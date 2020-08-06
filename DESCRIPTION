@@ -1,0 +1,33 @@
+Type: Package
+Package: r5r
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: c(
+            person(given="Marcus", family="Saraiva", email="rafa.pereira.br@gmail.com", role=c("aut", "cre"), comment = c(ORCID = " ")),
+            person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="aut", comment = c(ORCID = "0000-0003-2125-7465")),
+            person(given=" d", family="d ", email="  d@gmail.com", role="aut", comment = c(ORCID = "  ")),
+            person(given="d ", family=" d", email="  d@gmail.com", role="aut", comment = c(ORCID = "  ")),
+            person("Ipea - Institue for Applied Economic Research", role = c("cph", "fnd")))
+Date: 2020-08-06
+URL: https://github.com/ipeaGIT/r5r
+BugReports: https://github.com/ipeaGIT/r5r/issues
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: TRUE
+Depends:
+    R (>= 4.0)
+Suggests:
+    rmarkdown,
+    knitr,
+    testthat,
+    dplyr
+Imports:
+    data.table,
+    httr (>= 1.4.1),
+    rJava,
+    sf (>= 0.9-3),
+    sfheaders,
+    utils
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
