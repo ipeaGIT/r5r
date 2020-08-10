@@ -2,36 +2,6 @@
 # r5r
 
 
+r5r is a package that aims to make it easy to use the R<sup>5</sup> routing engine from R.
 
-
-### Package functions
-
-- `download_r5`
-  - input: version
-  
-- `build_graph`
-  - input: local directory with input data (.pbf, GTFS.zip)
-
-- `load_graph`
-  - input: local directory where graph.dat object is saved
-
-
-- `travel_times`
-  - input: date
-  - input: departure_time
-  - input: mode
-  - input: speed
-  - input: origins
-  - input: destinations
-
-
-  
-- `trips`
-  - input: date
-  - input: departure_time
-  - input: mode
-  - input: speed
-  - input: origins
-  - input: destinations
-
-
+This repository contains the R code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>.
