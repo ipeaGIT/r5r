@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: org.ipea.r5r.Main
+Class-Path: org.ipea.r5r.Main
 
