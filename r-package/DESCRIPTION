@@ -23,6 +23,7 @@ Suggests:
     testthat,
     dplyr
 Imports:
+    checkmate,
     data.table,
     httr (>= 1.4.1),
     rJava,
