@@ -32,4 +32,15 @@ public class R5RCore {
         }
     }
 
+    public void loadDestinationsFromCsv(String csvFile) {
+        CSVInputStreamProvider csvInputStream;
+        try {
+            csvInputStream = new CSVInputStreamProvider(csvFile);
+            destinationPointSet = FreeFormPointSet.fromCsv(csvInputStream, "lat", "lon", "id", "count");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
