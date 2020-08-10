@@ -7,6 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="r5_v4.8.1-40-g3ef09b1-dirty" level="project" />
   </component>
 </module>
-

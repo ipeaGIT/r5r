@@ -1,4 +1,4 @@
-package org.ipea;
+package org.ipea.r5r;
 
 public class Main {
 
