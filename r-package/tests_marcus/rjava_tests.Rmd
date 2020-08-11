@@ -1,0 +1,30 @@
+---
+title: "Package Tests"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("rJava")
+```
+
+## Testing Java / R Integration
+
+```{r}
+.jinit()
+.jaddClassPath(path = "../../JAR/R5.jar")
+.jaddClassPath(path = "../../JAR/r5r_core.jar")
+.jclassPath()
+```
+
+
+```{r}
+r5r_core <- .jnew("R5RCore", here::here("inst/extdata/"))
+```
+
+```{r}
+r5r_core
+```
+
+
+
