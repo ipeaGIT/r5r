@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+    <head>
+        <title>GraphQL API</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+        <link rel="stylesheet" href="/leaflet_context/leaflet.contextmenu.css"/>
+        <link rel="stylesheet" href="leaflet-sidebar.css"/>
+        <style type="text/css">
+            .status-ok {
+                background-color:green;
+            }
+            .status-error {
+                background-color:red;
+            }
+            .status-waiting {
+                background-color:orange;
+            }
+            .pre-wrap {
+                white-space: pre-wrap;       /* CSS 3 */
+                white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                white-space: -pre-wrap;      /* Opera 4-6 */
+                white-space: -o-pre-wrap;    /* Opera 7 */
+                word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            }
+            abbr[title], acronym[title] {
+                 border-bottom: 1px dotted black;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div id="map" style="position: absolute; top: 0px; left: 0; width: 100%; height: 100%;"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    	<script src='//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.min.js'></script>
+        <script src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="./leaflet_context/leaflet.contextmenu.js"></script>
+		<script src="./scripts/lib/leaflet-sidebar.js"></script>
+        <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="./scripts/graphql_plan.js"></script>
+		<div id="sidebar" class="sidebar collapsed">
+			<!-- Nav tabs -->
+			<div class="sidebar-tabs">
+				<ul role="tablist">
+					<li><a href="#result" id="resultTab" role="tab">Results</a></li>
+					<li><a href="#query" id="queryTab" role="tab">Query</a></li>
+					<li><a href="#curl" id="curlTab" role="tab">Curl</a></li>
+					<li><a href="#java" id="javaTab" role="tab">Java</a></li>
+				</ul>
+
+			</div>
+
+			<!-- Tab panes -->
+			<div class="sidebar-content">
+				<div class="sidebar-pane" id="result">
+					<h1 class="sidebar-header">
+						Results
+						<span class="sidebar-close">X</span>
+					</h1>
+					<p><a id="requestLink">Request Link</a></p>
+					<div class="response">
+					</div>
+
+				</div>
+				<div class="sidebar-pane" id="query">
+					<h1 class="sidebar-header">
+						Query
+						<span class="sidebar-close">X</span>
+					</h1>
+					<div class="query">
+					</div>
+
+				</div>
+				<div class="sidebar-pane" id="curl">
+					<h1 class="sidebar-header">
+						Curl
+						<span class="sidebar-close">X</span>
+					</h1>
+					<div class="curl">
+					</div>
+
+				</div>
+				<div class="sidebar-pane" id="java">
+					<h1 class="sidebar-header">
+						Java
+						<span class="sidebar-close">X</span>
+					</h1>
+					<div class="java">
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+    </body>
+</html>

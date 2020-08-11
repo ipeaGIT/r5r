@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Leaflet Context Menu</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+        <link rel="stylesheet" href="/leaflet_context/leaflet.contextmenu.css"/>
+    </head>
+    <body>
+        <select id="mode">
+            <option value="CAR">Car</option>
+            <option value="WALK">Walking</option>
+            <option value="BICYCLE">Cycling</option>
+            <option value="TRANSIT">Transit</option>
+        </select>
+        <label for="full">
+            <input type="checkbox" value="full_load" id="full" name="full">Load all states
+        </label>
+        <input type="text" placeholder="from lat" id="fromLat" name="fromLat">
+        <input type="text" placeholder="from lon" id="fromLon" name="fromLon">
+        <input type="text" placeholder="to lat" id="toLat" name="toLat">
+        <input type="text" placeholder="to lon" id="toLon" name="toLon">
+        <button type="submit" value="submit" disabled="true" id="planButton">Plan</button>
+        <button type="submit" value="submit" disabled="true" id="stopButton">Closest stops</button>
+        <button type="submit" value="submit" disabled="true" id="bikeShareButton">Closest bike shares</button>
+        <button type="submit" value="submit" disabled="true" id="prButton">Closest P+R</button>
+        <button type="submit" value="submit" disabled="true" id="isochroneButton">Isochrone</button>
+        <div id="map" style="position: absolute; top: 40px; left: 0; width: 100%; height: 100%;"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="./leaflet_context/leaflet.contextmenu.js"></script>
+        <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="./scripts/plan.js"></script>
+    </body>
+</html>
