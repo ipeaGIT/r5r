@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="ossrh-releases" />
+      <option name="name" value="releases on sonatype, which may not yet have been synced with central" />
+      <option name="url" value="https://oss.sonatype.org/content/repositories/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="conveyal" />
+      <option name="name" value="conveyal" />
+      <option name="url" value="https://maven.conveyal.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="osgeo" />
+      <option name="name" value="Open Source Geospatial Foundation Repository" />
+      <option name="url" value="https://download.osgeo.org/webdav/geotools/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="ossrh-snapshots" />
+      <option name="name" value="releases on sonatype, which may not yet have been synced with central" />
+      <option name="url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central2" />
+      <option name="name" value="check central first to avoid a lot of not found warnings" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="axiom-public-releases" />
+      <option name="name" value="Axiom Releases" />
+      <option name="url" value="http://nexus.axiomalaska.com/nexus/content/repositories/public-releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="oba-public" />
+      <option name="name" value="One Bus Away Public" />
+      <option name="url" value="http://nexus.onebusaway.org/nexus/content/repositories/public/" />
+    </remote-repository>
+  </component>
+</project>

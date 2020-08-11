@@ -23,7 +23,8 @@ r5r_core <- .jnew("R5RCore", here::here("inst/extdata/"))
 ```
 
 ```{r}
-r5r_core
+.jcall(r5r_core, returnSig = "V", 
+       method = "loadDestinationPointsFromCsv", here::here("inst/extdata/", "poa_hexgrid.csv"))
 ```
 
 
