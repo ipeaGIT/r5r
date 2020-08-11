@@ -6,6 +6,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="library" level="project" name="r5_v4.8.1-40-g3ef09b1-dirty" />
+      <element id="module-output" name="java-api" />
     </root>
   </artifact>
 </component>
