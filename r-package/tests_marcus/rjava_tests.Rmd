@@ -6,6 +6,14 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("rJava")
+library("jdx")
+library("sf")
+library("dplyr")
+library("ggplot2")
+```
+
+```{r}
+poa_boundary <- st_read(here::here("inst/extdata/portoalegre_boundary.geojson"))
 ```
 
 ## Testing Java / R Integration
@@ -13,7 +21,7 @@ library("rJava")
 ```{r}
 .jinit()
 .jaddClassPath(path = "../../JAR/R5.jar")
-.jaddClassPath(path = "../../JAR/r5r_core.jar")
+.jaddClassPath(path = "../../java-api/out/artifacts/r5r_core/r5r_core.jar")
 .jclassPath()
 ```
 
@@ -26,6 +34,52 @@ r5r_core <- .jnew("R5RCore", here::here("inst/extdata/"))
 .jcall(r5r_core, returnSig = "V", 
        method = "loadDestinationPointsFromCsv", here::here("inst/extdata/", "poa_hexgrid.csv"))
 ```
+
+Estação Farrapos
+Lat: -29.997611
+Lon: -51.197720
+
+Shopping Praia de Belas
+Lat: -30.048951
+Lon: -51.229533
+
+Function Signature
+public void planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
+                               String[] directModes, String[] transitModes, String date, String departureTime) {
+                               
+```{r}
+fromLat <- -29.997611
+fromLon <- -51.197720
+toLat <- -30.048951
+toLon <- -51.229533
+trip_date <- "2019-04-08"
+departure_time <- "14:00:00"
+
+.jcall(r5r_core, returnSig = "V", 
+       method = "planSingleTrip", fromLat, fromLon, toLat, toLon, "WALK", "BUS", trip_date, departure_time)
+```
+
+
+```{r}
+path_options <- r5r_core$getPathOptionsTable()
+path_options_df <-convertToR(path_options)
+```
+
+```{r}
+path_options_df %>% 
+  filter(option <= 4) %>%
+  mutate(geometry = st_as_sfc(geometry)) %>%
+  st_sf(crs = 4326) %>%
+  ggplot() +
+  geom_sf(data=poa_boundary) +
+  geom_sf(aes(geometry=geometry, colour = mode)) +
+  scale_colour_brewer(palette = "Set1") +
+  facet_wrap(~option, ncol = 4) +
+  theme(legend.position = "bottom")
+```
+
+
+
 
 
 
