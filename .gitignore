@@ -7,3 +7,4 @@ java-r5/target
 R5.jar
 r5r_core.jar
 java-r5/.idea/libraries
+/r-package/.Rhistory
