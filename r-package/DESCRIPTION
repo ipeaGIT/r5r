@@ -26,6 +26,7 @@ Imports:
     data.table,
     httr (>= 1.4.1),
     rJava,
+    jdx,
     sf (>= 0.9-3),
     sfheaders,
     utils
