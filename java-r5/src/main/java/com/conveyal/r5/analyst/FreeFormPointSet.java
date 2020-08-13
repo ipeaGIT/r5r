@@ -43,6 +43,11 @@ public class FreeFormPointSet extends PointSet {
     /** The number of opportunities located at each point. */
     private final double[] counts;
 
+    public void setId(int index, String value) { ids[index] = value; }
+    public void setLat(int index, double value) { lats[index] = value; }
+    public void setLon(int index, double value) { lons[index] = value; }
+    public void setCount(int index, double value) { counts[index] = value; }
+
     // TODO check that all identifiers are unique
 
     /**
@@ -134,7 +139,7 @@ public class FreeFormPointSet extends PointSet {
     /**
      * @param capacity expected number of features to be added to this FreeFormPointSet.
      */
-    private FreeFormPointSet(int capacity) {
+    public FreeFormPointSet(int capacity) {
         ids = new String[capacity];
         lats = new double[capacity];
         lons = new double[capacity];
