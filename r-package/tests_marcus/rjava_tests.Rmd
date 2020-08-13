@@ -5,34 +5,27 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library("rJava")
-library("jdx")
 library("sf")
-library("dplyr")
-library("ggplot2")
+library("tidyverse")
 ```
 
 ```{r}
-poa_boundary <- st_read(here::here("inst/extdata/portoalegre_boundary.geojson"))
+poa_boundary <- st_read("/Users/marcussaraiva/Repos/data_r5r/portoalegre_boundary.geojson")
 ```
 
 ## Testing Java / R Integration
 
 ```{r}
-.jinit()
-.jaddClassPath(path = "../../JAR/R5.jar")
-.jaddClassPath(path = "../../java-api/out/artifacts/r5r_core/r5r_core.jar")
-.jclassPath()
+r5_path <- "/Users/marcussaraiva/Repos/r5r/JAR/"
+data_path <- "/Users/marcussaraiva/Repos/data_r5r/"
+
+r5r_core <- r5_setup(r5_path, data_path)
 ```
 
 
 ```{r}
-r5r_core <- .jnew("R5RCore", here::here("inst/extdata/"))
-```
-
-```{r}
-.jcall(r5r_core, returnSig = "V", 
-       method = "loadDestinationPointsFromCsv", here::here("inst/extdata/", "poa_hexgrid.csv"))
+# .jcall(r5r_core, returnSig = "V", 
+       # method = "loadDestinationPointsFromCsv", here::here("inst/extdata/", "poa_hexgrid.csv"))
 ```
 
 Estação Farrapos
@@ -52,34 +45,82 @@ fromLat <- -29.997611
 fromLon <- -51.197720
 toLat <- -30.048951
 toLon <- -51.229533
-trip_date <- "2019-04-08"
+trip_date <- "2019-05-20"
 departure_time <- "14:00:00"
+street_time = 15L
 
-.jcall(r5r_core, returnSig = "V", 
-       method = "planSingleTrip", fromLat, fromLon, toLat, toLon, "WALK", "BUS", trip_date, departure_time)
+paths_bus_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, "WALK", "BUS", 
+                        trip_date, departure_time, max_street_time = 30L)
+paths_active_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("WALK", "BICYCLE"), "", 
+                           trip_date, departure_time, max_street_time = 45L)
+
+paths_car_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("CAR"), "", 
+                           trip_date, departure_time, max_street_time = 45L)
 ```
 
-
 ```{r}
-path_options <- r5r_core$getPathOptionsTable()
-path_options_df <-convertToR(path_options)
+paths_active_df
+paths_car_df
 ```
 
 ```{r}
-path_options_df %>% 
-  filter(option <= 4) %>%
-  mutate(geometry = st_as_sfc(geometry)) %>%
-  st_sf(crs = 4326) %>%
+paths_bus_df %>%
   ggplot() +
-  geom_sf(data=poa_boundary) +
-  geom_sf(aes(geometry=geometry, colour = mode)) +
+  # geom_sf(data=poa_boundary) +
+  geom_sf(aes(geometry=geometry, colour = mode, linetype=factor(segment))) +
   scale_colour_brewer(palette = "Set1") +
   facet_wrap(~option, ncol = 4) +
   theme(legend.position = "bottom")
 ```
 
+## Teste Bike
+
+Porto Alegre, rota ao longo da Av. Ramiro Barcellos.
+Rota mais direta possui alta declividade, com alternativas mais longas porém mais planas.
+
+```{r}
+fromLat <- -30.040177
+fromLon <- -51.208234
+toLat <- -30.022159
+toLon <- -51.212495
+
+paths_bike_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("BICYCLE"), "", 
+                           trip_date, departure_time, max_street_time = 45L)
+```
 
 
+```{r}
+paths_bike_df %>%
+  ggplot() + 
+  # geom_sf(data=poa_boundary) + 
+  geom_sf()
+```
+
+### Travel Times
+
+Shopping Praia de Belas
+Lat: -30.048951
+Lon: -51.229533
 
 
+```{r}
+fromId = "praia_de_belas"
+fromLat <- -30.048951
+fromLon <- -51.229533
+trip_date <- "2019-05-20"
+departure_time <- "14:00:00"
+street_time <- 30L
+trip_time <- 120L
+
+destinations_df <- read_csv(paste0(data_path, "poa_hexgrid.csv"))
+
+travel_times <- r5_travel_times_from_origin(r5r_core, fromId, fromLat, fromLon, 
+                                            destinations = destinations_df, 
+                                            direct_modes = "WALK", transit_modes = "BUS", 
+                                            trip_date, departure_time, street_time, trip_time)
+```
+
+```{r}
+travel_times
+```
 

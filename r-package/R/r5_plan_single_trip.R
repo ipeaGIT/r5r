@@ -10,24 +10,25 @@
 #' @param trip_date
 #' @param departure_time
 #' @param filter_paths
+#' @param max_street_time
 #'
 #' @return
 #' @export
 #'
 #' @examples
-r5_plan <- function(r5r_core, fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time,
-                    filter_paths = TRUE) {
+r5_plan_single_trip <- function(r5r_core, fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time,
+                    max_street_time, filter_paths = TRUE) {
 
   # Collapses list into single string before passing argument to Java
   direct_modes <- paste0(direct_modes, collapse = ";")
   transit_modes <- paste0(transit_modes, collapse = ";")
 
   # Call to method inside R5RCore object
-  .jcall(r5r_core, returnSig = "V", method = "planSingleTrip",
-         fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time)
+  rJava::.jcall(r5r_core, returnSig = "V", method = "planSingleTrip",
+         fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
 
   # Collects results from R5 and transforms them into simple features objects
-  path_options_df <-convertToR(r5r_core$getPathOptionsTable()) %>%
+  path_options_df <- jdx::convertToR(r5r_core$getPathOptionsTable()) %>%
     mutate(geometry = st_as_sfc(geometry)) %>%
     st_sf(crs = 4326) # WGS 84
 
