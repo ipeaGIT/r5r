@@ -6,5 +6,9 @@ r-package/.Rhistory
 R5.jar
 r5r_core.jar
 java-r5/.idea/libraries
+<<<<<<< HEAD
+/r-package/.Rhistory
+=======
 .Rproj.user
 .Rhistory
+>>>>>>> 071a62f8b5bbed77746406384105c4a723c25937
