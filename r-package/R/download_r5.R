@@ -29,7 +29,7 @@ download_r5 <- function(version = "1.0",
   # invalid version input
   if (!(version %in% metadata$version)){
     stop(paste0("Error: Invalid Value to argument 'version'. Please use one of the following: ",
-                paste(unique(metadata$version),collapse = " ")))
+                paste(unique(metadata$version), collapse = " ")))
   } else {
     # generate inputs
     url <- subset(metadata, version == version)$download_path

@@ -16,6 +16,8 @@
 #' @export
 #'
 #' @examples
+
+# detailed_itineraries <- function(){}
 r5_plan_single_trip <- function(r5r_core, fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time,
                     max_street_time, filter_paths = TRUE) {
 
