@@ -4,28 +4,25 @@
 \alias{download_r5}
 \title{Download R5 Jar file}
 \usage{
-download_r5(
-  path = NULL,
-  version = "1.4.0",
-  file_name = paste0("r5-", version, "-shaded.jar"),
-  url = "http://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv",
-  quiet = FALSE,
-  cache = TRUE
-)
+download_r5(version = "1.0", quiet = FALSE)
+}
+\arguments{
+\item{version}{character string with the version of R5 to be downloaded. Defaults to latest version '1.0'.}
+
+\item{quiet}{logical, passed to download.file, default FALSE}
 }
 \description{
-Download a compiled version of R5 (a jar file) and
-saves it locally. This is a compilation of R5 tailored for the
-purposes of the package r5r but that keeps R5's essential features.
+Download a compiled JAR file of R5 and saves it locally.
+The JAR file is saved within the package directory. The package uses a
+compilation of R5 tailored for the purposes of r5r that keeps R5's
+essential features. Source code available at https://github.com/ipeaGIT/r5r.
 }
 \examples{
 \donttest{
 
 library(r5r)
 
-download_r5()
-
+download_r5(version = "1.0")
 }
-
 }
 \concept{setup}
