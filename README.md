@@ -9,7 +9,6 @@ This repository contains the R code (r-package folder) and the Java code (java-a
 ## Installation R (soon on CRAN)
 
 ```R
-  utils::remove.packages('geobr')
   devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
   library(r5r)
 ```
