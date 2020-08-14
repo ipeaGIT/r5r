@@ -7,7 +7,9 @@
 #'
 #' @param version character string with the version of R5 to be downloaded.
 #'                Defaults to latest version '1.0'.
-#' @param quiet logical, passed to download.file, default FALSE
+#' @param quiet logical, passed to download.file. Defaults to FALSE
+#' @param force_update logical, Replaces the jar file stored locally with a new
+#'                     one. Defaults to FALSE.
 #'
 #' @family setup
 #' @examples \donttest{
@@ -18,7 +20,7 @@
 #' }
 #' @export
 
-download_r5 <- function(version = "4.9.0", quiet = FALSE) {
+download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) {
 
   # download metadata with jar file addresses
   metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
@@ -40,7 +42,7 @@ download_r5 <- function(version = "4.9.0", quiet = FALSE) {
 
 
   # check for existing file
-  if (checkmate::test_file_exists(destfile)) {
+  if (checkmate::test_file_exists(destfile) & force_update==FALSE) {
     message("Using cached version from ", destfile)
     return(destfile)
   } else {

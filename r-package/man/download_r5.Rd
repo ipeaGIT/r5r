@@ -4,13 +4,16 @@
 \alias{download_r5}
 \title{Download R5 Jar file}
 \usage{
-download_r5(version = "4.9.0", quiet = FALSE)
+download_r5(version = "4.9.0", quiet = FALSE, force_update = FALSE)
 }
 \arguments{
 \item{version}{character string with the version of R5 to be downloaded.
 Defaults to latest version '1.0'.}
 
-\item{quiet}{logical, passed to download.file, default FALSE}
+\item{quiet}{logical, passed to download.file. Defaults to FALSE}
+
+\item{force_update}{logical, Replaces the jar file stored locally with a new
+one. Defaults to FALSE.}
 }
 \description{
 Download a compiled JAR file of R5 and saves it locally.
@@ -25,5 +28,9 @@ library(r5r)
 
 download_r5(version = "4.9.0")
 }
+}
+\seealso{
+Other setup: 
+\code{\link{r5_setup}()}
 }
 \concept{setup}
