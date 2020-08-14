@@ -13,9 +13,9 @@ library("tidyverse")
 poa_boundary <- st_read("/Users/marcussaraiva/Repos/data_r5r/portoalegre_boundary.geojson")
 ```
 
-## Testing Java / R Integration
+## Loading Java Libraries
 
-```{r}
+```{r include=FALSE}
 r5_path <- "/Users/marcussaraiva/Repos/r5r/JAR/"
 data_path <- "/Users/marcussaraiva/Repos/data_r5r/"
 
@@ -23,10 +23,7 @@ r5r_core <- r5_setup(r5_path, data_path)
 ```
 
 
-```{r}
-# .jcall(r5r_core, returnSig = "V", 
-       # method = "loadDestinationPointsFromCsv", here::here("inst/extdata/", "poa_hexgrid.csv"))
-```
+## Querying detailed itineraries
 
 Estação Farrapos
 Lat: -29.997611
@@ -40,7 +37,7 @@ Function Signature
 public void planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
                                String[] directModes, String[] transitModes, String date, String departureTime) {
                                
-```{r}
+```{r include=FALSE}
 fromLat <- -29.997611
 fromLon <- -51.197720
 toLat <- -30.048951
@@ -49,27 +46,22 @@ trip_date <- "2019-05-20"
 departure_time <- "14:00:00"
 street_time = 15L
 
-paths_bus_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, "WALK", "BUS", 
+paths_bus_df <- r5_plan_single_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("WALK", "BICYCLE", "CAR"), "BUS", 
                         trip_date, departure_time, max_street_time = 30L)
-paths_active_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("WALK", "BICYCLE"), "", 
-                           trip_date, departure_time, max_street_time = 45L)
-
-paths_car_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("CAR"), "", 
-                           trip_date, departure_time, max_street_time = 45L)
 ```
 
+
 ```{r}
-paths_active_df
-paths_car_df
+paths_bus_df
 ```
 
 ```{r}
 paths_bus_df %>%
   ggplot() +
   # geom_sf(data=poa_boundary) +
-  geom_sf(aes(geometry=geometry, colour = mode, linetype=factor(segment))) +
+  geom_sf(aes(geometry=geometry, colour = factor(segment), linetype=mode)) +
   scale_colour_brewer(palette = "Set1") +
-  facet_wrap(~option, ncol = 4) +
+  facet_wrap(~option, ncol = 5) +
   theme(legend.position = "bottom")
 ```
 
@@ -84,26 +76,26 @@ fromLon <- -51.208234
 toLat <- -30.022159
 toLon <- -51.212495
 
-paths_bike_df <- r5_plan_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("BICYCLE"), "", 
-                           trip_date, departure_time, max_street_time = 45L)
+paths_bike_df <- r5_plan_single_trip(r5r_core, fromLat, fromLon, toLat, toLon, c("BICYCLE"), "", 
+                                     trip_date, departure_time, max_street_time = 45L)
 ```
 
 
 ```{r}
 paths_bike_df %>%
   ggplot() + 
-  # geom_sf(data=poa_boundary) + 
+  geom_sf(data=poa_boundary) +
   geom_sf()
 ```
 
-### Travel Times
+### Travel Times from Single Origin
 
 Shopping Praia de Belas
 Lat: -30.048951
 Lon: -51.229533
 
 
-```{r}
+```{r include=FALSE}
 fromId = "praia_de_belas"
 fromLat <- -30.048951
 fromLon <- -51.229533
@@ -123,4 +115,27 @@ travel_times <- r5_travel_times_from_origin(r5r_core, fromId, fromLat, fromLon,
 ```{r}
 travel_times
 ```
+
+### Travel Time Matrix
+
+```{r include=FALSE}
+trip_date <- "2019-05-20"
+departure_time <- "14:00:00"
+street_time <- 30L
+trip_time <- 120L
+
+origins_df <- read_csv(paste0(data_path, "poa_hexgrid.csv"))  %>% sample_n(20)
+destinations_df <- read_csv(paste0(data_path, "poa_hexgrid.csv")) %>% sample_n(100)
+
+travel_times <- r5_travel_time_matrix(r5r_core, origins = origins_df, destinations = destinations_df, 
+                                      direct_modes = "WALK", transit_modes = "BUS", 
+                                      trip_date, departure_time, street_time, trip_time)
+
+```
+
+
+```{r}
+travel_times
+```
+
 

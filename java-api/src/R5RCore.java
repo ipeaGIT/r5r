@@ -10,24 +10,21 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
-import com.conveyal.r5.util.CSVInputStreamProvider;
-import org.locationtech.jts.geom.Coordinate;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
 public class R5RCore {
 
     private TransportNetwork transportNetwork;
-    private LinkedHashMap<String, Object> pathOptionsTable;
+//    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
         File file = new File(dataFolder + "network.dat");
@@ -65,7 +62,7 @@ public class R5RCore {
 
     }
 
-    public void planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
+    public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
                                String directModes, String transitModes, String date, String departureTime,
                                int maxStreetTime) throws ParseException {
         AnalysisTask request = new RegionalTask();
@@ -112,7 +109,9 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            buildPathOptionsTable(response.getOptions());
+            return buildPathOptionsTable(response.getOptions());
+        } else {
+            return null;
         }
     }
 
@@ -123,7 +122,7 @@ public class R5RCore {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
-    private void buildPathOptionsTable(List<ProfileOption> pathOptions) {
+    private LinkedHashMap<String, Object> buildPathOptionsTable(List<ProfileOption> pathOptions) {
         // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
 
         // Columns:
@@ -138,7 +137,7 @@ public class R5RCore {
         ArrayList<String> routeCol = new ArrayList<>();
         ArrayList<String> geometryCol = new ArrayList<>();
 
-        pathOptionsTable = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> pathOptionsTable = new LinkedHashMap<>();
         pathOptionsTable.put("option", optionCol);
         pathOptionsTable.put("segment", segmentCol);
         pathOptionsTable.put("mode", modeCol);
@@ -236,10 +235,45 @@ public class R5RCore {
             }
 
         }
+
+        return pathOptionsTable;
     }
 
-    public LinkedHashMap<String, Object> getPathOptionsTable() {
-        return pathOptionsTable;
+    public List<Object> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                 String[] toIds, double[] toLats, double[] toLons,
+                                                 String directModes, String transitModes, String date, String departureTime,
+                                                 int maxWalkTime, int maxTripDuration) {
+        int[] originIndices = new int[fromIds.length];
+        for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
+
+        return Arrays.stream(originIndices).parallel()
+                .mapToObj(index -> {
+                    LinkedHashMap<String, Object> results =
+                            null;
+                    try {
+                        results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
+                                toIds, toLats, toLons, directModes, transitModes, date, departureTime,
+                                maxWalkTime, maxTripDuration);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return results;
+                }).collect(Collectors.toList());
+
+
+//
+//            project.getHexGrid().getCells().entrySet()
+//                    .parallelStream()
+//                    .forEach(cell -> {
+//                        String hexagonId = cell.getValue().getH3code();
+//
+//                        OneOriginResult travelTimeResults = travelTimesFromOrigin(hexagonId);
+//
+//                        saveTravelTimeResults(travelTimeResults, hexagonId);
+//                    });
+//
+//            .map    (s -> { s.setState("ok"); return s; }) // need to return a value here
+//                    .collect(Collectors.toList());
     }
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
@@ -316,22 +350,37 @@ public class R5RCore {
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
 
         // Build return table
+        ArrayList<String> fromIdCol = new ArrayList<>();
+        ArrayList<Double> fromLatCol = new ArrayList<>();
+        ArrayList<Double> fromLonCol = new ArrayList<>();
+
         ArrayList<String> idCol = new ArrayList<>();
         ArrayList<Double> latCol = new ArrayList<>();
         ArrayList<Double> lonCol = new ArrayList<>();
+
         ArrayList<Integer> travelTimeCol = new ArrayList<>();
 
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
-            idCol.add(toIds[i]);
-            latCol.add(toLats[i]);
-            lonCol.add(toLons[i]);
-            travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
+            if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
+                fromIdCol.add(fromId);
+                fromLatCol.add(fromLat);
+                fromLonCol.add(fromLon);
+
+                idCol.add(toIds[i]);
+                latCol.add(toLats[i]);
+                lonCol.add(toLons[i]);
+
+                travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
+            }
         }
 
         LinkedHashMap<String, Object> results = new LinkedHashMap<>();
-        results.put("id", idCol);
-        results.put("lat", latCol);
-        results.put("lon", lonCol);
+        results.put("fromId", fromIdCol);
+        results.put("fromLat", fromLatCol);
+        results.put("fromLon", fromLonCol);
+        results.put("toId", idCol);
+        results.put("toLat", latCol);
+        results.put("toLon", lonCol);
         results.put("travel_time", travelTimeCol);
 
         return results;

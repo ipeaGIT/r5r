@@ -26,11 +26,14 @@ r5_plan_single_trip <- function(r5r_core, fromLat, fromLon, toLat, toLon, direct
   transit_modes <- paste0(transit_modes, collapse = ";")
 
   # Call to method inside R5RCore object
-  rJava::.jcall(r5r_core, returnSig = "V", method = "planSingleTrip",
-         fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
+  path_options <- r5r_core$planSingleTrip(fromLat, fromLon, toLat, toLon,
+                                             direct_modes, transit_modes,
+                                             trip_date, departure_time, max_street_time)
+    # rJava::.jcall(r5r_core, returnSig = "O", method = "planSingleTrip",
+    #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
 
   # Collects results from R5 and transforms them into simple features objects
-  path_options_df <- jdx::convertToR(r5r_core$getPathOptionsTable()) %>%
+  path_options_df <- jdx::convertToR(path_options) %>%
     mutate(geometry = st_as_sfc(geometry)) %>%
     st_sf(crs = 4326) # WGS 84
 
