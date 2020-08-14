@@ -16,7 +16,10 @@ poa_boundary <- st_read("/Users/marcussaraiva/Repos/data_r5r/portoalegre_boundar
 ## Loading Java Libraries
 
 ```{r include=FALSE}
+# Caminho do arquivo JAR
 r5_path <- "/Users/marcussaraiva/Repos/r5r/JAR/"
+
+#Caminho da pasta com os dados: .pbf e gtfs, ou network.dat
 data_path <- "/Users/marcussaraiva/Repos/data_r5r/"
 
 r5r_core <- r5_setup(r5_path, data_path)
