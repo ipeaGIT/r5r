@@ -3,3 +3,5 @@
 export(download_r5)
 export(r5_plan_single_trip)
 export(r5_setup)
+export(r5_travel_time_matrix)
+export(r5_travel_times_from_origin)
