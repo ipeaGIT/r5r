@@ -14,11 +14,11 @@
 #'
 #' library(r5r)
 #'
-#' download_r5(version = "4.7.1")
+#' download_r5(version = "4.9.0")
 #' }
 #' @export
 
-download_r5 <- function(version = "4.7.1", quiet = FALSE) {
+download_r5 <- function(version = "4.9.0", quiet = FALSE) {
 
   # download metadata with jar file addresses
   metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
