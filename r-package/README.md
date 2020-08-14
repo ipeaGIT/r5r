@@ -6,7 +6,7 @@
 
 ### Package functions
 
-- [ ] `download_r5`
+- [x] `download_r5`
   - input: version
   - output: R5 JAR saved in the package directory
 
