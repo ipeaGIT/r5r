@@ -8,7 +8,7 @@ download_r5(version = "4.9.0", quiet = FALSE, force_update = FALSE)
 }
 \arguments{
 \item{version}{character string with the version of R5 to be downloaded.
-Defaults to latest version '1.0'.}
+Defaults to latest version '4.9.0'.}
 
 \item{quiet}{logical, passed to download.file. Defaults to FALSE}
 
