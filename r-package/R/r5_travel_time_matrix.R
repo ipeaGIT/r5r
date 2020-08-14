@@ -1,3 +1,19 @@
+#' Title
+#'
+#' @param r5r_core
+#' @param origins
+#' @param destinations
+#' @param direct_modes
+#' @param transit_modes
+#' @param trip_date
+#' @param departure_time
+#' @param max_street_time
+#' @param max_trip_duration
+#'
+#' @return
+#' @export
+#'
+#' @examples
 r5_travel_time_matrix <- function(r5r_core, origins, destinations,
                                         direct_modes, transit_modes, trip_date, departure_time,
                                         max_street_time, max_trip_duration) {

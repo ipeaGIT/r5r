@@ -186,7 +186,7 @@ public class R5RCore {
                         segmentIndex++;
                         TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
 
-                        String geometry = "NA";
+                        StringBuilder geometry = new StringBuilder("NA");
 
                         for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
                             int stopIdx = tripPattern.stops[stop];
@@ -194,20 +194,20 @@ public class R5RCore {
                             coord.x = coord.x / FIXED_FACTOR;
                             coord.y = coord.y / FIXED_FACTOR;
 
-                            if (geometry.equals("NA")) {
-                                geometry = "LINESTRING (" + coord.x + " " + coord.y;
+                            if (geometry.toString().equals("NA")) {
+                                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
                             } else {
-                                geometry = geometry + ", " + coord.x + " " + coord.y;
+                                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
                             }
                         }
-                        geometry = geometry + ")";
+                        geometry.append(")");
 
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
                         durationCol.add(transit.rideStats.avg);
                         routeCol.add(tripPattern.routeId);
-                        geometryCol.add(geometry);
+                        geometryCol.add(geometry.toString());
                     }
 
                     if (transit.middle != null) {
@@ -302,18 +302,10 @@ public class R5RCore {
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
 
-        request.directModes = EnumSet.noneOf(LegMode.class);
-        String[] modes = directModes.split(";");
-        if (!directModes.equals("") & modes.length > 0) {
-            for (String mode : modes) {
-                request.directModes.add(LegMode.valueOf(mode));
-            }
-        }
-
         request.transitModes = EnumSet.noneOf(TransitModes.class);
         request.accessModes = EnumSet.noneOf(LegMode.class);
         request.egressModes = EnumSet.noneOf(LegMode.class);
-        modes = transitModes.split(";");
+        String[] modes = transitModes.split(";");
         if (!transitModes.equals("") & modes.length > 0) {
             request.accessModes.add(LegMode.WALK);
             request.egressModes.add(LegMode.WALK);
@@ -321,6 +313,16 @@ public class R5RCore {
                 request.transitModes.add(TransitModes.valueOf(mode));
             }
         }
+
+        request.directModes = EnumSet.noneOf(LegMode.class);
+        modes = directModes.split(";");
+        if (!directModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.accessModes.add(LegMode.valueOf(mode));
+                request.directModes.add(LegMode.valueOf(mode));
+            }
+        }
+
 
         request.date = LocalDate.parse(date);
 

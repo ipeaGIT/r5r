@@ -127,11 +127,11 @@ departure_time <- "14:00:00"
 street_time <- 30L
 trip_time <- 120L
 
-origins_df <- read_csv(paste0(data_path, "poa_hexgrid.csv"))  %>% sample_n(20)
+origins_df <- read_csv(paste0(data_path, "poa_hexgrid.csv"))  %>% sample_n(100)
 destinations_df <- read_csv(paste0(data_path, "poa_hexgrid.csv")) %>% sample_n(100)
 
 travel_times <- r5_travel_time_matrix(r5r_core, origins = origins_df, destinations = destinations_df, 
-                                      direct_modes = "WALK", transit_modes = "BUS", 
+                                      direct_modes = c("WALK"), transit_modes = "", 
                                       trip_date, departure_time, street_time, trip_time)
 
 ```
