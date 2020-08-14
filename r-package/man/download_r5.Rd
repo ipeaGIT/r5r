@@ -4,7 +4,7 @@
 \alias{download_r5}
 \title{Download R5 Jar file}
 \usage{
-download_r5(version = "4.7.1", quiet = FALSE)
+download_r5(version = "4.9.0", quiet = FALSE)
 }
 \arguments{
 \item{version}{character string with the version of R5 to be downloaded.
@@ -23,7 +23,7 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r.
 
 library(r5r)
 
-download_r5(version = "4.7.1")
+download_r5(version = "4.9.0")
 }
 }
 \concept{setup}

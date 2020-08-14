@@ -4,7 +4,7 @@
 \alias{r5_setup}
 \title{Creates and R5R object associated to a data folder}
 \usage{
-r5_setup(r5_path, data_path)
+r5_setup(data_path, version = "4.9.0")
 }
 \arguments{
 \item{data_path}{}
