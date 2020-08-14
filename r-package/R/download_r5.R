@@ -1,5 +1,5 @@
 #' Download R5 Jar file
-#'
+#' 
 #' @description Download a compiled JAR file of R5 and saves it locally.
 #' The JAR file is saved within the package directory. The package uses a
 #' compilation of R5 tailored for the purposes of r5r that keeps R5's
@@ -25,6 +25,16 @@ download_r5 <- function(version = "1.0",
                               colClasses = 'character',
                               header = T,
                               sep = ';')
+  #   metadata <- utils::read.csv(tempf, stringsAsFactors=F)
+  # 
+  # } else {
+  #   # download it and save to metadata
+  #   httr::GET(url="http://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv", httr::write_disk(tempf, overwrite = T))
+  #   metadata <- utils::read.csv(tempf, stringsAsFactors=F)
+  # }
+  # 
+  # return(metadata)
+  }
 
   # invalid version input
   if (!(version %in% metadata$version)){
@@ -43,6 +53,26 @@ download_r5 <- function(version = "1.0",
     if (checkmate::test_file_exists(destfile)) {
       message("Using cached version from ", destfile)
       return(destfile)
+                       quiet = FALSE,
+                       cache = TRUE) {
+  if (cache) {
+    # Check we can find the package
+    libs <- .libPaths()[1]
+    if (!checkmate::test_directory_exists(file.path(libs, "r5r"))) {
+      cache <- FALSE
+    }
+  }
+  
+  if (cache) {
+    # Check for JAR folder can find the package
+    if (!checkmate::test_directory_exists(file.path(libs, "r5r", "jar"))) {
+      dir.create(file.path(libs, "r5r", "jar"))
+    }
+    destfile <- file.path(libs, "r5r", "jar", file_name)
+    if (checkmate::test_file_exists(destfile)) {
+      message("Using cached version from ", destfile)
+      return(destfile)
+    }
     } else {
 
   # download file if it does not exit
@@ -52,6 +82,9 @@ download_r5 <- function(version = "1.0",
       message("R5 will be saved to ", destfile)
       utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
       return(destfile)
-
+  
     }
-  }
+  message("The OTP will be saved to ", destfile)
+  utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
+  return(destfile)
+}
