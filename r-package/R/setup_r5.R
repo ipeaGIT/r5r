@@ -20,11 +20,11 @@
 #' # directory with street network and gtfs files
 #' path <- system.file("extdata", package = "r5r")
 #'
-#' r5r_core <- r5_setup(data_path = path)
+#' r5r_core <- setup_r5(data_path = path)
 #' }
 #' @export
 
-r5_setup <- function(data_path, version='4.9.0') {
+setup_r5 <- function(data_path, version='4.9.0') {
 
   # # check directory input
   # is.null(data_path){ stop(paste0("Please provide data_path")) }
