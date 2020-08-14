@@ -1,3 +1,5 @@
+package com.conveyal.r5;
+
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
