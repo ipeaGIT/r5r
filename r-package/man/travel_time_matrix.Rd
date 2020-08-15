@@ -29,6 +29,10 @@ with public transport networks, check the GTFS.zip
 
 \item{departure_time}{character string, time in format "hh:mm:ss"}
 
+\item{direct_modes}{99999999}
+
+\item{transit_modes}{99999999}
+
 \item{max_street_time}{integer,}
 
 \item{max_trip_duration}{integer, Maximum trip duration in seconds. Defaults
@@ -78,6 +82,8 @@ df <- travel_time_matrix( r5_core = r5_core,
 }
 \seealso{
 Other routing: 
-\code{\link{detailed_itineraries}()}
+\code{\link{detailed_itineraries}()},
+\code{\link{multiple_detailed_itineraries}()},
+\code{\link{r5_travel_times_from_origin}()}
 }
 \concept{routing}

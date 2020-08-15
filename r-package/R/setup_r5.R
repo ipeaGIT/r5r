@@ -2,8 +2,8 @@
 #'
 #' @description Combine data inputs in a directory to build a multimodal
 #'  transport network used for routing in R5. The directory must contain at
-#'  least one street network file (in .pbf format). Or or more public transport
-#'  data sets (in GTFS format) are optional. If there is more than one GTFS file
+#'  least one street network file (in .pbf format). One or more public transport
+#'  data sets (in GTFS.zip format) are optional. If there is more than one GTFS file
 #'  in the directory, both files will be merged.
 #'
 #' @param data_path character string, the directory where data inputs are stored

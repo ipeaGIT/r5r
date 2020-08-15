@@ -143,7 +143,7 @@ library(usethis)
 
 
 
-setwd("R:/Dropbox/git/gtfs2gps")
+# setwd("R:/Dropbox/git/r5r/r-package")
 
 # update `NEWS.md` file
 # update `DESCRIPTION` file

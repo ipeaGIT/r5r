@@ -5,12 +5,12 @@
 #' on transport mode, travel time, walked distance etc. for each trip section
 #'
 #' @param r5_core a rJava object to connect with R5 routing engine
-#' @param fromLat
-#' @param fromLon
-#' @param toLat
-#' @param toLon
-#' @param direct_modes
-#' @param transit_modes
+#' @param fromLat 99999999
+#' @param fromLon 99999999
+#' @param toLat 99999999
+#' @param toLon 99999999
+#' @param direct_modes 99999999
+#' @param transit_modes 99999999
 #' @param trip_date character string, date in format "yyyy-mm-dd". If working
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
@@ -113,19 +113,53 @@ detailed_itineraries <- function(r5_core,
 
 #' Plan multiple itineraries in parallel
 #'
-#' @param r5_core
+#' @description description
+#'
+#' @param r5_core a rJava object to connect with R5 routing engine
 #' @param requests A dataframe with 5 columns: id, fromLat, fromLon, toLat and toLon
-#' @param direct_modes
-#' @param transit_modes
-#' @param trip_date
-#' @param departure_time
-#' @param max_street_time
-#' @param shortest_path
+#' @param direct_modes 99999999
+#' @param transit_modes 99999999
+#' @param trip_date 99999999
+#' @param departure_time 99999999
+#' @param max_street_time 99999999
+#' @param shortest_path 99999999
 #'
 #' @return
-#' @export
+#' @family routing
+#' @examples \donttest{
 #'
-#' @examples
+#' library(r5r)
+#'
+#' # build transport network
+#' path <- system.file("extdata", package = "r5r")
+#' r5_core <- setup_r5(data_path = path)
+#'
+#' # load origin/destination points
+#' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+#'
+#' # input
+#' direct_modes <- c("WALK", "BICYCLE", "CAR")
+#' transit_modes <-"BUS"
+#' departure_time <- "14:00:00"
+#' trip_date <- "2019-05-20"
+#' street_time = 15L
+#' max_street_time = 30L
+#' max_trip_duration = 300L
+#'
+#' df <- multiple_detailed_itineraries( r5_core = r5_core,
+#'                           origins = points,
+#'                           destinations = points,
+#'                           trip_date = trip_date,
+#'                           departure_time = departure_time,
+#'                           direct_modes = direct_modes,
+#'                           transit_modes = transit_modes,
+#'                           max_street_time = max_street_time,
+#'                           max_trip_duration = max_trip_duration
+#'                           )
+#'
+#' }
+#' @export
+
 multiple_detailed_itineraries <- function(r5_core,
                                           requests,
                                           direct_modes,

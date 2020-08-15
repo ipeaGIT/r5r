@@ -10,8 +10,8 @@
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
 #' @param departure_time character string, time in format "hh:mm:ss"
-#' @param direct_modes
-#' @param transit_modes
+#' @param direct_modes 99999999
+#' @param transit_modes 99999999
 #' @param max_street_time integer,
 #' @param max_trip_duration integer, Maximum trip duration in seconds. Defaults
 #'                           to 7200 seconds (2 hours).

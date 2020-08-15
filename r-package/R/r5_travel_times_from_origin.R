@@ -1,21 +1,56 @@
 #' Title
 #'
-#' @param r5r_core
-#' @param fromId
-#' @param fromLat
-#' @param fromLon
-#' @param destinations
-#' @param direct_modes
-#' @param transit_modes
-#' @param trip_date
-#' @param departure_time
-#' @param max_street_time
-#' @param max_trip_duration
+#' @description description
+#'
+#'
+#' @param r5_core a rJava object to connect with R5 routing engine
+#' @param fromId 99999999
+#' @param fromLat 99999999
+#' @param fromLon 99999999
+#' @param destinations 99999999
+#' @param direct_modes 99999999
+#' @param transit_modes 99999999
+#' @param trip_date 99999999
+#' @param departure_time 99999999
+#' @param max_street_time 99999999
+#' @param max_trip_duration 99999999
 #'
 #' @return
-#' @export
+#' @family routing
+#' @examples \donttest{
 #'
-#' @examples
+#' library(r5r)
+#'
+#' # build transport network
+#' path <- system.file("extdata", package = "r5r")
+#' r5_core <- setup_r5(data_path = path)
+#'
+#' # load origin/destination points
+#' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+#'
+#' # input
+#' direct_modes <- c("WALK", "BICYCLE", "CAR")
+#' transit_modes <-"BUS"
+#' departure_time <- "14:00:00"
+#' trip_date <- "2019-05-20"
+#' street_time = 15L
+#' max_street_time = 30L
+#' max_trip_duration = 300L
+#'
+#' df <- multiple_detailed_itineraries( r5_core = r5_core,
+#'                           origins = points,
+#'                           destinations = points,
+#'                           trip_date = trip_date,
+#'                           departure_time = departure_time,
+#'                           direct_modes = direct_modes,
+#'                           transit_modes = transit_modes,
+#'                           max_street_time = max_street_time,
+#'                           max_trip_duration = max_trip_duration
+#'                           )
+#'
+#' }
+#' @export
+
 r5_travel_times_from_origin <- function(r5r_core, fromId, fromLat, fromLon, destinations,
                                         direct_modes, transit_modes, trip_date, departure_time,
                                         max_street_time, max_trip_duration) {

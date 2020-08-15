@@ -21,6 +21,18 @@ detailed_itineraries(
 \arguments{
 \item{r5_core}{a rJava object to connect with R5 routing engine}
 
+\item{fromLat}{99999999}
+
+\item{fromLon}{99999999}
+
+\item{toLat}{99999999}
+
+\item{toLon}{99999999}
+
+\item{direct_modes}{99999999}
+
+\item{transit_modes}{99999999}
+
 \item{trip_date}{character string, date in format "yyyy-mm-dd". If working
 with public transport networks, check the GTFS.zip
 (calendar.txt file) for dates with service.}
@@ -79,6 +91,8 @@ trips <- detailed_itineraries( fromLat = fromLat,
 }
 \seealso{
 Other routing: 
+\code{\link{multiple_detailed_itineraries}()},
+\code{\link{r5_travel_times_from_origin}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}
