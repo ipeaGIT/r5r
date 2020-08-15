@@ -1,0 +1,113 @@
+---
+title: 'r5r: Rapid Realistic Routing with R5 in R'
+author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
+output: github_document
+abstract: `r5r` is an R package for rapid realistic routing on multimodal 
+transport networks (walk, bike, public transport and car) using R5 
+<https://github.com/conveyal/r5>. The package allows users to generate detailed
+routing analysis or calculate travel time matrices using seamless parallel 
+computing on top of the R5 Java machine.
+urlcolor: blue
+vignette: |
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{r5r}
+---
+15 August 2020
+
+# Introduction 
+
+**r5r** is an R package for rapid realistic routing on multimodal transport 
+networks (walk, bike, public transport and car). It provides a simple and 
+friendly interface to R5, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
+
+# Installation
+To use `r5r`, you need to have [Java SE Development Kit 11.0.8](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) 
+installed on your computer. No worries, you don't have to pay for it.
+
+Install the development version from GitHub (soon on CRAN).
+
+```{r, eval = FALSE}
+devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+library(r5r)
+library(sf)
+library(data.table)
+library(dplyr)
+
+```
+
+# Demonstration on sample data
+
+## Data
+To illustrate functionality, the package includes a small sample data for the 
+city of Porto Alegre (Brazil). It includes three files:
+- An Open Street Map network in `.pbf` format (*mandatory*)
+- A public transport network in `GTFS.zip` format
+- The spatial coordinates of the origin destination pairs in a `.csv` file.
+
+```{r}
+path <- system.file("extdata", package = "r5r")
+list.files(path)
+
+```
+The data with origin destination pairs looks like this below. In this example, 
+we will be looking at the transport routes between ten random points in this 
+data.
+```{r}
+points <- fread(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
+head(points)
+
+```
+
+## Build routable transport network
+
+The first step is to build the multimodal transport used for routing in R5. This
+is done with the `setup_r5` function. It does two things: (1) downloads a compiled JAR file
+of R5 and store it locally in the r5r package directory; (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object. The function 
+
+```{r, message = FALSE}
+# Indicate the path where OSM and GTFS data are stored
+r5_core <- setup_r5(data_path = path)
+
+```
+
+## Routing analysi
+
+**r5** has two core routing functions.
+
+- `detailed_itineraries`
+   * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
+   between one or multiple origin destination pairs. The data output brings 
+   detailed information on transport mode, travel time, walk distance etc for 
+   each trip section
+ 
+- `travel_time_matrix`
+   * Fast function that returns a simple 'data.frame' with travel time 
+   estimates between one or multiple origin destination pairs.
+   
+### Detailed itineraries
+
+### Fast many to many travel time matrix
+
+
+```{r, message = FALSE}
+# calculate a travel time matrix
+ttm <- travel_time_matrix( r5_core = r5_core,
+                           origins = points,
+                           destinations = points,
+                           trip_date = "2019-05-20",
+                           departure_time = "14:00:00",
+                           direct_modes = c("WALK", "BICYCLE", "CAR"),
+                           transit_modes = "BUS",
+                           max_street_time = 300L,
+                           max_trip_duration = 3600L
+                          )
+head(ttm)
+```
+
+
+
+# Final remarks
+
+If you have any suggestions or want to report an error, please visit the GitHub page of the package [here](https://github.com/ipeaGIT/r5r).
