@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 r5_travel_time_matrix(
-  r5r_core,
+  r5_core,
   origins,
   destinations,
   direct_modes,
@@ -20,8 +20,49 @@ r5_travel_time_matrix(
 \item{max_trip_duration}{}
 }
 \value{
-
+Returns a data.table with travel-time estimates between pairs of
+origin-destinations
 }
 \description{
 Title
 }
+\examples{
+\donttest{
+
+library(r5r)
+
+# build transport network
+path <- system.file("extdata", package = "r5r")
+r5_core <- setup_r5(data_path = path)
+
+# load origin/destination points
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+
+
+# input
+trip_date <- "2019-05-20"
+departure_time <- "14:00:00"
+street_time = 15L
+direct_modes <- c("WALK", "BICYCLE", "CAR")
+transit_modes <-"BUS"
+max_street_time = 30
+max_trip_duration = 300
+
+r5_travel_time_matrix( origins = from,
+                       destinations = from,
+                       r5_core = r5_core,
+                       trip_date = trip_date,
+                       departure_time = departure_time,
+                       direct_modes = direct_modes,
+                       transit_modes = transit_modes,
+                       max_street_time = max_street_time,
+                       max_trip_duration = max_trip_duration
+                       )
+
+}
+}
+\seealso{
+Other routing: 
+\code{\link{detailed_itineraries}()}
+}
+\concept{routing}

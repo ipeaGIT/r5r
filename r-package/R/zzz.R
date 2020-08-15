@@ -16,8 +16,8 @@ utils::globalVariables(c(".",
   data.table::setDTthreads(percent = 100) # nocov
 }
 
+#' @importFrom data.table := %like% %between% fifelse
 # #' @importFrom magrittr %>%
-# #' @importFrom data.table := %between% fifelse
 # #' @importFrom stats na.omit
 # #' @importFrom utils head tail object.size
 # #' @importFrom stats na.omit
