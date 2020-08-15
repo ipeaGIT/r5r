@@ -165,26 +165,6 @@ system("R CMD Rd2pdf --title=Package gtfs2gps --output=./gtfs2gps/manual.pdf")
 
 
 
-# Ignore these files/folders when building the package (but keep them on github)
-setwd("R:/Dropbox/git_projects/gtfs2gps")
-
-
-usethis::use_build_ignore("test")
-usethis::use_build_ignore("prep_data")
-usethis::use_build_ignore("manual.pdf")
-
-# script da base de dados e a propria base armazenada localmente, mas que eh muito grande para o CRAN
-usethis::use_build_ignore("brazil_2010.R")
-usethis::use_build_ignore("brazil_2010.RData")
-usethis::use_build_ignore("brazil_2010.Rd")
-
-# Vignette que ainda nao esta pronta
-usethis::use_build_ignore("  Georeferencing-gain.R")
-usethis::use_build_ignore("  Georeferencing-gain.Rmd")
-
-# temp files
-usethis::use_build_ignore("crosswalk_pre.R")
-
 
 
 ### CMD Check ----------------

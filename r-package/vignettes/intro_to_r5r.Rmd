@@ -1,19 +1,22 @@
 ---
 title: 'r5r: Rapid Realistic Routing with R5 in R'
 author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
-output: github_document
-abstract: `r5r` is an R package for rapid realistic routing on multimodal 
-transport networks (walk, bike, public transport and car) using R5 
-<https://github.com/conveyal/r5>. The package allows users to generate detailed
-routing analysis or calculate travel time matrices using seamless parallel 
-computing on top of the R5 Java machine.
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette: default
+  github_document: default
+abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5 <https://github.com/conveyal/r5>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine."
 urlcolor: blue
 vignette: |
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{r5r}
+  %\VignetteIndexEntry{r5r-intro} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
-15 August 2020
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 # Introduction 
 
@@ -29,6 +32,12 @@ Install the development version from GitHub (soon on CRAN).
 
 ```{r, eval = FALSE}
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+
+```
+
+
+```{r, message = FALSE}
+# Load packages
 library(r5r)
 library(sf)
 library(data.table)
