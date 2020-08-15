@@ -105,3 +105,75 @@ detailed_itineraries <- function(r5_core,
 
   return(path_options_sf)
 }
+
+#' Plan multiple itinerarires in parallel
+#'
+#' @param r5_core
+#' @param requests A dataframe with 5 columns: id, fromLat, fromLon, toLat and toLon
+#' @param direct_modes
+#' @param transit_modes
+#' @param trip_date
+#' @param departure_time
+#' @param max_street_time
+#' @param filter_paths
+#'
+#' @return
+#' @export
+#'
+#' @examples
+multiple_detailed_itineraries <- function(r5_core,
+                                          requests,
+                                          direct_modes,
+                                          transit_modes,
+                                          trip_date,
+                                          departure_time,
+                                          max_street_time,
+                                          filter_paths = TRUE) {
+
+  # Collapses list into single string before passing argument to Java
+  direct_modes <- paste0(direct_modes, collapse = ";")
+  transit_modes <- paste0(transit_modes, collapse = ";")
+
+  # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
+  max_street_time = as.integer(max_street_time)
+
+  requests$id = as.character(requests$id)
+
+  # Call to method inside R5RCore object
+  path_options <- r5_core$planMultipleTrips(requests$id, requests$fromLat, requests$fromLon,
+                                            requests$toLat, requests$toLon,
+                                            direct_modes, transit_modes,
+                                            trip_date, departure_time, max_street_time)
+  # rJava::.jcall(r5_core, returnSig = "O", method = "planSingleTrip",
+  #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
+
+  # Collects results from R5 and transforms them into simple features objects
+  path_options_df <- jdx::convertToR(path_options) %>%
+    data.table::rbindlist() %>%
+    mutate(geometry = st_as_sfc(geometry)) %>%
+    st_sf(crs = 4326) # WGS 84
+
+  # R5 often returns multiple options with the basic structure, with minor
+  # changes to the walking segments at the start and end of the trip.
+  # This section filters out paths with the same signature, leaving only the one
+  # with the shortest duration
+  ####
+  #### filter paths not working... we need to consider both request and option ids
+  ####
+  # if (filter_paths) {
+  #   distinct_options <- path_options_df %>%
+  #     select(-geometry) %>%
+  #     mutate(route = if_else(route == "", mode, route)) %>%
+  #     group_by(request, option) %>%
+  #     summarise(signature = paste(route, collapse = " "), duration = sum(duration), .groups = "drop") %>%
+  #     group_by(request, signature) %>%
+  #     arrange(duration) %>%
+  #     slice(1)
+  #
+  #   path_options_df <- path_options_df %>%
+  #     filter(option %in% distinct_options$option)
+  # }
+
+  return(path_options_df)
+}
+
