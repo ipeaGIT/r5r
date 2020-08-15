@@ -65,7 +65,7 @@ trip <- detailed_itineraries( fromLat = fromLat,
 ##### TESTS travel_time_matrix ------------------------
 
  # input
-origins <- destinations <- points
+origins <- destinations <- points[1:500,]
 
  trip_date <- "2019-05-20"
  departure_time <- "14:00:00"
@@ -93,7 +93,7 @@ origins <- destinations <- points
  nrow(tt)
 
  1474469/ 143.64
-
+ 245480 /32.74
 
 ##### Coverage ------------------------
 

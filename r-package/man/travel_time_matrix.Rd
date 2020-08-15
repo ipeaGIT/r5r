@@ -8,22 +8,34 @@ travel_time_matrix(
   r5_core,
   origins,
   destinations,
-  direct_modes,
-  transit_modes,
   trip_date,
   departure_time,
+  direct_modes,
+  transit_modes,
   max_street_time,
-  max_trip_duration
+  max_trip_duration = 7200L
 )
 }
 \arguments{
-\item{r5_core}{A rJava object to connect with R5 routing engine}
+\item{r5_core}{a rJava object to connect with R5 routing engine}
 
-\item{max_trip_duration}{}
+\item{origins}{a data.frame containing the columns 'id', 'lat', 'lat'}
+
+\item{destinations}{a data.frame containing the columns 'id', 'lat', 'lat'}
+
+\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
+with public transport networks, check the GTFS.zip
+(calendar.txt file) for dates with service.}
+
+\item{departure_time}{character string, time in format "hh:mm:ss"}
+
+\item{max_street_time}{integer,}
+
+\item{max_trip_duration}{integer, Maximum trip duration in seconds. Defaults to 7200 seconds (2 hours).}
 }
 \value{
-Returns a data.table with travel-time estimates between pairs of
-origin-destinations
+Returns a data.table with travel-time estimates (in seconds) between pairs of
+origin-destinations.
 }
 \description{
 travel_time_matrix
@@ -38,8 +50,7 @@ path <- system.file("extdata", package = "r5r")
 r5_core <- setup_r5(data_path = path)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
-
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
 # input
 trip_date <- "2019-05-20"
@@ -50,16 +61,16 @@ transit_modes <-"BUS"
 max_street_time = 30L
 max_trip_duration = 300L
 
-travel_time_matrix( origins = from,
-                       destinations = from,
-                       r5_core = r5_core,
-                       trip_date = trip_date,
-                       departure_time = departure_time,
-                       direct_modes = direct_modes,
-                       transit_modes = transit_modes,
-                       max_street_time = max_street_time,
-                       max_trip_duration = max_trip_duration
-                       )
+df <- travel_time_matrix( r5_core = r5_core,
+                          origins = points,
+                          destinations = points,
+                          trip_date = trip_date,
+                          departure_time = departure_time,
+                          direct_modes = direct_modes,
+                          transit_modes = transit_modes,
+                          max_street_time = max_street_time,
+                          max_trip_duration = max_trip_duration
+                          )
 
 }
 }
