@@ -71,6 +71,9 @@ detailed_itineraries <- function(r5_core,
   direct_modes <- paste0(direct_modes, collapse = ";")
   transit_modes <- paste0(transit_modes, collapse = ";")
 
+  # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
+  max_street_time = as.integer(max_street_time)
+
   # Call to method inside R5RCore object
   path_options <- r5_core$planSingleTrip(fromLat, fromLon, toLat, toLon,
                                              direct_modes, transit_modes,
