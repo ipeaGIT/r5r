@@ -1,6 +1,6 @@
-#' Title
+#' travel_time_matrix
 #'
-#' @param r5_core
+#' @param r5_core A rJava object to connect with R5 routing engine
 #' @param origins
 #' @param destinations
 #' @param direct_modes
@@ -35,7 +35,7 @@
 #' max_street_time = 30
 #' max_trip_duration = 300
 #'
-#' r5_travel_time_matrix( origins = from,
+#' travel_time_matrix( origins = from,
 #'                        destinations = from,
 #'                        r5_core = r5_core,
 #'                        trip_date = trip_date,
@@ -49,7 +49,7 @@
 #' }
 #' @export
 
-r5_travel_time_matrix <- function(r5_core,
+travel_time_matrix <- function(r5_core,
                                   origins,
                                   destinations,
                                   direct_modes,
