@@ -144,7 +144,7 @@ travel_times
 ## Rafa Tests
 
 ```{r}
-library(r5r)
+ library(r5r)
  library(data.table)
  library(dplyr)
  library(sf)
@@ -182,6 +182,58 @@ library(r5r)
 ```
 
 ```{r}
-trip
+ library(r5r)
+ library(data.table)
+ library(dplyr)
+ library(sf)
+ 
+ # build transport network
+ path <- system.file("extdata", package = "r5r")
+ r5_core <- setup_r5(data_path = path)
+
+ # load origin/destination points
+ points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+
+ # input
+ trip_date <- "2019-03-17"
+ departure_time <- "14:00:00"
+ street_time = 15L
+ direct_modes <- c("WALK", "BICYCLE", "CAR")
+ transit_modes <-"BUS"
+ max_street_time = 30
+ 
+trip_requests <- data.frame(id = 1:5,
+                            fromLat = points[1:5,]$lat,
+                            fromLon = points[1:5,]$lon,
+                            toLat = points[96:100,]$lat,
+                            toLon = points[96:100,]$lon )
+
+trips <- multiple_detailed_itineraries( r5_core,
+                                         trip_requests,
+                                         trip_date = trip_date,
+                                         departure_time = departure_time,
+                                         direct_modes = direct_modes,
+                                         transit_modes = transit_modes,
+                                         max_street_time = max_street_time
+                                         )
+```
+
+
+```{r}
+ trips <- multiple_detailed_itineraries( r5_core,
+                                         trip_requests,
+                                         trip_date = trip_date,
+                                         departure_time = departure_time,
+                                         direct_modes = direct_modes,
+                                         transit_modes = transit_modes,
+                                         max_street_time = max_street_time
+                                         )
+```
+
+```{r}
+trips %>%
+  ggplot() +
+  geom_sf(aes(colour = mode)) +
+  facet_grid(request~option)
 ```
 

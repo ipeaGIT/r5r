@@ -59,12 +59,35 @@ public class R5RCore {
 //        }
 //    }
 
-    public void planMultipleTrips(double[] fromLat, double[] fromLon, double[] toLat, double[] toLon,
-                                  String directModes, String transitModes, String date, String departureTime) {
+    public List<Object> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
+                                  String directModes, String transitModes, String date, String departureTime, int maxStreetTime) {
 
+        int[] requestIndices = new int[requestIds.length];
+        for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
+
+        return Arrays.stream(requestIndices).parallel()
+                .mapToObj(index -> {
+                    LinkedHashMap<String, Object> results =
+                            null;
+                    try {
+                        results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
+                                directModes, transitModes, date, departureTime, maxStreetTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return results;
+                }).collect(Collectors.toList());
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
+                                                        String directModes, String transitModes, String date, String departureTime,
+                                                        int maxStreetTime) throws ParseException {
+        return planSingleTrip("1", fromLat, fromLon, toLat, toLon, directModes, transitModes,
+                date, departureTime, maxStreetTime);
+
+    }
+
+    public LinkedHashMap<String, Object> planSingleTrip(String requestId, double fromLat, double fromLon, double toLat, double toLon,
                                String directModes, String transitModes, String date, String departureTime,
                                int maxStreetTime) throws ParseException {
         AnalysisTask request = new RegionalTask();
@@ -111,7 +134,7 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable(response.getOptions());
+            return buildPathOptionsTable(requestId, response.getOptions());
         } else {
             return null;
         }
@@ -124,7 +147,7 @@ public class R5RCore {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
-    private LinkedHashMap<String, Object> buildPathOptionsTable(List<ProfileOption> pathOptions) {
+    private LinkedHashMap<String, Object> buildPathOptionsTable(String requestId, List<ProfileOption> pathOptions) {
         // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
 
         // Columns:
@@ -132,6 +155,7 @@ public class R5RCore {
         // segment: int
         // mode: string
         // geometry: string (LINESTRING)
+        ArrayList<String> requestCol = new ArrayList<>();
         ArrayList<Integer> optionCol = new ArrayList<>();
         ArrayList<Integer> segmentCol = new ArrayList<>();
         ArrayList<String> modeCol = new ArrayList<>();
@@ -140,6 +164,7 @@ public class R5RCore {
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> pathOptionsTable = new LinkedHashMap<>();
+        pathOptionsTable.put("request", requestCol);
         pathOptionsTable.put("option", optionCol);
         pathOptionsTable.put("segment", segmentCol);
         pathOptionsTable.put("mode", modeCol);
@@ -153,6 +178,7 @@ public class R5RCore {
 
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
+                        requestCol.add(requestId);
                         optionIndex++;
                         optionCol.add(optionIndex);
                         segmentCol.add(1);
@@ -170,6 +196,7 @@ public class R5RCore {
                 // first leg: access to station
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
+                        requestCol.add(requestId);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
@@ -202,6 +229,7 @@ public class R5RCore {
                         }
                         geometry.append(")");
 
+                        requestCol.add(requestId);
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
@@ -211,6 +239,7 @@ public class R5RCore {
                     }
 
                     if (transit.middle != null) {
+                        requestCol.add(requestId);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
@@ -224,6 +253,7 @@ public class R5RCore {
                 // first leg: access to station
                 if (option.egress != null) {
                     for (StreetSegment segment : option.egress) {
+                        requestCol.add(requestId);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
@@ -261,21 +291,6 @@ public class R5RCore {
                     }
                     return results;
                 }).collect(Collectors.toList());
-
-
-//
-//            project.getHexGrid().getCells().entrySet()
-//                    .parallelStream()
-//                    .forEach(cell -> {
-//                        String hexagonId = cell.getValue().getH3code();
-//
-//                        OneOriginResult travelTimeResults = travelTimesFromOrigin(hexagonId);
-//
-//                        saveTravelTimeResults(travelTimeResults, hexagonId);
-//                    });
-//
-//            .map    (s -> { s.setState("ok"); return s; }) // need to return a value here
-//                    .collect(Collectors.toList());
     }
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
