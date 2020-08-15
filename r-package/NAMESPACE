@@ -2,6 +2,7 @@
 
 export(detailed_itineraries)
 export(download_r5)
+export(multiple_detailed_itineraries)
 export(r5_travel_times_from_origin)
 export(setup_r5)
 export(travel_time_matrix)
