@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 124.44 144.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    line, polyline, polygon, path, rect, circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQzLjg2fDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.71' />
+  </clipPath>
+</defs>
+<rect x='0.00' y='0.14' width='124.44' height='143.71' style='stroke-width: 1.07; stroke: none;' clip-path='url(#cpMC4wMHwxMjQuNDR8MTQzLjg2fDAuMTQ=)' />
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<rect x='-0.14' y='0.14' width='124.58' height='143.85' style='stroke-width: 1.07; stroke: none;' clip-path='url(#cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ=)' />
+<polygon points='1.08,36.81 1.08,107.33 62.15,142.59 123.22,107.33 123.22,36.81 62.15,1.55 1.08,36.81 ' style='stroke-width: 4.27; stroke: none; fill: #FCFCFC;' clip-path='url(#cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ=)' />
+<defs>
+  <clipPath id='cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2'>
+    <rect x='7.15' y='15.66' width='117.29' height='126.93' />
+  </clipPath>
+</defs>
+<polyline points='7.15,136.82 124.44,136.82 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='7.15,107.97 124.44,107.97 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='7.15,79.12 124.44,79.12 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='7.15,50.27 124.44,50.27 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='7.15,21.43 124.44,21.43 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='12.92,142.59 12.92,15.66 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='41.76,142.59 41.76,15.66 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='70.61,142.59 70.61,15.66 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<polyline points='99.46,142.59 99.46,15.66 ' style='stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<path d='M 50.71 60.87 L 46.90 60.87 L 46.90 67.42 L 44.76 67.42 L 44.76 51.24 L 50.12 51.24 L 50.12 51.24 L 50.65 51.25 L 51.16 51.29 L 51.64 51.35 L 52.10 51.44 L 52.53 51.55 L 52.94 51.69 L 53.32 51.85 L 53.68 52.03 L 54.01 52.25 L 54.32 52.48 L 54.32 52.48 L 54.60 52.74 L 54.85 53.03 L 55.07 53.33 L 55.26 53.66 L 55.43 54.01 L 55.56 54.38 L 55.66 54.78 L 55.74 55.20 L 55.78 55.64 L 55.80 56.11 L 55.80 56.11 L 55.79 56.40 L 55.76 56.69 L 55.72 56.98 L 55.66 57.25 L 55.59 57.52 L 55.50 57.78 L 55.39 58.03 L 55.27 58.27 L 55.13 58.51 L 54.97 58.74 L 54.97 58.74 L 54.80 58.96 L 54.62 59.17 L 54.43 59.36 L 54.22 59.55 L 54.00 59.72 L 53.77 59.88 L 53.52 60.03 L 53.26 60.17 L 52.99 60.30 L 52.71 60.42 L 56.51 67.29 L 56.51 67.42 L 54.22 67.42 L 50.71 60.87 ZM 46.90 59.13 L 50.18 59.13 L 50.18 59.13 L 50.49 59.12 L 50.79 59.10 L 51.08 59.05 L 51.35 59.00 L 51.61 58.92 L 51.85 58.83 L 52.09 58.73 L 52.31 58.60 L 52.51 58.46 L 52.71 58.31 L 52.71 58.31 L 52.89 58.14 L 53.05 57.95 L 53.19 57.76 L 53.31 57.56 L 53.41 57.34 L 53.50 57.12 L 53.57 56.88 L 53.61 56.63 L 53.64 56.38 L 53.65 56.11 L 53.65 56.11 L 53.64 55.81 L 53.62 55.53 L 53.57 55.27 L 53.51 55.02 L 53.43 54.78 L 53.33 54.56 L 53.21 54.35 L 53.07 54.15 L 52.92 53.97 L 52.75 53.80 L 52.75 53.80 L 52.56 53.65 L 52.36 53.52 L 52.15 53.40 L 51.91 53.29 L 51.66 53.20 L 51.40 53.13 L 51.11 53.07 L 50.82 53.03 L 50.50 53.00 L 50.17 52.99 L 46.90 52.99 L 46.90 59.13 Z' style='fill-rule: evenodd; fill: #2D3E50; stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<path d='M 58.51 50.32 L 59.09 44.67 L 64.89 44.67 L 64.89 46.00 L 60.31 46.00 L 59.97 49.09 L 59.97 49.09 L 60.13 48.99 L 60.31 48.91 L 60.48 48.84 L 60.67 48.77 L 60.85 48.72 L 61.05 48.67 L 61.24 48.64 L 61.44 48.62 L 61.65 48.60 L 61.86 48.60 L 61.86 48.60 L 62.16 48.61 L 62.45 48.64 L 62.73 48.69 L 62.99 48.76 L 63.24 48.85 L 63.48 48.97 L 63.71 49.10 L 63.92 49.25 L 64.13 49.43 L 64.31 49.62 L 64.31 49.62 L 64.49 49.83 L 64.64 50.06 L 64.78 50.30 L 64.90 50.55 L 65.00 50.82 L 65.08 51.11 L 65.14 51.40 L 65.19 51.72 L 65.22 52.04 L 65.22 52.39 L 65.22 52.39 L 65.21 52.73 L 65.19 53.06 L 65.14 53.37 L 65.07 53.67 L 64.99 53.95 L 64.88 54.22 L 64.76 54.47 L 64.62 54.71 L 64.46 54.94 L 64.28 55.15 L 64.28 55.15 L 64.08 55.34 L 63.87 55.51 L 63.64 55.66 L 63.40 55.79 L 63.15 55.90 L 62.87 55.99 L 62.59 56.06 L 62.29 56.11 L 61.97 56.14 L 61.64 56.15 L 61.64 56.15 L 61.34 56.14 L 61.06 56.12 L 60.79 56.08 L 60.52 56.02 L 60.27 55.94 L 60.03 55.85 L 59.81 55.74 L 59.59 55.62 L 59.38 55.48 L 59.19 55.32 L 59.19 55.32 L 59.01 55.15 L 58.84 54.96 L 58.69 54.76 L 58.56 54.55 L 58.44 54.33 L 58.34 54.09 L 58.26 53.84 L 58.19 53.58 L 58.14 53.30 L 58.11 53.02 L 59.47 53.02 L 59.47 53.02 L 59.50 53.21 L 59.54 53.39 L 59.59 53.56 L 59.64 53.72 L 59.71 53.87 L 59.78 54.01 L 59.86 54.14 L 59.95 54.27 L 60.05 54.38 L 60.16 54.49 L 60.16 54.49 L 60.28 54.58 L 60.40 54.66 L 60.53 54.74 L 60.66 54.80 L 60.81 54.85 L 60.96 54.90 L 61.12 54.93 L 61.28 54.96 L 61.46 54.97 L 61.64 54.98 L 61.64 54.98 L 61.83 54.97 L 62.02 54.95 L 62.20 54.91 L 62.37 54.87 L 62.53 54.80 L 62.69 54.73 L 62.83 54.64 L 62.96 54.54 L 63.09 54.42 L 63.21 54.29 L 63.21 54.29 L 63.32 54.15 L 63.42 54.00 L 63.50 53.83 L 63.58 53.66 L 63.64 53.48 L 63.69 53.28 L 63.73 53.08 L 63.76 52.86 L 63.78 52.64 L 63.79 52.40 L 63.79 52.40 L 63.78 52.18 L 63.76 51.96 L 63.73 51.76 L 63.69 51.56 L 63.63 51.38 L 63.56 51.20 L 63.48 51.03 L 63.39 50.87 L 63.28 50.72 L 63.16 50.58 L 63.16 50.58 L 63.04 50.45 L 62.90 50.33 L 62.76 50.23 L 62.61 50.14 L 62.44 50.06 L 62.28 50.00 L 62.10 49.95 L 61.92 49.92 L 61.72 49.89 L 61.52 49.89 L 61.52 49.89 L 61.34 49.89 L 61.16 49.90 L 60.99 49.93 L 60.83 49.95 L 60.68 49.99 L 60.54 50.04 L 60.40 50.09 L 60.27 50.15 L 60.15 50.22 L 60.04 50.30 L 59.66 50.61 L 58.51 50.32 Z' style='fill-rule: evenodd; fill: #2D3E50; stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<path d='M 73.67 60.87 L 69.87 60.87 L 69.87 67.42 L 67.72 67.42 L 67.72 51.24 L 73.08 51.24 L 73.08 51.24 L 73.61 51.25 L 74.12 51.29 L 74.61 51.35 L 75.06 51.44 L 75.50 51.55 L 75.90 51.69 L 76.29 51.85 L 76.64 52.03 L 76.97 52.25 L 77.28 52.48 L 77.28 52.48 L 77.56 52.74 L 77.81 53.03 L 78.03 53.33 L 78.23 53.66 L 78.39 54.01 L 78.52 54.38 L 78.63 54.78 L 78.70 55.20 L 78.74 55.64 L 78.76 56.11 L 78.76 56.11 L 78.75 56.40 L 78.73 56.69 L 78.68 56.98 L 78.63 57.25 L 78.55 57.52 L 78.46 57.78 L 78.36 58.03 L 78.23 58.27 L 78.09 58.51 L 77.94 58.74 L 77.94 58.74 L 77.77 58.96 L 77.59 59.17 L 77.39 59.36 L 77.18 59.55 L 76.96 59.72 L 76.73 59.88 L 76.48 60.03 L 76.23 60.17 L 75.95 60.30 L 75.67 60.42 L 79.47 67.29 L 79.47 67.42 L 77.18 67.42 L 73.67 60.87 ZM 69.87 59.13 L 73.15 59.13 L 73.15 59.13 L 73.46 59.12 L 73.76 59.10 L 74.04 59.05 L 74.31 59.00 L 74.57 58.92 L 74.82 58.83 L 75.05 58.73 L 75.27 58.60 L 75.48 58.46 L 75.67 58.31 L 75.67 58.31 L 75.85 58.14 L 76.01 57.95 L 76.15 57.76 L 76.27 57.56 L 76.38 57.34 L 76.46 57.12 L 76.53 56.88 L 76.58 56.63 L 76.60 56.38 L 76.61 56.11 L 76.61 56.11 L 76.60 55.81 L 76.58 55.53 L 76.53 55.27 L 76.47 55.02 L 76.39 54.78 L 76.29 54.56 L 76.17 54.35 L 76.04 54.15 L 75.88 53.97 L 75.71 53.80 L 75.71 53.80 L 75.53 53.65 L 75.33 53.52 L 75.11 53.40 L 74.87 53.29 L 74.62 53.20 L 74.36 53.13 L 74.08 53.07 L 73.78 53.03 L 73.46 53.00 L 73.13 52.99 L 69.87 52.99 L 69.87 59.13 Z' style='fill-rule: evenodd; fill: #2D3E50; stroke-width: 0.75; stroke: none;' clip-path='url(#cpNy4xNXwxMjQuNDR8MTQyLjU5fDE1LjY2)' />
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ='>
+    <rect x='0.00' y='0.14' width='124.44' height='143.85' />
+  </clipPath>
+</defs>
+<polyline points='1.08,36.81 1.08,107.33 62.15,142.59 123.22,107.33 123.22,36.81 62.15,1.55 1.08,36.81 1.08,36.81 ' style='stroke-width: 4.27; stroke: #2D3E50;' clip-path='url(#cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMTQ=)' />
+<defs>
+  <clipPath id='cpMC4wMHwxMjQuNDR8MTQ0LjAwfDAuMDA='>
+    <rect x='0.00' y='0.00' width='124.44' height='144.00' />
+  </clipPath>
+</defs>
+</svg>
