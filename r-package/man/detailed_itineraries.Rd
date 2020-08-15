@@ -2,7 +2,7 @@
 % Please edit documentation in R/detailed_itineraries.R
 \name{detailed_itineraries}
 \alias{detailed_itineraries}
-\title{Title}
+\title{Detailed itineraries between origin destination pairs}
 \usage{
 detailed_itineraries(
   r5_core,
@@ -15,19 +15,30 @@ detailed_itineraries(
   trip_date,
   departure_time,
   max_street_time,
-  filter_paths = TRUE
+  shortest_path = TRUE
 )
 }
 \arguments{
-\item{max_street_time}{}
+\item{r5_core}{a rJava object to connect with R5 routing engine}
+
+\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
+with public transport networks, check the GTFS.zip
+(calendar.txt file) for dates with service.}
+
+\item{departure_time}{character string, time in format "hh:mm:ss"}
+
+\item{max_street_time}{integer,}
+
+\item{shortest_path}{logical, whether the function should only return the
+fastest route alternative (default) or multiple alternative.}
 }
 \value{
-A 'data.frame sf' LINESTRINGs of the alternative routes between a
-given pair of origin-destination. The data output brings detailed information
-on transport mode, travel time, walked distance etc. for each trip section
+A 'data.frame sf LINESTRING'
 }
 \description{
-Title
+Estimate one or multiple alternative routes between one or
+multiple origin destination pairs. The data output brings detailed information
+on transport mode, travel time, walked distance etc. for each trip section
 }
 \examples{
 \donttest{
@@ -41,7 +52,6 @@ r5_core <- setup_r5(data_path = path)
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 
-
 # input
 fromLat <- points[1,]$lat
 fromLon <- points[1,]$lon
@@ -49,21 +59,21 @@ toLat <- points[100,]$lat
 toLon <- points[100,]$lon
 trip_date <- "2019-05-20"
 departure_time <- "14:00:00"
-street_time = 15L
 direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
+street_time = 15L
 max_street_time = 30L
 
-trip <- detailed_itineraries( fromLat = fromLat,
-                             fromLon = fromLon,
-                             toLat = toLat,
-                             toLon = toLon,
-                             r5_core = r5_core,
-                             trip_date = trip_date,
-                             departure_time = departure_time,
-                             direct_modes = direct_modes,
-                             transit_modes = transit_modes,
-                             max_street_time = max_street_time)
+trips <- detailed_itineraries( fromLat = fromLat,
+                               fromLon = fromLon,
+                               toLat = toLat,
+                               toLon = toLon,
+                               r5_core = r5_core,
+                               trip_date = trip_date,
+                               departure_time = departure_time,
+                               direct_modes = direct_modes,
+                               transit_modes = transit_modes,
+                               max_street_time = max_street_time)
 
 }
 }

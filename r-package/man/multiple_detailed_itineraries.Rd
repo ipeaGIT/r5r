@@ -12,13 +12,13 @@ multiple_detailed_itineraries(
   trip_date,
   departure_time,
   max_street_time,
-  filter_paths = TRUE
+  shortest_path = TRUE
 )
 }
 \arguments{
 \item{requests}{A dataframe with 5 columns: id, fromLat, fromLon, toLat and toLon}
 
-\item{filter_paths}{}
+\item{shortest_path}{}
 }
 \value{
 

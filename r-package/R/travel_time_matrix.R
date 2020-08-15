@@ -1,4 +1,7 @@
-#' travel_time_matrix
+#' Calculate travel time matrix between origin destination pairs
+#'
+#' @description Fast function to calculate travel time estimates between one or
+#'              multiple origin destination pairs.
 #'
 #' @param r5_core a rJava object to connect with R5 routing engine
 #' @param origins a data.frame containing the columns 'id', 'lat', 'lat'
@@ -10,10 +13,11 @@
 #' @param direct_modes
 #' @param transit_modes
 #' @param max_street_time integer,
-#' @param max_trip_duration integer, Maximum trip duration in seconds. Defaults to 7200 seconds (2 hours).
+#' @param max_trip_duration integer, Maximum trip duration in seconds. Defaults
+#'                           to 7200 seconds (2 hours).
 #'
-#' @return Returns a data.table with travel-time estimates (in seconds) between pairs of
-#' origin-destinations.
+#' @return A data.table with travel-time estimates (in seconds) between origin
+#' destination pairs
 #'
 #' @family routing
 #' @examples \donttest{

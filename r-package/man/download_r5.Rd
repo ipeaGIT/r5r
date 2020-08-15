@@ -16,7 +16,7 @@ Defaults to latest version '1.0'.}
 one. Defaults to FALSE.}
 }
 \value{
-Saves a jar file to the package locally in the r5r directory
+A jar file is saved locally in the r5r package directory
 }
 \description{
 Download a compiled JAR file of R5 and saves it locally.

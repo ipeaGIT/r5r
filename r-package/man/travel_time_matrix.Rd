@@ -2,7 +2,7 @@
 % Please edit documentation in R/travel_time_matrix.R
 \name{travel_time_matrix}
 \alias{travel_time_matrix}
-\title{travel_time_matrix}
+\title{Calculate travel time matrix between origin destination pairs}
 \usage{
 travel_time_matrix(
   r5_core,
@@ -31,14 +31,16 @@ with public transport networks, check the GTFS.zip
 
 \item{max_street_time}{integer,}
 
-\item{max_trip_duration}{integer, Maximum trip duration in seconds. Defaults to 7200 seconds (2 hours).}
+\item{max_trip_duration}{integer, Maximum trip duration in seconds. Defaults
+to 7200 seconds (2 hours).}
 }
 \value{
-Returns a data.table with travel-time estimates (in seconds) between pairs of
-origin-destinations.
+A data.table with travel-time estimates (in seconds) between origin
+destination pairs
 }
 \description{
-travel_time_matrix
+Fast function to calculate travel time estimates between one or
+multiple origin destination pairs.
 }
 \examples{
 \donttest{

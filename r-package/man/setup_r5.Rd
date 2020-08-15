@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_r5.R
 \name{setup_r5}
 \alias{setup_r5}
-\title{Creates transport network used for routing in R5}
+\title{Create transport network used for routing in R5}
 \usage{
 setup_r5(data_path, version = "4.9.0")
 }
@@ -14,14 +14,14 @@ and where the built network.dat will be saved.}
 latest version '4.9.0'.}
 }
 \value{
-Returns an rJava object to connect with R5 routing engine
+An rJava object to connect with R5 routing engine
 }
 \description{
-Combines data inputs in a directory to build a multimodal
-transport networked used for routing in R5. The directory must contain at
-least one street network file (in .pbf format) OR a public transport data
-set (in GTFS format). If there is more than one GTFS file in the directory
-R5 will merge both files to build the transport network.
+Combine data inputs in a directory to build a multimodal
+transport network used for routing in R5. The directory must contain at
+least one street network file (in .pbf format). Or or more public transport
+data sets (in GTFS format) are optional. If there is more than one GTFS file
+in the directory, both files will be merged.
 }
 \examples{
 \donttest{

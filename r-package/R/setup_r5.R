@@ -1,17 +1,17 @@
-#' Creates transport network used for routing in R5
+#' Create transport network used for routing in R5
 #'
-#' @description Combines data inputs in a directory to build a multimodal
-#'  transport networked used for routing in R5. The directory must contain at
-#'  least one street network file (in .pbf format) OR a public transport data
-#'  set (in GTFS format). If there is more than one GTFS file in the directory
-#'  R5 will merge both files to build the transport network.
+#' @description Combine data inputs in a directory to build a multimodal
+#'  transport network used for routing in R5. The directory must contain at
+#'  least one street network file (in .pbf format). Or or more public transport
+#'  data sets (in GTFS format) are optional. If there is more than one GTFS file
+#'  in the directory, both files will be merged.
 #'
 #' @param data_path character string, the directory where data inputs are stored
 #'                  and where the built network.dat will be saved.
 #' @param version character string, the version of R5 to be used. Defaults to
 #'                latest version '4.9.0'.
 #'
-#' @return Returns an rJava object to connect with R5 routing engine
+#' @return An rJava object to connect with R5 routing engine
 #' @family setup
 #' @examples \donttest{
 #'

@@ -11,7 +11,7 @@
 #' @param force_update logical, Replaces the jar file stored locally with a new
 #'                     one. Defaults to FALSE.
 #'
-#' @return Saves a jar file to the package locally in the r5r directory
+#' @return A jar file is saved locally in the r5r package directory
 #' @family setup
 #' @examples \donttest{
 #'

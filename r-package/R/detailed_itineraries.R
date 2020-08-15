@@ -1,20 +1,25 @@
-#' Title
+#' Detailed itineraries between origin destination pairs
 #'
-#' @param r5_core
+#' @description Estimate one or multiple alternative routes between one or
+#' multiple origin destination pairs. The data output brings detailed information
+#' on transport mode, travel time, walked distance etc. for each trip section
+#'
+#' @param r5_core a rJava object to connect with R5 routing engine
 #' @param fromLat
 #' @param fromLon
 #' @param toLat
 #' @param toLon
 #' @param direct_modes
 #' @param transit_modes
-#' @param trip_date
-#' @param departure_time
-#' @param filter_paths
-#' @param max_street_time
+#' @param trip_date character string, date in format "yyyy-mm-dd". If working
+#'                  with public transport networks, check the GTFS.zip
+#'                  (calendar.txt file) for dates with service.
+#' @param departure_time character string, time in format "hh:mm:ss"
+#' @param shortest_path logical, whether the function should only return the
+#'                      fastest route alternative (default) or multiple alternative.
+#' @param max_street_time integer,
 #'
-#' @return A 'data.frame sf' LINESTRINGs of the alternative routes between a
-#' given pair of origin-destination. The data output brings detailed information
-#' on transport mode, travel time, walked distance etc. for each trip section
+#' @return A 'data.frame sf LINESTRING'
 #'
 #' @family routing
 #' @examples \donttest{
@@ -28,7 +33,6 @@
 #' # load origin/destination points
 #' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 #'
-#'
 #' # input
 #' fromLat <- points[1,]$lat
 #' fromLon <- points[1,]$lon
@@ -36,36 +40,36 @@
 #' toLon <- points[100,]$lon
 #' trip_date <- "2019-05-20"
 #' departure_time <- "14:00:00"
-#' street_time = 15L
 #' direct_modes <- c("WALK", "BICYCLE", "CAR")
 #' transit_modes <-"BUS"
+#' street_time = 15L
 #' max_street_time = 30L
 #'
-#' trip <- detailed_itineraries( fromLat = fromLat,
-#'                              fromLon = fromLon,
-#'                              toLat = toLat,
-#'                              toLon = toLon,
-#'                              r5_core = r5_core,
-#'                              trip_date = trip_date,
-#'                              departure_time = departure_time,
-#'                              direct_modes = direct_modes,
-#'                              transit_modes = transit_modes,
-#'                              max_street_time = max_street_time)
+#' trips <- detailed_itineraries( fromLat = fromLat,
+#'                                fromLon = fromLon,
+#'                                toLat = toLat,
+#'                                toLon = toLon,
+#'                                r5_core = r5_core,
+#'                                trip_date = trip_date,
+#'                                departure_time = departure_time,
+#'                                direct_modes = direct_modes,
+#'                                transit_modes = transit_modes,
+#'                                max_street_time = max_street_time)
 #'
 #' }
 #' @export
 
 detailed_itineraries <- function(r5_core,
-                                fromLat,
-                                fromLon,
-                                toLat,
-                                toLon,
-                                direct_modes,
-                                transit_modes,
-                                trip_date,
-                                departure_time,
-                                max_street_time,
-                                filter_paths = TRUE) {
+                                 fromLat,
+                                 fromLon,
+                                 toLat,
+                                 toLon,
+                                 direct_modes,
+                                 transit_modes,
+                                 trip_date,
+                                 departure_time,
+                                 max_street_time,
+                                 shortest_path = TRUE){
 
   # Collapses list into single string before passing argument to Java
   direct_modes <- paste0(direct_modes, collapse = ";")
@@ -90,7 +94,7 @@ detailed_itineraries <- function(r5_core,
   # changes to the walking segments at the start and end of the trip.
   # This section filters out paths with the same signature, leaving only the one
   # with the shortest duration
-  if (filter_paths) {
+  if (shortest_path) {
     distinct_options <- path_options_sf %>%
       select(-geometry) %>%
       mutate(route = if_else(route == "", mode, route)) %>%
@@ -115,7 +119,7 @@ detailed_itineraries <- function(r5_core,
 #' @param trip_date
 #' @param departure_time
 #' @param max_street_time
-#' @param filter_paths
+#' @param shortest_path
 #'
 #' @return
 #' @export
@@ -128,7 +132,7 @@ multiple_detailed_itineraries <- function(r5_core,
                                           trip_date,
                                           departure_time,
                                           max_street_time,
-                                          filter_paths = TRUE) {
+                                          shortest_path = TRUE) {
 
   # Collapses list into single string before passing argument to Java
   direct_modes <- paste0(direct_modes, collapse = ";")
@@ -160,7 +164,7 @@ multiple_detailed_itineraries <- function(r5_core,
   ####
   #### filter paths not working... we need to consider both request and option ids
   ####
-  # if (filter_paths) {
+  # if (shortest_path) {
   #   distinct_options <- path_options_df %>%
   #     select(-geometry) %>%
   #     mutate(route = if_else(route == "", mode, route)) %>%
