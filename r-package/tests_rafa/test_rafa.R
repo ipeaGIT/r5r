@@ -38,7 +38,7 @@ departure_time <- "14:00:00"
 street_time = 15L
 direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
-max_street_time = 30
+max_street_time = 30L
 
 
 
@@ -56,8 +56,43 @@ trip <- detailed_itineraries( fromLat = fromLat,
                               departure_time = departure_time,
                               direct_modes = direct_modes,
                               transit_modes = transit_modes,
-                              max_street_time = max_street_time)
+                              max_street_time = max_street_time,
+                              filter_paths = F)
 
+
+
+
+##### TESTS travel_time_matrix ------------------------
+
+ # input
+origins <- destinations <- points
+
+ trip_date <- "2019-05-20"
+ departure_time <- "14:00:00"
+ street_time = 15L
+ direct_modes <- c("WALK", "BICYCLE", "CAR")
+ transit_modes <-"BUS"
+ max_street_time = 30L
+ max_trip_duration = 300L
+
+
+ system.time(
+ tt <- travel_time_matrix( r5_core,
+                     origins,
+                     destinations,
+                     direct_modes,
+                     transit_modes,
+                     trip_date,
+                     departure_time,
+                     max_street_time,
+                     max_trip_duration)
+ )
+
+
+ head(tt)
+ nrow(tt)
+
+ 1474469/ 143.64
 
 
 ##### Coverage ------------------------

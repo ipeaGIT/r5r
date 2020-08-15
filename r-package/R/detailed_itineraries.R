@@ -39,7 +39,7 @@
 #' street_time = 15L
 #' direct_modes <- c("WALK", "BICYCLE", "CAR")
 #' transit_modes <-"BUS"
-#' max_street_time = 30
+#' max_street_time = 30L
 #'
 #' trip <- detailed_itineraries( fromLat = fromLat,
 #'                              fromLon = fromLon,
@@ -79,16 +79,16 @@ detailed_itineraries <- function(r5_core,
     #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
 
   # Collects results from R5 and transforms them into simple features objects
-  path_options_df <- jdx::convertToR(path_options) %>%
-    mutate(geometry = st_as_sfc(geometry)) %>%
-    st_sf(crs = 4326) # WGS 84
+  path_options_df <- jdx::convertToR(path_options)
+  data.table::setDT(path_options_df)[, geometry := sf::st_as_sfc(geometry)]
+  path_options_sf <- sf::st_sf(path_options_df, crs = 4326) # WGS 84
 
   # R5 often returns multiple options with the basic structure, with minor
   # changes to the walking segments at the start and end of the trip.
   # This section filters out paths with the same signature, leaving only the one
   # with the shortest duration
   if (filter_paths) {
-    distinct_options <- path_options_df %>%
+    distinct_options <- path_options_sf %>%
       select(-geometry) %>%
       mutate(route = if_else(route == "", mode, route)) %>%
       group_by(option) %>%
@@ -97,9 +97,8 @@ detailed_itineraries <- function(r5_core,
       arrange(duration) %>%
       slice(1)
 
-    path_options_df <- path_options_df %>%
-      filter(option %in% distinct_options$option)
+    path_options_sf <- subset(path_options_sf, option %in% distinct_options$option)
   }
 
-  return(path_options_df)
+  return(path_options_sf)
 }

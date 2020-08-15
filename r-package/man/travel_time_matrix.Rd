@@ -47,8 +47,8 @@ departure_time <- "14:00:00"
 street_time = 15L
 direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
-max_street_time = 30
-max_trip_duration = 300
+max_street_time = 30L
+max_trip_duration = 300L
 
 travel_time_matrix( origins = from,
                        destinations = from,

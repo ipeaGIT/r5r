@@ -32,8 +32,8 @@
 #' street_time = 15L
 #' direct_modes <- c("WALK", "BICYCLE", "CAR")
 #' transit_modes <-"BUS"
-#' max_street_time = 30
-#' max_trip_duration = 300
+#' max_street_time = 30L
+#' max_trip_duration = 300L
 #'
 #' travel_time_matrix( origins = from,
 #'                        destinations = from,
@@ -49,15 +49,15 @@
 #' }
 #' @export
 
-travel_time_matrix <- function(r5_core,
-                                  origins,
-                                  destinations,
-                                  direct_modes,
-                                  transit_modes,
-                                  trip_date,
-                                  departure_time,
-                                  max_street_time,
-                                  max_trip_duration){
+travel_time_matrix <- function( r5_core,
+                                origins,
+                                destinations,
+                                direct_modes,
+                                transit_modes,
+                                trip_date,
+                                departure_time,
+                                max_street_time,
+                                max_trip_duration){
 
   # Collapses list into single string before passing argument to Java
   direct_modes <- paste0(direct_modes, collapse = ";")
@@ -85,8 +85,8 @@ travel_time_matrix <- function(r5_core,
 
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
-  travel_times$direct_modes = direct_modes
-  travel_times$transit_modes = transit_modes;
+  travel_times[, direct_modes := direct_modes ]
+  travel_times[, transit_modes := transit_modes]
 
   return(travel_times)
 }
