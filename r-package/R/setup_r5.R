@@ -11,7 +11,7 @@
 #' @param version character string, the version of R5 to be used. Defaults to
 #'                latest version '4.9.0'.
 #'
-#'
+#' @return Returns an rJava object to connect with R5 routing engine
 #' @family setup
 #' @examples \donttest{
 #'

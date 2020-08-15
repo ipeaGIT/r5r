@@ -15,6 +15,9 @@ Defaults to latest version '1.0'.}
 \item{force_update}{logical, Replaces the jar file stored locally with a new
 one. Defaults to FALSE.}
 }
+\value{
+Saves a jar file to the package locally in the r5r directory
+}
 \description{
 Download a compiled JAR file of R5 and saves it locally.
 The JAR file is saved within the package directory. The package uses a

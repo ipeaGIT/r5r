@@ -13,6 +13,9 @@ and where the built network.dat will be saved.}
 \item{version}{character string, the version of R5 to be used. Defaults to
 latest version '4.9.0'.}
 }
+\value{
+Returns an rJava object to connect with R5 routing engine
+}
 \description{
 Combines data inputs in a directory to build a multimodal
 transport networked used for routing in R5. The directory must contain at
