@@ -2,7 +2,7 @@
 % Please edit documentation in R/detailed_itineraries.R
 \name{multiple_detailed_itineraries}
 \alias{multiple_detailed_itineraries}
-\title{Plan multiple itinerarires in parallel}
+\title{Plan multiple itineraries in parallel}
 \usage{
 multiple_detailed_itineraries(
   r5_core,
@@ -24,5 +24,5 @@ multiple_detailed_itineraries(
 
 }
 \description{
-Plan multiple itinerarires in parallel
+Plan multiple itineraries in parallel
 }

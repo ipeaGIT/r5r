@@ -72,8 +72,8 @@ detailed_itineraries <- function(r5_core,
                                  shortest_path = TRUE){
 
   # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(direct_modes, collapse = ";")
-  transit_modes <- paste0(transit_modes, collapse = ";")
+  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
+  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
   # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
   max_street_time = as.integer(max_street_time)
@@ -136,8 +136,8 @@ multiple_detailed_itineraries <- function(r5_core,
                                           shortest_path = TRUE) {
 
   # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(direct_modes, collapse = ";")
-  transit_modes <- paste0(transit_modes, collapse = ";")
+  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
+  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
   # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
   max_street_time = as.integer(max_street_time)

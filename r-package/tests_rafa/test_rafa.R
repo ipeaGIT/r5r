@@ -47,6 +47,8 @@ max_street_time = 30L
 
 
 
+
+system.time(
 trip <- detailed_itineraries( fromLat = fromLat,
                               fromLon = fromLon,
                               toLat = toLat,
@@ -57,9 +59,21 @@ trip <- detailed_itineraries( fromLat = fromLat,
                               direct_modes = direct_modes,
                               transit_modes = transit_modes,
                               max_street_time = max_street_time,
-                              filter_paths = F)
+                              shortest_path = F) )
 
 
+system.time(
+        trip2 <- multiple_detailed_itineraries( fromLat = fromLat,
+                                      fromLon = fromLon,
+                                      toLat = toLat,
+                                      toLon = toLon,
+                                      r5_core = r5_core,
+                                      trip_date = trip_date,
+                                      departure_time = departure_time,
+                                      direct_modes = direct_modes,
+                                      transit_modes = transit_modes,
+                                      max_street_time = max_street_time,
+                                      shortest_path = F) )
 
 
 ##### TESTS travel_time_matrix ------------------------

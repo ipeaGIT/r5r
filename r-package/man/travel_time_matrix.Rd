@@ -55,11 +55,11 @@ r5_core <- setup_r5(data_path = path)
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
 # input
-trip_date <- "2019-05-20"
-departure_time <- "14:00:00"
-street_time = 15L
 direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
+departure_time <- "14:00:00"
+trip_date <- "2019-05-20"
+street_time = 15L
 max_street_time = 30L
 max_trip_duration = 300L
 

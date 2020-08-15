@@ -32,11 +32,11 @@
 #' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 #'
 #' # input
-#' trip_date <- "2019-05-20"
-#' departure_time <- "14:00:00"
-#' street_time = 15L
 #' direct_modes <- c("WALK", "BICYCLE", "CAR")
 #' transit_modes <-"BUS"
+#' departure_time <- "14:00:00"
+#' trip_date <- "2019-05-20"
+#' street_time = 15L
 #' max_street_time = 30L
 #' max_trip_duration = 300L
 #'
@@ -65,11 +65,11 @@ travel_time_matrix <- function( r5_core,
                                 max_trip_duration = 7200L){
 
   # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(direct_modes, collapse = ";")
-  transit_modes <- paste0(transit_modes, collapse = ";")
+  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
+  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
   # Forcefully cast integer parameters before passing them to Java
-  max_street_time = as.integer(mmax_street_time)
+  max_street_time = as.integer(max_street_time)
   max_trip_duration = as.integer(max_trip_duration)
 
   # Call to method inside R5RCore object
