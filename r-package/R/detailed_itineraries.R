@@ -12,6 +12,10 @@
 #' @param filter_paths
 #' @param max_street_time
 #'
+#' @return A 'data.frame sf' LINESTRINGs of the alternative routes between a
+#' given pair of origin-destination. The data output brings detailed information
+#' on transport mode, travel time, walked distance etc. for each trip section
+#'
 #' @family routing
 #' @examples \donttest{
 #'

@@ -2,6 +2,11 @@
 
 export(detailed_itineraries)
 export(download_r5)
-export(r5_travel_time_matrix)
 export(r5_travel_times_from_origin)
 export(setup_r5)
+export(travel_time_matrix)
+importFrom(data.table,"%between%")
+importFrom(data.table,"%like%")
+importFrom(data.table,":=")
+importFrom(data.table,fifelse)
+importFrom(utils,"tail")

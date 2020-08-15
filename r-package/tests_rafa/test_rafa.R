@@ -1,84 +1,81 @@
+library(r5r)
 library(sf)
 library(data.table)
 library(magrittr)
-library(future.apply)
 library(roxygen2)
 library(devtools)
 library(usethis)
 library(testthat)
 library(profvis)
+library(dplyr)
 library(mapview)
-library(Rcpp)
-library(gtfs2gps)
+library(covr)
+
+
 
 # Update documentation
 devtools::document(pkg = ".")
 
 
-# calculate Distance between successive points
-new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
-                                            matrix(c(data.table::shift(shape_pt_lon, type="lead"), data.table::shift(shape_pt_lat, type="lead")), ncol = 2))/1000]
-
-
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-
-
-poa1 <- filter_day_period(poa, period_start = "10:00", period_end = "18:00")
-
-poa2 <- gtfs2gps(poa1, cores=1)
-
-
-
 ##### INPUT  ------------------------
-  # normal
-  gtfsn <- './inst/extdata/poa.zip'
-  # freq based
-  gtfsf <- './inst/extdata/saopaulo.zip'
 
-emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
-  
-  
-##### TESTS normal fun ------------------------
-  # normal data
-  system.time(  normal <- gtfs2gps_dt_parallel2(emtu) ) # 61.55  secs
 
-  # freq data
-  system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
-  
-  
+# build transport network
+path <- system.file("extdata", package = "r5r")
+r5_core <- setup_r5(data_path = path)
+
+# load origin/destination points
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+
+
+# input
+fromLat <- points[1,]$lat
+fromLon <- points[1,]$lon
+toLat <- points[100,]$lat
+toLon <- points[100,]$lon
+trip_date <- "2019-05-20"
+departure_time <- "14:00:00"
+street_time = 15L
+direct_modes <- c("WALK", "BICYCLE", "CAR")
+transit_modes <-"BUS"
+max_street_time = 30
+
+
+
+
+##### TESTS detailed_itineraries ------------------------
+
+
+
+trip <- detailed_itineraries( fromLat = fromLat,
+                              fromLon = fromLon,
+                              toLat = toLat,
+                              toLon = toLon,
+                              r5_core = r5_core,
+                              trip_date = trip_date,
+                              departure_time = departure_time,
+                              direct_modes = direct_modes,
+                              transit_modes = transit_modes,
+                              max_street_time = max_street_time)
+
+
+
 ##### Coverage ------------------------
 
-    
-  
-#  ERROR in shapeid 52936
-  
-  library(gtfs2gps)
-  library(covr)
-  library(testthat)
-  
-  function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
-  function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
-  function_coverage(fun=gtfs2gps::gps_as_sflinestring, test_file("./tests/testthat/test_gps_as_sflinestring.R"))
-  function_coverage(fun=gtfs2gps::gps_as_sfpoints, test_file("./tests/testthat/test_gps_as_sfpoints.R"))
-  
-  covr::package_coverage(path = ".", type = "tests")
-  
+# each function separately
+function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
+function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
+
+# the whole package
+covr::package_coverage(path = ".", type = "tests")
+
+
+
+
 ##### Profiling function ------------------------
-p <-   profvis( update_newstoptimes("T2-1@1#2146") )
-
-p <-   profvis( b <- corefun("T2-1") )
-
-
-
-
-
-
-
-
-
-
-
-
+# p <-   profvis( update_newstoptimes("T2-1@1#2146") )
+#
+# p <-   profvis( b <- corefun("T2-1") )
 
 
 

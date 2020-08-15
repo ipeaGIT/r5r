@@ -21,6 +21,11 @@ detailed_itineraries(
 \arguments{
 \item{max_street_time}{}
 }
+\value{
+A 'data.frame sf' LINESTRINGs of the alternative routes between a
+given pair of origin-destination. The data output brings detailed information
+on transport mode, travel time, walked distance etc. for each trip section
+}
 \description{
 Title
 }
@@ -64,6 +69,6 @@ trip <- detailed_itineraries( fromLat = fromLat,
 }
 \seealso{
 Other routing: 
-\code{\link{r5_travel_time_matrix}()}
+\code{\link{travel_time_matrix}()}
 }
 \concept{routing}
