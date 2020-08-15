@@ -87,6 +87,7 @@ detailed_itineraries <- function(r5_core,
 
   # Collects results from R5 and transforms them into simple features objects
   path_options_df <- jdx::convertToR(path_options)
+
   data.table::setDT(path_options_df)[, geometry := sf::st_as_sfc(geometry)]
   path_options_sf <- sf::st_sf(path_options_df, crs = 4326) # WGS 84
 
@@ -110,7 +111,7 @@ detailed_itineraries <- function(r5_core,
   return(path_options_sf)
 }
 
-#' Plan multiple itinerarires in parallel
+#' Plan multiple itineraries in parallel
 #'
 #' @param r5_core
 #' @param requests A dataframe with 5 columns: id, fromLat, fromLon, toLat and toLon
