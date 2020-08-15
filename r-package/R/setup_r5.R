@@ -24,22 +24,24 @@
 #' }
 #' @export
 
-setup_r5 <- function(data_path, version='4.9.0') {
+setup_r5 <- function(data_path, version = "4.9.0") {
 
   # check directory input
-  if(is.null(data_path)){ stop(paste0("Please provide data_path")) }
+  if (is.null(data_path)) { stop("Please provide data_path.") }
 
   # check if data_path has osm.pbf and gtfs data
-  any_pbf <- sum(list.files(data_path) %like% '.pbf') > 0
-  any_gtfs <- sum(list.files(data_path) %like% '.zip') > 0
+  any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
+  any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if ( any_pbf==FALSE & any_gtfs==FALSE){
-    stop(paste0("No street network data (.pbf) and no public transport data
-                (gtfs) provided"))}
+  if (any_pbf == FALSE & any_gtfs == FALSE) {
+    stop("\nNo street network data (.pbf) and no public transport data
+         (gtfs) provided.")
+  }
 
-  if ( any_pbf==FALSE & any_gtfs==TRUE){
-    stop(paste0("\nAn OSM PBF file is required to build a network."))}
+  if (any_pbf == FALSE & any_gtfs == TRUE) {
+    stop("\nAn OSM PBF file is required to build a network.")
+  }
 
   # path to jar file
   jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
@@ -47,17 +49,20 @@ setup_r5 <- function(data_path, version='4.9.0') {
   # check if jar file is stored already. If not, download it
   if (checkmate::test_file_exists(jar_file)) {
     message("Using cached version from ", jar_file)
-  } else { download_r5(version=version) }
+  } else {
+    download_r5(version = version)
+  }
 
-  # start r5 c
+  # start r5 core
   rJava::.jinit()
   rJava::.jaddClassPath(path = jar_file)
   r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
 
-  # Warning message if there is only one of either OSM or GTFS data set
-  if ( any_pbf==TRUE & any_gtfs==FALSE){
-    message(paste0("\nNo public transport data (gtfs) provided. Graph will be
-                built with the street network only."))}
+  # display a warning message if there is a PBF file but no GTFS data
+  if (any_pbf == TRUE & any_gtfs == FALSE) {
+    message("\nNo public transport data (gtfs) provided. Graph will be built
+            with the street network only.")
+  }
 
   return(r5r_core)
 }

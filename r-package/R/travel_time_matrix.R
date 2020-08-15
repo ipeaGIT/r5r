@@ -63,6 +63,10 @@ travel_time_matrix <- function( r5_core,
   direct_modes <- paste0(direct_modes, collapse = ";")
   transit_modes <- paste0(transit_modes, collapse = ";")
 
+  # Forcefully cast integer parameters before passing them to Java
+  max_street_time = as.integer(mmax_street_time)
+  max_trip_duration = as.integer(max_trip_duration)
+
   # Call to method inside R5RCore object
   travel_times <- r5_core$travelTimeMatrixParallel(origins$id,
                                                     origins$lat,
