@@ -34,26 +34,26 @@ library(r5r)
 The package has three fundamental functions.
 
 1. `setup_r5`
- - Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)
- - Builds a multimodal transport network given a street network in `.pbf` format
+   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)
+   * Builds a multimodal transport network given a street network in `.pbf` format
    (mandatory) and one or more public transport networks in `GTFS.zip` format 
    (optional).
 
 2. `detailed_itineraries`
- - Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
+   * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
    between one or multiple origin destination pairs. The data output brings 
    detailed information on transport mode, travel time, walk distance etc for 
    each trip section
  
 3. `travel_time_matrix`
- - Fast function that returns a simple 'data.frame' with travel time 
+   * Fast function that returns a simple 'data.frame' with travel time 
    estimates between one or multiple origin destination pairs.
 
 ### Demonstration on sample data
-To illustrate functionality, the package includes a small sample data set
-of the public transport and Open Street Map networks of Porto Alegre (Brazil).
-Three steps are required to use `r5r`, as follows. See a detailed demonstration
-of `r5r` in this intro Vignette (*soon*).
+See a detailed demonstration of `r5r` in this intro Vignette (*soon*). To illustrate
+functionality, the package includes a small sample data set of the public transport
+and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to 
+use `r5r`, as follows.
 
 ```R
 # 1) build transport network, indication the path where OSM and GTFS data are stored
