@@ -28,6 +28,8 @@ setup_r5 <- function(data_path, version = "4.9.0") {
 
   # check directory input
   if (is.null(data_path)) { stop("Please provide data_path.") }
+  # expand data_path to full path, as required by rJava api call
+  data_path <- path.expand(data_path)
 
   # check if data_path has osm.pbf and gtfs data
   any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
