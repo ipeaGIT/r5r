@@ -4,7 +4,8 @@
 #'  transport network used for routing in R5. The directory must contain at
 #'  least one street network file (in .pbf format). One or more public transport
 #'  data sets (in GTFS.zip format) are optional. If there is more than one GTFS file
-#'  in the directory, both files will be merged.
+#'  in the directory, both files will be merged. If there is already a 'network.dat'
+#'  file in the directory the function will simply read it and load it to memory.
 #'
 #' @param data_path character string, the directory where data inputs are stored
 #'                  and where the built network.dat will be saved.
@@ -28,22 +29,30 @@ setup_r5 <- function(data_path, version = "4.9.0") {
 
   # check directory input
   if (is.null(data_path)) { stop("Please provide data_path.") }
+
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
 
+
+  # check if data_path already has a network.dat file
+    dat_file <- file.path(path, "network.dat")
+
+    if (checkmate::test_file_exists(dat_file)) {
+      r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", path)
+      message("\nUsing cached network.dat from ", dat_file)
+      return(r5_core)
+      } else {
+
   # check if data_path has osm.pbf and gtfs data
-  any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
-  any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
+    any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
+    any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
   if (any_pbf == FALSE & any_gtfs == FALSE) {
-    stop("\nNo street network data (.pbf) and no public transport data
-         (gtfs) provided.")
-  }
-
-  if (any_pbf == FALSE & any_gtfs == TRUE) {
-    stop("\nAn OSM PBF file is required to build a network.")
-  }
+    stop("\nNo street network data (.pbf) and no public transport data (gtfs) provided.")
+      } else if (any_pbf == FALSE & any_gtfs == TRUE) {
+        stop("\nAn OSM PBF file is required to build a network.")
+        }
 
   # path to jar file
   jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
@@ -67,4 +76,5 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   }
 
   return(r5r_core)
+  }
 }
