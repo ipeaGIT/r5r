@@ -25,7 +25,11 @@ path <- system.file("extdata", package = "r5r")
 r5_core <- setup_r5(data_path = path)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+
+
+##### TESTS detailed_itineraries ------------------------
 
 
 # input
@@ -39,13 +43,6 @@ street_time = 15L
 direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
 max_street_time = 30L
-
-
-
-
-##### TESTS detailed_itineraries ------------------------
-
-
 
 
 system.time(
@@ -62,18 +59,30 @@ trip <- detailed_itineraries( fromLat = fromLat,
                               shortest_path = F) )
 
 
+##### TESTS multiple detailed_itineraries ------------------------
+
+trip_date <- "2019-03-17"
+departure_time <- "14:00:00"
+street_time = 15L
+direct_modes <- c("WALK", "BICYCLE", "CAR")
+transit_modes <-"BUS"
+max_street_time = 30
+
+trip_requests <- data.frame(id = 1:5,
+                            fromLat = points[1:5,]$lat,
+                            fromLon = points[1:5,]$lon,
+                            toLat = points[96:100,]$lat,
+                            toLon = points[96:100,]$lon )
+
 system.time(
-        trip2 <- multiple_detailed_itineraries( fromLat = fromLat,
-                                      fromLon = fromLon,
-                                      toLat = toLat,
-                                      toLon = toLon,
-                                      r5_core = r5_core,
-                                      trip_date = trip_date,
-                                      departure_time = departure_time,
-                                      direct_modes = direct_modes,
-                                      transit_modes = transit_modes,
-                                      max_street_time = max_street_time,
-                                      shortest_path = F) )
+trips <- multiple_detailed_itineraries( r5_core,
+                                        trip_requests,
+                                        trip_date = trip_date,
+                                        departure_time = departure_time,
+                                        direct_modes = direct_modes,
+                                        transit_modes = transit_modes,
+                                        max_street_time = max_street_time
+))
 
 
 ##### TESTS travel_time_matrix ------------------------
