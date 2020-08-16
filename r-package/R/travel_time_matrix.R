@@ -68,8 +68,6 @@
 #'
 #' }
 #' @export
-#'
-
 travel_time_matrix <- function( r5_core,
                                 origins,
                                 destinations,
@@ -86,19 +84,12 @@ travel_time_matrix <- function( r5_core,
   # max_trip_duration & max_street_time
   if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
   if(! is.numeric(max_trip_duration)){stop(message('max_trip_duration must be of class interger'))}
+
     # Forcefully cast integer parameters before passing them to Java
     max_street_time = as.integer(max_street_time)
     max_trip_duration = as.integer(max_trip_duration)
 
-### Run
   # Modes
-    #'   'TRAM', 'SUBWAY', 'RAIL', 'BUS', 'FERRY', 'CABLE_CAR', 'GONDOLA', 'FUNICULAR'
-    #'
-    #'   ## Non transit modes
-    #'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
-    #'
-
-
     all_tmodes <- c('TRAM','SUBWAY','RAIL','BUS','FERRY','CABLE_CAR','GONDOLA','FUNICULAR')
     all_dmodes <- c('WALK','BICYCLE','CAR','BICYCLE_RENT','CAR_PARK')
     if(!direct_modes %in% all_dmodes){ stop(paste0("Eror: invalid 'mode'. Please use one of the following: ",
@@ -107,10 +98,9 @@ travel_time_matrix <- function( r5_core,
     if(!transit_modes %in% all_tmodes){ stop(paste0("Eror: invalid 'mode'. Please use one of the following: ",
                   paste(unique(all_tmodes),collapse = " "))) }
 
-
-  # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
-  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
+    # Collapses list into single string before passing argument to Java
+    direct_modes <- paste0(toupper(direct_modes), collapse = ";")
+    transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
   # if origins/destinations are a spatial 'sf' objects, convert them to data.frame
   if(sum(class(origins) %in% 'sf')>0){origins <- sf_to_df_r5r(origins)}
