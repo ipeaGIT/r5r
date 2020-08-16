@@ -7,7 +7,7 @@
 sf_to_df_r5r(sf)
 }
 \arguments{
-\item{sf}{A spatial sf MULTIPOINT object.}
+\item{sf}{A spatial sf MULTIPOINT object where the 1st column is the point id.}
 }
 \description{
 Convert sf spatial objects to data.frame

@@ -5,7 +5,7 @@
 
 #' Convert sf spatial objects to data.frame
 #'
-#' @param sf A spatial sf MULTIPOINT object.
+#' @param sf A spatial sf MULTIPOINT object where the 1st column is the point id.
 #' @export
 #' @family support functions
 #'
