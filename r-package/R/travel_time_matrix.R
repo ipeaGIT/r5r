@@ -88,8 +88,8 @@ travel_time_matrix <- function( r5_core,
   max_trip_duration = as.integer(max_trip_duration)
 
   # if origins/destinations are a spatial 'sf' objects, convert them to data.frame
-  if(checkmate::check_class(origins, "sf")){origins <- sf_to_df_r5r(origins)}
-  if(checkmate::check_class(destinations, "sf")){destinations <- sf_to_df_r5r(destinations)}
+  if(sum(class(origins) %in% 'sf')>0){origins <- sf_to_df_r5r(origins)}
+  if(sum(class(destinations) %in% 'sf')>0){destinations <- sf_to_df_r5r(destinations)}
 
   # Call to method inside r5r_core object
   travel_times <- r5_core$travelTimeMatrixParallel(origins$id,
