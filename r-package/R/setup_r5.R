@@ -75,6 +75,8 @@ setup_r5 <- function(data_path, version = "4.9.0") {
             with the street network only.")
   }
 
+  message("\nFinished building network.dat at ", dat_file)
   return(r5r_core)
+
   }
 }

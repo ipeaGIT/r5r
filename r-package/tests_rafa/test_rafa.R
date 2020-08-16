@@ -1,3 +1,5 @@
+# devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+
 library(r5r)
 library(sf)
 library(data.table)
@@ -25,9 +27,12 @@ path <- system.file("extdata", package = "r5r")
 list.files(path)
 list.files(file.path(.libPaths()[1], "r5r", "jar"))
 
+
 # remove files
 # file.remove( file.path(path, "network.dat") )
 # file.remove( file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar") )
+
+# r5r::download_r5()
 
 r5_core <- setup_r5(data_path = path)
 
