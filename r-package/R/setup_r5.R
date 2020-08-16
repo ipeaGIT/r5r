@@ -38,7 +38,7 @@ setup_r5 <- function(data_path, version = "4.9.0") {
     dat_file <- file.path(path, "network.dat")
 
     if (checkmate::test_file_exists(dat_file)) {
-      r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", path)
+      r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
       message("\nUsing cached network.dat from ", dat_file)
       return(r5_core)
       } else {
