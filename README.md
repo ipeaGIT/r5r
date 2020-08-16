@@ -8,12 +8,14 @@ friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world 
 
 **r5r** is a simple way to run R<sup>5</sup> locally, what allows users to
 generate detailed routing analysis or calculate travel time matrices using 
-seamless parallel computing on top of R<sup>5</sup>. See a detailed demonstration
-of `r5r` in this intro Vignette (*soon*).
+seamless parallel computing. See a detailed demonstration of `r5r` in this
+intro Vignette (*soon*). Over time, `r5r` migth be expanded to incorporate
+other functionalities from R<sup>5</sup>
 
 
 This repository contains the `R` code (r-package folder) and the Java code 
-(java-api folder) that provides the interface to R<sup>5</sup>.
+(java-api folder) that provides the interface to R<sup>5</sup>. Soon, this
+could also become a `python` library. 
 
 
 ## Installation
