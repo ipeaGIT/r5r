@@ -33,6 +33,29 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
 
+  # check if data_path has osm.pbf and gtfs data
+  any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
+  any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
+
+  # stop if there is no input data
+  if (any_pbf == FALSE) {
+    stop("\nAn OSM PBF file is required to build a network.")
+  }
+
+
+  # check if jar file is stored already. If not, download it
+  jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
+
+  if (checkmate::test_file_exists(jar_file)) {
+    message("Using cached version from ", jar_file)
+  } else {
+    download_r5(version = version)
+  }
+
+  # start R5 JAR
+  rJava::.jinit()
+  rJava::.jaddClassPath(path = jar_file)
+
 
   # check if data_path already has a network.dat file
     dat_file <- file.path(path, "network.dat")
@@ -43,28 +66,7 @@ setup_r5 <- function(data_path, version = "4.9.0") {
       return(r5_core)
       } else {
 
-  # check if data_path has osm.pbf and gtfs data
-    any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
-    any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
-
-  # stop if there is no input data
-  if (any_pbf == FALSE) {
-    stop("\nAn OSM PBF file is required to build a network.")
-    }
-
-  # path to jar file
-  jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
-
-  # check if jar file is stored already. If not, download it
-  if (checkmate::test_file_exists(jar_file)) {
-    message("Using cached version from ", jar_file)
-  } else {
-    download_r5(version = version)
-  }
-
-  # start r5 core
-  rJava::.jinit()
-  rJava::.jaddClassPath(path = jar_file)
+  # build new r5_core
   r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
 
   # display a warning message if there is a PBF file but no GTFS data
