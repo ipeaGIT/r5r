@@ -122,7 +122,7 @@ trips <- multiple_detailed_itineraries( r5_core,
 options(java.parameters = "-Xmx16G")
 
 # input
-origins <- destinations <-  read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
  # input
  direct_modes <- c("WALK", "BICYCLE", "CAR")

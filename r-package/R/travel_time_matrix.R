@@ -81,6 +81,7 @@ travel_time_matrix <- function( r5_core,
 
 ### check inputs
 
+
   # max_trip_duration & max_street_time
   if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
   if(! is.numeric(max_trip_duration)){stop(message('max_trip_duration must be of class interger'))}
@@ -102,9 +103,13 @@ travel_time_matrix <- function( r5_core,
     direct_modes <- paste0(toupper(direct_modes), collapse = ";")
     transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
-  # if origins/destinations are a spatial 'sf' objects, convert them to data.frame
-  if(sum(class(origins) %in% 'sf')>0){origins <- sf_to_df_r5r(origins)}
-  if(sum(class(destinations) %in% 'sf')>0){destinations <- sf_to_df_r5r(destinations)}
+ # Origins / Destinations
+    test_points_input(origins)
+    test_points_input(destinations)
+
+    # if origins/destinations are a spatial 'sf' objects, convert them to data.frame
+    if(sum(class(origins) %in% 'sf')>0){origins <- sf_to_df_r5r(origins)}
+    if(sum(class(destinations) %in% 'sf')>0){destinations <- sf_to_df_r5r(destinations)}
 
   # Call to method inside r5r_core object
   travel_times <- r5_core$travelTimeMatrixParallel(origins$id,

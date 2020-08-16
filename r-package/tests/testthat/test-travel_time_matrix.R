@@ -52,36 +52,62 @@ test_that("setup_r5 - expected behavior", {
 test_that("travel_time_matrix - expected errors", {
 
 
-  # invalid modes
-  travel_time_matrix( r5_core = r5_core,
-                      origins = points_sf,
-                      destinations = points_sf,
-                      trip_date = trip_date,
-                      departure_time = departure_time,
-                      direct_modes = "pogoball",
-                      transit_modes = transit_modes,
-                      max_street_time = max_street_time,
-                      max_trip_duration = max_trip_duration)
+  # invalid origins destinations
+  testthat::expect_error(
+    travel_time_matrix( r5_core,
+                        origins = 'a',
+                        destinations = points,
+                        trip_date,
+                        departure_time,
+                        direct_modes = direct_modes,
+                        transit_modes = transit_modes,
+                        max_street_time = max_street_time,
+                        max_trip_duration = max_trip_duration))
+  testthat::expect_error(
+    travel_time_matrix( r5_core,
+                        origins = points,
+                        destinations = 'a',
+                        trip_date,
+                        departure_time,
+                        direct_modes = direct_modes,
+                        transit_modes = transit_modes,
+                        max_street_time = max_street_time,
+                        max_trip_duration = max_trip_duration))
 
-  travel_time_matrix( r5_core = r5_core,
-                      origins = points_sf,
-                      destinations = points_sf,
-                      trip_date = trip_date,
-                      departure_time = departure_time,
-                      direct_modes = direct_modes,
-                      transit_modes = 'mothership',
-                      max_street_time = max_street_time,
-                      max_trip_duration = max_trip_duration)
+  # invalid modes
+  testthat::expect_error(
+    travel_time_matrix( r5_core = r5_core,
+                        origins = points_sf,
+                        destinations = points_sf,
+                        trip_date = trip_date,
+                        departure_time = departure_time,
+                        direct_modes = "pogoball",
+                        transit_modes = transit_modes,
+                        max_street_time = max_street_time,
+                        max_trip_duration = max_trip_duration))
+
+  testthat::expect_error(
+    travel_time_matrix( r5_core = r5_core,
+                        origins = points_sf,
+                        destinations = points_sf,
+                        trip_date = trip_date,
+                        departure_time = departure_time,
+                        direct_modes = direct_modes,
+                        transit_modes = 'mothership',
+                        max_street_time = max_street_time,
+                        max_trip_duration = max_trip_duration))
 
   # invalid max_trip_duration
   testthat::expect_error(
-  travel_time_matrix( r5_core,
-                      origins = points,
-                      destinations = points,
-                      trip_date,
-                      departure_time,
-                      max_street_time = 'a',
-                      max_trip_duration = max_trip_duration))
+    travel_time_matrix( r5_core,
+                        origins = points,
+                        destinations = points,
+                        trip_date,
+                        departure_time,
+                        direct_modes = direct_modes,
+                        transit_modes = transit_modes,
+                        max_street_time = 'a',
+                        max_trip_duration = max_trip_duration))
 
   testthat::expect_error(
     travel_time_matrix( r5_core,
@@ -89,6 +115,8 @@ test_that("travel_time_matrix - expected errors", {
                         destinations = points,
                         trip_date,
                         departure_time,
+                        direct_modes = direct_modes,
+                        transit_modes = transit_modes,
                         max_street_time = max_street_time,
                         max_trip_duration = 'a'))
 
