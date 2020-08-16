@@ -22,4 +22,28 @@ sf_to_df_r5r <- function(sf){
 
 
 
+
+#' Check class of Origin / Destination inputs
+#' #'
+#' @param df Any object
+#' @export
+#' @family support functions
+#'
+
+test_points_input <- function(df) {
+
+  # is data.frame?
+  any_df <- is(df, 'data.frame')
+
+  # is sf MULTIPOINT?
+  if (is(df, 'sf')) { any_sf <- as.character(unique(st_geometry_type(df))) == "MULTIPOINT"}
+
+  # check
+  if (sum(any_sf, any_sf) < 1) {
+    stop(message("Origin/Destinations must be either a 'data.frame' or a 'sf MULTIPOINT'"))
+    }
+}
+
+
+
 # nocov end

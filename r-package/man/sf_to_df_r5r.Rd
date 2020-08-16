@@ -12,4 +12,8 @@ sf_to_df_r5r(sf)
 \description{
 Convert sf spatial objects to data.frame
 }
+\seealso{
+Other support functions: 
+\code{\link{test_points_input}()}
+}
 \concept{support functions}
