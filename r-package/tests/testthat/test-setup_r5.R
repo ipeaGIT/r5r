@@ -6,12 +6,14 @@ test_that("setup_r5 - expected behavior", {
   path <- system.file("extdata", package = "r5r")
 
   testthat::expect_message( setup_r5(data_path = path) )
-  testthat::expect_message(setup_r5(data_path = path, version='4.9.0'))
 
   # remove files GTFS
-#  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
+  #  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
   testthat::expect_message( setup_r5(data_path = path) )
-  file.rename(file.path(path, "poa.x"), file.path(path, "poa.zip"))
+  #  file.rename(file.path(path, "poa.x"), file.path(path, "poa.zip"))
+
+  testthat::expect_message(setup_r5(data_path = path, version='4.9.0'))
+
 
 })
 
