@@ -31,7 +31,7 @@ utils::globalVariables(c(".",
   requireNamespace("sf")
   requireNamespace("rJava")
   requireNamespace("data.table")
-  options(datatable.optimize = Inf) # nocov
   # set number of threads used in data.table to 100%
-  data.table::setDTthreads(percent = 100) # nocov
+  options(datatable.optimize = Inf)
+  data.table::setDTthreads(percent = 100)
 } # nocov end

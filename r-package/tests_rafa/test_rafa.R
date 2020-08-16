@@ -57,8 +57,8 @@ a <- jdx::convertToR(a$V1)
 # input
 fromLat <- points[1,]$lat
 fromLon <- points[1,]$lon
-toLat <- points[100,]$lat
-toLon <- points[100,]$lon
+toLat <- points[5,]$lat
+toLon <- points[5,]$lon
 trip_date <- "2019-05-20"
 departure_time <- "14:00:00"
 street_time = 15L
@@ -98,8 +98,10 @@ max_street_time = 30
 trip_requests <- data.frame(id = 1:5,
                             fromLat = points[1:5,]$lat,
                             fromLon = points[1:5,]$lon,
-                            toLat = points[96:100,]$lat,
-                            toLon = points[96:100,]$lon )
+                            toLat = points[1:5,]$lat,
+                            toLon = points[1:5,]$lon )
+
+trip_requests2 <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
 system.time(
 trips <- multiple_detailed_itineraries( r5_core,
@@ -155,6 +157,7 @@ origins <- destinations <-  read.csv(system.file("extdata/poa_hexgrid.csv", pack
 # each function separately
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
+covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
 
 # the whole package
 covr::package_coverage(path = ".", type = "tests")
