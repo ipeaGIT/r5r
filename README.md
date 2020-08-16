@@ -58,7 +58,7 @@ and Open Street Map networks of Porto Alegre (Brazil). Three steps are required 
 use `r5r`, as follows.
 
 ```R
-# 1) build transport network, indication the path where OSM and GTFS data are stored
+# 1) build transport network, pointing to the path where OSM and GTFS data are stored
 path <- system.file("extdata", package = "r5r")
 r5_core <- setup_r5(data_path = path)
 
