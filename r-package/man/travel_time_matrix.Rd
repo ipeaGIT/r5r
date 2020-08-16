@@ -10,8 +10,8 @@ travel_time_matrix(
   destinations,
   trip_date,
   departure_time,
-  direct_modes,
-  transit_modes,
+  direct_modes = "WALK",
+  transit_modes = "TRANSIT",
   max_street_time,
   max_trip_duration = 7200L
 )
@@ -19,9 +19,11 @@ travel_time_matrix(
 \arguments{
 \item{r5_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins}{a data.frame containing the columns 'id', 'lat', 'lat'}
+\item{origins}{a spatial sf MULTIPOINT object, or a data.frame containing the
+columns 'id', 'lon', 'lat'}
 
-\item{destinations}{a data.frame containing the columns 'id', 'lat', 'lat'}
+\item{destinations}{a spatial sf MULTIPOINT object, or a data.frame
+containing the columns 'id', 'lon', 'lat'}
 
 \item{trip_date}{character string, date in format "yyyy-mm-dd". If working
 with public transport networks, check the GTFS.zip
@@ -29,9 +31,12 @@ with public transport networks, check the GTFS.zip
 
 \item{departure_time}{character string, time in format "hh:mm:ss"}
 
-\item{direct_modes}{99999999}
+\item{direct_modes}{character string, defaults to "WALK". See details for
+other options.}
 
-\item{transit_modes}{99999999}
+\item{transit_modes}{character string, defaults to "TRANSIT", which includes
+all available options of public transport. See details
+for options.}
 
 \item{max_street_time}{integer,}
 
@@ -45,6 +50,19 @@ destination pairs
 \description{
 Fast function to calculate travel time estimates between one or
 multiple origin destination pairs.
+}
+\details{
+R5 allows for multiple combinations of transport modes. The options
+include:
+\subsection{Transit modes}{
+
+TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR
+}
+
+\subsection{Non transit modes}{
+
+WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
+}
 }
 \examples{
 \donttest{

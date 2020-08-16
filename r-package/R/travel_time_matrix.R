@@ -4,20 +4,35 @@
 #'              multiple origin destination pairs.
 #'
 #' @param r5_core a rJava object to connect with R5 routing engine
-#' @param origins a data.frame containing the columns 'id', 'lat', 'lat'
-#' @param destinations a data.frame containing the columns 'id', 'lat', 'lat'
+#' @param origins a spatial sf MULTIPOINT object, or a data.frame containing the
+#'                columns 'id', 'lon', 'lat'
+#' @param destinations a spatial sf MULTIPOINT object, or a data.frame
+#'                     containing the columns 'id', 'lon', 'lat'
 #' @param trip_date character string, date in format "yyyy-mm-dd". If working
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
 #' @param departure_time character string, time in format "hh:mm:ss"
-#' @param direct_modes 99999999
-#' @param transit_modes 99999999
+#' @param direct_modes character string, defaults to "WALK". See details for
+#'                     other options.
+#' @param transit_modes character string, defaults to "TRANSIT", which includes
+#'                      all available options of public transport. See details
+#'                      for options.
 #' @param max_street_time integer,
 #' @param max_trip_duration integer, Maximum trip duration in seconds. Defaults
 #'                           to 7200 seconds (2 hours).
 #'
 #' @return A data.table with travel-time estimates (in seconds) between origin
 #' destination pairs
+#'
+#' @details R5 allows for multiple combinations of transport modes. The options
+#'          include:
+#'
+#'   ## Transit modes
+#'   TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR
+#'
+#'   ## Non transit modes
+#'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
+#'
 #'
 #' @family routing
 #' @examples \donttest{
@@ -59,8 +74,8 @@ travel_time_matrix <- function( r5_core,
                                 destinations,
                                 trip_date,
                                 departure_time,
-                                direct_modes,
-                                transit_modes,
+                                direct_modes = "WALK",
+                                transit_modes = "TRANSIT",
                                 max_street_time,
                                 max_trip_duration = 7200L){
 
@@ -72,7 +87,11 @@ travel_time_matrix <- function( r5_core,
   max_street_time = as.integer(max_street_time)
   max_trip_duration = as.integer(max_trip_duration)
 
-  # Call to method inside R5RCore object
+  # if origins/destinations are a spatial 'sf' objects, convert them to data.frame
+  if(checkmate::check_class(origins, "sf")){origins <- sf_to_df_r5r(origins)}
+  if(checkmate::check_class(destinations, "sf")){destinations <- sf_to_df_r5r(destinations)}
+
+  # Call to method inside r5r_core object
   travel_times <- r5_core$travelTimeMatrixParallel(origins$id,
                                                     origins$lat,
                                                     origins$lon,
