@@ -1,4 +1,4 @@
-# devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+# devtools::install_github("ipeaGIT/r5r", subdir = "r-package", force=T)
 
 library(r5r)
 library(sf)

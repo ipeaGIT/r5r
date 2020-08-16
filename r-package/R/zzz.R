@@ -8,7 +8,8 @@
 #' @docType package
 #' @name r5r
 #' @importFrom utils "tail"
-#' @importFrom data.table := %like% %between% fifelse
+# #' @importFrom("data.table", ":=", "%like%", "fifelse")
+# #' @importFrom("methods", "is", "signature")
 # #' @importFrom magrittr %>%
 # #' @importFrom stats na.omit
 # #' @importFrom utils head tail object.size

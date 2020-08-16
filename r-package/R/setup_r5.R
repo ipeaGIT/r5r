@@ -48,11 +48,9 @@ setup_r5 <- function(data_path, version = "4.9.0") {
     any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if (any_pbf == FALSE & any_gtfs == FALSE) {
-    stop("\nNo street network data (.pbf) and no public transport data (gtfs) provided.")
-      } else if (any_pbf == FALSE & any_gtfs == TRUE) {
-        stop("\nAn OSM PBF file is required to build a network.")
-        }
+  if (any_pbf == FALSE) {
+    stop("\nAn OSM PBF file is required to build a network.")
+    }
 
   # path to jar file
   jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
