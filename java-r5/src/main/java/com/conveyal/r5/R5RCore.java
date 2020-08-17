@@ -10,8 +10,12 @@ import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
+import com.conveyal.r5.streets.EdgeStore;
+import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.locationtech.jts.geom.Coordinate;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -403,5 +407,52 @@ public class R5RCore {
         results.put("travel_time", travelTimeCol);
 
         return results;
+    }
+
+    public List<Object> getStreetNetwork() {
+        // Build vertices return table
+        ArrayList<Integer> indexCol = new ArrayList<>();
+        ArrayList<Double> latCol = new ArrayList<>();
+        ArrayList<Double> lonCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> verticesTable = new LinkedHashMap<>();
+        verticesTable.put("index", indexCol);
+        verticesTable.put("lat", latCol);
+        verticesTable.put("lon", lonCol);
+
+        VertexStore vertices = transportNetwork.streetLayer.vertexStore;
+
+        VertexStore.Vertex vertexCursor = vertices.getCursor();
+        while (vertexCursor.advance()) {
+            indexCol.add(vertexCursor.index);
+            latCol.add(vertexCursor.getLat());
+            lonCol.add(vertexCursor.getLon());
+        }
+
+        // Build edges return table
+        ArrayList<Integer> fromVertexCol = new ArrayList<>();
+        ArrayList<Integer> toVertexCol = new ArrayList<>();
+        ArrayList<String> geometryCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
+        verticesTable.put("fromVertex", fromVertexCol);
+        verticesTable.put("toVertex", toVertexCol);
+        verticesTable.put("geometry", geometryCol);
+
+        EdgeStore edges = transportNetwork.streetLayer.edgeStore;
+
+        EdgeStore.Edge edgeCursor = edges.getCursor();
+        while (edgeCursor.advance()) {
+            fromVertexCol.add(edgeCursor.getFromVertex());
+            toVertexCol.add(edgeCursor.getToVertex());
+            geometryCol.add(edgeCursor.getGeometry().toString());
+        }
+
+        // Return a list of dataframes
+        List<Object> transportNetworkList = new ArrayList<>();
+        transportNetworkList.add(verticesTable);
+        transportNetworkList.add(edgesTable);
+
+        return transportNetworkList;
     }
 }
