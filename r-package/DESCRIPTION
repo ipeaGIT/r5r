@@ -31,6 +31,7 @@ Imports:
     checkmate,
     data.table,
     dplyr,
+    magrittr,
     jdx (>= 0.1.4),
     rJava (>= 0.9-13),
     sf (>= 0.9-3),
