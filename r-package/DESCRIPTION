@@ -35,7 +35,8 @@ Imports:
     rJava (>= 0.9-13),
     sf (>= 0.9-3),
     sfheaders,
-    utils
+    utils,
+    rlang
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
