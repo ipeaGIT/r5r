@@ -42,7 +42,6 @@ setup_r5 <- function(data_path, version = "4.9.0") {
     stop("\nAn OSM PBF file is required to build a network.")
   }
 
-
   # check if jar file is stored already. If not, download it
   jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
 
@@ -56,27 +55,26 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   rJava::.jinit()
   rJava::.jaddClassPath(path = jar_file)
 
-
   # check if data_path already has a network.dat file
-    dat_file <- file.path(path, "network.dat")
+  dat_file <- file.path(path, "network.dat")
 
-    if (checkmate::test_file_exists(dat_file)) {
-      r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
-      message("\nUsing cached network.dat from ", dat_file)
-      return(r5_core)
-      } else {
+  if (checkmate::test_file_exists(dat_file)) {
+    r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
+    message("\nUsing cached network.dat from ", dat_file)
+    return(r5_core)
+  } else {
 
-  # build new r5_core
-  r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
+    # build new r5_core
+    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
 
-  # display a warning message if there is a PBF file but no GTFS data
-  if (any_pbf == TRUE & any_gtfs == FALSE) {
-    message("\nNo public transport data (gtfs) provided. Graph will be built
-            with the street network only.")
-  }
+    # display a warning message if there is a PBF file but no GTFS data
+    if (any_pbf == TRUE & any_gtfs == FALSE) {
+      message("\nNo public transport data (gtfs) provided. Graph will be built
+              with the street network only.")
+    }
 
-  message("\nFinished building network.dat at ", dat_file)
-  return(r5r_core)
+    message("\nFinished building network.dat at ", dat_file)
+    return(r5r_core)
 
   }
 }
