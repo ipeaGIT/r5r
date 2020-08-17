@@ -1,6 +1,5 @@
 package com.conveyal.r5;
 
-import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.AnalysisTask;
@@ -14,7 +13,6 @@ import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
-import org.locationtech.jts.geom.Coordinate;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +21,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
@@ -30,12 +30,23 @@ import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 public class R5RCore {
 
     private int numberOfThreads;
+    ForkJoinPool r5rThreadPool;
+
+    public int getNumberOfThreads() {
+        return this.numberOfThreads;
+    }
+
+    public void setNumberOfThreads(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
+        r5rThreadPool = new ForkJoinPool(numberOfThreads);
+    }
+
 
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
-        numberOfThreads = Runtime.getRuntime().availableProcessors();
+        setNumberOfThreads(Runtime.getRuntime().availableProcessors());
 
         File file = new File(dataFolder + "network.dat");
         if (!file.isFile()) {
@@ -67,24 +78,43 @@ public class R5RCore {
 //        }
 //    }
 
-    public List<Object> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
-                                  String directModes, String transitModes, String date, String departureTime, int maxStreetTime) {
+    public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
+                                                                 String directModes, String transitModes, String date, String departureTime, int maxStreetTime) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[requestIds.length];
         for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
 
-        return Arrays.stream(requestIndices).parallel()
-                .mapToObj(index -> {
-                    LinkedHashMap<String, Object> results =
-                            null;
-                    try {
-                        results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
-                                directModes, transitModes, date, departureTime, maxStreetTime);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    return results;
-                }).collect(Collectors.toList());
+
+//        ForkJoinPool customThreadPool = new ForkJoinPool(4);
+//        long actualTotal = customThreadPool.submit(
+//                () -> aList.parallelStream().reduce(0L, Long::sum)).get();
+
+//        List<Integer> result = pool.submit(() -> testList.parallelStream().map(item -> {
+//            try {
+//                // read from database
+//                Thread.sleep(1000);
+//                System.out.println("task" + item + ":" + Thread.currentThread());
+//            } catch (Exception e) {
+//            }
+//            return item * 10;
+//        }).collect(Collectors.toList())).get();
+
+        List<LinkedHashMap<String, Object>> itineraries = r5rThreadPool.submit(() ->
+                Arrays.stream(requestIndices).parallel()
+                        .mapToObj(index -> {
+                            LinkedHashMap<String, Object> results =
+                                    null;
+                            try {
+                                results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
+                                        directModes, transitModes, date, departureTime, maxStreetTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return results;
+                        }).
+                        collect(Collectors.toList())).get();
+
+        return itineraries;
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
