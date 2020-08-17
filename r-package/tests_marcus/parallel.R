@@ -16,7 +16,6 @@ list.files(file.path(.libPaths()[1], "r5r", "jar"))
 r5_core <- setup_r5(data_path = path)
 
 ##### TESTS travel_time_matrix ------------------------
-options(java.parameters = "-Xmx16G")
 
 # input
 origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
@@ -30,7 +29,9 @@ street_time = 15L
 max_street_time = 30L
 max_trip_duration = 300L
 
-tictoc::tic()
+r5_core$setNumberOfThreadsToMax()
+
+tictoc::tic("max")
 df <- travel_time_matrix( r5_core = r5_core,
                           origins = origins,
                           destinations = destinations,
@@ -41,7 +42,30 @@ df <- travel_time_matrix( r5_core = r5_core,
                           max_street_time = max_street_time,
                           max_trip_duration = max_trip_duration
 )
-tictoc::toc()
+tictoc::toc(log = TRUE, quiet = TRUE)
+
+for (x in 1:12) {
+  r5_core$setNumberOfThreads(as.integer(x))
+
+  tictoc::tic(x)
+
+  df <- travel_time_matrix( r5_core = r5_core,
+                            origins = origins,
+                            destinations = destinations,
+                            trip_date = trip_date,
+                            departure_time = departure_time,
+                            direct_modes = direct_modes,
+                            transit_modes = transit_modes,
+                            max_street_time = max_street_time,
+                            max_trip_duration = max_trip_duration)
+
+  tictoc::toc(log = TRUE, quiet = TRUE)
+}
+
+log.txt <- tictoc::tic.log(format = TRUE)
+log.lst <-tictoc::tic.log(format = FALSE)
+unlist(lapply(log.lst, function(x) x$toc - x$tic))
+writeLines(unlist(log.txt))
 
 # on common thread pool : 61.554 sec elapsed
 # on custom thread pool, number of threads = number of processor cores (12): 68.929 sec elapsed
@@ -65,10 +89,10 @@ direct_modes <- c("WALK", "BICYCLE", "CAR")
 transit_modes <-"BUS"
 max_street_time = 30
 
-origins = dplyr::sample_n(origins, 10000, replace = TRUE)
-destinations = dplyr::sample_n(destinations, 10000, replace = TRUE)
+origins = dplyr::sample_n(origins, 1000, replace = TRUE)
+destinations = dplyr::sample_n(destinations, 1000, replace = TRUE)
 
-trip_requests <- data.frame(id = 1:10000,
+trip_requests <- data.frame(id = 1:1000,
                             fromLat = origins$lat,
                             fromLon = origins$lon,
                             toLat = destinations$lat,
@@ -76,7 +100,9 @@ trip_requests <- data.frame(id = 1:10000,
 
 # trip_requests2 <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
-tictoc::tic()
+r5_core$setNumberOfThreadsToMax()
+
+tictoc::tic("max")
 trips <- multiple_detailed_itineraries( r5_core,
                                         trip_requests,
                                         trip_date = trip_date,
@@ -84,7 +110,28 @@ trips <- multiple_detailed_itineraries( r5_core,
                                         direct_modes = direct_modes,
                                         transit_modes = transit_modes,
                                         max_street_time = max_street_time)
-tictoc::toc()
+tictoc::toc(log = TRUE, quiet = TRUE)
+
+for (x in 1:12) {
+  r5_core$setNumberOfThreads(as.integer(x))
+
+  tictoc::tic(x)
+
+  trips <- multiple_detailed_itineraries( r5_core,
+                                          trip_requests,
+                                          trip_date = trip_date,
+                                          departure_time = departure_time,
+                                          direct_modes = direct_modes,
+                                          transit_modes = transit_modes,
+                                          max_street_time = max_street_time)
+
+  tictoc::toc(log = TRUE, quiet = TRUE)
+}
+
+log.txt <- tictoc::tic.log(format = TRUE)
+log.lst <-tictoc::tic.log(format = FALSE)
+unlist(lapply(log.lst, function(x) x$toc - x$tic))
+writeLines(unlist(log.txt))
 
 # on common thread pool : 2.624 sec elapsed
 # on custom thread pool, number of threads = number of processor cores (12): 80.79 sec elapsed
