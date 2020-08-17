@@ -56,7 +56,7 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file
-  dat_file <- file.path(path, "network.dat")
+  dat_file <- file.path(data_path, "network.dat")
 
   if (checkmate::test_file_exists(dat_file)) {
     r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
