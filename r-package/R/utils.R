@@ -36,11 +36,11 @@ test_points_input <- function(df) {
   any_df <- is(df, 'data.frame')
 
   if( is(df, 'sf') ){
-            any_sf <- as.character(unique(st_geometry_type(df))) == "MULTIPOINT"
+            any_sf <- as.character(unique(sf::st_geometry_type(df))) == "MULTIPOINT"
             } else { any_sf <- FALSE}
 
   # check
-  if (sum(any_sf, any_sf) < 1) {
+  if ( sum(any_df, any_sf) < 1) {
     stop(message("Origin/Destinations must be either a 'data.frame' or a 'sf MULTIPOINT'"))
     }
 }

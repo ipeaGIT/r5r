@@ -78,9 +78,7 @@ travel_time_matrix <- function( r5_core,
                                 max_street_time,
                                 max_trip_duration = 7200L){
 
-
 ### check inputs
-
 
   # max_trip_duration & max_street_time
   if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
@@ -133,8 +131,8 @@ travel_time_matrix <- function( r5_core,
 
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
-  travel_times[, direct_modes := direct_modes ]
-  travel_times[, transit_modes := transit_modes]
+  data.table::setDT(travel_times)[, 'direct_modes' := direct_modes ]
+  data.table::setDT(travel_times)[, 'transit_modes' := transit_modes]
 
   return(travel_times)
 }

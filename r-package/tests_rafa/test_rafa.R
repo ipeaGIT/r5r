@@ -7,11 +7,11 @@ library(magrittr)
 library(roxygen2)
 library(devtools)
 library(usethis)
-library(testthat)
 library(profvis)
 library(dplyr)
 library(mapview)
 library(covr)
+library(testthat)
 
 
 

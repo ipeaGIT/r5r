@@ -1,5 +1,6 @@
 context("download_r5")
 
+path <- system.file("extdata", package = "r5r")
 
 # expected behavior
 test_that("setup_r5 - expected behavior", {
