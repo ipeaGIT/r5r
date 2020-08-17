@@ -1,3 +1,11 @@
+#' Extract OpenStreetMap network in SF format
+#'
+#' @param r5_core
+#'
+#' @return A street network object with two SF fields: vertices and edges.
+#' @export
+#'
+#' @examples
 street_network_to_sf <- function(r5_core) {
 
   # Get street network from R5R core
