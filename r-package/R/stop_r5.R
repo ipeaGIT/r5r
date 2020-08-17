@@ -23,8 +23,7 @@ stop_r5 <- function(...) {
 
   # find all running r5r cores in the parent frame
 
-  current_objects <- rlang::env_get_list(env = parent.frame(),
-                                         nm = ls(env = parent.frame()))
+  current_objects <- mget(ls(env = parent.frame()), envir = parent.frame())
 
   classes_list <- lapply(current_objects, class)
 
