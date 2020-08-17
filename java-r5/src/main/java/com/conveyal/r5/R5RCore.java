@@ -435,9 +435,9 @@ public class R5RCore {
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
-        verticesTable.put("fromVertex", fromVertexCol);
-        verticesTable.put("toVertex", toVertexCol);
-        verticesTable.put("geometry", geometryCol);
+        edgesTable.put("fromVertex", fromVertexCol);
+        edgesTable.put("toVertex", toVertexCol);
+        edgesTable.put("geometry", geometryCol);
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
 
