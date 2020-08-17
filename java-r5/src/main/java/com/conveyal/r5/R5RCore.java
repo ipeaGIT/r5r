@@ -29,10 +29,14 @@ import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
 public class R5RCore {
 
+    private int numberOfThreads;
+
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
+        numberOfThreads = Runtime.getRuntime().availableProcessors();
+
         File file = new File(dataFolder + "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
