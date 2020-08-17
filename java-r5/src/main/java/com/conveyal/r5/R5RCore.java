@@ -41,12 +41,15 @@ public class R5RCore {
         r5rThreadPool = new ForkJoinPool(numberOfThreads);
     }
 
+    public void setNumberOfThreadsToMax() {
+        r5rThreadPool = ForkJoinPool.commonPool();
+    }
 
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
-        setNumberOfThreads(Runtime.getRuntime().availableProcessors());
+        setNumberOfThreadsToMax();
 
         File file = new File(dataFolder + "network.dat");
         if (!file.isFile()) {
@@ -84,22 +87,7 @@ public class R5RCore {
         int[] requestIndices = new int[requestIds.length];
         for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
 
-
-//        ForkJoinPool customThreadPool = new ForkJoinPool(4);
-//        long actualTotal = customThreadPool.submit(
-//                () -> aList.parallelStream().reduce(0L, Long::sum)).get();
-
-//        List<Integer> result = pool.submit(() -> testList.parallelStream().map(item -> {
-//            try {
-//                // read from database
-//                Thread.sleep(1000);
-//                System.out.println("task" + item + ":" + Thread.currentThread());
-//            } catch (Exception e) {
-//            }
-//            return item * 10;
-//        }).collect(Collectors.toList())).get();
-
-        List<LinkedHashMap<String, Object>> itineraries = r5rThreadPool.submit(() ->
+        return r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
                         .mapToObj(index -> {
                             LinkedHashMap<String, Object> results =
@@ -113,8 +101,6 @@ public class R5RCore {
                             return results;
                         }).
                         collect(Collectors.toList())).get();
-
-        return itineraries;
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
@@ -309,14 +295,15 @@ public class R5RCore {
         return pathOptionsTable;
     }
 
-    public List<Object> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                 String[] toIds, double[] toLats, double[] toLons,
-                                                 String directModes, String transitModes, String date, String departureTime,
-                                                 int maxWalkTime, int maxTripDuration) {
+    public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                        String[] toIds, double[] toLats, double[] toLons,
+                                                                        String directModes, String transitModes, String date, String departureTime,
+                                                                        int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
-        return Arrays.stream(originIndices).parallel()
+        return r5rThreadPool.submit(() ->
+                Arrays.stream(originIndices).parallel()
                 .mapToObj(index -> {
                     LinkedHashMap<String, Object> results =
                             null;
@@ -328,7 +315,7 @@ public class R5RCore {
                         e.printStackTrace();
                     }
                     return results;
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList())).get();
     }
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
