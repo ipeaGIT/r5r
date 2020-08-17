@@ -32,6 +32,25 @@ public class R5RCore {
     private int numberOfThreads;
     ForkJoinPool r5rThreadPool;
 
+    public float getWalkSpeed() {
+        return walkSpeed;
+    }
+
+    public void setWalkSpeed(float walkSpeed) {
+        this.walkSpeed = walkSpeed;
+    }
+
+    public float getBikeSpeed() {
+        return bikeSpeed;
+    }
+
+    public void setBikeSpeed(float bikeSpeed) {
+        this.bikeSpeed = bikeSpeed;
+    }
+
+    private float walkSpeed;
+    private float bikeSpeed;
+
     public int getNumberOfThreads() {
         return this.numberOfThreads;
     }
@@ -50,6 +69,9 @@ public class R5RCore {
 
     public R5RCore(String dataFolder) {
         setNumberOfThreadsToMax();
+
+        this.walkSpeed = 1.0f;
+        this.bikeSpeed = 3.3f;
 
         File file = new File(dataFolder + "network.dat");
         if (!file.isFile()) {
@@ -121,6 +143,8 @@ public class R5RCore {
         request.toLat = toLat;
         request.toLon = toLon;
         request.streetTime = maxStreetTime;
+        request.walkSpeed = this.walkSpeed;
+        request.bikeSpeed = this.bikeSpeed;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
 
@@ -332,8 +356,8 @@ public class R5RCore {
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
         request.fromLon = fromLon;
-        request.walkSpeed = 1f;
-        request.bikeSpeed = 3.3f;
+        request.walkSpeed = this.walkSpeed;
+        request.bikeSpeed = this.bikeSpeed;
         request.streetTime = maxWalkTime;
         request.maxWalkTime = maxWalkTime;
         request.maxTripDurationMinutes = maxTripDuration;
