@@ -187,10 +187,17 @@ multiple_detailed_itineraries <- function(r5_core,
   #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
 
   # Collects results from R5 and transforms them into simple features objects
-  path_options_df <- jdx::convertToR(path_options) %>%
-    data.table::rbindlist() %>%
-    mutate(geometry = st_as_sfc(geometry)) %>%
-    st_sf(crs = 4326) # WGS 84
+  # path_options_df <- jdx::convertToR(path_options) %>%
+  #   data.table::rbindlist() %>%
+  #   mutate(geometry = st_as_sfc(geometry)) %>%
+  #   st_sf(crs = 4326) # WGS 84
+
+  path_options <- jdx::convertToR(path_options)
+  path_options_df <- data.table::rbindlist(path_options)
+
+  data.table::setDT(path_options_df)[, geometry := sf::st_as_sfc(geometry)]
+  path_options_sf <- sf::st_sf(path_options_df, crs = 4326) # WGS 84
+
 
   # R5 often returns multiple options with the basic structure, with minor
   # changes to the walking segments at the start and end of the trip.

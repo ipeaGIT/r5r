@@ -1,6 +1,5 @@
 package com.conveyal.r5;
 
-import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.AnalysisTask;
@@ -10,8 +9,11 @@ import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
+import com.conveyal.r5.streets.EdgeStore;
+import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -19,16 +21,58 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
 public class R5RCore {
 
+    private int numberOfThreads;
+    ForkJoinPool r5rThreadPool;
+
+    public double getWalkSpeed() {
+        return walkSpeed;
+    }
+
+    public void setWalkSpeed(double walkSpeed) {
+        this.walkSpeed = walkSpeed;
+    }
+
+    public double getBikeSpeed() {
+        return bikeSpeed;
+    }
+
+    public void setBikeSpeed(double bikeSpeed) {
+        this.bikeSpeed = bikeSpeed;
+    }
+
+    private double walkSpeed;
+    private double bikeSpeed;
+
+    public int getNumberOfThreads() {
+        return this.numberOfThreads;
+    }
+
+    public void setNumberOfThreads(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
+        r5rThreadPool = new ForkJoinPool(numberOfThreads);
+    }
+
+    public void setNumberOfThreadsToMax() {
+        r5rThreadPool = ForkJoinPool.commonPool();
+    }
+
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
+        setNumberOfThreadsToMax();
+
+        this.walkSpeed = 1.0f;
+        this.bikeSpeed = 3.3f;
+
         File file = new File(dataFolder + "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
@@ -59,24 +103,26 @@ public class R5RCore {
 //        }
 //    }
 
-    public List<Object> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
-                                  String directModes, String transitModes, String date, String departureTime, int maxStreetTime) {
+    public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
+                                                                 String directModes, String transitModes, String date, String departureTime, int maxStreetTime) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[requestIds.length];
         for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
 
-        return Arrays.stream(requestIndices).parallel()
-                .mapToObj(index -> {
-                    LinkedHashMap<String, Object> results =
-                            null;
-                    try {
-                        results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
-                                directModes, transitModes, date, departureTime, maxStreetTime);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    return results;
-                }).collect(Collectors.toList());
+        return r5rThreadPool.submit(() ->
+                Arrays.stream(requestIndices).parallel()
+                        .mapToObj(index -> {
+                            LinkedHashMap<String, Object> results =
+                                    null;
+                            try {
+                                results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
+                                        directModes, transitModes, date, departureTime, maxStreetTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return results;
+                        }).
+                        collect(Collectors.toList())).get();
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
@@ -97,6 +143,8 @@ public class R5RCore {
         request.toLat = toLat;
         request.toLon = toLon;
         request.streetTime = maxStreetTime;
+        request.walkSpeed = (float) this.walkSpeed;
+        request.bikeSpeed = (float) this.bikeSpeed;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
 
@@ -271,14 +319,15 @@ public class R5RCore {
         return pathOptionsTable;
     }
 
-    public List<Object> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                 String[] toIds, double[] toLats, double[] toLons,
-                                                 String directModes, String transitModes, String date, String departureTime,
-                                                 int maxWalkTime, int maxTripDuration) {
+    public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                        String[] toIds, double[] toLats, double[] toLons,
+                                                                        String directModes, String transitModes, String date, String departureTime,
+                                                                        int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
-        return Arrays.stream(originIndices).parallel()
+        return r5rThreadPool.submit(() ->
+                Arrays.stream(originIndices).parallel()
                 .mapToObj(index -> {
                     LinkedHashMap<String, Object> results =
                             null;
@@ -290,7 +339,7 @@ public class R5RCore {
                         e.printStackTrace();
                     }
                     return results;
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList())).get();
     }
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
@@ -307,8 +356,8 @@ public class R5RCore {
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
         request.fromLon = fromLon;
-        request.walkSpeed = 1f;
-        request.bikeSpeed = 3.3f;
+        request.walkSpeed = (float) this.walkSpeed;
+        request.bikeSpeed = (float) this.bikeSpeed;
         request.streetTime = maxWalkTime;
         request.maxWalkTime = maxWalkTime;
         request.maxTripDurationMinutes = maxTripDuration;
@@ -403,5 +452,52 @@ public class R5RCore {
         results.put("travel_time", travelTimeCol);
 
         return results;
+    }
+
+    public List<Object> getStreetNetwork() {
+        // Build vertices return table
+        ArrayList<Integer> indexCol = new ArrayList<>();
+        ArrayList<Double> latCol = new ArrayList<>();
+        ArrayList<Double> lonCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> verticesTable = new LinkedHashMap<>();
+        verticesTable.put("index", indexCol);
+        verticesTable.put("lat", latCol);
+        verticesTable.put("lon", lonCol);
+
+        VertexStore vertices = transportNetwork.streetLayer.vertexStore;
+
+        VertexStore.Vertex vertexCursor = vertices.getCursor();
+        while (vertexCursor.advance()) {
+            indexCol.add(vertexCursor.index);
+            latCol.add(vertexCursor.getLat());
+            lonCol.add(vertexCursor.getLon());
+        }
+
+        // Build edges return table
+        ArrayList<Integer> fromVertexCol = new ArrayList<>();
+        ArrayList<Integer> toVertexCol = new ArrayList<>();
+        ArrayList<String> geometryCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
+        edgesTable.put("fromVertex", fromVertexCol);
+        edgesTable.put("toVertex", toVertexCol);
+        edgesTable.put("geometry", geometryCol);
+
+        EdgeStore edges = transportNetwork.streetLayer.edgeStore;
+
+        EdgeStore.Edge edgeCursor = edges.getCursor();
+        while (edgeCursor.advance()) {
+            fromVertexCol.add(edgeCursor.getFromVertex());
+            toVertexCol.add(edgeCursor.getToVertex());
+            geometryCol.add(edgeCursor.getGeometry().toString());
+        }
+
+        // Return a list of dataframes
+        List<Object> transportNetworkList = new ArrayList<>();
+        transportNetworkList.add(verticesTable);
+        transportNetworkList.add(edgesTable);
+
+        return transportNetworkList;
     }
 }
