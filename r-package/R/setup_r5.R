@@ -57,22 +57,16 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   dat_file <- file.path(data_path, "network.dat")
 
   if (checkmate::test_file_exists(dat_file)) {
+
+    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
+
     message("\nUsing cached network.dat from ", dat_file)
 
-    # logs_path <- file.path(data_path, "setup_logs.txt")
-    # logs      <- file(logs_path, open = "w")
-    #
-    # sink(logs, type = "message")
+    return(r5r_core)
 
-    r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
-
-    # sink(NULL, type = "message")
-    # close(logs)
-
-    return(r5_core)
   } else {
 
-    # build new r5_core
+    # build new r5r_core
     r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
 
     # display a warning message if there is a PBF file but no GTFS data
