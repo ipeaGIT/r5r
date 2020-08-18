@@ -12,8 +12,10 @@ library(dplyr)
 library(mapview)
 library(covr)
 library(testthat)
+library(ggplot2)
+library(mapview)
 
-
+mapviewOptions(platform = 'leafgl')
 
 # Update documentation
 devtools::document(pkg = ".")
@@ -36,12 +38,27 @@ list.files(file.path(.libPaths()[1], "r5r", "jar"))
 
 r5_core <- setup_r5(data_path = path)
 
-a <- street_network_to_sf(r5_core)
+
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
 
+
+
+##### TESTS street_network_to_sf ------------------------
+
+street_net <- street_network_to_sf(r5_core)
+
+
+mapview(street_net$edges ) + street_net$vertices + a
+
+head(street_net$edges)
+
+a <- sf::st_cast(street_net$edges, 'POINT')
+
+ggplot() +
+        geom_
 
 
 
