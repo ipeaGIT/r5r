@@ -24,9 +24,12 @@ LazyData: TRUE
 Depends:
     R (>= 4.0)
 Suggests:
-    rmarkdown,
+    covr,
+    ggplot2 (>= 3.3.1),
     knitr,
-    testthat,
+    mapview,
+    rmarkdown,
+    testthat
 Imports:
     checkmate,
     data.table,

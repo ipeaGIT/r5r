@@ -42,6 +42,7 @@ library(r5r)
 library(sf)
 library(data.table)
 library(dplyr)
+library(ggplot2)
 
 ```
 
@@ -69,7 +70,7 @@ head(points)
 
 ```
 
-## Build routable transport network
+# Build routable transport network
 
 The first step is to build the multimodal transport used for routing in R5. This
 is done with the `setup_r5` function. It does two things: (1) downloads a compiled JAR file
@@ -81,7 +82,7 @@ r5_core <- setup_r5(data_path = path)
 
 ```
 
-## Routing analysi
+# Routing analysis
 
 **r5** has two core routing functions.
 
@@ -95,10 +96,31 @@ r5_core <- setup_r5(data_path = path)
    * Fast function that returns a simple 'data.frame' with travel time 
    estimates between one or multiple origin destination pairs.
    
-### Detailed itineraries
+## Detailed itineraries
 
-### Fast many to many travel time matrix
+Allows one to get the fastest or multiple alternative routes between a set of
+origins and destinations.
 
+Create simple example here and plot the result below
+
+### visualize results
+
+
+```{r, message = FALSE}
+# extract OSM network
+street_net <- street_network_to_sf(r5_core)
+
+# plot
+ggplot() +
+        geom_sf(data = street_net$edges, color='gray85') +
+        theme_minimal()
+
+```
+
+
+
+
+## Fast many to many travel time matrix
 
 ```{r, message = FALSE}
 # calculate a travel time matrix

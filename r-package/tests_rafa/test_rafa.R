@@ -187,6 +187,10 @@ library(roxygen2)
 library(devtools)
 library(usethis)
 
+ggplot() +
+        geom_sf(data = street_net$edges, color='gray85') +
+        theme_minimal()
+
 
 
 
