@@ -134,8 +134,8 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
  max_trip_duration = 300L
 
  df <- travel_time_matrix( r5_core = r5_core,
-                           origins = points,
-                           destinations = points,
+                           origins = origins,
+                           destinations = destinations,
                            trip_date = trip_date,
                            departure_time = departure_time,
                            direct_modes = direct_modes,
