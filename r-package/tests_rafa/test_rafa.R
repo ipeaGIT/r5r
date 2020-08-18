@@ -32,21 +32,15 @@ list.files(file.path(.libPaths()[1], "r5r", "jar"))
 # file.remove( file.path(path, "network.dat") )
 # file.remove( file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar") )
 
-# r5r::download_r5()
+# r5r::download_r5(force_update = T)
 
 r5_core <- setup_r5(data_path = path)
 
-create core
-
+a <- street_network_to_sf(r5_core)
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
-
-jdx::convertToR(travel_times)
-a <- read.table("C:/Users/user/Documents/R/win-library/4.0/r5r/extdata/network.dat")
-
-a <- jdx::convertToR(a$V1)
 
 
 
@@ -122,10 +116,10 @@ trips <- multiple_detailed_itineraries( r5_core,
 options(java.parameters = "-Xmx16G")
 
 # input
-origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[c(1,100,300,500),]
 
  # input
- direct_modes <- c("WALK", "BICYCLE", "CAR")
+ direct_modes <- c("WALK") #, "BICYCLE", "CAR")
  transit_modes <-"BUS"
  departure_time <- "14:00:00"
  trip_date <- "2019-05-20"
@@ -133,7 +127,14 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
  max_street_time = 30L
  max_trip_duration = 300L
 
- df <- travel_time_matrix( r5_core = r5_core,
+ r5_core$setNumberOfThreads <- 4L
+ r5_core$getNumberOfThreads()
+
+ r5_core$setNumberOfThreadsToMax()
+ r5_core$setWalkSpeed <- 0
+
+ system.time(
+ df2 <- travel_time_matrix( r5_core = r5_core,
                            origins = origins,
                            destinations = destinations,
                            trip_date = trip_date,
@@ -143,7 +144,7 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
                            max_street_time = max_street_time,
                            max_trip_duration = max_trip_duration
                            )
-
+)
 
  head(tt)
  nrow(tt)
@@ -158,6 +159,8 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
 covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
+covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
+
 
 # the whole package
 covr::package_coverage(path = ".", type = "tests")

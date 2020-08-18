@@ -29,7 +29,6 @@ sf_to_df_r5r <- function(sf){
 #' @export
 #' @family support functions
 #'
-
 test_points_input <- function(df) {
 
   # is data.frame or sf
