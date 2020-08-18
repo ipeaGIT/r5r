@@ -12,6 +12,7 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%"))
 
 #' @importFrom magrittr %>%
 #' @importFrom data.table := %between% fifelse
+# #' @importFrom methods  is signature
 NULL
 
 

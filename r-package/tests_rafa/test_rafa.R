@@ -36,7 +36,7 @@ list.files(file.path(.libPaths()[1], "r5r", "jar"))
 
 # r5r::download_r5(force_update = T)
 
-r5_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path)
 
 
 
@@ -48,7 +48,7 @@ points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 
 
 ##### TESTS street_network_to_sf ------------------------
 
-street_net <- street_network_to_sf(r5_core)
+street_net <- street_network_to_sf(r5r_core)
 
 
 mapview(street_net$edges ) + street_net$vertices + a
@@ -82,7 +82,7 @@ trip <- detailed_itineraries( fromLat = fromLat,
                               fromLon = fromLon,
                               toLat = toLat,
                               toLon = toLon,
-                              r5_core = r5_core,
+                              r5r_core = r5r_core,
                               trip_date = trip_date,
                               departure_time = departure_time,
                               direct_modes = direct_modes,
@@ -115,7 +115,7 @@ trip_requests <- data.frame(id = 1:5,
 trip_requests2 <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
 system.time(
-trips <- multiple_detailed_itineraries( r5_core,
+trips <- multiple_detailed_itineraries( r5r_core,
                                         trip_requests,
                                         trip_date = trip_date,
                                         departure_time = departure_time,
@@ -137,27 +137,27 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
 
  # input
  direct_modes <- c("WALK") #, "BICYCLE", "CAR")
- transit_modes <-"BUS"
+ transit_modes <-"TRANSIT"
  departure_time <- "14:00:00"
  trip_date <- "2019-05-20"
  street_time = 15L
  max_street_time = 30L
  max_trip_duration = 300L
 
- r5_core$setNumberOfThreads <- 4L
- r5_core$getNumberOfThreads()
-
- r5_core$setNumberOfThreadsToMax()
- r5_core$setWalkSpeed <- 0
+ # r5r_core$setNumberOfThreads <- 4L
+ # r5r_core$getNumberOfThreads()
+ #
+ # r5r_core$setNumberOfThreadsToMax()
+ # r5r_core$setWalkSpeed <- 0
 
  system.time(
- df2 <- travel_time_matrix( r5_core = r5_core,
+ df <- travel_time_matrix( r5r_core = r5r_core,
                            origins = origins,
                            destinations = destinations,
                            trip_date = trip_date,
                            departure_time = departure_time,
                            direct_modes = direct_modes,
-                           transit_modes = transit_modes,
+                          # transit_modes = transit_modes,
                            max_street_time = max_street_time,
                            max_trip_duration = max_trip_duration
                            )
@@ -169,6 +169,25 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
  1474469/ 143.64
  245480 /32.74
  523074 / 46.96
+
+
+
+
+ ##### TESTS select_mode ------------------------
+
+ # mode = c('car')
+ mode = c('BUS') !!!!!!!!!!!!!!!!!!!!!
+         # mode = c('BICYCLE')  !!!!!!!!!!!!!!!!!!!!!
+         mode <- c('BICYCLE', 'BUS')
+ mode <- c('BICYCLE', 'car') ### WALK
+ mode <- c('car', 'BUS')
+ mode <- c('car', 'BUS', 'walk', 'BICYCLE')
+
+ bu kike === walk
+ se só tem direct mode, outros vazios
+
+ mode_list <- select_mode(mode)
+
 
 ##### Coverage ------------------------
 
