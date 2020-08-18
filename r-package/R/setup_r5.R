@@ -28,7 +28,7 @@
 setup_r5 <- function(data_path, version = "4.9.0") {
 
   # check directory input
-  if (is.null(data_path)) { stop("Please provide data_path.") }
+  if (is.null(data_path)) stop("Please provide data_path.")
 
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
@@ -38,9 +38,7 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if (any_pbf == FALSE) {
-    stop("\nAn OSM PBF file is required to build a network.")
-  }
+  if (!any_pbf) stop("\nAn OSM PBF file is required to build a network.")
 
   # check if jar file is stored already. If not, download it
   jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
@@ -59,8 +57,18 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   dat_file <- file.path(data_path, "network.dat")
 
   if (checkmate::test_file_exists(dat_file)) {
-    r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
     message("\nUsing cached network.dat from ", dat_file)
+
+    # logs_path <- file.path(data_path, "setup_logs.txt")
+    # logs      <- file(logs_path, open = "w")
+    #
+    # sink(logs, type = "message")
+
+    r5_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path)
+
+    # sink(NULL, type = "message")
+    # close(logs)
+
     return(r5_core)
   } else {
 
@@ -69,11 +77,12 @@ setup_r5 <- function(data_path, version = "4.9.0") {
 
     # display a warning message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
-      message("\nNo public transport data (gtfs) provided. Graph will be built
-              with the street network only.")
+      message(paste("\nNo public transport data (gtfs) provided.",
+                    "Graph will be built with the street network only."))
     }
 
     message("\nFinished building network.dat at ", dat_file)
+
     return(r5r_core)
 
   }
