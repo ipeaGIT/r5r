@@ -104,7 +104,8 @@ public class R5RCore {
 //    }
 
     public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
-                                                                 String directModes, String transitModes, String date, String departureTime, int maxStreetTime) throws ExecutionException, InterruptedException {
+                                                                 String directModes, String transitModes, String accessModes, String egressModes,
+                                                                 String date, String departureTime, int maxStreetTime) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[requestIds.length];
         for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
@@ -116,7 +117,7 @@ public class R5RCore {
                                     null;
                             try {
                                 results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
-                                        directModes, transitModes, date, departureTime, maxStreetTime);
+                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxStreetTime);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -126,16 +127,16 @@ public class R5RCore {
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
-                                                        String directModes, String transitModes, String date, String departureTime,
-                                                        int maxStreetTime) throws ParseException {
-        return planSingleTrip("1", fromLat, fromLon, toLat, toLon, directModes, transitModes,
+                                                        String directModes, String transitModes, String accessModes, String egressModes,
+                                                        String date, String departureTime, int maxStreetTime) throws ParseException {
+        return planSingleTrip("1", fromLat, fromLon, toLat, toLon, directModes, transitModes, accessModes, egressModes,
                 date, departureTime, maxStreetTime);
 
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(String requestId, double fromLat, double fromLon, double toLat, double toLon,
-                               String directModes, String transitModes, String date, String departureTime,
-                               int maxStreetTime) throws ParseException {
+                               String directModes, String transitModes, String accessModes, String egressModes,
+                                                        String date, String departureTime, int maxStreetTime) throws ParseException {
         AnalysisTask request = new RegionalTask();
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
@@ -157,14 +158,26 @@ public class R5RCore {
         }
 
         request.transitModes = EnumSet.noneOf(TransitModes.class);
-        request.accessModes = EnumSet.noneOf(LegMode.class);
-        request.egressModes = EnumSet.noneOf(LegMode.class);
         modes = transitModes.split(";");
         if (!transitModes.equals("") & modes.length > 0) {
-            request.accessModes.add(LegMode.WALK);
-            request.egressModes.add(LegMode.WALK);
             for (String mode : modes) {
                 request.transitModes.add(TransitModes.valueOf(mode));
+            }
+        }
+
+        request.accessModes = EnumSet.noneOf(LegMode.class);
+        modes = accessModes.split(";");
+        if (!accessModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.accessModes.add(LegMode.valueOf(mode));
+            }
+        }
+
+        request.egressModes = EnumSet.noneOf(LegMode.class);
+        modes = egressModes.split(";");
+        if (!egressModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.egressModes.add(LegMode.valueOf(mode));
             }
         }
 
@@ -321,7 +334,8 @@ public class R5RCore {
 
     public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                         String[] toIds, double[] toLats, double[] toLons,
-                                                                        String directModes, String transitModes, String date, String departureTime,
+                                                                        String directModes, String transitModes, String accessModes, String egressModes,
+                                                                        String date, String departureTime,
                                                                         int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
@@ -333,8 +347,8 @@ public class R5RCore {
                             null;
                     try {
                         results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
-                                toIds, toLats, toLons, directModes, transitModes, date, departureTime,
-                                maxWalkTime, maxTripDuration);
+                                toIds, toLats, toLons, directModes, transitModes, accessModes, egressModes,
+                                date, departureTime, maxWalkTime, maxTripDuration);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -344,7 +358,8 @@ public class R5RCore {
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
                                                   String[] toIds, double[] toLats, double[] toLons,
-                                                  String directModes, String transitModes, String date, String departureTime,
+                                                  String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String date, String departureTime,
                                                   int maxWalkTime, int maxTripDuration) throws ParseException {
 
         RegionalTask request = new RegionalTask();
@@ -366,27 +381,37 @@ public class R5RCore {
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
 
+        request.directModes = EnumSet.noneOf(LegMode.class);
+        String[] modes = directModes.split(";");
+        if (!directModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.directModes.add(LegMode.valueOf(mode));
+            }
+        }
+
         request.transitModes = EnumSet.noneOf(TransitModes.class);
-        request.accessModes = EnumSet.noneOf(LegMode.class);
-        request.egressModes = EnumSet.noneOf(LegMode.class);
-        String[] modes = transitModes.split(";");
+        modes = transitModes.split(";");
         if (!transitModes.equals("") & modes.length > 0) {
-            request.accessModes.add(LegMode.WALK);
-            request.egressModes.add(LegMode.WALK);
             for (String mode : modes) {
                 request.transitModes.add(TransitModes.valueOf(mode));
             }
         }
 
-        request.directModes = EnumSet.noneOf(LegMode.class);
-        modes = directModes.split(";");
-        if (!directModes.equals("") & modes.length > 0) {
+        request.accessModes = EnumSet.noneOf(LegMode.class);
+        modes = accessModes.split(";");
+        if (!accessModes.equals("") & modes.length > 0) {
             for (String mode : modes) {
                 request.accessModes.add(LegMode.valueOf(mode));
-                request.directModes.add(LegMode.valueOf(mode));
             }
         }
 
+        request.egressModes = EnumSet.noneOf(LegMode.class);
+        modes = egressModes.split(";");
+        if (!egressModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.egressModes.add(LegMode.valueOf(mode));
+            }
+        }
 
         request.date = LocalDate.parse(date);
 
