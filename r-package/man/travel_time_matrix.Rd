@@ -5,19 +5,18 @@
 \title{Calculate travel time matrix between origin destination pairs}
 \usage{
 travel_time_matrix(
-  r5_core,
+  r5r_core,
   origins,
   destinations,
   trip_date,
   departure_time,
-  direct_modes = "WALK",
-  transit_modes = "TRANSIT",
-  max_street_time,
+  mode = "WALK",
+  max_street_time = 7200L,
   max_trip_duration = 7200L
 )
 }
 \arguments{
-\item{r5_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{a rJava object to connect with R5 routing engine}
 
 \item{origins}{a spatial sf MULTIPOINT object, or a data.frame containing the
 columns 'id', 'lon', 'lat'}
@@ -31,12 +30,8 @@ with public transport networks, check the GTFS.zip
 
 \item{departure_time}{character string, time in format "hh:mm:ss"}
 
-\item{direct_modes}{character string, defaults to "WALK". See details for
+\item{mode}{character string, defaults to "WALK". See details for
 other options.}
-
-\item{transit_modes}{character string, defaults to "TRANSIT", which includes
-all available options of public transport. See details
-for options.}
 
 \item{max_street_time}{integer,}
 
@@ -56,7 +51,8 @@ R5 allows for multiple combinations of transport modes. The options
 include:
 \subsection{Transit modes}{
 
-TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR
+TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
+'TRANSIT' automatically considers all public transport modes available.
 }
 
 \subsection{Non transit modes}{
@@ -71,29 +67,20 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata", package = "r5r")
-r5_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path)
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
-# input
-direct_modes <- c("WALK", "BICYCLE", "CAR")
-transit_modes <-"BUS"
-departure_time <- "14:00:00"
-trip_date <- "2019-05-20"
-street_time = 15L
-max_street_time = 30L
-max_trip_duration = 300L
-
-df <- travel_time_matrix( r5_core = r5_core,
+# estimate travel time matrix
+df <- travel_time_matrix( r5r_core,
                           origins = points,
                           destinations = points,
-                          trip_date = trip_date,
-                          departure_time = departure_time,
-                          direct_modes = direct_modes,
-                          transit_modes = transit_modes,
-                          max_street_time = max_street_time,
-                          max_trip_duration = max_trip_duration
+                          trip_date = "2019-05-20",
+                          departure_time = "14:00:00",
+                          mode = c('WALK', 'TRANSIT'),
+                          max_street_time = 600L,
+                          max_trip_duration = 600L
                           )
 
 }
