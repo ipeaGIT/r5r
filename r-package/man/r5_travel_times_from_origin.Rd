@@ -84,7 +84,6 @@ df <- multiple_detailed_itineraries( r5_core = r5_core,
 \seealso{
 Other routing: 
 \code{\link{detailed_itineraries}()},
-\code{\link{multiple_detailed_itineraries}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}
