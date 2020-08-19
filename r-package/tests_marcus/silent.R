@@ -2,6 +2,7 @@ options(java.parameters = "-Xmx10G")
 
 library(r5r)
 library(sf)
+library(data.table)
 
 
 # build transport network
@@ -13,7 +14,7 @@ list.files(file.path(.libPaths()[1], "r5r", "jar"))
 
 # r5r::download_r5()
 
-r5_core <- setup_r5(data_path = path)
+r5_core <- setup_r5(data_path = path, quiet = TRUE)
 
 ##### TESTS travel_time_matrix ------------------------
 
@@ -31,6 +32,7 @@ max_trip_duration = 300L
 
 r5_core$silentMode()
 r5_core$verboseMode()
+r5_core$getNumberOfThreads()
 
 tictoc::tic("max")
 df <- travel_time_matrix( r5r_core = r5_core,
