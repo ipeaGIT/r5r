@@ -66,13 +66,13 @@ select_mode <- function(mode="WALK") {
 
   # check for invalid input
   lapply(X=mode, FUN=function(x){
-    if(!x %in% all_modes){stop(paste0("Eror: ", x, " is not a valid 'mode'.
+    if(!x %chin% all_modes){stop(paste0("Eror: ", x, " is not a valid 'mode'.
                                       Please use one of the following: ",
                                       paste(unique(all_modes),collapse = ", ")))} })
 
   # assign modes accordingly
-  direct_modes <- mode[which(mode %in% dr_modes)]
-  transit_mode <- mode[which(mode %in% tr_modes)]
+  direct_modes <- mode[which(mode %chin% dr_modes)]
+  transit_mode <- mode[which(mode %chin% tr_modes)]
 
 
   # if only a direct_mode is passed, all others are empty
@@ -90,7 +90,7 @@ select_mode <- function(mode="WALK") {
 
           # if transit & direct modes are passed, consider direct as access & egress_modes
           if (length(transit_mode) != 0 & length(direct_modes) != 0) {
-            access_mode <- direct_modes[which(direct_modes %in% c('WALK', 'BICYCLE', 'CAR'))]
+            access_mode <- direct_modes[which(direct_modes %chin% c('WALK', 'BICYCLE', 'CAR'))]
             egress_mode <- access_mode <- unique(c('WALK', access_mode))
             }
 
