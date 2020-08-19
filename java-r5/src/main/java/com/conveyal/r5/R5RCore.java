@@ -125,7 +125,7 @@ public class R5RCore {
 
     public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
                                                                  String directModes, String transitModes, String accessModes, String egressModes,
-                                                                 String date, String departureTime, int maxStreetTime) throws ExecutionException, InterruptedException {
+                                                                 String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[requestIds.length];
         for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
@@ -137,7 +137,7 @@ public class R5RCore {
                                     null;
                             try {
                                 results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
-                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxStreetTime);
+                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxStreetTime, maxTripDuration);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -148,15 +148,15 @@ public class R5RCore {
 
     public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
                                                         String directModes, String transitModes, String accessModes, String egressModes,
-                                                        String date, String departureTime, int maxStreetTime) throws ParseException {
+                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
         return planSingleTrip("1", fromLat, fromLon, toLat, toLon, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxStreetTime);
+                date, departureTime, maxStreetTime, maxTripDuration);
 
     }
 
     public LinkedHashMap<String, Object> planSingleTrip(String requestId, double fromLat, double fromLon, double toLat, double toLon,
                                String directModes, String transitModes, String accessModes, String egressModes,
-                                                        String date, String departureTime, int maxStreetTime) throws ParseException {
+                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
         AnalysisTask request = new RegionalTask();
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
@@ -166,6 +166,7 @@ public class R5RCore {
         request.streetTime = maxStreetTime;
         request.walkSpeed = (float) this.walkSpeed;
         request.bikeSpeed = (float) this.bikeSpeed;
+        request.maxTripDurationMinutes = maxTripDuration;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
 
