@@ -78,6 +78,11 @@ public class R5RCore {
         root.setLevel(Level.INFO);
     }
 
+    public void setLogMode(String mode) {
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.valueOf(mode));
+    }
+
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
