@@ -14,9 +14,11 @@
 #' @param departure_time character string, time in format "hh:mm:ss"
 #' @param mode character string, defaults to "WALK". See details for
 #'                     other options.
-#' @param max_street_time integer,
-#' @param max_trip_duration integer, Maximum trip duration in seconds. Defaults
+#' @param max_street_time numeric,
+#' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
 #'                           to 7200 seconds (2 hours).
+#' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
+#' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
 #'
 #' @return A data.table with travel-time estimates (in seconds) between origin
 #' destination pairs
@@ -51,8 +53,7 @@
 #'                           trip_date = "2019-05-20",
 #'                           departure_time = "14:00:00",
 #'                           mode = c('WALK', 'TRANSIT'),
-#'                           max_street_time = 600L,
-#'                           max_trip_duration = 600L
+#'                           max_trip_duration = 7200
 #'                           )
 #'
 #' }
@@ -64,8 +65,10 @@ travel_time_matrix <- function( r5r_core,
                                 trip_date,
                                 departure_time,
                                 mode = "WALK",
-                                max_street_time=7200L,
-                                max_trip_duration = 7200L){
+                                max_street_time = 7200,
+                                max_trip_duration = 7200,
+                                walk_speed = 3.6,
+                                bike_speed = 12){
 
 ### check inputs
 
@@ -88,8 +91,12 @@ travel_time_matrix <- function( r5r_core,
     if(sum(class(origins) %in% 'sf')>0){origins <- sf_to_df_r5r(origins)}
     if(sum(class(destinations) %in% 'sf')>0){destinations <- sf_to_df_r5r(destinations)}
 
+  # set bike and walk speed in meters per second
+    r5r_core$setWalkSpeed(walk_speed*5/18)
+    r5r_core$setBikeSpeed(bike_speed*5/18)
+
   # Call to method inside r5r_core object
-  travel_times <- r5r_core$travelTimeMatrixParallel( origins$id,
+  travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
                                                     origins$lat,
                                                     origins$lon,
                                                     destinations$id,

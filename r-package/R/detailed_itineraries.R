@@ -14,6 +14,8 @@
 #' @param departure_time A string in the format "hh:mm:ss".
 #' @param max_street_time An integer representing the maximum total travel time
 #'                        allowed (in minutes).
+#' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
+#' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
 #' @param shortest_path A logical. Whether the function should only return the
 #'                      fastest route alternative (default) or multiple
 #'                      alternatives.
@@ -70,6 +72,8 @@ detailed_itineraries <- function(r5r_core,
                                  trip_date,
                                  departure_time,
                                  max_street_time,
+                                 walk_speed = 3.6,
+                                 bike_speed = 12,
                                  shortest_path = TRUE) {
 
   ### check inputs
@@ -83,6 +87,10 @@ detailed_itineraries <- function(r5r_core,
 
   # Modes
   mode_list <- select_mode(mode)
+
+  # set bike and walk speed in meters per second
+  r5r_core$setWalkSpeed(walk_speed*5/18)
+  r5r_core$setBikeSpeed(bike_speed*5/18)
 
   # either 'origins' and 'destinations' have the same number of rows or one of
   # them has only one entry, in which case the smaller dataframe is expanded
