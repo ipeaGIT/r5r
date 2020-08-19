@@ -40,8 +40,16 @@ setup_r5 <- function(data_path, version = "4.9.0") {
   # stop if there is no input data
   if (!any_pbf) stop("\nAn OSM PBF file is required to build a network.")
 
-  # check if jar file is stored already. If not, download it
-  jar_file <- file.path(.libPaths()[1], "r5r", "jar", paste0("r5r_v", version, ".jar"))
+  # check if most recent JAR release is stored already. If not, download it
+    # download metadata with jar file addresses
+    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
+                                colClasses = 'character',
+                                header = T,
+                                sep = ';')
+    metadata <- subset(metadata, release_date == max(metadata$release_date))
+    release_date <- metadata$release_date
+    file_name = paste0("r5r_v", version,"_",release_date,".jar")
+    jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
 
   if (checkmate::test_file_exists(jar_file)) {
     message("Using cached version from ", jar_file)

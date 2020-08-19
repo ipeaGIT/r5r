@@ -29,6 +29,10 @@ download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) 
                               header = T,
                               sep = ';')
 
+  # check most recent JAR release
+  metadata <- subset(metadata, release_date == max(metadata$release_date))
+  release_date <- metadata$release_date
+
   # invalid version input
   if (!(version %in% metadata$version)){
     stop(paste0("Error: Invalid Value to argument 'version'. Please use one of the following: ",
@@ -36,7 +40,7 @@ download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) 
   } else {
     # generate inputs
     url <- subset(metadata, version == version)$download_path
-    file_name = paste0("r5r_v", version, ".jar")
+    file_name = paste0("r5r_v", version,"_",release_date,".jar")
     libs <- .libPaths()[1]
     destfile <- file.path(libs, "r5r", "jar", file_name)
   }
