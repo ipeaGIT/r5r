@@ -15,6 +15,7 @@ Convert sf spatial objects to data.frame
 \seealso{
 Other support functions: 
 \code{\link{select_mode}()},
+\code{\link{set_max_walk_distance}()},
 \code{\link{street_network_to_sf}()},
 \code{\link{test_points_input}()}
 }

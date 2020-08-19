@@ -187,6 +187,43 @@ max_trip_duration = 600L
  mode_list <- select_mode(mode)
 
 
+
+
+
+##### HEX sticker ------------------------
+
+ walk_speed = 3.6 Kmh
+ max_street_time
+ max_walk_dist =  .5 km
+
+
+ walk_speed = max_walk_dist / max_street_time
+
+ max_street_time =  max_walk_dist / walk_speed
+
+
+5 = 5 / 1
+
+
+ # select origin
+
+# load origin/destination points
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+
+
+
+# load origin/destination points
+street_net <- street_network_to_sf(r5r_core)
+mapview(street_net) + points_sf
+
+
+
+
+ # plot
+ ggplot() +
+         geom_sf(data = street_net$edges, color='gray85') +
+         theme_minimal()
 ##### Coverage ------------------------
 
 # each function separately

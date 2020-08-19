@@ -11,7 +11,7 @@ travel_time_matrix(
   trip_date,
   departure_time,
   mode = "WALK",
-  max_street_time = 7200,
+  max_walk_dist,
   max_trip_duration = 7200,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -35,7 +35,7 @@ with public transport networks, check the GTFS.zip
 
 \item{mode}{character string, defaults to "WALK". See details for other options.}
 
-\item{max_street_time}{numeric,}
+\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
 \item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
 to 7200 seconds (2 hours).}
@@ -88,6 +88,7 @@ df <- travel_time_matrix( r5r_core,
                           trip_date = "2019-05-20",
                           departure_time = "14:00:00",
                           mode = c('WALK', 'TRANSIT'),
+                          max_walk_dist = 5,
                           max_trip_duration = 7200
                           )
 

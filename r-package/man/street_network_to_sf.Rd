@@ -32,6 +32,7 @@ street_net <- street_network_to_sf(r5_core)
 \seealso{
 Other support functions: 
 \code{\link{select_mode}()},
+\code{\link{set_max_walk_distance}()},
 \code{\link{sf_to_df_r5r}()},
 \code{\link{test_points_input}()}
 }
