@@ -174,9 +174,10 @@ detailed_itineraries <- function(r5r_core,
 
   if (n_origs == 1 && n_dests == 1) {
 
-    path_options <- r5r_core$planSingleTrip(requests_ids,
+    path_options <- r5r_core$planSingleTrip(origins$id,
                                             origins$lat,
                                             origins$lon,
+                                            destinations$id,
                                             destinations$lat,
                                             destinations$lon,
                                             direct_modes= mode_list$direct_modes,
@@ -185,13 +186,15 @@ detailed_itineraries <- function(r5r_core,
                                             egress_mode= mode_list$egress_mode,
                                             trip_date,
                                             departure_time,
-                                            max_street_time)
+                                            max_street_time,
+                                            max_trip_duration = 120L)
 
   } else {
 
-    path_options <- r5r_core$planMultipleTrips(requests_ids,
+    path_options <- r5r_core$planMultipleTrips(origins$id,
                                                origins$lat,
                                                origins$lon,
+                                               destinations$id,
                                                destinations$lat,
                                                destinations$lon,
                                                direct_modes= mode_list$direct_modes,
@@ -200,7 +203,8 @@ detailed_itineraries <- function(r5r_core,
                                                egress_mode= mode_list$egress_mode,
                                                trip_date,
                                                departure_time,
-                                               max_street_time)
+                                               max_street_time,
+                                               max_trip_duration = 120L)
 
   }
 

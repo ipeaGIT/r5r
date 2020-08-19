@@ -83,7 +83,8 @@ points <- read_csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 ```
 
 ```{r}
-ttm <- travel_time_matrix(r5r_core, points, points, trip_date, departure_time, mode=c("WALK", "BUS"))
+ttm <- travel_time_matrix(r5r_core, points, points, trip_date, departure_time, mode=c("WALK", "BUS"), 
+                          max_walk_dist = 500, max_trip_duration = 120L)
 ```
 
 ```{r}

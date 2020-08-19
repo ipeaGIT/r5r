@@ -255,7 +255,9 @@ public class R5RCore {
         ArrayList<Integer> segmentCol = new ArrayList<>();
         ArrayList<String> modeCol = new ArrayList<>();
         ArrayList<Integer> durationCol = new ArrayList<>();
+        ArrayList<Integer> distanceCol = new ArrayList<>();
         ArrayList<String> routeCol = new ArrayList<>();
+        ArrayList<Integer> waitCol = new ArrayList<>();
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> pathOptionsTable = new LinkedHashMap<>();
@@ -269,7 +271,9 @@ public class R5RCore {
         pathOptionsTable.put("segment", segmentCol);
         pathOptionsTable.put("mode", modeCol);
         pathOptionsTable.put("duration", durationCol);
+        pathOptionsTable.put("distance", distanceCol);
         pathOptionsTable.put("route", routeCol);
+        pathOptionsTable.put("wait", waitCol);
         pathOptionsTable.put("geometry", geometryCol);
 
         int optionIndex = 0;
@@ -289,7 +293,9 @@ public class R5RCore {
                         segmentCol.add(1);
                         modeCol.add(segment.mode.toString());
                         durationCol.add(segment.duration);
+                        distanceCol.add(segment.distance);
                         routeCol.add("");
+                        waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
                     }
                 }
@@ -312,7 +318,9 @@ public class R5RCore {
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
                         durationCol.add(segment.duration);
+                        distanceCol.add(segment.distance);
                         routeCol.add("");
+                        waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
                     }
                 }
@@ -349,7 +357,9 @@ public class R5RCore {
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
                         durationCol.add(transit.rideStats.avg);
+                        distanceCol.add(-1);
                         routeCol.add(tripPattern.routeId);
+                        waitCol.add(transit.waitStats.avg);
                         geometryCol.add(geometry.toString());
                     }
 
@@ -365,7 +375,9 @@ public class R5RCore {
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.middle.mode.toString());
                         durationCol.add(transit.middle.duration);
+                        distanceCol.add(transit.middle.distance);
                         routeCol.add("");
+                        waitCol.add(0);
                         geometryCol.add(transit.middle.geometry.toString());
                     }
                 }
@@ -384,7 +396,9 @@ public class R5RCore {
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
                         durationCol.add(segment.duration);
+                        distanceCol.add(segment.distance);
                         routeCol.add("");
+                        waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
                     }
                 }
