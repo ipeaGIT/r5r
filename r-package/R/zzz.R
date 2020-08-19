@@ -1,4 +1,4 @@
-utils::globalVariables(c(".", "%>%", ":=", "%like%"))
+utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
 
 .onLoad = function(lib, pkg) {
   requireNamespace("sf")
@@ -11,7 +11,7 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%"))
 }
 
 #' @importFrom magrittr %>%
-#' @importFrom data.table := %between% fifelse
+#' @importFrom data.table := %between% fifelse %chin%
 # #' @importFrom methods  is signature
 NULL
 

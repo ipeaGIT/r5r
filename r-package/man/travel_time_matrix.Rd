@@ -11,8 +11,10 @@ travel_time_matrix(
   trip_date,
   departure_time,
   mode = "WALK",
-  max_street_time = 7200L,
-  max_trip_duration = 7200L
+  max_street_time = 7200,
+  max_trip_duration = 7200,
+  walk_speed = 3.6,
+  bike_speed = 12
 )
 }
 \arguments{
@@ -33,10 +35,14 @@ with public transport networks, check the GTFS.zip
 \item{mode}{character string, defaults to "WALK". See details for
 other options.}
 
-\item{max_street_time}{integer,}
+\item{max_street_time}{numeric,}
 
-\item{max_trip_duration}{integer, Maximum trip duration in seconds. Defaults
+\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
 to 7200 seconds (2 hours).}
+
+\item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
+
+\item{bike_speed}{numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.}
 }
 \value{
 A data.table with travel-time estimates (in seconds) between origin
@@ -79,8 +85,7 @@ df <- travel_time_matrix( r5r_core,
                           trip_date = "2019-05-20",
                           departure_time = "14:00:00",
                           mode = c('WALK', 'TRANSIT'),
-                          max_street_time = 600L,
-                          max_trip_duration = 600L
+                          max_trip_duration = 7200
                           )
 
 }

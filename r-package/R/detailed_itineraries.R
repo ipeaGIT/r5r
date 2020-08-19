@@ -4,10 +4,10 @@
 #' and destinations.
 #'
 #' @param r5r_core A rJava object to connect with R5 routing engine
-#' @param origins,destinations A dataframe with 3 columns: \code{id}, \code{lat},
-#'                    \code{lon}.
-#' @param mode character string, defaults to "WALK". See details for
-#'                     other options.
+#' @param origins,destinations Either a spatial sf MULTIPOINT or a data.frame
+#'                             containing the columns \code{id}, \code{lon} and
+#'                             \code{lat}.
+#' @param mode A string, defaults to "WALK". See details for other options.
 #' @param trip_date A string in the format "yyyy-mm-dd". If working with public
 #'                  transport networks, please check \code{calendar.txt} within
 #'                  the GTFS file for valid dates.
@@ -77,20 +77,60 @@ detailed_itineraries <- function(r5r_core,
                                  shortest_path = TRUE) {
 
   ### check inputs
-  # max_trip_duration & max_street_time
-  if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
-  # if(! is.numeric(max_trip_duration)){stop(message('max_trip_duration must be of class interger'))}
 
-  # Forcefully cast integer parameters before passing them to Java
-  max_street_time = as.integer(max_street_time)
-  # max_trip_duration = as.integer(max_trip_duration)
+  # max_trip_duration and max_street_time
 
-  # Modes
+  if (!is.numeric(max_street_time)) {
+
+    stop(message("max_street_time must be an integer."))
+
+    if (!is.integer(max_street_time)) {
+
+      max_street_time <- as.integer(max_street_time)
+      warning("max_street_time forcefully cast into an integer.")
+
+    }
+
+  }
+
+  # modes
+
   mode_list <- select_mode(mode)
 
-  # set bike and walk speed in meters per second
-  r5r_core$setWalkSpeed(walk_speed*5/18)
-  r5r_core$setBikeSpeed(bike_speed*5/18)
+  # bike and walk speed
+  # must be converted from km/h to m/s
+
+  if (!is.numeric(walk_speed)) stop(message("walk_speed must be numeric."))
+  else r5r_core$setWalkSpeed(walk_speed * 5 / 18)
+
+  if (!is.numeric(bike_speed)) stop(message("walk_speed must be numeric."))
+  else r5r_core$setBikeSpeed(bike_speed * 5 / 18)
+
+  # trip date
+
+  if (is.na(as.Date(trip_date, format = "20%y-%m-%d"))) {
+
+    stop("trip_date must be a string in the format 'yyyy-mm-dd'.")
+
+  }
+
+  # departure time
+
+  if (is.na(strptime(departure_time, format = "%H:%M:%S"))) {
+
+    stop("departure_time must be a string in the format 'hh:mm:ss'.")
+
+  }
+
+  # origins and destinations
+
+  test_points_input(origins)
+  test_points_input(destinations)
+
+  # if origins/destinations are 'sf' objects, convert them to 'data.frame'
+
+  if(sum(class(origins) %in% "sf") > 0) origins <- sf_to_df_r5r(origins)
+  if(sum(class(destinations) %in% "sf") > 0) destinations <- sf_to_df_r5r(destinations)
 
   # either 'origins' and 'destinations' have the same number of rows or one of
   # them has only one entry, in which case the smaller dataframe is expanded
