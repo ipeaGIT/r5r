@@ -128,12 +128,13 @@ public class R5RCore {
 //        }
 //    }
 
-    public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] requestIds, double[] fromLats, double[] fromLons, double[] toLats, double[] toLons,
+    public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                 String[] toIds, double[] toLats, double[] toLons,
                                                                  String directModes, String transitModes, String accessModes, String egressModes,
                                                                  String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-        int[] requestIndices = new int[requestIds.length];
-        for (int i = 0; i < requestIds.length; i++) requestIndices[i] = i;
+        int[] requestIndices = new int[fromIds.length];
+        for (int i = 0; i < fromIds.length; i++) requestIndices[i] = i;
 
         return r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
@@ -141,7 +142,8 @@ public class R5RCore {
                             LinkedHashMap<String, Object> results =
                                     null;
                             try {
-                                results = planSingleTrip(requestIds[index], fromLats[index], fromLons[index], toLats[index], toLons[index],
+                                results = planSingleTrip(fromIds[index], fromLats[index], fromLons[index],
+                                        toIds[index], toLats[index], toLons[index],
                                         directModes, transitModes, accessModes, egressModes, date, departureTime, maxStreetTime, maxTripDuration);
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -151,15 +153,15 @@ public class R5RCore {
                         collect(Collectors.toList())).get();
     }
 
-    public LinkedHashMap<String, Object> planSingleTrip(double fromLat, double fromLon, double toLat, double toLon,
-                                                        String directModes, String transitModes, String accessModes, String egressModes,
-                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
-        return planSingleTrip("1", fromLat, fromLon, toLat, toLon, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxStreetTime, maxTripDuration);
+//    public LinkedHashMap<String, Object> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
+//                                                        String directModes, String transitModes, String accessModes, String egressModes,
+//                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
+//        return planSingleTrip(fromId, fromLat, fromLon, toId, toLat, toLon, directModes, transitModes, accessModes, egressModes,
+//                date, departureTime, maxStreetTime, maxTripDuration);
+//
+//    }
 
-    }
-
-    public LinkedHashMap<String, Object> planSingleTrip(String requestId, double fromLat, double fromLon, double toLat, double toLon,
+    public LinkedHashMap<String, Object> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                String directModes, String transitModes, String accessModes, String egressModes,
                                                         String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
         AnalysisTask request = new RegionalTask();
@@ -221,7 +223,7 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable(requestId, response.getOptions());
+            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon, response.getOptions());
         } else {
             return null;
         }
@@ -234,7 +236,8 @@ public class R5RCore {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
-    private LinkedHashMap<String, Object> buildPathOptionsTable(String requestId, List<ProfileOption> pathOptions) {
+    private LinkedHashMap<String, Object> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
+                                                                String toId, double toLat, double toLon, List<ProfileOption> pathOptions) {
         // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
 
         // Columns:
@@ -242,7 +245,12 @@ public class R5RCore {
         // segment: int
         // mode: string
         // geometry: string (LINESTRING)
-        ArrayList<String> requestCol = new ArrayList<>();
+        ArrayList<String> fromIdCol = new ArrayList<>();
+        ArrayList<Double> fromLatCol = new ArrayList<>();
+        ArrayList<Double> fromLonCol = new ArrayList<>();
+        ArrayList<String> toIdCol = new ArrayList<>();
+        ArrayList<Double> toLatCol = new ArrayList<>();
+        ArrayList<Double> toLonCol = new ArrayList<>();
         ArrayList<Integer> optionCol = new ArrayList<>();
         ArrayList<Integer> segmentCol = new ArrayList<>();
         ArrayList<String> modeCol = new ArrayList<>();
@@ -251,7 +259,12 @@ public class R5RCore {
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> pathOptionsTable = new LinkedHashMap<>();
-        pathOptionsTable.put("request", requestCol);
+        pathOptionsTable.put("fromId", fromIdCol);
+        pathOptionsTable.put("fromLat", fromLatCol);
+        pathOptionsTable.put("fromLon", fromLonCol);
+        pathOptionsTable.put("toId", toIdCol);
+        pathOptionsTable.put("toLat", toLatCol);
+        pathOptionsTable.put("toLon", toLonCol);
         pathOptionsTable.put("option", optionCol);
         pathOptionsTable.put("segment", segmentCol);
         pathOptionsTable.put("mode", modeCol);
@@ -265,7 +278,12 @@ public class R5RCore {
 
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
-                        requestCol.add(requestId);
+                        fromIdCol.add(fromId);
+                        fromLatCol.add(fromLat);
+                        fromLonCol.add(fromLon);
+                        toIdCol.add(toId);
+                        toLatCol.add(toLat);
+                        toLonCol.add(toLon);
                         optionIndex++;
                         optionCol.add(optionIndex);
                         segmentCol.add(1);
@@ -283,7 +301,12 @@ public class R5RCore {
                 // first leg: access to station
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
-                        requestCol.add(requestId);
+                        fromIdCol.add(fromId);
+                        fromLatCol.add(fromLat);
+                        fromLonCol.add(fromLon);
+                        toIdCol.add(toId);
+                        toLatCol.add(toLat);
+                        toLonCol.add(toLon);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
@@ -316,7 +339,12 @@ public class R5RCore {
                         }
                         geometry.append(")");
 
-                        requestCol.add(requestId);
+                        fromIdCol.add(fromId);
+                        fromLatCol.add(fromLat);
+                        fromLonCol.add(fromLon);
+                        toIdCol.add(toId);
+                        toLatCol.add(toLat);
+                        toLonCol.add(toLon);
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
@@ -326,7 +354,12 @@ public class R5RCore {
                     }
 
                     if (transit.middle != null) {
-                        requestCol.add(requestId);
+                        fromIdCol.add(fromId);
+                        fromLatCol.add(fromLat);
+                        fromLonCol.add(fromLon);
+                        toIdCol.add(toId);
+                        toLatCol.add(toLat);
+                        toLonCol.add(toLon);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
@@ -340,7 +373,12 @@ public class R5RCore {
                 // first leg: access to station
                 if (option.egress != null) {
                     for (StreetSegment segment : option.egress) {
-                        requestCol.add(requestId);
+                        fromIdCol.add(fromId);
+                        fromLatCol.add(fromLat);
+                        fromLonCol.add(fromLon);
+                        toIdCol.add(toId);
+                        toLatCol.add(toLat);
+                        toLonCol.add(toLon);
                         optionCol.add(optionIndex);
                         segmentIndex++;
                         segmentCol.add(segmentIndex);

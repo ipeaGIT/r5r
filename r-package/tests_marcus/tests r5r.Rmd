@@ -1,0 +1,116 @@
+---
+title: "R5R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(java.parameters = "-Xmx8G")
+knitr::opts_chunk$set(echo = TRUE)
+library("r5r")
+library("tidyverse")
+library("sf")
+library("tmap")
+library("mapproj")
+```
+
+## 
+
+```{r}
+r5r_core <- setup_r5(system.file("extdata", package = "r5r"), quiet = TRUE)
+```
+
+```{r}
+r5r_core$silentMode()
+r5r_core$verboseMode()
+r5r_core$setLogMode("ERROR")
+r5r_core$setLogMode("OFF")
+```
+
+```{r}
+fromLat <- -29.997611
+fromLon <- -51.197720
+toLat <- -30.048951
+toLon <- -51.229533
+
+origin <- tibble(id="1", lat = fromLat, lon = fromLon)
+destination <- tibble(id="2", lat=toLat, lon = toLon)
+
+trip_date <- "2019-03-20"
+departure_time <- "14:00:00"
+street_time = 120L
+
+paths_bus_df <- detailed_itineraries(r5r_core, 
+                                     origins = origin, destinations = destination,
+                                     mode = c("WALK", "BUS"), 
+                                     trip_date = trip_date, departure_time = departure_time,
+                                     max_street_time = street_time, shortest_path = TRUE)
+
+```
+
+```{r}
+street_net <- street_network_to_sf(r5r_core)
+```
+
+```{r}
+best_options <- paths_bus_df %>%
+  st_set_geometry(NULL) %>%
+  mutate(route = if_else(route=="", mode, route)) %>%
+  group_by(option) %>%
+  summarise(pattern = paste(route, collapse = " "), duration = sum(duration), .groups = "drop") %>%
+  group_by(pattern) %>%
+  arrange(duration) %>%
+  slice(1)
+```
+
+```{r}
+paths_bus_df %>% filter(option==2) %>% View()
+```
+
+```{r}
+paths_bus_df %>% filter(option %in% best_options$option) %>%
+  ggplot() +
+  geom_sf(data=street_net$edges, colour="grey85", aes(geometry=geometry)) +
+  geom_sf(aes(geometry=geometry, colour=mode)) +
+  facet_wrap(~option)
+```
+
+```{r}
+points <- read_csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+```
+
+```{r}
+
+```
+
+```{r}
+ttm <- travel_time_matrix(r5r_core, points, points, trip_date, departure_time, mode=c("WALK", "BUS"))
+```
+
+```{r}
+ttm
+```
+
+
+
+
+```{r}
+orig <- (points %>% sample_n(1))$id
+
+ttm %>% filter(fromId==orig) %>%
+  ggplot() +
+  geom_point(aes(x=toLon, y=toLat, colour=travel_time)) +
+  scale_color_distiller(palette = "Spectral") +
+  coord_map()
+```
+
+```{r}
+# origins
+"89a9012804fffff"
+
+```
+
+
+
+
+
+
