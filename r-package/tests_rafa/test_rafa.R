@@ -26,23 +26,20 @@ devtools::document(pkg = ".")
 
 # build transport network
 path <- system.file("extdata", package = "r5r")
-list.files(path)
-list.files(file.path(.libPaths()[1], "r5r", "jar"))
-
-
-# remove files
-# file.remove( file.path(path, "network.dat") )
-# file.remove( file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar") )
 
 # r5r::download_r5(force_update = T)
-
 r5r_core <- setup_r5(data_path = path)
-
-
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+
+# remove files
+# file.remove( file.path(path, "network.dat") )
+# file.remove( file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar") )
+# list.files(path)
+# list.files(file.path(.libPaths()[1], "r5r", "jar"))
+
 
 
 
@@ -135,14 +132,15 @@ options(java.parameters = "-Xmx16G")
 # input
 origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[c(1,100,300,500),]
 
- # input
- direct_modes <- c("WALK") #, "BICYCLE", "CAR")
- transit_modes <-"TRANSIT"
- departure_time <- "14:00:00"
- trip_date <- "2019-05-20"
- street_time = 15L
- max_street_time = 30L
- max_trip_duration = 300L
+# input
+origins = points
+destinations = points
+trip_date = "2019-05-20"
+departure_time = "14:00:00"
+mode = c('WALK', 'TRANSIT')
+max_street_time = 600L
+max_trip_duration = 600L
+
 
  # r5r_core$setNumberOfThreads <- 4L
  # r5r_core$getNumberOfThreads()

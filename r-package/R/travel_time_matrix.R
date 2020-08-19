@@ -95,10 +95,10 @@ travel_time_matrix <- function( r5r_core,
                                                     destinations$id,
                                                     destinations$lat,
                                                     destinations$lon,
-                                                    direct_modes=  mode_list$direct_modes,
+                                                    direct_modes= mode_list$direct_modes,
                                                     transit_modes= mode_list$transit_mode,
-                                                    #access_mode,
-                                                    #egress_mode,
+                                                    access_mode= mode_list$access_mode,
+                                                    egress_mode= mode_list$egress_mode,
                                                     trip_date,
                                                     departure_time,
                                                     max_street_time,
@@ -114,7 +114,6 @@ travel_time_matrix <- function( r5r_core,
   travel_times <- data.table::rbindlist(travel_times)
 
   modes_string <- paste(unique(mode_list),collapse = " ")
-  modes_string <- gsub(" ", "", modes_string)
   travel_times[, 'mode' := modes_string ]
 
   return(travel_times)
