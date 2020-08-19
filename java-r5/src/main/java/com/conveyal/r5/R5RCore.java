@@ -1,5 +1,7 @@
 package com.conveyal.r5;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.AnalysisTask;
@@ -13,6 +15,7 @@ import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,12 +65,29 @@ public class R5RCore {
 
     public void setNumberOfThreadsToMax() {
         r5rThreadPool = ForkJoinPool.commonPool();
+        numberOfThreads = ForkJoinPool.commonPool().getParallelism();
+    }
+
+    public void silentMode() {
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.ERROR);
+    }
+
+    public void verboseMode() {
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.INFO);
     }
 
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
+        this(dataFolder, false);
+    }
+
+     public R5RCore(String dataFolder, boolean quiet) {
+        if (quiet) silentMode();
+
         setNumberOfThreadsToMax();
 
         this.walkSpeed = 1.0f;
