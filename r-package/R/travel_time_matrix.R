@@ -12,16 +12,17 @@
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
 #' @param departure_time character string, time in format "hh:mm:ss"
-#' @param mode character string, defaults to "WALK". See details for
-#'                     other options.
+#' @param mode character string, defaults to "WALK". See details for other options.
 #' @param max_street_time numeric,
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#'                           to 7200 seconds (2 hours).
+#'                          to 7200 seconds (2 hours).
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
+#' @param nThread numeric, The number of threads to use in parallel computing.
+#'                Defaults to use all available threads (Inf).
 #'
 #' @return A data.table with travel-time estimates (in seconds) between origin
-#' destination pairs
+#' destination pairs.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
 #'          include:
@@ -68,7 +69,8 @@ travel_time_matrix <- function( r5r_core,
                                 max_street_time = 7200,
                                 max_trip_duration = 7200,
                                 walk_speed = 3.6,
-                                bike_speed = 12){
+                                bike_speed = 12,
+                                nThread = Inf){
 
 ### check inputs
 
@@ -95,22 +97,27 @@ travel_time_matrix <- function( r5r_core,
     r5r_core$setWalkSpeed(walk_speed*5/18)
     r5r_core$setBikeSpeed(bike_speed*5/18)
 
+  # set number of threads
+    if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
+      } else if(!is.numeric(nThread)){stop("nThread must be numeric")
+        } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
+
   # Call to method inside r5r_core object
-  travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
-                                                    origins$lat,
-                                                    origins$lon,
-                                                    destinations$id,
-                                                    destinations$lat,
-                                                    destinations$lon,
-                                                    direct_modes= mode_list$direct_modes,
-                                                    transit_modes= mode_list$transit_mode,
-                                                    access_mode= mode_list$access_mode,
-                                                    egress_mode= mode_list$egress_mode,
-                                                    trip_date,
-                                                    departure_time,
-                                                    max_street_time,
-                                                    max_trip_duration
-                                                    )
+    travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
+                                                      origins$lat,
+                                                      origins$lon,
+                                                      destinations$id,
+                                                      destinations$lat,
+                                                      destinations$lon,
+                                                      direct_modes= mode_list$direct_modes,
+                                                      transit_modes= mode_list$transit_mode,
+                                                      access_mode= mode_list$access_mode,
+                                                      egress_mode= mode_list$egress_mode,
+                                                      trip_date,
+                                                      departure_time,
+                                                      max_street_time,
+                                                      max_trip_duration
+                                                      )
 
   # travel_times <- rJava::.jcall(r5r_core, returnSig = "V", method = "travelTimesFromOrigin",
   #                               fromId, fromLat, fromLon, jdx::convertToJava(destinations),

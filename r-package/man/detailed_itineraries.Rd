@@ -12,7 +12,10 @@ detailed_itineraries(
   trip_date,
   departure_time,
   max_street_time,
-  shortest_path = TRUE
+  walk_speed = 3.6,
+  bike_speed = 12,
+  shortest_path = TRUE,
+  nThread = Inf
 )
 }
 \arguments{
@@ -33,9 +36,16 @@ the GTFS file for valid dates.}
 \item{max_street_time}{An integer representing the maximum total travel time
 allowed (in minutes).}
 
+\item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
+
+\item{bike_speed}{numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.}
+
 \item{shortest_path}{A logical. Whether the function should only return the
 fastest route alternative (default) or multiple
 alternatives.}
+
+\item{nThread}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
 }
 \value{
 

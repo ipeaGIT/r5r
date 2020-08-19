@@ -19,7 +19,8 @@
 #' @param shortest_path A logical. Whether the function should only return the
 #'                      fastest route alternative (default) or multiple
 #'                      alternatives.
-#'
+#' @param nThread numeric, The number of threads to use in parallel computing.
+#'                Defaults to use all available threads (Inf).
 #' @return
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
@@ -74,7 +75,8 @@ detailed_itineraries <- function(r5r_core,
                                  max_street_time,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
-                                 shortest_path = TRUE) {
+                                 shortest_path = TRUE,
+                                 nThread = Inf) {
 
   ### check inputs
   # max_trip_duration & max_street_time
@@ -124,6 +126,12 @@ detailed_itineraries <- function(r5r_core,
   }
 
   requests_ids <- paste0(origins$id, "_", destinations$id)
+
+  # set number of threads
+  if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
+  } else if(!is.numeric(nThread)){stop("nThread must be numeric")
+  } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
+
 
   # call to method inside R5RCore object
   # if a single origin is provided, calls sequential function planSingleTrip
