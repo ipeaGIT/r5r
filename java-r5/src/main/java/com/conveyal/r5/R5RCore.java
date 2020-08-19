@@ -65,7 +65,7 @@ public class R5RCore {
 
     public void setNumberOfThreadsToMax() {
         r5rThreadPool = ForkJoinPool.commonPool();
-        numberOfThreads = ForkJoinPool.commonPool().getActiveThreadCount();
+        numberOfThreads = ForkJoinPool.commonPool().getParallelism();
     }
 
     public void silentMode() {
