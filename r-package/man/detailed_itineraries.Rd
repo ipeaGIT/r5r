@@ -21,11 +21,11 @@ detailed_itineraries(
 \arguments{
 \item{r5r_core}{A rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{A dataframe with 3 columns: \code{id}, \code{lat},
-\code{lon}.}
+\item{origins, destinations}{Either a spatial sf MULTIPOINT or a data.frame
+containing the columns \code{id}, \code{lon} and
+\code{lat}.}
 
-\item{mode}{character string, defaults to "WALK". See details for
-other options.}
+\item{mode}{A string, defaults to "WALK". See details for other options.}
 
 \item{trip_date}{A string in the format "yyyy-mm-dd". If working with public
 transport networks, please check \code{calendar.txt} within
