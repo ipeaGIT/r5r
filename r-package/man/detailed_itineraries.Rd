@@ -8,8 +8,7 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
-  direct_modes,
-  transit_modes,
+  mode = "WALK",
   trip_date,
   departure_time,
   max_street_time,
@@ -22,11 +21,8 @@ detailed_itineraries(
 \item{origins, destinations}{A dataframe with 3 columns: \code{id}, \code{lat},
 \code{lon}.}
 
-\item{direct_modes}{A character vector that can assume any combination of
-\code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.}
-
-\item{transit_modes}{A character vector that can assume any combination of
-\code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.}
+\item{mode}{character string, defaults to "WALK". See details for
+other options.}
 
 \item{trip_date}{A string in the format "yyyy-mm-dd". If working with public
 transport networks, please check \code{calendar.txt} within
@@ -48,6 +44,20 @@ alternatives.}
 Returns multiple detailed itineraries between specified origins
 and destinations.
 }
+\details{
+R5 allows for multiple combinations of transport modes. The options
+include:
+\subsection{Transit modes}{
+
+TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
+'TRANSIT' automatically considers all public transport modes available.
+}
+
+\subsection{Non transit modes}{
+
+WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
+}
+}
 \examples{
 \donttest{library(r5r)
 
@@ -62,16 +72,17 @@ origins <- head(points, 5)
 destinations <- tail(points, 5)
 
 # input
-direct_modes <- c("WALK", "BICYCLE", "CAR")
-transit_modes <- "BUS"
+mode = c('WALK', 'TRANSIT')
 departure_time <- "14:00:00"
 trip_date <- "2019-03-15"
 max_street_time <- 30L
 
 df <- detailed_itineraries(r5r_core,
-                           origins, destinations,
-                           direct_modes, transit_modes,
-                           trip_date, departure_time,
+                           origins,
+                           destinations,
+                           mode,
+                           trip_date,
+                           departure_time,
                            max_street_time)
 
 }

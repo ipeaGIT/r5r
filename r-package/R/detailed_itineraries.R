@@ -6,10 +6,8 @@
 #' @param r5r_core A rJava object to connect with R5 routing engine
 #' @param origins,destinations A dataframe with 3 columns: \code{id}, \code{lat},
 #'                    \code{lon}.
-#' @param direct_modes A character vector that can assume any combination of
-#'                     \code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.
-#' @param transit_modes A character vector that can assume any combination of
-#'                     \code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.
+#' @param mode character string, defaults to "WALK". See details for
+#'                     other options.
 #' @param trip_date A string in the format "yyyy-mm-dd". If working with public
 #'                  transport networks, please check \code{calendar.txt} within
 #'                  the GTFS file for valid dates.
@@ -21,7 +19,20 @@
 #'                      alternatives.
 #'
 #' @return
+#'
+#' @details R5 allows for multiple combinations of transport modes. The options
+#'          include:
+#'
+#'   ## Transit modes
+#'   TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
+#'   'TRANSIT' automatically considers all public transport modes available.
+#'
+#'   ## Non transit modes
+#'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
+#'
+#'
 #' @family routing
+
 #' @examples
 #' \donttest{library(r5r)
 #'
@@ -36,16 +47,17 @@
 #' destinations <- tail(points, 5)
 #'
 #' # input
-#' direct_modes <- c("WALK", "BICYCLE", "CAR")
-#' transit_modes <- "BUS"
+#' mode = c('WALK', 'TRANSIT')
 #' departure_time <- "14:00:00"
 #' trip_date <- "2019-03-15"
 #' max_street_time <- 30L
 #'
 #' df <- detailed_itineraries(r5r_core,
-#'                            origins, destinations,
-#'                            direct_modes, transit_modes,
-#'                            trip_date, departure_time,
+#'                            origins,
+#'                            destinations,
+#'                            mode,
+#'                            trip_date,
+#'                            departure_time,
 #'                            max_street_time)
 #'
 #' }
@@ -54,21 +66,23 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
-                                 direct_modes,
-                                 transit_modes,
+                                 mode = "WALK",
                                  trip_date,
                                  departure_time,
                                  max_street_time,
                                  shortest_path = TRUE) {
 
-  # collapses mode lists into single strings before passing argument to Java
+  ### check inputs
+  # max_trip_duration & max_street_time
+  if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
+  # if(! is.numeric(max_trip_duration)){stop(message('max_trip_duration must be of class interger'))}
 
-  direct_modes  <- paste0(toupper(direct_modes),  collapse = ";")
-  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
-
-  # java expects street times to be integers
-
+  # Forcefully cast integer parameters before passing them to Java
   max_street_time = as.integer(max_street_time)
+  # max_trip_duration = as.integer(max_trip_duration)
+
+  # Modes
+  mode_list <- select_mode(mode)
 
   # either 'origins' and 'destinations' have the same number of rows or one of
   # them has only one entry, in which case the smaller dataframe is expanded
@@ -110,19 +124,31 @@ detailed_itineraries <- function(r5r_core,
   if (n_origs == 1 && n_dests == 1) {
 
     path_options <- r5r_core$planSingleTrip(requests_ids,
-                                            origins$lat, origins$lon,
-                                            destinations$lat, destinations$lon,
-                                            direct_modes, transit_modes,
-                                            trip_date, departure_time,
+                                            origins$lat,
+                                            origins$lon,
+                                            destinations$lat,
+                                            destinations$lon,
+                                            direct_modes= mode_list$direct_modes,
+                                            transit_modes= mode_list$transit_mode,
+                                            access_mode= mode_list$access_mode,
+                                            egress_mode= mode_list$egress_mode,
+                                            trip_date,
+                                            departure_time,
                                             max_street_time)
 
   } else {
 
     path_options <- r5r_core$planMultipleTrips(requests_ids,
-                                               origins$lat, origins$lon,
-                                               destinations$lat, destinations$lon,
-                                               direct_modes, transit_modes,
-                                               trip_date, departure_time,
+                                               origins$lat,
+                                               origins$lon,
+                                               destinations$lat,
+                                               destinations$lon,
+                                               direct_modes= mode_list$direct_modes,
+                                               transit_modes= mode_list$transit_mode,
+                                               access_mode= mode_list$access_mode,
+                                               egress_mode= mode_list$egress_mode,
+                                               trip_date,
+                                               departure_time,
                                                max_street_time)
 
   }
