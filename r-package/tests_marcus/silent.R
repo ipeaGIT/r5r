@@ -29,7 +29,6 @@ street_time = 15L
 max_street_time = 30L
 max_trip_duration = 300L
 
-r5_core
 
 tictoc::tic("max")
 df <- travel_time_matrix( r5r_core = r5_core,
@@ -41,4 +40,4 @@ df <- travel_time_matrix( r5r_core = r5_core,
                           max_street_time = max_street_time,
                           max_trip_duration = max_trip_duration
 )
-tictoc::toc(log = TRUE, quiet = TRUE)
+tictoc::toc()
