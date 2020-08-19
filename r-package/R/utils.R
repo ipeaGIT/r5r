@@ -3,6 +3,8 @@
 
 
 
+
+
 #' Convert sf spatial objects to data.frame
 #'
 #' @param sf A spatial sf MULTIPOINT object where the 1st column is the point id.
@@ -18,6 +20,7 @@ sf_to_df_r5r <- function(sf){
     data.table::setnames(df, names(sf)[1], 'id')
     return(df)
   }
+
 
 
 
@@ -44,9 +47,29 @@ test_points_input <- function(df) {
 }
 
 
+#' Set max walking distance
+#' #'
+#' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole
+#'                      trip. Passed from routing functions.
+#' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
+#'                    Passed from routing functions.
+#' @export
+#' @family support functions
+#'
+set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
 
+    if (is.null(max_walk_dist)) {
+      max_street_time = as.integer(max_trip_duration)
+      return(max_street_time)
 
+    } else if (!is.numeric(max_walk_dist)) {
+      stop("max_walk_dist must be numeric")
 
+    } else {
+      max_street_time = as.integer(3600 * max_walk_dist / walk_speed)
+      return(max_street_time)
+    }
+  }
 
 
 #' Select transport mode
