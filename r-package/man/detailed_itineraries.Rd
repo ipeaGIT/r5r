@@ -2,14 +2,12 @@
 % Please edit documentation in R/detailed_itineraries.R
 \name{detailed_itineraries}
 \alias{detailed_itineraries}
-\title{Detailed itineraries between origin destination pairs}
+\title{Plan multiple itineraries}
 \usage{
 detailed_itineraries(
-  r5_core,
-  fromLat,
-  fromLon,
-  toLat,
-  toLon,
+  r5r_core,
+  origins,
+  destinations,
   direct_modes,
   transit_modes,
   trip_date,
@@ -19,79 +17,67 @@ detailed_itineraries(
 )
 }
 \arguments{
-\item{r5_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{A rJava object to connect with R5 routing engine}
 
-\item{fromLat}{99999999}
+\item{origins, destinations}{A dataframe with 3 columns: \code{id}, \code{lat},
+\code{lon}.}
 
-\item{fromLon}{99999999}
+\item{direct_modes}{A character vector that can assume any combination of
+\code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.}
 
-\item{toLat}{99999999}
+\item{transit_modes}{A character vector that can assume any combination of
+\code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.}
 
-\item{toLon}{99999999}
+\item{trip_date}{A string in the format "yyyy-mm-dd". If working with public
+transport networks, please check \code{calendar.txt} within
+the GTFS file for valid dates.}
 
-\item{direct_modes}{99999999}
+\item{departure_time}{A string in the format "hh:mm:ss".}
 
-\item{transit_modes}{99999999}
+\item{max_street_time}{An integer representing the maximum total travel time
+allowed (in minutes).}
 
-\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
-with public transport networks, check the GTFS.zip
-(calendar.txt file) for dates with service.}
-
-\item{departure_time}{character string, time in format "hh:mm:ss"}
-
-\item{max_street_time}{integer,}
-
-\item{shortest_path}{logical, whether the function should only return the
-fastest route alternative (default) or multiple alternative.}
+\item{shortest_path}{A logical. Whether the function should only return the
+fastest route alternative (default) or multiple
+alternatives.}
 }
 \value{
-A 'data.frame sf LINESTRING'
+
 }
 \description{
-Estimate one or multiple alternative routes between one or
-multiple origin destination pairs. The data output brings detailed information
-on transport mode, travel time, walked distance etc. for each trip section
+Returns multiple detailed itineraries between specified origins
+and destinations.
 }
 \examples{
-\donttest{
-
-library(r5r)
+\donttest{library(r5r)
 
 # build transport network
-path <- system.file("extdata", package = "r5r")
-r5_core <- setup_r5(data_path = path)
+data_path <- system.file("extdata", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
 
-# load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+# load and set origin/destination points
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+
+origins <- head(points, 5)
+destinations <- tail(points, 5)
 
 # input
-fromLat <- points[1,]$lat
-fromLon <- points[1,]$lon
-toLat <- points[100,]$lat
-toLon <- points[100,]$lon
-trip_date <- "2019-05-20"
-departure_time <- "14:00:00"
 direct_modes <- c("WALK", "BICYCLE", "CAR")
-transit_modes <-"BUS"
-street_time = 15L
-max_street_time = 30L
+transit_modes <- "BUS"
+departure_time <- "14:00:00"
+trip_date <- "2019-03-15"
+max_street_time <- 30L
 
-trips <- detailed_itineraries( fromLat = fromLat,
-                               fromLon = fromLon,
-                               toLat = toLat,
-                               toLon = toLon,
-                               r5_core = r5_core,
-                               trip_date = trip_date,
-                               departure_time = departure_time,
-                               direct_modes = direct_modes,
-                               transit_modes = transit_modes,
-                               max_street_time = max_street_time)
+df <- detailed_itineraries(r5r_core,
+                           origins, destinations,
+                           direct_modes, transit_modes,
+                           trip_date, departure_time,
+                           max_street_time)
 
 }
 }
 \seealso{
 Other routing: 
-\code{\link{multiple_detailed_itineraries}()},
 \code{\link{r5_travel_times_from_origin}()},
 \code{\link{travel_time_matrix}()}
 }

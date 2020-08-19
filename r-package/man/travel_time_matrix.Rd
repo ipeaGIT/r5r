@@ -88,7 +88,6 @@ df <- travel_time_matrix( r5r_core,
 \seealso{
 Other routing: 
 \code{\link{detailed_itineraries}()},
-\code{\link{multiple_detailed_itineraries}()},
 \code{\link{r5_travel_times_from_origin}()}
 }
 \concept{routing}
