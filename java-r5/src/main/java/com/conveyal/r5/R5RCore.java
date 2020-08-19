@@ -81,6 +81,12 @@ public class R5RCore {
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
+        this(dataFolder, false);
+    }
+
+     public R5RCore(String dataFolder, boolean quiet) {
+        if (quiet) silentMode();
+
         setNumberOfThreadsToMax();
 
         this.walkSpeed = 1.0f;

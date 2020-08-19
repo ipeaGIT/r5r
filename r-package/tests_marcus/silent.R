@@ -29,6 +29,8 @@ street_time = 15L
 max_street_time = 30L
 max_trip_duration = 300L
 
+r5_core$silentMode()
+r5_core$verboseMode()
 
 tictoc::tic("max")
 df <- travel_time_matrix( r5r_core = r5_core,
