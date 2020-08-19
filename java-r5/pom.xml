@@ -405,6 +405,12 @@
             <artifactId>gtfs-lib</artifactId>
             <!-- gtfs-lib maintenance v3.0.9+ updated for Java 11, but able to use existing MapDB files. -->
             <version>3.0.11</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Conveyal library for loading and storing OSM road data. -->
         <dependency>
