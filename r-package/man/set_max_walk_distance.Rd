@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{set_max_walk_distance}
 \alias{set_max_walk_distance}
-\title{Set max walking distance
-#'}
+\title{Set max walking distance}
 \usage{
 set_max_walk_distance(max_walk_dist, walk_speed, max_trip_duration)
 }
@@ -13,10 +12,12 @@ trip. Passed from routing functions.}
 
 \item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 Passed from routing functions.}
+
+\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
+to 7200 seconds (2 hours). Passed from routing functions.}
 }
 \description{
 Set max walking distance
-#'
 }
 \seealso{
 Other support functions: 

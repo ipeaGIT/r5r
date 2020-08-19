@@ -48,11 +48,13 @@ test_points_input <- function(df) {
 
 
 #' Set max walking distance
-#' #'
+#'
 #' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole
 #'                      trip. Passed from routing functions.
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #'                    Passed from routing functions.
+#' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
+#'                          to 7200 seconds (2 hours). Passed from routing functions.
 #' @export
 #' @family support functions
 #'
