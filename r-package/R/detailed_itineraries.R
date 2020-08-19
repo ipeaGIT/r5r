@@ -169,9 +169,8 @@ detailed_itineraries <- function(r5r_core,
 
   # set number of threads
   if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
-  } else if(!is.numeric(nThread)){stop("nThread must be numeric")
+  } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
   } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
-
 
   # call to method inside R5RCore object
   # if a single origin is provided, calls sequential function planSingleTrip
@@ -212,10 +211,26 @@ detailed_itineraries <- function(r5r_core,
   # convert result into a data.frame. if only one pair of origin and destination
   # has been sent then the result is already a df
 
-  path_options <- jdx::convertToR(path_options)
+  # check if any itineraries have been found - if not, raises an error
+  # if there are any results, convert those to a data.frame. if only one pair of
+  # origin and destination has been passed, then the result is already a df
 
-  if (!is.data.frame(path_options)) {
-    path_options <- data.table::rbindlist(path_options)
+  if (is.null(path_options)) {
+
+    stop("No itineraries have been found.")
+
+  } else {
+
+    path_options <- jdx::convertToR(path_options)
+
+    if (!is.data.frame(path_options)) {
+
+      path_options <- data.table::rbindlist(path_options)
+
+      if (length(path_options) == 0) stop("No itineraries have been found.")
+
+    }
+
   }
 
   # convert from data.frame to sf with CRS WGS 84 (EPSG 4326)
