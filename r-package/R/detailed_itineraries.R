@@ -101,6 +101,8 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
+  requests_ids <- paste0(origins$id, "_", destinations$id)
+
   # call to method inside R5RCore object
   # if a single origin is provided, calls sequential function planSingleTrip
   # else, calls parallel function planMultipleTrips
