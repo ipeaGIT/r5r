@@ -1,225 +1,145 @@
-#' Detailed itineraries between origin destination pairs
+#' Plan multiple itineraries
 #'
-#' @description Estimate one or multiple alternative routes between one or
-#' multiple origin destination pairs. The data output brings detailed information
-#' on transport mode, travel time, walked distance etc. for each trip section
+#' @description Returns multiple detailed itineraries between specified origins
+#' and destinations.
 #'
-#' @param r5_core a rJava object to connect with R5 routing engine
-#' @param fromLat 99999999
-#' @param fromLon 99999999
-#' @param toLat 99999999
-#' @param toLon 99999999
-#' @param direct_modes 99999999
-#' @param transit_modes 99999999
-#' @param trip_date character string, date in format "yyyy-mm-dd". If working
-#'                  with public transport networks, check the GTFS.zip
-#'                  (calendar.txt file) for dates with service.
-#' @param departure_time character string, time in format "hh:mm:ss"
-#' @param shortest_path logical, whether the function should only return the
-#'                      fastest route alternative (default) or multiple alternative.
-#' @param max_street_time integer,
+#' @param r5r_core A rJava object to connect with R5 routing engine
+#' @param origins,destinations A dataframe with 3 columns: \code{id}, \code{lat},
+#'                    \code{lon}.
+#' @param direct_modes A character vector that can assume any combination of
+#'                     \code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.
+#' @param transit_modes A character vector that can assume any combination of
+#'                     \code{"WALK"}, \code{"BICYCLE"} and \code{"CAR"}.
+#' @param trip_date A string in the format "yyyy-mm-dd". If working with public
+#'                  transport networks, please check \code{calendar.txt} within
+#'                  the GTFS file for valid dates.
+#' @param departure_time A string in the format "hh:mm:ss".
+#' @param max_street_time An integer representing the maximum total travel time
+#'                        allowed (in minutes).
+#' @param shortest_path A logical. Whether the function should only return the
+#'                      fastest route alternative (default) or multiple
+#'                      alternatives.
 #'
-#' @return A 'data.frame sf LINESTRING'
-#'
+#' @return
 #' @family routing
-#' @examples \donttest{
-#'
-#' library(r5r)
+#' @examples
+#' \donttest{library(r5r)
 #'
 #' # build transport network
-#' path <- system.file("extdata", package = "r5r")
-#' r5_core <- setup_r5(data_path = path)
+#' data_path <- system.file("extdata", package = "r5r")
+#' r5r_core <- setup_r5(data_path = data_path)
 #'
-#' # load origin/destination points
-#' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+#' # load and set origin/destination points
+#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+#'
+#' origins <- head(points, 5)
+#' destinations <- tail(points, 5)
 #'
 #' # input
-#' fromLat <- points[1,]$lat
-#' fromLon <- points[1,]$lon
-#' toLat <- points[100,]$lat
-#' toLon <- points[100,]$lon
-#' trip_date <- "2019-05-20"
-#' departure_time <- "14:00:00"
 #' direct_modes <- c("WALK", "BICYCLE", "CAR")
-#' transit_modes <-"BUS"
-#' street_time = 15L
-#' max_street_time = 30L
+#' transit_modes <- "BUS"
+#' departure_time <- "14:00:00"
+#' trip_date <- "2019-03-15"
+#' max_street_time <- 30L
 #'
-#' trips <- detailed_itineraries( fromLat = fromLat,
-#'                                fromLon = fromLon,
-#'                                toLat = toLat,
-#'                                toLon = toLon,
-#'                                r5_core = r5_core,
-#'                                trip_date = trip_date,
-#'                                departure_time = departure_time,
-#'                                direct_modes = direct_modes,
-#'                                transit_modes = transit_modes,
-#'                                max_street_time = max_street_time)
+#' df <- detailed_itineraries(r5r_core,
+#'                            origins, destinations,
+#'                            direct_modes, transit_modes,
+#'                            trip_date, departure_time,
+#'                            max_street_time)
 #'
 #' }
 #' @export
 
-detailed_itineraries <- function(r5_core,
-                                 fromLat,
-                                 fromLon,
-                                 toLat,
-                                 toLon,
+detailed_itineraries <- function(r5r_core,
+                                 origins,
+                                 destinations,
                                  direct_modes,
                                  transit_modes,
                                  trip_date,
                                  departure_time,
                                  max_street_time,
-                                 shortest_path = TRUE){
+                                 shortest_path = TRUE) {
 
-  # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
+  # collapses mode lists into single strings before passing argument to Java
+
+  direct_modes  <- paste0(toupper(direct_modes),  collapse = ";")
   transit_modes <- paste0(toupper(transit_modes), collapse = ";")
 
-  # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
+  # java expects street times to be integers
+
   max_street_time = as.integer(max_street_time)
 
-  # Call to method inside R5RCore object
-  path_options <- r5_core$planSingleTrip(fromLat, fromLon, toLat, toLon,
-                                             direct_modes, transit_modes,
-                                             trip_date, departure_time, max_street_time)
-    # rJava::.jcall(r5_core, returnSig = "O", method = "planSingleTrip",
-    #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
+  # either 'origins' and 'destinations' have the same number of rows or one of
+  # them has only one entry, in which case the smaller dataframe is expanded
 
-  # Collects results from R5 and transforms them into simple features objects
-  path_options_df <- jdx::convertToR(path_options)
+  n_origs <- nrow(origins)
+  n_dests <- nrow(destinations)
 
-  data.table::setDT(path_options_df)[, geometry := sf::st_as_sfc(geometry)]
-  path_options_sf <- sf::st_sf(path_options_df, crs = 4326) # WGS 84
+  if (n_origs != n_dests) {
 
-  # R5 often returns multiple options with the basic structure, with minor
-  # changes to the walking segments at the start and end of the trip.
-  # This section filters out paths with the same signature, leaving only the one
-  # with the shortest duration
-  if (shortest_path) {
-    distinct_options <- path_options_sf %>%
-      select(-geometry) %>%
-      mutate(route = if_else(route == "", mode, route)) %>%
-      group_by(option) %>%
-      summarise(signature = paste(route, collapse = " "), duration = sum(duration), .groups = "drop") %>%
-      group_by(signature) %>%
-      arrange(duration) %>%
-      slice(1)
+    if ((n_origs > 1) && (n_dests > 1)) {
 
-    path_options_sf <- subset(path_options_sf, option %in% distinct_options$option)
+      stop(paste("Origins and destinations dataframes must either have the",
+                 "same size or one of them must have only one entry."))
+
+    } else {
+
+      if (n_origs > n_dests) {
+
+        destinations <- destinations[rep(1, n_origs), ]
+        message("Destinations dataframe expanded to match the number of origins.")
+
+      } else {
+
+        origins <- origins[rep(1, n_dests), ]
+        message("Origins dataframe expanded to match the number of destinations.")
+
+      }
+
+    }
+
   }
 
-  return(path_options_sf)
-}
+  # call to method inside R5RCore object
+  # if a single origin is provided, calls sequential function planSingleTrip
+  # else, calls parallel function planMultipleTrips
 
-#' Plan multiple itineraries in parallel
-#'
-#' @description description
-#'
-#' @param r5_core a rJava object to connect with R5 routing engine
-#' @param requests A dataframe with 5 columns: id, fromLat, fromLon, toLat and toLon
-#' @param direct_modes 99999999
-#' @param transit_modes 99999999
-#' @param trip_date 99999999
-#' @param departure_time 99999999
-#' @param max_street_time 99999999
-#' @param shortest_path 99999999
-#'
-#' @return
-#' @family routing
-#' @examples \donttest{
-#'
-#' library(r5r)
-#'
-#' # build transport network
-#' path <- system.file("extdata", package = "r5r")
-#' r5_core <- setup_r5(data_path = path)
-#'
-#' # load origin/destination points
-#' points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
-#'
-#' # input
-#' direct_modes <- c("WALK", "BICYCLE", "CAR")
-#' transit_modes <-"BUS"
-#' departure_time <- "14:00:00"
-#' trip_date <- "2019-05-20"
-#' street_time = 15L
-#' max_street_time = 30L
-#' max_trip_duration = 300L
-#'
-#' df <- multiple_detailed_itineraries( r5_core = r5_core,
-#'                           origins = points,
-#'                           destinations = points,
-#'                           trip_date = trip_date,
-#'                           departure_time = departure_time,
-#'                           direct_modes = direct_modes,
-#'                           transit_modes = transit_modes,
-#'                           max_street_time = max_street_time,
-#'                           max_trip_duration = max_trip_duration
-#'                           )
-#'
-#' }
-#' @export
+  if (n_origs == 1 && n_dests == 1) {
 
-multiple_detailed_itineraries <- function(r5_core,
-                                          requests,
-                                          direct_modes,
-                                          transit_modes,
-                                          trip_date,
-                                          departure_time,
-                                          max_street_time,
-                                          shortest_path = TRUE) {
-
-  # Collapses list into single string before passing argument to Java
-  direct_modes <- paste0(toupper(direct_modes), collapse = ";")
-  transit_modes <- paste0(toupper(transit_modes), collapse = ";")
-
-  # Java expects street times to be integers. Casting the parameter to integer to make sure it works.
-  max_street_time = as.integer(max_street_time)
-
-  requests$id = as.character(requests$id)
-
-  # Call to method inside R5RCore object
-  path_options <- r5_core$planMultipleTrips(requests$id, requests$fromLat, requests$fromLon,
-                                            requests$toLat, requests$toLon,
+    path_options <- r5r_core$planSingleTrip(requests_ids,
+                                            origins$lat, origins$lon,
+                                            destinations$lat, destinations$lon,
                                             direct_modes, transit_modes,
-                                            trip_date, departure_time, max_street_time)
-  # rJava::.jcall(r5_core, returnSig = "O", method = "planSingleTrip",
-  #               fromLat, fromLon, toLat, toLon, direct_modes, transit_modes, trip_date, departure_time, max_street_time)
+                                            trip_date, departure_time,
+                                            max_street_time)
 
-  # Collects results from R5 and transforms them into simple features objects
-  # path_options_df <- jdx::convertToR(path_options) %>%
-  #   data.table::rbindlist() %>%
-  #   mutate(geometry = st_as_sfc(geometry)) %>%
-  #   st_sf(crs = 4326) # WGS 84
+  } else {
+
+    path_options <- r5r_core$planMultipleTrips(requests_ids,
+                                               origins$lat, origins$lon,
+                                               destinations$lat, destinations$lon,
+                                               direct_modes, transit_modes,
+                                               trip_date, departure_time,
+                                               max_street_time)
+
+  }
+
+  # convert result into a data.frame. if only one pair of origin and destination
+  # has been sent then the result is already a df
 
   path_options <- jdx::convertToR(path_options)
-  path_options_df <- data.table::rbindlist(path_options)
 
-  data.table::setDT(path_options_df)[, geometry := sf::st_as_sfc(geometry)]
-  path_options_sf <- sf::st_sf(path_options_df, crs = 4326) # WGS 84
+  if (!is.data.frame(path_options)) {
+    path_options <- data.table::rbindlist(path_options)
+  }
 
+  # convert from data.frame to sf with CRS WGS 84 (EPSG 4326)
 
-  # R5 often returns multiple options with the basic structure, with minor
-  # changes to the walking segments at the start and end of the trip.
-  # This section filters out paths with the same signature, leaving only the one
-  # with the shortest duration
-  ####
-  #### filter paths not working... we need to consider both request and option ids
-  ####
-  # if (shortest_path) {
-  #   distinct_options <- path_options_df %>%
-  #     select(-geometry) %>%
-  #     mutate(route = if_else(route == "", mode, route)) %>%
-  #     group_by(request, option) %>%
-  #     summarise(signature = paste(route, collapse = " "), duration = sum(duration), .groups = "drop") %>%
-  #     group_by(request, signature) %>%
-  #     arrange(duration) %>%
-  #     slice(1)
-  #
-  #   path_options_df <- path_options_df %>%
-  #     filter(option %in% distinct_options$option)
-  # }
+  data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
+  path_options <- sf::st_sf(path_options, crs = 4326)
 
-  return(path_options_df)
+  return(path_options)
+
 }
 
