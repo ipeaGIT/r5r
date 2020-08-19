@@ -69,6 +69,18 @@ points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
 head(points)
 
 ```
+### Set memory
+
+By default, R allocates only 512MB of memory for Java processes, which is not enough for large queries using r5r. To increase available memory to 4GB, for example, we need to set the java.parameters option at the beginning of the script, as follows:
+
+```{r, message = FALSE}
+options(java.parameters = "-Xmx4G")
+```
+
+
+# allocate RAM memory to Java
+options(java.parameters = "-Xmx2G")
+
 
 # Build routable transport network
 
@@ -78,7 +90,7 @@ of R5 and store it locally in the r5r package directory; (2) combines the osm.pb
 
 ```{r, message = FALSE}
 # Indicate the path where OSM and GTFS data are stored
-r5_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path)
 
 ```
 
@@ -108,7 +120,7 @@ Create simple example here and plot the result below
 
 ```{r, message = FALSE}
 # extract OSM network
-street_net <- street_network_to_sf(r5_core)
+street_net <- street_network_to_sf(r5r_core)
 
 # plot
 ggplot() +
@@ -124,15 +136,14 @@ ggplot() +
 
 ```{r, message = FALSE}
 # calculate a travel time matrix
-ttm <- travel_time_matrix( r5_core = r5_core,
+ttm <- travel_time_matrix( r5r_core = r5r_core,
                            origins = points,
                            destinations = points,
                            trip_date = "2019-05-20",
                            departure_time = "14:00:00",
-                           direct_modes = c("WALK", "BICYCLE", "CAR"),
-                           transit_modes = "BUS",
-                           max_street_time = 300L,
-                           max_trip_duration = 3600L
+                           mode = c("WALK", "TRANSIT"),
+                           max_street_time = 7200,
+                           max_trip_duration = 7200
                           )
 head(ttm)
 ```
