@@ -8,10 +8,10 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
-  departure_datetime,
   max_walk_dist,
   mode = "WALK",
-  max_trip_duration = 120L,
+  departure_datetime = Sys.time(),
+  max_trip_duration = 3600L,
   walk_speed = 3.6,
   bike_speed = 12,
   shortest_path = TRUE,
@@ -25,13 +25,13 @@ detailed_itineraries(
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check \code{calendar.txt} within
-the GTFS file for valid dates.}
-
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
 \item{mode}{A string, defaults to "WALK". See details for other options.}
+
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check \code{calendar.txt} within
+the GTFS file for valid dates.}
 
 \item{max_trip_duration}{An integer. Maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}

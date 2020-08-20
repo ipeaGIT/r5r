@@ -69,10 +69,10 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
-                                 departure_datetime,
                                  max_walk_dist,
                                  mode = "WALK",
-                                 max_trip_duration = 120L,
+                                 departure_datetime = Sys.time(),
+                                 max_trip_duration = 3600L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
@@ -96,16 +96,8 @@ detailed_itineraries <- function(r5r_core,
   if (!is.numeric(bike_speed)){ stop("bike_speed must be numeric.")
   } else{ r5r_core$setBikeSpeed(bike_speed * 5 / 18) }
 
-  # trip date
 
-  if (is.na(as.Date(trip_date, format = "20%y-%m-%d"))) {
-
-    stop("trip_date must be a string in the format 'yyyy-mm-dd'.")
-
-  }
-
-  # departure time
-
+  # departure date_time
   departure <- posix_to_string(departure_datetime)
 
   # origins and destinations
@@ -150,19 +142,9 @@ detailed_itineraries <- function(r5r_core,
   }
 
   # max walking distance - also set max_street_time
-
-  if (!is.integer(max_trip_duration)) {
-
-    if (!is.numeric(max_trip_duration)) stop("max_trip_duration must be an integer.")
-
-    max_trip_duration <- as.integer(max_trip_duration)
-    warning("max_trip_duration forcefully cast into an integer.")
-
-  }
-
-  max_street_time <- set_max_walk_distance(max_walk_dist,
-                                           walk_speed,
-                                           max_trip_duration)
+    max_street_time <- set_max_walk_distance(max_walk_dist,
+                                             walk_speed,
+                                             max_trip_duration)
 
   # set number of threads
   if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()

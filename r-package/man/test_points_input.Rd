@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{test_points_input}
 \alias{test_points_input}
-\title{Check class of Origin / Destination inputs
-#'}
+\title{Check class of Origin / Destination inputs}
 \usage{
 test_points_input(df)
 }
@@ -12,7 +11,6 @@ test_points_input(df)
 }
 \description{
 Check class of Origin / Destination inputs
-#'
 }
 \seealso{
 Other support functions: 

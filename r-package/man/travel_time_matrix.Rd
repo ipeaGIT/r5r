@@ -8,9 +8,8 @@ travel_time_matrix(
   r5r_core,
   origins,
   destinations,
-  trip_date,
-  departure_time,
   mode = "WALK",
+  departure_datetime = Sys.time(),
   max_walk_dist = NULL,
   max_trip_duration = 7200,
   walk_speed = 3.6,
@@ -25,13 +24,11 @@ travel_time_matrix(
 \item{origins, destinations}{a spatial sf POINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}
 
-\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
-with public transport networks, check the GTFS.zip
-(calendar.txt file) for dates with service.}
-
-\item{departure_time}{character string, time in format "hh:mm:ss"}
-
 \item{mode}{character string, defaults to "WALK". See details for other options.}
+
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check \code{calendar.txt} within
+the GTFS file for valid dates.}
 
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
@@ -47,6 +44,10 @@ Defaults to use all available threads (Inf).}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
+
+\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
+with public transport networks, check the GTFS.zip
+(calendar.txt file) for dates with service.}
 }
 \value{
 A data.table with travel-time estimates (in seconds) between origin
@@ -86,8 +87,8 @@ points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,
 df <- travel_time_matrix( r5r_core,
                           origins = points,
                           destinations = points,
-                          trip_date = "2019-05-20",
-                          departure_time = "14:00:00",
+                          departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+                                               format = "\%d-\%m-\%Y \%H:\%M:\%S")
                           mode = c('WALK', 'TRANSIT'),
                           max_walk_dist = 5,
                           max_trip_duration = 7200

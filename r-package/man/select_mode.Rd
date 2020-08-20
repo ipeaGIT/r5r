@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{select_mode}
 \alias{select_mode}
-\title{Select transport mode
-#'}
+\title{Select transport mode}
 \usage{
 select_mode(mode = "WALK")
 }
@@ -12,7 +11,6 @@ select_mode(mode = "WALK")
 }
 \description{
 Select transport mode
-#'
 }
 \seealso{
 Other support functions: 

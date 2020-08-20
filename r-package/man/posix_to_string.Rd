@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{posix_to_string}
 \alias{posix_to_string}
-\title{Generate date and departure time strings
-#'}
+\title{Generate date and departure time strings from POSIXct}
 \usage{
 posix_to_string(datetime)
 }
@@ -14,8 +13,7 @@ posix_to_string(datetime)
 A list with 'date' and 'departure_time' names.
 }
 \description{
-Generate date and departure time strings
-#'
+Generate date and departure time strings from POSIXct
 }
 \seealso{
 Other support functions: 

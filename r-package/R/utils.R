@@ -44,7 +44,7 @@ set_verbose <- function(verbose){
 
 
 #' Check class of Origin / Destination inputs
-#' #'
+#'
 #' @param df Any object
 #' @export
 #' @family support functions
@@ -112,7 +112,7 @@ set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
 
 
 #' Select transport mode
-#' #'
+#'
 #' @param mode character string, defaults to "WALK"
 #' @export
 #' @family support functions
@@ -168,8 +168,8 @@ select_mode <- function(mode="WALK") {
 }
 
 
-#' Generate date and departure time strings
-#' #'
+#' Generate date and departure time strings from POSIXct
+#'
 #' @param datetime An object of POSIXct class.
 #'
 #' @return A list with 'date' and 'departure_time' names.

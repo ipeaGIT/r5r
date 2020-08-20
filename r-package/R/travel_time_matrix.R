@@ -9,7 +9,9 @@
 #' @param trip_date character string, date in format "yyyy-mm-dd". If working
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
-#' @param departure_time character string, time in format "hh:mm:ss"
+#' @param departure_datetime A POSIXct object. If working with public transport
+#'                           networks, please check \code{calendar.txt} within
+#'                           the GTFS file for valid dates.
 #' @param mode character string, defaults to "WALK". See details for other options.
 #' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
@@ -51,8 +53,8 @@
 #' df <- travel_time_matrix( r5r_core,
 #'                           origins = points,
 #'                           destinations = points,
-#'                           trip_date = "2019-05-20",
-#'                           departure_time = "14:00:00",
+#'                           departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+#'                                                format = "%d-%m-%Y %H:%M:%S"),
 #'                           mode = c('WALK', 'TRANSIT'),
 #'                           max_walk_dist = 5,
 #'                           max_trip_duration = 7200
@@ -64,9 +66,8 @@
 travel_time_matrix <- function( r5r_core,
                                 origins,
                                 destinations,
-                                trip_date,
-                                departure_time,
                                 mode = "WALK",
+                                departure_datetime = Sys.time(),
                                 max_walk_dist = NULL,
                                 max_trip_duration = 7200,
                                 walk_speed = 3.6,
@@ -79,6 +80,9 @@ travel_time_matrix <- function( r5r_core,
 
   # Modes
     mode_list <- select_mode(mode)
+
+  # departure time
+    departure <- posix_to_string(departure_datetime)
 
   # Origins / Destinations
     test_points_input(origins)
@@ -120,8 +124,8 @@ travel_time_matrix <- function( r5r_core,
                                                       transit_modes= mode_list$transit_mode,
                                                       access_mode= mode_list$access_mode,
                                                       egress_mode= mode_list$egress_mode,
-                                                      trip_date,
-                                                      departure_time,
+                                                      departure$date,
+                                                      departure$time,
                                                       max_street_time,
                                                       max_trip_duration
                                                       )
