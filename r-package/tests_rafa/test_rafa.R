@@ -192,24 +192,68 @@ max_trip_duration = 600L
 
 ##### HEX sticker ------------------------
 
- walk_speed = 3.6 Kmh
- max_street_time
- max_walk_dist =  .5 km
-
-
- walk_speed = max_walk_dist / max_street_time
-
- max_street_time =  max_walk_dist / walk_speed
-
-
-5 = 5 / 1
-
-
- # select origin
-
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
-points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+ points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+ points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+
+ box <- st_as_sfc( st_bbox(points_sf), crs=st_crs(points_sf) )
+ box <- st_sf(box)
+ st_crs(box) <- 4674
+
+# get hex
+ hex_ids <- h3jsr::polyfill(box, res = 7, simple = FALSE)
+
+ # pass the h3 ids to return the hexagonal grid
+ hex_grid <- unlist(hex_ids$h3_polyfillers) %>%
+         h3jsr::h3_to_polygon(simple = FALSE) %>%
+         rename(id_hex = h3_address) %>%
+         st_sf()
+
+ selected_points <- subset(points_sf,
+                           id %in% c('89a90129d97ffff',
+                                     '89a90129977ffff',
+                                     '89a90128a83ffff'))
+
+ origin <- subset(points_sf, id == '89a90129977ffff')
+ destinations <- subset(points_sf, id %like% c('89a901299'))
+
+#  selected_points2 <- subset(points_sf,
+#                            id %like% c('89a901299'))
+#
+# mapview(hex_grid) + selected_points + selected_points2
+#
+#
+#
+# # 89a90129d97ffff >> para direita
+# # 89a90129977ffff ?? pra baixo
+# # 89a90128a83ffff ?? nordeste
+
+
+
+
+
+
+
+# build transport network
+data_path <- system.file("extdata", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
+
+
+# input
+mode = c('WALK', 'TRANSIT')
+departure_time <- "14:00:00"
+trip_date <- "2019-03-15"
+max_street_time <- 30000L
+
+df <- detailed_itineraries(r5r_core,
+                    origins = origin,
+                    destinations = destinations,
+                    mode = 'WALK',
+                    trip_date,
+                    departure_time,
+                    max_street_time)
+
+
 
 
 
@@ -222,8 +266,11 @@ mapview(street_net) + points_sf
 
  # plot
  ggplot() +
-         geom_sf(data = street_net$edges, color='gray85') +
-         theme_minimal()
+         geom_sf(data = df, color='gray1', alpha=1) +
+         theme_void()
+
+
+
 ##### Coverage ------------------------
 
 # each function separately
