@@ -1,6 +1,10 @@
 
 # r5r: Rapid Realistic Routing with R5 in R
 
+[![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r) (yet)
+[![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/r5r.svg?branch=master)](https://travis-ci.org/ipeaGIT/r5r)
+![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg)
+
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
 networks (walk, bike, public transport and car). It provides a simple and 
 friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
