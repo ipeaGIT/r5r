@@ -22,6 +22,7 @@ Set max walking distance
 \seealso{
 Other support functions: 
 \code{\link{select_mode}()},
+\code{\link{set_verbose}()},
 \code{\link{sf_to_df_r5r}()},
 \code{\link{street_network_to_sf}()},
 \code{\link{test_points_input}()}

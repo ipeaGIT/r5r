@@ -15,7 +15,8 @@ travel_time_matrix(
   max_trip_duration = 7200,
   walk_speed = 3.6,
   bike_speed = 12,
-  nThread = Inf
+  nThread = Inf,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ to 7200 seconds (2 hours).}
 
 \item{nThread}{numeric, The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
+
+\item{verbose}{logical, TRUE to show detailed output messages (Default) or
+FALSE to show only eventual ERROR messages.}
 }
 \value{
 A data.table with travel-time estimates (in seconds) between origin

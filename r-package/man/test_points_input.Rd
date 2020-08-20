@@ -18,6 +18,7 @@ Check class of Origin / Destination inputs
 Other support functions: 
 \code{\link{select_mode}()},
 \code{\link{set_max_walk_distance}()},
+\code{\link{set_verbose}()},
 \code{\link{sf_to_df_r5r}()},
 \code{\link{street_network_to_sf}()}
 }
