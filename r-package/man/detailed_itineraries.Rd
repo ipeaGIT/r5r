@@ -8,14 +8,14 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
+  departure_datetime,
   max_walk_dist,
   mode = "WALK",
-  departure_datetime = Sys.time(),
-  max_trip_duration = 3600L,
+  max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
   shortest_path = TRUE,
-  nThread = Inf,
+  n_threads = Inf,
   verbose = TRUE
 )
 }
@@ -26,13 +26,13 @@ detailed_itineraries(
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
-\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
-
-\item{mode}{A string, defaults to "WALK". See details for other options.}
-
 \item{departure_datetime}{A POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
+
+\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
+
+\item{mode}{A string, defaults to "WALK". See details for other options.}
 
 \item{max_trip_duration}{An integer. Maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
@@ -45,11 +45,11 @@ Defaults to 120 minutes (2 hours).}
 fastest route alternative (default) or multiple
 alternatives.}
 
-\item{nThread}{numeric, The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
-
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
+
+\item{nThread}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
 }
 \value{
 A LINESTRING sf with detailed information about the itineraries

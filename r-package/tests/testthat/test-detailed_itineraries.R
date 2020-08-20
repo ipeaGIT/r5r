@@ -19,7 +19,7 @@ detailed_itineraries_tester <- function(r5r_core,
                                         walk_speed = 3.6,
                                         bike_speed = 12,
                                         shortest_path = TRUE,
-                                        nThread = Inf,
+                                        n_threads = Inf,
                                         verbose = TRUE) {
 
   results <- detailed_itineraries(
@@ -33,7 +33,7 @@ detailed_itineraries_tester <- function(r5r_core,
     walk_speed,
     bike_speed,
     shortest_path,
-    nThread,
+    n_threads,
     verbose
   )
 
