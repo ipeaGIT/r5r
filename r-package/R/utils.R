@@ -21,7 +21,25 @@ sf_to_df_r5r <- function(sf){
   return(df)
 }
 
+#' Set verbose argument
+#'
+#' @param verbose logical, passed from function above
+#' @export
+#' @family support functions
+#'
+set_verbose <- function(verbose){
 
+  if (verbose == TRUE) {
+    r5r_core$verboseMode()
+
+  } else if (verbose == FALSE) {
+    # Only errors are reported.
+    r5r_core$silentMode()
+
+  } else {
+    stop("Parameter 'verbose' must be either TRUE or FALSE")
+  }
+}
 
 
 
