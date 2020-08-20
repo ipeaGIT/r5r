@@ -22,7 +22,7 @@ travel_time_matrix(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{a spatial sf MULTIPOINT object, or a data.frame
+\item{origins, destinations}{a spatial sf POINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}
 
 \item{trip_date}{character string, date in format "yyyy-mm-dd". If working

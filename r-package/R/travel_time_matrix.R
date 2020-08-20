@@ -4,7 +4,7 @@
 #'              multiple origin destination pairs.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf MULTIPOINT object, or a data.frame
+#' @param origins,destinations a spatial sf POINT object, or a data.frame
 #'                containing the columns 'id', 'lon', 'lat'
 #' @param trip_date character string, date in format "yyyy-mm-dd". If working
 #'                  with public transport networks, check the GTFS.zip

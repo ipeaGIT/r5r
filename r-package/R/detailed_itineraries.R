@@ -4,13 +4,12 @@
 #' and destinations.
 #'
 #' @param r5r_core A rJava object to connect with R5 routing engine
-#' @param origins,destinations Either a spatial sf MULTIPOINT or a data.frame
+#' @param origins,destinations Either a spatial sf POINT or a data.frame
 #'                             containing the columns \code{id}, \code{lon} and
 #'                             \code{lat}.
-#' @param trip_date A string in the format "yyyy-mm-dd". If working with public
-#'                  transport networks, please check \code{calendar.txt} within
-#'                  the GTFS file for valid dates.
-#' @param departure_time A string in the format "hh:mm:ss".
+#' @param departure_datetime A POSIXct object. If working with public transport
+#'                           networks, please check \code{calendar.txt} within
+#'                           the GTFS file for valid dates.
 #' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
 #' @param mode A string, defaults to "WALK". See details for other options.
 #' @param max_trip_duration An integer. Maximum trip duration in minutes.
@@ -53,15 +52,14 @@
 #'
 #' # inputs
 #' mode = c("WALK", "BUS")
-#' departure_time <- "14:00:00"
-#' trip_date <- "2019-03-15"
 #' max_walk_dist <- 1
+#' departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+#'                                  format = "%d-%m-%Y %H:%M:%S")
 #'
 #' df <- detailed_itineraries(r5r_core,
 #'                            origins,
 #'                            destinations,
-#'                            trip_date,
-#'                            departure_time,
+#'                            departure_datetime,
 #'                            max_walk_dist,
 #'                            mode)
 #'
@@ -71,8 +69,7 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
-                                 trip_date,
-                                 departure_time,
+                                 departure_datetime,
                                  max_walk_dist,
                                  mode = "WALK",
                                  max_trip_duration = 120L,
@@ -109,11 +106,7 @@ detailed_itineraries <- function(r5r_core,
 
   # departure time
 
-  if (is.na(strptime(departure_time, format = "%H:%M:%S"))) {
-
-    stop("departure_time must be a string in the format 'hh:mm:ss'.")
-
-  }
+  departure <- posix_to_string(departure_datetime)
 
   # origins and destinations
 
@@ -195,8 +188,8 @@ detailed_itineraries <- function(r5r_core,
                                             mode_list$transit_mode,
                                             mode_list$access_mode,
                                             mode_list$egress_mode,
-                                            trip_date,
-                                            departure_time,
+                                            departure$date,
+                                            departure$time,
                                             max_street_time,
                                             max_trip_duration)
 
@@ -212,8 +205,8 @@ detailed_itineraries <- function(r5r_core,
                                                mode_list$transit_mode,
                                                mode_list$access_mode,
                                                mode_list$egress_mode,
-                                               trip_date,
-                                               departure_time,
+                                               departure$date,
+                                               departure$time,
                                                max_street_time,
                                                max_trip_duration)
 

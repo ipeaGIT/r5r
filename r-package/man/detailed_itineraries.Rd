@@ -8,8 +8,7 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
-  trip_date,
-  departure_time,
+  departure_datetime,
   max_walk_dist,
   mode = "WALK",
   max_trip_duration = 120L,
@@ -22,15 +21,13 @@ detailed_itineraries(
 \arguments{
 \item{r5r_core}{A rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{Either a spatial sf MULTIPOINT or a data.frame
+\item{origins, destinations}{Either a spatial sf POINT or a data.frame
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
-\item{trip_date}{A string in the format "yyyy-mm-dd". If working with public
-transport networks, please check \code{calendar.txt} within
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
-
-\item{departure_time}{A string in the format "hh:mm:ss".}
 
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
@@ -87,15 +84,14 @@ destinations <- points[12,]
 
 # inputs
 mode = c("WALK", "BUS")
-departure_time <- "14:00:00"
-trip_date <- "2019-03-15"
 max_walk_dist <- 1
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 df <- detailed_itineraries(r5r_core,
                            origins,
                            destinations,
-                           trip_date,
-                           departure_time,
+                           departure_datetime,
                            max_walk_dist,
                            mode)
 
