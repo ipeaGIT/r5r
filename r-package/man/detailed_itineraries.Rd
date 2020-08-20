@@ -22,7 +22,7 @@ detailed_itineraries(
 \arguments{
 \item{r5r_core}{A rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{Either a spatial sf MULTIPOINT or a data.frame
+\item{origins, destinations}{Either a spatial sf POINT or a data.frame
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
