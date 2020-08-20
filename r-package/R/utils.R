@@ -167,4 +167,26 @@ select_mode <- function(mode="WALK") {
   return(mode_list)
 }
 
+
+#' Generate date and departure time strings
+#' #'
+#' @param datetime An object of POSIXct class.
+#'
+#' @return A list with 'date' and 'departure_time' names.
+#'
+#' @family support functions
+
+posix_to_string <- function(datetime) {
+
+  checkmate::assert_posixct(datetime)
+
+  datetime_list <- list(
+    date = strftime(datetime, format = "%Y-%m-%d"),
+    time = strftime(datetime, format = "%H:%M:%S")
+  )
+
+  return(datetime_list)
+
+}
+
 # nocov end

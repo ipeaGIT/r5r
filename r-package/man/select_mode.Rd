@@ -16,6 +16,7 @@ Select transport mode
 }
 \seealso{
 Other support functions: 
+\code{\link{posix_to_string}()},
 \code{\link{set_max_walk_distance}()},
 \code{\link{set_verbose}()},
 \code{\link{sf_to_df_r5r}()},
