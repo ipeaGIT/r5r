@@ -81,7 +81,10 @@ detailed_itineraries <- function(r5r_core,
                                  shortest_path = TRUE,
                                  nThread = Inf) {
 
-  ### check inputs
+
+
+  # check inputs ------------------------------------------------------------
+
 
   # modes
 
@@ -91,10 +94,10 @@ detailed_itineraries <- function(r5r_core,
   # must be converted from km/h to m/s
 
   if (!is.numeric(walk_speed)){ stop("walk_speed must be numeric.")
-    } else{ r5r_core$setWalkSpeed(walk_speed * 5 / 18) }
+  } else{ r5r_core$setWalkSpeed(walk_speed * 5 / 18) }
 
   if (!is.numeric(bike_speed)){ stop("bike_speed must be numeric.")
-    } else{ r5r_core$setBikeSpeed(bike_speed * 5 / 18) }
+  } else{ r5r_core$setBikeSpeed(bike_speed * 5 / 18) }
 
   # trip date
 
@@ -173,7 +176,10 @@ detailed_itineraries <- function(r5r_core,
   } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
   } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
 
-  # call to method inside R5RCore object
+
+  # call r5r_core method ----------------------------------------------------
+
+
   # if a single origin is provided, calls sequential function planSingleTrip
   # else, calls parallel function planMultipleTrips
 
@@ -212,6 +218,10 @@ detailed_itineraries <- function(r5r_core,
                                                max_trip_duration)
 
   }
+
+
+  # process results ---------------------------------------------------------
+
 
   # check if any itineraries have been found - if not, raises an error
   # if there are any results, convert those to a data.frame. if only one pair of
@@ -271,4 +281,3 @@ detailed_itineraries <- function(r5r_core,
   return(path_options)
 
 }
-
