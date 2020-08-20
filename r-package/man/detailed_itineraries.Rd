@@ -15,7 +15,8 @@ detailed_itineraries(
   walk_speed = 3.6,
   bike_speed = 12,
   shortest_path = TRUE,
-  nThread = Inf
+  nThread = Inf,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -46,9 +47,13 @@ alternatives.}
 
 \item{nThread}{numeric, The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
+
+\item{verbose}{logical, TRUE to show detailed output messages (Default) or
+FALSE to show only eventual ERROR messages.}
 }
 \value{
-
+A LINESTRING sf with detailed information about the itineraries
+between specified origins and destinations.
 }
 \description{
 Returns multiple detailed itineraries between specified origins
