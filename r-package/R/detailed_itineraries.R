@@ -81,10 +81,7 @@ detailed_itineraries <- function(r5r_core,
                                  shortest_path = TRUE,
                                  nThread = Inf) {
 
-
-
-  # check inputs ------------------------------------------------------------
-
+  ### check inputs
 
   # modes
 
@@ -176,10 +173,7 @@ detailed_itineraries <- function(r5r_core,
   } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
   } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
 
-
-  # call r5r_core method ----------------------------------------------------
-
-
+  # call to method inside R5RCore object
   # if a single origin is provided, calls sequential function planSingleTrip
   # else, calls parallel function planMultipleTrips
 
@@ -218,10 +212,6 @@ detailed_itineraries <- function(r5r_core,
                                                max_trip_duration)
 
   }
-
-
-  # process results ---------------------------------------------------------
-
 
   # check if any itineraries have been found - if not, raises an error
   # if there are any results, convert those to a data.frame. if only one pair of
