@@ -83,6 +83,58 @@ test_points_input <- function(df) {
 
 }
 
+#' Assert class of origin and destination inputs and the type of its columns
+#'
+#' @param df Any object.
+#' @param name Object name.
+#'
+#' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
+#'
+#' @family support functions
+#'
+
+assert_points_input <- function(df, name) {
+
+  # check if 'df' is a data.frame or a POINT sf
+
+  if (is(df, "data.frame")) {
+
+    if (is(df, "sf")) {
+
+      if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
+
+        stop(paste0("'", name, "' must be either a 'data.frame' or a 'sf POINT'."))
+
+      }
+
+      df <- sfheaders::sf_to_df(df, fill = TRUE)
+      data.table::setDT(df)
+      data.table::setnames(df, "x", "lon")
+      data.table::setnames(df, "y", "lat")
+      data.table::setnames(df, names(df)[1], "id")
+
+    }
+
+    checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)
+
+    if (!is.character(df$id)) {
+
+      df$id <- as.character(df$id)
+      warning(paste0("'", name, "$id' forcefully cast to character."))
+
+    }
+
+    checkmate::assert_numeric(df$lon, .var.name = paste0(name, "$lon"))
+    checkmate::assert_numeric(df$lat, .var.name = paste0(name, "$lat"))
+
+    return(df)
+
+  }
+
+  stop(paste0("'", name, "' must be either a 'data.frame' or a 'sf POINT'."))
+
+}
+
 
 #' Set max walking distance
 #'
