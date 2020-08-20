@@ -36,14 +36,33 @@ test_points_input <- function(df) {
   # is data.frame or sf
   any_df <- is(df, 'data.frame')
 
-  if( is(df, 'sf') ){
-            any_sf <- as.character(unique(sf::st_geometry_type(df))) == "MULTIPOINT"
-            } else { any_sf <- FALSE}
+  if (is(df, 'sf')) {
+    any_sf <- as.character(unique(sf::st_geometry_type(df))) == "MULTIPOINT"
+  } else {
+    any_sf <- FALSE
+  }
 
-  # check
-  if ( sum(any_df, any_sf) < 1) {
-    stop(message("Origin/Destinations must be either a 'data.frame' or a 'sf MULTIPOINT'"))
-    }
+  # check df type
+
+  if (sum(any_df, any_sf) < 1) {
+    stop("Origin/Destinations must be either a 'data.frame' or a 'sf MULTIPOINT'.")
+  }
+
+  # check df columns' types
+
+  if (!is.character(df$id)) {
+
+      df$id <- as.character(df$id)
+      stop("id must be a character column.")
+
+  }
+
+  if (!any_sf && (!is.numeric(df$lon) || !is.numeric(df$lat))) {
+
+    stop("lat and lon must be numeric columns.")
+
+  }
+
 }
 
 
