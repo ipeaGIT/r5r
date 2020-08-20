@@ -4,33 +4,38 @@ context("Detailed itineraries function")
 
 data_path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # create testing function
 
 detailed_itineraries_tester <- function(r5r_core,
-                                        origins = points[1:5, ],
-                                        destinations = points[2:6, ],
-                                        mode = c("WALK"),
-                                        trip_date = "2019-03-13",
-                                        departure_time = "14:00:00",
-                                        max_street_time = 120L,
+                                        origins = points[1:15, ],
+                                        destinations = points[15:1, ],
+                                        departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+                                                                        format = "%d-%m-%Y %H:%M:%S"),
+                                        max_walk_dist = 1,
+                                        mode = c("WALK", "BUS"),
+                                        max_trip_duration = 120L,
                                         walk_speed = 3.6,
                                         bike_speed = 12,
                                         shortest_path = TRUE,
-                                        nThread = Inf) {
+                                        nThread = Inf,
+                                        verbose = TRUE) {
 
-  results <- detailed_itineraries(r5r_core,
-                                  origins,
-                                  destinations,
-                                  mode,
-                                  trip_date,
-                                  departure_time,
-                                  max_street_time,
-                                  walk_speed,
-                                  bike_speed,
-                                  shortest_path,
-                                  nThread)
+  results <- detailed_itineraries(
+    r5r_core,
+    origins,
+    destinations,
+    departure_datetime,
+    max_walk_dist,
+    mode,
+    max_trip_duration,
+    walk_speed,
+    bike_speed,
+    shortest_path,
+    nThread,
+    verbose
+  )
 
   return(results)
 
@@ -41,23 +46,36 @@ test_that("detailed_itineraries adequately raises warnings and errors", {
   # message related to expanding origins dataframe
   expect_message(detailed_itineraries_tester(r5r_core, origins = points[1, ]))
 
+  # error related to using a MULTIPOINT sf as origin
+  expect_error(
+    detailed_itineraries_tester(
+      r5r_core,
+      origins = sf::st_cast(sf::st_as_sf(points, coords = c("lon", "lat")), "MULTIPOINT")
+    )
+  )
+
+
   # message related to expanding destinations dataframe
-  expect_message(detailed_itineraries_tester(r5r_core, destinations = points[6, ]))
+  expect_message(detailed_itineraries_tester(r5r_core, destinations = points[1, ]))
+
+  # errors related to date formatting
+  expect_error(detailed_itineraries_tester(r5r_core, departure_datetime = "13-03-2019 14:00:00"))
+  expect_error(
+    detailed_itineraries_tester(
+      r5r_core,
+      departure_datetime = as.numeric(as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
+    )
+  )
+
+  # errors related to max_walk_dist
+  expect_error(detailed_itineraries_tester(r5r_core, max_walk_dist = "1"))
 
   # error related to nonexistent mode
   expect_error(detailed_itineraries_tester(r5r_core, mode = "MOTORCYCLE"))
 
-  # errors related to date formatting
-  expect_error(detailed_itineraries_tester(r5r_core, trip_date = "13-03-2019"))
-  expect_error(detailed_itineraries_tester(r5r_core, trip_date = "2019-13-03"))
-  expect_error(detailed_itineraries_tester(r5r_core, trip_date = "2019-03-mar"))
-
-  # errors related to departure time formatting
-  expect_error(detailed_itineraries_tester(r5r_core, departure_time = "14:00"))
-
   # warnings and errors related to max_street_time
-  expect_error(detailed_itineraries_tester(r5r_core, max_street_time = "7200"))
-  expect_warning(detailed_itineraries_tester(r5r_core, max_street_time = 7200))
+  expect_error(detailed_itineraries_tester(r5r_core, max_trip_duration = "120"))
+  expect_warning(detailed_itineraries_tester(r5r_core, max_trip_duration = 120))
 
   # error related to non-numeric walk_speed
   expect_error(detailed_itineraries_tester(r5r_core, walk_speed = "3.6"))

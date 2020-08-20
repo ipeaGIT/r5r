@@ -21,7 +21,8 @@
 #'                      alternatives.
 #' @param nThread numeric, The number of threads to use in parallel computing.
 #'                Defaults to use all available threads (Inf).
-#' @return
+#' @param verbose logical, TRUE to show detailed output messages (Default) or
+#'                FALSE to show only eventual ERROR messages.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
 #'          include:
@@ -33,9 +34,11 @@
 #'   ## Non transit modes
 #'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 #'
+#' @return A LINESTRING sf with detailed information about the itineraries
+#'         between specified origins and destinations.
 #'
 #' @family routing
-
+#'
 #' @examples
 #' \donttest{
 #' library(r5r)
@@ -69,6 +72,7 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
+                                 departure_datetime,
                                  max_walk_dist,
                                  mode = "WALK",
                                  departure_datetime = Sys.time(),
@@ -76,7 +80,8 @@ detailed_itineraries <- function(r5r_core,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
-                                 nThread = Inf) {
+                                 nThread = Inf,
+                                 verbose = TRUE) {
 
 
 
@@ -101,17 +106,11 @@ detailed_itineraries <- function(r5r_core,
   departure <- posix_to_string(departure_datetime)
 
   # origins and destinations
+  # either they have the same number of rows or one of them has only one row,
+  # in which case the smaller dataframe is expanded
 
-  test_points_input(origins)
-  test_points_input(destinations)
-
-  # if origins/destinations are 'sf' objects, convert them to 'data.frame'
-
-  if(sum(class(origins) %in% "sf") > 0) origins <- sf_to_df_r5r(origins)
-  if(sum(class(destinations) %in% "sf") > 0) destinations <- sf_to_df_r5r(destinations)
-
-  # either 'origins' and 'destinations' have the same number of rows or one of
-  # them has only one entry, in which case the smaller dataframe is expanded
+  origins      <- assert_points_input(origins, "origins")
+  destinations <- assert_points_input(destinations, "origins")
 
   n_origs <- nrow(origins)
   n_dests <- nrow(destinations)
@@ -151,6 +150,8 @@ detailed_itineraries <- function(r5r_core,
   } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
   } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
 
+  # set verbose
+  set_verbose(verbose)
 
   # call r5r_core method ----------------------------------------------------
 
