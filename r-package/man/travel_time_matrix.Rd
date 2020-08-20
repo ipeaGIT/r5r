@@ -10,8 +10,8 @@ travel_time_matrix(
   destinations,
   trip_date,
   departure_time,
-  mode = "WALK",
   max_walk_dist,
+  mode = "WALK",
   max_trip_duration = 7200,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -21,10 +21,7 @@ travel_time_matrix(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins}{a spatial sf MULTIPOINT object, or a data.frame containing the
-columns 'id', 'lon', 'lat'}
-
-\item{destinations}{a spatial sf MULTIPOINT object, or a data.frame
+\item{origins, destinations}{a spatial sf MULTIPOINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}
 
 \item{trip_date}{character string, date in format "yyyy-mm-dd". If working
@@ -33,9 +30,9 @@ with public transport networks, check the GTFS.zip
 
 \item{departure_time}{character string, time in format "hh:mm:ss"}
 
-\item{mode}{character string, defaults to "WALK". See details for other options.}
-
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
+
+\item{mode}{character string, defaults to "WALK". See details for other options.}
 
 \item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
 to 7200 seconds (2 hours).}

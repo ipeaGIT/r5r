@@ -8,10 +8,11 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
-  mode = "WALK",
   trip_date,
   departure_time,
-  max_street_time,
+  max_walk_dist,
+  mode = "WALK",
+  max_trip_duration = 7200,
   walk_speed = 3.6,
   bike_speed = 12,
   shortest_path = TRUE,
@@ -25,16 +26,18 @@ detailed_itineraries(
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
-\item{mode}{A string, defaults to "WALK". See details for other options.}
-
 \item{trip_date}{A string in the format "yyyy-mm-dd". If working with public
 transport networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
 \item{departure_time}{A string in the format "hh:mm:ss".}
 
-\item{max_street_time}{An integer representing the maximum total travel time
-allowed (in minutes).}
+\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
+
+\item{mode}{A string, defaults to "WALK". See details for other options.}
+
+\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
+to 7200 seconds (2 hours).}
 
 \item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
 
@@ -69,7 +72,8 @@ WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 }
 }
 \examples{
-\donttest{library(r5r)
+\donttest{
+library(r5r)
 
 # build transport network
 data_path <- system.file("extdata", package = "r5r")
@@ -85,15 +89,13 @@ destinations <- tail(points, 5)
 mode = c('WALK', 'TRANSIT')
 departure_time <- "14:00:00"
 trip_date <- "2019-03-15"
-max_street_time <- 30L
 
 df <- detailed_itineraries(r5r_core,
                            origins,
                            destinations,
                            mode,
                            trip_date,
-                           departure_time,
-                           max_street_time)
+                           departure_time)
 
 }
 }

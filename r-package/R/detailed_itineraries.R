@@ -7,13 +7,14 @@
 #' @param origins,destinations Either a spatial sf MULTIPOINT or a data.frame
 #'                             containing the columns \code{id}, \code{lon} and
 #'                             \code{lat}.
-#' @param mode A string, defaults to "WALK". See details for other options.
 #' @param trip_date A string in the format "yyyy-mm-dd". If working with public
 #'                  transport networks, please check \code{calendar.txt} within
 #'                  the GTFS file for valid dates.
 #' @param departure_time A string in the format "hh:mm:ss".
-#' @param max_street_time An integer representing the maximum total travel time
-#'                        allowed (in minutes).
+#' @param mode A string, defaults to "WALK". See details for other options.
+#' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
+#' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
+#'                          to 7200 seconds (2 hours).
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
 #' @param shortest_path A logical. Whether the function should only return the
@@ -37,7 +38,8 @@
 #' @family routing
 
 #' @examples
-#' \donttest{library(r5r)
+#' \donttest{
+#' library(r5r)
 #'
 #' # build transport network
 #' data_path <- system.file("extdata", package = "r5r")
@@ -53,15 +55,13 @@
 #' mode = c('WALK', 'TRANSIT')
 #' departure_time <- "14:00:00"
 #' trip_date <- "2019-03-15"
-#' max_street_time <- 30L
 #'
 #' df <- detailed_itineraries(r5r_core,
 #'                            origins,
 #'                            destinations,
 #'                            mode,
 #'                            trip_date,
-#'                            departure_time,
-#'                            max_street_time)
+#'                            departure_time)
 #'
 #' }
 #' @export
@@ -69,27 +69,17 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
-                                 mode = "WALK",
                                  trip_date,
                                  departure_time,
-                                 max_street_time,
+                                 max_walk_dist,
+                                 mode = "WALK",
+                                 max_trip_duration = 7200,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
                                  nThread = Inf) {
 
   ### check inputs
-
-  # max_trip_duration and max_street_time
-
-  if (!is.integer(max_street_time)) {
-
-    if (!is.numeric(max_street_time)) stop("max_street_time must be an integer.")
-
-    max_street_time <- as.integer(max_street_time)
-    warning("max_street_time forcefully cast into an integer.")
-
-  }
 
   # modes
 
@@ -98,11 +88,11 @@ detailed_itineraries <- function(r5r_core,
   # bike and walk speed
   # must be converted from km/h to m/s
 
-  if (!is.numeric(walk_speed)) stop("walk_speed must be numeric.")
-  else r5r_core$setWalkSpeed(walk_speed * 5 / 18)
+  if (!is.numeric(walk_speed)){ stop("walk_speed must be numeric.")
+    } else{ r5r_core$setWalkSpeed(walk_speed * 5 / 18) }
 
-  if (!is.numeric(bike_speed)) stop("bike_speed must be numeric.")
-  else r5r_core$setBikeSpeed(bike_speed * 5 / 18)
+  if (!is.numeric(bike_speed)){ stop("bike_speed must be numeric.")
+    } else{ r5r_core$setBikeSpeed(bike_speed * 5 / 18) }
 
   # trip date
 
@@ -163,6 +153,13 @@ detailed_itineraries <- function(r5r_core,
 
   requests_ids <- paste0(origins$id, "_", destinations$id)
 
+  # Check for maximum walking distance
+  max_trip_duration = as.integer(max_trip_duration)
+  max_street_time <- set_max_walk_distance(max_walk_dist,
+                                           walk_speed,
+                                           max_trip_duration
+                                           )
+
   # set number of threads
   if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
   } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
@@ -187,7 +184,7 @@ detailed_itineraries <- function(r5r_core,
                                             trip_date,
                                             departure_time,
                                             max_street_time,
-                                            max_trip_duration = 120L)
+                                            max_trip_duration)
 
   } else {
 
@@ -204,7 +201,7 @@ detailed_itineraries <- function(r5r_core,
                                                trip_date,
                                                departure_time,
                                                max_street_time,
-                                               max_trip_duration = 120L)
+                                               max_trip_duration)
 
   }
 

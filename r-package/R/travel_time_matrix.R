@@ -4,10 +4,8 @@
 #'              multiple origin destination pairs.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins a spatial sf MULTIPOINT object, or a data.frame containing the
-#'                columns 'id', 'lon', 'lat'
-#' @param destinations a spatial sf MULTIPOINT object, or a data.frame
-#'                     containing the columns 'id', 'lon', 'lat'
+#' @param origins,destinations a spatial sf MULTIPOINT object, or a data.frame
+#'                containing the columns 'id', 'lon', 'lat'
 #' @param trip_date character string, date in format "yyyy-mm-dd". If working
 #'                  with public transport networks, check the GTFS.zip
 #'                  (calendar.txt file) for dates with service.
@@ -66,8 +64,8 @@ travel_time_matrix <- function( r5r_core,
                                 destinations,
                                 trip_date,
                                 departure_time,
-                                mode = "WALK",
                                 max_walk_dist,
+                                mode = "WALK",
                                 max_trip_duration = 7200,
                                 walk_speed = 3.6,
                                 bike_speed = 12,
