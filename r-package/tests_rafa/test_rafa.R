@@ -195,6 +195,13 @@ max_trip_duration = 600L
 # load origin/destination points
  points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
  points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+ points_sf2 <- sf::st_as_sf(points, coords = c("lon", "lat"))
+
+ data_path <- system.file("extdata", package = "r5r")
+ points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+ a <-  sf::st_as_sf(points, coords = c("lon", "lat"))
+
+
 
  box <- st_as_sfc( st_bbox(points_sf), crs=st_crs(points_sf) )
  box <- st_sf(box)
