@@ -78,9 +78,7 @@ df <- travel_time_matrix( r5_core = r5_core,
                           destinations = points,
                           trip_date = "2019-05-20",
                           departure_time = "14:00:00",
-                          direct_modes = c("WALK", "BICYCLE", "CAR"),
-                          transit_modes = "BUS",
-                          max_street_time = 300L,
+                          mode = c("WALK", "BUS"),
                           max_trip_duration = 3600L
                          )
 ```
