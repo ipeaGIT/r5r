@@ -11,10 +11,10 @@
 #'                  transport networks, please check \code{calendar.txt} within
 #'                  the GTFS file for valid dates.
 #' @param departure_time A string in the format "hh:mm:ss".
-#' @param mode A string, defaults to "WALK". See details for other options.
 #' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
-#' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#'                          to 7200 seconds (2 hours).
+#' @param mode A string, defaults to "WALK". See details for other options.
+#' @param max_trip_duration An integer. Maximum trip duration in minutes.
+#'                          Defaults to 120 minutes (2 hours).
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
 #' @param shortest_path A logical. Whether the function should only return the
@@ -46,22 +46,24 @@
 #' r5r_core <- setup_r5(data_path = data_path)
 #'
 #' # load and set origin/destination points
-#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+#' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
-#' origins <- head(points, 5)
-#' destinations <- tail(points, 5)
+#' origins <- points[10,]
+#' destinations <- points[12,]
 #'
-#' # input
-#' mode = c('WALK', 'TRANSIT')
+#' # inputs
+#' mode = c("WALK", "BUS")
 #' departure_time <- "14:00:00"
 #' trip_date <- "2019-03-15"
+#' max_walk_dist <- 1
 #'
 #' df <- detailed_itineraries(r5r_core,
 #'                            origins,
 #'                            destinations,
-#'                            mode,
 #'                            trip_date,
-#'                            departure_time)
+#'                            departure_time,
+#'                            max_walk_dist,
+#'                            mode)
 #'
 #' }
 #' @export
@@ -73,7 +75,7 @@ detailed_itineraries <- function(r5r_core,
                                  departure_time,
                                  max_walk_dist,
                                  mode = "WALK",
-                                 max_trip_duration = 7200,
+                                 max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
@@ -151,14 +153,20 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
-  requests_ids <- paste0(origins$id, "_", destinations$id)
+  # max walking distance - also set max_street_time
 
-  # Check for maximum walking distance
-  max_trip_duration = as.integer(max_trip_duration)
+  if (!is.integer(max_trip_duration)) {
+
+    if (!is.numeric(max_trip_duration)) stop("max_trip_duration must be an integer.")
+
+    max_trip_duration <- as.integer(max_trip_duration)
+    warning("max_trip_duration forcefully cast into an integer.")
+
+  }
+
   max_street_time <- set_max_walk_distance(max_walk_dist,
                                            walk_speed,
-                                           max_trip_duration
-                                           )
+                                           max_trip_duration)
 
   # set number of threads
   if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
@@ -177,10 +185,10 @@ detailed_itineraries <- function(r5r_core,
                                             destinations$id,
                                             destinations$lat,
                                             destinations$lon,
-                                            direct_modes= mode_list$direct_modes,
-                                            transit_modes= mode_list$transit_mode,
-                                            access_mode= mode_list$access_mode,
-                                            egress_mode= mode_list$egress_mode,
+                                            mode_list$direct_modes,
+                                            mode_list$transit_mode,
+                                            mode_list$access_mode,
+                                            mode_list$egress_mode,
                                             trip_date,
                                             departure_time,
                                             max_street_time,
@@ -194,19 +202,16 @@ detailed_itineraries <- function(r5r_core,
                                                destinations$id,
                                                destinations$lat,
                                                destinations$lon,
-                                               direct_modes= mode_list$direct_modes,
-                                               transit_modes= mode_list$transit_mode,
-                                               access_mode= mode_list$access_mode,
-                                               egress_mode= mode_list$egress_mode,
+                                               mode_list$direct_modes,
+                                               mode_list$transit_mode,
+                                               mode_list$access_mode,
+                                               mode_list$egress_mode,
                                                trip_date,
                                                departure_time,
                                                max_street_time,
                                                max_trip_duration)
 
   }
-
-  # convert result into a data.frame. if only one pair of origin and destination
-  # has been sent then the result is already a df
 
   # check if any itineraries have been found - if not, raises an error
   # if there are any results, convert those to a data.frame. if only one pair of
@@ -230,9 +235,37 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
-  # convert from data.frame to sf with CRS WGS 84 (EPSG 4326)
+  # convert path_options from data.frame to data.table with sfc column
 
   data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
+
+  # return either the fastest or multiple itineraries between an o-d pair
+
+  if (shortest_path) {
+
+    path_options[, temp_duration := sum(duration), by = .(fromId, toId, option)]
+    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId)]
+
+  } else {
+
+    # R5 often returns multiple itineraries between an origin and a destination
+    # with the same basic structure, but with minor differences in the walking
+    # segments at the start and end of the trip.
+    # itineraries with the same signature (sequence of routes) are filtered to
+    # keep the one with the shortest duration
+
+    path_options[, temp_route := ifelse(route == "", mode, route)]
+    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
+    path_options[, temp_duration := sum(duration), by = .(fromId, toId, option)]
+
+    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId, temp_sign)]
+
+  }
+
+  path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
+
+  # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
+
   path_options <- sf::st_sf(path_options, crs = 4326)
 
   return(path_options)
