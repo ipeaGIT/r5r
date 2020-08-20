@@ -12,7 +12,7 @@ detailed_itineraries(
   departure_time,
   max_walk_dist,
   mode = "WALK",
-  max_trip_duration = 7200,
+  max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
   shortest_path = TRUE,
@@ -36,8 +36,8 @@ the GTFS file for valid dates.}
 
 \item{mode}{A string, defaults to "WALK". See details for other options.}
 
-\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
-to 7200 seconds (2 hours).}
+\item{max_trip_duration}{An integer. Maximum trip duration in minutes.
+Defaults to 120 minutes (2 hours).}
 
 \item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
 
@@ -80,22 +80,24 @@ data_path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load and set origin/destination points
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-origins <- head(points, 5)
-destinations <- tail(points, 5)
+origins <- points[10,]
+destinations <- points[12,]
 
-# input
-mode = c('WALK', 'TRANSIT')
+# inputs
+mode = c("WALK", "BUS")
 departure_time <- "14:00:00"
 trip_date <- "2019-03-15"
+max_walk_dist <- 1
 
 df <- detailed_itineraries(r5r_core,
                            origins,
                            destinations,
-                           mode,
                            trip_date,
-                           departure_time)
+                           departure_time,
+                           max_walk_dist,
+                           mode)
 
 }
 }
