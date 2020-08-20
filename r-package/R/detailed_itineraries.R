@@ -75,34 +75,28 @@ detailed_itineraries <- function(r5r_core,
                                  departure_datetime,
                                  max_walk_dist,
                                  mode = "WALK",
-                                 departure_datetime = Sys.time(),
-                                 max_trip_duration = 3600L,
+                                 max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
-                                 nThread = Inf,
+                                 n_threads = Inf,
                                  verbose = TRUE) {
 
 
-
-  # check inputs ------------------------------------------------------------
+  # check inputs and set r5r_core options -----------------------------------
 
 
   # modes
 
   mode_list <- select_mode(mode)
 
-  # bike and walk speed
-  # must be converted from km/h to m/s
+  # set bike and walk speed
 
-  if (!is.numeric(walk_speed)){ stop("walk_speed must be numeric.")
-  } else{ r5r_core$setWalkSpeed(walk_speed * 5 / 18) }
+  set_speed(walk_speed, "walk")
+  set_speed(bike_speed, "bike")
 
-  if (!is.numeric(bike_speed)){ stop("bike_speed must be numeric.")
-  } else{ r5r_core$setBikeSpeed(bike_speed * 5 / 18) }
+  # departure time
 
-
-  # departure date_time
   departure <- posix_to_string(departure_datetime)
 
   # origins and destinations
@@ -140,18 +134,26 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
-  # max walking distance - also set max_street_time
-    max_street_time <- set_max_walk_distance(max_walk_dist,
-                                             walk_speed,
-                                             max_trip_duration)
+  # max_walking_distance and max_street_time
+
+  max_trip_duration <- assert_really_integer(max_trip_duration, "max_trip_duration")
+
+  max_street_time <- set_max_walk_distance(max_walk_dist,
+                                           walk_speed,
+                                           max_trip_duration)
+
+  # shortest_path
+
+  checkmate::assert_logical(shortest_path)
 
   # set number of threads
-  if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
-  } else if(!is.numeric(nThread)){stop("nThread must be numeric.")
-  } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
+
+  set_n_threads(n_threads)
 
   # set verbose
+
   set_verbose(verbose)
+
 
   # call r5r_core method ----------------------------------------------------
 

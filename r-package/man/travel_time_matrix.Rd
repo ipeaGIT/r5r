@@ -88,7 +88,7 @@ df <- travel_time_matrix( r5r_core,
                           origins = points,
                           destinations = points,
                           departure_datetime = as.POSIXct("13-03-2019 14:00:00",
-                                               format = "\%d-\%m-\%Y \%H:\%M:\%S")
+                                               format = "\%d-\%m-\%Y \%H:\%M:\%S"),
                           mode = c('WALK', 'TRANSIT'),
                           max_walk_dist = 5,
                           max_trip_duration = 7200
