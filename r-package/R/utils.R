@@ -7,7 +7,7 @@
 
 #' Convert sf spatial objects to data.frame
 #'
-#' @param sf A spatial sf MULTIPOINT object where the 1st column is the point id.
+#' @param sf A spatial sf POINT object where the 1st column is the point id.
 #' @export
 #' @family support functions
 #'
@@ -55,7 +55,7 @@ test_points_input <- function(df) {
   any_df <- is(df, 'data.frame')
 
   if (is(df, 'sf')) {
-    any_sf <- as.character(unique(sf::st_geometry_type(df))) == "MULTIPOINT"
+    any_sf <- as.character(unique(sf::st_geometry_type(df))) == "POINT"
   } else {
     any_sf <- FALSE
   }
@@ -63,7 +63,7 @@ test_points_input <- function(df) {
   # check df type
 
   if (sum(any_df, any_sf) < 1) {
-    stop("Origin/Destinations must be either a 'data.frame' or a 'sf MULTIPOINT'.")
+    stop("Origin/Destinations must be either a 'data.frame' or a 'sf POINT'.")
   }
 
   # check df columns' types

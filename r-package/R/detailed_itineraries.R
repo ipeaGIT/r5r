@@ -4,7 +4,7 @@
 #' and destinations.
 #'
 #' @param r5r_core A rJava object to connect with R5 routing engine
-#' @param origins,destinations Either a spatial sf MULTIPOINT or a data.frame
+#' @param origins,destinations Either a spatial sf POINT or a data.frame
 #'                             containing the columns \code{id}, \code{lon} and
 #'                             \code{lat}.
 #' @param trip_date A string in the format "yyyy-mm-dd". If working with public
