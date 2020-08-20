@@ -82,16 +82,12 @@ detailed_itineraries <- function(r5r_core,
 
   # max_trip_duration and max_street_time
 
-  if (!is.numeric(max_street_time)) {
+  if (!is.integer(max_street_time)) {
 
-    stop(message("max_street_time must be an integer."))
+    if (!is.numeric(max_street_time)) stop("max_street_time must be an integer.")
 
-    if (!is.integer(max_street_time)) {
-
-      max_street_time <- as.integer(max_street_time)
-      warning("max_street_time forcefully cast into an integer.")
-
-    }
+    max_street_time <- as.integer(max_street_time)
+    warning("max_street_time forcefully cast into an integer.")
 
   }
 
@@ -102,10 +98,10 @@ detailed_itineraries <- function(r5r_core,
   # bike and walk speed
   # must be converted from km/h to m/s
 
-  if (!is.numeric(walk_speed)) stop(message("walk_speed must be numeric."))
+  if (!is.numeric(walk_speed)) stop("walk_speed must be numeric.")
   else r5r_core$setWalkSpeed(walk_speed * 5 / 18)
 
-  if (!is.numeric(bike_speed)) stop(message("walk_speed must be numeric."))
+  if (!is.numeric(bike_speed)) stop("bike_speed must be numeric.")
   else r5r_core$setBikeSpeed(bike_speed * 5 / 18)
 
   # trip date
@@ -178,9 +174,10 @@ detailed_itineraries <- function(r5r_core,
 
   if (n_origs == 1 && n_dests == 1) {
 
-    path_options <- r5r_core$planSingleTrip(requests_ids,
+    path_options <- r5r_core$planSingleTrip(origins$id,
                                             origins$lat,
                                             origins$lon,
+                                            destinations$id,
                                             destinations$lat,
                                             destinations$lon,
                                             direct_modes= mode_list$direct_modes,
@@ -189,13 +186,15 @@ detailed_itineraries <- function(r5r_core,
                                             egress_mode= mode_list$egress_mode,
                                             trip_date,
                                             departure_time,
-                                            max_street_time)
+                                            max_street_time,
+                                            max_trip_duration = 120L)
 
   } else {
 
-    path_options <- r5r_core$planMultipleTrips(requests_ids,
+    path_options <- r5r_core$planMultipleTrips(origins$id,
                                                origins$lat,
                                                origins$lon,
+                                               destinations$id,
                                                destinations$lat,
                                                destinations$lon,
                                                direct_modes= mode_list$direct_modes,
@@ -204,7 +203,8 @@ detailed_itineraries <- function(r5r_core,
                                                egress_mode= mode_list$egress_mode,
                                                trip_date,
                                                departure_time,
-                                               max_street_time)
+                                               max_street_time,
+                                               max_trip_duration = 120L)
 
   }
 
