@@ -18,6 +18,8 @@
 #' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
 #' @param nThread numeric, The number of threads to use in parallel computing.
 #'                Defaults to use all available threads (Inf).
+#' @param verbose logical, TRUE to show detailed output messages (Default) or
+#'                FALSE to show only eventual ERROR messages.
 #'
 #' @return A data.table with travel-time estimates (in seconds) between origin
 #' destination pairs.
@@ -69,13 +71,11 @@ travel_time_matrix <- function( r5r_core,
                                 max_trip_duration = 7200,
                                 walk_speed = 3.6,
                                 bike_speed = 12,
-                                nThread = Inf){
+                                nThread = Inf,
+                                verbose = TRUE){
 
 ### check inputs
 
-  # max_trip_duration & max_street_time
-  if(! is.numeric(max_street_time)){stop(message('max_street_time must be of class interger'))}
-  if(! is.numeric(max_trip_duration)){stop(message('max_trip_duration must be of class interger'))}
 
   # Modes
     mode_list <- select_mode(mode)
@@ -103,6 +103,11 @@ travel_time_matrix <- function( r5r_core,
     if(nThread == Inf){ r5r_core$setNumberOfThreadsToMax()
       } else if(!is.numeric(nThread)){stop("nThread must be numeric")
         } else { r5r_core$setNumberOfThreads(as.integer(nThread))}
+
+
+  # set verbose
+    set_verbose(verbose)
+
 
   # Call to method inside r5r_core object
     travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
