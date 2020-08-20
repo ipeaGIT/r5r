@@ -10,8 +10,8 @@ travel_time_matrix(
   destinations,
   trip_date,
   departure_time,
-  max_walk_dist,
   mode = "WALK",
+  max_walk_dist = NULL,
   max_trip_duration = 7200,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -31,9 +31,9 @@ with public transport networks, check the GTFS.zip
 
 \item{departure_time}{character string, time in format "hh:mm:ss"}
 
-\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
-
 \item{mode}{character string, defaults to "WALK". See details for other options.}
+
+\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
 \item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
 to 7200 seconds (2 hours).}
