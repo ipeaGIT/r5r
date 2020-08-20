@@ -283,7 +283,7 @@ covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat
 # the whole package
 covr::package_coverage(path = ".", type = "tests")
 
-
+CODECOV_TOKEN="2a7013e9-6562-4011-beb9-168e922c4c84"
 
 
 ##### Profiling function ------------------------
