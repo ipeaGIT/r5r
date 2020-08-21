@@ -11,8 +11,17 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
 }
 
 #' @importFrom data.table := %between% fifelse %chin%
-# #' @importFrom methods  is signature
+#' @importFrom methods is signature
 NULL
+
+
+
+## quiets concerns of R CMD check re: the .'s that appear in pipelines
+if(getRversion() >= "2.15.1") utils::globalVariables(
+  c('is', 'duration', 'fromId', 'toId', 'option', 'option', '.SD', 'geometry'))
+
+
+
 
 # nocov end
 
