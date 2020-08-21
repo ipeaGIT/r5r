@@ -79,13 +79,16 @@ select_mode <- function(mode="WALK") {
 
   # if only a direct_mode is passed, all others are empty
   if (length(direct_modes) != 0 & length(transit_mode) == 0) {
-    egress_mode <- access_mode <- "WALK"
+    egress_mode <- access_mode <- mode[which(mode %chin% c('WALK', 'BICYCLE'))]
+    if (length(access_mode) == 0){ egress_mode <- access_mode <- 'WALK' }
+    if (direct_modes == "CAR"){ egress_mode <- access_mode <- 'CAR' }
     transit_mode <- ""
   } else
 
     # if only transit mode is passed, assume 'WALK' as access_ and egress_modes
     if (length(transit_mode) != 0 & length(direct_modes) == 0) {
-      egress_mode <- access_mode <- 'WALK'
+      egress_mode <- access_mode <- mode[which(mode %chin% c('WALK', 'BICYCLE'))]
+      if (length(access_mode) == 0){ egress_mode <- access_mode <- 'WALK' }
       direct_modes <- ""
 
     } else
