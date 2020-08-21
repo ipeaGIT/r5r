@@ -9,12 +9,14 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.api.util.*;
+import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.locationtech.jts.geom.Coordinate;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -292,8 +294,20 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(1);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration);
-                        distanceCol.add(segment.distance);
+                        durationCol.add(segment.duration / 60); // Converting from seconds to minutes
+
+//                        distanceCol.add(segment.distance);
+                        // try getting distances from street edges
+                        int dist = 0;
+                        StringBuilder distances = new StringBuilder();
+                        for (int i = 0; i < segment.streetEdges.size(); i++) {
+                            dist += segment.streetEdges.get(i).distance;
+                            distances.append(segment.streetEdges.get(i).distance).append(" ");
+                        }
+                        distanceCol.add(dist / 1000); // Converting from millimeters to meters
+//                        routeCol.add(distances.toString());
+
+
                         routeCol.add("");
                         waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
@@ -317,9 +331,22 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration);
-                        distanceCol.add(segment.distance);
+                        durationCol.add(segment.duration / 60);
+
+//                        distanceCol.add(segment.distance);
+                        // try getting distances from street edges
+                        int dist = 0;
+                        StringBuilder distances = new StringBuilder();
+                        for (int i = 0; i < segment.streetEdges.size(); i++) {
+                            dist += segment.streetEdges.get(i).distance;
+                            distances.append(segment.streetEdges.get(i).distance).append(" ");
+                        }
+                        distanceCol.add(dist / 1000);
+//                        routeCol.add(distances.toString());
+
+
                         routeCol.add("");
+
                         waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
                     }
@@ -332,17 +359,25 @@ public class R5RCore {
                         TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
 
                         StringBuilder geometry = new StringBuilder("NA");
+                        org.locationtech.jts.geom.Coordinate previousCoord = new Coordinate(0, 0);
+                        double accDistance = 0;
 
                         for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
                             int stopIdx = tripPattern.stops[stop];
                             org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+
                             coord.x = coord.x / FIXED_FACTOR;
                             coord.y = coord.y / FIXED_FACTOR;
 
                             if (geometry.toString().equals("NA")) {
                                 geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
+                                previousCoord.x = coord.x;
+                                previousCoord.y = coord.y;
                             } else {
                                 geometry.append(", ").append(coord.x).append(" ").append(coord.y);
+                                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
+                                previousCoord.x = coord.x;
+                                previousCoord.y = coord.y;
                             }
                         }
                         geometry.append(")");
@@ -356,8 +391,8 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
-                        durationCol.add(transit.rideStats.avg);
-                        distanceCol.add(-1);
+                        durationCol.add(transit.rideStats.avg/60);
+                        distanceCol.add((int) accDistance);
                         routeCol.add(tripPattern.routeId);
                         waitCol.add(transit.waitStats.avg);
                         geometryCol.add(geometry.toString());
@@ -374,9 +409,22 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.middle.mode.toString());
-                        durationCol.add(transit.middle.duration);
-                        distanceCol.add(transit.middle.distance);
+                        durationCol.add(transit.middle.duration / 60);
+
+//                        distanceCol.add(segment.distance);
+                        // try getting distances from street edges
+                        int dist = 0;
+                        StringBuilder distances = new StringBuilder();
+                        for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
+                            dist += transit.middle.streetEdges.get(i).distance;
+                            distances.append(transit.middle.streetEdges.get(i).distance).append(" ");
+                        }
+                        distanceCol.add(dist / 1000);
+//                        routeCol.add(distances.toString());
+
+
                         routeCol.add("");
+
                         waitCol.add(0);
                         geometryCol.add(transit.middle.geometry.toString());
                     }
@@ -395,9 +443,22 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration);
-                        distanceCol.add(segment.distance);
+                        durationCol.add(segment.duration / 60);
+
+//                        distanceCol.add(segment.distance);
+                        // try getting distances from street edges
+                        int dist = 0;
+                        StringBuilder distances = new StringBuilder();
+                        for (int i = 0; i < segment.streetEdges.size(); i++) {
+                            dist += segment.streetEdges.get(i).distance;
+                            distances.append(segment.streetEdges.get(i).distance).append(" ");
+                        }
+                        distanceCol.add(dist / 1000);
+//                        routeCol.add(distances.toString());
+
+
                         routeCol.add("");
+
                         waitCol.add(0);
                         geometryCol.add(segment.geometry.toString());
                     }
@@ -580,11 +641,15 @@ public class R5RCore {
         // Build edges return table
         ArrayList<Integer> fromVertexCol = new ArrayList<>();
         ArrayList<Integer> toVertexCol = new ArrayList<>();
+        ArrayList<Double> lengthCol = new ArrayList<>();
+        ArrayList<Double> lengthGeoCol = new ArrayList<>();
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
         edgesTable.put("fromVertex", fromVertexCol);
         edgesTable.put("toVertex", toVertexCol);
+        edgesTable.put("length", lengthCol);
+        edgesTable.put("lengthGeo", lengthGeoCol);
         edgesTable.put("geometry", geometryCol);
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
@@ -593,6 +658,8 @@ public class R5RCore {
         while (edgeCursor.advance()) {
             fromVertexCol.add(edgeCursor.getFromVertex());
             toVertexCol.add(edgeCursor.getToVertex());
+            lengthCol.add(edgeCursor.getLengthM());
+            lengthGeoCol.add(edgeCursor.getGeometry().getLength());
             geometryCol.add(edgeCursor.getGeometry().toString());
         }
 
