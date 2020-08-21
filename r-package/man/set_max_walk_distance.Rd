@@ -14,7 +14,7 @@ trip. Passed from routing functions.}
 Passed from routing functions.}
 
 \item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
-to 7200 seconds (2 hours). Passed from routing functions.}
+to 120 minutes (2 hours). Passed from routing functions.}
 }
 \description{
 Set max walking distance
