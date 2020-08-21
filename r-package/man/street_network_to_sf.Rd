@@ -38,8 +38,6 @@ Other support functions:
 \code{\link{set_max_walk_distance}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
-\code{\link{set_verbose}()},
-\code{\link{sf_to_df_r5r}()},
-\code{\link{test_points_input}()}
+\code{\link{set_verbose}()}
 }
 \concept{support functions}

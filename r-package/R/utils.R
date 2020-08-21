@@ -1,28 +1,6 @@
 ############# Support functions for r5r
 # nocov start
 
-
-
-
-
-#' Convert sf spatial objects to data.frame
-#'
-#' @param sf A spatial sf POINT object where the 1st column is the point id.
-#' @export
-#' @family support functions
-#'
-sf_to_df_r5r <- function(sf){
-
-  checkmate::assert_class(sf, classes = 'sf')
-
-  df <- sfheaders::sf_to_df(sf, fill = TRUE)
-  data.table::setDT(df)
-  data.table::setnames(df, 'x', 'lon')
-  data.table::setnames(df, 'y', 'lat')
-  data.table::setnames(df, names(sf)[1], 'id')
-  return(df)
-}
-
 #' Set verbose argument
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
@@ -38,48 +16,6 @@ set_verbose <- function(r5r_core, verbose) {
 
   if (verbose) r5r_core$verboseMode()
   else r5r_core$silentMode()
-
-}
-
-
-
-#' Check class of Origin / Destination inputs
-#'
-#' @param df Any object
-#' @export
-#' @family support functions
-#'
-test_points_input <- function(df) {
-
-  # is data.frame or sf
-  any_df <- is(df, 'data.frame')
-
-  if (is(df, 'sf')) {
-    any_sf <- as.character(unique(sf::st_geometry_type(df))) == "POINT"
-  } else {
-    any_sf <- FALSE
-  }
-
-  # check df type
-
-  if (sum(any_df, any_sf) < 1) {
-    stop("Origin/Destinations must be either a 'data.frame' or a 'sf POINT'.")
-  }
-
-  # check df columns' types
-
-  if (!is.character(df$id)) {
-
-    df$id <- as.character(df$id)
-    stop("id must be a character column.")
-
-  }
-
-  if (!any_sf && (!is.numeric(df$lon) || !is.numeric(df$lat))) {
-
-    stop("lat and lon must be numeric columns.")
-
-  }
 
 }
 
@@ -112,6 +48,7 @@ set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) 
   return(max_street_time)
 
 }
+
 
 
 #' Select transport mode
