@@ -11,10 +11,10 @@ travel_time_matrix(
   mode = "WALK",
   departure_datetime = Sys.time(),
   max_walk_dist = NULL,
-  max_trip_duration = 7200,
+  max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
-  nThread = Inf,
+  n_threads = Inf,
   verbose = TRUE
 )
 }
@@ -32,15 +32,12 @@ the GTFS file for valid dates.}
 
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
 
-\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
-to 7200 seconds (2 hours).}
+\item{max_trip_duration}{numeric, Maximum trip duration in minutes. Defaults
+to 120 minutes (2 hours).}
 
 \item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
 
 \item{bike_speed}{numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.}
-
-\item{nThread}{numeric, The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
@@ -48,6 +45,9 @@ FALSE to show only eventual ERROR messages.}
 \item{trip_date}{character string, date in format "yyyy-mm-dd". If working
 with public transport networks, check the GTFS.zip
 (calendar.txt file) for dates with service.}
+
+\item{nThread}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
 }
 \value{
 A data.table with travel-time estimates (in seconds) between origin
