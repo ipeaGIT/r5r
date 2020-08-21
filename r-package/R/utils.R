@@ -34,7 +34,7 @@ set_verbose <- function(r5r_core, verbose) {
 
 set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
-  if (is.null(max_walk_dist)) return(max_trip_duration)
+  if (is.infinite(max_walk_dist)) return(max_trip_duration)
 
   checkmate::assert_numeric(max_walk_dist)
 
