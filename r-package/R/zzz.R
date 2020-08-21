@@ -1,3 +1,4 @@
+# nocov start
 utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
 
 .onLoad = function(lib, pkg) {
@@ -15,4 +16,5 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
 # #' @importFrom methods  is signature
 NULL
 
+# nocov end
 
