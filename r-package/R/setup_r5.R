@@ -12,7 +12,7 @@
 #' @param version character string, the version of R5 to be used. Defaults to
 #'                latest version '4.9.0'.
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
-#'                FALSE to show only eventual ERROR messages.
+#'                FALSE to show only eventual ERROR and WARNING messages.
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup

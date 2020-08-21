@@ -133,7 +133,7 @@ public class R5RCore {
     public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                  String[] toIds, double[] toLats, double[] toLons,
                                                                  String directModes, String transitModes, String accessModes, String egressModes,
-                                                                 String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                 String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) requestIndices[i] = i;
@@ -146,7 +146,7 @@ public class R5RCore {
                             try {
                                 results = planSingleTrip(fromIds[index], fromLats[index], fromLons[index],
                                         toIds[index], toLats[index], toLons[index],
-                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxStreetTime, maxTripDuration);
+                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -155,24 +155,19 @@ public class R5RCore {
                         collect(Collectors.toList())).get();
     }
 
-//    public LinkedHashMap<String, Object> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
-//                                                        String directModes, String transitModes, String accessModes, String egressModes,
-//                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
-//        return planSingleTrip(fromId, fromLat, fromLon, toId, toLat, toLon, directModes, transitModes, accessModes, egressModes,
-//                date, departureTime, maxStreetTime, maxTripDuration);
-//
-//    }
-
     public LinkedHashMap<String, Object> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                String directModes, String transitModes, String accessModes, String egressModes,
-                                                        String date, String departureTime, int maxStreetTime, int maxTripDuration) throws ParseException {
+                                                        String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
         AnalysisTask request = new RegionalTask();
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
         request.fromLon = fromLon;
         request.toLat = toLat;
         request.toLon = toLon;
-        request.streetTime = maxStreetTime;
+        request.streetTime = maxTripDuration;
+        request.maxWalkTime = maxWalkTime;
+        request.maxBikeTime = maxTripDuration;
+        request.maxCarTime = maxTripDuration;
         request.walkSpeed = (float) this.walkSpeed;
         request.bikeSpeed = (float) this.bikeSpeed;
         request.maxTripDurationMinutes = maxTripDuration;
@@ -512,8 +507,10 @@ public class R5RCore {
         request.fromLon = fromLon;
         request.walkSpeed = (float) this.walkSpeed;
         request.bikeSpeed = (float) this.bikeSpeed;
-        request.streetTime = maxWalkTime;
+        request.streetTime = maxTripDuration;
         request.maxWalkTime = maxWalkTime;
+        request.maxBikeTime = maxTripDuration;
+        request.maxCarTime = maxTripDuration;
         request.maxTripDurationMinutes = maxTripDuration;
         request.makeTauiSite = false;
         request.computePaths = false;

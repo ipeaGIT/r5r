@@ -121,8 +121,10 @@ public class TransportNetwork implements Serializable {
     private static TransportNetwork fromFiles (String osmSourceFile, List<String> gtfsSourceFiles, List<GTFSFeed> feeds,
                                                TNBuilderConfig tnBuilderConfig) throws DuplicateFeedException {
 
-        System.out.println("Summarizing builder config: " + BUILDER_CONFIG_FILENAME);
-        System.out.println(tnBuilderConfig);
+//        System.out.println("Summarizing builder config: " + BUILDER_CONFIG_FILENAME);
+//        System.out.println(tnBuilderConfig);
+        LOG.info("Summarizing builder config: " + BUILDER_CONFIG_FILENAME);
+        LOG.info(tnBuilderConfig.toString());
 
         // Create a transport network to hold the street and transit layers
         TransportNetwork transportNetwork = new TransportNetwork();

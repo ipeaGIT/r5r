@@ -14,7 +14,7 @@ and where the built network.dat will be saved.}
 latest version '4.9.0'.}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
-FALSE to show only eventual ERROR messages.}
+FALSE to show only eventual ERROR and WARNING messages.}
 }
 \value{
 An rJava object to connect with R5 routing engine
