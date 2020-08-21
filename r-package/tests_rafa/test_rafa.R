@@ -14,6 +14,7 @@ library(covr)
 library(testthat)
 library(ggplot2)
 library(mapview)
+library(checkmate)
 
 mapviewOptions(platform = 'leafgl')
 
@@ -62,30 +63,21 @@ ggplot() +
 
 ##### TESTS detailed_itineraries ------------------------
 
-# input
-fromLat <- points[1,]$lat
-fromLon <- points[1,]$lon
-toLat <- points[5,]$lat
-toLon <- points[5,]$lon
-trip_date <- "2019-05-20"
-departure_time <- "14:00:00"
-street_time = 15L
-direct_modes <- c("WALK", "BICYCLE", "CAR")
-transit_modes <-"BUS"
-max_street_time = 30L
+ mode = c("WALK", "BUS")
+ max_walk_dist <- 1000
+ departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                  format = "%d-%m-%Y %H:%M:%S")
+
 
 system.time(
-trip <- detailed_itineraries( fromLat = fromLat,
-                              fromLon = fromLon,
-                              toLat = toLat,
-                              toLon = toLon,
-                              r5r_core = r5r_core,
-                              trip_date = trip_date,
-                              departure_time = departure_time,
-                              direct_modes = direct_modes,
-                              transit_modes = transit_modes,
-                              max_street_time = max_street_time,
-                              shortest_path = F) )
+df <- detailed_itineraries(r5r_core,
+                           origins,
+                           destinations,
+                           departure_datetime,
+                           max_walk_dist,
+                           mode,
+                           shortest_path = T)
+)
 
 
 

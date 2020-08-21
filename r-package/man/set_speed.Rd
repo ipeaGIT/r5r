@@ -4,14 +4,14 @@
 \alias{set_speed}
 \title{Set walk and bike speed}
 \usage{
-set_speed(speed, mode)
+set_speed(r5r_core, speed, mode)
 }
 \arguments{
+\item{r5r_core}{a rJava object to connect with R5 routing engine}
+
 \item{speed}{A numeric representing the speed in km/h.}
 
 \item{mode}{Either \code{"bike"} or \code{"walk"}.}
-
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
 }
 \description{
 Sets walk and bike speed considered by R5R. R5 inputs speed in
