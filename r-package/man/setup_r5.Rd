@@ -4,7 +4,7 @@
 \alias{setup_r5}
 \title{Create transport network used for routing in R5}
 \usage{
-setup_r5(data_path, version = "4.9.0", quiet = FALSE)
+setup_r5(data_path, version = "4.9.0", verbose = TRUE)
 }
 \arguments{
 \item{data_path}{character string, the directory where data inputs are stored
@@ -13,8 +13,8 @@ and where the built network.dat will be saved.}
 \item{version}{character string, the version of R5 to be used. Defaults to
 latest version '4.9.0'.}
 
-\item{quiet}{boolean value indicating if R5 should be started in 'quiet mode',
-when only error messages are output to the console.}
+\item{verbose}{logical, TRUE to show detailed output messages (Default) or
+FALSE to show only eventual ERROR messages.}
 }
 \value{
 An rJava object to connect with R5 routing engine

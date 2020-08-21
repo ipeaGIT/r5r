@@ -6,17 +6,18 @@ output: html_document
 ```{r setup, include=FALSE}
 options(java.parameters = "-Xmx8G")
 knitr::opts_chunk$set(echo = TRUE)
-library("r5r")
+# library("r5r")
 library("tidyverse")
 library("sf")
 library("tmap")
 library("mapproj")
+library("lubridate")
 ```
 
 ## 
 
 ```{r}
-r5r_core <- setup_r5(system.file("extdata", package = "r5r"), quiet = TRUE)
+r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
 ```
 
 ```{r}
@@ -37,13 +38,13 @@ destination <- tibble(id="2", lat=toLat, lon = toLon)
 
 trip_date <- "2019-03-20"
 departure_time <- "14:00:00"
+trip_date_time <- lubridate::as_datetime("2019-03-20 14:00:00")
+
 street_time = 120L
 
-paths_bus_df <- detailed_itineraries(r5r_core, 
-                                     origins = origin, destinations = destination,
-                                     mode = c("WALK", "BUS"), 
-                                     trip_date = trip_date, departure_time = departure_time,
-                                     max_street_time = street_time, shortest_path = TRUE)
+paths_df <- detailed_itineraries(r5r_core = r5r_core, origins = origin, destinations = destination, 
+                     departure_datetime = trip_date_time, max_walk_dist = 800, mode = c("WALK", "BUS"),
+                     shortest_path = FALSE, verbose = FALSE)
 
 ```
 
@@ -51,23 +52,10 @@ paths_bus_df <- detailed_itineraries(r5r_core,
 street_net <- street_network_to_sf(r5r_core)
 ```
 
-```{r}
-best_options <- paths_bus_df %>%
-  st_set_geometry(NULL) %>%
-  mutate(route = if_else(route=="", mode, route)) %>%
-  group_by(option) %>%
-  summarise(pattern = paste(route, collapse = " "), duration = sum(duration), .groups = "drop") %>%
-  group_by(pattern) %>%
-  arrange(duration) %>%
-  slice(1)
-```
+
 
 ```{r}
-paths_bus_df %>% filter(option==2) %>% View()
-```
-
-```{r}
-paths_bus_df %>% filter(option %in% best_options$option) %>%
+paths_df %>%
   ggplot() +
   geom_sf(data=street_net$edges, colour="grey85", aes(geometry=geometry)) +
   geom_sf(aes(geometry=geometry, colour=mode)) +
@@ -83,7 +71,8 @@ points <- read_csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 ```
 
 ```{r}
-ttm <- travel_time_matrix(r5r_core, points, points, trip_date, departure_time, mode=c("WALK", "BUS"), 
+ttm <- travel_time_matrix(r5r_core, points, points, departure_datetime = trip_date_time, 
+                          mode=c("WALK", "BUS"), 
                           max_walk_dist = 500, max_trip_duration = 120L)
 ```
 
@@ -95,13 +84,15 @@ ttm
 
 
 ```{r}
-orig <- (points %>% sample_n(1))$id
+orig <- (points %>% sample_n(4))$id
 
-ttm %>% filter(fromId==orig) %>%
+ttm %>% filter(fromId %in% orig) %>%
   ggplot() +
+  geom_point(data=points, aes(x=lon, y=lat), colour="grey85") +
   geom_point(aes(x=toLon, y=toLat, colour=travel_time)) +
   scale_color_distiller(palette = "Spectral") +
-  coord_map()
+  coord_map() +
+  facet_wrap(~fromId)
 ```
 
 ```{r}
