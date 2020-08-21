@@ -12,11 +12,12 @@ library("sf")
 library("tmap")
 library("mapproj")
 library("lubridate")
+library("purrr")
 ```
 
 ## 
 
-```{r}
+```{r include=FALSE}
 r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
 ```
 
@@ -61,9 +62,33 @@ paths_df %>%
   geom_sf(aes(geometry=geometry, colour=mode)) +
   facet_wrap(~option)
 ```
+```{r}
+
+```
+
+
+```{r}
+paths_df %>%
+  mutate(dist_m = distance, dist_geo = st_length(geometry)) %>% View()
+
+
+  mutate(dist_sum = map_dbl(route, function(txt) {
+           txt_list <- str_split(txt, pattern = " ", simplify = TRUE)
+           num_list = as.numeric(txt_list)
+           return(sum(num_list))
+         }))
+```
+
+
+```{r}
+paths_df %>% st_write("/Users/marcussaraiva/paths3.shp")
+street_net$edges %>% st_write("/Users/marcussaraiva/streets.shp")
+```
+
 
 ```{r}
 points <- read_csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+poi <- read_csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
 ```
 
 ```{r}
