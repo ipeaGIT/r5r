@@ -19,8 +19,8 @@
 #' @param shortest_path A logical. Whether the function should only return the
 #'                      fastest route alternative (default) or multiple
 #'                      alternatives.
-#' @param nThread numeric, The number of threads to use in parallel computing.
-#'                Defaults to use all available threads (Inf).
+#' @param n_threads numeric, The number of threads to use in parallel computing.
+#'                  Defaults to use all available threads (Inf).
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR messages.
 #'
@@ -62,9 +62,9 @@
 #' df <- detailed_itineraries(r5r_obj,
 #'                            origins,
 #'                            destinations,
+#'                            mode,
 #'                            departure_datetime,
-#'                            max_walk_dist,
-#'                            mode)
+#'                            max_walk_dist)
 #'
 #' }
 #' @export
@@ -72,9 +72,9 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
-                                 departure_datetime,
-                                 max_walk_dist,
                                  mode = "WALK",
+                                 departure_datetime = Sys.time(),
+                                 max_walk_dist = Inf,
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
@@ -83,24 +83,46 @@ detailed_itineraries <- function(r5r_core,
                                  verbose = TRUE) {
 
 
-  # check inputs and set r5r_core options -----------------------------------
+  # set r5r_core options ----------------------------------------------------
+
+
+  # set bike and walk speed
+  set_speed(r5r_core, walk_speed, "walk")
+  set_speed(r5r_core, bike_speed, "bike")
+
+  # set number of threads
+  set_n_threads(r5r_core, n_threads)
+
+  # set verbose
+  set_verbose(r5r_core, verbose)
+
+
+  # check inputs ------------------------------------------------------------
 
 
   # modes
   mode_list <- select_mode(mode)
 
-  # set bike and walk speed
-  set_speed(r5r_core, speed=walk_speed, mode="walk")
-  set_speed(r5r_core, speed=bike_speed, mode="bike")
-
   # departure time
   departure <- posix_to_string(departure_datetime)
+
+  # max trip duration
+  checkmate::assert_numeric(max_trip_duration)
+  max_trip_duration <- as.integer(max_trip_duration)
+
+  # max_walking_distance and max_street_time
+  max_street_time <- set_max_walk_distance(max_walk_dist,
+                                           walk_speed,
+                                           max_trip_duration)
+
+  # shortest_path
+  checkmate::assert_logical(shortest_path)
 
   # origins and destinations
   # either they have the same number of rows or one of them has only one row,
   # in which case the smaller dataframe is expanded
   origins      <- assert_points_input(origins, "origins")
-  destinations <- assert_points_input(destinations, "origins")
+  destinations <- assert_points_input(destinations, "destinations")
 
   n_origs <- nrow(origins)
   n_dests <- nrow(destinations)
@@ -129,20 +151,6 @@ detailed_itineraries <- function(r5r_core,
     }
 
   }
-
-  # max_walking_distance and max_street_time
-  max_street_time <- set_max_walk_distance(max_walk_dist,
-                                           walk_speed,
-                                           max_trip_duration)
-
-  # shortest_path
-  checkmate::assert_logical(shortest_path)
-
-  # set number of threads
-  set_n_threads(r5r_core, n_threads)
-
-  # set verbose
-  set_verbose(r5r_core, verbose)
 
 
   # call r5r_core method ----------------------------------------------------
@@ -212,7 +220,6 @@ detailed_itineraries <- function(r5r_core,
     }
 
   }
-
 
   # return either the fastest or multiple itineraries between an o-d pair
   data.table::setDT(path_options)

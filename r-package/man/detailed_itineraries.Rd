@@ -8,9 +8,9 @@ detailed_itineraries(
   r5r_core,
   origins,
   destinations,
-  departure_datetime,
-  max_walk_dist,
   mode = "WALK",
+  departure_datetime = Sys.time(),
+  max_walk_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -26,13 +26,13 @@ detailed_itineraries(
 containing the columns \code{id}, \code{lon} and
 \code{lat}.}
 
+\item{mode}{A string, defaults to "WALK". See details for other options.}
+
 \item{departure_datetime}{A POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
 \item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
-
-\item{mode}{A string, defaults to "WALK". See details for other options.}
 
 \item{max_trip_duration}{An integer. Maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
@@ -45,11 +45,11 @@ Defaults to 120 minutes (2 hours).}
 fastest route alternative (default) or multiple
 alternatives.}
 
+\item{n_threads}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
+
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
-
-\item{nThread}{numeric, The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
 }
 \value{
 A LINESTRING sf with detailed information about the itineraries
@@ -96,15 +96,14 @@ departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
 df <- detailed_itineraries(r5r_obj,
                            origins,
                            destinations,
+                           mode,
                            departure_datetime,
-                           max_walk_dist,
-                           mode)
+                           max_walk_dist)
 
 }
 }
 \seealso{
 Other routing: 
-\code{\link{r5_travel_times_from_origin}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}

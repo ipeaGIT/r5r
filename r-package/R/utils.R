@@ -1,28 +1,6 @@
 ############# Support functions for r5r
 # nocov start
 
-
-
-
-
-#' Convert sf spatial objects to data.frame
-#'
-#' @param sf A spatial sf POINT object where the 1st column is the point id.
-#' @export
-#' @family support functions
-#'
-sf_to_df_r5r <- function(sf){
-
-  checkmate::assert_class(sf, classes = 'sf')
-
-  df <- sfheaders::sf_to_df(sf, fill = TRUE)
-  data.table::setDT(df)
-  data.table::setnames(df, 'x', 'lon')
-  data.table::setnames(df, 'y', 'lat')
-  data.table::setnames(df, names(sf)[1], 'id')
-  return(df)
-}
-
 #' Set verbose argument
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
@@ -43,48 +21,6 @@ set_verbose <- function(r5r_core, verbose) {
 
 
 
-#' Check class of Origin / Destination inputs
-#'
-#' @param df Any object
-#' @export
-#' @family support functions
-#'
-test_points_input <- function(df) {
-
-  # is data.frame or sf
-  any_df <- is(df, 'data.frame')
-
-  if (is(df, 'sf')) {
-    any_sf <- as.character(unique(sf::st_geometry_type(df))) == "POINT"
-  } else {
-    any_sf <- FALSE
-  }
-
-  # check df type
-
-  if (sum(any_df, any_sf) < 1) {
-    stop("Origin/Destinations must be either a 'data.frame' or a 'sf POINT'.")
-  }
-
-  # check df columns' types
-
-  if (!is.character(df$id)) {
-
-    df$id <- as.character(df$id)
-    stop("id must be a character column.")
-
-  }
-
-  if (!any_sf && (!is.numeric(df$lon) || !is.numeric(df$lat))) {
-
-    stop("lat and lon must be numeric columns.")
-
-  }
-
-}
-
-
-
 #' Set max walking distance
 #'
 #' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole
@@ -92,17 +28,15 @@ test_points_input <- function(df) {
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #'                    Passed from routing functions.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#'                          to 7200 seconds (2 hours). Passed from routing functions.
+#'                          to 120 minutes (2 hours). Passed from routing functions.
 #' @export
 #' @family support functions
 
-set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
-
-  checkmate::assert_numeric(max_trip_duration)
-
-  if (is.null(max_walk_dist)){ max_street_time <- as.integer(max_trip_duration) }
+set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   checkmate::assert_numeric(max_walk_dist)
+
+  if (is.infinite(max_walk_dist)) return(max_trip_duration)
 
   max_street_time <- as.integer(round(60 * max_walk_dist / walk_speed, digits = 0))
 
@@ -114,6 +48,7 @@ set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
   return(max_street_time)
 
 }
+
 
 
 #' Select transport mode
@@ -140,7 +75,7 @@ select_mode <- function(mode="WALK") {
   # assign modes accordingly
   direct_modes <- mode[which(mode %chin% dr_modes)]
   transit_mode <- mode[which(mode %chin% tr_modes)]
-
+  if("TRANSIT" %in% transit_mode){ transit_mode <- tr_modes }
 
   # if only a direct_mode is passed, all others are empty
   if (length(direct_modes) != 0 & length(transit_mode) == 0) {
@@ -250,36 +185,6 @@ assert_points_input <- function(df, name) {
 
 
 
-#' Assert if integer
-#'
-#' @description Asserts if an object is an integer. In case it's numeric, though
-#' not an integer, casts to integer and raises a warning.
-#'
-#' @param df Any object.
-#' @param name Object name.
-#'
-#' @return An integer.
-#'
-#' @family support functions
-
-assert_really_integer <- function(x, name) {
-
-  if (!is.integer(x)) {
-
-    if (!is.numeric(x)) stop(paste0("Assertion on '", name, "' failed: ",
-                                    checkmate::checkInteger(x), "."))
-
-    x <- as.integer(x)
-    warning(paste0("'", name, "' forcefully cast to integer."))
-
-  }
-
-  return(x)
-
-}
-
-
-
 #' Set number of threads
 #'
 #' @description Sets numbers of threads to be used by the R5R .jar.
@@ -293,7 +198,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 
   checkmate::assert_numeric(n_threads)
 
-  if (n_threads == Inf) {
+  if (is.infinite(n_threads)) {
 
     r5r_core$setNumberOfThreadsToMax()
 

@@ -17,14 +17,11 @@ Set verbose argument
 \seealso{
 Other support functions: 
 \code{\link{assert_points_input}()},
-\code{\link{assert_really_integer}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_walk_distance}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
-\code{\link{sf_to_df_r5r}()},
-\code{\link{street_network_to_sf}()},
-\code{\link{test_points_input}()}
+\code{\link{street_network_to_sf}()}
 }
 \concept{support functions}
