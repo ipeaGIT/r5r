@@ -98,6 +98,8 @@ test_points_input <- function(df) {
 
 set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
 
+  checkmate::assert_numeric(max_trip_duration)
+
   if (is.null(max_walk_dist)){ max_street_time <- as.integer(max_trip_duration) }
 
   checkmate::assert_numeric(max_walk_dist)
@@ -289,7 +291,7 @@ assert_really_integer <- function(x, name) {
 
 set_n_threads <- function(r5r_core, n_threads) {
 
-  checkmate::assert_number(n_threads)
+  checkmate::assert_numeric(n_threads)
 
   if (n_threads == Inf) {
 

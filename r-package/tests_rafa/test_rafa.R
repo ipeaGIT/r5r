@@ -32,7 +32,7 @@ path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
 
 # remove files
@@ -63,8 +63,11 @@ ggplot() +
 
 ##### TESTS detailed_itineraries ------------------------
 
+origins <- points
+destinations <- points
+
  mode = c("WALK", "BUS")
- max_walk_dist <- 1000
+ max_walk_dist <- 10000
  departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                   format = "%d-%m-%Y %H:%M:%S")
 
@@ -76,7 +79,8 @@ df <- detailed_itineraries(r5r_core,
                            departure_datetime,
                            max_walk_dist,
                            mode,
-                           shortest_path = T)
+                           shortest_path = T,
+                           n_threads= Inf)
 )
 
 
