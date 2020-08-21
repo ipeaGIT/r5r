@@ -9,6 +9,7 @@ path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 
 # input
+mode = 'WALK'
 departure_datetime = as.POSIXct("13-03-2019 14:00:00",
                                 format = "%d-%m-%Y %H:%M:%S")
 trip_date <- "2019-05-20"
