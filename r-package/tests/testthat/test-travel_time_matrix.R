@@ -1,7 +1,7 @@
 context("travel_time_matrix")
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:10,]
 points_sf <- sfheaders::sf_point(points, x='lon', y='lat', keep = T)
 
 # setup_r5
@@ -9,11 +9,10 @@ path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 
 # input
-mode = 'WALK'
+mode = 'BICYCLE'
+max_trip_duration = 300L
 departure_datetime = as.POSIXct("13-03-2019 14:00:00",
                                 format = "%d-%m-%Y %H:%M:%S")
-trip_date <- "2019-05-20"
-max_trip_duration = 300L
 
 df <- travel_time_matrix( r5r_core,
                           origins = points,

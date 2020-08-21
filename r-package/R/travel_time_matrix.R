@@ -75,7 +75,6 @@ travel_time_matrix <- function(r5r_core,
 
   # set r5r_core options ----------------------------------------------------
 
-
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
@@ -88,8 +87,6 @@ travel_time_matrix <- function(r5r_core,
 
 
   # check inputs ------------------------------------------------------------
-
-
 
   # modes
   mode_list <- select_mode(mode)
@@ -112,7 +109,6 @@ travel_time_matrix <- function(r5r_core,
 
 
   # call r5r_core method ----------------------------------------------------
-
 
   travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
                                                     origins$lat,
