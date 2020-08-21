@@ -196,13 +196,15 @@ assert_points_input <- function(df, name) {
 
 set_n_threads <- function(r5r_core, n_threads) {
 
+  checkmate::assert_numeric(n_threads)
+
   if (is.infinite(n_threads)) {
 
     r5r_core$setNumberOfThreadsToMax()
 
   } else {
 
-    n_threads <- assert_really_integer(n_threads, "n_threads")
+    n_threads <- as.integer(n_threads)
     r5r_core$setNumberOfThreads(n_threads)
 
   }
