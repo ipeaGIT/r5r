@@ -13,6 +13,8 @@
 #'
 sf_to_df_r5r <- function(sf){
 
+  checkmate::assert_class(sf, classes = 'sf')
+
   df <- sfheaders::sf_to_df(sf, fill = TRUE)
   data.table::setDT(df)
   data.table::setnames(df, 'x', 'lon')
@@ -96,7 +98,7 @@ test_points_input <- function(df) {
 
 set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
 
-  if (is.null(max_walk_dist)) max_street_time <- as.integer(max_trip_duration)
+  if (is.null(max_walk_dist)){ max_street_time <- as.integer(max_trip_duration) }
 
   checkmate::assert_numeric(max_walk_dist)
 
@@ -130,7 +132,7 @@ select_mode <- function(mode="WALK") {
   # check for invalid input
   lapply(X=mode, FUN=function(x){
     if(!x %chin% all_modes){stop(paste0("Eror: ", x, " is not a valid 'mode'.
-                                      Please use one of the following: ",
+                                        Please use one of the following: ",
                                         paste(unique(all_modes),collapse = ", ")))} })
 
   # assign modes accordingly
@@ -171,11 +173,11 @@ select_mode <- function(mode="WALK") {
 
 
 #' Generate date and departure time strings from POSIXct
-#' #'
+#'
 #' @param datetime An object of POSIXct class.
 #'
 #' @return A list with 'date' and 'departure_time' names.
-#'
+#' @export
 #' @family support functions
 
 posix_to_string <- function(datetime) {
@@ -199,7 +201,7 @@ posix_to_string <- function(datetime) {
 #' @param name Object name.
 #'
 #' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
-#'
+#' @export
 #' @family support functions
 
 assert_points_input <- function(df, name) {
@@ -282,7 +284,7 @@ assert_really_integer <- function(x, name) {
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
-#'
+#' @export
 #' @family support functions
 
 set_n_threads <- function(r5r_core, n_threads) {
@@ -295,7 +297,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 
   } else {
 
-    n_threads <- assert_really_integer(n_threads, "n_threads")
+    n_threads <- as.integer(n_threads)
     r5r_core$setNumberOfThreads(n_threads)
 
   }
@@ -312,7 +314,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param speed A numeric representing the speed in km/h.
 #' @param mode Either \code{"bike"} or \code{"walk"}.
-#'
+#' @export
 #' @family support functions
 
 set_speed <- function(r5r_core, speed, mode) {
