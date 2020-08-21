@@ -98,6 +98,8 @@ test_points_input <- function(df) {
 
 set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
+  if (is.null(max_walk_dist)) return(max_trip_duration)
+
   checkmate::assert_numeric(max_walk_dist)
 
   max_street_time <- as.integer(round(60 * max_walk_dist / walk_speed, digits = 0))
