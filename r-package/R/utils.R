@@ -75,7 +75,7 @@ select_mode <- function(mode="WALK") {
   # assign modes accordingly
   direct_modes <- mode[which(mode %chin% dr_modes)]
   transit_mode <- mode[which(mode %chin% tr_modes)]
-
+  if("TRANSIT" %in% transit_mode){ transit_mode <- tr_modes }
 
   # if only a direct_mode is passed, all others are empty
   if (length(direct_modes) != 0 & length(transit_mode) == 0) {
