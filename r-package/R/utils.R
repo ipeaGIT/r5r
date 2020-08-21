@@ -280,11 +280,12 @@ assert_really_integer <- function(x, name) {
 #'
 #' @description Sets numbers of threads to be used by the R5R .jar.
 #'
+#' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
 #'
 #' @family support functions
 
-set_n_threads <- function(n_threads) {
+set_n_threads <- function(r5r_core, n_threads) {
 
   if (n_threads == Inf) {
 
@@ -306,6 +307,7 @@ set_n_threads <- function(n_threads) {
 #' @description Sets walk and bike speed considered by R5R. R5 inputs speed in
 #' m/s, while our functions inputs it in km/h.
 #'
+#' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param speed A numeric representing the speed in km/h.
 #' @param mode Either \code{"bike"} or \code{"walk"}.
 #'
@@ -313,7 +315,7 @@ set_n_threads <- function(n_threads) {
 
 set_speed <- function(speed, mode) {
 
-  checkmate::assert_numeric(speed, .var.name = paste0(mode, "_speed"))
+  checkmate::assert_numeric(r5r_core, speed, .var.name = paste0(mode, "_speed"))
 
   # convert from km/h to m/s
   speed <- speed * 5 / 18
