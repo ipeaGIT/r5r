@@ -110,7 +110,7 @@ travel_time_matrix <- function( r5r_core,
 
 
   # set verbose
-    set_verbose(verbose)
+    set_verbose(r5r_core, verbose)
 
 
   # Call to method inside r5r_core object

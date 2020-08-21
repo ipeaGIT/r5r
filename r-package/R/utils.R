@@ -23,11 +23,12 @@ sf_to_df_r5r <- function(sf){
 
 #' Set verbose argument
 #'
+#' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param verbose logical, passed from function above
 #' @export
 #' @family support functions
 #'
-set_verbose <- function(verbose) {
+set_verbose <- function(r5r_core, verbose) {
 
   # in silent mode only errors are reported
 

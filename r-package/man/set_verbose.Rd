@@ -4,9 +4,11 @@
 \alias{set_verbose}
 \title{Set verbose argument}
 \usage{
-set_verbose(verbose)
+set_verbose(r5r_core, verbose)
 }
 \arguments{
+\item{r5r_core}{a rJava object to connect with R5 routing engine}
+
 \item{verbose}{logical, passed from function above}
 }
 \description{

@@ -9,16 +9,15 @@ path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 
 # input
-mode <- "WALK"
-departure_time <- "14:00:00"
+departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+                                format = "%d-%m-%Y %H:%M:%S")
 trip_date <- "2019-05-20"
 max_trip_duration = 300L
 
 df <- travel_time_matrix( r5r_core,
                           origins = points,
                           destinations = points,
-                          trip_date,
-                          departure_time,
+                          departure_datetime,
                           mode = mode,
                           max_trip_duration,
                           verbose = FALSE)
@@ -26,8 +25,7 @@ df <- travel_time_matrix( r5r_core,
 df_sf <- travel_time_matrix( r5r_core,
                           origins = points_sf,
                           destinations = points_sf,
-                          trip_date,
-                          departure_time,
+                          departure_datetime,
                           mode = mode,
                           max_trip_duration,
                           verbose = FALSE)
@@ -52,8 +50,7 @@ test_that("travel_time_matrix - expected errors", {
     travel_time_matrix( r5r_core,
                         origins = 'a',
                         destinations = points,
-                        trip_date,
-                        departure_time,
+                        departure_datetime,
                         mode,
                         max_street_time,
                         max_trip_duration))
@@ -61,8 +58,7 @@ test_that("travel_time_matrix - expected errors", {
     travel_time_matrix( r5r_core,
                         origins = points,
                         destinations = 'a',
-                        trip_date,
-                        departure_time,
+                        departure_datetime,
                         mode,
                         max_street_time,
                         max_trip_duration))
@@ -72,8 +68,7 @@ test_that("travel_time_matrix - expected errors", {
     travel_time_matrix( r5r_core = r5r_core,
                         origins = points_sf,
                         destinations = points_sf,
-                        trip_date,
-                        departure_time,
+                        departure_datetime,
                         mode = "pogoball",
                         max_trip_duration))
 
@@ -83,8 +78,7 @@ test_that("travel_time_matrix - expected errors", {
   #   travel_time_matrix( r5r_core,
   #                       origins = points,
   #                       destinations = points,
-  #                       trip_date,
-  #                       departure_time,
+  #                       departure_datetime,
   #                       mode,
   #                       max_trip_duration = 'aaa'))
 
