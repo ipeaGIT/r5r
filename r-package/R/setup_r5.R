@@ -29,6 +29,8 @@
 
 setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
 
+  checkmate::assert_logical(verbose)
+
   # check directory input
   if (is.null(data_path)) stop("Please provide data_path.")
 
