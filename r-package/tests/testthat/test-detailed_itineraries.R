@@ -149,12 +149,13 @@ test_that("detailed_itineraries output is correct", {
 
   origins      <- points[10,]
   destinations <- points[12,]
+  mode = "WALK"
 
-  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, walk_speed = 3.6)
-  duration_lower_speed <- data.table::setDT(df)[mode == "WALK", sum(duration)]
+  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = mode, walk_speed = 3.6)
+  duration_lower_speed <- data.table::setDT(df)$duration
 
-  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, walk_speed = 4)
-  duration_higher_speed <- data.table::setDT(df)[mode == "WALK", sum(duration)]
+  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = mode, walk_speed = 4)
+  duration_higher_speed <- data.table::setDT(df)$duration
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
@@ -196,7 +197,7 @@ test_that("detailed_itineraries output is correct", {
   df <- default_tester(r5r_obj, origins, destinations,
                        max_trip_duration = max_trip_duration, shortest_path = FALSE)
 
-  max_duration <- data.table::setDT(df)[, sum(duration), by = .(fromId, toId, option)][, max(V1 / 60)]
+  max_duration <- data.table::setDT(df)[, sum(duration), by = .(fromId, toId, option)][, max(V1)]
 
   expect_true(max_duration < max_trip_duration)
 
