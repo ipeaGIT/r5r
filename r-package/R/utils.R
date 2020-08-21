@@ -315,9 +315,9 @@ set_n_threads <- function(r5r_core, n_threads) {
 #'
 #' @family support functions
 
-set_speed <- function(speed, mode) {
+set_speed <- function(r5r_core, speed, mode) {
 
-  checkmate::assert_numeric(r5r_core, speed, .var.name = paste0(mode, "_speed"))
+  checkmate::assert_numeric(speed, .var.name = paste0(mode, "_speed"))
 
   # convert from km/h to m/s
   speed <- speed * 5 / 18
