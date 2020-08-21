@@ -45,7 +45,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_obj <- setup_r5(data_path = data_path)
 #'
 #' # load and set origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -59,7 +59,7 @@
 #' departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
 #'                                  format = "%d-%m-%Y %H:%M:%S")
 #'
-#' df <- detailed_itineraries(r5r_core,
+#' df <- detailed_itineraries(r5r_obj,
 #'                            origins,
 #'                            destinations,
 #'                            departure_datetime,
@@ -90,8 +90,8 @@ detailed_itineraries <- function(r5r_core,
   mode_list <- select_mode(mode)
 
   # set bike and walk speed
-  set_speed(r5r_core=r5r_core, speed=walk_speed, mode="walk")
-  set_speed(r5r_core=r5r_core, speed=bike_speed, mode="bike")
+  set_speed(r5r_core, speed=walk_speed, mode="walk")
+  set_speed(r5r_core, speed=bike_speed, mode="bike")
 
   # departure time
   departure <- posix_to_string(departure_datetime)
