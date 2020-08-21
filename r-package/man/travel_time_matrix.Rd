@@ -39,22 +39,18 @@ to 120 minutes (2 hours).}
 
 \item{bike_speed}{numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.}
 
+\item{n_threads}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
+
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
-
-\item{trip_date}{character string, date in format "yyyy-mm-dd". If working
-with public transport networks, check the GTFS.zip
-(calendar.txt file) for dates with service.}
-
-\item{nThread}{numeric, The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
 }
 \value{
 A data.table with travel-time estimates (in seconds) between origin
-destination pairs.
+destination pairs by a given transport mode.
 }
 \description{
-Fast function to calculate travel time estimates between one or
+Fast computation of travel time estimates between one or
 multiple origin destination pairs.
 }
 \details{

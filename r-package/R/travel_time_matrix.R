@@ -1,14 +1,11 @@
 #' Calculate travel time matrix between origin destination pairs
 #'
-#' @description Fast function to calculate travel time estimates between one or
+#' @description Fast computation of travel time estimates between one or
 #'              multiple origin destination pairs.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param origins,destinations a spatial sf POINT object, or a data.frame
 #'                containing the columns 'id', 'lon', 'lat'
-#' @param trip_date character string, date in format "yyyy-mm-dd". If working
-#'                  with public transport networks, check the GTFS.zip
-#'                  (calendar.txt file) for dates with service.
 #' @param departure_datetime A POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
@@ -18,13 +15,13 @@
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
-#' @param nThread numeric, The number of threads to use in parallel computing.
+#' @param n_threads numeric, The number of threads to use in parallel computing.
 #'                Defaults to use all available threads (Inf).
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR messages.
 #'
 #' @return A data.table with travel-time estimates (in seconds) between origin
-#' destination pairs.
+#' destination pairs by a given transport mode.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
 #'          include:

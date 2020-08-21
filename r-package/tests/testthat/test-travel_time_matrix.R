@@ -2,7 +2,7 @@ context("travel_time_matrix")
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
-points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+points_sf <- sfheaders::sf_point(points, x='lon', y='lat', keep = T)
 
 # setup_r5
 path <- system.file("extdata", package = "r5r")
