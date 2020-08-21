@@ -158,28 +158,17 @@ origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", packa
 # input
 origins = points
 destinations = points
-trip_date = "2019-05-20"
-departure_time = "14:00:00"
 mode = c('WALK', 'TRANSIT')
-max_street_time = 600L
 max_trip_duration = 600L
+departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-
- # r5r_core$setNumberOfThreads <- 4L
- # r5r_core$getNumberOfThreads()
- #
- # r5r_core$setNumberOfThreadsToMax()
- # r5r_core$setWalkSpeed <- 0
 
  system.time(
  df <- travel_time_matrix( r5r_core = r5r_core,
                            origins = origins,
                            destinations = destinations,
-                           trip_date = trip_date,
-                           departure_time = departure_time,
-                           direct_modes = direct_modes,
+                           mode = mode,
                           # transit_modes = transit_modes,
-                           max_street_time = max_street_time,
                            max_trip_duration = max_trip_duration
                            )
 )
