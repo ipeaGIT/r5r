@@ -45,11 +45,11 @@ Defaults to 120 minutes (2 hours).}
 fastest route alternative (default) or multiple
 alternatives.}
 
+\item{n_threads}{numeric, The number of threads to use in parallel computing.
+Defaults to use all available threads (Inf).}
+
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
-
-\item{nThread}{numeric, The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
 }
 \value{
 A LINESTRING sf with detailed information about the itineraries

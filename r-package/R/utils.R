@@ -92,15 +92,11 @@ test_points_input <- function(df) {
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #'                    Passed from routing functions.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#'                          to 7200 seconds (2 hours). Passed from routing functions.
+#'                          to 120 minutes (2 hours). Passed from routing functions.
 #' @export
 #' @family support functions
 
-set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration){
-
-  checkmate::assert_numeric(max_trip_duration)
-
-  if (is.null(max_walk_dist)){ max_street_time <- as.integer(max_trip_duration) }
+set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   checkmate::assert_numeric(max_walk_dist)
 
