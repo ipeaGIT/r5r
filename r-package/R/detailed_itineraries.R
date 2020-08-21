@@ -87,22 +87,18 @@ detailed_itineraries <- function(r5r_core,
 
 
   # modes
-
   mode_list <- select_mode(mode)
 
   # set bike and walk speed
-
-  set_speed(walk_speed, "walk")
-  set_speed(bike_speed, "bike")
+  set_speed(r5r_core=r5r_core, speed=walk_speed, mode="walk")
+  set_speed(r5r_core=r5r_core, speed=bike_speed, mode="bike")
 
   # departure time
-
   departure <- posix_to_string(departure_datetime)
 
   # origins and destinations
   # either they have the same number of rows or one of them has only one row,
   # in which case the smaller dataframe is expanded
-
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "origins")
 
@@ -135,24 +131,18 @@ detailed_itineraries <- function(r5r_core,
   }
 
   # max_walking_distance and max_street_time
-
-  max_trip_duration <- assert_really_integer(max_trip_duration, "max_trip_duration")
-
   max_street_time <- set_max_walk_distance(max_walk_dist,
                                            walk_speed,
                                            max_trip_duration)
 
   # shortest_path
-
   checkmate::assert_logical(shortest_path)
 
   # set number of threads
-
-  set_n_threads(n_threads)
+  set_n_threads(r5r_core, n_threads)
 
   # set verbose
-
-  set_verbose(verbose)
+  set_verbose(r5r_core, verbose)
 
 
   # call r5r_core method ----------------------------------------------------
@@ -223,11 +213,9 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
-  # convert path_options from data.frame to data.table with sfc column
-
-  data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
 
   # return either the fastest or multiple itineraries between an o-d pair
+  data.table::setDT(path_options)
 
   if (shortest_path) {
 
@@ -252,8 +240,10 @@ detailed_itineraries <- function(r5r_core,
 
   path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
 
-  # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
+  # convert path_options from data.frame to data.table with sfc column
+  data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
 
+  # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
   path_options <- sf::st_sf(path_options, crs = 4326)
 
   return(path_options)
