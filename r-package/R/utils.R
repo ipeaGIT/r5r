@@ -34,9 +34,9 @@ set_verbose <- function(r5r_core, verbose) {
 
 set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
-  if (is.infinite(max_walk_dist)) return(max_trip_duration)
-
   checkmate::assert_numeric(max_walk_dist)
+
+  if (is.infinite(max_walk_dist)) return(max_trip_duration)
 
   max_street_time <- as.integer(round(60 * max_walk_dist / walk_speed, digits = 0))
 
@@ -226,15 +226,13 @@ assert_really_integer <- function(x, name) {
 
 set_n_threads <- function(r5r_core, n_threads) {
 
-  checkmate::assert_numeric(n_threads)
-
-  if (n_threads == Inf) {
+  if (is.infinite(n_threads)) {
 
     r5r_core$setNumberOfThreadsToMax()
 
   } else {
 
-    n_threads <- as.integer(n_threads)
+    n_threads <- assert_really_integer(n_threads, "n_threads")
     r5r_core$setNumberOfThreads(n_threads)
 
   }
