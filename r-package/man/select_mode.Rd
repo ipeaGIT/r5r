@@ -15,7 +15,6 @@ Select transport mode
 \seealso{
 Other support functions: 
 \code{\link{assert_points_input}()},
-\code{\link{assert_really_integer}()},
 \code{\link{posix_to_string}()},
 \code{\link{set_max_walk_distance}()},
 \code{\link{set_n_threads}()},

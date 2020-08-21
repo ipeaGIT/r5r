@@ -20,7 +20,6 @@ m/s, while our functions inputs it in km/h.
 \seealso{
 Other support functions: 
 \code{\link{assert_points_input}()},
-\code{\link{assert_really_integer}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_walk_distance}()},

@@ -98,7 +98,8 @@ travel_time_matrix <- function(r5r_core,
   departure <- posix_to_string(departure_datetime)
 
   # max trip duration
-  max_trip_duration <- assert_really_integer(max_trip_duration, "max_trip_duration")
+  checkmate::assert_numeric(max_trip_duration)
+  max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance and max_street_time
   max_street_time <- set_max_walk_distance(max_walk_dist,

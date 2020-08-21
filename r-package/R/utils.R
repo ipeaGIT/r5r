@@ -185,36 +185,6 @@ assert_points_input <- function(df, name) {
 
 
 
-#' Assert if integer
-#'
-#' @description Asserts if an object is an integer. In case it's numeric, though
-#' not an integer, casts to integer and raises a warning.
-#'
-#' @param df Any object.
-#' @param name Object name.
-#'
-#' @return An integer.
-#'
-#' @family support functions
-
-assert_really_integer <- function(x, name) {
-
-  if (!is.integer(x)) {
-
-    if (!is.numeric(x)) stop(paste0("Assertion on '", name, "' failed: ",
-                                    checkmate::checkInteger(x), "."))
-
-    x <- as.integer(x)
-    warning(paste0("'", name, "' forcefully cast to integer."))
-
-  }
-
-  return(x)
-
-}
-
-
-
 #' Set number of threads
 #'
 #' @description Sets numbers of threads to be used by the R5R .jar.
