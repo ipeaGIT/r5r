@@ -10,7 +10,7 @@ travel_time_matrix(
   destinations,
   mode = "WALK",
   departure_datetime = Sys.time(),
-  max_walk_dist = NULL,
+  max_walk_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -94,7 +94,6 @@ df <- travel_time_matrix( r5r_obj,
 }
 \seealso{
 Other routing: 
-\code{\link{detailed_itineraries}()},
-\code{\link{r5_travel_times_from_origin}()}
+\code{\link{detailed_itineraries}()}
 }
 \concept{routing}
