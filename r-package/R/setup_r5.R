@@ -11,8 +11,8 @@
 #'                  and where the built network.dat will be saved.
 #' @param version character string, the version of R5 to be used. Defaults to
 #'                latest version '4.9.0'.
-#' @param quiet boolean value indicating if R5 should be started in 'quiet mode',
-#'              when only error messages are output to the console.
+#' @param verbose logical, TRUE to show detailed output messages (Default) or
+#'                FALSE to show only eventual ERROR messages.
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
@@ -27,7 +27,7 @@
 #' }
 #' @export
 
-setup_r5 <- function(data_path, version = "4.9.0", quiet = FALSE) {
+setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
 
   # check directory input
   if (is.null(data_path)) stop("Please provide data_path.")
@@ -67,7 +67,7 @@ setup_r5 <- function(data_path, version = "4.9.0", quiet = FALSE) {
 
   if (checkmate::test_file_exists(dat_file)) {
 
-    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, quiet)
+    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, verbose)
 
     message("\nUsing cached network.dat from ", dat_file)
 
@@ -76,7 +76,7 @@ setup_r5 <- function(data_path, version = "4.9.0", quiet = FALSE) {
   } else {
 
     # build new r5r_core
-    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, quiet)
+    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, verbose)
 
     # display a warning message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {

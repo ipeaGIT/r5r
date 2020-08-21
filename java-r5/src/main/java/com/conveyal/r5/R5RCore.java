@@ -87,11 +87,11 @@ public class R5RCore {
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     public R5RCore(String dataFolder) {
-        this(dataFolder, false);
+        this(dataFolder, true);
     }
 
-     public R5RCore(String dataFolder, boolean quiet) {
-        if (quiet) silentMode();
+     public R5RCore(String dataFolder, boolean verbose) {
+        if (!verbose) silentMode();
 
         setNumberOfThreadsToMax();
 
