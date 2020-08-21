@@ -62,9 +62,9 @@
 #' df <- detailed_itineraries(r5r_obj,
 #'                            origins,
 #'                            destinations,
+#'                            mode,
 #'                            departure_datetime,
-#'                            max_walk_dist,
-#'                            mode)
+#'                            max_walk_dist)
 #'
 #' }
 #' @export
@@ -72,9 +72,9 @@
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
+                                 mode = "WALK",
                                  departure_datetime = Sys.time(),
                                  max_walk_dist = NULL,
-                                 mode = "WALK",
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
@@ -121,7 +121,7 @@ detailed_itineraries <- function(r5r_core,
   # either they have the same number of rows or one of them has only one row,
   # in which case the smaller dataframe is expanded
   origins      <- assert_points_input(origins, "origins")
-  destinations <- assert_points_input(destinations, "origins")
+  destinations <- assert_points_input(destinations, "destinations")
 
   n_origs <- nrow(origins)
   n_dests <- nrow(destinations)
