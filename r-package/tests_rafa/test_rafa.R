@@ -43,6 +43,33 @@ points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 
 
 
 
+library(r5r)
+library(data.table)
+
+
+# function
+get_all_od_combinations <- function(origins, destinations){
+
+        # all possible id combinations
+        base <- expand.grid(origins$id, destinations$id)
+
+        # rename df
+        setDT(base)
+        setnames(base, 'Var1', 'idorig')
+        setnames(base, 'Var2', 'iddest')
+
+        # bring spatial coordinates from origin and destination
+        base[origins, on=c('idorig'='id'), c('lon_orig', 'lat_orig') := list(i.lon, i.lat)]
+        base[destinations, on=c('iddest'='id'), c('lon_dest', 'lat_dest') := list(i.lon, i.lat)]
+
+        return(base)
+        }
+
+# example
+origins <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:800,]
+destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[400:1200,]
+
+df <- get_all_od_combinations(origins, destinations)
 
 ##### TESTS street_network_to_sf ------------------------
 
