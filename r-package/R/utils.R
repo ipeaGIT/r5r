@@ -287,6 +287,8 @@ assert_really_integer <- function(x, name) {
 
 set_n_threads <- function(r5r_core, n_threads) {
 
+  checkmate::assert_number(n_threads)
+
   if (n_threads == Inf) {
 
     r5r_core$setNumberOfThreadsToMax()
