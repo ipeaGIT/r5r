@@ -15,6 +15,9 @@ library(testthat)
 library(ggplot2)
 library(mapview)
 library(checkmate)
+library(qpdf)
+
+
 
 mapviewOptions(platform = 'leafgl')
 
@@ -169,7 +172,8 @@ departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:
                            destinations = destinations,
                            mode = mode,
                           # transit_modes = transit_modes,
-                           max_trip_duration = max_trip_duration
+                           max_trip_duration = max_trip_duration,
+                          verbose = F
                            )
 )
 
@@ -179,6 +183,8 @@ departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:
  1474469/ 143.64
  245480 /32.74
  523074 / 46.96
+
+
 
 
 
