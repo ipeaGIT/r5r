@@ -106,16 +106,45 @@ test_that("assert_points_input adequately raises warnings and errors", {
 
 test_that("assert_points_input output is coherent", {
 
-  datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-  datetime <- posix_to_string(datetime)
+  sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"))
+  sf_points_output <- assert_points_input(sf_points, "points")
 
-  expect_equal(datetime$date, "2019-03-13")
-  expect_equal(datetime$time, "14:00:00")
+  df_points_output <- assert_points_input(points, "points")
 
-  datetime <- as.POSIXct("13-03-1919 2:00:00 pm", format = "%d-%m-%Y %I:%M:%S %p")
-  datetime <- posix_to_string(datetime)
+  # correct output column types
 
-  expect_equal(datetime$date, "1919-03-13")
-  expect_equal(datetime$time, "14:00:00")
+  expect_type(sf_points_output$id, "character")
+  expect_type(sf_points_output$lat, "double")
+  expect_type(sf_points_output$lon, "double")
+
+  # expect output columns to have the same value, irrespective of input class
+
+  expect_equal(sf_points_output$id, df_points_output$id, points$id)
+  expect_equal(sf_points_output$lat, df_points_output$lat, points$lat)
+  expect_equal(sf_points_output$lon, df_points_output$lon, points$lon)
 
 })
+
+
+# set_n_threads -----------------------------------------------------------
+
+
+test_that("set_n_threads adequately raises warnings and errors", {
+
+  expect_error(set_n_threads("r5r_obj", 2))
+  expect_error(set_n_threads(r5r_obj, "2"))
+
+})
+
+
+# set_speed ---------------------------------------------------------------
+
+
+test_that("set_speed adequately raises warnings and errors", {
+
+  expect_error(set_speed("r5r_obj", 3.6, "walk"))
+  expect_error(set_speed(r5r_obj, "3.6", "walk"))
+
+})
+
+stop_r5(r5r_obj)
