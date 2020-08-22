@@ -16,15 +16,12 @@ detailed_itineraries(
   bike_speed = 12,
   shortest_path = TRUE,
   n_threads = Inf,
-  verbose = TRUE
+  verbose = TRUE,
+  drop_geometry = FALSE
 )
 }
 \arguments{
 \item{r5r_core}{A rJava object to connect with R5 routing engine}
-
-\item{origins, destinations}{Either a spatial sf POINT or a data.frame
-containing the columns \code{id}, \code{lon} and
-\code{lat}.}
 
 \item{mode}{A string, defaults to "WALK". See details for other options.}
 
@@ -50,6 +47,9 @@ Defaults to use all available threads (Inf).}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR messages.}
+
+\item{drop_geometry}{A logical. Indicates wether R5 should drop itinerary's
+geometry column. It can be helpful for saving memory.}
 }
 \value{
 A LINESTRING sf with detailed information about the itineraries
