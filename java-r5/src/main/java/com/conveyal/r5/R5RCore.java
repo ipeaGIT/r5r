@@ -223,7 +223,8 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon, dropItineraryGeometry, response.getOptions());
+            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
+                    maxWalkTime, dropItineraryGeometry, response.getOptions());
         } else {
             return null;
         }
@@ -237,7 +238,8 @@ public class R5RCore {
     }
 
     private LinkedHashMap<String, Object> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
-                                                                String toId, double toLat, double toLon, boolean dropItineraryGeometry,
+                                                                String toId, double toLat, double toLon,
+                                                                int maxWalkTime, boolean dropItineraryGeometry,
                                                                 List<ProfileOption> pathOptions) {
         // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
 
@@ -283,6 +285,11 @@ public class R5RCore {
 
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
+
+                        // maxStreetTime parameter only affects access and egress walking segments, but no direct trips
+                        // if a direct walking trip is found that is longer than maxWalkTime, then drop it
+                        if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
+
                         fromIdCol.add(fromId);
                         fromLatCol.add(fromLat);
                         fromLonCol.add(fromLon);
@@ -295,17 +302,12 @@ public class R5RCore {
                         modeCol.add(segment.mode.toString());
                         durationCol.add(segment.duration / 60); // Converting from seconds to minutes
 
-//                        distanceCol.add(segment.distance);
-                        // try getting distances from street edges
+                        // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = 0;
-                        StringBuilder distances = new StringBuilder();
                         for (int i = 0; i < segment.streetEdges.size(); i++) {
                             dist += segment.streetEdges.get(i).distance;
-                            distances.append(segment.streetEdges.get(i).distance).append(" ");
                         }
                         distanceCol.add(dist / 1000); // Converting from millimeters to meters
-//                        routeCol.add(distances.toString());
-
 
                         routeCol.add("");
                         waitCol.add(0);
