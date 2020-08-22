@@ -257,7 +257,7 @@ public class R5RCore {
         ArrayList<Integer> optionCol = new ArrayList<>();
         ArrayList<Integer> segmentCol = new ArrayList<>();
         ArrayList<String> modeCol = new ArrayList<>();
-        ArrayList<Integer> durationCol = new ArrayList<>();
+        ArrayList<Double> durationCol = new ArrayList<>();
         ArrayList<Integer> distanceCol = new ArrayList<>();
         ArrayList<String> routeCol = new ArrayList<>();
         ArrayList<Integer> waitCol = new ArrayList<>();
@@ -300,7 +300,7 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(1);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60); // Converting from seconds to minutes
+                        durationCol.add(segment.duration / 60.0); // Converting from seconds to minutes
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = 0;
@@ -332,7 +332,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60);
+                        durationCol.add(segment.duration / 60.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
@@ -392,7 +392,7 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
-                        durationCol.add(transit.rideStats.avg/60);
+                        durationCol.add(transit.rideStats.avg / 60.0);
                         distanceCol.add((int) accDistance);
                         routeCol.add(tripPattern.routeId);
                         waitCol.add(transit.waitStats.avg);
@@ -410,7 +410,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.middle.mode.toString());
-                        durationCol.add(transit.middle.duration / 60);
+                        durationCol.add(transit.middle.duration / 60.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
@@ -444,7 +444,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60);
+                        durationCol.add(segment.duration / 60.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
