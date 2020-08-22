@@ -205,7 +205,7 @@ detailed_itineraries <- function(r5r_core,
 
   if (is.null(path_options)) {
 
-    stop("No itineraries have been found.")
+    return(data.table::data.table(path_options))
 
   } else {
 
@@ -215,7 +215,7 @@ detailed_itineraries <- function(r5r_core,
 
       path_options <- data.table::rbindlist(path_options)
 
-      if (length(path_options) == 0) stop("No itineraries have been found.")
+      if (length(path_options) == 0) return(path_options)
 
     }
 
