@@ -300,7 +300,8 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(1);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60.0); // Converting from seconds to minutes
+
+                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0); // Converting from seconds to minutes
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = 0;
@@ -332,7 +333,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60.0);
+                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
@@ -392,7 +393,7 @@ public class R5RCore {
                         optionCol.add(optionIndex);
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.mode.toString());
-                        durationCol.add(transit.rideStats.avg / 60.0);
+                        durationCol.add(Math.round(transit.rideStats.avg / 60.0 * 100) / 100.0);
                         distanceCol.add((int) accDistance);
                         routeCol.add(tripPattern.routeId);
                         waitCol.add(transit.waitStats.avg);
@@ -410,7 +411,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(transit.middle.mode.toString());
-                        durationCol.add(transit.middle.duration / 60.0);
+                        durationCol.add(Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
@@ -444,7 +445,7 @@ public class R5RCore {
                         segmentIndex++;
                         segmentCol.add(segmentIndex);
                         modeCol.add(segment.mode.toString());
-                        durationCol.add(segment.duration / 60.0);
+                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
 
 //                        distanceCol.add(segment.distance);
                         // try getting distances from street edges
