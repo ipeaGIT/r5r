@@ -27,6 +27,7 @@ Suggests:
     covr,
     ggplot2 (>= 3.3.1),
     knitr,
+    lubridate,
     mapview,
     rmarkdown,
     testthat

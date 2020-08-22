@@ -124,8 +124,7 @@ origin/destination input can be either a spatial `sf POINT` object, or a
 ttm <- travel_time_matrix( r5r_core = r5r_core,
                            origins = points,
                            destinations = points,
-                           departure_datetime = as.POSIXct("13-03-2019 14:00:00",
-                                                format = "%d-%m-%Y %H:%M:%S"),
+                           departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
                            mode = c("WALK", "TRANSIT"),
                            max_walk_dist = 5,
                            max_trip_duration = 7200,
@@ -155,12 +154,11 @@ destination pair only.
 # inputs
 
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-origins <- points[2,]
+origins <- points[10,]
 destinations <- points[12,]
-mode = c("WALK", "BUS")
+mode = c("WALK", "TRANSIT")
 max_walk_dist <- 1
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                  format = "%d-%m-%Y %H:%M:%S")
+departure_datetime <- lubridate::as_datetime("2019-03-20 14:00:00")
 
 df <- detailed_itineraries(r5r_core = r5r_core,
                          origins,
@@ -168,27 +166,20 @@ df <- detailed_itineraries(r5r_core = r5r_core,
                          mode,
                          departure_datetime,
                          max_walk_dist,
+                         shortest_path = FALSE,
                          verbose = FALSE)
 
 head(df)
 ```
 
-The output is a `data.frame sf` object, so we can easily visualize the results
-with `ggplot2`.
+The output is a `data.frame sf` object, so we can easily visualize the results.
 
-### visualize results
+#### visualize results
 
-Interactive visualization of results with the `mapview` package.
-
-```{r, message = FALSE}
-mapviewOptions(platform = 'leafgl')
-mapview(df, zcol = 'mode')
-
-```
-
-Static visualization of results with the `ggplot2` package.
-
-To facilitate the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf` that will extract the street networked passed as an input.
+**Static visualization** with `ggplot2` package: To facilitate the 
+visualization of the results in `ggplot2`, you can also use the 
+`street_network_to_sf` function to  extract the OSM street network used in the
+routing.
 
 ```{r, message = FALSE}
 # extract OSM network
@@ -196,11 +187,22 @@ street_net <- street_network_to_sf(r5r_core)
 
 # plot
 ggplot() +
-        geom_sf(data = street_net$edges, color='gray85') +
-        geom_sf(data = df, aes(color=mode)) +
-        theme_minimal()
+  geom_sf(data = street_net$edges, color='gray85') +
+  geom_sf(data = df, aes(color=mode)) +
+  facet_wrap(.~option) + 
+  theme_minimal()
 
 ```
+
+**Interactive visualization** with `mapview`:
+
+```{r, message = FALSE}
+mapviewOptions(platform = 'leafgl')
+mapview(df, zcol = 'option')
+
+```
+
+
 
 
 # Final remarks
