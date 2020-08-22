@@ -19,6 +19,8 @@ library(qpdf)
 
 
 
+devtools::build_vignettes()
+
 mapviewOptions(platform = 'leafgl')
 
 # Update documentation
@@ -380,6 +382,7 @@ devtools::check_win_release(pkg = ".")
 
 beepr::beep()
 
+Java Runtime Environment (>= 8)
 
 # build binary
 system("R CMD build gtfs2gps --resave-data") # build tar.gz

@@ -40,6 +40,7 @@ Imports:
     sf (>= 0.9-3),
     sfheaders,
     utils
+SystemRequirements: Java JDK (>= 11.0.8)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
