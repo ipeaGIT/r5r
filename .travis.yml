@@ -9,7 +9,8 @@ r_packages:
 r_github_packages:
   - r-lib/covr
 
-jdk: openjdk11
+include:
+ - jdk: openjdk11
 
 before_install:
  - cd r-package

@@ -34,7 +34,7 @@ devtools::document(pkg = ".")
 path <- system.file("extdata", package = "r5r")
 
 # r5r::download_r5(force_update = T)
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, verbose = F)
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
@@ -307,11 +307,25 @@ covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/t
 covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
 covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat/test-detailed_itineraries.R"))
 
+covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testthat/test-utils.R"))
+covr::function_coverage(fun=r5r::posix_to_string, test_file("tests/testthat/test-utils.R"))
+covr::function_coverage(fun=r5r::assert_points_input, test_file("tests/testthat/test-utils.R"))
+
+
+covr::function_coverage(fun=r5r::select_mode, test_file("tests/testthat/test-utils.R"))
+covr::function_coverage(fun=r5r::set_verbose, test_file("tests/testthat/test-utils.R"))
+covr::function_coverage(fun=r5r::set_n_threads, test_file("tests/testthat/test-utils.R"))
+covr::function_coverage(fun=r5r::set_speed, test_file("tests/testthat/test-utils.R"))
+
+# nocov start
+
+# nocov end
 
 # the whole package
-covr::package_coverage(path = ".", type = "tests")
+r5r_cov <- covr::package_coverage(path = ".", type = "tests")
 
-CODECOV_TOKEN="2a7013e9-6562-4011-beb9-168e922c4c84"
+x <- as.data.frame(r5r_cov)
+covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
 
 
 ##### Profiling function ------------------------
