@@ -111,9 +111,10 @@ ttm
 orig <- (points %>% sample_n(4))$id
 
 ttm %>% filter(fromId %in% orig) %>%
+  left_join(points, by=c("toId" = "id")) %>%
   ggplot() +
   geom_point(data=points, aes(x=lon, y=lat), colour="grey85") +
-  geom_point(aes(x=toLon, y=toLat, colour=travel_time)) +
+  geom_point(aes(x=lon, y=lat, colour=travel_time)) +
   scale_color_distiller(palette = "Spectral") +
   coord_map() +
   facet_wrap(~fromId)
