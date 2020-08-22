@@ -67,24 +67,36 @@ use `r5r`, as follows.
 
 ```R
 # allocate RAM memory to Java
-options(java.parameters = "-Xmx2G")
+library(r5r)
 
 # 1) build transport network, pointing to the path where OSM and GTFS data are stored
 path <- system.file("extdata", package = "r5r")
-r5_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path)
 
 # 2) load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 
-# 3) run R5 to calculate a travel time matrix
-df <- travel_time_matrix( r5_core = r5_core,
+# 3.1) calculate a travel time matrix
+df <- travel_time_matrix( r5r_core,
                           origins = points,
                           destinations = points,
-                          trip_date = "2019-05-20",
-                          departure_time = "14:00:00",
                           mode = c("WALK", "BUS"),
-                          max_trip_duration = 3600L
+                          departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
+                          max_walk_dist = 5,
+                          max_trip_duration = 3600
                          )
+                         
+# 3.2) or get detailed info on multiple alternative routes
+df2 <- detailed_itineraries(r5r_core,
+                            origins = points,
+                            destinations = points,
+                            mode = c("WALK", "BUS"),
+                            departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
+                            max_walk_dist = 5,
+                            max_trip_duration = 3600,
+                            shortest_path = FALSE
+                            )
+
 ```
 
 
