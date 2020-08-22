@@ -1,5 +1,4 @@
 ############# Support functions for r5r
-# nocov start
 
 #' Set verbose argument
 #'
@@ -239,4 +238,4 @@ set_speed <- function(r5r_core, speed, mode) {
 
 }
 
-# nocov end
+
