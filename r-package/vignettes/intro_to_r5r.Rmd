@@ -1,11 +1,11 @@
 ---
 title: 'r5r: Rapid Realistic Routing with R5 in R'
-author: "Rafael H. M. Pereira,  "
+author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette: default
   github_document: default
-abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5 <https://github.com/conveyal/r5>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine."
+abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine <https://github.com/conveyal/r5>"
 urlcolor: blue
 vignette: >
   %\VignetteEngine{knitr::rmarkdown} 
@@ -22,15 +22,16 @@ knitr::opts_chunk$set(
 
 # Introduction 
 
-**r5r** is an R package for rapid realistic routing on multimodal transport 
-networks (walk, bike, public transport and car). It provides a simple and 
-friendly interface to R5, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
+**r5r** is an [R package for rapid realistic routing on multimodal transport networks](https://github.com/ipeaGIT/r5r) (walk, bike, public transport and car).
+It provides a simple and friendly interface to R5, a really fast and open source 
+routing engine based in `Java` developed by [Conveyal](https://www.conveyal.com/).
+R5 stands for [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
 
 # Installation
 To use `r5r`, you need to have [Java SE Development Kit 11.0.8](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) 
 installed on your computer. No worries, it's free.
 
-Install the development version from GitHub (soon on CRAN) and load packages.
+Install the development version of `r5r` from GitHub (soon on CRAN) and load packages.
 
 ```{r, eval = FALSE}
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
@@ -47,24 +48,26 @@ library(mapview)
 
 The package has 3 fundamental functions.
 
-1. `setup_r5` to build a routable transport network
+1. `setup_r5` to build a routable transport network given a street and public
+transport networks
 
 2. `travel_time_matrix` for fast computation of travel time estimates between 
-origin destination pairs.
+origin destination pairs
 
 3. `detailed_itineraries` to get detailed information on one or multiple 
-alternative routes between origin destination pairs.
+alternative routes between origin destination pairs
 
-Let's have a quick look at these three functions using demonstration on sample data.
+Let's have a quick look at how these functions work using a sample data set.
 
 # Demonstration on sample data
 
 ## Data
 To illustrate functionality, the package includes a small sample data for the 
 city of Porto Alegre (Brazil). It includes three files:
-- An Open Street Map network in `.pbf` format (*mandatory*)
-- A public transport network in `GTFS.zip` format
-- The spatial coordinates of the origin destination pairs in a `.csv` file.
+
+* An Open Street Map network in `.pbf` format (*mandatory*)
+* A public transport network in `GTFS.zip` format
+* The spatial coordinates of the origin destination pairs in a `.csv` file.
 
 ```{r}
 data_path <- system.file("extdata", package = "r5r")
@@ -73,33 +76,33 @@ list.files(data_path)
 ```
 The data with origin destination pairs looks like this below. In this example, 
 we will be looking at the transport routes between ten random points in this 
-data.
+data set.
 ```{r}
 points <- fread(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
 head(points)
 
 ```
-### Set memory
+#### Set memory
 
-Before we start, we need to increase available memory available to Java. This is
-because by default R allocates only 512MB of memory for Java processes, which is
-not enough for large queries using r5r. To increase available memory to 2GB, for
-example, we need to set the java.parameters option at the beginning of the script,
-as follows:
+Before we start, we need to increase the memory available to Java. This is
+because by default `R` allocates only 512MB of memory for Java processes, which is
+would not b enough for large queries using `r5r`. To increase available memory 
+to 2GB, for example, we need to set the java.parameters option at the beginning 
+of the script, as follows:
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
 ```
 
 
-# Build routable transport network with `setup_r5()`
+## Build routable transport network with `setup_r5()`
 
 The first step is to build the multimodal transport network used for routing in 
 R5. This is done with the `setup_r5` function. This function does two things: (1)
-downloads/updates a compiled JAR file of R5 and store it locally in the `r5r` package 
+downloads/updates a compiled JAR file of R5 and stores it locally in the `r5r` package 
 directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to
-build a routable network object. The function 
+build a routable network object.
 
 ```{r, message = FALSE}
 # Indicate the path where OSM and GTFS data are stored
@@ -107,12 +110,12 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
 ```
 
-# Routing analysis
+## Routing analysis
 
-For fast routing analysis, **r5** has two core functions: `travel_time_matrix` 
+For fast routing analysis, **r5r** currently has two core functions: `travel_time_matrix` 
 and `detailed_itineraries`.
 
-## Fast many to many travel time matrix
+### Fast many to many travel time matrix
 
 The `travel_time_matrix` function is a really simple and fast function to compute
 travel time estimates between one or multiple origin destination pairs. The 
@@ -136,7 +139,7 @@ head(ttm)
 
 
 
-## Detailed itineraries
+### Detailed itineraries
 
 Most routing packages only return the fastest route. A key advantage of the 
 `detailed_itineraries` function is that is allows for fast routing analysis while
@@ -150,9 +153,7 @@ In this example below, we want to know some alternative routes between one origi
 destination pair only.
 
 ```{r, message = FALSE}
-
 # inputs
-
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- points[10,]
 destinations <- points[12,]
@@ -174,7 +175,7 @@ head(df)
 
 The output is a `data.frame sf` object, so we can easily visualize the results.
 
-#### visualize results
+#### Visualize results
 
 **Static visualization** with `ggplot2` package: To facilitate the 
 visualization of the results in `ggplot2`, you can also use the 
@@ -190,7 +191,7 @@ ggplot() +
   geom_sf(data = street_net$edges, color='gray85') +
   geom_sf(data = df, aes(color=mode)) +
   facet_wrap(.~option) + 
-  theme_minimal()
+  theme_void()
 
 ```
 
@@ -204,7 +205,4 @@ mapview(df, zcol = 'option')
 
 
 
-
-# Final remarks
-
-If you have any suggestions or want to report an error, please visit the GitHub page of the package [here](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit the [the package GitHub page](https://github.com/ipeaGIT/r5r).
