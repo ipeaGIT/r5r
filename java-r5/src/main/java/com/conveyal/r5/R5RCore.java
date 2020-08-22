@@ -580,24 +580,24 @@ public class R5RCore {
 
         // Build return table
         ArrayList<String> fromIdCol = new ArrayList<>();
-        ArrayList<Double> fromLatCol = new ArrayList<>();
-        ArrayList<Double> fromLonCol = new ArrayList<>();
+//        ArrayList<Double> fromLatCol = new ArrayList<>();
+//        ArrayList<Double> fromLonCol = new ArrayList<>();
 
         ArrayList<String> idCol = new ArrayList<>();
-        ArrayList<Double> latCol = new ArrayList<>();
-        ArrayList<Double> lonCol = new ArrayList<>();
+//        ArrayList<Double> latCol = new ArrayList<>();
+//        ArrayList<Double> lonCol = new ArrayList<>();
 
         ArrayList<Integer> travelTimeCol = new ArrayList<>();
 
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
             if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
                 fromIdCol.add(fromId);
-                fromLatCol.add(fromLat);
-                fromLonCol.add(fromLon);
+//                fromLatCol.add(fromLat);
+//                fromLonCol.add(fromLon);
 
                 idCol.add(toIds[i]);
-                latCol.add(toLats[i]);
-                lonCol.add(toLons[i]);
+//                latCol.add(toLats[i]);
+//                lonCol.add(toLons[i]);
 
                 travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
             }
@@ -605,11 +605,11 @@ public class R5RCore {
 
         LinkedHashMap<String, Object> results = new LinkedHashMap<>();
         results.put("fromId", fromIdCol);
-        results.put("fromLat", fromLatCol);
-        results.put("fromLon", fromLonCol);
+//        results.put("fromLat", fromLatCol);
+//        results.put("fromLon", fromLonCol);
         results.put("toId", idCol);
-        results.put("toLat", latCol);
-        results.put("toLon", lonCol);
+//        results.put("toLat", latCol);
+//        results.put("toLon", lonCol);
         results.put("travel_time", travelTimeCol);
 
         return results;
