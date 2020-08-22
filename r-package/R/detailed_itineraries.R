@@ -254,11 +254,14 @@ detailed_itineraries <- function(r5r_core,
 
   path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
 
-  # convert path_options from data.frame to data.table with sfc column
-  data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
+  # if results includes the geometry, convert path_options from data.frame to
+  # data.table with sfc column
+  if (!drop_geometry) {
+    data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
 
-  # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
-  path_options <- sf::st_sf(path_options, crs = 4326)
+    # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
+    path_options <- sf::st_sf(path_options, crs = 4326)
+  }
 
   return(path_options)
 

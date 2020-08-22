@@ -46,12 +46,16 @@ street_time = 120L
 paths_df <- detailed_itineraries(r5r_core = r5r_core, origins = origin, destinations = destination, 
                      departure_datetime = trip_date_time, max_walk_dist = 0.8, 
                      mode = c("WALK", "BICYCLE", "BUS"),
-                     shortest_path = FALSE, verbose = FALSE)
+                     shortest_path = FALSE, verbose = FALSE, drop_geometry = FALSE)
 
 ```
 
 ```{r}
 street_net <- street_network_to_sf(r5r_core)
+```
+
+```{r}
+paths_df
 ```
 
 ```{r}
