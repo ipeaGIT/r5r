@@ -133,7 +133,8 @@ public class R5RCore {
     public List<LinkedHashMap<String, Object>> planMultipleTrips(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                  String[] toIds, double[] toLats, double[] toLons,
                                                                  String directModes, String transitModes, String accessModes, String egressModes,
-                                                                 String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                 String date, String departureTime, int maxWalkTime, int maxTripDuration,
+                                                                 boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
 
         int[] requestIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) requestIndices[i] = i;
@@ -146,7 +147,8 @@ public class R5RCore {
                             try {
                                 results = planSingleTrip(fromIds[index], fromLats[index], fromLons[index],
                                         toIds[index], toLats[index], toLons[index],
-                                        directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                                        directModes, transitModes, accessModes, egressModes, date, departureTime,
+                                        maxWalkTime, maxTripDuration, dropItineraryGeometry);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -157,7 +159,8 @@ public class R5RCore {
 
     public LinkedHashMap<String, Object> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                String directModes, String transitModes, String accessModes, String egressModes,
-                                                        String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+                                                        String date, String departureTime, int maxWalkTime, int maxTripDuration,
+                                                        boolean dropItineraryGeometry) throws ParseException {
         AnalysisTask request = new RegionalTask();
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
@@ -220,7 +223,7 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon, response.getOptions());
+            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon, dropItineraryGeometry, response.getOptions());
         } else {
             return null;
         }
@@ -234,7 +237,8 @@ public class R5RCore {
     }
 
     private LinkedHashMap<String, Object> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
-                                                                String toId, double toLat, double toLon, List<ProfileOption> pathOptions) {
+                                                                String toId, double toLat, double toLon, boolean dropItineraryGeometry,
+                                                                List<ProfileOption> pathOptions) {
         // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
 
         // Columns:
@@ -271,7 +275,7 @@ public class R5RCore {
         pathOptionsTable.put("distance", distanceCol);
         pathOptionsTable.put("route", routeCol);
         pathOptionsTable.put("wait", waitCol);
-        pathOptionsTable.put("geometry", geometryCol);
+        if (!dropItineraryGeometry) pathOptionsTable.put("geometry", geometryCol);
 
         int optionIndex = 0;
         for (ProfileOption option : pathOptions) {
@@ -305,7 +309,7 @@ public class R5RCore {
 
                         routeCol.add("");
                         waitCol.add(0);
-                        geometryCol.add(segment.geometry.toString());
+                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
                     }
                 }
 
@@ -343,7 +347,7 @@ public class R5RCore {
                         routeCol.add("");
 
                         waitCol.add(0);
-                        geometryCol.add(segment.geometry.toString());
+                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
                     }
                 }
 
@@ -390,7 +394,7 @@ public class R5RCore {
                         distanceCol.add((int) accDistance);
                         routeCol.add(tripPattern.routeId);
                         waitCol.add(transit.waitStats.avg);
-                        geometryCol.add(geometry.toString());
+                        if (!dropItineraryGeometry) geometryCol.add(geometry.toString());
                     }
 
                     if (transit.middle != null) {
@@ -421,7 +425,7 @@ public class R5RCore {
                         routeCol.add("");
 
                         waitCol.add(0);
-                        geometryCol.add(transit.middle.geometry.toString());
+                        if (!dropItineraryGeometry) geometryCol.add(transit.middle.geometry.toString());
                     }
                 }
 
@@ -455,7 +459,7 @@ public class R5RCore {
                         routeCol.add("");
 
                         waitCol.add(0);
-                        geometryCol.add(segment.geometry.toString());
+                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
                     }
                 }
 

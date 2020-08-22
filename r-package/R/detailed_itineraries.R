@@ -4,9 +4,6 @@
 #' and destinations.
 #'
 #' @param r5r_core A rJava object to connect with R5 routing engine
-#' @param origins,destinations Either a spatial sf POINT or a data.frame
-#'                             containing the columns \code{id}, \code{lon} and
-#'                             \code{lat}.
 #' @param departure_datetime A POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
@@ -23,6 +20,10 @@
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR messages.
+#' @param origins
+#' @param destinations
+#' @param drop_geometry A logical. Indicates wether R5 should drop itinerary's
+#'                      geometry column. It can be helpful for saving memory.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
 #'          include:
@@ -80,7 +81,8 @@ detailed_itineraries <- function(r5r_core,
                                  bike_speed = 12,
                                  shortest_path = TRUE,
                                  n_threads = Inf,
-                                 verbose = TRUE) {
+                                 verbose = TRUE,
+                                 drop_geometry = FALSE ) {
 
 
   # set r5r_core options ----------------------------------------------------
@@ -117,6 +119,9 @@ detailed_itineraries <- function(r5r_core,
 
   # shortest_path
   checkmate::assert_logical(shortest_path)
+
+  # drop_geometry
+  checkmate::assert_logical(drop_geometry)
 
   # origins and destinations
   # either they have the same number of rows or one of them has only one row,
@@ -174,7 +179,8 @@ detailed_itineraries <- function(r5r_core,
                                             departure$date,
                                             departure$time,
                                             max_street_time,
-                                            max_trip_duration)
+                                            max_trip_duration,
+                                            drop_geometry)
 
   } else {
 
@@ -191,7 +197,8 @@ detailed_itineraries <- function(r5r_core,
                                                departure$date,
                                                departure$time,
                                                max_street_time,
-                                               max_trip_duration)
+                                               max_trip_duration,
+                                               drop_geometry)
 
   }
 
