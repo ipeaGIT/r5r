@@ -132,10 +132,6 @@ travel_time_matrix <- function(r5r_core,
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
 
-  # add mode column for reference
-  modes_string <- paste(unique(mode_list),collapse = " ")
-  travel_times[, 'mode' := modes_string ]
-
   return(travel_times)
 
 }
