@@ -20,7 +20,8 @@ default_tester <- function(r5r_obj,
                            bike_speed = 12,
                            shortest_path = TRUE,
                            n_threads = Inf,
-                           verbose = FALSE) {
+                           verbose = FALSE,
+                           drop_geometry = FALSE) {
 
  results <- detailed_itineraries(
    r5r_obj,
@@ -34,7 +35,8 @@ default_tester <- function(r5r_obj,
    bike_speed,
    shortest_path,
    n_threads,
-   verbose
+   verbose,
+   drop_geometry
  )
 
  return(results)
@@ -117,6 +119,10 @@ test_that("detailed_itineraries adequately raises warnings and errors", {
  expect_error(default_tester(r5r_obj, verbose = 1))
  expect_error(default_tester(r5r_obj, verbose = NULL))
 
+ # error related to non-logical drop_geometry
+ expect_error(default_tester(r5r_obj, drop_geometry = "TRUE"))
+ expect_error(default_tester(r5r_obj, drop_geometry = 1))
+
 })
 
 
@@ -128,7 +134,7 @@ test_that("detailed_itineraries output is correct", {
   #  * output class ---------------------------------------------------------
 
   # expect results to be of class 'sf' and 'data.table', irrespective of the
-  # class of 'origins'/'destinations'
+  # class of 'origins'/'destinations', when drop_geometry = FALSE
 
   origins_sf      <- sf::st_as_sf(points[1:2,], coords = c("lon", "lat"))
   destinations_sf <- sf::st_as_sf(points[2:1,], coords = c("lon", "lat"))
@@ -139,6 +145,17 @@ test_that("detailed_itineraries output is correct", {
   expect_true(is(result_df_input, "sf"))
   expect_true(is(result_df_input, "data.table"))
   expect_true(is(result_sf_input, "sf"))
+  expect_true(is(result_sf_input, "data.table"))
+
+  # expect results to be of class 'data.table', but not 'sf', irrespective of
+  # the class of 'origins'/'destinations', when drop_geometry = TRUE
+
+  result_df_input <- default_tester(r5r_obj, drop_geometry = TRUE)
+  result_sf_input <- default_tester(r5r_obj, origins_sf, destinations_sf, drop_geometry = TRUE)
+
+  expect_false(is(result_df_input, "sf"))
+  expect_true(is(result_df_input, "data.table"))
+  expect_false(is(result_sf_input, "sf"))
   expect_true(is(result_sf_input, "data.table"))
 
   #  * r5r options ----------------------------------------------------------
