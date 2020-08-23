@@ -1,3 +1,7 @@
+jdk:
+  - openjdk11
+
+
 matrix:
   include:
     - language: r
