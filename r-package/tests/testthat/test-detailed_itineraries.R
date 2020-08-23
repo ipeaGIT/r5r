@@ -133,6 +133,7 @@ test_that("detailed_itineraries output is correct", {
 
   #  * output class ---------------------------------------------------------
 
+
   # expect results to be of class 'sf' and 'data.table', irrespective of the
   # class of 'origins'/'destinations', when drop_geometry = FALSE
 
@@ -158,7 +159,25 @@ test_that("detailed_itineraries output is correct", {
   expect_false(is(result_sf_input, "sf"))
   expect_true(is(result_sf_input, "data.table"))
 
+  # expect each column to be of right class
+
+  expect_true(typeof(result_df_input$fromId) == "character")
+  expect_true(typeof(result_df_input$toId) == "character")
+  expect_true(typeof(result_df_input$fromLat) == "double")
+  expect_true(typeof(result_df_input$fromLon) == "double")
+  expect_true(typeof(result_df_input$toLat) == "double")
+  expect_true(typeof(result_df_input$toLon) == "double")
+  expect_true(typeof(result_df_input$option) == "integer")
+  expect_true(typeof(result_df_input$segment) == "integer")
+  expect_true(typeof(result_df_input$mode) == "character")
+  expect_true(typeof(result_df_input$duration) == "double")
+  expect_true(typeof(result_df_input$distance) == "integer")
+  expect_true(typeof(result_df_input$route) == "character")
+  expect_true(typeof(result_df_input$wait) == "integer")
+
+
   #  * r5r options ----------------------------------------------------------
+
 
   # expect walking segments to be shorter when setting higher walk speeds
   # ps: note that if a very high speed is set then the routes change completely
@@ -189,7 +208,9 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
+
   #  * arguments ------------------------------------------------------------
+
 
   # expect each OD pair to have only option when shortest_path == TRUE
 
