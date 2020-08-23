@@ -21,7 +21,7 @@ Assert class of origin and destination inputs and the type of its columns
 Other support functions: 
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
-\code{\link{set_max_walk_distance}()},
+\code{\link{set_max_street_time}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
 \code{\link{set_verbose}()},

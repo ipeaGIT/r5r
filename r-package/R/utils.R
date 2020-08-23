@@ -20,10 +20,10 @@ set_verbose <- function(r5r_core, verbose) {
 
 
 
-#' Set max walking distance
+#' Set max street time
 #'
-#' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole
-#'                      trip. Passed from routing functions.
+#' @param max_walk_dist numeric, Maximum walking distance (in meters) for the
+#'                      whole trip. Passed from routing functions.
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
 #'                    Passed from routing functions.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
@@ -31,13 +31,13 @@ set_verbose <- function(r5r_core, verbose) {
 #' @export
 #' @family support functions
 
-set_max_walk_distance <- function(max_walk_dist, walk_speed, max_trip_duration) {
+set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   checkmate::assert_numeric(max_walk_dist)
 
   if (is.infinite(max_walk_dist)) return(max_trip_duration)
 
-  max_street_time <- as.integer(round(60 * max_walk_dist / walk_speed, digits = 0))
+  max_street_time <- as.integer(round(60 * max_walk_dist / (walk_speed * 1000), digits = 0))
 
   # if max_street_time ends up being higher than max_trip_duration, uses
   # max_trip_duration as a ceiling
