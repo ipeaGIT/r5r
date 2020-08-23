@@ -10,7 +10,7 @@
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
 #' @param mode character string, defaults to "WALK". See details for other options.
-#' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
+#' @param max_walk_dist numeric, Maximum walking distance (in meters) for the whole trip.
 #' @param max_trip_duration numeric, Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
@@ -99,9 +99,9 @@ travel_time_matrix <- function(r5r_core,
   max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance and max_street_time
-  max_street_time <- set_max_walk_distance(max_walk_dist,
-                                           walk_speed,
-                                           max_trip_duration)
+  max_street_time <- set_max_street_time(max_walk_dist,
+                                         walk_speed,
+                                         max_trip_duration)
 
   # origins and destinations
   origins      <- assert_points_input(origins, "origins")

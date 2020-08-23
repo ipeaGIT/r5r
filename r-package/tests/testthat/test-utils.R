@@ -19,22 +19,22 @@ test_that("set_verbose adequately raises warnings and errors", {
 })
 
 
-# set_max_walk_distance ---------------------------------------------------
+# set_max_street_time -----------------------------------------------------
 
 
-test_that("set_max_walk_distance adequately raises warnings and errors", {
+test_that("set_max_street_time adequately raises warnings and errors", {
 
-  expect_error(set_max_walk_distance("1", 3.6, 60L))
-  expect_error(set_max_walk_distance(1, "3.6", 60L))
-  # expect_error(set_max_walk_distance(3.7, 3.6, "60L")) # should this fail though?
+  expect_error(set_max_walk_distance("1000", 3.6, 60L))
+  expect_error(set_max_walk_distance(1000, "3.6", 60L))
+  # expect_error(set_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
 
 })
 
-test_that("set_max_walk_distance output is coherent", {
+test_that("set_max_street_time output is coherent", {
 
-  expect_equal(set_max_walk_distance(Inf, 3.6, 60L), 60L)
-  expect_equal(set_max_walk_distance(1.8, 3.6, 60L), 30L)
-  expect_equal(set_max_walk_distance(7.2, 3.6, 60L), 60L)
+  expect_equal(set_max_street_time(Inf, 3.6, 60L), 60L)
+  expect_equal(set_max_street_time(1800, 3.6, 60L), 30L)
+  expect_equal(set_max_street_time(7200, 3.6, 60L), 60L)
 
 })
 

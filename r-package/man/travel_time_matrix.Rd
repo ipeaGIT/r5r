@@ -30,7 +30,7 @@ containing the columns 'id', 'lon', 'lat'}
 networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
-\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
+\item{max_walk_dist}{numeric, Maximum walking distance (in meters) for the whole trip.}
 
 \item{max_trip_duration}{numeric, Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).}
