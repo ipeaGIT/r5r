@@ -28,20 +28,19 @@ knitr::opts_chunk$set(
 
 # RESEARCH QUESTIONS AND HYPOTHESES 
 
-Transport routing is a fundamental step for the transport modeling required in 
-accessibility analysis, fleet allocation and transport simulation and planning 
+
+Transport routing is the process of finding the alternative routes and costs 
+that connect places on a given transport network. Routing often involves complex
+mathematical algorithms and it is a fundamental step required for transport
+accessibility analysis, fleet allocation and transport simulation and planning
 more broadly.
 
-
-
-context that researcher and practitioners face practical challenges in transport routing
-and accessibility analysis.
-- licensed software
-- time consuming compuations particularly for large and complex transport
-mulimodal networks
-- most options available only focus on fastest route, whach overlooks...
-
-
+Despite the long standing importance of routing analysis to the field, transport 
+researchers and practitioners still frequently face practical challenges with 
+this task. These challenges involve for example the monetary costs of licensed 
+software, data availability issues for data hungry models, and the long 
+computation times to run multiple routing scenarios, particularly in large and 
+complex multimodal transport networks. While there is a growing number of open source routing models (ref: stplnr, otp, dodgr), most options available only return the fastest route, what overlooks....
 
 This article presents **r5r**, a new open-source `R` package for rapid 
 realistic routing on multimodal transport networks.
