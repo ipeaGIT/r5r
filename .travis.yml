@@ -4,7 +4,11 @@ matrix:
       warnings_are_errors: true
       sudo: required
       cache: packages
-      jdk: openjdk11
+    - jdk: openjdk11
+      before_install:
+        - rm "${JAVA_HOME}/lib/security/cacerts"
+        - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+
 
       r_packages:
        - devtools
@@ -13,7 +17,7 @@ matrix:
         - r-lib/covr
 
       before_install:
-       - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+       - ./.travis/install_java_11.0.5
        - cd r-package
        - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable --yes
        - sudo apt-get --yes --force-yes update -qq
