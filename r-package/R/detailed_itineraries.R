@@ -229,13 +229,16 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
-  # return either the fastest or multiple itineraries between an o-d pair
+  # return either the fastest or multiple itineraries between an o-d pair (untie
+  # it by the option number, if necessary)
+
   data.table::setDT(path_options)
 
   if (shortest_path) {
 
     path_options[, temp_duration := sum(duration), by = .(fromId, toId, option)]
-    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId)]
+    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId)
+                                 ][, .SD[option == min(option)], by = .(fromId, toId)]
 
   } else {
 
