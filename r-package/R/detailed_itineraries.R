@@ -237,8 +237,8 @@ detailed_itineraries <- function(r5r_core,
   if (shortest_path) {
 
     path_options[, temp_duration := sum(duration), by = .(fromId, toId, option)]
-    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId)
-                                 ][, .SD[option == min(option)], by = .(fromId, toId)]
+    path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId)]$V1]
 
   } else {
 
@@ -252,7 +252,7 @@ detailed_itineraries <- function(r5r_core,
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
     path_options[, temp_duration := sum(duration), by = .(fromId, toId, option)]
 
-    path_options <- path_options[, .SD[temp_duration == min(temp_duration)], by = .(fromId, toId, temp_sign)]
+    path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId, temp_sign)]$V1]
 
   }
 
@@ -261,10 +261,11 @@ detailed_itineraries <- function(r5r_core,
   # if results includes the geometry, convert path_options from data.frame to
   # data.table with sfc column
   if (!drop_geometry) {
-    data.table::setDT(path_options)[, geometry := sf::st_as_sfc(geometry)]
 
     # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
+    path_options[, geometry := sf::st_as_sfc(geometry)]
     path_options <- sf::st_sf(path_options, crs = 4326)
+
   }
 
   return(path_options)
