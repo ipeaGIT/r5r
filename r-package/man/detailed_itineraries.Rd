@@ -23,13 +23,17 @@ detailed_itineraries(
 \arguments{
 \item{r5r_core}{A rJava object to connect with R5 routing engine}
 
+\item{origins, destinations}{Either a spatial sf POINT or a data.frame
+containing the columns \code{id}, \code{lon} and
+\code{lat}.}
+
 \item{mode}{A string, defaults to "WALK". See details for other options.}
 
 \item{departure_datetime}{A POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
-\item{max_walk_dist}{numeric, Maximum walking distance (in Km) for the whole trip.}
+\item{max_walk_dist}{numeric, Maximum walking distance (in meters) for the whole trip.}
 
 \item{max_trip_duration}{An integer. Maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}

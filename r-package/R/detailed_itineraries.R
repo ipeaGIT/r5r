@@ -4,10 +4,13 @@
 #' and destinations.
 #'
 #' @param r5r_core A rJava object to connect with R5 routing engine
+#' @param origins,destinations Either a spatial sf POINT or a data.frame
+#'                             containing the columns \code{id}, \code{lon} and
+#'                             \code{lat}.
 #' @param departure_datetime A POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
-#' @param max_walk_dist numeric, Maximum walking distance (in Km) for the whole trip.
+#' @param max_walk_dist numeric, Maximum walking distance (in meters) for the whole trip.
 #' @param mode A string, defaults to "WALK". See details for other options.
 #' @param max_trip_duration An integer. Maximum trip duration in minutes.
 #'                          Defaults to 120 minutes (2 hours).
@@ -20,8 +23,6 @@
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR messages.
-#' @param origins
-#' @param destinations
 #' @param drop_geometry A logical. Indicates wether R5 should drop itinerary's
 #'                      geometry column. It can be helpful for saving memory.
 #'
@@ -113,9 +114,9 @@ detailed_itineraries <- function(r5r_core,
   max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance and max_street_time
-  max_street_time <- set_max_walk_distance(max_walk_dist,
-                                           walk_speed,
-                                           max_trip_duration)
+  max_street_time <- set_max_street_time(max_walk_dist,
+                                        walk_speed,
+                                        max_trip_duration)
 
   # shortest_path
   checkmate::assert_logical(shortest_path)
