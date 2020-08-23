@@ -30,6 +30,8 @@ devtools::document(pkg = ".")
 ##### INPUT  ------------------------
 
 
+
+
 # build transport network
 path <- system.file("extdata", package = "r5r")
 

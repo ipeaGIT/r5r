@@ -1,10 +1,10 @@
 matrix:
   include:
-    - jdk: openjdk11
     - language: r
       warnings_are_errors: true
       sudo: required
       cache: packages
+      jdk: openjdk11
 
       r_packages:
        - devtools
