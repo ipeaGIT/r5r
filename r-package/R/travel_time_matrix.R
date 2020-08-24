@@ -134,10 +134,6 @@ travel_time_matrix <- function(r5r_core,
   # convert travel_times from java object to data.table
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
-  
-  # convert time from seconds to minutes
-  travel_times[, travel_time := round(travel_time/60, 2)]
-  
 
   return(travel_times)
 
