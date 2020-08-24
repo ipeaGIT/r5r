@@ -411,5 +411,5 @@ system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 
-
+ggsave('ggplot.png', width = 16, height = 8, units = 'cm', dpi=200)
 

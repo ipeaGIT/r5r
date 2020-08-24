@@ -159,7 +159,7 @@ points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- points[10,]
 destinations <- points[12,]
 mode = c("WALK", "TRANSIT")
-max_walk_dist <- 1
+max_walk_dist <- 10000
 departure_datetime <- lubridate::as_datetime("2019-03-20 14:00:00")
 
 df <- detailed_itineraries(r5r_core = r5r_core,
@@ -195,6 +195,11 @@ ggplot() +
   theme_void()
 
 ```
+
+```{r speed, echo = FALSE, message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/man/figures/vig_detailed_ggplot.png")
+```
+
 
 **Interactive visualization** with `mapview`:
 
