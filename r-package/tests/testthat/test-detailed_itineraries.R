@@ -47,7 +47,7 @@ default_tester <- function(r5r_obj,
 # errors and warnings -----------------------------------------------------
 
 
-test_that("detailed_itineraries adequately raises warnings and errors", {
+test_that("detailed_itineraries adequately raises errors", {
 
   # error related to using object with wrong type as r5r_core
   expect_error(default_tester("r5r_obj"))
@@ -121,12 +121,13 @@ test_that("detailed_itineraries adequately raises warnings and errors", {
 })
 
 
-# beyond here all tests require java and thus will be skipped on CRAN and Travis
+# FROM THIS POINT ONWARDS ALL TESTS REQUIRE JAVA, THUS WILL BE SKIPPED ON
+# CRAN AND TRAVIS
 testthat::skip_on_cran()
 testthat::skip_on_travis()
 
 
-test_that("detailed_itineraries adequately raises warnings and errors - needs java", {
+test_that("detailed_itineraries adequately raises warnings and messages - needs java", {
 
   # message related to expanding origins/destinations dataframe
   expect_message(default_tester(r5r_obj, origins = points[1, ]))
@@ -154,7 +155,7 @@ test_that("detailed_itineraries output is correct", {
   #  * output class ---------------------------------------------------------
 
 
-  # expect results to be of class 'sf' and 'data.table', irrespective of the
+  # expect results to be of class 'sf' and 'data.table', independently of the
   # class of 'origins'/'destinations', when drop_geometry = FALSE
 
   origins_sf      <- sf::st_as_sf(points[1:2,], coords = c("lon", "lat"))
@@ -205,12 +206,11 @@ test_that("detailed_itineraries output is correct", {
 
   origins      <- points[10,]
   destinations <- points[12,]
-  mode = "WALK"
 
-  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = mode, walk_speed = 3.6)
+  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 3.6)
   duration_lower_speed <- data.table::setDT(df)$duration
 
-  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = mode, walk_speed = 4)
+  df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
   duration_higher_speed <- data.table::setDT(df)$duration
 
   expect_true(duration_higher_speed < duration_lower_speed)
