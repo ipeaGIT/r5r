@@ -470,7 +470,11 @@ public class R5RCore {
 
         }
 
-        return pathOptionsTable;
+        if (fromIdCol.size() > 0) {
+            return pathOptionsTable;
+        } else {
+            return null;
+        }
     }
 
     public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
