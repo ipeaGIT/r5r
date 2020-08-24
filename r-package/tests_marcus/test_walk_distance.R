@@ -14,7 +14,7 @@ destination <- points[12,] # Praia de Belas shopping mall
 
 trip_date_time <- lubridate::as_datetime("2019-03-20 14:00:00")
 
-max_walk_distance = 800
+max_walk_distance = Inf
 max_trip_duration = 120L
 
 paths_df <- detailed_itineraries(r5r_core = r5r_core,

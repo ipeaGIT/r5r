@@ -291,141 +291,116 @@ public class R5RCore {
                     }
                 }
 
+            } else { // option has transit
+                optionIndex++;
+                int segmentIndex = 0;
+
+                // first leg: access to station
+                if (option.access != null) {
+                    for (StreetSegment segment : option.access) {
+                        pathOptionsTable.append();
+
+                        pathOptionsTable.set("option", optionIndex);
+                        segmentIndex++;
+                        pathOptionsTable.set("segment", segmentIndex);
+                        pathOptionsTable.set("mode", segment.mode.toString());
+                        pathOptionsTable.set("duration", Math.round(segment.duration / 60.0 * 100) / 100.0);
+
+                        // getting distances from street edges, that are more accurate than segment.distance
+                        int dist = 0;
+                        for (int i = 0; i < segment.streetEdges.size(); i++) {
+                            dist += segment.streetEdges.get(i).distance;
+                        }
+                        pathOptionsTable.set("distance", dist / 1000);
+
+                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
+                    }
+                }
+
+                for (TransitSegment transit : option.transit) {
+
+                    for (SegmentPattern pattern : transit.segmentPatterns) {
+                        pathOptionsTable.append();
+
+                        segmentIndex++;
+                        TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
+
+                        StringBuilder geometry = new StringBuilder("NA");
+                        org.locationtech.jts.geom.Coordinate previousCoord = new Coordinate(0, 0);
+                        double accDistance = 0;
+
+                        for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
+                            int stopIdx = tripPattern.stops[stop];
+                            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+
+                            coord.x = coord.x / FIXED_FACTOR;
+                            coord.y = coord.y / FIXED_FACTOR;
+
+                            if (geometry.toString().equals("NA")) {
+                                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
+                                previousCoord.x = coord.x;
+                                previousCoord.y = coord.y;
+                            } else {
+                                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
+                                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
+                                previousCoord.x = coord.x;
+                                previousCoord.y = coord.y;
+                            }
+                        }
+                        geometry.append(")");
+
+                        pathOptionsTable.set("option", optionIndex);
+                        pathOptionsTable.set("segment", segmentIndex);
+                        pathOptionsTable.set("mode", transit.mode.toString());
+                        pathOptionsTable.set("duration", Math.round(transit.rideStats.avg / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("distance", (int) accDistance);
+                        pathOptionsTable.set("route", tripPattern.routeId);
+                        pathOptionsTable.set("wait", transit.waitStats.avg);
+                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
+                    }
+
+                    if (transit.middle != null) {
+                        pathOptionsTable.append();
+
+                        pathOptionsTable.set("option", optionIndex);
+                        segmentIndex++;
+                        pathOptionsTable.set("segment", segmentIndex);
+                        pathOptionsTable.set("mode", transit.middle.mode.toString());
+                        pathOptionsTable.set("duration", Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
+
+                        // getting distances from street edges, which are more accurate than segment.distance
+                        int dist = 0;
+                        for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
+                            dist += transit.middle.streetEdges.get(i).distance;
+                        }
+                        pathOptionsTable.set("distance", dist / 1000);
+                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", transit.middle.geometry.toString());
+                    }
+                }
+
+                // first leg: access to station
+                if (option.egress != null) {
+                    for (StreetSegment segment : option.egress) {
+                        pathOptionsTable.append();
+
+                        pathOptionsTable.set("option", optionIndex);
+                        segmentIndex++;
+                        pathOptionsTable.set("segment", segmentIndex);
+                        pathOptionsTable.set("mode", segment.mode.toString());
+                        pathOptionsTable.set("duration", Math.round(segment.duration / 60.0 * 100) / 100.0);
+
+                        // getting distances from street edges, that are more accurate than segment.distance
+                        int dist = 0;
+                        for (int i = 0; i < segment.streetEdges.size(); i++) {
+                            dist += segment.streetEdges.get(i).distance;
+                        }
+                        pathOptionsTable.set("distance", dist / 1000);
+
+                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
+                    }
+                }
             }
-//            else { // option has transit
-//                optionIndex++;
-//                int segmentIndex = 0;
-//
-//                // first leg: access to station
-//                if (option.access != null) {
-//                    for (StreetSegment segment : option.access) {
-//                        fromIdCol.add(fromId);
-//                        fromLatCol.add(fromLat);
-//                        fromLonCol.add(fromLon);
-//                        toIdCol.add(toId);
-//                        toLatCol.add(toLat);
-//                        toLonCol.add(toLon);
-//                        optionCol.add(optionIndex);
-//                        segmentIndex++;
-//                        segmentCol.add(segmentIndex);
-//                        modeCol.add(segment.mode.toString());
-//                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
-//
-//                        // getting distances from street edges, that are more accurate than segment.distance
-//                        int dist = 0;
-//                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-//                            dist += segment.streetEdges.get(i).distance;
-//                        }
-//                        distanceCol.add(dist / 1000);
-//                        routeCol.add("");
-//                        waitCol.add(0);
-//                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
-//                    }
-//                }
-//
-//                for (TransitSegment transit : option.transit) {
-//
-//                    for (SegmentPattern pattern : transit.segmentPatterns) {
-//                        segmentIndex++;
-//                        TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
-//
-//                        StringBuilder geometry = new StringBuilder("NA");
-//                        org.locationtech.jts.geom.Coordinate previousCoord = new Coordinate(0, 0);
-//                        double accDistance = 0;
-//
-//                        for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
-//                            int stopIdx = tripPattern.stops[stop];
-//                            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
-//
-//                            coord.x = coord.x / FIXED_FACTOR;
-//                            coord.y = coord.y / FIXED_FACTOR;
-//
-//                            if (geometry.toString().equals("NA")) {
-//                                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
-//                                previousCoord.x = coord.x;
-//                                previousCoord.y = coord.y;
-//                            } else {
-//                                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
-//                                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
-//                                previousCoord.x = coord.x;
-//                                previousCoord.y = coord.y;
-//                            }
-//                        }
-//                        geometry.append(")");
-//
-//                        fromIdCol.add(fromId);
-//                        fromLatCol.add(fromLat);
-//                        fromLonCol.add(fromLon);
-//                        toIdCol.add(toId);
-//                        toLatCol.add(toLat);
-//                        toLonCol.add(toLon);
-//                        optionCol.add(optionIndex);
-//                        segmentCol.add(segmentIndex);
-//                        modeCol.add(transit.mode.toString());
-//                        durationCol.add(Math.round(transit.rideStats.avg / 60.0 * 100) / 100.0);
-//                        distanceCol.add((int) accDistance);
-//                        routeCol.add(tripPattern.routeId);
-//                        waitCol.add(transit.waitStats.avg);
-//                        if (!dropItineraryGeometry) geometryCol.add(geometry.toString());
-//                    }
-//
-//                    if (transit.middle != null) {
-//                        fromIdCol.add(fromId);
-//                        fromLatCol.add(fromLat);
-//                        fromLonCol.add(fromLon);
-//                        toIdCol.add(toId);
-//                        toLatCol.add(toLat);
-//                        toLonCol.add(toLon);
-//                        optionCol.add(optionIndex);
-//                        segmentIndex++;
-//                        segmentCol.add(segmentIndex);
-//                        modeCol.add(transit.middle.mode.toString());
-//                        durationCol.add(Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
-//
-//                        // getting distances from street edges, which are more accurate than segment.distance
-//                        int dist = 0;
-//                        for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
-//                            dist += transit.middle.streetEdges.get(i).distance;
-//                        }
-//                        distanceCol.add(dist / 1000);
-//                        routeCol.add("");
-//                        waitCol.add(0);
-//                        if (!dropItineraryGeometry) geometryCol.add(transit.middle.geometry.toString());
-//                    }
-//                }
-//
-//                // first leg: access to station
-//                if (option.egress != null) {
-//                    for (StreetSegment segment : option.egress) {
-//                        fromIdCol.add(fromId);
-//                        fromLatCol.add(fromLat);
-//                        fromLonCol.add(fromLon);
-//                        toIdCol.add(toId);
-//                        toLatCol.add(toLat);
-//                        toLonCol.add(toLon);
-//                        optionCol.add(optionIndex);
-//                        segmentIndex++;
-//                        segmentCol.add(segmentIndex);
-//                        modeCol.add(segment.mode.toString());
-//                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
-//
-//                        // getting distances from street edges, which are more accurate than segment.distance
-//                        int dist = 0;
-//                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-//                            dist += segment.streetEdges.get(i).distance;
-//                        }
-//                        distanceCol.add(dist / 1000);
-//                        routeCol.add("");
-//                        waitCol.add(0);
-//                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
-//                    }
-//                }
-//            }
         }
-
-
-
-
 
         return pathOptionsTable.getDataFrame();
     }
