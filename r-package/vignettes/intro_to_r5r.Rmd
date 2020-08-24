@@ -91,7 +91,7 @@ would not b enough for large queries using `r5r`. To increase available memory
 to 2GB, for example, we need to set the java.parameters option at the beginning 
 of the script, as follows:
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 options(java.parameters = "-Xmx2G")
 ```
 
@@ -104,7 +104,7 @@ downloads/updates a compiled JAR file of R5 and stores it locally in the `r5r` p
 directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to
 build a routable network object.
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 # Indicate the path where OSM and GTFS data are stored
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
@@ -122,7 +122,7 @@ travel time estimates between one or multiple origin destination pairs. The
 origin/destination input can be either a spatial `sf POINT` object, or a 
 `data.frame` containing the columns `id, lon, lat`.
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 # calculate a travel time matrix
 ttm <- travel_time_matrix( r5r_core = r5r_core,
                            origins = points,
@@ -152,7 +152,7 @@ each trip segment.
 In this example below, we want to know some alternative routes between one origin
 destination pair only.
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 # inputs
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- points[10,]
@@ -182,7 +182,7 @@ visualization of the results in `ggplot2`, you can also use the
 `street_network_to_sf` function to  extract the OSM street network used in the
 routing.
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
@@ -197,7 +197,7 @@ ggplot() +
 
 **Interactive visualization** with `mapview`:
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 mapviewOptions(platform = 'leafgl')
 mapview(df, zcol = 'option')
 
