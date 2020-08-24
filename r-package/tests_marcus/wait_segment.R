@@ -23,15 +23,16 @@ results <- detailed_itineraries(
 )
 
 results %>%
-  mutate(totalDuration = totalDuration / 60) %>%
-  # write.csv("trips_with_filter.csv")
-  View()
+  sf::st_set_geometry(NULL) %>%
+  write.csv("trips_no_filter.csv")
+
 
 results %>% dplyr::group_by(fromId, toId, option) %>%
-  dplyr::summarise(totalDuration= max(totalDuration)/60, duration = sum(duration+wait)) %>% View()
+  dplyr::summarise(duration = sum(duration+wait)) %>% View()
 # results[8:10,] %>% View()
+
 results %>%
-  dplyr::filter(fromId == "gasometer_museum") %>%
+  # dplyr::filter(fromId == "gasometer_museum") %>%
   ggplot() +
   geom_sf(aes(colour=mode)) +
   theme_void() +
