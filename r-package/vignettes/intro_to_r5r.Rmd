@@ -37,6 +37,7 @@ Install the development version of `r5r` from GitHub (soon on CRAN) and load pac
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 
 ```
+
 ```{r, message = FALSE}
 library(r5r)
 library(sf)

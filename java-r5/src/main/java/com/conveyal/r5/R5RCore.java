@@ -93,7 +93,11 @@ public class R5RCore {
     }
 
      public R5RCore(String dataFolder, boolean verbose) {
-        if (!verbose) silentMode();
+        if (verbose) {
+            verboseMode();
+        } else {
+            silentMode();
+        }
 
         setNumberOfThreadsToMax();
 
@@ -470,7 +474,11 @@ public class R5RCore {
 
         }
 
-        return pathOptionsTable;
+        if (fromIdCol.size() > 0) {
+            return pathOptionsTable;
+        } else {
+            return null;
+        }
     }
 
     public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
