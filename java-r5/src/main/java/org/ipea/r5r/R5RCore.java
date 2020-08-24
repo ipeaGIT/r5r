@@ -281,10 +281,7 @@ public class R5RCore {
                         pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
+                        int dist = calculateSegmentLength(segment);
                         pathOptionsTable.set("distance", dist / 1000);
 
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
@@ -307,10 +304,7 @@ public class R5RCore {
                         pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // getting distances from street edges, that are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
+                        int dist = calculateSegmentLength(segment);
                         pathOptionsTable.set("distance", dist / 1000);
 
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
@@ -326,34 +320,13 @@ public class R5RCore {
                         TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
 
                         StringBuilder geometry = new StringBuilder("NA");
-                        org.locationtech.jts.geom.Coordinate previousCoord = new Coordinate(0, 0);
-                        double accDistance = 0;
-
-                        for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
-                            int stopIdx = tripPattern.stops[stop];
-                            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
-
-                            coord.x = coord.x / FIXED_FACTOR;
-                            coord.y = coord.y / FIXED_FACTOR;
-
-                            if (geometry.toString().equals("NA")) {
-                                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
-                                previousCoord.x = coord.x;
-                                previousCoord.y = coord.y;
-                            } else {
-                                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
-                                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
-                                previousCoord.x = coord.x;
-                                previousCoord.y = coord.y;
-                            }
-                        }
-                        geometry.append(")");
+                        int accDistance = buildTransitGeometryAndCalculateDistance(pattern, tripPattern, geometry);
 
                         pathOptionsTable.set("option", optionIndex);
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.mode.toString());
                         pathOptionsTable.set("duration", Utils.roundTo2(transit.rideStats.avg / 60.0));
-                        pathOptionsTable.set("distance", (int) accDistance);
+                        pathOptionsTable.set("distance", accDistance);
                         pathOptionsTable.set("route", tripPattern.routeId);
                         pathOptionsTable.set("wait", transit.waitStats.avg);
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
@@ -369,10 +342,7 @@ public class R5RCore {
                         pathOptionsTable.set("duration", Utils.roundTo2(transit.middle.duration / 60.0));
 
                         // getting distances from street edges, which are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
-                            dist += transit.middle.streetEdges.get(i).distance;
-                        }
+                        int dist = calculateSegmentLength(transit.middle);
                         pathOptionsTable.set("distance", dist / 1000);
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", transit.middle.geometry.toString());
                     }
@@ -390,10 +360,7 @@ public class R5RCore {
                         pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // getting distances from street edges, that are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
+                        int dist = calculateSegmentLength(segment);
                         pathOptionsTable.set("distance", dist / 1000);
 
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
@@ -403,6 +370,41 @@ public class R5RCore {
         }
 
         return pathOptionsTable.getDataFrame();
+    }
+
+    private int buildTransitGeometryAndCalculateDistance(SegmentPattern segmentPattern,
+                                                            TripPattern tripPattern,
+                                                            StringBuilder geometry) {
+        Coordinate previousCoord = new Coordinate(0, 0);
+        double accDistance = 0;
+
+        for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
+            int stopIdx = tripPattern.stops[stop];
+            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+
+            coord.x = coord.x / FIXED_FACTOR;
+            coord.y = coord.y / FIXED_FACTOR;
+
+            if (geometry.toString().equals("NA")) {
+                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
+            } else {
+                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
+                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
+            }
+            previousCoord.x = coord.x;
+            previousCoord.y = coord.y;
+        }
+        geometry.append(")");
+
+        return (int) accDistance;
+    }
+
+    private int calculateSegmentLength(StreetSegment segment) {
+        int dist = 0;
+        for (int i = 0; i < segment.streetEdges.size(); i++) {
+            dist += segment.streetEdges.get(i).distance;
+        }
+        return dist;
     }
 
     public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
