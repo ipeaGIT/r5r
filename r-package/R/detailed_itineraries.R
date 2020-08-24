@@ -86,22 +86,11 @@ detailed_itineraries <- function(r5r_core,
                                  drop_geometry = FALSE ) {
 
 
-  # set r5r_core options ----------------------------------------------------
-
-
-  # set bike and walk speed
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-
-  # set number of threads
-  set_n_threads(r5r_core, n_threads)
-
-  # set verbose
-  set_verbose(r5r_core, verbose)
-
-
   # check inputs ------------------------------------------------------------
 
+
+  # r5r_core
+  checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
   mode_list <- select_mode(mode)
@@ -157,6 +146,20 @@ detailed_itineraries <- function(r5r_core,
     }
 
   }
+
+
+  # set r5r_core options ----------------------------------------------------
+
+
+  # set bike and walk speed
+  set_speed(r5r_core, walk_speed, "walk")
+  set_speed(r5r_core, bike_speed, "bike")
+
+  # set number of threads
+  set_n_threads(r5r_core, n_threads)
+
+  # set verbose
+  set_verbose(r5r_core, verbose)
 
 
   # call r5r_core method ----------------------------------------------------
