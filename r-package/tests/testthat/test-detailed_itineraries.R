@@ -1,9 +1,5 @@
 context("Detailed itineraries function")
 
-testthat::skip_on_cran()
-testthat::skip_on_travis()
-
-
 # load required data and setup r5r_obj
 
 data_path <- system.file("extdata", package = "r5r")
@@ -53,79 +49,99 @@ default_tester <- function(r5r_obj,
 
 test_that("detailed_itineraries adequately raises warnings and errors", {
 
- # message related to expanding origins/destinations dataframe
- expect_message(default_tester(r5r_obj, origins = points[1, ]))
- expect_message(default_tester(r5r_obj, destinations = points[1, ]))
+  # error related to using object with wrong type as r5r_core
+  expect_error(default_tester("r5r_obj"))
 
- # error related to using wrong origins/destinations object type
- multipoint_origins      <- sf::st_cast(sf::st_as_sf(points[1:2,], coords = c("lon", "lat")), "MULTIPOINT")
- multipoint_destinations <- sf::st_cast(sf::st_as_sf(points[2:1,], coords = c("lon", "lat")), "MULTIPOINT")
- list_origins      <- list(id = c("1", "2"), lat = c(-30.02756, -30.02329), long = c(-51.22781, -51.21886))
- list_destinations <- list(id = c("2", "1"), lat = c(-30.02329, -30.02756), long = c(-51.21886, -51.22781))
+  # error related to using wrong origins/destinations object type
+  multipoint_origins      <- sf::st_cast(sf::st_as_sf(points[1:2,], coords = c("lon", "lat")), "MULTIPOINT")
+  multipoint_destinations <- sf::st_cast(sf::st_as_sf(points[2:1,], coords = c("lon", "lat")), "MULTIPOINT")
+  list_origins      <- list(id = c("1", "2"), lat = c(-30.02756, -30.02329), long = c(-51.22781, -51.21886))
+  list_destinations <- list(id = c("2", "1"), lat = c(-30.02329, -30.02756), long = c(-51.21886, -51.22781))
 
- expect_error(default_tester(r5r_obj, origins = multipoint_origins))
- expect_error(default_tester(r5r_obj, destinations = multipoint_destinations))
- expect_error(default_tester(r5r_obj, origins = list_origins))
- expect_error(default_tester(r5r_obj, destinations = list_destinations))
- expect_error(default_tester(r5r_obj, origins = "origins"))
- expect_error(default_tester(r5r_obj, destinations = "destinations"))
+  expect_error(default_tester(r5r_obj, origins = multipoint_origins))
+  expect_error(default_tester(r5r_obj, destinations = multipoint_destinations))
+  expect_error(default_tester(r5r_obj, origins = list_origins))
+  expect_error(default_tester(r5r_obj, destinations = list_destinations))
+  expect_error(default_tester(r5r_obj, origins = "origins"))
+  expect_error(default_tester(r5r_obj, destinations = "destinations"))
 
- # error/warning related to using wrong origins/destinations column types
- origins <- points[1:2, ]
- destinations <- points[2:1, ]
+  # error/warning related to using wrong origins/destinations column types
+  origins <- points[1:2, ]
+  destinations <- points[2:1, ]
 
- origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
- origins_char_lat   <- data.frame(id = origins$id, lat = as.character(origins$lat), lon = origins$lon)
- origins_char_lon   <- data.frame(id = origins$id, lat = origins$lat, lon = as.character(origins$lon))
- destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
- destinations_char_lat   <- data.frame(id = destinations$id, lat = as.character(destinations$lat), lon = destinations$lon)
- destinations_char_lon   <- data.frame(id = destinations$id, lat = destinations$lat, lon = as.character(destinations$lon))
+  origins_char_lat   <- data.frame(id = origins$id, lat = as.character(origins$lat), lon = origins$lon)
+  origins_char_lon   <- data.frame(id = origins$id, lat = origins$lat, lon = as.character(origins$lon))
+  destinations_char_lat   <- data.frame(id = destinations$id, lat = as.character(destinations$lat), lon = destinations$lon)
+  destinations_char_lon   <- data.frame(id = destinations$id, lat = destinations$lat, lon = as.character(destinations$lon))
 
- expect_warning(default_tester(r5r_obj, origins = origins_numeric_id))
- expect_error(default_tester(r5r_obj, origins = origins_char_lat))
- expect_error(default_tester(r5r_obj, origins = origins_char_lon))
- expect_warning(default_tester(r5r_obj, destinations = destinations_numeric_id))
- expect_error(default_tester(r5r_obj, destinations = destinations_char_lat))
- expect_error(default_tester(r5r_obj, destinations = destinations_char_lon))
+  expect_error(default_tester(r5r_obj, origins = origins_char_lat))
+  expect_error(default_tester(r5r_obj, origins = origins_char_lon))
+  expect_error(default_tester(r5r_obj, destinations = destinations_char_lat))
+  expect_error(default_tester(r5r_obj, destinations = destinations_char_lon))
 
- # error related to nonexistent mode
- expect_error(default_tester(r5r_obj, mode = "all"))
+  # error related to nonexistent mode
+  expect_error(default_tester(r5r_obj, mode = "all"))
 
- # errors related to date formatting
- numeric_datetime <- as.numeric(as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
+  # errors related to date formatting
+  numeric_datetime <- as.numeric(as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
- expect_error(default_tester(r5r_obj, departure_datetime = "13-03-2019 14:00:00"))
- expect_error(default_tester(r5r_obj, numeric_datetime))
+  expect_error(default_tester(r5r_obj, departure_datetime = "13-03-2019 14:00:00"))
+  expect_error(default_tester(r5r_obj, numeric_datetime))
 
- # errors related to max_walk_dist
- expect_error(default_tester(r5r_obj, max_walk_dist = "1"))
- expect_error(default_tester(r5r_obj, max_walk_dist = NULL))
+  # errors related to max_walk_dist
+  expect_error(default_tester(r5r_obj, max_walk_dist = "1"))
+  expect_error(default_tester(r5r_obj, max_walk_dist = NULL))
 
- # error/warning related to max_street_time
- expect_error(default_tester(r5r_obj, max_trip_duration = "120"))
+  # error/warning related to max_street_time
+  expect_error(default_tester(r5r_obj, max_trip_duration = "120"))
 
- # error related to non-numeric walk_speed
- expect_error(default_tester(r5r_obj, walk_speed = "3.6"))
+  # error related to non-numeric walk_speed
+  expect_error(default_tester(r5r_obj, walk_speed = "3.6"))
 
- # error related to non-numeric bike_speed
- expect_error(default_tester(r5r_obj, bike_speed = "12"))
+  # error related to non-numeric bike_speed
+  expect_error(default_tester(r5r_obj, bike_speed = "12"))
 
- # error related to non-logical shortest_path
- expect_error(default_tester(r5r_obj, shortest_path = "TRUE"))
- expect_error(default_tester(r5r_obj, shortest_path = 1))
- expect_error(default_tester(r5r_obj, shortest_path = NULL))
+  # error related to non-logical shortest_path
+  expect_error(default_tester(r5r_obj, shortest_path = "TRUE"))
+  expect_error(default_tester(r5r_obj, shortest_path = 1))
+  expect_error(default_tester(r5r_obj, shortest_path = NULL))
 
- # error related to non-numeric n_threads
- expect_error(default_tester(r5r_obj, n_threads = "1"))
+  # error related to non-numeric n_threads
+  expect_error(default_tester(r5r_obj, n_threads = "1"))
 
- # error related to non-logical verbose
- expect_error(default_tester(r5r_obj, verbose = "TRUE"))
- expect_error(default_tester(r5r_obj, verbose = 1))
- expect_error(default_tester(r5r_obj, verbose = NULL))
+  # error related to non-logical verbose
+  expect_error(default_tester(r5r_obj, verbose = "TRUE"))
+  expect_error(default_tester(r5r_obj, verbose = 1))
+  expect_error(default_tester(r5r_obj, verbose = NULL))
 
- # error related to non-logical drop_geometry
- expect_error(default_tester(r5r_obj, drop_geometry = "TRUE"))
- expect_error(default_tester(r5r_obj, drop_geometry = 1))
+  # error related to non-logical drop_geometry
+  expect_error(default_tester(r5r_obj, drop_geometry = "TRUE"))
+  expect_error(default_tester(r5r_obj, drop_geometry = 1))
+
+})
+
+
+# beyond here all tests require java and thus will be skipped on CRAN and Travis
+testthat::skip_on_cran()
+testthat::skip_on_travis()
+
+
+test_that("detailed_itineraries adequately raises warnings and errors - needs java", {
+
+  # message related to expanding origins/destinations dataframe
+  expect_message(default_tester(r5r_obj, origins = points[1, ]))
+  expect_message(default_tester(r5r_obj, destinations = points[1, ]))
+
+  # error/warning related to using wrong origins/destinations column types
+  origins <- points[1:2, ]
+  destinations <- points[2:1, ]
+
+  origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
+  destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
+
+  expect_warning(default_tester(r5r_obj, origins = origins_numeric_id))
+  expect_warning(default_tester(r5r_obj, destinations = destinations_numeric_id))
+
 
 })
 
@@ -152,7 +168,7 @@ test_that("detailed_itineraries output is correct", {
   expect_true(is(result_sf_input, "sf"))
   expect_true(is(result_sf_input, "data.table"))
 
-  # expect results to be of class 'data.table', but not 'sf', irrespective of
+  # expect results to be of class 'data.table', but not 'sf', independently of
   # the class of 'origins'/'destinations', when drop_geometry = TRUE
 
   result_df_input <- default_tester(r5r_obj, drop_geometry = TRUE)
