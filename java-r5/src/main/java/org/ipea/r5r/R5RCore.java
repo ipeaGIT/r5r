@@ -278,7 +278,7 @@ public class R5RCore {
                         pathOptionsTable.set("option", optionIndex);
                         pathOptionsTable.set("segment", 1);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("duration", Math.round(segment.duration / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = 0;
@@ -304,7 +304,7 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("duration", Math.round(segment.duration / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = 0;
@@ -352,7 +352,7 @@ public class R5RCore {
                         pathOptionsTable.set("option", optionIndex);
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.mode.toString());
-                        pathOptionsTable.set("duration", Math.round(transit.rideStats.avg / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("duration", Utils.roundTo2(transit.rideStats.avg / 60.0));
                         pathOptionsTable.set("distance", (int) accDistance);
                         pathOptionsTable.set("route", tripPattern.routeId);
                         pathOptionsTable.set("wait", transit.waitStats.avg);
@@ -366,7 +366,7 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.middle.mode.toString());
-                        pathOptionsTable.set("duration", Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("duration", Utils.roundTo2(transit.middle.duration / 60.0));
 
                         // getting distances from street edges, which are more accurate than segment.distance
                         int dist = 0;
@@ -387,7 +387,7 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("duration", Math.round(segment.duration / 60.0 * 100) / 100.0);
+                        pathOptionsTable.set("duration", Utils.roundTo2(segment.duration / 60.0));
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = 0;
