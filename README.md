@@ -83,8 +83,8 @@ df <- travel_time_matrix( r5r_core,
                           destinations = points,
                           mode = c("WALK", "BUS"),
                           departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
-                          max_walk_dist = 5,
-                          max_trip_duration = 3600
+                          max_walk_dist = 3000,  # meters
+                          max_trip_duration = 60 # minutes
                          )
                          
 # 3.2) or get detailed info on multiple alternative routes
@@ -93,8 +93,8 @@ df2 <- detailed_itineraries(r5r_core,
                             destinations = points,
                             mode = c("WALK", "BUS"),
                             departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
-                            max_walk_dist = 5,
-                            max_trip_duration = 3600,
+                            max_walk_dist = 3000,   # meters
+                            max_trip_duration = 60, # minutes
                             shortest_path = FALSE
                             )
 

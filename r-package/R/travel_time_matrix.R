@@ -20,7 +20,7 @@
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR messages.
 #'
-#' @return A data.table with travel-time estimates (in seconds) between origin
+#' @return A data.table with travel-time estimates (in minutes) between origin
 #' destination pairs by a given transport mode.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
@@ -134,6 +134,10 @@ travel_time_matrix <- function(r5r_core,
   # convert travel_times from java object to data.table
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
+  
+  # convert time from seconds to minutes
+  travel_times[, travel_time := round(travel_time/60, 2)]
+  
 
   return(travel_times)
 
