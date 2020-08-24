@@ -340,20 +340,13 @@ public class R5RCore {
                         modeCol.add(segment.mode.toString());
                         durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
 
-//                        distanceCol.add(segment.distance);
-                        // try getting distances from street edges
+                        // getting distances from street edges, that are more accurate than segment.distance
                         int dist = 0;
-                        StringBuilder distances = new StringBuilder();
                         for (int i = 0; i < segment.streetEdges.size(); i++) {
                             dist += segment.streetEdges.get(i).distance;
-                            distances.append(segment.streetEdges.get(i).distance).append(" ");
                         }
                         distanceCol.add(dist / 1000);
-//                        routeCol.add(distances.toString());
-
-
                         routeCol.add("");
-
                         waitCol.add(0);
                         if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
                     }
@@ -418,20 +411,13 @@ public class R5RCore {
                         modeCol.add(transit.middle.mode.toString());
                         durationCol.add(Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
 
-//                        distanceCol.add(segment.distance);
-                        // try getting distances from street edges
+                        // getting distances from street edges, which are more accurate than segment.distance
                         int dist = 0;
-                        StringBuilder distances = new StringBuilder();
                         for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
                             dist += transit.middle.streetEdges.get(i).distance;
-                            distances.append(transit.middle.streetEdges.get(i).distance).append(" ");
                         }
                         distanceCol.add(dist / 1000);
-//                        routeCol.add(distances.toString());
-
-
                         routeCol.add("");
-
                         waitCol.add(0);
                         if (!dropItineraryGeometry) geometryCol.add(transit.middle.geometry.toString());
                     }
@@ -452,27 +438,18 @@ public class R5RCore {
                         modeCol.add(segment.mode.toString());
                         durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
 
-//                        distanceCol.add(segment.distance);
-                        // try getting distances from street edges
+                        // getting distances from street edges, which are more accurate than segment.distance
                         int dist = 0;
-                        StringBuilder distances = new StringBuilder();
                         for (int i = 0; i < segment.streetEdges.size(); i++) {
                             dist += segment.streetEdges.get(i).distance;
-                            distances.append(segment.streetEdges.get(i).distance).append(" ");
                         }
                         distanceCol.add(dist / 1000);
-//                        routeCol.add(distances.toString());
-
-
                         routeCol.add("");
-
                         waitCol.add(0);
                         if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
                     }
                 }
-
             }
-
         }
 
         if (fromIdCol.size() > 0) {
