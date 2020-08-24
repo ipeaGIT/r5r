@@ -24,29 +24,32 @@ travel_time_matrix(
 \item{origins, destinations}{a spatial sf POINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}
 
-\item{mode}{character string, defaults to "WALK". See details for other options.}
+\item{mode}{string. Transport modes allowed for the trips. Defaults to
+"WALK". See details for other options.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
+\item{departure_datetime}{POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
-\item{max_walk_dist}{numeric, Maximum walking distance (in meters) for the whole trip.}
+\item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
+whole trip. Defaults to no restrictions on walking, as
+long as \code{max_trip_duration} is respected.}
 
-\item{max_trip_duration}{numeric, Maximum trip duration in minutes. Defaults
+\item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).}
 
-\item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.}
+\item{walk_speed}{numeric. Average walk speed in km/h. Defaults to 3.6 km/h.}
 
-\item{bike_speed}{numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.}
+\item{bike_speed}{numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
 
-\item{n_threads}{numeric, The number of threads to use in parallel computing.
+\item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical, TRUE to show detailed output messages (Default) or
-FALSE to show only eventual ERROR messages.}
+\item{verbose}{logical. TRUE to show detailed output messages (the default)
+or FALSE to show only eventual ERROR messages.}
 }
 \value{
-A data.table with travel-time estimates (in minutes) between origin
+A data.table with travel time estimates (in minutes) between origin
 destination pairs by a given transport mode.
 }
 \description{
@@ -69,26 +72,32 @@ WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 }
 \examples{
 \donttest{
-
 library(r5r)
 
 # build transport network
-path <- system.file("extdata", package = "r5r")
-r5r_obj <- setup_r5(data_path = path)
+data_path <- system.file("extdata", package = "r5r")
+r5r_obj <- setup_r5(data_path = data_path)
 
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
+mode = c("WALK", "TRANSIT")
+max_walk_dist = Inf
+max_trip_duration <- 120L
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+
 # estimate travel time matrix
-df <- travel_time_matrix( r5r_obj,
-                          origins = points,
-                          destinations = points,
-                          departure_datetime = as.POSIXct("13-03-2019 14:00:00",
-                                               format = "\%d-\%m-\%Y \%H:\%M:\%S"),
-                          mode = c('WALK', 'TRANSIT'),
-                          max_walk_dist = 5,
-                          max_trip_duration = 7200
-                          )
+df <- travel_time_matrix(r5r_obj,
+                         origins = points,
+                         destinations = points,
+                         mode,
+                         departure_datetime,
+                         max_walk_dist,
+                         max_trip_duration)
+
+stop_r5(r5r_obj)
+rJava::.jgc(R.gc = TRUE)
 
 }
 }
