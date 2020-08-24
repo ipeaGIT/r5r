@@ -410,6 +410,10 @@ system("R CMD check gtfs2gps_1.0.tar.gz")
 system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
+system.file("man/figures/vig_detailed_ggplot.png", package = "r5r")
 
-ggsave('ggplot.png', width = 16, height = 8, units = 'cm', dpi=200)
+
+ggsave('./inst/img/vig_detailed_ggplot2.png', width = 10, height = 5, units = 'cm', dpi=200)
+
+
 

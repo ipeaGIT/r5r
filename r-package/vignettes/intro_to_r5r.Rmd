@@ -8,9 +8,9 @@ output:
 abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine <https://github.com/conveyal/r5>"
 urlcolor: blue
 vignette: >
-  %\VignetteEngine{knitr::rmarkdown} 
   %\VignetteIndexEntry{r5r-intro} 
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown} 
 ---
 
 ```{r, include = FALSE}
@@ -196,9 +196,10 @@ ggplot() +
 
 ```
 
-```{r speed, echo = FALSE, message = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/man/figures/vig_detailed_ggplot.png")
+```{r ggplot2 output, echo = FALSE, message = FALSE}
+knitr::include_graphics(system.file("img", "vig_detailed_ggplot.png", package="r5r"))
 ```
+
 
 
 **Interactive visualization** with `mapview`:
@@ -207,6 +208,10 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/man/figures/
 mapviewOptions(platform = 'leafgl')
 mapview(df, zcol = 'option')
 
+```
+
+```{r mapview output, echo = FALSE, message = FALSE}
+knitr::include_graphics(system.file("img", "vig_detailed_mapview.png", package="r5r"))
 ```
 
 
