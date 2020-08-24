@@ -4,7 +4,7 @@
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param verbose logical, passed from function above
-#' @export
+#'
 #' @family support functions
 #'
 set_verbose <- function(r5r_core, verbose) {
@@ -28,7 +28,7 @@ set_verbose <- function(r5r_core, verbose) {
 #'                    Passed from routing functions.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
 #'                          to 120 minutes (2 hours). Passed from routing functions.
-#' @export
+#'
 #' @family support functions
 
 set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
@@ -54,7 +54,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #' Select transport mode
 #'
 #' @param mode character string, defaults to "WALK"
-#' @export
+#'
 #' @family support functions
 #'
 select_mode <- function(mode="WALK") {
@@ -117,7 +117,7 @@ select_mode <- function(mode="WALK") {
 #' @param datetime An object of POSIXct class.
 #'
 #' @return A list with 'date' and 'departure_time' names.
-#' @export
+#'
 #' @family support functions
 
 posix_to_string <- function(datetime) {
@@ -141,7 +141,7 @@ posix_to_string <- function(datetime) {
 #' @param name Object name.
 #'
 #' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
-#' @export
+#'
 #' @family support functions
 
 assert_points_input <- function(df, name) {
@@ -194,7 +194,7 @@ assert_points_input <- function(df, name) {
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
-#' @export
+#'
 #' @family support functions
 
 set_n_threads <- function(r5r_core, n_threads) {
@@ -224,7 +224,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param speed A numeric representing the speed in km/h.
 #' @param mode Either \code{"bike"} or \code{"walk"}.
-#' @export
+#'
 #' @family support functions
 
 set_speed <- function(r5r_core, speed, mode) {
