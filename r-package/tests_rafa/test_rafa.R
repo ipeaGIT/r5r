@@ -339,30 +339,6 @@ covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84'
 
 
 
-### update package documentation ----------------
-# http://r-pkgs.had.co.nz/release.html#release-check
-
-
-rm(list = ls())
-
-library(roxygen2)
-library(devtools)
-library(usethis)
-
-ggplot() +
-        geom_sf(data = street_net$edges, color='gray85') +
-        theme_minimal()
-
-
-
-
-# setwd("R:/Dropbox/git/r5r/r-package")
-
-# update `NEWS.md` file
-# update `DESCRIPTION` file
-# update ``cran-comments.md` file
-
-
 # checks spelling
 library(spelling)
 devtools::spell_check(pkg = ".", vignettes = TRUE, use_wordlist = TRUE)
@@ -398,7 +374,7 @@ devtools::check_win_release(pkg = ".")
 
 beepr::beep()
 
-Java Runtime Environment (>= 8)
+
 
 # build binary
 system("R CMD build gtfs2gps --resave-data") # build tar.gz
@@ -410,10 +386,6 @@ system("R CMD check gtfs2gps_1.0.tar.gz")
 system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
-system.file("man/figures/vig_detailed_ggplot.png", package = "r5r")
 
 
 ggsave('./inst/img/vig_detailed_ggplot2.png', width = 10, height = 5, units = 'cm', dpi=200)
-
-
-
