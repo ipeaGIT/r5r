@@ -37,6 +37,7 @@ Install the development version of `r5r` from GitHub (soon on CRAN) and load pac
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 
 ```
+
 ```{r, message = FALSE}
 library(r5r)
 library(sf)
@@ -72,7 +73,6 @@ city of Porto Alegre (Brazil). It includes three files:
 ```{r}
 data_path <- system.file("extdata", package = "r5r")
 list.files(data_path)
-
 ```
 The data with origin destination pairs looks like this below. In this example, 
 we will be looking at the transport routes between ten random points in this 
@@ -198,7 +198,7 @@ ggplot() +
 **Interactive visualization** with `mapview`:
 
 ```{r, message = FALSE}
-mapviewOptions(platform = 'leafgl')
+mapviewOptions(platform = 'leaflet')
 mapview(df, zcol = 'option')
 
 ```
