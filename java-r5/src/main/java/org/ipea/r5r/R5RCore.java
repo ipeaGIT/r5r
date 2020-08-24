@@ -228,7 +228,7 @@ public class R5RCore {
         ProfileResponse response = query.getPlan(request);
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable2(fromId, fromLat, fromLon, toId, toLat, toLon,
+            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
                     maxWalkTime, dropItineraryGeometry, response.getOptions());
         } else {
             return null;
@@ -242,10 +242,10 @@ public class R5RCore {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
-    private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable2(String fromId, double fromLat, double fromLon,
-                                                                            String toId, double toLat, double toLon,
-                                                                            int maxWalkTime, boolean dropItineraryGeometry,
-                                                                            List<ProfileOption> pathOptions) {
+    private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
+                                                                           String toId, double toLat, double toLon,
+                                                                           int maxWalkTime, boolean dropItineraryGeometry,
+                                                                           List<ProfileOption> pathOptions) {
         RDataFrame pathOptionsTable = new RDataFrame();
         pathOptionsTable.addStringColumn("fromId", fromId);
         pathOptionsTable.addDoubleColumn("fromLat", fromLat);
@@ -403,223 +403,6 @@ public class R5RCore {
         }
 
         return pathOptionsTable.getDataFrame();
-    }
-
-    private LinkedHashMap<String, Object> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
-                                                                String toId, double toLat, double toLon,
-                                                                int maxWalkTime, boolean dropItineraryGeometry,
-                                                                List<ProfileOption> pathOptions) {
-        // When data.frame.row.major = FALSE, convertToJava() creates a LinkedHashMap<String, Object> object. In this case, the key/value pairs represent column names and data. The column data are converted to primitive Java arrays using the same rules as R vectors.
-
-        // Columns:
-        // option: int
-        // segment: int
-        // mode: string
-        // geometry: string (LINESTRING)
-        ArrayList<String> fromIdCol = new ArrayList<>();
-        ArrayList<Double> fromLatCol = new ArrayList<>();
-        ArrayList<Double> fromLonCol = new ArrayList<>();
-        ArrayList<String> toIdCol = new ArrayList<>();
-        ArrayList<Double> toLatCol = new ArrayList<>();
-        ArrayList<Double> toLonCol = new ArrayList<>();
-        ArrayList<Integer> optionCol = new ArrayList<>();
-        ArrayList<Integer> segmentCol = new ArrayList<>();
-        ArrayList<String> modeCol = new ArrayList<>();
-        ArrayList<Double> durationCol = new ArrayList<>();
-        ArrayList<Integer> distanceCol = new ArrayList<>();
-        ArrayList<String> routeCol = new ArrayList<>();
-        ArrayList<Integer> waitCol = new ArrayList<>();
-        ArrayList<String> geometryCol = new ArrayList<>();
-
-        LinkedHashMap<String, Object> pathOptionsTable = new LinkedHashMap<>();
-        pathOptionsTable.put("fromId", fromIdCol);
-        pathOptionsTable.put("fromLat", fromLatCol);
-        pathOptionsTable.put("fromLon", fromLonCol);
-        pathOptionsTable.put("toId", toIdCol);
-        pathOptionsTable.put("toLat", toLatCol);
-        pathOptionsTable.put("toLon", toLonCol);
-        pathOptionsTable.put("option", optionCol);
-        pathOptionsTable.put("segment", segmentCol);
-        pathOptionsTable.put("mode", modeCol);
-        pathOptionsTable.put("duration", durationCol);
-        pathOptionsTable.put("distance", distanceCol);
-        pathOptionsTable.put("route", routeCol);
-        pathOptionsTable.put("wait", waitCol);
-        if (!dropItineraryGeometry) pathOptionsTable.put("geometry", geometryCol);
-
-        int optionIndex = 0;
-        for (ProfileOption option : pathOptions) {
-            if (option.transit == null) { // no transit, maybe has direct access legs
-
-                if (option.access != null) {
-                    for (StreetSegment segment : option.access) {
-
-                        // maxStreetTime parameter only affects access and egress walking segments, but no direct trips
-                        // if a direct walking trip is found that is longer than maxWalkTime, then drop it
-                        if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
-
-                        fromIdCol.add(fromId);
-                        fromLatCol.add(fromLat);
-                        fromLonCol.add(fromLon);
-                        toIdCol.add(toId);
-                        toLatCol.add(toLat);
-                        toLonCol.add(toLon);
-                        optionIndex++;
-                        optionCol.add(optionIndex);
-                        segmentCol.add(1);
-                        modeCol.add(segment.mode.toString());
-
-                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0); // Converting from seconds to minutes
-
-                        // segment.distance value is inaccurate, so it's better to get distances from street edges
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
-                        distanceCol.add(dist / 1000); // Converting from millimeters to meters
-
-                        routeCol.add("");
-                        waitCol.add(0);
-                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
-                    }
-                }
-
-            } else { // option has transit
-                optionIndex++;
-                int segmentIndex = 0;
-
-                // first leg: access to station
-                if (option.access != null) {
-                    for (StreetSegment segment : option.access) {
-                        fromIdCol.add(fromId);
-                        fromLatCol.add(fromLat);
-                        fromLonCol.add(fromLon);
-                        toIdCol.add(toId);
-                        toLatCol.add(toLat);
-                        toLonCol.add(toLon);
-                        optionCol.add(optionIndex);
-                        segmentIndex++;
-                        segmentCol.add(segmentIndex);
-                        modeCol.add(segment.mode.toString());
-                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
-
-                        // getting distances from street edges, that are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
-                        distanceCol.add(dist / 1000);
-                        routeCol.add("");
-                        waitCol.add(0);
-                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
-                    }
-                }
-
-                for (TransitSegment transit : option.transit) {
-
-                    for (SegmentPattern pattern : transit.segmentPatterns) {
-                        segmentIndex++;
-                        TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
-
-                        StringBuilder geometry = new StringBuilder("NA");
-                        org.locationtech.jts.geom.Coordinate previousCoord = new Coordinate(0, 0);
-                        double accDistance = 0;
-
-                        for (int stop = pattern.fromIndex; stop <= pattern.toIndex; stop++) {
-                            int stopIdx = tripPattern.stops[stop];
-                            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
-
-                            coord.x = coord.x / FIXED_FACTOR;
-                            coord.y = coord.y / FIXED_FACTOR;
-
-                            if (geometry.toString().equals("NA")) {
-                                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
-                                previousCoord.x = coord.x;
-                                previousCoord.y = coord.y;
-                            } else {
-                                geometry.append(", ").append(coord.x).append(" ").append(coord.y);
-                                accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
-                                previousCoord.x = coord.x;
-                                previousCoord.y = coord.y;
-                            }
-                        }
-                        geometry.append(")");
-
-                        fromIdCol.add(fromId);
-                        fromLatCol.add(fromLat);
-                        fromLonCol.add(fromLon);
-                        toIdCol.add(toId);
-                        toLatCol.add(toLat);
-                        toLonCol.add(toLon);
-                        optionCol.add(optionIndex);
-                        segmentCol.add(segmentIndex);
-                        modeCol.add(transit.mode.toString());
-                        durationCol.add(Math.round(transit.rideStats.avg / 60.0 * 100) / 100.0);
-                        distanceCol.add((int) accDistance);
-                        routeCol.add(tripPattern.routeId);
-                        waitCol.add(transit.waitStats.avg);
-                        if (!dropItineraryGeometry) geometryCol.add(geometry.toString());
-                    }
-
-                    if (transit.middle != null) {
-                        fromIdCol.add(fromId);
-                        fromLatCol.add(fromLat);
-                        fromLonCol.add(fromLon);
-                        toIdCol.add(toId);
-                        toLatCol.add(toLat);
-                        toLonCol.add(toLon);
-                        optionCol.add(optionIndex);
-                        segmentIndex++;
-                        segmentCol.add(segmentIndex);
-                        modeCol.add(transit.middle.mode.toString());
-                        durationCol.add(Math.round(transit.middle.duration / 60.0 * 100) / 100.0);
-
-                        // getting distances from street edges, which are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < transit.middle.streetEdges.size(); i++) {
-                            dist += transit.middle.streetEdges.get(i).distance;
-                        }
-                        distanceCol.add(dist / 1000);
-                        routeCol.add("");
-                        waitCol.add(0);
-                        if (!dropItineraryGeometry) geometryCol.add(transit.middle.geometry.toString());
-                    }
-                }
-
-                // first leg: access to station
-                if (option.egress != null) {
-                    for (StreetSegment segment : option.egress) {
-                        fromIdCol.add(fromId);
-                        fromLatCol.add(fromLat);
-                        fromLonCol.add(fromLon);
-                        toIdCol.add(toId);
-                        toLatCol.add(toLat);
-                        toLonCol.add(toLon);
-                        optionCol.add(optionIndex);
-                        segmentIndex++;
-                        segmentCol.add(segmentIndex);
-                        modeCol.add(segment.mode.toString());
-                        durationCol.add(Math.round(segment.duration / 60.0 * 100) / 100.0);
-
-                        // getting distances from street edges, which are more accurate than segment.distance
-                        int dist = 0;
-                        for (int i = 0; i < segment.streetEdges.size(); i++) {
-                            dist += segment.streetEdges.get(i).distance;
-                        }
-                        distanceCol.add(dist / 1000);
-                        routeCol.add("");
-                        waitCol.add(0);
-                        if (!dropItineraryGeometry) geometryCol.add(segment.geometry.toString());
-                    }
-                }
-            }
-        }
-
-        if (fromIdCol.size() > 0) {
-            return pathOptionsTable;
-        } else {
-            return null;
-        }
     }
 
     public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
