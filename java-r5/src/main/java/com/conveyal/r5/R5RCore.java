@@ -93,7 +93,11 @@ public class R5RCore {
     }
 
      public R5RCore(String dataFolder, boolean verbose) {
-        if (!verbose) silentMode();
+        if (verbose) {
+            verboseMode();
+        } else {
+            silentMode();
+        }
 
         setNumberOfThreadsToMax();
 

@@ -1,5 +1,5 @@
 data_path <- system.file("extdata", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 origins <- points
@@ -15,3 +15,10 @@ df <- detailed_itineraries(r5r_core,
                           mode,
                           departure_datetime,
                           max_walk_dist)
+
+r5r_obj <- setup_r5(data_path, verbose = TRUE)
+r5r_obj <- setup_r5(data_path, verbose = TRUE)
+r5r_obj <- setup_r5(data_path, verbose = FALSE)
+r5r_obj <- setup_r5(data_path, verbose = TRUE)
+
+
