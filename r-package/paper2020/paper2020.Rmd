@@ -42,6 +42,13 @@ software, data availability issues for data hungry models, and the long
 computation times to run multiple routing scenarios, particularly in large and 
 complex multimodal transport networks. While there is a growing number of open source routing models (ref: stplnr, otp, dodgr), most options available only return the fastest route, what overlooks....
 
+
+jean:
+-  mass of assumptions regarding decision-making and routing (Miller, 2018). 
+Haugen, 2011; Schwanen, 2008
+
+Miller, E.J., 2018. Accessibility: measurement and application in transportation planning. Transp. Rev. 38, 551–555. https://doi.org/10.1080/01441647.2018.1492778
+
 This article presents **r5r**, a new open-source `R` package for rapid 
 realistic routing on multimodal transport networks.
 
