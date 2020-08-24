@@ -319,7 +319,7 @@ public class R5RCore {
                         segmentIndex++;
                         TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
 
-                        StringBuilder geometry = new StringBuilder("NA");
+                        StringBuilder geometry = new StringBuilder();
                         int accDistance = buildTransitGeometryAndCalculateDistance(pattern, tripPattern, geometry);
 
                         pathOptionsTable.set("option", optionIndex);
@@ -380,13 +380,13 @@ public class R5RCore {
 
         for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
             int stopIdx = tripPattern.stops[stop];
-            org.locationtech.jts.geom.Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+            Coordinate coord = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
 
             coord.x = coord.x / FIXED_FACTOR;
             coord.y = coord.y / FIXED_FACTOR;
 
-            if (geometry.toString().equals("NA")) {
-                geometry = new StringBuilder("LINESTRING (" + coord.x + " " + coord.y);
+            if (geometry.toString().equals("")) {
+                geometry.append("LINESTRING (" + coord.x + " " + coord.y);
             } else {
                 geometry.append(", ").append(coord.x).append(" ").append(coord.y);
                 accDistance +=  GeometryUtils.distance(previousCoord.y, previousCoord.x, coord.y, coord.x);
