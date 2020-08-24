@@ -1,5 +1,8 @@
 context("travel_time_matrix")
 
+testthat::skip_on_cran()
+testthat::skip_on_travis()
+
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:10,]
 points_sf <- sfheaders::sf_point(points, x='lon', y='lat', keep = T)
