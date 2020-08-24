@@ -137,7 +137,9 @@ ttm <- travel_time_matrix( r5r_core = r5r_core,
 head(ttm)
 ```
 
-
+```{r ttm head, echo = FALSE, message = FALSE}
+knitr::include_graphics(system.file("img", "vig_output_ttm.png", package="r5r"))
+```
 
 
 ### Detailed itineraries
@@ -173,6 +175,10 @@ df <- detailed_itineraries(r5r_core = r5r_core,
 
 head(df)
 ```
+```{r detailed head, echo = FALSE, message = FALSE}
+knitr::include_graphics(system.file("img", "vig_output_detailed.png", package="r5r"))
+```
+
 
 The output is a `data.frame sf` object, so we can easily visualize the results.
 
