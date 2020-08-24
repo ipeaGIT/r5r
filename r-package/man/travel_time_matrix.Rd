@@ -46,7 +46,7 @@ Defaults to use all available threads (Inf).}
 FALSE to show only eventual ERROR messages.}
 }
 \value{
-A data.table with travel-time estimates (in seconds) between origin
+A data.table with travel-time estimates (in minutes) between origin
 destination pairs by a given transport mode.
 }
 \description{

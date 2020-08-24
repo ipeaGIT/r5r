@@ -57,7 +57,8 @@ geometry column. It can be helpful for saving memory.}
 }
 \value{
 A LINESTRING sf with detailed information about the itineraries
-between specified origins and destinations.
+between specified origins and destinations. Distances are in meters and
+travel times are in minutes
 }
 \description{
 Returns multiple detailed itineraries between specified origins
