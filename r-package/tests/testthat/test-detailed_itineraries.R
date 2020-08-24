@@ -65,7 +65,7 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_obj, origins = "origins"))
   expect_error(default_tester(r5r_obj, destinations = "destinations"))
 
-  # error/warning related to using wrong origins/destinations column types
+  # error related to using wrong origins/destinations column types
   origins <- points[1:2, ]
   destinations <- points[2:1, ]
 
@@ -78,6 +78,10 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_obj, origins = origins_char_lon))
   expect_error(default_tester(r5r_obj, destinations = destinations_char_lat))
   expect_error(default_tester(r5r_obj, destinations = destinations_char_lon))
+
+  # error related to 'origins' and 'destinations' with distinct number of rows
+  expect_error(default_tester(r5r_obj, origins = points[1:3,], destinations = points[2:1,]))
+  expect_error(default_tester(r5r_obj, origins = points[2:1,], destinations = points[1:3,]))
 
   # error related to nonexistent mode
   expect_error(default_tester(r5r_obj, mode = "all"))
@@ -258,6 +262,18 @@ test_that("detailed_itineraries output is correct", {
   max_duration <- data.table::setDT(df)[, sum(duration), by = .(fromId, toId, option)][, max(V1)]
 
   expect_true(max_duration < max_trip_duration)
+
+  # expect a NULL data.table as output when no routes are found between the pairs
+
+  df <- default_tester(r5r_obj, origins = points[10,], destinations = points[12,],
+                       mode = "WALK", max_trip_duration = 30L)
+
+  expect_true(length(df) == 0)
+
+  df <- default_tester(r5r_obj, origins = points[10:11,], destinations = points[12,],
+                       mode = "WALK", max_trip_duration = 30L)
+
+  expect_true(length(df) == 0)
 
 })
 
