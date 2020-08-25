@@ -34,6 +34,8 @@ paths_df %>%
   geom_sf(aes(colour=mode)) +
   facet_wrap(~option)
 
+sf::st_write(paths_df, "/Users/marcussaraiva/path_shape.shp")
+
 tic()
 ttm <- travel_time_matrix(r5r_core, points, points, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
                           max_trip_duration = 120L, verbose = FALSE)
