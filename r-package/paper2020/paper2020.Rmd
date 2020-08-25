@@ -42,17 +42,7 @@ software, data availability issues for data hungry models, and the long
 computation times to run multiple routing scenarios, particularly in large and 
 complex multimodal transport networks. While there is a growing number of open source routing models (ref: stplnr, otp, dodgr), most options available only return the fastest route, what overlooks....
 
-
-jean:
--  mass of assumptions regarding decision-making and routing (Miller, 2018). 
-Haugen, 2011; Schwanen, 2008
-
-Miller, E.J., 2018. Accessibility: measurement and application in transportation planning. Transp. Rev. 38, 551–555. https://doi.org/10.1080/01441647.2018.1492778
-
-This article presents **r5r**, a new open-source `R` package for rapid 
-realistic routing on multimodal transport networks.
-
-
+...
 
 
 # METHODS AND DATA
@@ -67,6 +57,19 @@ papers under R5 we should cite
 
 # FINDINGS
 
+Section to demonstrate how to use the core functions of the package. We can use 
+our intro vignette as a starting point and build from there with more the analysis
+of larger data sets, include couple more data visualization of results and emphasize
+the results of multiple route alternatives.
+
+
+To illustrate functionality, the package includes a small sample data for the 
+city of Porto Alegre (Brazil). It includes three files:
+- An Open Street Map network in `.pbf` format (*mandatory*)
+- A public transport network in `GTFS.zip` format
+- The spatial coordinates of the origin destination pairs in a `.csv` file.
+
+
 
 ```{r, message = FALSE}
 # Load packages
@@ -78,11 +81,6 @@ library(ggplot2)
 
 ```
 
-To illustrate functionality, the package includes a small sample data for the 
-city of Porto Alegre (Brazil). It includes three files:
-- An Open Street Map network in `.pbf` format (*mandatory*)
-- A public transport network in `GTFS.zip` format
-- The spatial coordinates of the origin destination pairs in a `.csv` file.
 
 ```{r}
 path <- system.file("extdata", package = "r5r")
@@ -177,6 +175,7 @@ ggplot() +
 
 # Acknowledgments
 
+Conveyal for R5
 
 
 # References
@@ -184,3 +183,11 @@ ggplot() +
 
 
 
+#> Rafa's notes
+#> jean: #>-  mass of assumptions regarding decision-making and routing (Miller, 2018). 
+#>Haugen, 2011; Schwanen, 2008
+#>
+#>Miller, E.J., 2018. Accessibility: measurement and application in transportation planning. Transp. Rev. 38, #>551–555. https://doi.org/10.1080/01441647.2018.1492778
+#>
+#>This article presents **r5r**, a new open-source `R` package for rapid 
+#>realistic routing on multimodal transport networks.
