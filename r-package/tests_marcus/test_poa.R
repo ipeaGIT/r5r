@@ -1,5 +1,8 @@
+options(java.parameters = "-Xmx12G")
+
 library("r5r")
 library("tidyverse")
+library("tictoc")
 
 # Start R5R core
 r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r", verbose = FALSE)
@@ -7,7 +10,7 @@ r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r", verbose = FALSE)
 # Load points of interest
 points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
 
-points_hex <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa_hexgrid.csv")
 
 # Configuring trip
 origin <- points[10,] # Farrapos train station
@@ -31,18 +34,25 @@ paths_df %>%
   geom_sf(aes(colour=mode)) +
   facet_wrap(~option)
 
+tic()
 ttm <- travel_time_matrix(r5r_core, points, points, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
                           max_trip_duration = 120L, verbose = FALSE)
-ttm <- travel_time_matrix(r5r_core, points_hex, points, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
+toc()
+
+tic()
+ttm <- travel_time_matrix(r5r_core, points_hex, points_hex, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
                           max_trip_duration = 120L, verbose = FALSE)
-ttm
+toc()
+
+hex_sample <- sample(points_hex$id, 4)
 
 ttm %>%
-  left_join(points, by=c("toId"="id")) %>%
+  filter(fromId %in% hex_sample) %>%
+  left_join(points_hex, by=c("toId"="id")) %>%
   ggplot() +
-  geom_point(aes(x=lon, y=lat, colour=travel_time), size=5) +
+  geom_point(aes(x=lon, y=lat, colour=travel_time), size=0.5) +
   scale_color_distiller(palette = "Spectral") +
-  facet_wrap(~fromId, ncol=5) +
+  facet_wrap(~fromId, ncol=2) +
   theme_minimal() +
   coord_map()
 
