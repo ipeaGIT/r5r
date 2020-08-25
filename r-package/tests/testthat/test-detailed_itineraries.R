@@ -184,18 +184,19 @@ test_that("detailed_itineraries output is correct", {
   # expect each column to be of right class
 
   expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$toId) == "character")
   expect_true(typeof(result_df_input$fromLat) == "double")
   expect_true(typeof(result_df_input$fromLon) == "double")
+  expect_true(typeof(result_df_input$toId) == "character")
   expect_true(typeof(result_df_input$toLat) == "double")
   expect_true(typeof(result_df_input$toLon) == "double")
   expect_true(typeof(result_df_input$option) == "integer")
   expect_true(typeof(result_df_input$segment) == "integer")
   expect_true(typeof(result_df_input$mode) == "character")
-  expect_true(typeof(result_df_input$duration) == "double")
+  expect_true(typeof(result_df_input$total_duration) == "double")
+  expect_true(typeof(result_df_input$segment_duration) == "double")
+  expect_true(typeof(result_df_input$wait) == "double")
   expect_true(typeof(result_df_input$distance) == "integer")
   expect_true(typeof(result_df_input$route) == "character")
-  expect_true(typeof(result_df_input$wait) == "integer")
 
 
   #  * r5r options ----------------------------------------------------------
@@ -209,10 +210,10 @@ test_that("detailed_itineraries output is correct", {
   destinations <- points[12,]
 
   df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 3.6)
-  duration_lower_speed <- data.table::setDT(df)$duration
+  duration_lower_speed <- data.table::setDT(df)$segment_duration
 
   df <- default_tester(r5r_obj, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
-  duration_higher_speed <- data.table::setDT(df)$duration
+  duration_higher_speed <- data.table::setDT(df)$segment_duration
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
@@ -221,11 +222,11 @@ test_that("detailed_itineraries output is correct", {
 
   df <- default_tester(r5r_obj, origins = origins, destinations = destinations,
                        mode = "BICYCLE", bike_speed = 12)
-  duration_lower_speed <- data.table::setDT(df)$duration
+  duration_lower_speed <- data.table::setDT(df)$segment_duration
 
   df <- default_tester(r5r_obj, origins = origins, destinations = destinations,
                        mode = "BICYCLE", bike_speed = 13)
-  duration_higher_speed <- data.table::setDT(df)$duration
+  duration_higher_speed <- data.table::setDT(df)$segment_duration
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
@@ -256,7 +257,7 @@ test_that("detailed_itineraries output is correct", {
   df <- default_tester(r5r_obj, origins, destinations,
                        max_trip_duration = max_trip_duration, shortest_path = FALSE)
 
-  max_duration <- data.table::setDT(df)[, sum(duration), by = .(fromId, toId, option)][, max(V1)]
+  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(fromId, toId, option)][, max(V1)]
 
   expect_true(max_duration < max_trip_duration)
 
