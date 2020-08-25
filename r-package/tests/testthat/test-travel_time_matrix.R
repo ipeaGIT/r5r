@@ -1,5 +1,9 @@
 context("Travel time matrix function")
 
+# skips tests on CRAN and Travis since they require a specific version of java
+testthat::skip_on_cran()
+testthat::skip_on_travis()
+
 # load required data and setup r5r_obj
 
 data_path <- system.file("extdata", package = "r5r")
@@ -105,13 +109,6 @@ test_that("travel_time_matrix adequately raises errors", {
   expect_error(default_tester(r5r_obj, verbose = NULL))
 
 })
-
-
-# FROM THIS POINT ONWARDS ALL TESTS REQUIRE JAVA, THUS WILL BE SKIPPED ON
-# CRAN AND TRAVIS
-testthat::skip_on_cran()
-testthat::skip_on_travis()
-
 
 test_that("detailed_itineraries adequately raises warnings - needs java", {
 
