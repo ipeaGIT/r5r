@@ -249,7 +249,7 @@ public class R5RCore {
         pathOptionsTable.addStringColumn("mode", "");
         pathOptionsTable.addIntegerColumn("total_duration", 0);
         pathOptionsTable.addDoubleColumn("segment_duration", 0.0);
-        pathOptionsTable.addIntegerColumn("wait", 0);
+        pathOptionsTable.addDoubleColumn("wait", 0.0);
         pathOptionsTable.addIntegerColumn("distance", 0);
         pathOptionsTable.addStringColumn("route", "");
         if (!dropItineraryGeometry) pathOptionsTable.addStringColumn("geometry", "");
@@ -324,7 +324,7 @@ public class R5RCore {
                         pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
                         pathOptionsTable.set("distance", accDistance);
                         pathOptionsTable.set("route", tripPattern.routeId);
-                        pathOptionsTable.set("wait", (int) Math.round(transit.waitStats.avg / 60.0));
+                        pathOptionsTable.set("wait", Utils.roundTo2(transit.waitStats.avg / 60.0));
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
                     }
 

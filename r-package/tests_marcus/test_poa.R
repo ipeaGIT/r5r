@@ -5,12 +5,12 @@ library("tidyverse")
 library("tictoc")
 
 # Start R5R core
-r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r", verbose = FALSE)
+r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa", verbose = FALSE)
 
 # Load points of interest
 points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
 
-points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa_hexgrid.csv")
+points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa/poa_hexgrid.csv")
 
 # Configuring trip
 origin <- points[10,] # Farrapos train station
