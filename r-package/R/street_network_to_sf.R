@@ -40,8 +40,13 @@ street_network_to_sf <- function(r5_core) {
   data.table::setDT(edges_df)[, geometry := sf::st_as_sfc(geometry)]
   edges_sf <- sf::st_sf(edges_df, crs = 4326) # WGS 84
 
-  # gather in a list
-  street_network <- list(vertices = vertices_sf, edges = edges_sf)
+  # Convert routes to SF (linestring)
+  routes_df <- jdx::convertToR(network$get(2L), array.order = "column-major")
+  data.table::setDT(routes_df)[, geometry := sf::st_as_sfc(geometry)]
+  routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
+
+    # gather in a list
+  street_network <- list(vertices = vertices_sf, edges = edges_sf, routes = routes_sf)
 
   return(street_network)
 }

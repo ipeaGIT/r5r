@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -613,10 +614,25 @@ public class R5RCore {
             geometryCol.add(edgeCursor.getGeometry().toString());
         }
 
+        // Build transit
+        ArrayList<String> routeIdCol = new ArrayList<>();
+        ArrayList<String> routeGeometryCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> routesTable = new LinkedHashMap<>();
+        routesTable.put("routeId", routeIdCol);
+        routesTable.put("geometry", routeGeometryCol);
+
+        for (TripPattern pattern : transportNetwork.transitLayer.tripPatterns) {
+            routeIdCol.add(pattern.routeId);
+            routeGeometryCol.add(pattern.shape.toString());
+
+        }
+
         // Return a list of dataframes
         List<Object> transportNetworkList = new ArrayList<>();
         transportNetworkList.add(verticesTable);
         transportNetworkList.add(edgesTable);
+        transportNetworkList.add(routesTable);
 
         return transportNetworkList;
     }
