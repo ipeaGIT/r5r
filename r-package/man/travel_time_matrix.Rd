@@ -81,7 +81,7 @@ r5r_obj <- setup_r5(data_path = data_path)
 # load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
-mode = c("WALK", "TRANSIT")
+mode <- c("WALK", "TRANSIT")
 max_walk_dist = Inf
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
