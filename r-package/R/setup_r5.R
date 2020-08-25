@@ -69,7 +69,7 @@ setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
 
   if (checkmate::test_file_exists(dat_file)) {
 
-    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, verbose)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
 
     message("\nUsing cached network.dat from ", dat_file)
 
@@ -78,7 +78,7 @@ setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
   } else {
 
     # build new r5r_core
-    r5r_core <- rJava::.jnew("com.conveyal.r5.R5RCore", data_path, verbose)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
 
     # display a warning message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
