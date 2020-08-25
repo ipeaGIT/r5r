@@ -56,7 +56,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
 #' Select transport mode
 #'
-#' @param mode character string, defaults to "WALK"
+#' @param mode character string passed from routing functions.
 #'
 #' @family support functions
 
@@ -199,7 +199,7 @@ assert_points_input <- function(df, name) {
 
 #' Set number of threads
 #'
-#' @description Sets numbers of threads to be used by the R5R .jar.
+#' @description Sets number of threads to be used by the r5r .jar.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
@@ -227,8 +227,9 @@ set_n_threads <- function(r5r_core, n_threads) {
 
 #' Set walk and bike speed
 #'
-#' @description Sets walk and bike speed considered by R5R. R5 inputs speed in
-#' m/s, while our functions inputs it in km/h.
+#' @description This function receives the walk and bike 'speed' inputs in Km/h
+#' from routing functions above and converts them to meters per second, which is
+#' then used to set these speed profiles in r5r JAR.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param speed A numeric representing the speed in km/h.

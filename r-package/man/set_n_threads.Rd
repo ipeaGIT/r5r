@@ -12,7 +12,7 @@ set_n_threads(r5r_core, n_threads)
 \item{n_threads}{Any object.}
 }
 \description{
-Sets numbers of threads to be used by the R5R .jar.
+Sets number of threads to be used by the r5r .jar.
 }
 \seealso{
 Other support functions: 

@@ -7,7 +7,7 @@
 select_mode(mode)
 }
 \arguments{
-\item{mode}{character string, defaults to "WALK"}
+\item{mode}{character string passed from routing functions.}
 }
 \description{
 Select transport mode

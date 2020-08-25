@@ -14,8 +14,9 @@ set_speed(r5r_core, speed, mode)
 \item{mode}{Either \code{"bike"} or \code{"walk"}.}
 }
 \description{
-Sets walk and bike speed considered by R5R. R5 inputs speed in
-m/s, while our functions inputs it in km/h.
+This function receives the walk and bike 'speed' inputs in Km/h
+from routing functions above and converts them to meters per second, which is
+then used to set these speed profiles in r5r JAR.
 }
 \seealso{
 Other support functions: 
