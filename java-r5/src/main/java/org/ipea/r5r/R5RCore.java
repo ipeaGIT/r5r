@@ -371,28 +371,53 @@ public class R5RCore {
     }
 
     private int buildTransitGeometryAndCalculateDistance(SegmentPattern segmentPattern,
-                                                            TripPattern tripPattern,
-                                                            StringBuilder geometry) {
+                                                         TripPattern tripPattern,
+                                                         StringBuilder geometry) {
         Coordinate previousCoordinate = new Coordinate(0, 0);
         double accDistance = 0;
 
-        for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
-            int stopIdx = tripPattern.stops[stop];
-            Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+        if (tripPattern.shape != null) {
+            int firstStop = segmentPattern.fromIndex;
+            int lastStop = segmentPattern.toIndex;
 
-            coordinate.x = coordinate.x / FIXED_FACTOR;
-            coordinate.y = coordinate.y / FIXED_FACTOR;
+            int firstSegment = tripPattern.stopShapeSegment[firstStop];
+            int lastSegment = tripPattern.stopShapeSegment[lastStop];
 
-            if (geometry.toString().equals("")) {
-                geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
-            } else {
-                geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
-                accDistance +=  GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+            for (int i = firstSegment; i < lastSegment; i++) {
+                Coordinate coordinate = tripPattern.shape.getCoordinateN(i);
+
+                coordinate.x = coordinate.x / FIXED_FACTOR;
+                coordinate.y = coordinate.y / FIXED_FACTOR;
+                if (geometry.toString().equals("")) {
+                    geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+                } else {
+                    geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                    accDistance +=  GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+                }
+                previousCoordinate.x = coordinate.x;
+                previousCoordinate.y = coordinate.y;
             }
-            previousCoordinate.x = coordinate.x;
-            previousCoordinate.y = coordinate.y;
+            geometry.append(")");
+
+        } else {
+            for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
+                int stopIdx = tripPattern.stops[stop];
+                Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+
+                coordinate.x = coordinate.x / FIXED_FACTOR;
+                coordinate.y = coordinate.y / FIXED_FACTOR;
+
+                if (geometry.toString().equals("")) {
+                    geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+                } else {
+                    geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                    accDistance +=  GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+                }
+                previousCoordinate.x = coordinate.x;
+                previousCoordinate.y = coordinate.y;
+            }
+            geometry.append(")");
         }
-        geometry.append(")");
 
         return (int) accDistance;
     }
