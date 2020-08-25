@@ -12,6 +12,10 @@ points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "
 
 points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa/poa_hexgrid.csv")
 
+
+# routes
+street_net <- street_network_to_sf(r5r_core)
+
 # Configuring trip
 origin <- points[10,] # Farrapos train station
 destination <- points[12,] # Praia de Belas shopping mall
