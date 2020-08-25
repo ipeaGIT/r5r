@@ -60,25 +60,27 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #'
 #' @family support functions
 
-select_mode <- function(mode="WALK") {
+select_mode <- function(mode) {
 
   mode <- toupper(unique(mode))
 
-  # List all available modes
-  dr_modes <- c('WALK','BICYCLE','CAR','BICYCLE_RENT','CAR_PARK')
-  tr_modes <- c('TRANSIT', 'TRAM','SUBWAY','RAIL','BUS','FERRY','CABLE_CAR','GONDOLA','FUNICULAR')
+  # list all available modes
+  dr_modes  <- c('WALK','BICYCLE','CAR','BICYCLE_RENT','CAR_PARK')
+  tr_modes  <- c('TRANSIT', 'TRAM','SUBWAY','RAIL','BUS','FERRY','CABLE_CAR','GONDOLA','FUNICULAR')
   all_modes <- c(tr_modes, dr_modes)
 
   # check for invalid input
-  lapply(X=mode, FUN=function(x){
-    if(!x %chin% all_modes){stop(paste0(x, " is not a valid 'mode'.
-                                        Please use one of the following: ",
-                                        paste(unique(all_modes),collapse = ", ")))} })
+  lapply(mode, function(x) {
+    if (!x %chin% all_modes) {
+      stop(paste0(x, " is not a valid 'mode'.\nPlease use one of the following: ",
+                  paste(unique(all_modes), collapse = ", ")))
+    }
+  })
 
   # assign modes accordingly
   direct_modes <- mode[which(mode %chin% dr_modes)]
   transit_mode <- mode[which(mode %chin% tr_modes)]
-  if("TRANSIT" %in% transit_mode){ transit_mode <- tr_modes }
+  if ("TRANSIT" %in% transit_mode) transit_mode <- tr_modes
 
   # if only a direct_mode is passed, all others are empty
   if (length(direct_modes) != 0 & length(transit_mode) == 0) {
@@ -102,15 +104,19 @@ select_mode <- function(mode="WALK") {
         egress_mode <- access_mode <- unique(c('WALK', access_mode))
       }
 
+  # removes CAR and BICYCLE from egress_mode, since a transit user (probably)
+  # won't have to these modes after a transit ride
+  egress_mode <- egress_mode[! egress_mode %chin% c("CAR", "BICYCLE")]
 
   # create output as a list
   mode_list <- list('direct_modes' = paste0(direct_modes, collapse = ";"),
                     'transit_mode' = paste0(transit_mode, collapse = ";"),
-                    'access_mode' = paste0(access_mode, collapse = ";"),
-                    'egress_mode' = paste0(egress_mode, collapse = ";"))
+                    'access_mode'  = paste0(access_mode, collapse = ";"),
+                    'egress_mode'  = paste0(egress_mode, collapse = ";"))
 
 
   return(mode_list)
+
 }
 
 
