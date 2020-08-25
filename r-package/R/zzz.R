@@ -8,10 +8,17 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
   # set number of threads used in data.table to 100%
   options(datatable.optimize = Inf) # nocov
   data.table::setDTthreads(percent = 100) # nocov
-
-  message('Please remember to allocate some memory to Java with by running
-          options(java.parameters = "-Xmx2G")')
 }
+
+.onAttach <- function(lib, pkg) {
+
+  packageStartupMessage(paste0("Please make sure you have already allocated ",
+                               "some memory to Java by running:\n",
+                               "  options(java.parameters = '-Xmx2G')"))
+
+}
+
+
 
 #' @importFrom data.table := %between% fifelse %chin%
 #' @importFrom methods is signature
