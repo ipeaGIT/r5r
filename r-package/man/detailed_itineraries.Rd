@@ -94,7 +94,7 @@ points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 # inputs
 origins <- points[10,]
 destinations <- points[12,]
-mode = c("WALK", "TRANSIT")
+mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 1000
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
