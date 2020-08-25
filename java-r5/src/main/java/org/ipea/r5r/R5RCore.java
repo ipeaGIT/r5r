@@ -15,9 +15,11 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
+import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -89,6 +91,8 @@ public class R5RCore {
 
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
     public R5RCore(String dataFolder) {
         this(dataFolder, true);
@@ -378,17 +382,26 @@ public class R5RCore {
         double accDistance = 0;
 
         if (tripPattern.shape != null) {
+            List<LineString> shapeSegments = tripPattern.getHopGeometries(transportNetwork.transitLayer);
             int firstStop = segmentPattern.fromIndex;
             int lastStop = segmentPattern.toIndex;
 
             int firstSegment = tripPattern.stopShapeSegment[firstStop];
             int lastSegment = tripPattern.stopShapeSegment[lastStop];
 
-            for (int i = firstSegment; i < lastSegment; i++) {
-                Coordinate coordinate = tripPattern.shape.getCoordinateN(i);
+            LOG.info("route: {}", tripPattern.routeId);
+            LOG.info("stops: {}", tripPattern.stops.length);
+            LOG.info("segments: {}", shapeSegments.size());
+            LOG.info("First stop: {}; Last stop: {}.", firstStop, lastStop);
+            LOG.info("First segment: {}; Last segment: {}.", firstSegment, lastSegment);
+//            LOG.info("segments: {}", shapeSegments.size());
 
-                coordinate.x = coordinate.x / FIXED_FACTOR;
-                coordinate.y = coordinate.y / FIXED_FACTOR;
+            for (int i = firstStop; i < lastStop; i++) {
+                for (Coordinate coordinate : shapeSegments.get(i).getCoordinates()) {
+//                Coordinate coordinate = tripPattern.shape.getCoordinateN(i);
+
+//                coordinate.x = coordinate.x / FIXED_FACTOR;
+//                coordinate.y = coordinate.y / FIXED_FACTOR;
                 if (geometry.toString().equals("")) {
                     geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
                 } else {
@@ -397,6 +410,22 @@ public class R5RCore {
                 }
                 previousCoordinate.x = coordinate.x;
                 previousCoordinate.y = coordinate.y;
+
+                }
+//                geometry.append(shapeSegments.get(i).toString());
+
+//                Coordinate coordinate = tripPattern.shape.getCoordinateN(i);
+
+//                coordinate.x = coordinate.x / FIXED_FACTOR;
+//                coordinate.y = coordinate.y / FIXED_FACTOR;
+//                if (geometry.toString().equals("")) {
+//                    geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+//                } else {
+//                    geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+//                    accDistance +=  GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+//                }
+//                previousCoordinate.x = coordinate.x;
+//                previousCoordinate.y = coordinate.y;
             }
             geometry.append(")");
 
