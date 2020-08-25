@@ -6,7 +6,7 @@
 #' @param verbose logical, passed from function above
 #'
 #' @family support functions
-#'
+
 set_verbose <- function(r5r_core, verbose) {
 
   # in silent mode only errors are reported
@@ -40,6 +40,9 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   max_street_time <- as.integer(round(60 * max_walk_dist / (walk_speed * 1000), digits = 0))
 
+  if (max_street_time == 0) stop(paste("'max_walk_dist' is too low.",
+                                       "Please make sure distances are in meters, not kilometers."))
+
   # if max_street_time ends up being higher than max_trip_duration, uses
   # max_trip_duration as a ceiling
 
@@ -56,7 +59,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #' @param mode character string, defaults to "WALK"
 #'
 #' @family support functions
-#'
+
 select_mode <- function(mode="WALK") {
 
   mode <- toupper(unique(mode))
@@ -68,7 +71,7 @@ select_mode <- function(mode="WALK") {
 
   # check for invalid input
   lapply(X=mode, FUN=function(x){
-    if(!x %chin% all_modes){stop(paste0("Eror: ", x, " is not a valid 'mode'.
+    if(!x %chin% all_modes){stop(paste0(x, " is not a valid 'mode'.
                                         Please use one of the following: ",
                                         paste(unique(all_modes),collapse = ", ")))} })
 
