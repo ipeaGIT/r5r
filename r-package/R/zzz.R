@@ -8,6 +8,9 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
   # set number of threads used in data.table to 100%
   options(datatable.optimize = Inf) # nocov
   data.table::setDTthreads(percent = 100) # nocov
+
+  message('Please remember to allocate some memory to Java with by running
+          options(java.parameters = "-Xmx2G")')
 }
 
 #' @importFrom data.table := %between% fifelse %chin%

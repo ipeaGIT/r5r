@@ -302,6 +302,8 @@ mapview(street_net) + points_sf
 
 ##### Coverage ------------------------
 
+
+
 # each function separately
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
@@ -324,7 +326,9 @@ covr::function_coverage(fun=r5r::set_speed, test_file("tests/testthat/test-utils
 # nocov end
 
 # the whole package
+Sys.setenv(NOT_CRAN = "true")
 r5r_cov <- covr::package_coverage(path = ".", type = "tests")
+r5r_cov
 
 x <- as.data.frame(r5r_cov)
 covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
