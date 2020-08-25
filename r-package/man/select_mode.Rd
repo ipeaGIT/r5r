@@ -4,7 +4,7 @@
 \alias{select_mode}
 \title{Select transport mode}
 \usage{
-select_mode(mode = "WALK")
+select_mode(mode)
 }
 \arguments{
 \item{mode}{character string, defaults to "WALK"}
