@@ -31,12 +31,31 @@ R5 stands for [Rapid Realistic Routing on Real-world and Reimagined networks](ht
 To use `r5r`, you need to have [Java SE Development Kit 11.0.8](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) 
 installed on your computer. No worries, it's free.
 
-Install the development version of `r5r` from GitHub (soon on CRAN) and load packages.
+Install the development version of `r5r` from GitHub (soon on CRAN).
 
 ```{r, eval = FALSE}
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 
 ```
+
+# Usage
+
+Before we start, we need to increase the memory available to Java. This is
+because by default `R` allocates only 512MB of memory for Java processes, which
+is not enough for large queries using `r5r`. To increase available memory 
+to 2GB, for example, we need to set the java.parameters option at the beginning 
+of the script, as follows:
+
+```{r, message = FALSE, eval = FALSE}
+options(java.parameters = "-Xmx2G")
+```
+
+Note: It's very important to allocate memory before attaching `r5r` package, 
+since `rJava` starts a Java Virtual Machine only once for each R session. It
+might be useful to restart your R session and execute the code above right after,
+if you notice that you haven't succeeded in your previous attempts.
+
+Then we can load the packages:
 
 ```{r, message = FALSE}
 library(r5r)
@@ -84,18 +103,6 @@ points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
 head(points)
 
 ```
-#### Set memory
-
-Before we start, we need to increase the memory available to Java. This is
-because by default `R` allocates only 512MB of memory for Java processes, which is
-would not b enough for large queries using `r5r`. To increase available memory 
-to 2GB, for example, we need to set the java.parameters option at the beginning 
-of the script, as follows:
-
-```{r, message = FALSE, eval = FALSE}
-options(java.parameters = "-Xmx2G")
-```
-
 
 ## Build routable transport network with `setup_r5()`
 
@@ -125,15 +132,15 @@ origin/destination input can be either a spatial `sf POINT` object, or a
 
 ```{r, message = FALSE, eval = FALSE}
 # calculate a travel time matrix
-ttm <- travel_time_matrix( r5r_core = r5r_core,
-                           origins = points,
-                           destinations = points,
-                           departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
-                           mode = c("WALK", "TRANSIT"),
-                           max_walk_dist = 5,
-                           max_trip_duration = 7200,
-                           verbose = FALSE
-                          )
+ttm <- travel_time_matrix(r5r_core = r5r_core,
+                          origins = points,
+                          destinations = points,
+                          departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
+                          mode = c("WALK", "TRANSIT"),
+                          max_walk_dist = 5000,
+                          max_trip_duration = 7200,
+                          verbose = FALSE)
+
 head(ttm)
 ```
 
@@ -165,20 +172,19 @@ max_walk_dist <- 10000
 departure_datetime <- lubridate::as_datetime("2019-03-20 14:00:00")
 
 df <- detailed_itineraries(r5r_core = r5r_core,
-                         origins,
-                         destinations,
-                         mode,
-                         departure_datetime,
-                         max_walk_dist,
-                         shortest_path = FALSE,
-                         verbose = FALSE)
+                           origins,
+                           destinations,
+                           mode,
+                           departure_datetime,
+                           max_walk_dist,
+                           shortest_path = FALSE,
+                           verbose = FALSE)
 
 head(df)
 ```
 ```{r detailed head, echo = FALSE, message = FALSE}
 knitr::include_graphics(system.file("img", "vig_output_detailed.png", package="r5r"))
 ```
-
 
 The output is a `data.frame sf` object, so we can easily visualize the results.
 
@@ -220,6 +226,15 @@ mapview(df, zcol = 'option')
 knitr::include_graphics(system.file("img", "vig_detailed_mapview.png", package="r5r"))
 ```
 
+### Cleaning up after usage
 
+`r5r` objects are still allocated to any amount of memory previously set after
+they are done with their calculations. In order to remove an existing `r5r`
+object and reallocate the memory it had been using we use the code below:
 
-If you have any suggestions or want to report an error, please visit the [the package GitHub page](https://github.com/ipeaGIT/r5r).
+```{r, message = FALSE, eval = FALSE}
+stop_r5(r5r_obj)
+rJava::.jgc(R.gc = TRUE)
+```
+
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
