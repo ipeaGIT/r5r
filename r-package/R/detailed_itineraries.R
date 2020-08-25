@@ -1,29 +1,31 @@
-#' Plan multiple itineraries
+#' Calculate detailed itineraries between origin destination pairs
 #'
-#' @description Returns multiple detailed itineraries between specified origins
-#' and destinations.
+#' @description Fast computation of (multiple) detailed itineraries between one
+#'              or many origin destination pairs.
 #'
-#' @param r5r_core A rJava object to connect with R5 routing engine
-#' @param origins,destinations Either a spatial sf POINT or a data.frame
-#'                             containing the columns \code{id}, \code{lon} and
-#'                             \code{lat}.
-#' @param departure_datetime A POSIXct object. If working with public transport
+#' @param r5r_core rJava object to connect with R5 routing engine
+#' @param origins,destinations either a spatial sf POINT object or a data.frame
+#'                            containing the columns 'id', 'lon', 'lat'
+#' @param mode string. Transport modes allowed for the trips. Defaults to
+#'             "WALK". See details for other options.
+#' @param departure_datetime POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
-#' @param max_walk_dist numeric, Maximum walking distance (in meters) for the whole trip.
-#' @param mode A string, defaults to "WALK". See details for other options.
-#' @param max_trip_duration An integer. Maximum trip duration in minutes.
-#'                          Defaults to 120 minutes (2 hours).
-#' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
-#' @param bike_speed numeric, Average cycling speed in Km/h. Defaults to 12 Km/h.
-#' @param shortest_path A logical. Whether the function should only return the
-#'                      fastest route alternative (default) or multiple
+#' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
+#'                      whole trip. Defaults to no restrictions on walking, as
+#'                      long as \code{max_trip_duration} is respected.
+#' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
+#'                          to 120 minutes (2 hours).
+#' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
+#' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
+#' @param shortest_path logical. Whether the function should only return the
+#'                      fastest route alternative (the default) or multiple
 #'                      alternatives.
-#' @param n_threads numeric, The number of threads to use in parallel computing.
+#' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
-#' @param verbose logical, TRUE to show detailed output messages (Default) or
-#'                FALSE to show only eventual ERROR messages.
-#' @param drop_geometry A logical. Indicates wether R5 should drop itinerary's
+#' @param verbose logical. TRUE to show detailed output messages (the default)
+#'                or FALSE to show only eventual ERROR messages.
+#' @param drop_geometry logical. Indicates whether R5 should drop segment's
 #'                      geometry column. It can be helpful for saving memory.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
@@ -37,7 +39,8 @@
 #'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 #'
 #' @return A LINESTRING sf with detailed information about the itineraries
-#'         between specified origins and destinations.
+#'         between specified origins and destinations. Distances are in meters
+#'         and travel times are in minutes.
 #'
 #' @family routing
 #'
@@ -47,26 +50,29 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_obj <- setup_r5(data_path = data_path)
 #'
-#' # load and set origin/destination points
+#' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
+#' # inputs
 #' origins <- points[10,]
 #' destinations <- points[12,]
-#'
-#' # inputs
-#' mode = c("WALK", "BUS")
-#' max_walk_dist <- 1
+#' mode = c("WALK", "TRANSIT")
+#' max_walk_dist <- 1000
+#' max_trip_duration <- 120L
 #' departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
 #'                                  format = "%d-%m-%Y %H:%M:%S")
 #'
-#' df <- detailed_itineraries(r5r_core,
+#' df <- detailed_itineraries(r5r_obj,
 #'                            origins,
 #'                            destinations,
 #'                            mode,
 #'                            departure_datetime,
 #'                            max_walk_dist)
+#'
+#' stop_r5(r5r_obj)
+#' rJava::.jgc(R.gc = TRUE)
 #'
 #' }
 #' @export
