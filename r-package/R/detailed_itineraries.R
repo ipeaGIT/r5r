@@ -230,8 +230,6 @@ detailed_itineraries <- function(r5r_core,
 
     if (!is.data.frame(path_options)) {
 
-      # check for nested NULL or empty lists in path_options and remove those
-      path_options <- path_options[!sapply(path_options, function(x) is.null(x) | length(x$fromId) == 0)]
       path_options <- data.table::rbindlist(path_options)
 
       if (length(path_options) == 0) return(path_options)
