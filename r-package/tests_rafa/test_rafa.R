@@ -302,6 +302,7 @@ mapview(street_net) + points_sf
 
 ##### Coverage ------------------------
 
+ Sys.setenv(NOT_CRAN = "true")
 
 
 # each function separately

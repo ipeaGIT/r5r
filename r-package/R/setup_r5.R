@@ -29,10 +29,19 @@
 
 setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
 
+  # check Java version installed locally
+    rJava::.jinit()
+    ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
+    ver <- as.numeric(gsub("\\..*","",ver))
+    if (ver < 11){stop("This package requires the Java SE Development Kit 11.0.8.
+                        Please update your Java installation. The jdk 11.0.8 can
+                        be freely downloaded from
+                        https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")}
+
   checkmate::assert_logical(verbose)
 
   # check directory input
-  if (is.null(data_path)) stop("Please provide data_path.")
+  if (is.null(data_path)){ stop("Please provide data_path.")}
 
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
