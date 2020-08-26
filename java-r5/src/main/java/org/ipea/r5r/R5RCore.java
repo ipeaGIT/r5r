@@ -59,6 +59,15 @@ public class R5RCore {
 
     private double walkSpeed;
     private double bikeSpeed;
+    private int maxTransfers = 8;
+
+    public int getMaxTransfers() {
+        return maxTransfers;
+    }
+
+    public void setMaxTransfers(int maxTransfers) {
+        this.maxTransfers = maxTransfers;
+    }
 
     public int getNumberOfThreads() {
         return this.numberOfThreads;
@@ -176,6 +185,7 @@ public class R5RCore {
         request.maxTripDurationMinutes = maxTripDuration;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
+        request.maxRides = this.maxTransfers;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -261,7 +271,7 @@ public class R5RCore {
 
         int optionIndex = 0;
         for (ProfileOption option : pathOptions) {
-            if (option.stats.avg > (maxTripDuration * 60)) continue;
+//            if (option.stats.avg > (maxTripDuration * 60)) continue;
 
             if (option.transit == null) { // no transit, maybe has direct access legs
                 if (option.access != null) {
@@ -515,6 +525,7 @@ public class R5RCore {
         request.computePaths = false;
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
+        request.maxRides = this.maxTransfers;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");

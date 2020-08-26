@@ -5,8 +5,8 @@ library("tidyverse")
 library("tictoc")
 
 # Start R5R core
-r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
-# r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa", verbose = FALSE)
+# r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
+r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa", verbose = FALSE)
 
 # Load points of interest
 points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
@@ -17,20 +17,21 @@ points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa/poa_hexgrid.csv"
 # routes
 street_net <- street_network_to_sf(r5r_core)
 
-street_net$routes %>% View()
 
-street_net$routes %>%
-  ggplot() +
-  geom_sf()
+street_net$routes %>% filter(routeId == "gtfs_poa_eptc_2019-06:T2") %>%
+  mapview::mapview()
 
 # Configuring trip
 origin <- points[10,] # Farrapos train station
 destination <- points[12,] # Praia de Belas shopping mall
 
-trip_date_time <- lubridate::as_datetime("2019-03-20 14:00:00")
-# trip_date_time <- lubridate::as_datetime("2019-05-20 14:00:00")
+origin <- tibble(id = "pinheiro_machado", lon = -51.200939, lat = -30.005756)
+destination <- tibble(id = "praia_de_belas", lon = -51.228199, lat = -30.050274)
 
-max_walk_distance = 1000
+# trip_date_time <- lubridate::as_datetime("2019-03-20 14:00:00")
+trip_date_time <- lubridate::as_datetime("2019-05-22 08:00:00")
+
+max_walk_distance = 1000L
 max_trip_duration = 120L
 
 paths_df <- detailed_itineraries(r5r_core = r5r_core,
@@ -43,7 +44,7 @@ paths_df <- detailed_itineraries(r5r_core = r5r_core,
 
 paths_df %>%
   # sf::st_write("/Users/marcussaraiva/path_with_shape.shp")
-  # mapview::mapview()
+  mapview::mapview(zcol = "mode")
 
   ggplot() +
   geom_sf(aes(colour=mode)) +
@@ -100,12 +101,17 @@ max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
-df <- detailed_itineraries(r5r_obj,
+df <- detailed_itineraries(r5r_core,
                            origins,
                            destinations,
                            mode,
                            departure_datetime,
-                           max_walk_dist)
+                           max_walk_dist, verbose = FALSE)
+
+df %>%
+  mapview::mapview(zcol = "mode")
+
+
 
 data.table::rbindlist(df) %>% View()
 df
