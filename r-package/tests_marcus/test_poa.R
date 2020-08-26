@@ -42,14 +42,10 @@ paths_df <- detailed_itineraries(r5r_core = r5r_core,
                                  shortest_path = FALSE, verbose = TRUE)
 
 paths_df %>%
-  filter(geometry != ")") %>%
-  mutate(geometry = sf::st_as_sfc(geometry)) %>%
-  sf::st_sf(crs = 4326) %>%
   # sf::st_write("/Users/marcussaraiva/path_with_shape.shp")
-  mapview::mapview()
+  # mapview::mapview()
 
   ggplot() +
-  geom_line(data = poa_702, aes(x=shape_pt_lon, y=shape_pt_lat, order = shape_pt_sequence)) +
   geom_sf(aes(colour=mode)) +
   facet_wrap(~option)
 
@@ -86,5 +82,33 @@ poa_702 <- poa_shapes %>% filter(shape_id == "702-1")
 
 write_csv(poa_702, "/Users/marcussaraiva/p702.csv")
 
+####
 
+# build transport network
+data_path <- system.file("extdata", package = "r5r")
+r5r_obj <- setup_r5(data_path = data_path)
+
+# load origin/destination points
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+
+# inputs
+origins <- points[]
+destinations <- points[15:1,]
+mode <- c("WALK", "TRANSIT")
+max_walk_dist <- 1000
+max_trip_duration <- 120L
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+df <- detailed_itineraries(r5r_obj,
+                           origins,
+                           destinations,
+                           mode,
+                           departure_datetime,
+                           max_walk_dist)
+
+data.table::rbindlist(df) %>% View()
+df
+stop_r5(r5r_obj)
+rJava::.jgc(R.gc = TRUE)
 

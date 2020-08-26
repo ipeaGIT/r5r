@@ -372,7 +372,12 @@ public class R5RCore {
             }
         }
 
-        return pathOptionsTable.getDataFrame();
+        if (pathOptionsTable.nRow() > 0) {
+            return pathOptionsTable.getDataFrame();
+        } else {
+            return null;
+        }
+
     }
 
     private int buildTransitGeometryAndCalculateDistance(SegmentPattern segmentPattern,

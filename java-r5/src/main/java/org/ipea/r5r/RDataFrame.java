@@ -5,8 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class RDataFrame {
+    private int rowCount = 0;
+
     public LinkedHashMap<String, ArrayList<Object>> getDataFrame() {
         return dataFrame;
+    }
+
+    public int nRow() {
+        return rowCount;
     }
 
     private final LinkedHashMap<String, ArrayList<Object>> dataFrame;
@@ -23,6 +29,7 @@ public class RDataFrame {
 
             columnContents.add(defaultValue);
         });
+        rowCount++;
     }
 
     public void set(String columnName, String value) {
