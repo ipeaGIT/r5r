@@ -1,6 +1,6 @@
 options(java.parameters = "-Xmx12G")
 
-library("r5r")
+devtools::load_all(".")
 library("tidyverse")
 library("tictoc")
 
@@ -13,7 +13,7 @@ toc()
 # Load points of interest
 points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
 
-points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa/poa_hexgrid.csv")
+points_hex <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
 
 
 # routes
@@ -48,7 +48,7 @@ paths_df <- detailed_itineraries(r5r_core = r5r_core,
                                  shortest_path = FALSE, verbose = TRUE)
 
 paths_df %>%
-  filter(option == 21) %>%
+  filter(option == 1) %>%
   # sf::st_write("/Users/marcussaraiva/path_with_shape.shp")
   mapview::mapview(zcol = "mode")
 
