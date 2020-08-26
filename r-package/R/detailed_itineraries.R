@@ -267,7 +267,10 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
+  # remove temporary columns and substitute 'option' id assigned by r5 to a
+  # run-length id from 1 to number of options
   path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
+  path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
 
   # if results includes the geometry, convert path_options from data.frame to
   # data.table with sfc column
