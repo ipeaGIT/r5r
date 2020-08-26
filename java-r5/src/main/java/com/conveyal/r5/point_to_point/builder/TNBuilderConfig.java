@@ -138,7 +138,7 @@ public class TNBuilderConfig {
         areaVisibility = false;
         matchBusRoutesToStreets = false;
         fetchElevationUS = false;
-        staticBikeRental = false;
+        staticBikeRental = true;
         staticParkAndRide = true;
         staticBikeParkAndRide = false;
         bikeRentalFile = null;

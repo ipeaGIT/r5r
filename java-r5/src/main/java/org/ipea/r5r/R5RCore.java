@@ -15,13 +15,16 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
+import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +59,34 @@ public class R5RCore {
 
     private double walkSpeed;
     private double bikeSpeed;
+    private int maxTransfers = 8; // max 8 transfers in public transport trips
+
+    public int getTimeWindowSize() {
+        return timeWindowSize;
+    }
+
+    public void setTimeWindowSize(int timeWindowSize) {
+        this.timeWindowSize = timeWindowSize;
+    }
+
+    public int getNumberOfMonteCarloDraws() {
+        return numberOfMonteCarloDraws;
+    }
+
+    public void setNumberOfMonteCarloDraws(int numberOfMonteCarloDraws) {
+        this.numberOfMonteCarloDraws = numberOfMonteCarloDraws;
+    }
+
+    private int timeWindowSize = 1; // minutes
+    private int numberOfMonteCarloDraws = 1; //
+
+    public int getMaxTransfers() {
+        return maxTransfers;
+    }
+
+    public void setMaxTransfers(int maxTransfers) {
+        this.maxTransfers = maxTransfers;
+    }
 
     public int getNumberOfThreads() {
         return this.numberOfThreads;
@@ -89,11 +120,13 @@ public class R5RCore {
     private TransportNetwork transportNetwork;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
+
     public R5RCore(String dataFolder) {
         this(dataFolder, true);
     }
 
-     public R5RCore(String dataFolder, boolean verbose) {
+    public R5RCore(String dataFolder, boolean verbose) {
         if (verbose) {
             verboseMode();
         } else {
@@ -105,7 +138,7 @@ public class R5RCore {
         this.walkSpeed = 1.0f;
         this.bikeSpeed = 3.3f;
 
-        File file = new File(dataFolder + "network.dat");
+        File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
             transportNetwork = TransportNetwork.fromDirectory(new File(dataFolder));
@@ -171,6 +204,7 @@ public class R5RCore {
         request.maxTripDurationMinutes = maxTripDuration;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
+        request.maxRides = this.maxTransfers;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -209,9 +243,9 @@ public class R5RCore {
         int secondsFromMidnight = getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + 60;
+        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
 
-        request.monteCarloDraws = 1;
+        request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
@@ -271,8 +305,8 @@ public class R5RCore {
                         pathOptionsTable.set("option", optionIndex);
                         pathOptionsTable.set("segment", 1);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", Utils.roundTo2(segment.duration / 60.0));
-                        pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
+                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
+                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = calculateSegmentLength(segment);
@@ -295,8 +329,8 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", Utils.roundTo2(segment.duration / 60.0));
-                        pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
+                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
+                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = calculateSegmentLength(segment);
@@ -320,11 +354,11 @@ public class R5RCore {
                         pathOptionsTable.set("option", optionIndex);
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.mode.toString());
-                        pathOptionsTable.set("segment_duration", Utils.roundTo2(transit.rideStats.avg / 60.0));
-                        pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
+                        pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
+                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
                         pathOptionsTable.set("distance", accDistance);
                         pathOptionsTable.set("route", tripPattern.routeId);
-                        pathOptionsTable.set("wait", Utils.roundTo2(transit.waitStats.avg / 60.0));
+                        pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
                     }
 
@@ -335,13 +369,14 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.middle.mode.toString());
-                        pathOptionsTable.set("segment_duration", Utils.roundTo2(transit.middle.duration / 60.0));
-                        pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
+                        pathOptionsTable.set("segment_duration",transit.middle.duration / 60.0);
+                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
 
                         // getting distances from street edges, which are more accurate than segment.distance
                         int dist = calculateSegmentLength(transit.middle);
                         pathOptionsTable.set("distance", dist / 1000);
-                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", transit.middle.geometry.toString());
+                        if (!dropItineraryGeometry)
+                            pathOptionsTable.set("geometry", transit.middle.geometry.toString());
                     }
                 }
 
@@ -354,8 +389,8 @@ public class R5RCore {
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", Utils.roundTo2(segment.duration / 60.0));
-                        pathOptionsTable.set("total_duration", Utils.roundTo2(option.stats.avg / 60.0));
+                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
+                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = calculateSegmentLength(segment);
@@ -367,32 +402,59 @@ public class R5RCore {
             }
         }
 
-        return pathOptionsTable.getDataFrame();
+        if (pathOptionsTable.nRow() > 0) {
+            return pathOptionsTable.getDataFrame();
+        } else {
+            return null;
+        }
+
     }
 
     private int buildTransitGeometryAndCalculateDistance(SegmentPattern segmentPattern,
-                                                            TripPattern tripPattern,
-                                                            StringBuilder geometry) {
+                                                         TripPattern tripPattern,
+                                                         StringBuilder geometry) {
         Coordinate previousCoordinate = new Coordinate(0, 0);
         double accDistance = 0;
 
-        for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
-            int stopIdx = tripPattern.stops[stop];
-            Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+        if (tripPattern.shape != null) {
+            List<LineString> shapeSegments = tripPattern.getHopGeometries(transportNetwork.transitLayer);
+            int firstStop = segmentPattern.fromIndex;
+            int lastStop = segmentPattern.toIndex;
 
-            coordinate.x = coordinate.x / FIXED_FACTOR;
-            coordinate.y = coordinate.y / FIXED_FACTOR;
+            for (int i = firstStop; i < lastStop; i++) {
+                for (Coordinate coordinate : shapeSegments.get(i).getCoordinates()) {
+                    if (geometry.toString().equals("")) {
+                        geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+                    } else {
+                        geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                        accDistance += GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+                    }
+                    previousCoordinate.x = coordinate.x;
+                    previousCoordinate.y = coordinate.y;
 
-            if (geometry.toString().equals("")) {
-                geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
-            } else {
-                geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
-                accDistance +=  GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+                }
             }
-            previousCoordinate.x = coordinate.x;
-            previousCoordinate.y = coordinate.y;
+            geometry.append(")");
+
+        } else {
+            for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
+                int stopIdx = tripPattern.stops[stop];
+                Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
+
+                coordinate.x = coordinate.x / FIXED_FACTOR;
+                coordinate.y = coordinate.y / FIXED_FACTOR;
+
+                if (geometry.toString().equals("")) {
+                    geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+                } else {
+                    geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                    accDistance += GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+                }
+                previousCoordinate.x = coordinate.x;
+                previousCoordinate.y = coordinate.y;
+            }
+            geometry.append(")");
         }
-        geometry.append(")");
 
         return (int) accDistance;
     }
@@ -415,25 +477,25 @@ public class R5RCore {
 
         return r5rThreadPool.submit(() ->
                 Arrays.stream(originIndices).parallel()
-                .mapToObj(index -> {
-                    LinkedHashMap<String, Object> results =
-                            null;
-                    try {
-                        results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
-                                toIds, toLats, toLons, directModes, transitModes, accessModes, egressModes,
-                                date, departureTime, maxWalkTime, maxTripDuration);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    return results;
-                }).collect(Collectors.toList())).get();
+                        .mapToObj(index -> {
+                            LinkedHashMap<String, Object> results =
+                                    null;
+                            try {
+                                results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
+                                        toIds, toLats, toLons, directModes, transitModes, accessModes, egressModes,
+                                        date, departureTime, maxWalkTime, maxTripDuration);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return results;
+                        }).collect(Collectors.toList())).get();
     }
 
     public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
-                                                  String[] toIds, double[] toLats, double[] toLons,
-                                                  String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String[] toIds, double[] toLats, double[] toLons,
+                                                               String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime,
-                                                  int maxWalkTime, int maxTripDuration) throws ParseException {
+                                                               int maxWalkTime, int maxTripDuration) throws ParseException {
 
         RegionalTask request = new RegionalTask();
 
@@ -455,6 +517,7 @@ public class R5RCore {
         request.computePaths = false;
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
+        request.maxRides = this.maxTransfers;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -493,17 +556,16 @@ public class R5RCore {
         int secondsFromMidnight = getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + 60;
+        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
 
-        request.monteCarloDraws = 1;
-
+        request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
         request.destinationPointSet = new FreeFormPointSet(toIds.length);
         for (int i = 0; i < toIds.length; i++) {
-            ((FreeFormPointSet)request.destinationPointSet).setId(i, toIds[i]);
-            ((FreeFormPointSet)request.destinationPointSet).setLat(i, toLats[i]);
-            ((FreeFormPointSet)request.destinationPointSet).setLon(i, toLons[i]);
-            ((FreeFormPointSet)request.destinationPointSet).setCount(i, 1);
+            ((FreeFormPointSet) request.destinationPointSet).setId(i, toIds[i]);
+            ((FreeFormPointSet) request.destinationPointSet).setLat(i, toLats[i]);
+            ((FreeFormPointSet) request.destinationPointSet).setLon(i, toLons[i]);
+            ((FreeFormPointSet) request.destinationPointSet).setCount(i, 1);
         }
 
 //        request.inRoutingFareCalculator = fareCalculator;
@@ -595,4 +657,32 @@ public class R5RCore {
 
         return transportNetworkList;
     }
+
+    public List<Object> getTransitNetwork() {
+        // Build transit network
+
+        // routes and shape geometries
+        ArrayList<String> routeIdCol = new ArrayList<>();
+        ArrayList<String> routeGeometryCol = new ArrayList<>();
+
+        LinkedHashMap<String, Object> routesTable = new LinkedHashMap<>();
+        routesTable.put("routeId", routeIdCol);
+        routesTable.put("geometry", routeGeometryCol);
+
+        for (TripPattern pattern : transportNetwork.transitLayer.tripPatterns) {
+            routeIdCol.add(pattern.routeId);
+            if (pattern.shape != null) {
+                routeGeometryCol.add(pattern.shape.toString());
+            } else {
+                routeGeometryCol.add("");
+            }
+        }
+
+        // Return a list of dataframes
+        List<Object> transportNetworkList = new ArrayList<>();
+        transportNetworkList.add(routesTable);
+
+        return transportNetworkList;
+    }
+
 }
