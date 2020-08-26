@@ -6,7 +6,9 @@ library("tictoc")
 
 # Start R5R core
 # r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
-r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa", verbose = FALSE)
+tic()
+r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa/", verbose = FALSE)
+toc()
 
 # Load points of interest
 points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
@@ -17,9 +19,10 @@ points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/poa/poa_hexgrid.csv"
 # routes
 street_net <- street_network_to_sf(r5r_core)
 
+street_net$edges %>%
+  ggplot() +
+  geom_sf()
 
-street_net$routes %>% filter(routeId == "gtfs_poa_eptc_2019-06:T2") %>%
-  mapview::mapview()
 
 # Configuring trip
 origin <- points[10,] # Farrapos train station
@@ -31,8 +34,10 @@ destination <- tibble(id = "praia_de_belas", lon = -51.228199, lat = -30.050274)
 # trip_date_time <- lubridate::as_datetime("2019-03-20 14:00:00")
 trip_date_time <- lubridate::as_datetime("2019-05-22 08:00:00")
 
-max_walk_distance = 1000L
+max_walk_distance = 8000L
 max_trip_duration = 120L
+
+r5r_core$setMaxTransfers(1L)
 
 paths_df <- detailed_itineraries(r5r_core = r5r_core,
                                  origins = origin, destinations = destination,
@@ -43,6 +48,7 @@ paths_df <- detailed_itineraries(r5r_core = r5r_core,
                                  shortest_path = FALSE, verbose = TRUE)
 
 paths_df %>%
+  filter(option == 21) %>%
   # sf::st_write("/Users/marcussaraiva/path_with_shape.shp")
   mapview::mapview(zcol = "mode")
 
