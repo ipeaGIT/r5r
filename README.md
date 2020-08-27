@@ -72,7 +72,7 @@ options(java.parameters = "-Xmx2G")
 # 1) build transport network, pointing to the path where OSM and GTFS data are stored
 library(r5r)
 path <- system.file("extdata", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
 # 2) load origin/destination points
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
@@ -85,18 +85,18 @@ df <- travel_time_matrix( r5r_core,
                           departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
                           max_walk_dist = 3000,  # meters
                           max_trip_duration = 60 # minutes
-                         )
-                         
+)
+
 # 3.2) or get detailed info on multiple alternative routes
 df2 <- detailed_itineraries(r5r_core,
-                            origins = points,
-                            destinations = points,
+                            origins = points[370, ],
+                            destinations = points[200, ],
                             mode = c("WALK", "BUS"),
                             departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
                             max_walk_dist = 3000,   # meters
                             max_trip_duration = 60, # minutes
                             shortest_path = FALSE
-                            )
+)
 
 ```
 
