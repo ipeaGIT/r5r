@@ -250,3 +250,24 @@ set_speed <- function(r5r_core, speed, mode) {
 }
 
 
+
+#' Set max number of transfers
+#'
+#' @description Set maxTransfers parameter in R5.
+#'
+#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @param max_transfers a numeric representing the max number of transfer
+#'                      allowed in the same trip.
+#'
+#' @family support functions
+
+set_max_transfers <- function(r5r_core, max_transfers) {
+
+  checkmate::assert_numeric(max_transfers)
+
+  # maxTransfers = 8L is R5's default
+
+  if (is.infinite(max_transfers)) r5r_core$setMaxTransfers(8L)
+  else r5r_core$setMaxTransfers(as.integer(max_transfers))
+
+}
