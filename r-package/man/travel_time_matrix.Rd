@@ -43,8 +43,9 @@ to 120 minutes (2 hours).}
 
 \item{bike_speed}{numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
 
-\item{max_transfers}{numeric. Max number of transit legs allowed in each
-route option. Defaults to 3.}
+\item{max_transfers}{numeric. The max number of public transport transfers
+allowed in the same trip. Passed from routing function.
+Defaults to 3.}
 
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}

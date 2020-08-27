@@ -255,9 +255,9 @@ set_speed <- function(r5r_core, speed, mode) {
 #'
 #' @description Set maxTransfers parameter in R5.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param max_transfers a numeric representing the max number of transfer
-#'                      allowed in the same trip.
+#' @param r5r_core rJava object to connect with R5 routing engine
+#' @param max_transfers numeric. The max number of public transport transfers
+#'                      allowed in the same trip. Passed from routing function.
 #'
 #' @family support functions
 

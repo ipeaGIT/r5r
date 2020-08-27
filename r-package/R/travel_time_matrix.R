@@ -18,8 +18,9 @@
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
-#' @param max_transfers numeric. Max number of transit legs allowed in each
-#'                      route option. Defaults to 3.
+#' @param max_transfers numeric. The max number of public transport transfers
+#'                      allowed in the same trip. Passed from routing function.
+#'                      Defaults to 3.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. TRUE to show detailed output messages (the default)

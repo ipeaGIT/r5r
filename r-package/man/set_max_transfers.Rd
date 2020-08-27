@@ -7,10 +7,10 @@
 set_max_transfers(r5r_core, max_transfers)
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{rJava object to connect with R5 routing engine}
 
-\item{max_transfers}{a numeric representing the max number of transfer
-allowed in the same trip.}
+\item{max_transfers}{numeric. The max number of public transport transfers
+allowed in the same trip. Passed from routing function.}
 }
 \description{
 Set maxTransfers parameter in R5.

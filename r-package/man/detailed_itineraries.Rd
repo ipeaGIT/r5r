@@ -45,8 +45,9 @@ to 120 minutes (2 hours).}
 
 \item{bike_speed}{numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
 
-\item{max_transfers}{numeric. Max number of transit legs allowed in each
-route option. Defaults to 3.}
+\item{max_transfers}{numeric. The max number of public transport transfers
+allowed in the same trip. Passed from routing function.
+Defaults to 3.}
 
 \item{shortest_path}{logical. Whether the function should only return the
 fastest route alternative (the default) or multiple
@@ -90,7 +91,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata", package = "r5r")
-r5r_obj <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -104,14 +105,14 @@ max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
-df <- detailed_itineraries(r5r_obj,
+df <- detailed_itineraries(r5r_core,
                            origins,
                            destinations,
                            mode,
                            departure_datetime,
                            max_walk_dist)
 
-stop_r5(r5r_obj)
+stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 
 }
