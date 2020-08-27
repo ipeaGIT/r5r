@@ -250,9 +250,10 @@ detailed_itineraries <- function(r5r_core,
 
   data.table::setDT(path_options)
 
+  path_options[, temp_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
+
   if (shortest_path) {
 
-    path_options[, temp_duration := sum(segment_duration), by = .(fromId, toId, option)]
     path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId)]$V1]
     path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId)]$V1]
 
@@ -266,7 +267,6 @@ detailed_itineraries <- function(r5r_core,
 
     path_options[, temp_route := ifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
-    path_options[, temp_duration := sum(segment_duration), by = .(fromId, toId, option)]
 
     path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId, temp_sign)]$V1]
 
