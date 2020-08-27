@@ -14,6 +14,7 @@ detailed_itineraries(
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
+  max_transfers = 3,
   shortest_path = TRUE,
   n_threads = Inf,
   verbose = TRUE,
@@ -43,6 +44,9 @@ to 120 minutes (2 hours).}
 \item{walk_speed}{numeric. Average walk speed in km/h. Defaults to 3.6 km/h.}
 
 \item{bike_speed}{numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
+
+\item{max_transfers}{numeric. Max number of transit legs allowed in each
+route option. Defaults to 3.}
 
 \item{shortest_path}{logical. Whether the function should only return the
 fastest route alternative (the default) or multiple

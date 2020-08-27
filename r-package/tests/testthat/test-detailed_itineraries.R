@@ -22,6 +22,7 @@ default_tester <- function(r5r_obj,
                            max_trip_duration = 120L,
                            walk_speed = 3.6,
                            bike_speed = 12,
+                           max_transfers = 3,
                            shortest_path = TRUE,
                            n_threads = Inf,
                            verbose = FALSE,
@@ -37,6 +38,7 @@ default_tester <- function(r5r_obj,
    max_trip_duration,
    walk_speed,
    bike_speed,
+   max_transfers,
    shortest_path,
    n_threads,
    verbose,
@@ -108,6 +110,9 @@ test_that("detailed_itineraries adequately raises errors", {
 
   # error related to non-numeric bike_speed
   expect_error(default_tester(r5r_obj, bike_speed = "12"))
+
+  # error related to non-numeric max_transfers
+  expect_error(default_tester(r5r_obj, max_transfers = "3"))
 
   # error related to non-logical shortest_path
   expect_error(default_tester(r5r_obj, shortest_path = "TRUE"))

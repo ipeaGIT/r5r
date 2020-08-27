@@ -18,6 +18,8 @@
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
+#' @param max_transfers numeric. Max number of transit legs allowed in each
+#'                      route option. Defaults to 3.
 #' @param shortest_path logical. Whether the function should only return the
 #'                      fastest route alternative (the default) or multiple
 #'                      alternatives.
@@ -86,6 +88,7 @@ detailed_itineraries <- function(r5r_core,
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
+                                 max_transfers = 3,
                                  shortest_path = TRUE,
                                  n_threads = Inf,
                                  verbose = TRUE,
@@ -160,6 +163,9 @@ detailed_itineraries <- function(r5r_core,
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
+
+  # set max transfers
+  set_max_transfers(r5r_core, max_transfers)
 
   # set number of threads
   set_n_threads(r5r_core, n_threads)

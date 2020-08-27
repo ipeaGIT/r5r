@@ -265,9 +265,9 @@ set_max_transfers <- function(r5r_core, max_transfers) {
 
   checkmate::assert_numeric(max_transfers)
 
-  # maxTransfers = 8L is R5's default
+  # R5 defaults maxTransfers to 8L
+  if (is.infinite(max_transfers)) max_transfers <- 8L
 
-  if (is.infinite(max_transfers)) r5r_core$setMaxTransfers(8L)
-  else r5r_core$setMaxTransfers(as.integer(max_transfers))
+  r5r_core$setMaxTransfers(as.integer(max_transfers))
 
 }

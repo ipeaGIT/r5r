@@ -24,6 +24,7 @@ Other support functions:
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_street_time}()},
+\code{\link{set_max_transfers}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_verbose}()},
 \code{\link{street_network_to_sf}()}
