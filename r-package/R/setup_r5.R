@@ -33,9 +33,9 @@ setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
     rJava::.jinit()
     ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
     ver <- as.numeric(gsub("\\..*","",ver))
-    if (ver < 11){stop("This package requires the Java SE Development Kit 11.0.8.
-                        Please update your Java installation. The jdk 11.0.8 can
-                        be freely downloaded from
+    if (ver < 11){stop("This package requires the Java SE Development Kit 11.0.8
+                        or higher. Please update your Java installation. The jdk
+                        11.0.8 can be freely downloaded from
                         https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")}
 
   checkmate::assert_logical(verbose)
