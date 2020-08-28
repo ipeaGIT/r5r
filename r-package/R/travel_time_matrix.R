@@ -18,9 +18,8 @@
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
-#' @param max_transfers numeric. The max number of public transport transfers
-#'                      allowed in the same trip. Passed from routing function.
-#'                      Defaults to 3.
+#' @param max_rides numeric. The max number of public transport rides allowed in
+#'                  the same trip. Defaults to 3.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. TRUE to show detailed output messages (the default)
@@ -81,7 +80,7 @@ travel_time_matrix <- function(r5r_core,
                                max_trip_duration = 120L,
                                walk_speed = 3.6,
                                bike_speed = 12,
-                               max_transfers = 3,
+                               max_rides = 3,
                                n_threads = Inf,
                                verbose = TRUE){
 
@@ -118,7 +117,7 @@ travel_time_matrix <- function(r5r_core,
   set_speed(r5r_core, bike_speed, "bike")
 
   # set max transfers
-  set_max_transfers(r5r_core, max_transfers)
+  set_max_rides(r5r_core, max_rides)
 
   # set number of threads
   set_n_threads(r5r_core, n_threads)

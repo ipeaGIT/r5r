@@ -22,7 +22,7 @@ default_tester <- function(r5r_obj,
                            max_trip_duration = 120L,
                            walk_speed = 3.6,
                            bike_speed = 12,
-                           max_transfers = 3,
+                           max_rides = 3,
                            n_threads = Inf,
                            verbose = FALSE) {
 
@@ -36,7 +36,7 @@ default_tester <- function(r5r_obj,
     max_trip_duration,
     walk_speed,
     bike_speed,
-    max_transfers,
+    max_rides,
     n_threads,
     verbose
   )
@@ -102,8 +102,8 @@ test_that("travel_time_matrix adequately raises errors", {
   # error related to non-numeric bike_speed
   expect_error(default_tester(r5r_obj, bike_speed = "12"))
 
-  # error related to non-numeric max_transfers
-  expect_error(default_tester(r5r_obj, max_transfers = "3"))
+  # error related to non-numeric max_rides
+  expect_error(default_tester(r5r_obj, max_rides = "3"))
 
   # error related to non-numeric n_threads
   expect_error(default_tester(r5r_obj, n_threads = "1"))
