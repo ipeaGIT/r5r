@@ -6,9 +6,6 @@ cache: packages
 jdk:
  - openjdk11
 
-r_packages:
- - devtools
-
 r_github_packages:
   - r-lib/covr
 
