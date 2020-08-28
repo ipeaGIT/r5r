@@ -4,4 +4,10 @@ sudo: required
 cache: packages
 
 apt_packages:
-  - r-cran-rjava
+  - default-jdk
+
+before_install:
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+  - export PATH=$PATH:$JAVA_HOME/bin
+  - export LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib
+  - sudo R CMD javareconf
