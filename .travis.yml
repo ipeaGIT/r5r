@@ -3,8 +3,8 @@ warnings_are_errors: true
 sudo: required
 cache: packages
 
-apt_packages:
- - openjdk-11-jdk
+jdk:
+ - openjdk11
 
 r_packages:
  - devtools
