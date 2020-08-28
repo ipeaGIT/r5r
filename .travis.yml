@@ -12,7 +12,7 @@ r_github_packages:
 before_install:
   - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
   - export PATH=$PATH:$JAVA_HOME/bin
-  - echo PATH
+  - echo $PATH
   - export LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib
   - sudo R CMD javareconf
   - cd r-package
