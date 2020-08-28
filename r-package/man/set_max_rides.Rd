@@ -9,7 +9,7 @@ set_max_rides(r5r_core, max_rides)
 \arguments{
 \item{r5r_core}{rJava object to connect with R5 routing engine}
 
-\item{max_rides}{numeric. The max number of public transport transfers
+\item{max_rides}{numeric. The max number of public transport rides
 allowed in the same trip. Passed from routing function.}
 }
 \description{

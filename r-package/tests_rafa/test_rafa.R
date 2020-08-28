@@ -374,10 +374,14 @@ r5r_core <- setup_r5(path)
 # Check package errors
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE)
+devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 devtools::check_win_release(pkg = ".")
 
 beepr::beep()
+
+
+
 
 
 
