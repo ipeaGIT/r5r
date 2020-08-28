@@ -250,11 +250,11 @@ detailed_itineraries <- function(r5r_core,
 
   data.table::setDT(path_options)
 
-  path_options[, temp_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
+  path_options[, total_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
 
   if (shortest_path) {
 
-    path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(fromId, toId)]$V1]
     path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId)]$V1]
 
   } else {
@@ -268,13 +268,15 @@ detailed_itineraries <- function(r5r_core,
     path_options[, temp_route := ifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
-    path_options <- path_options[path_options[, .I[temp_duration == min(temp_duration)], by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(fromId, toId, temp_sign)]$V1]
+
+    # remove temporary columns
+    path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
 
   }
 
-  # remove temporary columns and substitute 'option' id assigned by r5 to a
-  # run-length id from 1 to number of options
-  path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
+  # substitute 'option' id assigned by r5 to a run-length id from 1 to number of
+  # options
   path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
 
   # if results includes the geometry, convert path_options from data.frame to
