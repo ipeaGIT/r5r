@@ -4,7 +4,7 @@ sudo: required
 cache: packages
 
 apt_packages:
- - r-cran-rjava
+ - openjdk-11-jdk
 
 r_packages:
  - devtools
