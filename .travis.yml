@@ -10,9 +10,9 @@ r_github_packages:
   - r-lib/covr
 
 before_install:
-  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/jre
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
   - export PATH=$PATH:$JAVA_HOME/bin
-  - export LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib/amd64:/usr/lib/jvm/java-11-openjdk-amd64/jre/lib/amd64/server
+  - export LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib
   - sudo R CMD javareconf
   - cd r-package
   - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable --yes
