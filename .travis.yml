@@ -3,8 +3,8 @@ warnings_are_errors: true
 sudo: required
 cache: packages
 
-jdk:
- - openjdk11
+apt_packages:
+ - openjdk-11-jre-headless
 
 r_github_packages:
   - r-lib/covr
