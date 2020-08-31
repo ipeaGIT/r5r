@@ -118,6 +118,7 @@ public class R5RCore {
     }
 
     private TransportNetwork transportNetwork;
+    private FreeFormPointSet destinationPoints;
 //    private LinkedHashMap<String, Object> pathOptionsTable;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
@@ -475,6 +476,14 @@ public class R5RCore {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
+        destinationPoints = new FreeFormPointSet(toIds.length);
+        for (int i = 0; i < toIds.length; i++) {
+            destinationPoints.setId(i, toIds[i]);
+            destinationPoints.setLat(i, toLats[i]);
+            destinationPoints.setLon(i, toLons[i]);
+            destinationPoints.setCount(i, 1);
+        }
+
         return r5rThreadPool.submit(() ->
                 Arrays.stream(originIndices).parallel()
                         .mapToObj(index -> {
@@ -491,7 +500,7 @@ public class R5RCore {
                         }).collect(Collectors.toList())).get();
     }
 
-    public LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
+    private LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
                                                                String[] toIds, double[] toLats, double[] toLons,
                                                                String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime,
@@ -560,13 +569,13 @@ public class R5RCore {
 
         request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
-        request.destinationPointSet = new FreeFormPointSet(toIds.length);
-        for (int i = 0; i < toIds.length; i++) {
-            ((FreeFormPointSet) request.destinationPointSet).setId(i, toIds[i]);
-            ((FreeFormPointSet) request.destinationPointSet).setLat(i, toLats[i]);
-            ((FreeFormPointSet) request.destinationPointSet).setLon(i, toLons[i]);
-            ((FreeFormPointSet) request.destinationPointSet).setCount(i, 1);
-        }
+        request.destinationPointSet = destinationPoints;
+//        for (int i = 0; i < toIds.length; i++) {
+//            ((FreeFormPointSet) request.destinationPointSet).setId(i, toIds[i]);
+//            ((FreeFormPointSet) request.destinationPointSet).setLat(i, toLats[i]);
+//            ((FreeFormPointSet) request.destinationPointSet).setLon(i, toLons[i]);
+//            ((FreeFormPointSet) request.destinationPointSet).setCount(i, 1);
+//        }
 
 //        request.inRoutingFareCalculator = fareCalculator;
 
