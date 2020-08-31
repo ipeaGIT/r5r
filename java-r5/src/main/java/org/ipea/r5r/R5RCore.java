@@ -580,9 +580,9 @@ public class R5RCore {
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
 
         // Build return table
-        ArrayList<String> fromIdCol = new ArrayList<>();
-        ArrayList<String> idCol = new ArrayList<>();
-        ArrayList<Integer> travelTimeCol = new ArrayList<>();
+        ArrayList<String> fromIdCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+        ArrayList<String> idCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+        ArrayList<Integer> travelTimeCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
 
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
             if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
