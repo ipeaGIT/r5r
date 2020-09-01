@@ -161,12 +161,12 @@
 <span class="no">points</span> <span class="kw">&lt;-</span> <span class="no">points</span>[ <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">points</span>), <span class="fl">10</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">TRUE</span>)), ]
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">points</span>)
 <span class="co">#&gt;                 id       lon       lat</span>
-<span class="co">#&gt; 1: 89a9012a06bffff -51.21220 -30.10886</span>
-<span class="co">#&gt; 2: 89a901289d7ffff -51.25436 -30.02345</span>
-<span class="co">#&gt; 3: 89a9012917bffff -51.14589 -30.04934</span>
-<span class="co">#&gt; 4: 89a90128663ffff -51.17127 -30.07493</span>
-<span class="co">#&gt; 5: 89a90128ccfffff -51.23113 -30.05041</span>
-<span class="co">#&gt; 6: 89a9012857bffff -51.21075 -30.07295</span></pre></body></html></div>
+<span class="co">#&gt; 1: 89a9012acc3ffff -51.25442 -30.09971</span>
+<span class="co">#&gt; 2: 89a9012accbffff -51.25133 -30.09858</span>
+<span class="co">#&gt; 3: 89a901286d3ffff -51.16885 -30.09038</span>
+<span class="co">#&gt; 4: 89a9012828bffff -51.17402 -30.06776</span>
+<span class="co">#&gt; 5: 89a9012b3c3ffff -51.14790 -30.09909</span>
+<span class="co">#&gt; 6: 89a9012a143ffff -51.23028 -30.10455</span></pre></body></html></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">
@@ -196,7 +196,7 @@
                           <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ttm</span>)</pre></body></html></div>
-<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/img/vig_output_ttm.png" width="100%"></p>
+<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7846047dea/r5r/img/vig_output_ttm.png" width="100%"></p>
 </div>
 <div id="detailed-itineraries" class="section level3">
 <h3 class="hasAnchor">
@@ -221,7 +221,7 @@
                            <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df</span>)</pre></body></html></div>
-<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/img/vig_output_detailed.png" width="100%"></p>
+<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7846047dea/r5r/img/vig_output_detailed.png" width="100%"></p>
 <p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
 <div id="visualize-results" class="section level4">
 <h4 class="hasAnchor">
@@ -236,10 +236,10 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span><span class="kw">=</span><span class="no">mode</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="no">.</span>~<span class="no">option</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span>()</pre></body></html></div>
-<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/img/vig_detailed_ggplot.png" width="100%"></p>
+<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7846047dea/r5r/img/vig_detailed_ggplot.png" width="100%"></p>
 <p><strong>Interactive visualization</strong> with <code>mapview</code>:</p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html">mapview</a></span>(<span class="no">df</span>, <span class="kw">zcol</span> <span class="kw">=</span> <span class="st">'option'</span>)</pre></body></html></div>
-<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/img/vig_detailed_mapview.png" width="80%"></p>
+<p><img src="../../../../../AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7846047dea/r5r/img/vig_detailed_mapview.png" width="80%"></p>
 </div>
 </div>
 <div id="cleaning-up-after-usage" class="section level3">
@@ -265,7 +265,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, d   d, Ipea - Institue for Applied Economic Research.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Ipea - Institue for Applied Economic Research.</p>
 </div>
 
 <div class="pkgdown">

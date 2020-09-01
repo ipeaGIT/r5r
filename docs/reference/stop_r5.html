@@ -143,15 +143,13 @@ are supplied all running cores are stopped.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
+    <pre class="examples"><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
 <span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>)
 
-<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>path</span>)</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/Usuario/AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/jar/r5r_v4.9.0_20200831.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/Usuario/AppData/Local/Temp/Rtmpiq46yo/temp_libpath1f7822646e/r5r/extdata/network.dat</span></div><div class='input'>
-<span class='fu'>stop_r5</span>(<span class='no'>r5r_core</span>)</div><div class='output co'>#&gt; <span class='message'>r5r_core has been successfully stopped.</span></div><div class='input'>
+<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>path</span>)
 
-</div></pre>
+<span class='fu'>stop_r5</span>(<span class='no'>r5r_core</span>)</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -163,7 +161,7 @@ are supplied all running cores are stopped.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, d   d, Ipea - Institue for Applied Economic Research.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Ipea - Institue for Applied Economic Research.</p>
 </div>
 
 <div class="pkgdown">
