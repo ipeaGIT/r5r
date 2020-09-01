@@ -1,4 +1,4 @@
-# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="r-package/man/figures/r5r_blue.png" alt="logo" width="200">
+# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/r5r_blue.png" alt="logo" width="200">
 <!-- badges: start -->
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r) (yet)
