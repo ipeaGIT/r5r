@@ -3,9 +3,7 @@
 ^tests_marcus$
 ^tests_rafa$
 ^paper2020
-
-
-
-
 ^doc$
 ^Meta$
+^_pkgdown\.yml$
+^pkgdown$
