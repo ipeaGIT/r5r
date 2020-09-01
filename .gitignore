@@ -9,7 +9,7 @@ java-r5/.idea/libraries
 .Rproj.user
 .Rhistory
 r5r.Rcheck
-r5r_0.0.0.9000.tar.gz
+*.tar.gz
 network.dat
 poa_osm.pbf.mapdb
 poa_osm.pbf.mapdb.p
