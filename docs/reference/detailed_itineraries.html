@@ -8,6 +8,13 @@
 
 <title>Calculate detailed itineraries between origin destination pairs — detailed_itineraries • r5r</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -42,6 +49,7 @@
 <meta property="og:title" content="Calculate detailed itineraries between origin destination pairs — detailed_itineraries" />
 <meta property="og:description" content="Fast computation of (multiple) detailed itineraries between one
 or many origin destination pairs." />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -243,13 +251,13 @@ include:</p><h3>Transit modes</h3>
 <code><a href='travel_time_matrix.html'>travel_time_matrix</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><span class='co'># \donttest{</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
 <span class='co'># build transport network</span>
 <span class='no'>data_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>)
-<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>data_path</span>)</div><div class='output co'>#&gt; <span class='message'>R5 will be saved to C:/Users/user/AppData/Local/Temp/RtmpoxdkBL/temp_libpath7ec25bb654b/r5r/jar/r5r_v4.9.0_20200831.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/RtmpoxdkBL/temp_libpath7ec25bb654b/r5r/extdata/network.dat</span></div><div class='input'>
+<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>data_path</span>)
+
 <span class='co'># load origin/destination points</span>
 <span class='no'>points</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>data_path</span>, <span class='st'>"poa_points_of_interest.csv"</span>))
 
@@ -270,9 +278,10 @@ include:</p><h3>Transit modes</h3>
                            <span class='no'>departure_datetime</span>,
                            <span class='no'>max_walk_dist</span>)
 
-<span class='fu'><a href='stop_r5.html'>stop_r5</a></span>(<span class='no'>r5r_core</span>)</div><div class='output co'>#&gt; <span class='message'>r5r_core has been successfully stopped.</span></div><div class='input'><span class='kw pkg'>rJava</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rJava/man/jgc.html'>.jgc</a></span>(<span class='kw'>R.gc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='stop_r5.html'>stop_r5</a></span>(<span class='no'>r5r_core</span>)
+<span class='kw pkg'>rJava</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rJava/man/jgc.html'>.jgc</a></span>(<span class='kw'>R.gc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='co'># }</span></div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

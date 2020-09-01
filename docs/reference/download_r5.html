@@ -8,6 +8,13 @@
 
 <title>Download R5 Jar file — download_r5 • r5r</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -44,6 +51,7 @@
 The JAR file is saved within the package directory. The package uses a
 compilation of R5 tailored for the purposes of r5r that keeps R5's
 essential features. Source code available at https://github.com/ipeaGIT/r5r." />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -165,12 +173,12 @@ one. Defaults to FALSE.</p></td>
 <code><a href='setup_r5.html'>setup_r5</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><span class='co'># \donttest{</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
-<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>)</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/RtmpoxdkBL/temp_libpath7ec25bb654b/r5r/jar/r5r_v4.9.0_20200831.jar</span></div><div class='output co'>#&gt; [1] "C:/Users/user/AppData/Local/Temp/RtmpoxdkBL/temp_libpath7ec25bb654b/r5r/jar/r5r_v4.9.0_20200831.jar"</div><div class='input'># }
-</div></pre>
+<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
