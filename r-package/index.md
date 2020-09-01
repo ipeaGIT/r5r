@@ -1,4 +1,4 @@
-# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="200">
+# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/r5r_blue.png" alt="logo" width="200">
 <!-- badges: start -->
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r) (yet)
@@ -124,7 +124,7 @@ The [R<sup>5</sup> routing engine](https://github.com/conveyal/r5) is developed
 at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
 
-# Citation <img align="right" src="r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
+# Citation <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
 
  The R package **r5r** is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:
 

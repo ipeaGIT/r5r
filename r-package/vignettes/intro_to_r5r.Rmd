@@ -128,7 +128,7 @@ head(ttm)
 ```
 
 ```{r ttm head, echo=FALSE, message=FALSE, out.width='100%'}
-knitr::include_graphics(system.file("img", "vig_output_ttm.png", package="r5r"))
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_ttm.png?raw=true")
 ```
 
 
@@ -159,7 +159,7 @@ df <- detailed_itineraries(r5r_core = r5r_core,
 head(df)
 ```
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
-knitr::include_graphics(system.file("img", "vig_output_detailed.png", package="r5r"))
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
 ```
 
 The output is a `data.frame sf` object, so we can easily visualize the results.
@@ -182,7 +182,7 @@ ggplot() +
 ```
 
 ```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE}
-knitr::include_graphics(system.file("img", "vig_detailed_ggplot.png", package="r5r"))
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
 ```
 
 **Interactive visualization** with `mapview`:
@@ -192,7 +192,7 @@ mapview(df, zcol = 'option')
 ```
 
 ```{r mapview output, echo = FALSE, out.width='80%', message = FALSE}
-knitr::include_graphics(system.file("img", "vig_detailed_mapview.png", package="r5r"))
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_mapview.png?raw=true")
 ```
 
 ### Cleaning up after usage
