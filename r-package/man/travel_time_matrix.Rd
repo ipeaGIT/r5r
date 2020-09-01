@@ -89,7 +89,8 @@ mode <- c("WALK", "TRANSIT")
 max_walk_dist = Inf
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S",
+                                 tz = "America/Sao_Paulo")
 
 # estimate travel time matrix
 df <- travel_time_matrix(r5r_obj,

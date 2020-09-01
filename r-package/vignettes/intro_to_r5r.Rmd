@@ -117,7 +117,8 @@ The `travel_time_matrix` function is a really simple and fast function to comput
 ttm <- travel_time_matrix(r5r_core = r5r_core,
                           origins = points,
                           destinations = points,
-                          departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"),
+                          departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00",
+                                                                      tz = "America/Sao_Paulo"),
                           mode = c("WALK", "TRANSIT"),
                           max_walk_dist = 5000,
                           max_trip_duration = 120,
@@ -143,7 +144,8 @@ origins <- poi[10,]
 destinations <- poi[12,]
 mode = c("WALK", "TRANSIT")
 max_walk_dist <- 10000
-departure_datetime <- lubridate::as_datetime("2019-03-20 14:00:00")
+departure_datetime <- lubridate::as_datetime("2019-03-20 14:00:00",
+                                             tz = "America/Sao_Paulo")
 
 df <- detailed_itineraries(r5r_core = r5r_core,
                            origins,

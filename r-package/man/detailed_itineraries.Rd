@@ -102,7 +102,8 @@ mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 1000
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S",
+                                 tz = "America/Sao_Paulo")
 
 df <- detailed_itineraries(r5r_core,
                            origins,
