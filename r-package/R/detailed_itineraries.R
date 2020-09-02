@@ -278,7 +278,8 @@ detailed_itineraries <- function(r5r_core,
     path_options[, temp_route := ifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[
+      path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
 
     # remove temporary columns
     path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
