@@ -1,0 +1,5 @@
+# ignore HTML
+*.html linguist-detectable=false
+
+# Interpret .rmd as R
+*.Rmd linguist-language=R
