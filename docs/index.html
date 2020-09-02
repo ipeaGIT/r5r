@@ -138,39 +138,41 @@
 <h3 class="hasAnchor">
 <a href="#demonstration-on-sample-data" class="anchor"></a>Demonstration on sample data</h3>
 <p>See a detailed demonstration of <code>r5r</code> in this intro Vignette (<em>soon</em>). To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
-<div class="sourceCode" id="cb2"><pre class="r"># allocate RAM memory to Java
-options(java.parameters = "-Xmx2G")
+<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># allocate RAM memory to Java</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">java.parameters</span> <span class="kw">=</span> <span class="st">"-Xmx2G"</span>)
 
-# 1) build transport network, pointing to the path where OSM and GTFS data are stored
-library(r5r)
-path &lt;- system.file("extdata", package = "r5r")
-r5r_core &lt;- setup_r5(data_path = path, verbose = FALSE)
+<span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">r5r</span>)
+<span class="no">path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"r5r"</span>)
+<span class="no">r5r_core</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span>(<span class="kw">data_path</span> <span class="kw">=</span> <span class="no">path</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 
-# 2) load origin/destination points
-points &lt;- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+<span class="co"># 2) load origin/destination points and set arguments</span>
+<span class="no">points</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/poa_hexgrid.csv"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"r5r"</span>))
+<span class="no">mode</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"WALK"</span>, <span class="st">"BUS"</span>)
+<span class="no">max_walk_dist</span> <span class="kw">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
+<span class="no">max_trip_duration</span> <span class="kw">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
+<span class="no">departure_datetime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
+                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>,
+                                 <span class="kw">tz</span> <span class="kw">=</span> <span class="st">"America/Sao_Paulo"</span>)
 
-# 3.1) calculate a travel time matrix
-df &lt;- travel_time_matrix(r5r_core,
-                         origins = points,
-                         destinations = points,
-                         mode = c("WALK", "BUS"),
-                         departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"
-                                                                     tz = "America/Sao_Paulo"),
-                         max_walk_dist = 3000,  # meters
-                         max_trip_duration = 60 # minutes
-)
+<span class="co"># 3.1) calculate a travel time matrix</span>
+<span class="no">ttm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span>(<span class="no">r5r_core</span>,
+                          <span class="kw">origins</span> <span class="kw">=</span> <span class="no">points</span>,
+                          <span class="kw">destinations</span> <span class="kw">=</span> <span class="no">points</span>,
+                          <span class="no">mode</span>,
+                          <span class="no">departure_datetime</span>,
+                          <span class="no">max_walk_dist</span>,
+                          <span class="no">max_trip_duration</span>)
 
-# 3.2) or get detailed info on multiple alternative routes
-df2 &lt;- detailed_itineraries(r5r_core,
-                            origins = points[370, ],
-                            destinations = points[200, ],
-                            mode = c("WALK", "BUS"),
-                            departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"
-                                                                        tz = "America/Sao_Paulo"),
-                            max_walk_dist = 3000,   # meters
-                            max_trip_duration = 60, # minutes
-                            shortest_path = FALSE
-)</pre></div>
+<span class="co"># 3.2) or get detailed info on multiple alternative routes</span>
+<span class="no">dit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span>(<span class="no">r5r_core</span>,
+                            <span class="kw">origins</span> <span class="kw">=</span> <span class="no">points</span>[<span class="fl">370</span>, ],
+                            <span class="kw">destinations</span> <span class="kw">=</span> <span class="no">points</span>[<span class="fl">200</span>, ],
+                            <span class="no">mode</span>,
+                            <span class="no">departure_datetime</span>,
+                            <span class="no">max_walk_dist</span>,
+                            <span class="no">max_trip_duration</span>,
+                            <span class="kw">shortest_path</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></div>
 <div id="related-r-packages" class="section level4">
 <h4 class="hasAnchor">
 <a href="#related-r-packages" class="anchor"></a><strong>Related R packages</strong>
