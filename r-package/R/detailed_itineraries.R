@@ -67,12 +67,12 @@
 #'                                  format = "%d-%m-%Y %H:%M:%S",
 #'                                  tz = "America/Sao_Paulo")
 #'
-#' df <- detailed_itineraries(r5r_core,
-#'                            origins,
-#'                            destinations,
-#'                            mode,
-#'                            departure_datetime,
-#'                            max_walk_dist)
+#' dit <- detailed_itineraries(r5r_core,
+#'                             origins,
+#'                             destinations,
+#'                             mode,
+#'                             departure_datetime,
+#'                             max_walk_dist)
 #'
 #' stop_r5(r5r_core)
 #' rJava::.jgc(R.gc = TRUE)

@@ -86,20 +86,20 @@ r5r_obj <- setup_r5(data_path = data_path)
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
 
 mode <- c("WALK", "TRANSIT")
-max_walk_dist = Inf
+max_walk_dist <- Inf
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "\%d-\%m-\%Y \%H:\%M:\%S",
                                  tz = "America/Sao_Paulo")
 
 # estimate travel time matrix
-df <- travel_time_matrix(r5r_obj,
-                         origins = points,
-                         destinations = points,
-                         mode,
-                         departure_datetime,
-                         max_walk_dist,
-                         max_trip_duration)
+ttm <- travel_time_matrix(r5r_obj,
+                          origins = points,
+                          destinations = points,
+                          mode,
+                          departure_datetime,
+                          max_walk_dist,
+                          max_trip_duration)
 
 stop_r5(r5r_obj)
 rJava::.jgc(R.gc = TRUE)

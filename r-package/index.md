@@ -72,32 +72,33 @@ library(r5r)
 path <- system.file("extdata", package = "r5r")
 r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
-# 2) load origin/destination points
+# 2) load origin/destination points and set arguments
 points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+mode <- c("WALK", "BUS")
+max_walk_dist <- 3000   # meters
+max_trip_duration <- 60 # minutes
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S",
+                                 tz = "America/Sao_Paulo")
 
 # 3.1) calculate a travel time matrix
-df <- travel_time_matrix(r5r_core,
-                         origins = points,
-                         destinations = points,
-                         mode = c("WALK", "BUS"),
-                         departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"
-                                                                     tz = "America/Sao_Paulo"),
-                         max_walk_dist = 3000,  # meters
-                         max_trip_duration = 60 # minutes
-)
+ttm <- travel_time_matrix(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          mode,
+                          departure_datetime,
+                          max_walk_dist,
+                          max_trip_duration)
 
 # 3.2) or get detailed info on multiple alternative routes
-df2 <- detailed_itineraries(r5r_core,
+dit <- detailed_itineraries(r5r_core,
                             origins = points[370, ],
                             destinations = points[200, ],
-                            mode = c("WALK", "BUS"),
-                            departure_datetime = lubridate::as_datetime("2019-03-20 14:00:00"
-                                                                        tz = "America/Sao_Paulo"),
-                            max_walk_dist = 3000,   # meters
-                            max_trip_duration = 60, # minutes
-                            shortest_path = FALSE
-)
-
+                            mode,
+                            departure_datetime,
+                            max_walk_dist,
+                            max_trip_duration,
+                            shortest_path = FALSE)
 ```
 
 
