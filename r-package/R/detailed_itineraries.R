@@ -93,11 +93,23 @@ detailed_itineraries <- function(r5r_core,
                                  shortest_path = TRUE,
                                  n_threads = Inf,
                                  verbose = TRUE,
-                                 drop_geometry = FALSE ) {
+                                 drop_geometry = FALSE) {
+
+
+  # set data.table options --------------------------------------------------
+
+  old_options <- options()
+  old_dt_threads <- data.table::getDTthreads()
+
+  on.exit({
+    options(old_options)
+    data.table::setDTthreads(old_dt_threads)
+  })
+
+  options(datatable.optimize = Inf)
 
 
   # check inputs ------------------------------------------------------------
-
 
   # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
@@ -160,7 +172,6 @@ detailed_itineraries <- function(r5r_core,
 
   # set r5r_core options ----------------------------------------------------
 
-
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
@@ -168,7 +179,7 @@ detailed_itineraries <- function(r5r_core,
   # set max transfers
   set_max_rides(r5r_core, max_rides)
 
-  # set number of threads
+  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
 
   # set verbose
@@ -176,7 +187,6 @@ detailed_itineraries <- function(r5r_core,
 
 
   # call r5r_core method ----------------------------------------------------
-
 
   # if a single origin is provided, calls sequential function planSingleTrip
   # else, calls parallel function planMultipleTrips

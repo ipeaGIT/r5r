@@ -213,11 +213,13 @@ set_n_threads <- function(r5r_core, n_threads) {
   if (is.infinite(n_threads)) {
 
     r5r_core$setNumberOfThreadsToMax()
+    data.table::setDTthreads(percent = 100)
 
   } else {
 
     n_threads <- as.integer(n_threads)
     r5r_core$setNumberOfThreads(n_threads)
+    data.table::setDTthreads(threads = n_threads)
 
   }
 

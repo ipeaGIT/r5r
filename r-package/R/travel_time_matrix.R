@@ -83,7 +83,20 @@ travel_time_matrix <- function(r5r_core,
                                bike_speed = 12,
                                max_rides = 3,
                                n_threads = Inf,
-                               verbose = TRUE){
+                               verbose = TRUE) {
+
+
+  # set data.table options --------------------------------------------------
+
+  old_options <- options()
+  old_dt_threads <- data.table::getDTthreads()
+
+  on.exit({
+    options(old_options)
+    data.table::setDTthreads(old_dt_threads)
+  })
+
+  options(datatable.optimize = Inf)
 
 
   # check inputs ------------------------------------------------------------
@@ -120,7 +133,7 @@ travel_time_matrix <- function(r5r_core,
   # set max transfers
   set_max_rides(r5r_core, max_rides)
 
-  # set number of threads
+  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
 
   # set verbose
