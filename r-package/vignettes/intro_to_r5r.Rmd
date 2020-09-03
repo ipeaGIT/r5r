@@ -28,9 +28,12 @@ knitr::opts_chunk$set(
 
 To use `r5r`, you need to have [Java SE Development Kit 11.0.8](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) installed on your computer. No worries, it's free.
 
-Install the development version of `r5r` from GitHub (soon on CRAN).
-
+You can install `r5r` from CRAN, of the development version from github.
 ```{r, eval = FALSE}
+# CRAN
+install.packages('r5r')
+
+# github
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
