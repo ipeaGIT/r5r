@@ -15,7 +15,7 @@ library(testthat)
 library(ggplot2)
 library(mapview)
 library(checkmate)
-library(qpdf)
+library(geobr)
 
 
 
@@ -397,3 +397,37 @@ system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 ggsave('./inst/img/vig_detailed_ggplot2.png', width = 10, height = 5, units = 'cm', dpi=200)
+
+
+
+
+
+cities <- geobr::read_municipal_seat()
+cities <- subset(cities, abbrev_state == 'SP')
+sp <- subset(cities, name_muni  == 'São Paulo')
+
+
+# allocate RAM memory to Java
+options(java.parameters = "-Xmx20G")
+
+r5r_core <- r5r::setup_r5(data_path = 'E:/Dropbox/bases_de_dados/OSM/brasil/t')
+
+set.seed(1)
+orig <- cities[sample(1:645, 200),]
+dit <- r5r::detailed_itineraries(r5r_core,
+                                 origins = orig,
+                                 destinations = sp,
+                                 mode='car',
+                                 max_trip_duration = 600L, shortest_path = T)
+
+
+
+
+head(dit)
+plot(dit)
+beepr:beep()
+
+ggplot()+
+        geom_sf(data=dit, color='black', alpha=.3)
+
+
