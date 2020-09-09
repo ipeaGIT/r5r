@@ -692,21 +692,25 @@ public class R5RCore {
         RDataFrame stopsTable = new RDataFrame();
         stopsTable.addIntegerColumn("stop_index", -1);
         stopsTable.addStringColumn("stop_id", "");
-        stopsTable.addStringColumn("stop_code", "");
         stopsTable.addStringColumn("stop_name", "");
         stopsTable.addDoubleColumn("lat", -1.0);
         stopsTable.addDoubleColumn("lon", -1.0);
         stopsTable.addBooleanColumn("linked_to_street", false);
 
         for (int stopIndex = 0; stopIndex < transportNetwork.transitLayer.getStopCount(); stopIndex++) {
-            Stop stop = transportNetwork.transitLayer.stopForIndex.get(stopIndex);
             stopsTable.append();
             stopsTable.set("stop_index", stopIndex);
-            stopsTable.set("stop_id", stop.stop_id);
-            stopsTable.set("stop_code", stop.stop_code);
-            stopsTable.set("stop_name", stop.stop_name);
-            stopsTable.set("lat", stop.stop_lat);
-            stopsTable.set("lon", stop.stop_lon);
+            stopsTable.set("stop_id", transportNetwork.transitLayer.stopIdForIndex.get(stopIndex));
+
+            if (!transportNetwork.transitLayer.stopNames.isEmpty()) {
+                stopsTable.set("stop_name", transportNetwork.transitLayer.stopNames.get(stopIndex));
+            }
+
+            Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIndex);
+            coordinate.x = coordinate.x / FIXED_FACTOR;
+            coordinate.y = coordinate.y / FIXED_FACTOR;
+            stopsTable.set("lat", coordinate.y);
+            stopsTable.set("lon", coordinate.x);
 
             boolean linkedToStreet = (transportNetwork.transitLayer.streetVertexForStop.get(stopIndex) != -1);
             stopsTable.set("linked_to_street", linkedToStreet);
