@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
@@ -15,7 +16,6 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
-import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.locationtech.jts.geom.Coordinate;
@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -527,6 +526,7 @@ public class R5RCore {
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
         request.maxRides = this.maxTransfers;
+        request.nPathsPerTarget = 1;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -693,5 +693,26 @@ public class R5RCore {
 
         return transportNetworkList;
     }
+
+    // Returns list of public transport services active on a given date
+    public LinkedHashMap<String, ArrayList<Object>> getServicesByDate(String date) {
+        RDataFrame servicesTable = new RDataFrame();
+        servicesTable.addStringColumn("service_id", "");
+        servicesTable.addStringColumn("start_date", "");
+        servicesTable.addStringColumn("end_date", "");
+        servicesTable.addBooleanColumn("active_on_date", false);
+
+        for (Service service : transportNetwork.transitLayer.services) {
+            servicesTable.append();
+            servicesTable.set("service_id", service.service_id);
+            servicesTable.set("start_date", String.valueOf(service.calendar.start_date));
+            servicesTable.set("end_date", String.valueOf(service.calendar.end_date));
+            servicesTable.set("active_on_date", service.activeOn(LocalDate.parse(date)));
+        }
+
+        return servicesTable.getDataFrame();
+    }
+
+
 
 }

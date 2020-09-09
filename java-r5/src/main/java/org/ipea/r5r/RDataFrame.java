@@ -37,6 +37,11 @@ public class RDataFrame {
         column.set(column.size() - 1, value);
     }
 
+    public void set(String columnName, Boolean value) {
+        List<Object> column = dataFrame.get(columnName);
+        column.set(column.size() - 1, value);
+    }
+
     public void set(String columnName, Integer value) {
         List<Object> column = dataFrame.get(columnName);
         column.set(column.size() - 1, value);
@@ -52,7 +57,13 @@ public class RDataFrame {
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
+    }
 
+    public void addBooleanColumn(String columnName, Boolean defaultValue) {
+        ArrayList<Object> column = new ArrayList<>();
+        dataFrame.put(columnName, column);
+
+        defaultValues.put(columnName, defaultValue);
     }
 
     public void addIntegerColumn(String columnName, Integer defaultValue) {
