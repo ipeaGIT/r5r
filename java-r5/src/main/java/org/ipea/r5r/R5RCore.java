@@ -668,6 +668,7 @@ public class R5RCore {
     }
 
     public List<Object> getTransitNetwork() {
+        transportNetwork.transitLayer.stopForIndex
         // Build transit network
 
         // routes and shape geometries
@@ -695,7 +696,7 @@ public class R5RCore {
     }
 
     // Returns list of public transport services active on a given date
-    public LinkedHashMap<String, ArrayList<Object>> getServicesByDate(String date) {
+    public LinkedHashMap<String, ArrayList<Object>> getTransitServicesByDate(String date) {
         RDataFrame servicesTable = new RDataFrame();
         servicesTable.addStringColumn("service_id", "");
         servicesTable.addStringColumn("start_date", "");
@@ -705,8 +706,12 @@ public class R5RCore {
         for (Service service : transportNetwork.transitLayer.services) {
             servicesTable.append();
             servicesTable.set("service_id", service.service_id);
-            servicesTable.set("start_date", String.valueOf(service.calendar.start_date));
-            servicesTable.set("end_date", String.valueOf(service.calendar.end_date));
+
+            if (service.calendar != null) {
+                servicesTable.set("start_date", String.valueOf(service.calendar.start_date));
+                servicesTable.set("end_date", String.valueOf(service.calendar.end_date));
+            }
+
             servicesTable.set("active_on_date", service.activeOn(LocalDate.parse(date)));
         }
 
