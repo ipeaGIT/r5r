@@ -3,6 +3,7 @@ package org.ipea.r5r;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.conveyal.gtfs.model.Service;
+import com.conveyal.gtfs.model.Stop;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
@@ -668,7 +669,6 @@ public class R5RCore {
     }
 
     public List<Object> getTransitNetwork() {
-        transportNetwork.transitLayer.stopForIndex
         // Build transit network
 
         // routes and shape geometries
@@ -688,9 +688,34 @@ public class R5RCore {
             }
         }
 
+        // stops
+        RDataFrame stopsTable = new RDataFrame();
+        stopsTable.addIntegerColumn("stop_index", -1);
+        stopsTable.addStringColumn("stop_id", "");
+        stopsTable.addStringColumn("stop_code", "");
+        stopsTable.addStringColumn("stop_name", "");
+        stopsTable.addDoubleColumn("lat", -1.0);
+        stopsTable.addDoubleColumn("lon", -1.0);
+        stopsTable.addBooleanColumn("linked_to_street", false);
+
+        for (int stopIndex = 0; stopIndex < transportNetwork.transitLayer.getStopCount(); stopIndex++) {
+            Stop stop = transportNetwork.transitLayer.stopForIndex.get(stopIndex);
+            stopsTable.append();
+            stopsTable.set("stop_index", stopIndex);
+            stopsTable.set("stop_id", stop.stop_id);
+            stopsTable.set("stop_code", stop.stop_code);
+            stopsTable.set("stop_name", stop.stop_name);
+            stopsTable.set("lat", stop.stop_lat);
+            stopsTable.set("lon", stop.stop_lon);
+
+            boolean linkedToStreet = (transportNetwork.transitLayer.streetVertexForStop.get(stopIndex) != -1);
+            stopsTable.set("linked_to_street", linkedToStreet);
+        }
+
         // Return a list of dataframes
         List<Object> transportNetworkList = new ArrayList<>();
         transportNetworkList.add(routesTable);
+        transportNetworkList.add(stopsTable.getDataFrame());
 
         return transportNetworkList;
     }
