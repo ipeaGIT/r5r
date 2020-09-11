@@ -10,6 +10,8 @@
 #' @param quiet logical, passed to download.file. Defaults to FALSE
 #' @param force_update logical, Replaces the jar file stored locally with a new
 #'                     one. Defaults to FALSE.
+#' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
+#'                 directory. Defaults to FALSE
 #'
 #' @return A jar file is saved locally in the r5r package directory
 #' @family setup
@@ -17,11 +19,14 @@
 #'
 #' library(r5r)
 #'
-#' download_r5(version = "4.9.0")
+#' download_r5(version = "4.9.0", temp_dir = TRUE)
 #' }
 #' @export
 
-download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) {
+download_r5 <- function(version = "4.9.0",
+                        quiet = FALSE,
+                        force_update = FALSE,
+                        temp_dir = FALSE) {
 
   # download metadata with jar file addresses
   metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
@@ -45,6 +50,11 @@ download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) 
     destfile <- file.path(libs, "r5r", "jar", file_name)
   }
 
+  # if temp_dir
+  if( temp_dir==TRUE){
+    destfile <- paste0(tempdir(),"\\", file_name)
+    }
+
 
   # check for existing file
   if (!is.logical(force_update)){stop(paste0("force_update must be either TRUE or FALSE"))}
@@ -54,7 +64,7 @@ download_r5 <- function(version = "4.9.0", quiet = FALSE, force_update = FALSE) 
     return(destfile)
   } else {
 
-    # download file if it does not exit
+    # download file if it does not exist
     if (!checkmate::test_directory_exists(file.path(libs, "r5r", "jar"))) {
       dir.create(file.path(libs, "r5r", "jar"))
     }

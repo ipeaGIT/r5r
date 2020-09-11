@@ -4,7 +4,7 @@
 \alias{setup_r5}
 \title{Create transport network used for routing in R5}
 \usage{
-setup_r5(data_path, version = "4.9.0", verbose = TRUE)
+setup_r5(data_path, version = "4.9.0", verbose = TRUE, temp_dir = FALSE)
 }
 \arguments{
 \item{data_path}{character string, the directory where data inputs are stored
@@ -15,6 +15,9 @@ latest version '4.9.0'.}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR and WARNING messages.}
+
+\item{temp_dir}{logical, whether the R5 Jar file should be saved in temporary
+directory. Defaults to FALSE}
 }
 \value{
 An rJava object to connect with R5 routing engine
@@ -35,7 +38,7 @@ library(r5r)
 # directory with street network and gtfs files
 path <- system.file("extdata", package = "r5r")
 
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 }
 }
 \seealso{

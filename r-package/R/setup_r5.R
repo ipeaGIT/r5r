@@ -13,6 +13,8 @@
 #'                latest version '4.9.0'.
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR and WARNING messages.
+#' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
+#'                 directory. Defaults to FALSE
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
@@ -23,11 +25,14 @@
 #' # directory with street network and gtfs files
 #' path <- system.file("extdata", package = "r5r")
 #'
-#' r5r_core <- setup_r5(data_path = path)
+#' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 #' }
 #' @export
 
-setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
+setup_r5 <- function(data_path,
+                     version = "4.9.0",
+                     verbose = TRUE,
+                     temp_dir = FALSE) {
 
   # check Java version installed locally
     rJava::.jinit()
@@ -64,10 +69,16 @@ setup_r5 <- function(data_path, version = "4.9.0", verbose = TRUE) {
     file_name = paste0("r5r_v", version,"_",release_date,".jar")
     jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
 
+    # if temp_dir
+    if( temp_dir==TRUE){
+      jar_file <- paste0(tempdir(),"\\", file_name)
+    }
+
+
   if (checkmate::test_file_exists(jar_file)) {
     message("Using cached version from ", jar_file)
   } else {
-    download_r5(version = version)
+    download_r5(version = version, temp_dir = temp_dir)
   }
 
   # start R5 JAR

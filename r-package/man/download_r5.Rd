@@ -4,7 +4,12 @@
 \alias{download_r5}
 \title{Download R5 Jar file}
 \usage{
-download_r5(version = "4.9.0", quiet = FALSE, force_update = FALSE)
+download_r5(
+  version = "4.9.0",
+  quiet = FALSE,
+  force_update = FALSE,
+  temp_dir = FALSE
+)
 }
 \arguments{
 \item{version}{character string with the version of R5 to be downloaded.
@@ -14,6 +19,9 @@ Defaults to latest version '1.0'.}
 
 \item{force_update}{logical, Replaces the jar file stored locally with a new
 one. Defaults to FALSE.}
+
+\item{temp_dir}{logical, whether the R5 Jar file should be saved in temporary
+directory. Defaults to FALSE}
 }
 \value{
 A jar file is saved locally in the r5r package directory
@@ -29,7 +37,7 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r.
 
 library(r5r)
 
-download_r5(version = "4.9.0")
+download_r5(version = "4.9.0", temp_dir = TRUE)
 }
 }
 \seealso{

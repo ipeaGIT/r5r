@@ -209,3 +209,4 @@ test_that("detailed_itineraries output is correct", {
   expect_true(n_rows <= nrow(origins) * nrow(destinations))
 
 })
+
