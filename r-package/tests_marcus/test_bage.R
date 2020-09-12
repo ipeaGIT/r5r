@@ -10,6 +10,10 @@ tic()
 r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/bage/", verbose = FALSE)
 toc()
 
+street_net <- street_network_to_sf(r5r_core)
+street_net$vertices %>% ggplot() + geom_sf()
+street_net$edges %>% ggplot() + geom_sf(aes(colour=walk))
+
 
 points_hex <- read.csv("/Users/marcussaraiva/Repos/data_r5r/bage/hexgrid.csv")
 

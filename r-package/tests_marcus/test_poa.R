@@ -59,9 +59,14 @@ paths_df %>%
 sf::st_write(paths_df, "/Users/marcussaraiva/path_with_shape.shp")
 
 tic()
-ttm <- travel_time_matrix(r5r_core, points, points, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
+ttm <- travel_time_matrix(r5r_core,
+                          origins=sample_n(points_hex, 400),
+                          destinations=sample_n(points_hex, 200),
+                          mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
                           max_trip_duration = 120L, verbose = FALSE)
 toc()
+
+ttm %>% filter(travel_time < 120) %>% View()
 
 tic()
 ttm <- travel_time_matrix(r5r_core, points_hex, points_hex, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,

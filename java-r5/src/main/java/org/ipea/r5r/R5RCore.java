@@ -3,7 +3,6 @@ package org.ipea.r5r;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.conveyal.gtfs.model.Service;
-import com.conveyal.gtfs.model.Stop;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
@@ -15,6 +14,7 @@ import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
+import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.RouteInfo;
@@ -23,7 +23,6 @@ import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
-import org.mapdb.Atomic;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -122,7 +121,6 @@ public class R5RCore {
 
     private TransportNetwork transportNetwork;
     private FreeFormPointSet destinationPoints;
-//    private LinkedHashMap<String, Object> pathOptionsTable;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
@@ -530,7 +528,6 @@ public class R5RCore {
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
         request.maxRides = this.maxTransfers;
-        request.nPathsPerTarget = 1;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -574,14 +571,6 @@ public class R5RCore {
         request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
         request.destinationPointSet = destinationPoints;
-//        for (int i = 0; i < toIds.length; i++) {
-//            ((FreeFormPointSet) request.destinationPointSet).setId(i, toIds[i]);
-//            ((FreeFormPointSet) request.destinationPointSet).setLat(i, toLats[i]);
-//            ((FreeFormPointSet) request.destinationPointSet).setLon(i, toLons[i]);
-//            ((FreeFormPointSet) request.destinationPointSet).setCount(i, 1);
-//        }
-
-//        request.inRoutingFareCalculator = fareCalculator;
 
         request.percentiles = new int[1];
         request.percentiles[0] = 100;
@@ -623,11 +612,15 @@ public class R5RCore {
         ArrayList<Integer> indexCol = new ArrayList<>();
         ArrayList<Double> latCol = new ArrayList<>();
         ArrayList<Double> lonCol = new ArrayList<>();
+        ArrayList<Boolean> parkAndRideCol = new ArrayList<>();
+        ArrayList<Boolean> bikeSharingCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> verticesTable = new LinkedHashMap<>();
         verticesTable.put("index", indexCol);
         verticesTable.put("lat", latCol);
         verticesTable.put("lon", lonCol);
+        verticesTable.put("park_and_ride", parkAndRideCol);
+        verticesTable.put("bike_sharing", bikeSharingCol);
 
         VertexStore vertices = transportNetwork.streetLayer.vertexStore;
 
@@ -636,20 +629,26 @@ public class R5RCore {
             indexCol.add(vertexCursor.index);
             latCol.add(vertexCursor.getLat());
             lonCol.add(vertexCursor.getLon());
+            parkAndRideCol.add(vertexCursor.getFlag(VertexStore.VertexFlag.PARK_AND_RIDE));
+            bikeSharingCol.add(vertexCursor.getFlag(VertexStore.VertexFlag.BIKE_SHARING));
         }
 
         // Build edges return table
         ArrayList<Integer> fromVertexCol = new ArrayList<>();
         ArrayList<Integer> toVertexCol = new ArrayList<>();
         ArrayList<Double> lengthCol = new ArrayList<>();
-        ArrayList<Double> lengthGeoCol = new ArrayList<>();
+        ArrayList<Boolean> walkCol = new ArrayList<>();
+        ArrayList<Boolean> bicycleCol = new ArrayList<>();
+        ArrayList<Boolean> carCol = new ArrayList<>();
         ArrayList<String> geometryCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
-        edgesTable.put("fromVertex", fromVertexCol);
-        edgesTable.put("toVertex", toVertexCol);
+        edgesTable.put("from_vertex", fromVertexCol);
+        edgesTable.put("to_vertex", toVertexCol);
         edgesTable.put("length", lengthCol);
-        edgesTable.put("lengthGeo", lengthGeoCol);
+        edgesTable.put("walk", walkCol);
+        edgesTable.put("bicycle", bicycleCol);
+        edgesTable.put("car", carCol);
         edgesTable.put("geometry", geometryCol);
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
@@ -659,7 +658,9 @@ public class R5RCore {
             fromVertexCol.add(edgeCursor.getFromVertex());
             toVertexCol.add(edgeCursor.getToVertex());
             lengthCol.add(edgeCursor.getLengthM());
-            lengthGeoCol.add(edgeCursor.getGeometry().getLength());
+            walkCol.add(edgeCursor.allowsStreetMode(StreetMode.WALK));
+            bicycleCol.add(edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
+            carCol.add(edgeCursor.allowsStreetMode(StreetMode.CAR));
             geometryCol.add(edgeCursor.getGeometry().toString());
         }
 
@@ -703,16 +704,20 @@ public class R5RCore {
                 for (int stopIndex : pattern.stops) {
                     Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIndex);
 
-                    coordinate.x = coordinate.x / FIXED_FACTOR;
-                    coordinate.y = coordinate.y / FIXED_FACTOR;
+                    if (coordinate != null) {
+                        coordinate.x = coordinate.x / FIXED_FACTOR;
+                        coordinate.y = coordinate.y / FIXED_FACTOR;
 
-                    if (geometry.toString().equals("")) {
-                        geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
-                    } else {
-                        geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                        if (geometry.toString().equals("")) {
+                            geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
+                        } else {
+                            geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
+                        }
                     }
                 }
-                geometry.append(")");
+                if (!geometry.toString().equals("")) {
+                    geometry.append(")");
+                }
                 routesTable.set("geometry", geometry.toString());
             }
         }

@@ -129,6 +129,8 @@ public class PerTargetPropagater {
         // This expects the pathsToStopsForIteration and pathWriter fields to be set separately by the caller.
         this.calculateComponents = task.makeTauiSite;
 
+        this.cutoffSeconds = task.maxTripDurationMinutes * SECONDS_PER_MINUTE;
+
         oneToOne = request instanceof RegionalTask && ((RegionalTask) request).oneToOne;
 
         nIterations = travelTimesToStopsForIteration.length;
