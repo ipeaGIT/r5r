@@ -1,6 +1,6 @@
 Type: Package
 Package: r5r
-Title: Rapid Realistic Routing with R5 in R
+Title: Rapid Realistic Routing with 'R5'
 Version: 0.1.0
 Authors@R: c(
             person(given="Marcus", family="Saraiva", email="marcus.saraiva@gmail.com", role="aut", comment = c(ORCID = "0000-0001-6218-2338")),
@@ -10,7 +10,7 @@ Authors@R: c(
             person("Ipea - Institue for Applied Economic Research", role = c("cph", "fnd"))
             )
 Description: Rapid realistic routing on multimodal transport networks (walk, 
-             bike, public transport and car) using R5, the Rapid Realistic 
+             bike, public transport and car) using 'R5', the Rapid Realistic 
              Routing on Real-world and Reimagined networks 
              <https://github.com/conveyal/r5>. The package allows users to 
              generate detailed routing analysis or calculate travel time matrices

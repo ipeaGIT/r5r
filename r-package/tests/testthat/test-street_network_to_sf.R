@@ -23,3 +23,4 @@ test_that("street_network_to_sf - expected errors", {
   # invalid input
   testthat::expect_error( street_network_to_sf('a') )
   })
+
