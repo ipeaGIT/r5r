@@ -578,9 +578,6 @@ public class R5RCore {
         request.destinationPointSet = destinationPoints;
 
         request.percentiles = this.percentiles;
-//        request.percentiles = new int[1];
-//        request.percentiles[0] = 100;
-//        for (int i = 1; i <= 100; i++) request.percentiles[i - 1] = i;
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
 
@@ -590,29 +587,34 @@ public class R5RCore {
         RDataFrame travelTimesTable = new RDataFrame();
         travelTimesTable.addStringColumn("fromId", fromId);
         travelTimesTable.addStringColumn("toId", "");
-        travelTimesTable.addIntegerColumn("travel_time", -1);
 
-//        ArrayList<String> fromIdCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
-//        ArrayList<String> idCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
-//        ArrayList<Integer> travelTimeCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+        if (percentiles.length == 1) {
+            travelTimesTable.addIntegerColumn("travel_time", -1);
+        } else {
+            for (int p : percentiles) {
+                String ps = String.format("%03d", p);
+                travelTimesTable.addIntegerColumn("travel_time_p" + ps, -1);
+            }
+        }
 
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
             if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
                 travelTimesTable.append();
                 travelTimesTable.set("toId", toIds[i]);
-                travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][i]);
-//                fromIdCol.add(fromId);
-//                idCol.add(toIds[i]);
-//                travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
+                if (percentiles.length == 1) {
+                    travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][i]);
+                } else {
+                    for (int p = 0; p < percentiles.length; p++) {
+                        int tt = travelTimeResults.travelTimes.getValues()[p][i];
+                        String ps = String.format("%03d", percentiles[p]);
+
+                        travelTimesTable.set("travel_time_p" + ps, tt);
+                    }
+                }
             }
         }
 
         if (travelTimesTable.nRow() > 0) {
-//            LinkedHashMap<String, Object> results = new LinkedHashMap<>();
-//            results.put("fromId", fromIdCol);
-//            results.put("toId", idCol);
-//            results.put("travel_time", travelTimeCol);
-
             return travelTimesTable.getDataFrame();
         } else {
             return null;
