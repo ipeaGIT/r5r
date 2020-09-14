@@ -81,6 +81,11 @@ public class R5RCore {
 
     private int timeWindowSize = 1; // minutes
     private int numberOfMonteCarloDraws = 1; //
+    private int[] percentiles = {100};
+
+    public void setPercentiles(int[] percentiles) {
+        this.percentiles = percentiles;
+    }
 
     public int getMaxTransfers() {
         return maxTransfers;
@@ -469,11 +474,11 @@ public class R5RCore {
         return sum;
     }
 
-    public List<LinkedHashMap<String, Object>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                        String[] toIds, double[] toLats, double[] toLons,
-                                                                        String directModes, String transitModes, String accessModes, String egressModes,
-                                                                        String date, String departureTime,
-                                                                        int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                                   String[] toIds, double[] toLats, double[] toLons,
+                                                                                   String directModes, String transitModes, String accessModes, String egressModes,
+                                                                                   String date, String departureTime,
+                                                                                   int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
@@ -488,7 +493,7 @@ public class R5RCore {
         return r5rThreadPool.submit(() ->
                 Arrays.stream(originIndices).parallel()
                         .mapToObj(index -> {
-                            LinkedHashMap<String, Object> results =
+                            LinkedHashMap<String, ArrayList<Object>> results =
                                     null;
                             try {
                                 results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
@@ -501,11 +506,11 @@ public class R5RCore {
                         }).collect(Collectors.toList())).get();
     }
 
-    private LinkedHashMap<String, Object> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
-                                                               String[] toIds, double[] toLats, double[] toLons,
-                                                               String directModes, String transitModes, String accessModes, String egressModes,
-                                                               String date, String departureTime,
-                                                               int maxWalkTime, int maxTripDuration) throws ParseException {
+    private LinkedHashMap<String, ArrayList<Object>> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
+                                                                           String[] toIds, double[] toLats, double[] toLons,
+                                                                           String directModes, String transitModes, String accessModes, String egressModes,
+                                                                           String date, String departureTime,
+                                                                           int maxWalkTime, int maxTripDuration) throws ParseException {
 
         RegionalTask request = new RegionalTask();
 
@@ -572,9 +577,9 @@ public class R5RCore {
 
         request.destinationPointSet = destinationPoints;
 
-        request.percentiles = new int[1];
-        request.percentiles[0] = 100;
-//        request.percentiles = new int[100];
+        request.percentiles = this.percentiles;
+//        request.percentiles = new int[1];
+//        request.percentiles[0] = 100;
 //        for (int i = 1; i <= 100; i++) request.percentiles[i - 1] = i;
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
@@ -582,25 +587,33 @@ public class R5RCore {
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
 
         // Build return table
-        ArrayList<String> fromIdCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
-        ArrayList<String> idCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
-        ArrayList<Integer> travelTimeCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+        RDataFrame travelTimesTable = new RDataFrame();
+        travelTimesTable.addStringColumn("fromId", fromId);
+        travelTimesTable.addStringColumn("toId", "");
+        travelTimesTable.addIntegerColumn("travel_time", -1);
+
+//        ArrayList<String> fromIdCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+//        ArrayList<String> idCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
+//        ArrayList<Integer> travelTimeCol = new ArrayList<>(travelTimeResults.travelTimes.nPoints);
 
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
             if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
-                fromIdCol.add(fromId);
-                idCol.add(toIds[i]);
-                travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
+                travelTimesTable.append();
+                travelTimesTable.set("toId", toIds[i]);
+                travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][i]);
+//                fromIdCol.add(fromId);
+//                idCol.add(toIds[i]);
+//                travelTimeCol.add(travelTimeResults.travelTimes.getValues()[0][i]);
             }
         }
 
-        if (fromIdCol.size() > 0) {
-            LinkedHashMap<String, Object> results = new LinkedHashMap<>();
-            results.put("fromId", fromIdCol);
-            results.put("toId", idCol);
-            results.put("travel_time", travelTimeCol);
+        if (travelTimesTable.nRow() > 0) {
+//            LinkedHashMap<String, Object> results = new LinkedHashMap<>();
+//            results.put("fromId", fromIdCol);
+//            results.put("toId", idCol);
+//            results.put("travel_time", travelTimeCol);
 
-            return results;
+            return travelTimesTable.getDataFrame();
         } else {
             return null;
         }
