@@ -8,6 +8,8 @@ cache: packages
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
       - r-cran-rjava
       - libproj-dev
@@ -19,3 +21,6 @@ before_install:
   - sudo $(which R) CMD javareconf
   - cd r-package
   - R -e 'install.packages("rgdal", repos="http://R-Forge.R-project.org")'
+
+after_success:
+ - Rscript -e 'covr::codecov()'
