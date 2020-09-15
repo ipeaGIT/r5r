@@ -1,8 +1,6 @@
 context("Stop r5r core")
 
 testthat::skip_on_cran()
-testthat::skip_on_travis()
-
 
 test_that("stop_r5 raises warnings and errors when supplied wrong objects", {
   path <- system.file("extdata", package = "r5r")
