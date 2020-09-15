@@ -28,19 +28,28 @@ knitr::opts_chunk$set(
 
 # RESEARCH QUESTIONS AND HYPOTHESES 
 
-
 Transport routing is the process of finding the alternative routes and costs 
 that connect places on a given transport network. Routing often involves complex
 mathematical algorithms and it is a fundamental step required for transport
 accessibility analysis, fleet allocation and transport simulation and planning
-more broadly.
+more broadly. Despite the long-standing importance of routing analysis to the 
+field, transport researchers and practitioners still frequently face practical 
+challenges with this task. These challenges involve for example the monetary 
+costs of licensed software, data availability issues for data hungry models, and
+the long computation times to run multiple routing scenarios, particularly in 
+large and complex multimodal transport networks. While there is a growing number
+of open source routing models (ref: stplnr, otp, dodgr), most options available 
+only return the fastest route option between a set of origins and destinations. 
+This simple approach overlooks how often people's actual route choices deviate 
+from shortest travel time paths due to imperfect information, monetary costs and
+safety issues among other reasons (refs, 1 2 3).
+Refs:
+1 - https://tram.mcgill.ca/Research/Publications/Who_will_use_it.pdf
+2 - https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0134322
+3 - https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075
 
-Despite the long standing importance of routing analysis to the field, transport 
-researchers and practitioners still frequently face practical challenges with 
-this task. These challenges involve for example the monetary costs of licensed 
-software, data availability issues for data hungry models, and the long 
-computation times to run multiple routing scenarios, particularly in large and 
-complex multimodal transport networks. While there is a growing number of open source routing models (ref: stplnr, otp, dodgr), most options available only return the fastest route, what overlooks....
+
+
 
 ...
 
