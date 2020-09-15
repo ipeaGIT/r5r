@@ -65,7 +65,40 @@ alternatives between origins and destinations using seamless parallel computing.
 
 # METHODS AND DATA
 
-p
+r5r has low data requirements, enabling routing analysis on 
+different contexts wherever there is open data on street networks from 
+OpenStreetMap (OSM). The package is also easily scalable allowing for fast 
+computations at either the city or country level analysis. For multimodal 
+transport routing, r5r will automatically combine OpenStreetMap with one or 
+multiple public transport data sets in the stantard GTFS format to create a routable
+transport network.
+
+The r5r package has 3 fundamental functions. The `setup_r5()` function builds a 
+multimodal transport network used for routing in R5. This function (1) 
+downloads/updates a compiled JAR file of R5 and stores it locally in the r5r
+package directory for future use; and (2) combines the OSM and GTFS data sets to
+build a routable network object. For fast routing analysis, r5r currently has 
+two functions:
+
+- `travel_time_matrix`: a simple and fast function to efficiently compute travel
+time estimates between one or multiple origin/destination pairs. The origin/destination
+input can be either a spatial `sf POINT` object, or a `data.frame` containing the
+columns `id`, `lon`, `lat.` 
+
+- `detailed_itineraries`:  function that provides the shortest or 
+multiple alternative routes between origin/destination pairs. The output also 
+brings detailed information for each route alternative at the trip segment level,
+including the transport mode, waiting times, travel time and distance of each 
+trip segment.
+
+Both routing functions are versatile so users can easily can set customized inputs
+such as transport mode, departure date and times, walking  an cycling speeds, 
+maximum trip duration, walking distances or number of public transport transfers
+etc.
+
+
+
+
 
 # FINDINGS
 
