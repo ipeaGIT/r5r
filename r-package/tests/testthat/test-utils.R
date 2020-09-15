@@ -1,8 +1,6 @@
 context("Support functions")
 
 testthat::skip_on_cran()
-testthat::skip_on_travis()
-
 
 # load required data and setup r5r_obj
 data_path <- system.file("extdata", package = "r5r")

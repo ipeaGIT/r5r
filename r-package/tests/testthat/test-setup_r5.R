@@ -1,7 +1,6 @@
 context("download_r5")
 
 testthat::skip_on_cran()
-testthat::skip_on_travis()
 
 path <- system.file("extdata", package = "r5r")
 

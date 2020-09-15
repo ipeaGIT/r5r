@@ -1,8 +1,7 @@
 context("Detailed itineraries function")
 
-# skips tests on CRAN and Travis since they require a specific version of java
+# skips tests on CRAN since they require a specific version of java
 testthat::skip_on_cran()
-testthat::skip_on_travis()
 
 # load required data and setup r5r_obj
 
