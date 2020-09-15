@@ -8,4 +8,3 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^index.md$
-^codecov.yml$
