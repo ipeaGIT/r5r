@@ -49,20 +49,23 @@ Refs:
 3 - https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075
 
 
+This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source 
+R package for rapid realistic routing on multimodal transport networks based on
+the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). R<sup>5</sup> is a powerful 
+next-generation routing engine written in Java and developed at Conveyal (ref 1-2)
+to replace its predecessor OpenTripPlanner. The r5r package provides a simple 
+and friendly interface to run R<sup>5</sup> locally from within R, what allows 
+users to efficiently calculate travel time matrices or generate multiple route 
+alternatives between origins and destinations using seamless parallel computing.
+1 - https://repository.asu.edu/items/54162
+2- https://www.jtlu.org/index.php/jtlu/article/view/1074
 
 
-...
 
 
 # METHODS AND DATA
 
-
-The **r5r** package provides a simple and convenient friendly interface to R<sup>5</sup>, [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5). The  developed by [Conveyal](https://www.conveyal.com/).
-
-papers under R5 we should cite
-- https://repository.asu.edu/items/54162
-- https://www.jtlu.org/index.php/jtlu/article/view/1074
-
+p
 
 # FINDINGS
 
