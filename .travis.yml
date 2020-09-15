@@ -16,5 +16,6 @@ addons:
       - libudunits2-dev
 
 before_install:
+  - sudo $(which R) CMD javareconf
   - cd r-package
   - R -e 'install.packages("rgdal", repos="http://R-Forge.R-project.org")'
