@@ -126,14 +126,9 @@ library(ggplot2)
 To illustrate functionality, the package includes a small sample data set for 
 the city of Porto Alegre (Brazil). It includes three files:
 
-- An OSM network in `.pbf` format (*mandatory*).
+- An OSM network in `.pbf` format.
 - A public transport network in `GTFS.zip` format.
 - The spatial coordinates of points covering the area in `.csv` format.
-
-The `.pbf` and `GTFS.zip` files are used to build the transport network. While 
-the first is mandatory, since it is required to create a street network, the 
-latter is only used to calculate public transport trips, thus may not be 
-necessary if that's not intended.
 
 ```{r}
 data_path <- system.file("extdata", package = "r5r")
@@ -144,41 +139,42 @@ points <- points[c(sample(1:nrow(points), 100))]
 head(points)
 ```
 
+### Build a routable transport network
 
-### Build routable transport network
-
-The first step is to build the multimodal transport used for routing in R5. This
-is done with the `setup_r5` function. It does two things: (1) downloads a compiled JAR file
-of R5 and store it locally in the r5r package directory; (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object. The function 
+Building a transport network with r5r is as simple as a one command line:
 
 ```{r, message = FALSE}
-# Indicate the path where OSM and GTFS data are stored
 r5r_core <- setup_r5(data_path)
 ```
 
-**r5** has two core routing functions.
+The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed 
+by `data_path` to create a multimodal transport network used for routing by 
+R<sup>5</sup>. The resulting `network.dat`, as well as some other files used by 
+R<sup>5</sup>, is saved inside the supplied directory.
 
-- `detailed_itineraries`
-   * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
-   between one or multiple origin destination pairs. The data output brings 
-   detailed information on transport mode, travel time, walk distance etc for 
-   each trip section
- 
-- `travel_time_matrix`
-   * Fast function that returns a simple 'data.frame' with travel time 
-   estimates between one or multiple origin destination pairs.
+While the presence of a `.pbf` file is mandatory, since it is required to create 
+a street network, the `GTFS.zip` file is only used to calculate public transport 
+trips, thus may not be necessary if that's not intended. Multiple GTFS can be 
+used simultaneously, in which case all files are merged into a single one 
+automatically.
    
-   
-## Fast many to many travel time matrix
+### Calculate a travel time matrix
+
+Calculating a travel time matrix with r5r can be done very efficiently with the
+`travel_time_matrix()` function. The function takes travel restrictions and
+origins/destinations spatial location as inputs and outputs a `data.table` with 
+the travel time between all combinations of origins and destinations that can be 
+reached with the given restrictions:
 
 ```{r, message = FALSE}
+# set restrictions
 mode <- c("WALK", "TRANSIT")
-max_walk_dist <- Inf
-max_trip_duration <- 120L
+max_walk_dist <- 1000
+max_trip_duration <- 120
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
-# estimate travel time matrix
+# calculate travel time matrix
 ttm <- travel_time_matrix(r5r_core,
                           origins = points,
                           destinations = points,
@@ -187,10 +183,35 @@ ttm <- travel_time_matrix(r5r_core,
                           max_walk_dist,
                           max_trip_duration)
 
-head(ttm)
+ttm
 ```
 
-## Detailed itineraries
+Note that the resulting `ttm` object only holds the travel time of 1043 
+origin/destination pairs, even though the `points` data set passed both to 
+`origins` and `destinations` argument contains 100 points. This is because out 
+of the total 10000 possible trips between the supplied points, only 1043 could 
+be completed within the specified restrictions. Removing any walking distance 
+limits (by setting it to infinite) and increasing maximum trip duration 
+accordingly results in a "complete" output?
+
+```{r, message = FALSE}
+# set softer restrictions
+max_walk_dist <- Inf
+max_trip_duration <- 360
+
+# calculate travel time matrix
+ttm <- travel_time_matrix(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          mode,
+                          departure_datetime,
+                          max_walk_dist,
+                          max_trip_duration)
+
+ttm
+```
+
+### Detailed itineraries
 
 Allows one to get the fastest or multiple alternative routes between a set of
 origins and destinations.

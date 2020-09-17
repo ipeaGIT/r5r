@@ -371,11 +371,10 @@ write abstract
 <span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
 <p>To illustrate functionality, the package includes a small sample data set for the city of Porto Alegre (Brazil). It includes three files:</p>
 <ul>
-<li>An OSM network in <code>.pbf</code> format (<em>mandatory</em>).</li>
+<li>An OSM network in <code>.pbf</code> format.</li>
 <li>A public transport network in <code>GTFS.zip</code> format.</li>
 <li>The spatial coordinates of points covering the area in <code>.csv</code> format.</li>
 </ul>
-<p>The <code>.pbf</code> and <code>GTFS.zip</code> files are used to build the transport network. While the first is mandatory, since it is required to create a street network, the latter is only used to calculate public transport trips, thus may not be necessary if that’s not intended.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">list.files</span>(data_path)</span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; [1] &quot;network.dat&quot;                &quot;poa.zip&quot;                   </span></span>
@@ -393,64 +392,88 @@ write abstract
 <span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
 <span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
 <span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
-<div id="build-routable-transport-network" class="section level3">
-<h3>Build routable transport network</h3>
-<p>The first step is to build the multimodal transport used for routing in R5. This is done with the <code>setup_r5</code> function. It does two things: (1) downloads a compiled JAR file of R5 and store it locally in the r5r package directory; (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object. The function</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Indicate the path where OSM and GTFS data are stored</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>r5r_core &lt;-<span class="st"> </span><span class="kw">setup_r5</span>(data_path)</span></code></pre></div>
-<p><strong>r5</strong> has two core routing functions.</p>
-<ul>
-<li><code>detailed_itineraries</code>
-<ul>
-<li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip section</li>
-</ul></li>
-<li><code>travel_time_matrix</code>
-<ul>
-<li>Fast function that returns a simple ‘data.frame’ with travel time estimates between one or multiple origin destination pairs.</li>
-</ul></li>
-</ul>
+<div id="build-a-routable-transport-network" class="section level3">
+<h3>Build a routable transport network</h3>
+<p>Building a transport network with r5r is as simple as a one command line:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>r5r_core &lt;-<span class="st"> </span><span class="kw">setup_r5</span>(data_path)</span></code></pre></div>
+<p>The function uses the <code>.pbf</code> and the <code>GTFS.zip</code> files in the directory pointed by <code>data_path</code> to create a multimodal transport network used for routing by R<sup>5</sup>. The resulting <code>network.dat</code>, as well as some other files used by R<sup>5</sup>, is saved inside the supplied directory.</p>
+<p>While the presence of a <code>.pbf</code> file is mandatory, since it is required to create a street network, the <code>GTFS.zip</code> file is only used to calculate public transport trips, thus may not be necessary if that’s not intended. Multiple GTFS can be used simultaneously, in which case all files are merged into a single one automatically.</p>
 </div>
-<div id="fast-many-to-many-travel-time-matrix" class="section level2">
-<h2>Fast many to many travel time matrix</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>max_walk_dist &lt;-<span class="st"> </span><span class="ot">Inf</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>max_trip_duration &lt;-<span class="st"> </span>120L</span>
-<span id="cb6-4"><a href="#cb6-4"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
-<span id="cb6-5"><a href="#cb6-5"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># estimate travel time matrix</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
-<span id="cb6-9"><a href="#cb6-9"></a>                          <span class="dt">origins =</span> points,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>                          <span class="dt">destinations =</span> points,</span>
-<span id="cb6-11"><a href="#cb6-11"></a>                          mode,</span>
-<span id="cb6-12"><a href="#cb6-12"></a>                          departure_datetime,</span>
-<span id="cb6-13"><a href="#cb6-13"></a>                          max_walk_dist,</span>
-<span id="cb6-14"><a href="#cb6-14"></a>                          max_trip_duration)</span>
-<span id="cb6-15"><a href="#cb6-15"></a></span>
-<span id="cb6-16"><a href="#cb6-16"></a><span class="kw">head</span>(ttm)</span>
-<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;             fromId            toId travel_time</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; 1: 89a90128217ffff 89a90128217ffff           1</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt; 2: 89a90128217ffff 89a90129567ffff          42</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 3: 89a90128217ffff 89a9012a3b3ffff          93</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; 4: 89a90128217ffff 89a9012989bffff          77</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; 5: 89a90128217ffff 89a901298cbffff          83</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; 6: 89a90128217ffff 89a9012a317ffff         114</span></span></code></pre></div>
+<div id="calculate-a-travel-time-matrix" class="section level3">
+<h3>Calculate a travel time matrix</h3>
+<p>Calculating a travel time matrix with r5r can be done very efficiently with the <code>travel_time_matrix()</code> function. The function takes travel restrictions and origins/destinations spatial location as inputs and outputs a <code>data.table</code> with the travel time between all combinations of origins and destinations that can be reached with the given restrictions:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># set restrictions</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>max_walk_dist &lt;-<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">120</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># calculate travel time matrix</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>                          <span class="dt">origins =</span> points,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>                          <span class="dt">destinations =</span> points,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>                          mode,</span>
+<span id="cb6-13"><a href="#cb6-13"></a>                          departure_datetime,</span>
+<span id="cb6-14"><a href="#cb6-14"></a>                          max_walk_dist,</span>
+<span id="cb6-15"><a href="#cb6-15"></a>                          max_trip_duration)</span>
+<span id="cb6-16"><a href="#cb6-16"></a></span>
+<span id="cb6-17"><a href="#cb6-17"></a>ttm</span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;                fromId            toId travel_time</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;    1: 89a90128217ffff 89a90128217ffff           1</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt;    2: 89a90128217ffff 89a9012828fffff          12</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt;    3: 89a90128217ffff 89a9012820bffff          12</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt;    4: 89a90128217ffff 89a901282d7ffff          16</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt;    5: 89a90128217ffff 89a901282a3ffff          18</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co">#&gt;   ---                                            </span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="co">#&gt; 1039: 89a90129967ffff 89a90128063ffff          57</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co">#&gt; 1040: 89a90129967ffff 89a9012aa6fffff          77</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="co">#&gt; 1041: 89a90129967ffff 89a90129897ffff          32</span></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="co">#&gt; 1042: 89a90129967ffff 89a90128557ffff          82</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="co">#&gt; 1043: 89a90129967ffff 89a90129967ffff           0</span></span></code></pre></div>
+<p>Note that the resulting <code>ttm</code> object only holds the travel time of 1043 origin/destination pairs, even though the <code>points</code> data set passed both to <code>origins</code> and <code>destinations</code> argument contains 100 points. This is because out of the total 10000 possible trips between the supplied points, only 1043 could be completed within the specified restrictions. Removing any walking distance limits (by setting it to infinite) and increasing maximum trip duration accordingly results in a “complete” output?</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># set softer restrictions</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>max_walk_dist &lt;-<span class="st"> </span><span class="ot">Inf</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">360</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># calculate travel time matrix</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>                          <span class="dt">origins =</span> points,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>                          <span class="dt">destinations =</span> points,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>                          mode,</span>
+<span id="cb7-10"><a href="#cb7-10"></a>                          departure_datetime,</span>
+<span id="cb7-11"><a href="#cb7-11"></a>                          max_walk_dist,</span>
+<span id="cb7-12"><a href="#cb7-12"></a>                          max_trip_duration)</span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a>ttm</span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co">#&gt;                 fromId            toId travel_time</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt;     1: 89a90128217ffff 89a90128217ffff           1</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt;     2: 89a90128217ffff 89a90129567ffff          42</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;     3: 89a90128217ffff 89a9012a3b3ffff          93</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;     4: 89a90128217ffff 89a9012989bffff          77</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;     5: 89a90128217ffff 89a901298cbffff          83</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt;    ---                                            </span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt;  9996: 89a90129967ffff 89a90129897ffff          32</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt;  9997: 89a90129967ffff 89a901295afffff         150</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt;  9998: 89a90129967ffff 89a90129143ffff         149</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt;  9999: 89a90129967ffff 89a90128557ffff          71</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 10000: 89a90129967ffff 89a90129967ffff           0</span></span></code></pre></div>
 </div>
-<div id="detailed-itineraries" class="section level2">
-<h2>Detailed itineraries</h2>
+<div id="detailed-itineraries" class="section level3">
+<h3>Detailed itineraries</h3>
 <p>Allows one to get the fastest or multiple alternative routes between a set of origins and destinations.</p>
 <p>Create simple example here and plot the result below</p>
+</div>
 <div id="visualize-results" class="section level3">
 <h3>visualize results</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># extract OSM network</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>street_net &lt;-<span class="st"> </span><span class="kw">street_network_to_sf</span>(r5r_core)</span>
-<span id="cb7-3"><a href="#cb7-3"></a></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># plot</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="st">   </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> street_net<span class="op">$</span>edges, <span class="dt">color=</span><span class="st">&#39;gray85&#39;</span>) <span class="op">+</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="st">   </span><span class="kw">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># extract OSM network</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>street_net &lt;-<span class="st"> </span><span class="kw">street_network_to_sf</span>(r5r_core)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># plot</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="st">   </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> street_net<span class="op">$</span>edges, <span class="dt">color=</span><span class="st">&#39;gray85&#39;</span>) <span class="op">+</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">   </span><span class="kw">theme_minimal</span>()</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-</div>
 </div>
 </div>
 <div id="acknowledgments" class="section level1">
