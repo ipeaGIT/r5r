@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette: default
   github_document: default
-abstract: " write abstract"
+abstract: "write abstract"
 urlcolor: blue
 vignette: |
   %\VignetteIndexEntry{r5r-intro} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
@@ -39,32 +39,22 @@ challenges with this task. These challenges involve for example the monetary
 costs of licensed software, data availability issues for data hungry models, and
 the long computation times to run multiple routing scenarios, particularly in 
 large and complex multimodal transport networks. While there is a growing number
-of open source routing models (ref: stplnr, otp, dodgr), most options available 
-only return the fastest route option between a set of origins and destinations. 
-This simple approach overlooks how often people's actual route choices deviate 
-from shortest travel time paths due to imperfect information, monetary costs and
-safety issues among other reasons (refs, 1 2 3).
-Refs:
-1 - https://tram.mcgill.ca/Research/Publications/Who_will_use_it.pdf
-2 - https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0134322
-3 - https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075
-
-Test [@http://zotero.org/users/local/FtLgDWw9/items/8CHCA2S3]
-
+of open source routing models [@lovelace2019stplanr; @padgham2019dodgr], most
+options available only return the fastest route option between a set of origins 
+and destinations. This simple approach overlooks how often people's actual route 
+choices deviate from shortest travel time paths due to imperfect information, 
+monetary costs and safety issues among other reasons [@larsen2011travel;
+@zhu2015people; @conway2019getting].
 
 This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source 
 R package for rapid realistic routing on multimodal transport networks based on
-the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). R<sup>5</sup> is a powerful 
-next-generation routing engine written in Java and developed at Conveyal (ref 1-2)
-to replace its predecessor OpenTripPlanner. The r5r package provides a simple 
-and friendly interface to run R<sup>5</sup> locally from within R, what allows 
-users to efficiently calculate travel time matrices or generate multiple route 
+the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). 
+R<sup>5</sup> is a powerful next-generation routing engine written in Java and
+developed at Conveyal [@conway2017evidencebased; @conway2018accounting] to
+replace its predecessor OpenTripPlanner. The r5r package provides a simple and
+friendly interface to run R<sup>5</sup> locally from within R, what allows users
+to efficiently calculate travel time matrices or generate multiple route 
 alternatives between origins and destinations using seamless parallel computing.
-1 - https://repository.asu.edu/items/54162
-2- https://www.jtlu.org/index.php/jtlu/article/view/1074
-
-
-
 
 # METHODS AND DATA
 
@@ -210,8 +200,8 @@ street_net <- street_network_to_sf(r5r_core)
 
 # plot
 ggplot() +
-        geom_sf(data = street_net$edges, color='gray85') +
-        theme_minimal()
+   geom_sf(data = street_net$edges, color='gray85') +
+   theme_minimal()
 
 ```
 

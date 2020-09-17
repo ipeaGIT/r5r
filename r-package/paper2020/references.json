@@ -1,0 +1,296 @@
+[
+	{
+		"id": "padgham2019dodgr",
+		"type": "article-journal",
+		"abstract": "Allocation of flows throughout networks is a common problem in transport research, yet there are very few computational tools available, and almost no open source tools. We describe a new software package, “dodgr” (Distances On Directed GRaphs) capable of extremely efficient flow aggregation over millions of routes within a network. This package represents a much needed advance in transport research, enabling aggregation at the finest scales of individual street segments, with results able to be direcly viewed with modern web-rendering and interactive viewing tools such as deck.gl.",
+		"container-title": "Transport Findings",
+		"DOI": "10.32866/6945",
+		"note": "publisher: Network Design Lab",
+		"title": "dodgr: An R Package for Network Flow Aggregation",
+		"author": [
+			{
+				"family": "Padgham",
+				"given": "Mark"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			],
+			"season": "02-14"
+		}
+	},
+	{
+		"id": "larsen2011travel",
+		"type": "article-journal",
+		"abstract": "This study examines the personal factors that influence cycling facility usage and how specific facility types and their spatial characteristics affect route choice. This study is based on an online survey of 2917 cyclists from Montréal, Quebec, Canada. Respondent’s most frequent home-based trips are modeled using a geographic information system. Several statistical models are used to measure the cycling patterns associated with different types of utilitarian cyclists. Experienced cyclists are less likely to use cycling facilities compared to other kinds of cyclists. Overall, cyclists add greater distance to their trips for facilities that are segregated from vehicle traffic, however, this additional diversion distance is best explained by facility length and supply of nearby facilities.",
+		"container-title": "Transportation Research Part D: Transport and Environment",
+		"DOI": "10.1016/j.trd.2010.07.011",
+		"ISSN": "13619209",
+		"issue": "2",
+		"journalAbbreviation": "Transportation Research Part D: Transport and Environment",
+		"language": "en",
+		"page": "172-177",
+		"source": "DOI.org (Crossref)",
+		"title": "A travel behavior analysis of urban cycling facilities in Montréal, Canada",
+		"URL": "https://linkinghub.elsevier.com/retrieve/pii/S1361920910001100",
+		"volume": "16",
+		"author": [
+			{
+				"family": "Larsen",
+				"given": "Jacob"
+			},
+			{
+				"family": "El-Geneidy",
+				"given": "Ahmed"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2011",
+					3
+				]
+			]
+		}
+	},
+	{
+		"id": "zhu2015people",
+		"type": "article-journal",
+		"container-title": "PLOS ONE",
+		"DOI": "10.1371/journal.pone.0134322",
+		"ISSN": "1932-6203",
+		"issue": "8",
+		"journalAbbreviation": "PLoS ONE",
+		"language": "en",
+		"page": "e0134322",
+		"source": "DOI.org (Crossref)",
+		"title": "Do People Use the Shortest Path? An Empirical Test of Wardrop’s First Principle",
+		"title-short": "Do People Use the Shortest Path?",
+		"URL": "https://dx.plos.org/10.1371/journal.pone.0134322",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Zhu",
+				"given": "Shanjiang"
+			},
+			{
+				"family": "Levinson",
+				"given": "David"
+			}
+		],
+		"editor": [
+			{
+				"family": "Ropert-Coudert",
+				"given": "Yan"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8,
+					12
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2019getting",
+		"type": "article-journal",
+		"container-title": "International Journal of Geographical Information Science",
+		"DOI": "10.1080/13658816.2019.1605075",
+		"ISSN": "1365-8816, 1362-3087",
+		"issue": "9",
+		"journalAbbreviation": "International Journal of Geographical Information Science",
+		"language": "en",
+		"page": "1759-1787",
+		"source": "DOI.org (Crossref)",
+		"title": "Getting Charlie off the MTA: a multiobjective optimization method to account for cost constraints in public transit accessibility metrics",
+		"title-short": "Getting Charlie off the MTA",
+		"URL": "https://www.tandfonline.com/doi/full/10.1080/13658816.2019.1605075",
+		"volume": "33",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Stewart",
+				"given": "Anson F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					9,
+					2
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2017evidencebased",
+		"type": "article-journal",
+		"container-title": "Transportation Research Record: Journal of the Transportation Research Board",
+		"DOI": "10.3141/2653-06",
+		"ISSN": "0361-1981, 2169-4052",
+		"issue": "1",
+		"journalAbbreviation": "Transportation Research Record",
+		"language": "en",
+		"page": "45-53",
+		"source": "DOI.org (Crossref)",
+		"title": "Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks",
+		"URL": "http://journals.sagepub.com/doi/10.3141/2653-06",
+		"volume": "2653",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "Linden",
+				"given": "Marco",
+				"non-dropping-particle": "van der"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2017",
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2018accounting",
+		"type": "article-journal",
+		"container-title": "Journal of Transport and Land Use",
+		"DOI": "10.5198/jtlu.2018.1074",
+		"ISSN": "1938-7849",
+		"issue": "1",
+		"journalAbbreviation": "JTLU",
+		"source": "DOI.org (Crossref)",
+		"title": "Accounting for uncertainty and variation in accessibility metrics for public transport sketch planning",
+		"URL": "https://www.jtlu.org/index.php/jtlu/article/view/1074",
+		"volume": "11",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "Van Eggermond",
+				"given": "Michael"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2018",
+					7,
+					23
+				]
+			]
+		}
+	},
+	{
+		"id": "lovelace2019stplanr",
+		"type": "article-journal",
+		"container-title": "The R Journal",
+		"DOI": "10.32614/RJ-2018-053",
+		"ISSN": "2073-4859",
+		"issue": "2",
+		"journalAbbreviation": "The R Journal",
+		"language": "en",
+		"page": "7",
+		"source": "DOI.org (Crossref)",
+		"title": "stplanr: A Package for Transport Planning",
+		"title-short": "stplanr",
+		"URL": "https://journal.r-project.org/archive/2018/RJ-2018-053/index.html",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Lovelace",
+				"given": "Robin"
+			},
+			{
+				"family": "Ellison",
+				"given": "Richard"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			]
+		}
+	}
+]
