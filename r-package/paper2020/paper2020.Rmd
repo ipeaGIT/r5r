@@ -19,12 +19,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-#> Examples of similar papers
-#> - https://transportfindings.org/article/8416-accessibility-toolbox-for-r-and-arcgis
-#> 
-#> - https://transportfindings.org/article/6945-dodgr-an-r-package-for-network-flow-aggregation
-#> 
-#> - https://joss.theoj.org/papers/10.21105/joss.01926
+<!-- Examples of similar papers -->
+<!--  - https://transportfindings.org/article/8416-accessibility-toolbox-for-r-and-arcgis -->
+
+<!--  - https://transportfindings.org/article/6945-dodgr-an-r-package-for-network-flow-aggregation -->
+
+<!--  - https://joss.theoj.org/papers/10.21105/joss.01926 -->
 
 
 # RESEARCH QUESTIONS AND HYPOTHESES 
@@ -226,11 +226,11 @@ Conveyal for R5
 
 
 
-#> Rafa's notes
-#> jean: #>-  mass of assumptions regarding decision-making and routing (Miller, 2018). 
-#>Haugen, 2011; Schwanen, 2008
-#>
-#>Miller, E.J., 2018. Accessibility: measurement and application in transportation planning. Transp. Rev. 38, #>551–555. https://doi.org/10.1080/01441647.2018.1492778
-#>
-#>This article presents **r5r**, a new open-source `R` package for rapid 
-#>realistic routing on multimodal transport networks.
+<!-- Rafa's notes -->
+<!-- jean: #>-  mass of assumptions regarding decision-making and routing (Miller, 2018).  -->
+<!-- Haugen, 2011; Schwanen, 2008 -->
+
+<!-- Miller, E.J., 2018. Accessibility: measurement and application in transportation planning. Transp. Rev. 38, #>551–555. https://doi.org/10.1080/01441647.2018.1492778 -->
+
+<!-- This article presents **r5r**, a new open-source `R` package for rapid  -->
+<!-- realistic routing on multimodal transport networks. -->
