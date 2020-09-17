@@ -1,6 +1,6 @@
 ---
 title: 'r5r: Rapid Realistic Routing with R5 in R'
-author: "   "
+author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette: default
@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+set.seed(0)
 ```
 
 <!-- Examples of similar papers -->
@@ -26,6 +28,7 @@ knitr::opts_chunk$set(
 
 <!--  - https://joss.theoj.org/papers/10.21105/joss.01926 -->
 
+dasdasdds
 
 # RESEARCH QUESTIONS AND HYPOTHESES 
 
@@ -39,12 +42,12 @@ challenges with this task. These challenges involve for example the monetary
 costs of licensed software, data availability issues for data hungry models, and
 the long computation times to run multiple routing scenarios, particularly in 
 large and complex multimodal transport networks. While there is a growing number
-of open source routing models [@lovelace2019stplanr; @padgham2019dodgr], most
-options available only return the fastest route option between a set of origins 
-and destinations. This simple approach overlooks how often people's actual route 
-choices deviate from shortest travel time paths due to imperfect information, 
-monetary costs and safety issues among other reasons [@larsen2011travel;
-@zhu2015people; @conway2019getting].
+of open source routing models [@opentripplanneropentripplanner; 
+@lovelace2019stplanr; @padgham2019dodgr], most options available only return the
+fastest route option between a set of origins and destinations. This simple
+approach overlooks how often people's actual route choices deviate from shortest
+travel time paths due to imperfect information, monetary costs and safety issues
+among other reasons [@larsen2011travel; @zhu2015people; @conway2019getting].
 
 This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source 
 R package for rapid realistic routing on multimodal transport networks based on
@@ -58,84 +61,88 @@ alternatives between origins and destinations using seamless parallel computing.
 
 # METHODS AND DATA
 
-r5r has low data requirements, enabling routing analysis on 
-different contexts wherever there is open data on street networks from 
-OpenStreetMap (OSM). The package is also easily scalable allowing for fast 
-computations at either the city or country level analysis. For multimodal 
-transport routing, r5r will automatically combine OpenStreetMap with one or 
-multiple public transport data sets in the stantard GTFS format to create a routable
-transport network.
+r5r has low data requirements, enabling routing analysis on different contexts 
+wherever there is open data on street networks from OpenStreetMap (OSM). The 
+package is also easily scalable allowing for fast computations at either the 
+city or country level analysis. For multimodal transport routing, r5r will 
+automatically combine OSM data with one or multiple public transport data sets 
+in the standard GTFS format to create a routable transport network.
 
 The r5r package has 3 fundamental functions. The `setup_r5()` function builds a 
-multimodal transport network used for routing in R5. This function (1) 
-downloads/updates a compiled JAR file of R5 and stores it locally in the r5r
-package directory for future use; and (2) combines the OSM and GTFS data sets to
-build a routable network object. For fast routing analysis, r5r currently has 
-two functions:
+multimodal transport network used for routing in R<sup>5</sup>. This function 
+(1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the 
+purposes of the package, and stores it locally in the r5r package directory for 
+future use; and (2) combines the OSM and GTFS data sets to build a routable 
+network object. For fast routing analysis, r5r currently has two functions:
 
-- `travel_time_matrix`: a simple and fast function to efficiently compute travel
-time estimates between one or multiple origin/destination pairs. The origin/destination
-input can be either a spatial `sf POINT` object, or a `data.frame` containing the
-columns `id`, `lon`, `lat.` 
+- `travel_time_matrix()`: used to compute travel time estimates between one or 
+multiple origin/destination pairs. The origin/destination input can be either a 
+spatial `sf POINT` object, or a `data.frame` containing the columns `id`, `lon`, 
+`lat.` 
 
-- `detailed_itineraries`:  function that provides the shortest or 
-multiple alternative routes between origin/destination pairs. The output also 
-brings detailed information for each route alternative at the trip segment level,
-including the transport mode, waiting times, travel time and distance of each 
-trip segment.
+- `detailed_itineraries()`:  used to compute detailed information at the trip 
+segment level on either the shortest or multiple alternative routes between one
+or multiple origin/destination pairs. Includes information such as the transport 
+mode, waiting time, travel time and distance.
 
-Both routing functions are versatile so users can easily can set customized inputs
-such as transport mode, departure date and times, walking  an cycling speeds, 
-maximum trip duration, walking distances or number of public transport transfers
-etc.
-
-
-
-
+Both routing functions are versatile so users can easily set customized inputs
+such as transport mode, departure date and times, walking and cycling speeds, 
+maximum trip duration, walking distances and number of public transport 
+transfers, etc.
 
 # FINDINGS
 
-Section to demonstrate how to use the core functions of the package. We can use 
-our intro vignette as a starting point and build from there with more the analysis
-of larger data sets, include couple more data visualization of results and emphasize
-the results of multiple route alternatives.
+The package can be installed with the following command:
 
+```{r, message = FALSE, eval = FALSE}
+devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+```
 
-To illustrate functionality, the package includes a small sample data for the 
-city of Porto Alegre (Brazil). It includes three files:
-- An Open Street Map network in `.pbf` format (*mandatory*)
-- A public transport network in `GTFS.zip` format
-- The spatial coordinates of the origin destination pairs in a `.csv` file.
-
-
+The first step when using r5r is to set the amount of memory available to Java. 
+By default `R` allocates only 512 MB of memory for Java processes, which is not 
+enough for large queries using r5r. To increase available memory to 2GB, for 
+example, we need to set the `java.parameters` option at the beginning of the 
+script as follows:
 
 ```{r, message = FALSE}
-# Load packages
+options(java.parameters = "-Xmx2G")
+```
+
+Please note that `R` only allocates memory to Java once during a running 
+session. If a Java process has been initiated before, either by r5r or any other 
+Java-dependent package or function, it might be required to restart the current 
+`R` session in order to effectively change the amount of memory allocated.
+
+The package can be attached (with some other packages used in this article) with 
+the following command:
+
+```{r, message = FALSE}
 library(r5r)
 library(sf)
 library(data.table)
-library(dplyr)
 library(ggplot2)
-
 ```
 
+To illustrate functionality, the package includes a small sample data set for 
+the city of Porto Alegre (Brazil). It includes three files:
+
+- An OSM network in `.pbf` format (*mandatory*).
+- A public transport network in `GTFS.zip` format.
+- The spatial coordinates of points covering the area in `.csv` format.
+
+The `.pbf` and `GTFS.zip` files are used to build the transport network. While 
+the first is mandatory, since it is required to create a street network, the 
+latter is only used to calculate public transport trips, thus may not be 
+necessary if that's not intended.
 
 ```{r}
-path <- system.file("extdata", package = "r5r")
-list.files(path)
+data_path <- system.file("extdata", package = "r5r")
+list.files(data_path)
 
 points <- fread(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
-points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
+points <- points[c(sample(1:nrow(points), 100))]
 head(points)
-
 ```
-
-By default, R allocates only 512MB of memory for Java processes, which is not enough for large queries using r5r. To increase available memory to 4GB, for example, we need to set the java.parameters option at the beginning of the script, as follows:
-
-```{r, message = FALSE}
-options(java.parameters = "-Xmx4G")
-```
-
 
 
 ### Build routable transport network
@@ -146,8 +153,7 @@ of R5 and store it locally in the r5r package directory; (2) combines the osm.pb
 
 ```{r, message = FALSE}
 # Indicate the path where OSM and GTFS data are stored
-r5r_core <- setup_r5(data_path = path)
-
+r5r_core <- setup_r5(data_path)
 ```
 
 **r5** has two core routing functions.

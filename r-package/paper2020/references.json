@@ -292,5 +292,26 @@
 				]
 			]
 		}
+	},
+	{
+		"id": "opentripplanneropentripplanner",
+		"type": "webpage",
+		"title": "OpenTripPlanner",
+		"URL": "http://www.opentripplanner.org/",
+		"author": [
+			{
+				"family": "OpenTripPlanner",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		}
 	}
 ]
