@@ -147,7 +147,7 @@ in the directory, both files will be merged. If there is already a 'network.dat'
 file in the directory the function will simply read it and load it to memory.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>setup_r5</span>(<span class='no'>data_path</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>setup_r5</span>(<span class='no'>data_path</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,6 +167,11 @@ latest version '4.9.0'.</p></td>
       <td><p>logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR and WARNING messages.</p></td>
     </tr>
+    <tr>
+      <th>temp_dir</th>
+      <td><p>logical, whether the R5 Jar file should be saved in temporary
+directory. Defaults to FALSE</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -185,7 +190,7 @@ FALSE to show only eventual ERROR and WARNING messages.</p></td>
 <span class='co'># directory with street network and gtfs files</span>
 <span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>)
 
-<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'>setup_r5</span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>path</span>)
+<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'>setup_r5</span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>path</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -9,6 +9,7 @@ abstract: " write abstract"
 urlcolor: blue
 vignette: |
   %\VignetteIndexEntry{r5r-intro} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+bibliography: references.json
 ---
 
 ```{r, include = FALSE}
@@ -47,6 +48,8 @@ Refs:
 1 - https://tram.mcgill.ca/Research/Publications/Who_will_use_it.pdf
 2 - https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0134322
 3 - https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075
+
+Test [@http://zotero.org/users/local/FtLgDWw9/items/8CHCA2S3]
 
 
 This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source 
@@ -177,8 +180,7 @@ mode <- c("WALK", "TRANSIT")
 max_walk_dist <- Inf
 max_trip_duration <- 120L
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                 format = "%d-%m-%Y %H:%M:%S",
-                                 tz = "America/Sao_Paulo")
+                                 format = "%d-%m-%Y %H:%M:%S")
 
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,

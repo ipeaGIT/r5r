@@ -78,8 +78,7 @@ mode <- c("WALK", "BUS")
 max_walk_dist <- 3000   # meters
 max_trip_duration <- 60 # minutes
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                 format = "%d-%m-%Y %H:%M:%S",
-                                 tz = "America/Sao_Paulo")
+                                 format = "%d-%m-%Y %H:%M:%S")
 
 # 3.1) calculate a travel time matrix
 ttm <- travel_time_matrix(r5r_core,

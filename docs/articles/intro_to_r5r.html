@@ -89,7 +89,7 @@
       <h1 data-toc-skip>r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 class="date">2020-09-02</h4>
+            <h4 class="date">2020-09-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/intro_to_r5r.Rmd"><code>vignettes/intro_to_r5r.Rmd</code></a></small>
       <div class="hidden name"><code>intro_to_r5r.Rmd</code></div>
@@ -111,8 +111,12 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>To use <code>r5r</code>, you need to have <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Java SE Development Kit 11.0.8</a> installed on your computer. No worries, it’s free.</p>
-<p>Install the development version of <code>r5r</code> from GitHub (soon on CRAN).</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ipeaGIT/r5r"</span>, <span class="kw">subdir</span> <span class="kw">=</span> <span class="st">"r-package"</span>)</pre></body></html></div>
+<p>You can install <code>r5r</code> from CRAN, of the development version from github.</p>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># CRAN</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">'r5r'</span>)
+
+<span class="co"># github</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ipeaGIT/r5r"</span>, <span class="kw">subdir</span> <span class="kw">=</span> <span class="st">"r-package"</span>)</pre></body></html></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
@@ -168,12 +172,12 @@
 <span class="no">points</span> <span class="kw">&lt;-</span> <span class="no">points</span>[ <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">points</span>), <span class="fl">10</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">TRUE</span>)), ]
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">points</span>)
 <span class="co">#&gt;                 id       lon       lat</span>
-<span class="co">#&gt; 1: 89a90129d63ffff -51.19054 -30.02474</span>
-<span class="co">#&gt; 2: 89a90e934cfffff -51.14388 -29.99955</span>
-<span class="co">#&gt; 3: 89a90129b73ffff -51.16825 -30.00026</span>
-<span class="co">#&gt; 4: 89a90128d6fffff -51.25448 -30.02622</span>
-<span class="co">#&gt; 5: 89a9012a1b3ffff -51.24870 -30.10851</span>
-<span class="co">#&gt; 6: 89a90129c23ffff -51.17886 -30.03683</span></pre></body></html></div>
+<span class="co">#&gt; 1: 89a90128007ffff -51.19839 -30.06846</span>
+<span class="co">#&gt; 2: 89a90128527ffff -51.22585 -30.07027</span>
+<span class="co">#&gt; 3: 89a901280d3ffff -51.18969 -30.07891</span>
+<span class="co">#&gt; 4: 89a9012b1abffff -51.18143 -30.10040</span>
+<span class="co">#&gt; 5: 89a9012814bffff -51.20401 -30.05688</span>
+<span class="co">#&gt; 6: 89a901290a7ffff -51.14347 -30.06481</span></pre></body></html></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">
@@ -196,8 +200,7 @@
 <span class="no">max_walk_dist</span> <span class="kw">&lt;-</span> <span class="fl">5000</span>
 <span class="no">max_trip_duration</span> <span class="kw">&lt;-</span> <span class="fl">120</span>
 <span class="no">departure_datetime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>,
-                                 <span class="kw">tz</span> <span class="kw">=</span> <span class="st">"America/Sao_Paulo"</span>)
+                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>)
 
 <span class="co"># calculate a travel time matrix</span>
 <span class="no">ttm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span>(<span class="kw">r5r_core</span> <span class="kw">=</span> <span class="no">r5r_core</span>,
@@ -223,8 +226,7 @@
 <span class="no">mode</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span>)
 <span class="no">max_walk_dist</span> <span class="kw">&lt;-</span> <span class="fl">10000</span>
 <span class="no">departure_datetime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>,
-                                 <span class="kw">tz</span> <span class="kw">=</span> <span class="st">"America/Sao_Paulo"</span>)
+                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>)
 
 <span class="co"># calculate detailed itineraries</span>
 <span class="no">dit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span>(<span class="kw">r5r_core</span> <span class="kw">=</span> <span class="no">r5r_core</span>,

@@ -143,7 +143,12 @@ compilation of R5 tailored for the purposes of r5r that keeps R5's
 essential features. Source code available at https://github.com/ipeaGIT/r5r.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>force_update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>download_r5</span>(
+  <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>,
+  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>force_update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,6 +167,11 @@ Defaults to latest version '1.0'.</p></td>
       <td><p>logical, Replaces the jar file stored locally with a new
 one. Defaults to FALSE.</p></td>
     </tr>
+    <tr>
+      <th>temp_dir</th>
+      <td><p>logical, whether the R5 Jar file should be saved in temporary
+directory. Defaults to FALSE</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -177,7 +187,7 @@ one. Defaults to FALSE.</p></td>
 
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
-<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>)
+<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

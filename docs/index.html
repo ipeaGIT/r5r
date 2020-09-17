@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rapid Realistic Routing with R5 in R • r5r</title>
+<title>Rapid Realistic Routing with R5 • r5r</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Rapid Realistic Routing with R5 in R">
+<script src="pkgdown.js"></script><meta property="og:title" content="Rapid Realistic Routing with R5">
 <meta property="og:description" content="Rapid realistic routing on multimodal transport networks (walk, 
              bike, public transport and car) using R5, the Rapid Realistic 
              Routing on Real-world and Reimagined networks 
@@ -152,8 +152,7 @@
 <span class="no">max_walk_dist</span> <span class="kw">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
 <span class="no">max_trip_duration</span> <span class="kw">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
 <span class="no">departure_datetime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>,
-                                 <span class="kw">tz</span> <span class="kw">=</span> <span class="st">"America/Sao_Paulo"</span>)
+                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>)
 
 <span class="co"># 3.1) calculate a travel time matrix</span>
 <span class="no">ttm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span>(<span class="no">r5r_core</span>,
