@@ -215,15 +215,64 @@ ttm <- travel_time_matrix(r5r_core,
 ttm
 ```
 
-### Detailed itineraries
+### Calculate detailed itineraries
 
-Allows one to get the fastest or multiple alternative routes between a set of
-origins and destinations.
+Often enough one wants more information on the itineraries between 
+origin/destination pairs than simply the travel time. For such cases, the 
+package includes the `detailed_itineraries()` function, which also takes travel 
+restrictions as inputs, but outputs a much more detailed data set at the trip 
+segment level. Another key feature of this function is that it (optionally) 
+provides multiple alternative routes between origin/destination pairs:
 
-Create simple example here and plot the result below
+```{r, message = FALSE}
+# load points of interests and set origin and destination
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+origins <- points[c(10, 14),]
+destinations <- points[c(12, 15),]
+
+# set restrictions
+mode <- c("WALK", "TRANSIT")
+max_walk_dist <- Inf
+max_trip_duration <- 120
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+dit <- detailed_itineraries(r5r_core,
+                            origins,
+                            destinations,
+                            mode,
+                            departure_datetime,
+                            max_walk_dist,
+                            shortest_path = FALSE)
+
+dit
+```
+
+Since the `shortest_path` argument has been set to `FALSE`, `dit` holds 
+information for multiple itineraries between the same origin/destination pairs:
+
+```{r, message = FALSE}
+setDT(copy(dit))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId)]
+```
+
+Had `shortest_path` been set to `TRUE`, only the shortest path would have been 
+returned:
+
+```{r, message = FALSE}
+dit_short <- detailed_itineraries(r5r_core,
+                                  origins,
+                                  destinations,
+                                  mode,
+                                  departure_datetime,
+                                  max_walk_dist,
+                                  shortest_path = TRUE)
+
+setDT(copy(dit_short))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId)]
+```
 
 ### visualize results
 
+`detailed_itineraries()` output is a `sf` object, which means that each trip segment is associated to a geometry
 
 ```{r, message = FALSE}
 # extract OSM network
