@@ -300,8 +300,10 @@ in the rightmost facet.
 
 # Acknowledgments
 
-Conveyal for R5
-
+The [R<sup>5</sup> routing engine](https://github.com/conveyal/r5) is developed 
+at [Conveyal](https://www.conveyal.com/) with contributions from several people. 
+This work was supported by the Brazilian Institute for Applied Economic Research 
+(Ipea).
 
 # References
 
