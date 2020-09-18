@@ -1,4 +1,4 @@
-# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="200">
+# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="160">
 <!-- badges: start -->
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r)
@@ -16,7 +16,7 @@ friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world 
 **r5r** is a simple way to run R<sup>5</sup> locally, what allows users to
 generate detailed routing analysis or calculate travel time matrices using 
 seamless parallel computing. See a detailed demonstration of `r5r` in this
-intro Vignette (*soon*). Over time, `r5r` migth be expanded to incorporate
+[intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). Over time, `r5r` migth be expanded to incorporate
 other functionalities from R<sup>5</sup>
 
 
