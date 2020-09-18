@@ -268,14 +268,14 @@ dit_short <- detailed_itineraries(r5r_core,
 setDT(copy(dit_short))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId)]
 ```
 
-### visualize results
+### Visualize results
 
 `detailed_itineraries()` output is a `sf` object, which means that each trip 
 segment is associated to a spatial geometry that can be plotted with common `R` 
 packages, such as `ggplot2`. The package also offers a handy 
-`street_network_to_sf()` function that extracts the OSM street network used in 
-the routing as a `sf` object and can be used to provide geographic context for 
-the visualization.
+`street_network_to_sf()` function which extracts the OSM street network used by 
+R<sup>5</sup> as a `sf` object and that can be used to provide geographic 
+context for the visualization.
 
 ```{r, message = FALSE, fig.width = 7, fig.height = 5}
 # extract OSM network
@@ -291,16 +291,12 @@ ggplot() +
    theme(legend.position = "bottom", axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-
-
-
-
-
-
-
-
-
-
+The picture above can be used to compare the walking-only to the walking and 
+transit itineraries between each origin/destination pair. Given that the sample 
+`GTFS.zip` file includes only very few public transport routes, the resulting 
+plot picture some odd scenarios, such as a fairly lengthy circular-like bus 
+route, in the leftmost facet, and a very long walking access trip to the bus, 
+in the rightmost facet.  
 
 # Acknowledgments
 
