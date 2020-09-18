@@ -110,6 +110,9 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -144,10 +147,10 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r.</p>
     </div>
 
     <pre class="usage"><span class='fu'>download_r5</span>(
-  <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>force_update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  version = <span class='st'>"4.9.0"</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  force_update = <span class='fl'>FALSE</span>,
+  temp_dir = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,12 +186,13 @@ directory. Defaults to FALSE</p></td>
 <code><a href='setup_r5.html'>setup_r5</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># \donttest{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span>)
 
-<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>download_r5</span>(version = <span class='st'>"4.9.0"</span>, temp_dir = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt; <span class='message'>R5 will be saved to C:\Users\user\AppData\Local\Temp\RtmpwVSI0w\r5r_v4.9.0_20200914.jar</span></div><div class='output co'>#&gt; [1] "C:\\Users\\user\\AppData\\Local\\Temp\\RtmpwVSI0w\\r5r_v4.9.0_20200914.jar"</div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -204,7 +208,7 @@ directory. Defaults to FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

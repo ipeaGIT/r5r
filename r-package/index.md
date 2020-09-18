@@ -1,7 +1,7 @@
 # r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/r5r_blue.png" alt="logo" width="160">
 <!-- badges: start -->
 
-[![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r) (yet)
+[![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r).[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
 [![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/r5r.svg?branch=master)](https://travis-ci.org/ipeaGIT/r5r)
 ![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg) [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -31,8 +31,14 @@ installed on your computer. No worries, you don't have to pay for it.
 
 
 ```R
-install.packages("r5r")
-library(r5r)
+# From CRAN
+  install.packages("r5r")
+  library(r5r)
+
+# or use the development version with latest features
+  utils::remove.packages('r5r')
+  devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+  library(r5r)
 ```
 
 ## Usage

@@ -32,8 +32,15 @@ installed on your computer. No worries, you don't have to pay for it.
 
 
 ```R
-install.packages("r5r")
-library(r5r)
+# From CRAN
+  install.packages("r5r")
+  library(r5r)
+
+# or use the development version with latest features
+  utils::remove.packages('r5r')
+  devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+  library(r5r)
+
 ```
 
 ## Usage

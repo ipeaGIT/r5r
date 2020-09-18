@@ -70,6 +70,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -96,7 +99,7 @@
 <a href="#r5r-rapid-realistic-routing-with-r5-in-r-" class="anchor"></a>r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/r5r_blue.png" alt="logo" width="160">
 </h1></div>
 <!-- badges: start -->
-<p><a href="https://CRAN.R-project.org/package=r5r"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a> (yet) <a href="https://travis-ci.org/ipeaGIT/r5r"><img src="https://travis-ci.org/ipeaGIT/r5r.svg?branch=master" alt="Travis-CI Build Status"></a> <img src="https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg" alt="Codecov test coverage"><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <!-- badges: end --></p>
+<p><a href="https://CRAN.R-project.org/package=r5r"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a>.<a href="https://CRAN.R-project.org/package=r5r"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a> <a href="https://travis-ci.org/ipeaGIT/r5r"><img src="https://travis-ci.org/ipeaGIT/r5r.svg?branch=master" alt="Travis-CI Build Status"></a> <img src="https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg" alt="Codecov test coverage"><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <!-- badges: end --></p>
 <p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks</a>.</p>
 <p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, what allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in this intro Vignette (<em>soon</em>). Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
 <p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>. Soon, this could also become a <code>python</code> library.</p>
@@ -104,8 +107,16 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To use <code>r5r</code>, you need to have <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Java SE Development Kit 11.0.8</a> installed on your computer. No worries, you don’t have to pay for it.</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"r5r"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">r5r</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># From CRAN</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"r5r"</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span>)
+
+<span class="co"># or use the development version with latest features</span>
+  <span class="kw">utils</span>::<span class="fu"><a href="https://rdrr.io/r/utils/remove.packages.html">remove.packages</a></span>(<span class="st">'r5r'</span>)
+  <span class="kw">devtools</span>::<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ipeaGIT/r5r"</span>, subdir = <span class="st">"r-package"</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span>)
+</pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -136,40 +147,42 @@
 <h3 class="hasAnchor">
 <a href="#demonstration-on-sample-data" class="anchor"></a>Demonstration on sample data</h3>
 <p>See a detailed demonstration of <code>r5r</code> in this intro Vignette (<em>soon</em>). To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># allocate RAM memory to Java</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">java.parameters</span> <span class="kw">=</span> <span class="st">"-Xmx2G"</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># allocate RAM memory to Java</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(java.parameters = <span class="st">"-Xmx2G"</span>)
 
 <span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">r5r</span>)
-<span class="no">path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"r5r"</span>)
-<span class="no">r5r_core</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span>(<span class="kw">data_path</span> <span class="kw">=</span> <span class="no">path</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span>)
+<span class="kw">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, package = <span class="st">"r5r"</span>)
+<span class="kw">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span>(data_path = <span class="kw">path</span>, verbose = <span class="fl">FALSE</span>)
 
 <span class="co"># 2) load origin/destination points and set arguments</span>
-<span class="no">points</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/poa_hexgrid.csv"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"r5r"</span>))
-<span class="no">mode</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"WALK"</span>, <span class="st">"BUS"</span>)
-<span class="no">max_walk_dist</span> <span class="kw">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
-<span class="no">max_trip_duration</span> <span class="kw">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
-<span class="no">departure_datetime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span>)
+<span class="kw">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/poa_hexgrid.csv"</span>, package = <span class="st">"r5r"</span>))
+<span class="kw">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"WALK"</span>, <span class="st">"BUS"</span>)
+<span class="kw">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
+<span class="kw">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
+<span class="kw">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"13-03-2019 14:00:00"</span>,
+                                 format = <span class="st">"%d-%m-%Y %H:%M:%S"</span>)
 
 <span class="co"># 3.1) calculate a travel time matrix</span>
-<span class="no">ttm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span>(<span class="no">r5r_core</span>,
-                          <span class="kw">origins</span> <span class="kw">=</span> <span class="no">points</span>,
-                          <span class="kw">destinations</span> <span class="kw">=</span> <span class="no">points</span>,
-                          <span class="no">mode</span>,
-                          <span class="no">departure_datetime</span>,
-                          <span class="no">max_walk_dist</span>,
-                          <span class="no">max_trip_duration</span>)
+<span class="kw">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span>(<span class="kw">r5r_core</span>,
+                          origins = <span class="kw">points</span>,
+                          destinations = <span class="kw">points</span>,
+                          <span class="kw">mode</span>,
+                          <span class="kw">departure_datetime</span>,
+                          <span class="kw">max_walk_dist</span>,
+                          <span class="kw">max_trip_duration</span>)
 
 <span class="co"># 3.2) or get detailed info on multiple alternative routes</span>
-<span class="no">dit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span>(<span class="no">r5r_core</span>,
-                            <span class="kw">origins</span> <span class="kw">=</span> <span class="no">points</span>[<span class="fl">370</span>, ],
-                            <span class="kw">destinations</span> <span class="kw">=</span> <span class="no">points</span>[<span class="fl">200</span>, ],
-                            <span class="no">mode</span>,
-                            <span class="no">departure_datetime</span>,
-                            <span class="no">max_walk_dist</span>,
-                            <span class="no">max_trip_duration</span>,
-                            <span class="kw">shortest_path</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></div>
+<span class="kw">dit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span>(<span class="kw">r5r_core</span>,
+                            origins = <span class="kw">points</span>[<span class="fl">370</span>, ],
+                            destinations = <span class="kw">points</span>[<span class="fl">200</span>, ],
+                            <span class="kw">mode</span>,
+                            <span class="kw">departure_datetime</span>,
+                            <span class="kw">max_walk_dist</span>,
+                            <span class="kw">max_trip_duration</span>,
+                            shortest_path = <span class="fl">FALSE</span>)
+</pre></div>
 <div id="related-r-packages" class="section level4">
 <h4 class="hasAnchor">
 <a href="#related-r-packages" class="anchor"></a><strong>Related R packages</strong>
@@ -251,7 +264,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
