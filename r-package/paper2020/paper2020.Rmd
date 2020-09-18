@@ -28,8 +28,6 @@ set.seed(0)
 
 <!--  - https://joss.theoj.org/papers/10.21105/joss.01926 -->
 
-dasdasdds
-
 # RESEARCH QUESTIONS AND HYPOTHESES 
 
 Transport routing is the process of finding the alternative routes and costs 
@@ -272,17 +270,25 @@ setDT(copy(dit_short))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId
 
 ### visualize results
 
-`detailed_itineraries()` output is a `sf` object, which means that each trip segment is associated to a geometry
+`detailed_itineraries()` output is a `sf` object, which means that each trip 
+segment is associated to a spatial geometry that can be plotted with common `R` 
+packages, such as `ggplot2`. The package also offers a handy 
+`street_network_to_sf()` function that extracts the OSM street network used in 
+the routing as a `sf` object and can be used to provide geographic context for 
+the visualization.
 
-```{r, message = FALSE}
+```{r, message = FALSE, fig.width = 7, fig.height = 5}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
-# plot
-ggplot() +
-   geom_sf(data = street_net$edges, color='gray85') +
-   theme_minimal()
+dit$facet_labels <- paste0(dit$fromId, " to\n", dit$toId)
 
+ggplot() +
+   geom_sf(data = street_net$edges, color = "gray85") +
+   geom_sf(data = dit, aes(color = mode), size = 1) +
+   facet_wrap(~ facet_labels, nrow = 1) +
+   theme_minimal() + 
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
 
