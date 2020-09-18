@@ -92,9 +92,13 @@ transfers, etc.
 
 # FINDINGS
 
-The package can be installed with the following command:
+The package can be installed with the following commands:
 
 ```{r, message = FALSE, eval = FALSE}
+# stable version
+install.packages("r5r")
+
+# development version
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
@@ -192,7 +196,7 @@ origin/destination pairs, even though the `points` data set passed both to
 of the total 10000 possible trips between the supplied points, only 1043 could 
 be completed within the specified restrictions. Removing any walking distance 
 limits (by setting it to infinite) and increasing maximum trip duration 
-accordingly results in a "complete" output?
+accordingly results in a "complete" output:
 
 ```{r, message = FALSE}
 # set softer restrictions
