@@ -32,9 +32,7 @@ installed on your computer. No worries, you don't have to pay for it.
 
 
 ```R
-# soon on CRAN
-
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+install.packages("r5r")
 library(r5r)
 ```
 
