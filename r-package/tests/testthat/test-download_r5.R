@@ -3,7 +3,7 @@ context("download_r5")
 # expected behavior
 test_that("download_r5 - expected behavior", {
 
-  testthat::expect_vector(download_r5())
+  #testthat::expect_vector(download_r5())
   testthat::expect_vector(download_r5(force_update = T))
 
   # file.remove(file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar"))

@@ -18,7 +18,6 @@ library(checkmate)
 library(geobr)
 
 
-
 devtools::build_vignettes()
 
 mapviewOptions(platform = 'leafgl')
