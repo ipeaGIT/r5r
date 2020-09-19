@@ -28,6 +28,19 @@ download_r5 <- function(version = "4.9.0",
                         force_update = FALSE,
                         temp_dir = FALSE) {
 
+  # set timeout options --------------------------------------------------
+
+  old_options <- options()
+
+  on.exit({
+    options(old_options)
+  })
+
+  options(timeout=120)
+
+
+  # download metadata ------------------------------------------------------------
+
   # download metadata with jar file addresses
   metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
                               colClasses = 'character',
@@ -56,6 +69,8 @@ download_r5 <- function(version = "4.9.0",
     }
 
 
+  # check cached file ------------------------------------------------------------
+
   # check for existing file
   if (!is.logical(force_update)){stop(paste0("force_update must be either TRUE or FALSE"))}
 
@@ -63,6 +78,9 @@ download_r5 <- function(version = "4.9.0",
     message("Using cached version from ", destfile)
     return(destfile)
   } else {
+
+
+  # Download JAR file ------------------------------------------------------------
 
     # download file if it does not exist
     if (!checkmate::test_directory_exists(file.path(libs, "r5r", "jar"))) {
