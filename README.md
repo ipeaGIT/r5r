@@ -64,7 +64,7 @@ The package has three fundamental functions.
    estimates between one or multiple origin destination pairs.
 
 ### Demonstration on sample data
-See a detailed demonstration of `r5r` in this intro Vignette (*soon*). To illustrate
+See a detailed demonstration of `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). To illustrate
 functionality, the package includes a small sample data set of the public transport
 and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to 
 use `r5r`, as follows.
