@@ -10,8 +10,8 @@ travel_time_matrix(
   destinations,
   mode = "WALK",
   departure_datetime = Sys.time(),
-  time_window = 1,
-  percentiles = c(25L, 50L, 75L, 100L),
+  time_window = 60L,
+  percentiles = c(50L, 50L),
   max_walk_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
@@ -36,7 +36,7 @@ the GTFS file for valid dates.}
 
 \item{time_window}{numeric. Time window in minutes for which r5r will
 calculate multiple travel time matrices (one matrix
-departing every minute). Defaults to '1', so the function
+departing every minute). Defaults to '60', so the function
 only considers a single departure time.}
 
 \item{percentiles}{numeric vector. This parameter is only used when the
@@ -45,7 +45,8 @@ additional columns with the average travel times within
 percentiles of trips. For a given percentile of 10, for
 example, the result should be interpreted as 10\% of the
 trips in the set time window have an average travel time
-of up to x minutes. Defaults to 'c(25L, 50L, 75L, 100L)'.}
+of up to x minutes. Defaults to 'c(50L)', returning the
+median travel time for that window.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
 whole trip. Defaults to no restrictions on walking, as
