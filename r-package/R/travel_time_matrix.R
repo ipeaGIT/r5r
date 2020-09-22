@@ -11,6 +11,17 @@
 #' @param departure_datetime POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
+#' @param time_window numeric. Time window in minutes for which r5r will
+#'                    calculate multiple travel time matrices (one matrix
+#'                    departing every minute). Defaults to '1', so the function
+#'                    only considers a single departure time.
+#' @param percentiles numeric vector. This parameter is only used when the
+#'                    'time_window' value is above 1. The parameter will return
+#'                    additional columns with the average travel times within
+#'                    percentiles of trips. For a given percentile of 10, for
+#'                    example, the result should be interpreted as 10% of the
+#'                    trips in the set time window have an average travel time
+#'                    of up to x minutes. Defaults to 'c(25L, 50L, 75L, 100L)'.
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
@@ -76,6 +87,8 @@ travel_time_matrix <- function(r5r_core,
                                destinations,
                                mode = "WALK",
                                departure_datetime = Sys.time(),
+                               time_window = 1,
+                               percentiles = c(25L, 50L, 75L, 100L),
                                max_walk_dist = Inf,
                                max_trip_duration = 120L,
                                walk_speed = 3.6,
@@ -123,7 +136,21 @@ travel_time_matrix <- function(r5r_core,
   destinations <- assert_points_input(destinations, "destinations")
 
 
+  # time window
+  checkmate::assert_numeric(time_window)
+  time_window <- as.integer(time_window)
+
+  # percentiles
+  checkmate::assert_numeric(percentiles)
+  percentiles <- as.integer(percentiles)
+
+
   # set r5r_core options ----------------------------------------------------
+
+  # time window
+  r5r_core$setTimeWindowSize(time_window)
+  r5r_core$setNumberOfMonteCarloDraws(time_window) # 1 monte carlo draws (departures) per minute
+  r5r_core$setPercentiles(percentiles)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
