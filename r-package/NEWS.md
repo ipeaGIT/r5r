@@ -18,5 +18,5 @@ times each minute within a given time window.
 -------------------------------------------------------
 # r5r v0.1.0 (2020-09-18)
 
-* Launch of **r5r** v0.1.0 on [CRAN](https://cran.r-project.org/web/packages/r5r/index.html).
+* Launch of **r5r** v0.1.0 on [CRAN](https://CRAN.R-project.org/package=r5r).
 * Package website https://ipeagit.github.io/r5r/
