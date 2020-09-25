@@ -2,22 +2,22 @@
 
 
 -------------------------------------------------------
-# geobr v0.2 dev
+# r5r v0.2.0 dev
 
-### Major changes
+**Major changes**
 
 * function `travel_time_matrix` calculates travel times for multiple departure 
 times each minute within a given time window.
 
-### Minor changes
+**Minor changes**
 * Improved documentation of routing functions adding more info on the routing algorithms used in R5.
 
 
 
 -------------------------------------------------------
-# r5r v0.1-1 (2020-09-25)
+# r5r v0.1-1
 
-### Minor changes
+**Minor changes**
 * Fixed issues with time zone when setting departure times
 * Fixed issues to address CRAN checks
   * Now r5r can be installed on R (>= 3.6)
@@ -27,7 +27,7 @@ times each minute within a given time window.
 
 
 -------------------------------------------------------
-# r5r v0.1.0 (2020-09-18)
+# r5r v0.1.0
 
 * Launch of **r5r** v0.1.0 on [CRAN](https://CRAN.R-project.org/package=r5r).
 * Package website https://ipeagit.github.io/r5r/
