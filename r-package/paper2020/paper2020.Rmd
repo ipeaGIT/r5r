@@ -101,14 +101,12 @@ transfers, etc.
 
 # FINDINGS
 
-The package can be installed with the following commands:
+The package can be installed with the following command:
 
 ```{r, message = FALSE, eval = FALSE}
 # stable version
 install.packages("r5r")
 
-# development version
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
 The first step when using r5r is to set the amount of memory available to Java. 
@@ -121,6 +119,7 @@ script as follows:
 options(java.parameters = "-Xmx2G")
 ```
 
+#> I think this is perhaps unecessary detail for the paper publication.
 Please note that `R` only allocates memory to Java once during a running 
 session. If a Java process has been initiated before, either by r5r or any other 
 Java-dependent package or function, it might be required to restart the current 
@@ -154,7 +153,8 @@ head(points)
 
 ### Build a routable transport network
 
-Building a transport network with r5r is as simple as a one command line:
+To build a routable transport network with r5r, the user only needs one command
+line pointing to `setup_r5()` where the input data is stored:
 
 ```{r, message = FALSE}
 r5r_core <- setup_r5(data_path)
@@ -162,28 +162,24 @@ r5r_core <- setup_r5(data_path)
 
 The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed 
 by `data_path` to create a multimodal transport network used for routing by 
-R<sup>5</sup>. The resulting `network.dat`, as well as some other files used by 
-R<sup>5</sup>, is saved inside the supplied directory.
+R<sup>5</sup>. The resulting `network.dat` as well as some other files used by 
+R<sup>5</sup> are saved inside the supplied directory.
 
-While the presence of a `.pbf` file is mandatory, since it is required to create 
-a street network, the `GTFS.zip` file is only used to calculate public transport 
-trips, thus may not be necessary if that's not intended. Multiple GTFS can be 
-used simultaneously, in which case all files are merged into a single one 
-automatically.
+The presence of a `.pbf` file with OpenStreetMap data is mandatory because it is
+required to create a street network. Meanwhile, a `GTFS.zip` file is only used to
+calculate public transport trips, thus may not be necessary if that's not intended.
+Multiple GTFS can be used simultaneously, in which case all files are merged into
+a single one automatically by R<sup>5</sup>.
    
 ### Calculate a travel time matrix
 
 Calculating a travel time matrix with r5r can be done very efficiently with the
-`travel_time_matrix()` function. The function takes travel restrictions and
+`travel_time_matrix()` function. The function takes travel parameters and
 origins/destinations spatial location as inputs and outputs a `data.table` with 
 the travel time between all combinations of origins and destinations that can be 
-reached with the given restrictions:
+reached with the given parameters:
 
 ```{r, message = FALSE}
-# set restrictions
-mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000
-max_trip_duration <- 120
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -191,12 +187,12 @@ departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
 ttm <- travel_time_matrix(r5r_core,
                           origins = points,
                           destinations = points,
-                          mode,
+                          mode = c("WALK", "TRANSIT"),
                           departure_datetime,
-                          max_walk_dist,
-                          max_trip_duration)
+                          max_walk_dist = 1000,
+                          max_trip_duration = 120)
 
-ttm
+head(ttm)
 ```
 
 Note that the resulting `ttm` object only holds the travel time of 1043 
