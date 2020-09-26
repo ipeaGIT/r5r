@@ -1,5 +1,5 @@
 ---
-title: 'r5r: Rapid Realistic Routing with R5 in R'
+title: 'r5r: rapid realistic routing on multimodal transport networks with R5 in R'
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
@@ -35,17 +35,21 @@ that connect places on a given transport network. Routing often involves complex
 mathematical algorithms and it is a fundamental step required for transport
 accessibility analysis, fleet allocation and transport simulation and planning
 more broadly. Despite the long-standing importance of routing analysis to the 
-field, transport researchers and practitioners still frequently face practical 
-challenges with this task. These challenges involve for example the monetary 
-costs of licensed software, data availability issues for data hungry models, and
-the long computation times to run multiple routing scenarios, particularly in 
-large and complex multimodal transport networks. While there is a growing number
-of open source routing models [@opentripplanneropentripplanner; 
-@lovelace2019stplanr; @padgham2019dodgr], most options available only return the
-fastest route option between a set of origins and destinations. This simple
-approach overlooks how often people's actual route choices deviate from shortest
-travel time paths due to imperfect information, monetary costs and safety issues
-among other reasons [@larsen2011travel; @zhu2015people; @conway2019getting].
+field of transport and mobility studies, researchers and practitioners still 
+frequently face practical challenges with this task. These challenges involve for
+example the monetary costs of licensed software, data availability issues for data
+hungry models, and the long computation times to run multiple routing scenarios, 
+particularly in  large and complex multimodal transport networks. 
+
+While there is a growing number of open source routing models [@opentripplanneropentripplanner; 
+@lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently 
+process large transport networks. More importantly, these softwares generate
+deterministic estimates of travel times without accounting for issues of service
+reliability (REF) and they only return the fastest route option  between a set of
+origins and destinations. This simple approach overlooks how often people's 
+actual route choices deviate from shortest travel time paths, what
+can occur due to multiple factors such as imperfect information, monetary costs 
+and safety issues [@larsen2011travel; @zhu2015people; @conway2019getting].
 
 This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source 
 R package for rapid realistic routing on multimodal transport networks based on
@@ -64,7 +68,8 @@ wherever there is open data on street networks from OpenStreetMap (OSM). The
 package is also easily scalable allowing for fast computations at either the 
 city or country level analysis. For multimodal transport routing, r5r will 
 automatically combine OSM data with one or multiple public transport data sets 
-in the standard GTFS format to create a routable transport network.
+provided by the user in  the standard GTFS format to create a routable transport
+network.
 
 The r5r package has 3 fundamental functions. The `setup_r5()` function builds a 
 multimodal transport network used for routing in R<sup>5</sup>. This function 
@@ -74,14 +79,20 @@ future use; and (2) combines the OSM and GTFS data sets to build a routable
 network object. For fast routing analysis, r5r currently has two functions:
 
 - `travel_time_matrix()`: used to compute travel time estimates between one or 
-multiple origin/destination pairs. The origin/destination input can be either a 
+multiple origin/destination pairs for a single departure time or for multiple
+departure times over a time window. The origin/destination input can be either a 
 spatial `sf POINT` object, or a `data.frame` containing the columns `id`, `lon`, 
-`lat.` 
+`lat.` The output is a `data.frame` with the travel time estimate between each 
+origin/destination pair. If the user passes a `time_window` parameter to the,
+function, r5r will calculate multiple travel time matrices departing each minute
+and return additional information on the percentile distribution of travel times
+that allows one to grasp service reliability issues.
 
-- `detailed_itineraries()`:  used to compute detailed information at the trip 
-segment level on either the shortest or multiple alternative routes between one
-or multiple origin/destination pairs. Includes information such as the transport 
-mode, waiting time, travel time and distance.
+- `detailed_itineraries()`: used to compute detailed information on either the
+shortest or multiple alternative routes between one or multiple origin/destination
+pairs for a single departure time. The output includes detailed information on
+route alternatives such as the transport mode, waiting time, travel time and 
+distance of each segment of the trip.
 
 Both routing functions are versatile so users can easily set customized inputs
 such as transport mode, departure date and times, walking and cycling speeds, 
