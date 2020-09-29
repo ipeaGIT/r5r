@@ -27,17 +27,17 @@ default_tester <- function(r5r_obj,
 
   results <- travel_time_matrix(
     r5r_obj,
-    origins,
-    destinations,
-    mode,
-    departure_datetime,
-    max_walk_dist,
-    max_trip_duration,
-    walk_speed,
-    bike_speed,
-    max_rides,
-    n_threads,
-    verbose
+    origins = origins,
+    destinations = destinations,
+    mode = mode,
+    departure_datetime = departure_datetime,
+    max_walk_dist = max_walk_dist,
+    max_trip_duration = max_trip_duration,
+    walk_speed = walk_speed,
+    bike_speed = bike_speed,
+    max_rides = max_rides,
+    n_threads = n_threads,
+    verbose = verbose
   )
 
   return(results)
