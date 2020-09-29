@@ -96,24 +96,15 @@ r5r_core <- setup_r5(data_path = data_path)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # inputs
-origins <- points[10,]
-destinations <- points[12,]
-mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000
-max_trip_duration <- 120L
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 dit <- detailed_itineraries(r5r_core,
-                            origins,
-                            destinations,
-                            mode,
-                            departure_datetime,
-                            max_walk_dist)
-
-stop_r5(r5r_core)
-rJava::.jgc(R.gc = TRUE)
-
+                            origins = points[10,],
+                            destinations = points[12,],
+                            mode = c("WALK", "TRANSIT"),
+                            departure_datetime = departure_datetime,
+                            max_walk_dist = 1000,
+                            max_trip_duration = 120L)
 }
 }
 \seealso{
