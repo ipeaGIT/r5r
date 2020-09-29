@@ -152,7 +152,7 @@ travel_time_matrix <- function(r5r_core,
   # time window
   r5r_core$setTimeWindowSize(time_window)
   r5r_core$setPercentiles(percentiles)
-  r5r_core$setNumberOfMonteCarloDraws(200)
+  # r5r_core$setNumberOfMonteCarloDraws(200L)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
