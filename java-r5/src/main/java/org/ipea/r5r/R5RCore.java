@@ -79,12 +79,17 @@ public class R5RCore {
         this.numberOfMonteCarloDraws = numberOfMonteCarloDraws;
     }
 
-    private int timeWindowSize = 1; // minutes
-    private int numberOfMonteCarloDraws = 1; //
-    private int[] percentiles = {100};
+    private int timeWindowSize = 60; // minutes
+    private int numberOfMonteCarloDraws = 220; //
+    private int[] percentiles = {50};
 
     public void setPercentiles(int[] percentiles) {
         this.percentiles = percentiles;
+    }
+
+    public void setPercentiles(int percentile) {
+        this.percentiles = new int[1];
+        this.percentiles[0] = percentile;
     }
 
     public int getMaxTransfers() {
@@ -250,9 +255,9 @@ public class R5RCore {
         int secondsFromMidnight = getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + 60; // 1 minute, ignoring time window parameter (this.timeWindowSize * 60);
 
-        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+        request.monteCarloDraws = 1;
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
@@ -472,6 +477,55 @@ public class R5RCore {
             sum += streetEdgeInfo.distance;
         }
         return sum;
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String fromId, double fromLat, double fromLon,
+                                                                                   String[] toIds, double[] toLats, double[] toLons,
+                                                                                   String directModes, String transitModes, String accessModes, String egressModes,
+                                                                                   String date, String departureTime,
+                                                                                   int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return travelTimeMatrixParallel(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                                   String toId, double toLat, double toLon,
+                                                                                   String directModes, String transitModes, String accessModes, String egressModes,
+                                                                                   String date, String departureTime,
+                                                                                   int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return travelTimeMatrixParallel(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String fromId, double fromLat, double fromLon,
+                                                                                   String toId, double toLat, double toLon,
+                                                                                   String directModes, String transitModes, String accessModes, String egressModes,
+                                                                                   String date, String departureTime,
+                                                                                   int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return travelTimeMatrixParallel(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String[] fromIds, double[] fromLats, double[] fromLons,
