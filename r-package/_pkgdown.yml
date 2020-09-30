@@ -3,3 +3,16 @@ repo:
   url:
     home: https://github.com/ipeaGIT/r5r/
     source: https://github.com/ipeaGIT/r5r/tree/master/r-package/
+reference:
+  - title: "Setup"
+  - contents:
+    - download_r5
+    - setup_r5
+    - stop_r5
+  - title: "Routing"
+  - contents:
+    - detailed_itineraries
+    - travel_time_matrix
+  - title: "Support"
+  - contents:
+    - street_network_to_sf
