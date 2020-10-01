@@ -63,6 +63,4 @@ stop_r5 <- function(...) {
 
   }
 
-  rJava::.jgc(R.gc = TRUE)
-
 }
