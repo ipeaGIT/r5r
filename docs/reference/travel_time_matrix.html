@@ -88,6 +88,12 @@ multiple origin destination pairs." />
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -137,18 +143,20 @@ multiple origin destination pairs.</p>
     </div>
 
     <pre class="usage"><span class='fu'>travel_time_matrix</span>(
-  <span class='kw'>r5r_core</span>,
-  <span class='kw'>origins</span>,
-  <span class='kw'>destinations</span>,
-  mode = <span class='st'>"WALK"</span>,
-  departure_datetime = <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>(),
-  max_walk_dist = <span class='fl'>Inf</span>,
-  max_trip_duration = <span class='fl'>120L</span>,
-  walk_speed = <span class='fl'>3.6</span>,
-  bike_speed = <span class='fl'>12</span>,
-  max_rides = <span class='fl'>3</span>,
-  n_threads = <span class='fl'>Inf</span>,
-  verbose = <span class='fl'>TRUE</span>
+  <span class='no'>r5r_core</span>,
+  <span class='no'>origins</span>,
+  <span class='no'>destinations</span>,
+  <span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"WALK"</span>,
+  <span class='kw'>departure_datetime</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>(),
+  <span class='kw'>time_window</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
+  <span class='kw'>percentiles</span> <span class='kw'>=</span> <span class='fl'>50L</span>,
+  <span class='kw'>max_walk_dist</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
+  <span class='kw'>max_trip_duration</span> <span class='kw'>=</span> <span class='fl'>120L</span>,
+  <span class='kw'>walk_speed</span> <span class='kw'>=</span> <span class='fl'>3.6</span>,
+  <span class='kw'>bike_speed</span> <span class='kw'>=</span> <span class='fl'>12</span>,
+  <span class='kw'>max_rides</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>n_threads</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -173,6 +181,25 @@ containing the columns 'id', 'lon', 'lat'</p></td>
       <td><p>POSIXct object. If working with public transport
 networks, please check <code>calendar.txt</code> within
 the GTFS file for valid dates.</p></td>
+    </tr>
+    <tr>
+      <th>time_window</th>
+      <td><p>numeric. Time window in minutes for which r5r will
+calculate multiple travel time matrices (one matrix
+departing every minute). Defaults window size to '1', so
+the function only considers a single departure time.</p></td>
+    </tr>
+    <tr>
+      <th>percentiles</th>
+      <td><p>numeric vector. Defaults to '50', returning the median
+travel time for a given time_window. If a numeric vector is passed,
+for example c(25, 50, 75), the function will return
+additional columns with the travel times within percentiles
+of trips. For example, if the 25 percentile of trips between
+A and B is 15 minutes, this means that 25% of all trips
+taken between A and B within the set time window are shorter
+than 15 minutes. For more details, see R5 documentation at
+'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'</p></td>
     </tr>
     <tr>
       <th>max_walk_dist</th>
@@ -217,13 +244,13 @@ destination pairs by a given transport mode.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>R5 allows for multiple combinations of transport modes. The options
-include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Transit modes</h3>
+include:</p><h3>Transit modes</h3>
 
 
 <p>TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
 'TRANSIT' automatically considers all public transport modes available.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Non transit modes</h3>
+<h3>Non transit modes</h3>
 
 
 <p>WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK</p>
@@ -234,37 +261,28 @@ include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#argume
 <code><a href='detailed_itineraries.html'>detailed_itineraries</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span>)
+    <pre class="examples"><span class='co'># \donttest{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
 <span class='co'># build transport network</span>
-<span class='kw'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, package = <span class='st'>"r5r"</span>)
-<span class='kw'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(data_path = <span class='kw'>data_path</span>)
-</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/Rtmp2t6dyj/temp_libpath33405bd1ec/r5r/jar/r5r_v4.9.0_20200914.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/Rtmp2t6dyj/temp_libpath33405bd1ec/r5r/extdata/network.dat</span></div><div class='input'>
-<span class='co'># load origin/destination points</span>
-<span class='kw'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/poa_hexgrid.csv"</span>, package = <span class='st'>"r5r"</span>))[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>,]
+<span class='no'>data_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>)
+<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>data_path</span>)
 
-<span class='kw'>mode</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"WALK"</span>, <span class='st'>"TRANSIT"</span>)
-<span class='kw'>max_walk_dist</span> <span class='op'>&lt;-</span> <span class='fl'>Inf</span>
-<span class='kw'>max_trip_duration</span> <span class='op'>&lt;-</span> <span class='fl'>120L</span>
-<span class='kw'>departure_datetime</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span>(<span class='st'>"13-03-2019 14:00:00"</span>,
-                                 format = <span class='st'>"%d-%m-%Y %H:%M:%S"</span>)
+<span class='co'># load origin/destination points</span>
+<span class='no'>points</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/poa_hexgrid.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>))[<span class='fl'>1</span>:<span class='fl'>5</span>,]
+
+<span class='no'>departure_datetime</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span>(<span class='st'>"13-03-2019 14:00:00"</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"%d-%m-%Y %H:%M:%S"</span>)
 
 <span class='co'># estimate travel time matrix</span>
-<span class='kw'>ttm</span> <span class='op'>&lt;-</span> <span class='fu'>travel_time_matrix</span>(<span class='kw'>r5r_core</span>,
-                          origins = <span class='kw'>points</span>,
-                          destinations = <span class='kw'>points</span>,
-                          <span class='kw'>mode</span>,
-                          <span class='kw'>departure_datetime</span>,
-                          <span class='kw'>max_walk_dist</span>,
-                          <span class='kw'>max_trip_duration</span>)
+<span class='no'>ttm</span> <span class='kw'>&lt;-</span> <span class='fu'>travel_time_matrix</span>(<span class='no'>r5r_core</span>,
+                          <span class='kw'>origins</span> <span class='kw'>=</span> <span class='no'>points</span>,
+                          <span class='kw'>destinations</span> <span class='kw'>=</span> <span class='no'>points</span>,
+                          <span class='kw'>mode</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"WALK"</span>, <span class='st'>"TRANSIT"</span>),
+                          <span class='kw'>departure_datetime</span> <span class='kw'>=</span> <span class='no'>departure_datetime</span>,
+                          <span class='kw'>max_walk_dist</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
+                          <span class='kw'>max_trip_duration</span> <span class='kw'>=</span> <span class='fl'>120L</span>)
 
-<span class='fu'><a href='stop_r5.html'>stop_r5</a></span>(<span class='kw'>r5r_core</span>)
-</div><div class='output co'>#&gt; <span class='message'>r5r_core has been successfully stopped.</span></div><div class='input'><span class='kw'>rJava</span>::<span class='fu'><a href='https://rdrr.io/pkg/rJava/man/jgc.html'>.jgc</a></span>(R.gc = <span class='fl'>TRUE</span>)
-
-<span class='co'># }</span>
-</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -280,7 +298,7 @@ include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#argume
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
