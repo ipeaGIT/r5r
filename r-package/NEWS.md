@@ -6,11 +6,12 @@
 
 **Major changes**
 
-* function `travel_time_matrix` calculates travel times for multiple departure 
+* Added new parameters to `travel_time_matrix` so the function now calculates travel times for multiple departure 
 times each minute within a given time window.
 
 **Minor changes**
-* Improved documentation of routing functions adding more info on the routing algorithms used in R5.
+* added a sample of frequency-based GTFS for Sao Paulo. Closed #116
+* improved documentation of routing functions adding more info on the routing algorithms used in R5.
 
 
 

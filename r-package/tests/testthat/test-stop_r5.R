@@ -3,7 +3,7 @@ context("Stop r5r core")
 testthat::skip_on_cran()
 
 test_that("stop_r5 raises warnings and errors when supplied wrong objects", {
-  path <- system.file("extdata", package = "r5r")
+  path <- system.file("extdata/poa", package = "r5r")
   old_env <- environment()
   r5r_core <- setup_r5(data_path = path, verbose=FALSE)
 
@@ -19,7 +19,7 @@ test_that("stop_r5 raises warnings and errors when supplied wrong objects", {
 })
 
 test_that("stop_r5 successfully stops multiple running r5r cores", {
-  path <- system.file("extdata", package = "r5r")
+  path <- system.file("extdata/poa", package = "r5r")
   old_env <- environment()
 
   # stops all running r5r cores

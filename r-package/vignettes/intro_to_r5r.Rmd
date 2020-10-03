@@ -79,21 +79,21 @@ To illustrate functionality, the package includes a small sample data for the ci
 * The spatial coordinates of a regular hexagonal grid covering the sample area, in a `.csv` file, which can be used as origin/destination pairs in a travel time matrix calculation.
 
 ```{r}
-data_path <- system.file("extdata", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)
 ```
 
 The points of interest data can be seen below.  In this example, we will be looking at transport alternatives between some of those places.
 
 ```{r}
-poi <- fread(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
+poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 head(poi)
 ```
 
 The data with origin destination pairs is shown below. In this example, we will be building a travel time matrix between ten random points in this data set.
 
 ```{r}
-points <- fread(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
 head(points)
 ```

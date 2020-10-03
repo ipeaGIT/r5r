@@ -13,17 +13,13 @@ library(mapview)
 library(covr)
 library(testthat)
 library(ggplot2)
-library(mapview)
 library(checkmate)
 library(geobr)
-
-
-devtools::build_vignettes()
-
+library(gtfs2gps)
+library(mapview)
 mapviewOptions(platform = 'leafgl')
 
-# Update documentation
-devtools::document(pkg = ".")
+
 
 
 ##### INPUT  ------------------------
@@ -32,13 +28,14 @@ devtools::document(pkg = ".")
 
 
 # build transport network
-path <- system.file("extdata", package = "r5r")
+poa <- system.file("extdata/poa", package = "r5r")
+spo <- system.file("extdata/spo", package = "r5r")
 
 # r5r::download_r5(force_update = T)
 r5r_core <- setup_r5(data_path = path, verbose = F)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
 
 # remove files
@@ -72,24 +69,29 @@ get_all_od_combinations <- function(origins, destinations){
         }
 
 # example
-origins <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:800,]
-destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[400:1200,]
+origins <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))[1:800,]
+destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))[400:1200,]
 
 df <- get_all_od_combinations(origins, destinations)
 
 ##### TESTS street_network_to_sf ------------------------
 
+gtfs_shapes <- gtfs2gps::read_gtfs( system.file("extdata/spo/spo.zip", package = "r5r") ) %>%
+        gtfs2gps::gtfs_shapes_as_sf()
+
+
+
+spo <- system.file("extdata/spo", package = "r5r")
+
+r5r_core <- setup_r5(data_path = spo, verbose = F)
+
 street_net <- street_network_to_sf(r5r_core)
 
 
-mapview(street_net$edges ) + street_net$vertices + a
+mapview(street_net$edges ) + street_net$vertices + gtfs_shapes
 
 head(street_net$edges)
 
-a <- sf::st_cast(street_net$edges, 'POINT')
-
-ggplot() +
-        geom_
 
 
 
@@ -123,33 +125,6 @@ df <- detailed_itineraries(r5r_core,
 
 
 
-##### TESTS multiple detailed_itineraries ------------------------
-
-trip_date <- "2019-03-17"
-departure_time <- "14:00:00"
-street_time = 15L
-direct_modes <- c("WALK", "BICYCLE", "CAR")
-transit_modes <-"BUS"
-max_street_time = 30
-
-trip_requests <- data.frame(id = 1:5,
-                            fromLat = points[1:5,]$lat,
-                            fromLon = points[1:5,]$lon,
-                            toLat = points[1:5,]$lat,
-                            toLon = points[1:5,]$lon )
-
-trip_requests2 <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
-
-system.time(
-trips <- multiple_detailed_itineraries( r5r_core,
-                                        trip_requests,
-                                        trip_date = trip_date,
-                                        departure_time = departure_time,
-                                        direct_modes = direct_modes,
-                                        transit_modes = transit_modes,
-                                        max_street_time = max_street_time
-))
-
 
 
 
@@ -159,7 +134,7 @@ trips <- multiple_detailed_itineraries( r5r_core,
 options(java.parameters = "-Xmx16G")
 
 # input
-origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[c(1,100,300,500),]
+origins <- destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))[c(1,100,300,500),]
 
 # input
 origins = points
@@ -214,11 +189,11 @@ departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:
 ##### HEX sticker ------------------------
 
 # load origin/destination points
- points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+ points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
  points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
  points_sf2 <- sf::st_as_sf(points, coords = c("lon", "lat"))
 
- data_path <- system.file("extdata", package = "r5r")
+ data_path <- system.file("extdata/poa", package = "r5r")
  points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
  a <-  sf::st_as_sf(points, coords = c("lon", "lat"))
 
@@ -263,7 +238,7 @@ departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:
 
 
 # build transport network
-data_path <- system.file("extdata", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 

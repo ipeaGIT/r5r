@@ -96,11 +96,11 @@ WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 library(r5r)
 
 # build transport network
-data_path <- system.file("extdata", package = "r5r")
+data_path <- system.file("extdata/spo", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:5,]
+points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
 
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
 

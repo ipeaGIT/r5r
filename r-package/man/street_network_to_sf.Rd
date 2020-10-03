@@ -22,7 +22,7 @@ Extract OpenStreetMap network in sf format from a network.dat built with setup_r
 library(r5r)
 
 # build transport network
-path <- system.file("extdata", package = "r5r")
+path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 
 # load origin/destination points

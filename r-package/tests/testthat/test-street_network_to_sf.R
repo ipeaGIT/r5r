@@ -4,7 +4,7 @@ testthat::skip_on_cran()
 
 
 # setup_r5
-path <- system.file("extdata", package = "r5r")
+path <- system.file("extdata/poa", package = "r5r")
 r5_core <- setup_r5(data_path = path, verbose=FALSE)
 
 

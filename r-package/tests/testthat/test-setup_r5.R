@@ -2,7 +2,7 @@ context("download_r5")
 
 testthat::skip_on_cran()
 
-path <- system.file("extdata", package = "r5r")
+path <- system.file("extdata/poa", package = "r5r")
 
 # expected behavior
 test_that("setup_r5 - expected behavior", {

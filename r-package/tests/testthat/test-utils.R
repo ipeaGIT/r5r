@@ -3,7 +3,7 @@ context("Support functions")
 testthat::skip_on_cran()
 
 # load required data and setup r5r_obj
-data_path <- system.file("extdata", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 r5r_obj <- setup_r5(data_path, verbose = FALSE)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
