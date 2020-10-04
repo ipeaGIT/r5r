@@ -6,12 +6,16 @@
 
 **Major changes**
 
-* Added new parameters to `travel_time_matrix` so the function now calculates travel times for multiple departure 
-times each minute within a given time window.
+* Function `travel_time_matrix` now has new parameters `time_window` and
+`percentiles` it now calculates travel times for multiple departure times each 
+minute within a given time window. For now, the function automatically set the
+number of Monte Carlo Draws to 5 times the size of `time_window`. Closes #104 
+and #118
 
 **Minor changes**
 * added a sample of frequency-based GTFS for Sao Paulo. Closed #116
-* improved documentation of routing functions adding more info on the routing algorithms used in R5.
+* improved documentation of routing functions adding more info on the routing 
+algorithms used in R5. Closes #114
 
 
 
