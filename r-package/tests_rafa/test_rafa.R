@@ -347,7 +347,7 @@ r5r_core <- setup_r5(path)
 ### CMD Check ----------------
 # Check package errors
 Sys.setenv(NOT_CRAN = "false")
-devtools::check(pkg = ".",  cran = TRUE)
+devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 devtools::check_win_release(pkg = ".")
@@ -362,15 +362,10 @@ beepr::beep()
 # build binary
 system("R CMD build . --resave-data") # build tar.gz
 
-# Check package errors
-# devtools::check("gtfs2gps")
-system("R CMD check gtfs2gps_1.0.tar.gz")
-system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 
 
-ggsave('./inst/img/vig_detailed_ggplot2.png', width = 10, height = 5, units = 'cm', dpi=200)
 
 
 
