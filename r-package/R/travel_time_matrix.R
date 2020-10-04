@@ -12,9 +12,12 @@
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
 #' @param time_window numeric. Time window in minutes for which r5r will
-#'                    calculate multiple travel time matrices (one matrix
-#'                    departing every minute). Defaults window size to '1', so
-#'                    the function only considers a single departure time.
+#'                    calculate multiple travel time matrices departing each
+#'                    minute. By default, the number of simulations is 5 times
+#'                    the size of 'time_window' set by the user. Defaults window
+#'                    size to '1', the function only considers 5 departure times.
+#'                    This parameter is only used with frequency-based GTFS files.
+#'                    See details for further information.
 #' @param percentiles numeric vector. Defaults to '50', returning the median
 #'                    travel time for a given time_window. If a numeric vector is passed,
 #'                    for example c(25, 50, 75), the function will return
@@ -51,6 +54,19 @@
 #'   ## Non transit modes
 #'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 #'
+#'
+#' # Routing algorithm:
+#' The travel_time_matrix function uses an R5-specific extension to the RAPTOR
+#' routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
+#' systematic sample of one departure per minute over the time window set by the
+#' user in the 'time_window' parameter. A detailed description of base RAPTOR
+#' can be found in Delling et al (2015).
+#' - Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based transit
+#'  and land use sketch planning using interactive accessibility methods on
+#'  combined schedule and headway-based networks. Transportation Research Record,
+#'  2653(1), 45-53.
+#'  - Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
+#'  routing. Transportation Science, 49(3), 591-604.
 #'
 #' @family routing
 #' @examples \donttest{
@@ -134,6 +150,8 @@ travel_time_matrix <- function(r5r_core,
   # time window
   checkmate::assert_numeric(time_window)
   time_window <- as.integer(time_window)
+  draws <- time_window *5
+  draws <- as.integer(draws)
 
   # percentiles
   checkmate::assert_numeric(percentiles)
@@ -145,7 +163,7 @@ travel_time_matrix <- function(r5r_core,
   # time window
   r5r_core$setTimeWindowSize(time_window)
   r5r_core$setPercentiles(percentiles)
-  # r5r_core$setNumberOfMonteCarloDraws(200L)
+  r5r_core$setNumberOfMonteCarloDraws(draws)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")

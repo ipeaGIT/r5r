@@ -84,6 +84,19 @@ TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
 WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 }
 }
+\section{Routing algorithm:}{
+The detailed_itineraries function uses an R5-specific extension to the
+McRAPTOR routing algorithm to find paths that are optimal or less than
+optimal, with some heuristics around multiple access modes, riding the same
+patterns, etc. The specific extension to McRAPTOR to do suboptimal
+path routing are not documented yet, but a detailed description of base
+McRAPTOR can be found in Delling et al (2015).
+\itemize{
+\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
+routing. Transportation Science, 49(3), 591-604.
+}
+}
+
 \examples{
 \donttest{
 library(r5r)

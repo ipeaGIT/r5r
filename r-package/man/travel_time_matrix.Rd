@@ -35,9 +35,12 @@ networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
 \item{time_window}{numeric. Time window in minutes for which r5r will
-calculate multiple travel time matrices (one matrix
-departing every minute). Defaults window size to '1', so
-the function only considers a single departure time.}
+calculate multiple travel time matrices departing each
+minute. By default, the number of simulations is 5 times
+the size of 'time_window' set by the user. Defaults window
+size to '1', the function only considers 5 departure times.
+This parameter is only used with frequency-based GTFS files.
+See details for further information.}
 
 \item{percentiles}{numeric vector. Defaults to '50', returning the median
 travel time for a given time_window. If a numeric vector is passed,
@@ -91,6 +94,22 @@ TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
 WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
 }
 }
+\section{Routing algorithm:}{
+The travel_time_matrix function uses an R5-specific extension to the RAPTOR
+routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
+systematic sample of one departure per minute over the time window set by the
+user in the 'time_window' parameter. A detailed description of base RAPTOR
+can be found in Delling et al (2015).
+\itemize{
+\item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based transit
+and land use sketch planning using interactive accessibility methods on
+combined schedule and headway-based networks. Transportation Research Record,
+2653(1), 45-53.
+\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
+routing. Transportation Science, 49(3), 591-604.
+}
+}
+
 \examples{
 \donttest{
 library(r5r)
