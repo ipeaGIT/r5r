@@ -31,7 +31,7 @@ in the directory, both files will be merged. If there is already a 'network.dat'
 file in the directory the function will simply read it and load it to memory.
 }
 \examples{
-\donttest{
+\dontrun{
 
 library(r5r)
 

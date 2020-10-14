@@ -15,7 +15,7 @@
 #'
 #' @return A jar file is saved locally in the r5r package directory
 #' @family setup
-#' @examples \donttest{
+#' @examples \dontrun{
 #'
 #' library(r5r)
 #'

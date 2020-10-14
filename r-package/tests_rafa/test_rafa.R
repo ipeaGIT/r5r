@@ -16,6 +16,7 @@ library(ggplot2)
 library(checkmate)
 library(geobr)
 library(gtfs2gps)
+library(tictoc)
 library(mapview)
 mapviewOptions(platform = 'leafgl')
 
@@ -354,10 +355,15 @@ devtools::check_win_release(pkg = ".")
 
 beepr::beep()
 
+tictoc::tic()
+devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
+tictoc::toc()
 
+donottest
+219.34 sec elapsed
 
-
-
+donotrun
+175.84 sec elapsed
 
 # build binary
 system("R CMD build . --resave-data") # build tar.gz

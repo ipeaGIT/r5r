@@ -18,7 +18,7 @@
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
-#' @examples \donttest{
+#' @examples \dontrun{
 #'
 #' library(r5r)
 #'
