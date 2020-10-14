@@ -13,3 +13,5 @@ r5r.Rcheck
 network.dat
 poa_osm.pbf.mapdb
 poa_osm.pbf.mapdb.p
+/r-package/inst/extdata/spo/spo_osm.pbf.mapdb
+/r-package/inst/extdata/spo/spo_osm.pbf.mapdb.p
