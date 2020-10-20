@@ -36,7 +36,7 @@ download_r5 <- function(version = "4.9.0",
     options(old_options)
   })
 
-  options(timeout=120)
+  options(timeout=600)
 
 
   # download metadata ------------------------------------------------------------
