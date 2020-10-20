@@ -83,19 +83,13 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2-0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -146,12 +140,12 @@ compilation of R5 tailored for the purposes of r5r that keeps R5's
 essential features. Source code available at https://github.com/ipeaGIT/r5r.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>download_r5</span>(
-  <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>force_update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>download_r5</span><span class='op'>(</span>
+  version <span class='op'>=</span> <span class='st'>"4.9.0"</span>,
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  force_update <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  temp_dir <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,12 +180,13 @@ directory. Defaults to FALSE</p></td>
 <code><a href='setup_r5.html'>setup_r5</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># \donttest{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span><span class='op'>)</span>
 
-<span class='fu'>download_r5</span>(<span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"4.9.0"</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>download_r5</span><span class='op'>(</span>version <span class='op'>=</span> <span class='st'>"4.9.0"</span>, temp_dir <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -207,7 +202,7 @@ directory. Defaults to FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
