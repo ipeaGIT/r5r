@@ -134,6 +134,25 @@ the city of Porto Alegre (Brazil). It includes four files:
 - The spatial coordinates of points covering the area in `.csv` format.
 - The spatial coordinates of some of the city's points of interest.
 
+```{r, include = FALSE}
+
+# removes files other than the four specified above
+
+desired_files <- c(
+   "poa.zip", 
+   "poa_hexgrid.csv", 
+   "poa_osm.pbf", 
+   "poa_points_of_interest.csv"
+)
+
+data_path <- system.file("extdata/poa", package = "r5r")
+all_files <- list.files(data_path)
+
+files_to_remove <- all_files[! all_files %chin% desired_files]
+
+file.remove(paste0(data_path, "/", files_to_remove))
+```
+
 ```{r}
 data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)

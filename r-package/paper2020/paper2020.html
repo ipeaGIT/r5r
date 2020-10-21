@@ -378,21 +378,19 @@ write abstract
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/poa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">list.files</span>(data_path)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; [1] &quot;network.dat&quot;                &quot;poa.zip&quot;                   </span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [3] &quot;poa_hexgrid.csv&quot;            &quot;poa_osm.pbf&quot;               </span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; [5] &quot;poa_osm.pbf.mapdb&quot;          &quot;poa_osm.pbf.mapdb.p&quot;       </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; [7] &quot;poa_points_of_interest.csv&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a></span>
-<span id="cb4-8"><a href="#cb4-8"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/poa/poa_hexgrid.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>))</span>
-<span id="cb4-9"><a href="#cb4-9"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">head</span>(points)</span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt;                 id       lon       lat</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; 1: 89a90128217ffff -51.17689 -30.06336</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 2: 89a90129567ffff -51.15263 -30.06542</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 3: 89a9012a3b3ffff -51.22708 -30.10066</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; [1] &quot;poa.zip&quot;                    &quot;poa_hexgrid.csv&quot;           </span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [3] &quot;poa_osm.pbf&quot;                &quot;poa_points_of_interest.csv&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/poa/poa_hexgrid.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>))</span>
+<span id="cb4-7"><a href="#cb4-7"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">head</span>(points)</span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt;                 id       lon       lat</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; 1: 89a90128217ffff -51.17689 -30.06336</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt; 2: 89a90129567ffff -51.15263 -30.06542</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; 3: 89a9012a3b3ffff -51.22708 -30.10066</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
 <div id="build-a-routable-transport-network" class="section level3">
 <h3>Build a routable transport network</h3>
 <p>To build a routable transport network with r5r, the user only needs one command line pointing to <code>setup_r5()</code> where the input data is stored:</p>
