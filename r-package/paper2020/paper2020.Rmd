@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette: default
   github_document: default
-abstract: "write abstract"
+abstract: "Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges regarding this task, such as the cost of licensed software and the long computation times to run complex scenarios. Conveyal's R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single origin/destination pair. This paper describes r5r, an open source R package built on top of R<sup>5</sup> that allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as it offers an easy-to-use powerful tool for robust planning and research."
 urlcolor: blue
 vignette: |
   %\VignetteIndexEntry{r5r-intro} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
@@ -45,7 +45,7 @@ While there is a growing number of open source routing models [@opentripplannero
 @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently 
 process large transport networks. More importantly, these softwares generate
 deterministic estimates of travel times without accounting for issues of service
-reliability (REF) and they only return the fastest route option  between a set of
+reliability (REF) and they only return the fastest route option between a set of
 origins and destinations. This simple approach overlooks how often people's 
 actual route choices deviate from shortest travel time paths, what
 can occur due to multiple factors such as imperfect information, monetary costs 
@@ -139,15 +139,10 @@ the city of Porto Alegre (Brazil). It includes four files:
 - The spatial coordinates of points covering the area in `.csv` format.
 - The spatial coordinates of some of the city's points of interest.
 
-```{r, include = FALSE}
-
-# point to directory with data
+```{r}
+# points to directory with data
 data_path <- system.file("extdata/spo", package = "r5r")
 
-```
-
-```{r}
-# list files in directory
 list.files(data_path)
 
 # read points of origin and destination
