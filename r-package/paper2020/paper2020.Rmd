@@ -229,14 +229,6 @@ ttm <- travel_time_matrix(r5r_core,
 ttm
 ```
 
-Since the sample data holds information for few transit routes, many trips rely 
-only on walking to be completed. Consequently, the travel time estimates of such 
-trips are not affected by transit reliability issues. This is the case of the 
-first five rows of `ttm`, which present the same estimate regardless of the 
-percentile they represent. The effect of the `time_window` and `percentiles` 
-parameters can be observed above in the last rows of `ttm`, in which the 
-estimates grow along the increase of the percentile they depict.
-
 ### Calculate detailed itineraries
 
 Often enough one wants more information on the itineraries between 
