@@ -75,6 +75,42 @@ destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r
 
 df <- get_all_od_combinations(origins, destinations)
 
+
+
+
+
+##### TESTS isochronw ------------------------
+
+ library(r5r)
+
+ # build transport network
+ data_path <- system.file("extdata/spo", package = "r5r")
+ r5r_core <- setup_r5(data_path = data_path)
+
+# load origin/destination points
+network <- street_network_to_sf(r5r_core)
+ points = network[[1]]
+
+
+ departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+
+ # estimate travel time matrix
+ ttm <- travel_time_matrix(r5r_core,
+                           origins = points,
+                           destinations = points,
+                           mode = c("WALK", "TRANSIT"),
+                           departure_datetime = departure_datetime,
+                           max_walk_dist = Inf,
+                           max_trip_duration = 120L)
+
+
+
+
+
+
+
+
+
 ##### TESTS street_network_to_sf ------------------------
 
 gtfs_shapes <- gtfs2gps::read_gtfs( system.file("extdata/spo/spo.zip", package = "r5r") ) %>%
