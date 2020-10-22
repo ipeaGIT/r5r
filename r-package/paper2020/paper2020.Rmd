@@ -80,12 +80,10 @@ network object. For fast routing analysis, r5r currently has two functions:
 
 - `travel_time_matrix()`: used to compute travel time estimates between one or 
 multiple origin/destination pairs for a single departure time or for multiple
-departure times over a time window. The origin/destination input can be either a 
-spatial `sf POINT` object, or a `data.frame` containing the columns `id`, `lon`, 
-`lat.` The output is a `data.frame` with the travel time estimate between each 
-origin/destination pair. If the user passes a `time_window` parameter to the,
-function, r5r will calculate multiple travel time matrices departing each minute
-and return additional information on the percentile distribution of travel times
+departure times over a time window. The output comprises the travel time between
+each origin/destination pair. If the user passes a `time_window` parameter
+to the function, r5r will calculate multiple travel time matrices departing each 
+minute and return additional information on the percentile distribution of travel times
 that allows one to grasp service reliability issues.
 
 - `detailed_itineraries()`: used to compute detailed information on either the
@@ -106,7 +104,6 @@ The package can be installed with the following command:
 ```{r, message = FALSE, eval = FALSE}
 # stable version
 install.packages("r5r")
-
 ```
 
 The first step when using r5r is to set the amount of memory available to Java. 
@@ -119,12 +116,6 @@ script as follows:
 options(java.parameters = "-Xmx2G")
 ```
 
-#> I think this is perhaps unecessary detail for the paper publication.
-Please note that `R` only allocates memory to Java once during a running 
-session. If a Java process has been initiated before, either by r5r or any other 
-Java-dependent package or function, it might be required to restart the current 
-`R` session in order to effectively change the amount of memory allocated.
-
 The package can be attached (with some other packages used in this article) with 
 the following command:
 
@@ -136,17 +127,37 @@ library(ggplot2)
 ```
 
 To illustrate functionality, the package includes a small sample data set for 
-the city of Porto Alegre (Brazil). It includes three files:
+the city of Porto Alegre (Brazil). It includes four files:
 
 - An OSM network in `.pbf` format.
 - A public transport network in `GTFS.zip` format.
 - The spatial coordinates of points covering the area in `.csv` format.
+- The spatial coordinates of some of the city's points of interest.
+
+```{r, include = FALSE}
+
+# removes files other than the four specified above
+
+desired_files <- c(
+   "poa.zip", 
+   "poa_hexgrid.csv", 
+   "poa_osm.pbf", 
+   "poa_points_of_interest.csv"
+)
+
+data_path <- system.file("extdata/poa", package = "r5r")
+all_files <- list.files(data_path)
+
+files_to_remove <- all_files[! all_files %chin% desired_files]
+
+file.remove(paste0(data_path, "/", files_to_remove))
+```
 
 ```{r}
-data_path <- system.file("extdata", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)
 
-points <- fread(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points <- fread(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 points <- points[c(sample(1:nrow(points), 100))]
 head(points)
 ```
@@ -174,12 +185,20 @@ a single one automatically by R<sup>5</sup>.
 ### Calculate a travel time matrix
 
 Calculating a travel time matrix with r5r can be done very efficiently with the
-`travel_time_matrix()` function. The function takes travel parameters and
-origins/destinations spatial location as inputs and outputs a `data.table` with 
-the travel time between all combinations of origins and destinations that can be 
-reached with the given parameters:
+`travel_time_matrix()` function. The function takes origins/destinations spatial
+location (either as a spatial `sf POINT` object, or as a `data.frame` containing
+the columns `id`, `lon` and `lat`) and travel parameters as inputs and outputs a
+`data.table` with the travel time estimates between all combinations of origins 
+and destinations that can be reached with the given parameters.
+
+The `time_window` parameter is set to 1 by default, which means that travel time 
+estimates will be calculated using a single departure time (specified by 
+`departure_datetime`):
 
 ```{r, message = FALSE}
+mode <- c("WALK", "TRANSIT")
+max_walk_dist <- 1000
+max_trip_duration <- 120
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -187,38 +206,46 @@ departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
 ttm <- travel_time_matrix(r5r_core,
                           origins = points,
                           destinations = points,
-                          mode = c("WALK", "TRANSIT"),
-                          departure_datetime,
-                          max_walk_dist = 1000,
-                          max_trip_duration = 120)
+                          mode = mode,
+                          departure_datetime = departure_datetime,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration)
 
 head(ttm)
 ```
 
-Note that the resulting `ttm` object only holds the travel time of 1043 
-origin/destination pairs, even though the `points` data set passed both to 
-`origins` and `destinations` argument contains 100 points. This is because out 
-of the total 10000 possible trips between the supplied points, only 1043 could 
-be completed within the specified restrictions. Removing any walking distance 
-limits (by setting it to infinite) and increasing maximum trip duration 
-accordingly results in a "complete" output:
+Alternatively, a bigger time window can be specified. In such cases several 
+travel time matrices are calculated using every minute from `departure_datetime` 
+to the end of the given window as a distinct departure time. By default the 
+function outputs the 50th percentile (i.e. the median) travel time between each 
+origin and destination pair, which can be overruled by the `percentiles` 
+parameter:
 
 ```{r, message = FALSE}
-# set softer restrictions
-max_walk_dist <- Inf
-max_trip_duration <- 360
+time_window <- 60
+percentiles <- c(25, 50, 75)
 
 # calculate travel time matrix
 ttm <- travel_time_matrix(r5r_core,
                           origins = points,
                           destinations = points,
-                          mode,
-                          departure_datetime,
-                          max_walk_dist,
-                          max_trip_duration)
+                          mode = mode,
+                          departure_datetime = departure_datetime,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          time_window = time_window,
+                          percentiles = percentiles)
 
 ttm
 ```
+
+Since the sample data holds information for few transit routes, many trips rely 
+only on walking to be completed. Consequently, the travel time estimates of such 
+trips are not affected by transit reliability issues. This is the case of the 
+first five rows of `ttm`, which present the same estimate regardless of the 
+percentile they represent. The effect of the `time_window` and `percentiles` 
+parameters can be observed above in the last rows of `ttm`, in which the 
+estimates grow along the increase of the percentile they depict.
 
 ### Calculate detailed itineraries
 

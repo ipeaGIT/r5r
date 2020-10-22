@@ -12,9 +12,9 @@
 
 <meta name="author" content="Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga" />
 
-<meta name="date" content="2020-09-18" />
+<meta name="date" content="2020-10-21" />
 
-<title>r5r: Rapid Realistic Routing with R5 in R</title>
+<title>r5r: rapid realistic routing on multimodal transport networks with R5 in R</title>
 
 <script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
 // v0.0.1
@@ -327,9 +327,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">r5r: Rapid Realistic Routing with R5 in R</h1>
+<h1 class="title toc-ignore">r5r: rapid realistic routing on multimodal transport networks with R5 in R</h1>
 <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
-<h4 class="date">2020-09-18</h4>
+<h4 class="date">2020-10-21</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 write abstract
@@ -343,124 +343,129 @@ write abstract
 <!--  - https://joss.theoj.org/papers/10.21105/joss.01926 -->
 <div id="research-questions-and-hypotheses" class="section level1">
 <h1>RESEARCH QUESTIONS AND HYPOTHESES</h1>
-<p>Transport routing is the process of finding the alternative routes and costs that connect places on a given transport network. Routing often involves complex mathematical algorithms and it is a fundamental step required for transport accessibility analysis, fleet allocation and transport simulation and planning more broadly. Despite the long-standing importance of routing analysis to the field, transport researchers and practitioners still frequently face practical challenges with this task. These challenges involve for example the monetary costs of licensed software, data availability issues for data hungry models, and the long computation times to run multiple routing scenarios, particularly in large and complex multimodal transport networks. While there is a growing number of open source routing models <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available only return the fastest route option between a set of origins and destinations. This simple approach overlooks how often people’s actual route choices deviate from shortest travel time paths due to imperfect information, monetary costs and safety issues among other reasons <span class="citation">(Larsen and El-Geneidy 2011; Zhu and Levinson 2015; Conway and Stewart 2019)</span>.</p>
+<p>Transport routing is the process of finding the alternative routes and costs that connect places on a given transport network. Routing often involves complex mathematical algorithms and it is a fundamental step required for transport accessibility analysis, fleet allocation and transport simulation and planning more broadly. Despite the long-standing importance of routing analysis to the field of transport and mobility studies, researchers and practitioners still frequently face practical challenges with this task. These challenges involve for example the monetary costs of licensed software, data availability issues for data hungry models, and the long computation times to run multiple routing scenarios, particularly in large and complex multimodal transport networks.</p>
+<p>While there is a growing number of open source routing models <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available do not efficiently process large transport networks. More importantly, these softwares generate deterministic estimates of travel times without accounting for issues of service reliability (REF) and they only return the fastest route option between a set of origins and destinations. This simple approach overlooks how often people’s actual route choices deviate from shortest travel time paths, what can occur due to multiple factors such as imperfect information, monetary costs and safety issues <span class="citation">(Larsen and El-Geneidy 2011; Zhu and Levinson 2015; Conway and Stewart 2019)</span>.</p>
 <p>This paper presents <a href="https://ipeagit.github.io/r5r/">r5r</a>, a new open source R package for rapid realistic routing on multimodal transport networks based on the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)</a>. R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal <span class="citation">(Conway, Byrd, and van der Linden 2017; Conway, Byrd, and Van Eggermond 2018)</span> to replace its predecessor OpenTripPlanner. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, what allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.</p>
 </div>
 <div id="methods-and-data" class="section level1">
 <h1>METHODS AND DATA</h1>
-<p>r5r has low data requirements, enabling routing analysis on different contexts wherever there is open data on street networks from OpenStreetMap (OSM). The package is also easily scalable allowing for fast computations at either the city or country level analysis. For multimodal transport routing, r5r will automatically combine OSM data with one or multiple public transport data sets in the standard GTFS format to create a routable transport network.</p>
+<p>r5r has low data requirements, enabling routing analysis on different contexts wherever there is open data on street networks from OpenStreetMap (OSM). The package is also easily scalable allowing for fast computations at either the city or country level analysis. For multimodal transport routing, r5r will automatically combine OSM data with one or multiple public transport data sets provided by the user in the standard GTFS format to create a routable transport network.</p>
 <p>The r5r package has 3 fundamental functions. The <code>setup_r5()</code> function builds a multimodal transport network used for routing in R<sup>5</sup>. This function (1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the purposes of the package, and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS data sets to build a routable network object. For fast routing analysis, r5r currently has two functions:</p>
 <ul>
-<li><p><code>travel_time_matrix()</code>: used to compute travel time estimates between one or multiple origin/destination pairs. The origin/destination input can be either a spatial <code>sf POINT</code> object, or a <code>data.frame</code> containing the columns <code>id</code>, <code>lon</code>, <code>lat.</code></p></li>
-<li><p><code>detailed_itineraries()</code>: used to compute detailed information at the trip segment level on either the shortest or multiple alternative routes between one or multiple origin/destination pairs. Includes information such as the transport mode, waiting time, travel time and distance.</p></li>
+<li><p><code>travel_time_matrix()</code>: used to compute travel time estimates between one or multiple origin/destination pairs for a single departure time or for multiple departure times over a time window. The output comprises the travel time between each origin/destination pair. If the user passes a <code>time_window</code> parameter to the function, r5r will calculate multiple travel time matrices departing each minute and return additional information on the percentile distribution of travel times that allows one to grasp service reliability issues.</p></li>
+<li><p><code>detailed_itineraries()</code>: used to compute detailed information on either the shortest or multiple alternative routes between one or multiple origin/destination pairs for a single departure time. The output includes detailed information on route alternatives such as the transport mode, waiting time, travel time and distance of each segment of the trip.</p></li>
 </ul>
 <p>Both routing functions are versatile so users can easily set customized inputs such as transport mode, departure date and times, walking and cycling speeds, maximum trip duration, walking distances and number of public transport transfers, etc.</p>
 </div>
 <div id="findings" class="section level1">
 <h1>FINDINGS</h1>
-<p>The package can be installed with the following commands:</p>
+<p>The package can be installed with the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># stable version</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">install.packages</span>(<span class="st">&quot;r5r&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># development version</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ipeaGIT/r5r&quot;</span>, <span class="dt">subdir =</span> <span class="st">&quot;r-package&quot;</span>)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">install.packages</span>(<span class="st">&quot;r5r&quot;</span>)</span></code></pre></div>
 <p>The first step when using r5r is to set the amount of memory available to Java. By default <code>R</code> allocates only 512 MB of memory for Java processes, which is not enough for large queries using r5r. To increase available memory to 2GB, for example, we need to set the <code>java.parameters</code> option at the beginning of the script as follows:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">options</span>(<span class="dt">java.parameters =</span> <span class="st">&quot;-Xmx2G&quot;</span>)</span></code></pre></div>
-<p>Please note that <code>R</code> only allocates memory to Java once during a running session. If a Java process has been initiated before, either by r5r or any other Java-dependent package or function, it might be required to restart the current <code>R</code> session in order to effectively change the amount of memory allocated.</p>
 <p>The package can be attached (with some other packages used in this article) with the following command:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(r5r)</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">library</span>(sf)</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="kw">library</span>(data.table)</span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
-<p>To illustrate functionality, the package includes a small sample data set for the city of Porto Alegre (Brazil). It includes three files:</p>
+<p>To illustrate functionality, the package includes a small sample data set for the city of Porto Alegre (Brazil). It includes four files:</p>
 <ul>
 <li>An OSM network in <code>.pbf</code> format.</li>
 <li>A public transport network in <code>GTFS.zip</code> format.</li>
 <li>The spatial coordinates of points covering the area in <code>.csv</code> format.</li>
+<li>The spatial coordinates of some of the city’s points of interest.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/poa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">list.files</span>(data_path)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; [1] &quot;network.dat&quot;                &quot;poa.zip&quot;                   </span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [3] &quot;poa_hexgrid.csv&quot;            &quot;poa_osm.pbf&quot;               </span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; [5] &quot;poa_osm.pbf.mapdb&quot;          &quot;poa_osm.pbf.mapdb.p&quot;       </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; [7] &quot;poa_points_of_interest.csv&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a></span>
-<span id="cb4-8"><a href="#cb4-8"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/poa_hexgrid.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>))</span>
-<span id="cb4-9"><a href="#cb4-9"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">head</span>(points)</span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt;                 id       lon       lat</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; 1: 89a90128217ffff -51.17689 -30.06336</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 2: 89a90129567ffff -51.15263 -30.06542</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 3: 89a9012a3b3ffff -51.22708 -30.10066</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; [1] &quot;poa.zip&quot;                    &quot;poa_hexgrid.csv&quot;           </span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [3] &quot;poa_osm.pbf&quot;                &quot;poa_points_of_interest.csv&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/poa/poa_hexgrid.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>))</span>
+<span id="cb4-7"><a href="#cb4-7"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">head</span>(points)</span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt;                 id       lon       lat</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; 1: 89a90128217ffff -51.17689 -30.06336</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt; 2: 89a90129567ffff -51.15263 -30.06542</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; 3: 89a9012a3b3ffff -51.22708 -30.10066</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
 <div id="build-a-routable-transport-network" class="section level3">
 <h3>Build a routable transport network</h3>
-<p>Building a transport network with r5r is as simple as a one command line:</p>
+<p>To build a routable transport network with r5r, the user only needs one command line pointing to <code>setup_r5()</code> where the input data is stored:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>r5r_core &lt;-<span class="st"> </span><span class="kw">setup_r5</span>(data_path)</span></code></pre></div>
-<p>The function uses the <code>.pbf</code> and the <code>GTFS.zip</code> files in the directory pointed by <code>data_path</code> to create a multimodal transport network used for routing by R<sup>5</sup>. The resulting <code>network.dat</code>, as well as some other files used by R<sup>5</sup>, is saved inside the supplied directory.</p>
-<p>While the presence of a <code>.pbf</code> file is mandatory, since it is required to create a street network, the <code>GTFS.zip</code> file is only used to calculate public transport trips, thus may not be necessary if that’s not intended. Multiple GTFS can be used simultaneously, in which case all files are merged into a single one automatically.</p>
+<p>The function uses the <code>.pbf</code> and the <code>GTFS.zip</code> files in the directory pointed by <code>data_path</code> to create a multimodal transport network used for routing by R<sup>5</sup>. The resulting <code>network.dat</code> as well as some other files used by R<sup>5</sup> are saved inside the supplied directory.</p>
+<p>The presence of a <code>.pbf</code> file with OpenStreetMap data is mandatory because it is required to create a street network. Meanwhile, a <code>GTFS.zip</code> file is only used to calculate public transport trips, thus may not be necessary if that’s not intended. Multiple GTFS can be used simultaneously, in which case all files are merged into a single one automatically by R<sup>5</sup>.</p>
 </div>
 <div id="calculate-a-travel-time-matrix" class="section level3">
 <h3>Calculate a travel time matrix</h3>
-<p>Calculating a travel time matrix with r5r can be done very efficiently with the <code>travel_time_matrix()</code> function. The function takes travel restrictions and origins/destinations spatial location as inputs and outputs a <code>data.table</code> with the travel time between all combinations of origins and destinations that can be reached with the given restrictions:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># set restrictions</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>max_walk_dist &lt;-<span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">120</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
-<span id="cb6-6"><a href="#cb6-6"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># calculate travel time matrix</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>                          <span class="dt">origins =</span> points,</span>
-<span id="cb6-11"><a href="#cb6-11"></a>                          <span class="dt">destinations =</span> points,</span>
-<span id="cb6-12"><a href="#cb6-12"></a>                          mode,</span>
-<span id="cb6-13"><a href="#cb6-13"></a>                          departure_datetime,</span>
-<span id="cb6-14"><a href="#cb6-14"></a>                          max_walk_dist,</span>
-<span id="cb6-15"><a href="#cb6-15"></a>                          max_trip_duration)</span>
-<span id="cb6-16"><a href="#cb6-16"></a></span>
-<span id="cb6-17"><a href="#cb6-17"></a>ttm</span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;                fromId            toId travel_time</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;    1: 89a90128217ffff 89a90128217ffff           1</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt;    2: 89a90128217ffff 89a9012828fffff          12</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt;    3: 89a90128217ffff 89a9012820bffff          12</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt;    4: 89a90128217ffff 89a901282d7ffff          16</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt;    5: 89a90128217ffff 89a901282a3ffff          18</span></span>
-<span id="cb6-24"><a href="#cb6-24"></a><span class="co">#&gt;   ---                                            </span></span>
-<span id="cb6-25"><a href="#cb6-25"></a><span class="co">#&gt; 1039: 89a90129967ffff 89a90128063ffff          57</span></span>
-<span id="cb6-26"><a href="#cb6-26"></a><span class="co">#&gt; 1040: 89a90129967ffff 89a9012aa6fffff          77</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="co">#&gt; 1041: 89a90129967ffff 89a90129897ffff          32</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a><span class="co">#&gt; 1042: 89a90129967ffff 89a90128557ffff          82</span></span>
-<span id="cb6-29"><a href="#cb6-29"></a><span class="co">#&gt; 1043: 89a90129967ffff 89a90129967ffff           0</span></span></code></pre></div>
-<p>Note that the resulting <code>ttm</code> object only holds the travel time of 1043 origin/destination pairs, even though the <code>points</code> data set passed both to <code>origins</code> and <code>destinations</code> argument contains 100 points. This is because out of the total 10000 possible trips between the supplied points, only 1043 could be completed within the specified restrictions. Removing any walking distance limits (by setting it to infinite) and increasing maximum trip duration accordingly results in a “complete” output:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># set softer restrictions</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>max_walk_dist &lt;-<span class="st"> </span><span class="ot">Inf</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">360</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># calculate travel time matrix</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
-<span id="cb7-7"><a href="#cb7-7"></a>                          <span class="dt">origins =</span> points,</span>
-<span id="cb7-8"><a href="#cb7-8"></a>                          <span class="dt">destinations =</span> points,</span>
-<span id="cb7-9"><a href="#cb7-9"></a>                          mode,</span>
-<span id="cb7-10"><a href="#cb7-10"></a>                          departure_datetime,</span>
-<span id="cb7-11"><a href="#cb7-11"></a>                          max_walk_dist,</span>
-<span id="cb7-12"><a href="#cb7-12"></a>                          max_trip_duration)</span>
-<span id="cb7-13"><a href="#cb7-13"></a></span>
-<span id="cb7-14"><a href="#cb7-14"></a>ttm</span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="co">#&gt;                 fromId            toId travel_time</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt;     1: 89a90128217ffff 89a90128217ffff           1</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt;     2: 89a90128217ffff 89a90129567ffff          42</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;     3: 89a90128217ffff 89a9012a3b3ffff          93</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;     4: 89a90128217ffff 89a9012989bffff          77</span></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;     5: 89a90128217ffff 89a901298cbffff          83</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt;    ---                                            </span></span>
-<span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt;  9996: 89a90129967ffff 89a90129897ffff          32</span></span>
-<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt;  9997: 89a90129967ffff 89a901295afffff         150</span></span>
-<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt;  9998: 89a90129967ffff 89a90129143ffff         149</span></span>
-<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt;  9999: 89a90129967ffff 89a90128557ffff          71</span></span>
-<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 10000: 89a90129967ffff 89a90129967ffff           0</span></span></code></pre></div>
+<p>Calculating a travel time matrix with r5r can be done very efficiently with the <code>travel_time_matrix()</code> function. The function takes origins/destinations spatial location (either as a spatial <code>sf POINT</code> object, or as a <code>data.frame</code> containing the columns <code>id</code>, <code>lon</code> and <code>lat</code>) and travel parameters as inputs and outputs a <code>data.table</code> with the travel time estimates between all combinations of origins and destinations that can be reached with the given parameters.</p>
+<p>The <code>time_window</code> parameter is set to 1 by default, which means that travel time estimates will be calculated using a single departure time (specified by <code>departure_datetime</code>):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>max_walk_dist &lt;-<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">120</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># calculate travel time matrix</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>                          <span class="dt">origins =</span> points,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>                          <span class="dt">destinations =</span> points,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>                          <span class="dt">mode =</span> mode,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>                          <span class="dt">departure_datetime =</span> departure_datetime,</span>
+<span id="cb6-13"><a href="#cb6-13"></a>                          <span class="dt">max_walk_dist =</span> max_walk_dist,</span>
+<span id="cb6-14"><a href="#cb6-14"></a>                          <span class="dt">max_trip_duration =</span> max_trip_duration)</span>
+<span id="cb6-15"><a href="#cb6-15"></a></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="kw">head</span>(ttm)</span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;             fromId            toId travel_time</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; 1: 89a90128217ffff 89a90128217ffff           1</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt; 2: 89a90128217ffff 89a9012828fffff          12</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 3: 89a90128217ffff 89a9012820bffff          12</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; 4: 89a90128217ffff 89a901282d7ffff          16</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; 5: 89a90128217ffff 89a901282a3ffff          18</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; 6: 89a90129567ffff 89a90129567ffff           0</span></span></code></pre></div>
+<p>Alternatively, a bigger time window can be specified. In such cases several travel time matrices are calculated using every minute from <code>departure_datetime</code> to the end of the given window as a distinct departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair, which can be overruled by the <code>percentiles</code> parameter:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>time_window &lt;-<span class="st"> </span><span class="dv">60</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>percentiles &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># calculate travel time matrix</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>ttm &lt;-<span class="st"> </span><span class="kw">travel_time_matrix</span>(r5r_core,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>                          <span class="dt">origins =</span> points,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>                          <span class="dt">destinations =</span> points,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>                          <span class="dt">mode =</span> mode,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>                          <span class="dt">departure_datetime =</span> departure_datetime,</span>
+<span id="cb7-10"><a href="#cb7-10"></a>                          <span class="dt">max_walk_dist =</span> max_walk_dist,</span>
+<span id="cb7-11"><a href="#cb7-11"></a>                          <span class="dt">max_trip_duration =</span> max_trip_duration,</span>
+<span id="cb7-12"><a href="#cb7-12"></a>                          <span class="dt">time_window =</span> time_window,</span>
+<span id="cb7-13"><a href="#cb7-13"></a>                          <span class="dt">percentiles =</span> percentiles)</span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a>ttm</span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt;                fromId            toId travel_time_p025 travel_time_p050</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt;    1: 89a90128217ffff 89a90128217ffff                1                1</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;    2: 89a90128217ffff 89a9012828fffff               12               12</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;    3: 89a90128217ffff 89a9012820bffff               12               12</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;    4: 89a90128217ffff 89a901282d7ffff               16               16</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt;    5: 89a90128217ffff 89a901282a3ffff               18               18</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt;   ---                                                                  </span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt; 1039: 89a90129967ffff 89a90128063ffff               59               62</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt; 1040: 89a90129967ffff 89a9012aa6fffff               79               82</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt; 1041: 89a90129967ffff 89a90129897ffff               34               37</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 1042: 89a90129967ffff 89a90128557ffff               74               79</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#&gt; 1043: 89a90129967ffff 89a90129967ffff                0                0</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="co">#&gt;       travel_time_p075</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="co">#&gt;    1:                1</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="co">#&gt;    2:               12</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a><span class="co">#&gt;    3:               12</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="co">#&gt;    4:               16</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="co">#&gt;    5:               18</span></span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="co">#&gt;   ---                 </span></span>
+<span id="cb7-35"><a href="#cb7-35"></a><span class="co">#&gt; 1039:               66</span></span>
+<span id="cb7-36"><a href="#cb7-36"></a><span class="co">#&gt; 1040:               86</span></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="co">#&gt; 1041:               41</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#&gt; 1042:               83</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="co">#&gt; 1043:                0</span></span></code></pre></div>
+<p>Since the sample data holds information for few transit routes, many trips rely only on walking to be completed. Consequently, the travel time estimates of such trips are not affected by transit reliability issues. This is the case of the first five rows of <code>ttm</code>, which present the same estimate regardless of the percentile they represent. The effect of the <code>time_window</code> and <code>percentiles</code> parameters can be observed above in the last rows of <code>ttm</code>, in which the estimates grow along the increase of the percentile they depict.</p>
 </div>
 <div id="calculate-detailed-itineraries" class="section level3">
 <h3>Calculate detailed itineraries</h3>
