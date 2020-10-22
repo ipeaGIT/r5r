@@ -313,5 +313,51 @@
 				]
 			]
 		}
+	},
+	{
+		"id": "delling2015roundbased",
+		"type": "article-journal",
+		"container-title": "Transportation Science",
+		"DOI": "10.1287/trsc.2014.0534",
+		"ISSN": "0041-1655, 1526-5447",
+		"issue": "3",
+		"journalAbbreviation": "Transportation Science",
+		"language": "en",
+		"page": "591-604",
+		"source": "DOI.org (Crossref)",
+		"title": "Round-Based Public Transit Routing",
+		"URL": "http://pubsonline.informs.org/doi/10.1287/trsc.2014.0534",
+		"volume": "49",
+		"author": [
+			{
+				"family": "Delling",
+				"given": "Daniel"
+			},
+			{
+				"family": "Pajor",
+				"given": "Thomas"
+			},
+			{
+				"family": "Werneck",
+				"given": "Renato F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					10,
+					22
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8
+				]
+			]
+		}
 	}
 ]

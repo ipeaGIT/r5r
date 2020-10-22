@@ -71,16 +71,13 @@ automatically combine OSM data with one or multiple public transport data sets
 provided by the user in  the standard GTFS format to create a routable transport
 network.
 
-The r5r package has 3 fundamental functions. The `setup_r5()` function builds a 
-multimodal transport network used for routing in R<sup>5</sup>. This function 
-(1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the 
-purposes of the package, and stores it locally in the r5r package directory for 
-future use; and (2) combines the OSM and GTFS data sets to build a routable 
-network object. For fast routing analysis, r5r currently has two functions:
+The r5r package has 3 fundamental functions:
+
+- `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function (1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the purposes of the package, and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS data sets to build a routable network object.
 
 - `travel_time_matrix()`: computes travel time estimates between one or 
 multiple origin/destination pairs for a single departure time or for multiple
-departure times over a time window. The travel_time_matrix function uses an R5-specific extension to the RAPTOR routing algorithm developed by Conway et al. [@conway2017evidencebased], which provides an efficient and systematic sample of 
+departure times over a time window. This function uses an R5-specific extension to the RAPTOR routing algorithm developed by Conway et al. [@conway2017evidencebased], which provides an efficient and systematic sample of 
 multiple departures per minute over a `time_window` set by the user. If the user
 passes a `time_window` parameter to the function, r5r will calculate multiple travel 
 time matrices departing each minute and return additional information on the percentile distribution of travel times that allows one to grasp service reliability issues.
@@ -91,11 +88,7 @@ pairs for a single departure time. The output includes detailed information on
 route alternatives such as the transport mode, waiting time, travel time and 
 distance of each segment of the trip. This function uses an R5-specific extension
 to the McRAPTOR routing algorithm to find paths that are optimal or less than
-optimal. The specific extension to McRAPTOR to do suboptimal path routing are not documented yet, but a detailed description of base McRAPTOR can be found in Delling et al (2015).
-
-#> incluir essa ref
-#> - Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit routing. Transportation Science, 49(3), 591-604.
-
+optimal. The specific extension to McRAPTOR to do suboptimal path routing are not documented yet, but a detailed description of base McRAPTOR can be found in @delling2015roundbased.
 
 Both routing functions are versatile so users can easily set customized inputs
 such as transport modes, departure date and times, walking and cycling speeds, 
@@ -132,12 +125,11 @@ library(ggplot2)
 ```
 
 To illustrate functionality, the package includes a small sample data set for 
-the city of Porto Alegre (Brazil). It includes four files:
+the city of São Paulo (Brazil). It includes three files:
 
 - An OSM network in `.pbf` format.
 - A public transport network in `GTFS.zip` format.
 - The spatial coordinates of points covering the area in `.csv` format.
-- The spatial coordinates of some of the city's points of interest.
 
 ```{r}
 # points to directory with data
@@ -246,8 +238,12 @@ segment level. Another key feature of this function is that it (optionally)
 provides multiple alternative routes between origin/destination pairs:
 
 ```{r, message = FALSE}
+data_path <- system.file("extdata/poa", package = "r5r")
+
+r5r_core <- setup_r5(data_path)
+
 # load points of interests and set origin and destination
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- points[c(10, 14),]
 destinations <- points[c(12, 15),]
 
@@ -259,11 +255,12 @@ departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 dit <- detailed_itineraries(r5r_core,
-                            origins,
-                            destinations,
-                            mode,
-                            departure_datetime,
-                            max_walk_dist,
+                            origins = origins,
+                            destinations = destinations,
+                            mode = mode,
+                            departure_datetime = departure_datetime,
+                            max_walk_dist = max_walk_dist,
+                            max_trip_duration = max_trip_duration,
                             shortest_path = FALSE)
 
 dit
