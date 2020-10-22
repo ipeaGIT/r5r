@@ -73,22 +73,31 @@ network.
 
 The r5r package has 3 fundamental functions:
 
-- `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function (1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the purposes of the package, and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS data sets to build a routable network object.
+- `setup_r5()`: builds a multimodal transport network used for routing in 
+R<sup>5</sup>. This function (1) downloads/updates a compiled R<sup>5</sup> JAR 
+file, tailored for the purposes of the package, and stores it locally in the r5r 
+package directory for future use; and (2) combines the OSM and GTFS data sets to 
+build a routable network object.
 
 - `travel_time_matrix()`: computes travel time estimates between one or 
 multiple origin/destination pairs for a single departure time or for multiple
-departure times over a time window. This function uses an R5-specific extension to the RAPTOR routing algorithm developed by Conway et al. [@conway2017evidencebased], which provides an efficient and systematic sample of 
-multiple departures per minute over a `time_window` set by the user. If the user
-passes a `time_window` parameter to the function, r5r will calculate multiple travel 
-time matrices departing each minute and return additional information on the percentile distribution of travel times that allows one to grasp service reliability issues.
+departure times over a time window. This function uses an R5-specific extension 
+to the RAPTOR routing algorithm which provides an efficient and systematic 
+sample of multiple departures per minute over a `time_window` set by the user 
+[@conway2017evidencebased]. If the user passes a `time_window` parameter to the 
+function, r5r calculates multiple travel time matrices departing each minute and 
+return additional information on the percentile distribution of travel times 
+that allows one to grasp service reliability issues.
 
 - `detailed_itineraries()`: computes detailed information on either the
 shortest or multiple alternative routes between one or multiple origin/destination
 pairs for a single departure time. The output includes detailed information on
 route alternatives such as the transport mode, waiting time, travel time and 
-distance of each segment of the trip. This function uses an R5-specific extension
-to the McRAPTOR routing algorithm to find paths that are optimal or less than
-optimal. The specific extension to McRAPTOR to do suboptimal path routing are not documented yet, but a detailed description of base McRAPTOR can be found in @delling2015roundbased.
+distance of each segment of the trip. This function uses an R5-specific 
+extension to the McRAPTOR routing algorithm to find optimal or less than optimal 
+paths. The specific extension to McRAPTOR to do suboptimal path routing are not 
+documented yet, but a detailed description of base McRAPTOR can be found in 
+@delling2015roundbased.
 
 Both routing functions are versatile so users can easily set customized inputs
 such as transport modes, departure date and times, walking and cycling speeds, 
@@ -233,9 +242,12 @@ estimates grow along the increase of the percentile they depict.
 Often enough one wants more information on the itineraries between 
 origin/destination pairs than simply the travel time. For such cases, the 
 package includes the `detailed_itineraries()` function, which also takes travel 
-restrictions as inputs, but outputs a much more detailed data set at the trip 
+restrictions as inputs, but outputs a much more detailed data table at the trip 
 segment level. Another key feature of this function is that it (optionally) 
-provides multiple alternative routes between origin/destination pairs:
+provides multiple alternative routes between origin/destination pairs. The 
+algorithm doesn't yet support frequency-based trips (such as São Paulo's), 
+however, so we use another data sample included in the package that covers the 
+city of Porto Alegre (Brazil):
 
 ```{r, message = FALSE}
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -273,7 +285,6 @@ information for multiple itineraries between the same origin/destination pairs:
 setDT(copy(dit))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId)]
 ```
 
-
 ### Visualize results
 
 `detailed_itineraries()` output is a `sf` object, which means that each trip 
@@ -298,11 +309,11 @@ ggplot() +
 ```
 
 The picture above can be used to compare the walking-only to the walking and 
-transit itineraries between each origin/destination pair. Given that the sample 
-`GTFS.zip` file includes only very few public transport routes, the resulting 
-plot picture some odd scenarios, such as a fairly lengthy circular-like bus 
-route, in the leftmost facet, and a very long walking access trip to the bus, 
-in the rightmost facet.  
+transit itineraries between each origin/destination pair. Given that Porto 
+Alegre's sample `GTFS.zip` file includes only very few public transport routes, 
+the resulting plot picture some odd scenarios, such as a fairly lengthy 
+circular-like bus route, in the leftmost facet, and a very long walking access 
+trip to the bus, in the rightmost facet.  
 
 # Acknowledgments
 
