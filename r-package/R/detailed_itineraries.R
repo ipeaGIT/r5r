@@ -69,7 +69,7 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 #'
 #' dit <- detailed_itineraries(r5r_core,
 #'                             origins = points[10,],
@@ -78,6 +78,8 @@
 #'                             departure_datetime = departure_datetime,
 #'                             max_walk_dist = 1000,
 #'                             max_trip_duration = 120L)
+#'
+#' stop_r5(r5r_core)
 #' }
 #' @export
 

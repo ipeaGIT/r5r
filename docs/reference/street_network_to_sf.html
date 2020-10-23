@@ -87,6 +87,12 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -134,7 +140,7 @@
     <p>Extract OpenStreetMap network in sf format from a network.dat built with setup_r5</p>
     </div>
 
-    <pre class="usage"><span class='fu'>street_network_to_sf</span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>street_network_to_sf</span>(<span class='no'>r5r_core</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,19 +168,19 @@
 <code><a href='set_verbose.html'>set_verbose</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><span class='co'># \donttest{</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>r5r</span>)
 
 <span class='co'># build transport network</span>
-<span class='va'>path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
-<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/RtmpwF4jXz/temp_libpath252056f05da6/r5r/jar/r5r_v4.9.0_20200929.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/RtmpwF4jXz/temp_libpath252056f05da6/r5r/extdata/poa/network.dat</span></div><div class='input'>
+<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/poa"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"r5r"</span>)
+<span class='no'>r5r_core</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span>(<span class='kw'>data_path</span> <span class='kw'>=</span> <span class='no'>path</span>)
+
 <span class='co'># load origin/destination points</span>
-<span class='va'>street_net</span> <span class='op'>&lt;-</span> <span class='fu'>street_network_to_sf</span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span>
-<span class='co'># }</span>
-</div></pre>
+<span class='no'>street_net</span> <span class='kw'>&lt;-</span> <span class='fu'>street_network_to_sf</span>(<span class='no'>r5r_core</span>)
+
+<span class='fu'><a href='stop_r5.html'>stop_r5</a></span>(<span class='no'>r5r_core</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -190,7 +196,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

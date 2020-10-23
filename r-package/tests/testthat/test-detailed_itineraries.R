@@ -15,7 +15,7 @@ default_tester <- function(r5r_core,
                            origins = points[1:2, ],
                            destinations = points[2:1, ],
                            mode = c("WALK", "TRANSIT"),
-                           departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+                           departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            max_walk_dist = Inf,
                            max_trip_duration = 120L,
@@ -92,9 +92,9 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_core, mode = "all"))
 
   # errors related to date formatting
-  numeric_datetime <- as.numeric(as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
+  numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
-  expect_error(default_tester(r5r_core, departure_datetime = "13-03-2019 14:00:00"))
+  expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
 
   # errors related to max_walk_dist

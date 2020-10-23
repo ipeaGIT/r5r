@@ -120,7 +120,7 @@ The `travel_time_matrix` function is a really simple and fast function to comput
 mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 5000
 max_trip_duration <- 120
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate a travel time matrix
@@ -153,7 +153,7 @@ origins <- poi[10,]
 destinations <- poi[12,]
 mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 10000
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate detailed itineraries
