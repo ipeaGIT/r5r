@@ -15,7 +15,9 @@ bibliography: references.json
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, 
+  fig.height = 5
 )
 
 set.seed(0)
@@ -114,10 +116,9 @@ install.packages("r5r")
 ```
 
 The first step when using r5r is to set the amount of memory available to Java. 
-By default `R` allocates only 512 MB of memory for Java processes~~, which is not 
-enough for large queries using r5r~~. To increase available memory to 2GB, for 
-example, we need to set the `java.parameters` option at the beginning of the 
-script as follows:
+By default `R` allocates only 512 MB of memory for Java processes. To increase 
+available memory to 2GB, for example, we need to set the `java.parameters` 
+option at the beginning of the script as follows:
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
@@ -213,7 +214,7 @@ origin and destination pair, which can be overruled by the `percentiles`
 parameter:
 
 ```{r, message = FALSE}
-time_window <- 60
+time_window <- 120
 percentiles <- c(25, 50, 75)
 
 # calculate travel time matrix
@@ -229,6 +230,28 @@ ttm <- travel_time_matrix(r5r_core,
 
 ttm
 ```
+
+The image below depicts the travel time distribution for each origin/destination in which a trip could be completed within the specified parameters. The pairs are ordered in the x axis by their median travel time and each point in the plot area pictures a distinct distribution percentile.
+
+```{r, message = FALSE}
+order_data <- ttm[, .(fromId, toId, travel_time_p025, travel_time_p050, travel_time_p075)]
+order_data <- order_data[order(travel_time_p050, travel_time_p025, travel_time_p075)]
+id_order   <- order_data[, id := paste0(fromId, "_", toId)]$id
+
+pctls <- paste0("travel_time_p", formatC(percentiles, width = 3, flag = "0"))
+
+plot_data <- melt(ttm, measure = pctls, variable = "percentil", value = "travel_time")
+plot_data[, percentil := as.integer(regmatches(percentil, regexpr("\\d+", percentil)))]
+plot_data[, travel_time := fifelse(travel_time > max_trip_duration, NA_integer_, travel_time)]
+plot_data[, id := factor(paste0(fromId, "_", toId), levels = id_order)]
+
+ggplot(plot_data) + 
+   geom_point(aes(id, travel_time, color = percentil), alpha = 0.1, size = 1) + 
+   theme_minimal() +
+   theme(axis.title.x = element_blank(), axis.text.x = element_blank())
+```
+
+Notice that the leftmost origin/destination pairs do not exhibit any variation in the distribution of their travel time along the time window. This is because the trips between such pairs rely solely on walking to be completed, therefore are not susceptible to transit reliability issues.
 
 ### Calculate detailed itineraries
 
@@ -280,7 +303,7 @@ packages, such as `ggplot2`. The package also offers a handy
 R<sup>5</sup> as a `sf` object and that can be used to provide geographic 
 context for the visualization.
 
-```{r, message = FALSE, fig.width = 7, fig.height = 5}
+```{r, message = FALSE}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
