@@ -134,20 +134,21 @@ library(ggplot2)
 ```
 
 To illustrate functionality, the package includes a small sample data set for 
-the city of São Paulo (Brazil). It includes three files:
+the city of Porto Alegre (Brazil). It includes three files:
 
 - An OSM network in `.pbf` format.
 - A public transport network in `GTFS.zip` format.
 - The spatial coordinates of points covering the area in `.csv` format.
+- The spatial coordinates of some of the city's points of interest.
 
 ```{r}
 # points to directory with data
-data_path <- system.file("extdata/spo", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 
 list.files(data_path)
 
 # read points of origin and destination
-points <- fread(file.path(data_path, "spo_hexgrid.csv"))
+points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 points <- points[c(sample(1:nrow(points), 100))]
 head(points)
 ```
@@ -236,16 +237,9 @@ origin/destination pairs than simply the travel time. For such cases, the
 package includes the `detailed_itineraries()` function, which also takes travel 
 restrictions as inputs, but outputs a much more detailed data table at the trip 
 segment level. Another key feature of this function is that it (optionally) 
-provides multiple alternative routes between origin/destination pairs. The 
-algorithm doesn't yet support frequency-based trips (such as São Paulo's), 
-however, so we use another data sample included in the package that covers the 
-city of Porto Alegre (Brazil):
+provides multiple alternative routes between origin/destination pairs:
 
 ```{r, message = FALSE}
-data_path <- system.file("extdata/poa", package = "r5r")
-
-r5r_core <- setup_r5(data_path)
-
 # load points of interests and set origin and destination
 points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- points[c(10, 14),]

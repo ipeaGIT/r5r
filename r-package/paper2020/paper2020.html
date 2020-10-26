@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga" />
 
-<meta name="date" content="2020-10-22" />
+<meta name="date" content="2020-10-26" />
 
 <title>r5r: rapid realistic routing on multimodal transport networks with R5 in R</title>
 
@@ -329,7 +329,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">r5r: rapid realistic routing on multimodal transport networks with R5 in R</h1>
 <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
-<h4 class="date">2020-10-22</h4>
+<h4 class="date">2020-10-26</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges regarding this task, such as the cost of licensed software and the long computation times to run complex scenarios. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single origin/destination pair. This paper describes r5r, an open source R package built on top of R<sup>5</sup> that allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as it offers an easy-to-use powerful tool for robust planning and research.
@@ -373,30 +373,33 @@ Routing is a key step in transport planning. Nonetheless, researchers and practi
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">library</span>(sf)</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="kw">library</span>(data.table)</span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
-<p>To illustrate functionality, the package includes a small sample data set for the city of São Paulo (Brazil). It includes three files:</p>
+<p>To illustrate functionality, the package includes a small sample data set for the city of Porto Alegre (Brazil). It includes three files:</p>
 <ul>
 <li>An OSM network in <code>.pbf</code> format.</li>
 <li>A public transport network in <code>GTFS.zip</code> format.</li>
 <li>The spatial coordinates of points covering the area in <code>.csv</code> format.</li>
+<li>The spatial coordinates of some of the city’s points of interest.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># points to directory with data</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/spo&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/poa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="kw">list.files</span>(data_path)</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; [1] &quot;network.dat&quot;         &quot;spo.zip&quot;             &quot;spo_hexgrid.csv&quot;    </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; [4] &quot;spo_osm.pbf&quot;         &quot;spo_osm.pbf.mapdb&quot;   &quot;spo_osm.pbf.mapdb.p&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co"># read points of origin and destination</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">file.path</span>(data_path, <span class="st">&quot;spo_hexgrid.csv&quot;</span>))</span>
-<span id="cb4-10"><a href="#cb4-10"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="kw">head</span>(points)</span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt;                 id       lon       lat</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 1: 89a8100dc13ffff -46.60680 -23.53123</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 2: 89a8100dc9bffff -46.60698 -23.53736</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 3: 89a8100ddb3ffff -46.63709 -23.52062</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 4: 89a8100ce9bffff -46.64977 -23.53539</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 5: 89a8100dc17ffff -46.60981 -23.52956</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; 6: 89a8100cc4fffff -46.66191 -23.53175</span></span></code></pre></div>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; [1] &quot;network.dat&quot;                &quot;poa.zip&quot;                   </span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; [3] &quot;poa_hexgrid.csv&quot;            &quot;poa_osm.pbf&quot;               </span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; [5] &quot;poa_osm.pbf.mapdb&quot;          &quot;poa_osm.pbf.mapdb.p&quot;       </span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; [7] &quot;poa_points_of_interest.csv&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co"># read points of origin and destination</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">file.path</span>(data_path, <span class="st">&quot;poa_hexgrid.csv&quot;</span>))</span>
+<span id="cb4-12"><a href="#cb4-12"></a>points &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(points), <span class="dv">100</span>))]</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="kw">head</span>(points)</span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt;                 id       lon       lat</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 1: 89a90128217ffff -51.17689 -30.06336</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 2: 89a90129567ffff -51.15263 -30.06542</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 3: 89a9012a3b3ffff -51.22708 -30.10066</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; 4: 89a9012989bffff -51.17257 -30.03182</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; 5: 89a901298cbffff -51.16330 -30.02844</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co">#&gt; 6: 89a9012a317ffff -51.22091 -30.09842</span></span></code></pre></div>
 <div id="build-a-routable-transport-network" class="section level3">
 <h3>Build a routable transport network</h3>
 <p>To build a routable transport network with r5r, the user only needs one command line pointing to where the input data is stored:</p>
@@ -425,12 +428,12 @@ Routing is a key step in transport planning. Nonetheless, researchers and practi
 <span id="cb6-15"><a href="#cb6-15"></a></span>
 <span id="cb6-16"><a href="#cb6-16"></a><span class="kw">head</span>(ttm)</span>
 <span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;             fromId            toId travel_time</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; 1: 89a8100dc13ffff 89a8100dc13ffff           3</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt; 2: 89a8100dc13ffff 89a8100dc9bffff          14</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 3: 89a8100dc13ffff 89a8100ce9bffff          62</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; 4: 89a8100dc13ffff 89a8100dc17ffff          13</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; 5: 89a8100dc13ffff 89a8100cc4fffff          67</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; 6: 89a8100dc13ffff 89a8100c57bffff          67</span></span></code></pre></div>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; 1: 89a90128217ffff 89a90128217ffff           1</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt; 2: 89a90128217ffff 89a9012828fffff          12</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 3: 89a90128217ffff 89a9012820bffff          12</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; 4: 89a90128217ffff 89a901282d7ffff          16</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; 5: 89a90128217ffff 89a901282a3ffff          18</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; 6: 89a90129567ffff 89a90129567ffff           0</span></span></code></pre></div>
 <p>Alternatively, a bigger time window can be specified. In such cases several travel time matrices are calculated using every minute from <code>departure_datetime</code> to the end of the given window as a distinct departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair, which can be overruled by the <code>percentiles</code> parameter:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>time_window &lt;-<span class="st"> </span><span class="dv">60</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a>percentiles &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>)</span>
@@ -448,98 +451,94 @@ Routing is a key step in transport planning. Nonetheless, researchers and practi
 <span id="cb7-14"><a href="#cb7-14"></a></span>
 <span id="cb7-15"><a href="#cb7-15"></a>ttm</span>
 <span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt;                fromId            toId travel_time_p025 travel_time_p050</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt;    1: 89a8100dc13ffff 89a8100dc13ffff                3                3</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;    2: 89a8100dc13ffff 89a8100dc9bffff               14               14</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;    3: 89a8100dc13ffff 89a8100ce9bffff               56               60</span></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;    4: 89a8100dc13ffff 89a8100dc17ffff               13               13</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt;    5: 89a8100dc13ffff 89a8100cc4fffff               61               65</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt;    1: 89a90128217ffff 89a90128217ffff                1                1</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;    2: 89a90128217ffff 89a9012828fffff               12               12</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;    3: 89a90128217ffff 89a9012820bffff               12               12</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;    4: 89a90128217ffff 89a901282d7ffff               16               16</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt;    5: 89a90128217ffff 89a901282a3ffff               18               18</span></span>
 <span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt;   ---                                                                  </span></span>
-<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt; 6377: 89a8100c237ffff 89a8100dc97ffff               21               24</span></span>
-<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt; 6378: 89a8100c237ffff 89a8100c06fffff               24               29</span></span>
-<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt; 6379: 89a8100c237ffff 89a8100c04fffff               51               56</span></span>
-<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 6380: 89a8100c237ffff 89a8100c313ffff               20               24</span></span>
-<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#&gt; 6381: 89a8100c237ffff 89a8100c237ffff                0                0</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt; 1039: 89a90129967ffff 89a90128063ffff               59               62</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt; 1040: 89a90129967ffff 89a9012aa6fffff               79               82</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt; 1041: 89a90129967ffff 89a90129897ffff               34               37</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 1042: 89a90129967ffff 89a90128557ffff               74               79</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#&gt; 1043: 89a90129967ffff 89a90129967ffff                0                0</span></span>
 <span id="cb7-28"><a href="#cb7-28"></a><span class="co">#&gt;       travel_time_p075</span></span>
-<span id="cb7-29"><a href="#cb7-29"></a><span class="co">#&gt;    1:                3</span></span>
-<span id="cb7-30"><a href="#cb7-30"></a><span class="co">#&gt;    2:               14</span></span>
-<span id="cb7-31"><a href="#cb7-31"></a><span class="co">#&gt;    3:               64</span></span>
-<span id="cb7-32"><a href="#cb7-32"></a><span class="co">#&gt;    4:               13</span></span>
-<span id="cb7-33"><a href="#cb7-33"></a><span class="co">#&gt;    5:               69</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="co">#&gt;    1:                1</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="co">#&gt;    2:               12</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a><span class="co">#&gt;    3:               12</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="co">#&gt;    4:               16</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="co">#&gt;    5:               18</span></span>
 <span id="cb7-34"><a href="#cb7-34"></a><span class="co">#&gt;   ---                 </span></span>
-<span id="cb7-35"><a href="#cb7-35"></a><span class="co">#&gt; 6377:               27</span></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="co">#&gt; 6378:               32</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a><span class="co">#&gt; 6379:               63</span></span>
-<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#&gt; 6380:               27</span></span>
-<span id="cb7-39"><a href="#cb7-39"></a><span class="co">#&gt; 6381:                0</span></span></code></pre></div>
+<span id="cb7-35"><a href="#cb7-35"></a><span class="co">#&gt; 1039:               66</span></span>
+<span id="cb7-36"><a href="#cb7-36"></a><span class="co">#&gt; 1040:               86</span></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="co">#&gt; 1041:               41</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#&gt; 1042:               83</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="co">#&gt; 1043:                0</span></span></code></pre></div>
 </div>
 <div id="calculate-detailed-itineraries" class="section level3">
 <h3>Calculate detailed itineraries</h3>
-<p>Often enough one wants more information on the itineraries between origin/destination pairs than simply the travel time. For such cases, the package includes the <code>detailed_itineraries()</code> function, which also takes travel restrictions as inputs, but outputs a much more detailed data table at the trip segment level. Another key feature of this function is that it (optionally) provides multiple alternative routes between origin/destination pairs. The algorithm doesn’t yet support frequency-based trips (such as São Paulo’s), however, so we use another data sample included in the package that covers the city of Porto Alegre (Brazil):</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/poa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;r5r&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a></span>
-<span id="cb8-3"><a href="#cb8-3"></a>r5r_core &lt;-<span class="st"> </span><span class="kw">setup_r5</span>(data_path)</span>
-<span id="cb8-4"><a href="#cb8-4"></a></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># load points of interests and set origin and destination</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">file.path</span>(data_path, <span class="st">&quot;poa_points_of_interest.csv&quot;</span>))</span>
-<span id="cb8-7"><a href="#cb8-7"></a>origins &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">14</span>),]</span>
-<span id="cb8-8"><a href="#cb8-8"></a>destinations &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">15</span>),]</span>
-<span id="cb8-9"><a href="#cb8-9"></a></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="co"># set restrictions</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
-<span id="cb8-12"><a href="#cb8-12"></a>max_walk_dist &lt;-<span class="st"> </span><span class="ot">Inf</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">120</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
-<span id="cb8-15"><a href="#cb8-15"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
-<span id="cb8-16"><a href="#cb8-16"></a></span>
-<span id="cb8-17"><a href="#cb8-17"></a>dit &lt;-<span class="st"> </span><span class="kw">detailed_itineraries</span>(r5r_core,</span>
-<span id="cb8-18"><a href="#cb8-18"></a>                            <span class="dt">origins =</span> origins,</span>
-<span id="cb8-19"><a href="#cb8-19"></a>                            <span class="dt">destinations =</span> destinations,</span>
-<span id="cb8-20"><a href="#cb8-20"></a>                            <span class="dt">mode =</span> mode,</span>
-<span id="cb8-21"><a href="#cb8-21"></a>                            <span class="dt">departure_datetime =</span> departure_datetime,</span>
-<span id="cb8-22"><a href="#cb8-22"></a>                            <span class="dt">max_walk_dist =</span> max_walk_dist,</span>
-<span id="cb8-23"><a href="#cb8-23"></a>                            <span class="dt">max_trip_duration =</span> max_trip_duration,</span>
-<span id="cb8-24"><a href="#cb8-24"></a>                            <span class="dt">shortest_path =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb8-25"><a href="#cb8-25"></a></span>
-<span id="cb8-26"><a href="#cb8-26"></a>dit</span>
-<span id="cb8-27"><a href="#cb8-27"></a><span class="co">#&gt; Simple feature collection with 11 features and 14 fields</span></span>
-<span id="cb8-28"><a href="#cb8-28"></a><span class="co">#&gt; geometry type:  LINESTRING</span></span>
-<span id="cb8-29"><a href="#cb8-29"></a><span class="co">#&gt; dimension:      XY</span></span>
-<span id="cb8-30"><a href="#cb8-30"></a><span class="co">#&gt; bbox:           xmin: -51.23018 ymin: -30.07393 xmax: -51.17319 ymax: -29.99884</span></span>
-<span id="cb8-31"><a href="#cb8-31"></a><span class="co">#&gt; geographic CRS: WGS 84</span></span>
-<span id="cb8-32"><a href="#cb8-32"></a><span class="co">#&gt; First 10 features:</span></span>
-<span id="cb8-33"><a href="#cb8-33"></a><span class="co">#&gt;              fromId   fromLat   fromLon                           toId</span></span>
-<span id="cb8-34"><a href="#cb8-34"></a><span class="co">#&gt; 1  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-35"><a href="#cb8-35"></a><span class="co">#&gt; 2  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-36"><a href="#cb8-36"></a><span class="co">#&gt; 3  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-37"><a href="#cb8-37"></a><span class="co">#&gt; 4  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-38"><a href="#cb8-38"></a><span class="co">#&gt; 5  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-39"><a href="#cb8-39"></a><span class="co">#&gt; 6  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-40"><a href="#cb8-40"></a><span class="co">#&gt; 7  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
-<span id="cb8-41"><a href="#cb8-41"></a><span class="co">#&gt; 8             ufrgs -30.03340 -51.22028                          pucrs</span></span>
-<span id="cb8-42"><a href="#cb8-42"></a><span class="co">#&gt; 9             ufrgs -30.03340 -51.22028                          pucrs</span></span>
-<span id="cb8-43"><a href="#cb8-43"></a><span class="co">#&gt; 10            ufrgs -30.03340 -51.22028                          pucrs</span></span>
-<span id="cb8-44"><a href="#cb8-44"></a><span class="co">#&gt;        toLat     toLon option segment mode total_duration segment_duration</span></span>
-<span id="cb8-45"><a href="#cb8-45"></a><span class="co">#&gt; 1  -30.04995 -51.22875      1       1 WALK      119.40000       119.400000</span></span>
-<span id="cb8-46"><a href="#cb8-46"></a><span class="co">#&gt; 2  -30.04995 -51.22875      2       1 WALK       69.21667        11.116667</span></span>
-<span id="cb8-47"><a href="#cb8-47"></a><span class="co">#&gt; 3  -30.04995 -51.22875      2       2  BUS       69.21667        45.583333</span></span>
-<span id="cb8-48"><a href="#cb8-48"></a><span class="co">#&gt; 4  -30.04995 -51.22875      2       3 WALK       69.21667         8.216667</span></span>
-<span id="cb8-49"><a href="#cb8-49"></a><span class="co">#&gt; 5  -30.04995 -51.22875      3       1 WALK       69.21667         8.716667</span></span>
-<span id="cb8-50"><a href="#cb8-50"></a><span class="co">#&gt; 6  -30.04995 -51.22875      3       2  BUS       69.21667        46.000000</span></span>
-<span id="cb8-51"><a href="#cb8-51"></a><span class="co">#&gt; 7  -30.04995 -51.22875      3       3 WALK       69.21667         8.216667</span></span>
-<span id="cb8-52"><a href="#cb8-52"></a><span class="co">#&gt; 8  -30.05797 -51.17607      1       1 WALK       95.16667        95.166667</span></span>
-<span id="cb8-53"><a href="#cb8-53"></a><span class="co">#&gt; 9  -30.05797 -51.17607      2       1 WALK       93.10000         6.066667</span></span>
-<span id="cb8-54"><a href="#cb8-54"></a><span class="co">#&gt; 10 -30.05797 -51.17607      2       2  BUS       93.10000         4.550000</span></span>
-<span id="cb8-55"><a href="#cb8-55"></a><span class="co">#&gt;         wait distance   route                       geometry</span></span>
-<span id="cb8-56"><a href="#cb8-56"></a><span class="co">#&gt; 1   0.000000     7002         LINESTRING (-51.19807 -29.9...</span></span>
-<span id="cb8-57"><a href="#cb8-57"></a><span class="co">#&gt; 2   0.000000      562         LINESTRING (-51.19807 -29.9...</span></span>
-<span id="cb8-58"><a href="#cb8-58"></a><span class="co">#&gt; 3   4.300000    16369  poa:T2 LINESTRING (-51.19993 -30.0...</span></span>
-<span id="cb8-59"><a href="#cb8-59"></a><span class="co">#&gt; 4   0.000000      483         LINESTRING (-51.22846 -30.0...</span></span>
-<span id="cb8-60"><a href="#cb8-60"></a><span class="co">#&gt; 5   0.000000      420         LINESTRING (-51.19807 -29.9...</span></span>
-<span id="cb8-61"><a href="#cb8-61"></a><span class="co">#&gt; 6   6.283333    16511  poa:T2 LINESTRING (-51.19946 -30.0...</span></span>
-<span id="cb8-62"><a href="#cb8-62"></a><span class="co">#&gt; 7   0.000000      483         LINESTRING (-51.22846 -30.0...</span></span>
-<span id="cb8-63"><a href="#cb8-63"></a><span class="co">#&gt; 8   0.000000     5756         LINESTRING (-51.22032 -30.0...</span></span>
-<span id="cb8-64"><a href="#cb8-64"></a><span class="co">#&gt; 9   0.000000      381         LINESTRING (-51.22022 -30.0...</span></span>
-<span id="cb8-65"><a href="#cb8-65"></a><span class="co">#&gt; 10 12.033333     1928 poa:R10 LINESTRING (-51.22202 -30.0...</span></span></code></pre></div>
+<p>Often enough one wants more information on the itineraries between origin/destination pairs than simply the travel time. For such cases, the package includes the <code>detailed_itineraries()</code> function, which also takes travel restrictions as inputs, but outputs a much more detailed data table at the trip segment level. Another key feature of this function is that it (optionally) provides multiple alternative routes between origin/destination pairs:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># load points of interests and set origin and destination</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>points &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">file.path</span>(data_path, <span class="st">&quot;poa_points_of_interest.csv&quot;</span>))</span>
+<span id="cb8-3"><a href="#cb8-3"></a>origins &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">14</span>),]</span>
+<span id="cb8-4"><a href="#cb8-4"></a>destinations &lt;-<span class="st"> </span>points[<span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">15</span>),]</span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co"># set restrictions</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>mode &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;WALK&quot;</span>, <span class="st">&quot;TRANSIT&quot;</span>)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>max_walk_dist &lt;-<span class="st"> </span><span class="ot">Inf</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>max_trip_duration &lt;-<span class="st"> </span><span class="dv">120</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>departure_datetime &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;13-03-2019 14:00:00&quot;</span>,</span>
+<span id="cb8-11"><a href="#cb8-11"></a>                                 <span class="dt">format =</span> <span class="st">&quot;%d-%m-%Y %H:%M:%S&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12"></a></span>
+<span id="cb8-13"><a href="#cb8-13"></a>dit &lt;-<span class="st"> </span><span class="kw">detailed_itineraries</span>(r5r_core,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>                            <span class="dt">origins =</span> origins,</span>
+<span id="cb8-15"><a href="#cb8-15"></a>                            <span class="dt">destinations =</span> destinations,</span>
+<span id="cb8-16"><a href="#cb8-16"></a>                            <span class="dt">mode =</span> mode,</span>
+<span id="cb8-17"><a href="#cb8-17"></a>                            <span class="dt">departure_datetime =</span> departure_datetime,</span>
+<span id="cb8-18"><a href="#cb8-18"></a>                            <span class="dt">max_walk_dist =</span> max_walk_dist,</span>
+<span id="cb8-19"><a href="#cb8-19"></a>                            <span class="dt">max_trip_duration =</span> max_trip_duration,</span>
+<span id="cb8-20"><a href="#cb8-20"></a>                            <span class="dt">shortest_path =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb8-21"><a href="#cb8-21"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a>dit</span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#&gt; Simple feature collection with 11 features and 14 fields</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#&gt; geometry type:  LINESTRING</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#&gt; dimension:      XY</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="co">#&gt; bbox:           xmin: -51.23018 ymin: -30.07393 xmax: -51.17319 ymax: -29.99884</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="co">#&gt; geographic CRS: WGS 84</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="co">#&gt; First 10 features:</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="co">#&gt;              fromId   fromLat   fromLon                           toId</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="co">#&gt; 1  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co">#&gt; 2  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co">#&gt; 3  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="co">#&gt; 4  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="co">#&gt; 5  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="co">#&gt; 6  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a><span class="co">#&gt; 7  farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center</span></span>
+<span id="cb8-37"><a href="#cb8-37"></a><span class="co">#&gt; 8             ufrgs -30.03340 -51.22028                          pucrs</span></span>
+<span id="cb8-38"><a href="#cb8-38"></a><span class="co">#&gt; 9             ufrgs -30.03340 -51.22028                          pucrs</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="co">#&gt; 10            ufrgs -30.03340 -51.22028                          pucrs</span></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="co">#&gt;        toLat     toLon option segment mode total_duration segment_duration</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="co">#&gt; 1  -30.04995 -51.22875      1       1 WALK      119.40000       119.400000</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="co">#&gt; 2  -30.04995 -51.22875      2       1 WALK       69.21667        11.116667</span></span>
+<span id="cb8-43"><a href="#cb8-43"></a><span class="co">#&gt; 3  -30.04995 -51.22875      2       2  BUS       69.21667        45.583333</span></span>
+<span id="cb8-44"><a href="#cb8-44"></a><span class="co">#&gt; 4  -30.04995 -51.22875      2       3 WALK       69.21667         8.216667</span></span>
+<span id="cb8-45"><a href="#cb8-45"></a><span class="co">#&gt; 5  -30.04995 -51.22875      3       1 WALK       69.21667         8.716667</span></span>
+<span id="cb8-46"><a href="#cb8-46"></a><span class="co">#&gt; 6  -30.04995 -51.22875      3       2  BUS       69.21667        46.000000</span></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="co">#&gt; 7  -30.04995 -51.22875      3       3 WALK       69.21667         8.216667</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a><span class="co">#&gt; 8  -30.05797 -51.17607      1       1 WALK       95.16667        95.166667</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a><span class="co">#&gt; 9  -30.05797 -51.17607      2       1 WALK       93.10000         6.066667</span></span>
+<span id="cb8-50"><a href="#cb8-50"></a><span class="co">#&gt; 10 -30.05797 -51.17607      2       2  BUS       93.10000         4.550000</span></span>
+<span id="cb8-51"><a href="#cb8-51"></a><span class="co">#&gt;         wait distance   route                       geometry</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a><span class="co">#&gt; 1   0.000000     7002         LINESTRING (-51.19807 -29.9...</span></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="co">#&gt; 2   0.000000      562         LINESTRING (-51.19807 -29.9...</span></span>
+<span id="cb8-54"><a href="#cb8-54"></a><span class="co">#&gt; 3   4.300000    16369  poa:T2 LINESTRING (-51.19993 -30.0...</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="co">#&gt; 4   0.000000      483         LINESTRING (-51.22846 -30.0...</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co">#&gt; 5   0.000000      420         LINESTRING (-51.19807 -29.9...</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="co">#&gt; 6   6.283333    16511  poa:T2 LINESTRING (-51.19946 -30.0...</span></span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="co">#&gt; 7   0.000000      483         LINESTRING (-51.22846 -30.0...</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a><span class="co">#&gt; 8   0.000000     5756         LINESTRING (-51.22032 -30.0...</span></span>
+<span id="cb8-60"><a href="#cb8-60"></a><span class="co">#&gt; 9   0.000000      381         LINESTRING (-51.22022 -30.0...</span></span>
+<span id="cb8-61"><a href="#cb8-61"></a><span class="co">#&gt; 10 12.033333     1928 poa:R10 LINESTRING (-51.22202 -30.0...</span></span></code></pre></div>
 <p>Since the <code>shortest_path</code> argument has been set to <code>FALSE</code>, <code>dit</code> holds information for multiple itineraries between the same origin/destination pairs:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">setDT</span>(<span class="kw">copy</span>(dit))[, .(<span class="dt">n_itineraries =</span> <span class="kw">uniqueN</span>(option)), by =<span class="st"> </span>.(fromId, toId)]</span>
 <span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt;              fromId                           toId n_itineraries</span></span>
