@@ -83,7 +83,7 @@ points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 mode <- c("WALK", "BUS")
 max_walk_dist <- 3000   # meters
 max_trip_duration <- 60 # minutes
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # 3.1) calculate a travel time matrix
