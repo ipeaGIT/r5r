@@ -3,12 +3,10 @@ title: 'r5r: rapid realistic routing on multimodal transport networks with R5 in
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette: default
-  github_document: default
+  html_document: default
+  pdf_document: default
 abstract: "Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges regarding this task, such as the cost of licensed software and the long computation times to run complex scenarios. Conveyal's R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single origin/destination pair. This paper describes r5r, an open source R package built on top of R<sup>5</sup> that allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as it offers an easy-to-use powerful tool for robust planning and research."
 urlcolor: blue
-vignette: |
-  %\VignetteIndexEntry{r5r-intro} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 bibliography: references.json
 ---
 
@@ -98,8 +96,7 @@ route alternatives such as the transport mode, waiting time, travel time and
 distance of each segment of the trip. This function uses an R5-specific 
 extension to the McRAPTOR routing algorithm to find optimal or less than optimal 
 paths. The specific extension to McRAPTOR to do suboptimal path routing are not 
-documented yet, but a detailed description of base McRAPTOR can be found in 
-@delling2015roundbased.
+documented yet, but a detailed description of base McRAPTOR can be found in @delling2015roundbased.
 
 Both routing functions are versatile so users can easily set customized inputs
 such as transport modes, departure date and times, walking and cycling speeds, 
@@ -234,6 +231,18 @@ ttm
 The image below depicts the travel time distribution for each origin/destination in which a trip could be completed within the specified parameters. The pairs are ordered in the x axis by their median travel time and each point in the plot area pictures a distinct distribution percentile.
 
 ```{r, message = FALSE}
+percentiles <- 1:100
+
+ttm <- travel_time_matrix(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          mode = mode,
+                          departure_datetime = departure_datetime,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          time_window = time_window,
+                          percentiles = percentiles)
+
 order_data <- ttm[, .(fromId, toId, travel_time_p025, travel_time_p050, travel_time_p075)]
 order_data <- order_data[order(travel_time_p050, travel_time_p025, travel_time_p075)]
 id_order   <- order_data[, id := paste0(fromId, "_", toId)]$id
@@ -246,12 +255,12 @@ plot_data[, travel_time := fifelse(travel_time > max_trip_duration, NA_integer_,
 plot_data[, id := factor(paste0(fromId, "_", toId), levels = id_order)]
 
 ggplot(plot_data) + 
-   geom_point(aes(id, travel_time, color = percentil), alpha = 0.1, size = 1) + 
+   geom_point(aes(id, travel_time), alpha = 0.02, size = 1) + 
    theme_minimal() +
    theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 ```
 
-Notice that the leftmost origin/destination pairs do not exhibit any variation in the distribution of their travel time along the time window. This is because the trips between such pairs rely solely on walking to be completed, therefore are not susceptible to transit reliability issues.
+Note that the leftmost origin/destination pairs do not exhibit any variation in the distribution of their travel time along the time window. This is because the trips between such pairs rely solely on walking to be completed, therefore are not susceptible to transit reliability issues.
 
 ### Calculate detailed itineraries
 
