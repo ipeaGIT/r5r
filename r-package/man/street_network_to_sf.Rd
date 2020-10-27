@@ -27,6 +27,8 @@ r5r_core <- setup_r5(data_path = path)
 
 # load origin/destination points
 street_net <- street_network_to_sf(r5r_core)
+
+stop_r5(r5r_core)
 }
 }
 \seealso{

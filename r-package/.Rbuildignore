@@ -8,3 +8,6 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^index.md$
+^inst/extdata/.*/.*\.dat$
+^inst/extdata/.*/.*\.mapdb$
+^inst/extdata/.*/.*\.mapdb\.p$

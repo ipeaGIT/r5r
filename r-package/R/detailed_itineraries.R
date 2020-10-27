@@ -69,7 +69,7 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 #'
 #' dit <- detailed_itineraries(r5r_core,
 #'                             origins = points[10,],
@@ -78,6 +78,8 @@
 #'                             departure_datetime = departure_datetime,
 #'                             max_walk_dist = 1000,
 #'                             max_trip_duration = 120L)
+#'
+#' stop_r5(r5r_core)
 #' }
 #' @export
 
@@ -279,8 +281,8 @@ detailed_itineraries <- function(r5r_core,
     path_options[, temp_route := ifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
-    path_options <- path_options[
-      path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId, temp_sign)]$V1]
 
     # remove temporary columns
     path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]

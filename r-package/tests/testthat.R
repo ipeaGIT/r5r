@@ -1,3 +1,5 @@
+options(java.parameters = '-Xmx2G')
+
 library(testthat)
 library(r5r)
 

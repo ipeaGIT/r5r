@@ -121,7 +121,7 @@ r5r_core <- setup_r5(data_path = data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
 
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,
@@ -131,6 +131,8 @@ ttm <- travel_time_matrix(r5r_core,
                           departure_datetime = departure_datetime,
                           max_walk_dist = Inf,
                           max_trip_duration = 120L)
+
+stop_r5(r5r_core)
 
 }
 }

@@ -15,7 +15,7 @@ default_tester <- function(r5r_core,
                            origins = points[1:10,],
                            destinations = points[1:10,],
                            mode = "BICYCLE",
-                           departure_datetime = as.POSIXct("13-03-2019 14:00:00",
+                           departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            time_window = 1L,
                            percentiles = 50L,
@@ -87,9 +87,9 @@ test_that("adequately raises errors", {
   expect_error(default_tester(r5r_core, mode = "pogoball"))
 
   # errors related to date formatting
-  numeric_datetime <- as.numeric(as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
+  numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
-  expect_error(default_tester(r5r_core, departure_datetime = "13-03-2019 14:00:00"))
+  expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
 
   # errors related to max_walk_dist
@@ -213,3 +213,4 @@ test_that("output is correct", {
 
 })
 
+stop_r5(r5r_core)
