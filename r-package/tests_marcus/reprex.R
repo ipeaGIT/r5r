@@ -3,12 +3,13 @@ options(java.parameters = "-Xmx16G")
 
 library(r5r)
 
-path <- system.file("extdata", package = "r5r")
+# path <- system.file("extdata/poa", package = "r5r")
+path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
 r5r_core <- setup_r5(data_path = path)
 
 
 ##### input
-origins <- destinations <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))[1:100,]
+origins <- destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 trip_date = "2019-05-20"
 departure_time = "14:00:00"
 mode = c('WALK', 'TRANSIT')
@@ -23,14 +24,16 @@ system.time(
   df <- travel_time_matrix( r5r_core = r5r_core,
                             origins = origins,
                             destinations = destinations,
-                            trip_date = trip_date,
-                            departure_time = departure_time,
+                            departure_datetime = lubridate::ymd_hm("2019-05-20 14:00"),
+                            time_window = 15,
+                            percentiles = c(25, 50, 75, 100),
                             mode = mode,
-                            max_street_time = max_street_time,
-                            max_trip_duration = max_trip_duration
+                            max_walk_dist = 300,
+                            max_trip_duration = 60
   )
 )
 
+df %>% drop_na() %>% nrow()
 # user  system elapsed
 # 12.982   0.864   1.647
 

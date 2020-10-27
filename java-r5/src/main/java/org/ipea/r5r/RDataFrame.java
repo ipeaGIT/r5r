@@ -52,6 +52,11 @@ public class RDataFrame {
         column.set(column.size() - 1, value);
     }
 
+    public void setNull(String columnName) {
+        List<Object> column = dataFrame.get(columnName);
+        column.set(column.size() - 1, null);
+    }
+
     public void addStringColumn(String columnName, String defaultValue) {
         ArrayList<Object> column = new ArrayList<>();
         dataFrame.put(columnName, column);

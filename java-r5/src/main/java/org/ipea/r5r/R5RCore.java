@@ -643,11 +643,11 @@ public class R5RCore {
         travelTimesTable.addStringColumn("toId", "");
 
         if (percentiles.length == 1) {
-            travelTimesTable.addIntegerColumn("travel_time", -1);
+            travelTimesTable.addIntegerColumn("travel_time", null);
         } else {
             for (int p : percentiles) {
                 String ps = String.format("%03d", p);
-                travelTimesTable.addIntegerColumn("travel_time_p" + ps, -1);
+                travelTimesTable.addIntegerColumn("travel_time_p" + ps, null);
             }
         }
 
@@ -661,8 +661,9 @@ public class R5RCore {
                     for (int p = 0; p < percentiles.length; p++) {
                         int tt = travelTimeResults.travelTimes.getValues()[p][i];
                         String ps = String.format("%03d", percentiles[p]);
-
-                        travelTimesTable.set("travel_time_p" + ps, tt);
+                        if (tt < maxTripDuration) {
+                            travelTimesTable.set("travel_time_p" + ps, tt);
+                        }
                     }
                 }
             }
