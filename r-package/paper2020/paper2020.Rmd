@@ -44,9 +44,10 @@ particularly in  large and complex multimodal transport networks.
 While there is a growing number of open source routing models [@opentripplanneropentripplanner; 
 @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently 
 process large transport networks. More importantly, these softwares generate
-deterministic estimates of travel times without accounting for issues of service
-reliability (REF) and they only return the fastest route option between a set of
-origins and destinations. This simple approach overlooks how often people's 
+deterministic estimates of travel times without accounting for variability in 
+results (due to service reliability issues, for example) and only return the 
+fastest route option between a set of origins and destinations (see @conway2018accounting 
+for a more in-depth discussion). This simple approach overlooks how often people's 
 actual route choices deviate from shortest travel time paths, what
 can occur due to multiple factors such as imperfect information, monetary costs 
 and safety issues [@larsen2011travel; @zhu2015people; @conway2019getting].
