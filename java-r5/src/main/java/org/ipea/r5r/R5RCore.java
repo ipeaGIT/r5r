@@ -355,7 +355,9 @@ public class R5RCore {
 
                 for (TransitSegment transit : option.transit) {
 
-                    for (SegmentPattern pattern : transit.segmentPatterns) {
+//                    for (SegmentPattern pattern : transit.segmentPatterns) {
+                        // Use only first of many possible repeated patterns
+                        SegmentPattern pattern = transit.segmentPatterns.get(0);
                         pathOptionsTable.append();
 
                         segmentIndex++;
@@ -373,8 +375,9 @@ public class R5RCore {
                         pathOptionsTable.set("route", tripPattern.routeId);
                         pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
                         if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
-                    }
+//                    }
 
+                    // middle leg: walk between stops/stations
                     if (transit.middle != null) {
                         pathOptionsTable.append();
 
@@ -393,7 +396,7 @@ public class R5RCore {
                     }
                 }
 
-                // first leg: access to station
+                // last leg: walk to destination
                 if (option.egress != null) {
                     for (StreetSegment segment : option.egress) {
                         pathOptionsTable.append();
