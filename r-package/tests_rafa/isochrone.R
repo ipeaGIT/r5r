@@ -124,8 +124,6 @@ ttm <- travel_time_matrix(r5r_core=r5r_core,
   dest[, index := as.character(index)]
   dest[ttm, on=c('index' ='toId'), isocrhones := i.isocrhones]
 
-  # back to sf
-  dest_sf <- st_as_sf(dest)
-
-  return(dest_sf)
+  # return sf
+  return(st_as_sf(dest))
 }
