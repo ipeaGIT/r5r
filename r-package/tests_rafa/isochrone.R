@@ -15,8 +15,6 @@
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
-#' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
-#'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
 #' @param max_rides numeric. The max number of public transport rides allowed in
@@ -74,7 +72,6 @@ isochrone <- function(r5r_core,
                       departure_datetime = Sys.time(),
                       cutoffs = c(0, 15, 30, 45, 60),
                       max_walk_dist = Inf,
-                      max_trip_duration = 120L,
                       walk_speed = 3.6,
                       bike_speed = 12,
                       max_rides = 3,
@@ -86,6 +83,8 @@ isochrone <- function(r5r_core,
   # check cutoffs
   checkmate::assert_numeric(cutoffs, lower = 0)
 
+  # max cutoff is used as max_trip_duration
+  max_trip_duration = as.integer(max(cutoffs))
 
 
 # get destinations ------------------------------------------------------------
@@ -120,13 +119,13 @@ ttm <- travel_time_matrix(r5r_core=r5r_core,
   # aggregate travel-times
   ttm[, isocrhones := cut(x=travel_time, breaks=cutoffs)]
 
-
   # join ttm results to destinations
-  setDT(destinations)[, index := as.character(index)]
-  destinations[ttm, on=c('index' ='toId'), isocrhones := i.isocrhones]
+  dest <- setDT(destinations)[index %in% ttm$toId, ]
+  dest[, index := as.character(index)]
+  dest[ttm, on=c('index' ='toId'), isocrhones := i.isocrhones]
 
   # back to sf
-  destinations_sf <- st_as_sf(destinations)
+  dest_sf <- st_as_sf(dest)
 
-  return(destinations_sf)
+  return(dest_sf)
 }
