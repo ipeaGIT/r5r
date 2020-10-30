@@ -16,6 +16,7 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
+import com.conveyal.r5.streets.LinkedPointSet;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
@@ -130,7 +131,7 @@ public class R5RCore {
     }
 
     private TransportNetwork transportNetwork;
-    private FreeFormPointSet destinationPoints;
+//    private FreeFormPointSet destinationPoints;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
@@ -536,12 +537,19 @@ public class R5RCore {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
-        destinationPoints = new FreeFormPointSet(toIds.length);
+        FreeFormPointSet destinationPoints = new FreeFormPointSet(toIds.length);
         for (int i = 0; i < toIds.length; i++) {
             destinationPoints.setId(i, toIds[i]);
             destinationPoints.setLat(i, toLats[i]);
             destinationPoints.setLon(i, toLons[i]);
             destinationPoints.setCount(i, 1);
+        }
+
+        String[] modes = accessModes.split(";");
+        if (!accessModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                transportNetwork.linkageCache.getLinkage(destinationPoints, transportNetwork.streetLayer, StreetMode.valueOf(mode));
+            }
         }
 
         return r5rThreadPool.submit(() ->
@@ -552,7 +560,7 @@ public class R5RCore {
                             try {
                                 results = travelTimesFromOrigin(fromIds[index], fromLats[index], fromLons[index],
                                         toIds, toLats, toLons, directModes, transitModes, accessModes, egressModes,
-                                        date, departureTime, maxWalkTime, maxTripDuration);
+                                        date, departureTime, maxWalkTime, maxTripDuration, destinationPoints);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -564,7 +572,7 @@ public class R5RCore {
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ParseException {
+                                                                           int maxWalkTime, int maxTripDuration, FreeFormPointSet destinationPoints) throws ParseException {
 
         RegionalTask request = new RegionalTask();
 
