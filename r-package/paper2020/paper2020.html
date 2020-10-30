@@ -11,7 +11,7 @@
 
 <meta name="author" content="Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga" />
 
-<meta name="date" content="2020-10-26" />
+<meta name="date" content="2020-10-28" />
 
 <title>r5r: rapid realistic routing on multimodal transport networks with R5 in R</title>
 
@@ -375,7 +375,7 @@ summary {
 
 <h1 class="title toc-ignore">r5r: rapid realistic routing on multimodal transport networks with R5 in R</h1>
 <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
-<h4 class="date">2020-10-26</h4>
+<h4 class="date">2020-10-28</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges regarding this task, such as the cost of licensed software and the long computation times to run complex scenarios. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single origin/destination pair. This paper describes r5r, an open source R package built on top of R<sup>5</sup> that allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as it offers an easy-to-use powerful tool for robust planning and research.
@@ -391,7 +391,7 @@ Routing is a key step in transport planning. Nonetheless, researchers and practi
 <div id="research-questions-and-hypotheses" class="section level1">
 <h1>RESEARCH QUESTIONS AND HYPOTHESES</h1>
 <p>Transport routing is the process of finding the alternative routes and costs that connect places on a given transport network. Routing often involves complex mathematical algorithms and it is a fundamental step required for transport accessibility analysis, fleet allocation and transport simulation and planning more broadly. Despite the long-standing importance of routing analysis to the field of transport and mobility studies, researchers and practitioners still frequently face practical challenges with this task. These challenges involve for example the monetary costs of licensed software, data availability issues for data hungry models, and the long computation times to run multiple routing scenarios, particularly in large and complex multimodal transport networks.</p>
-<p>While there is a growing number of open source routing models <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available do not efficiently process large transport networks. More importantly, these softwares generate deterministic estimates of travel times without accounting for issues of service reliability (REF) and they only return the fastest route option between a set of origins and destinations. This simple approach overlooks how often people’s actual route choices deviate from shortest travel time paths, what can occur due to multiple factors such as imperfect information, monetary costs and safety issues <span class="citation">(Larsen and El-Geneidy 2011; Zhu and Levinson 2015; Conway and Stewart 2019)</span>.</p>
+<p>While there is a growing number of open source routing models <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available do not efficiently process large transport networks. More importantly, these softwares generate deterministic estimates of travel times without accounting for variability in results (due to service reliability issues, for example) and only return the fastest route option between a set of origins and destinations (see <span class="citation">Conway, Byrd, and Van Eggermond (2018)</span> for a more in-depth discussion). This simple approach overlooks how often people’s actual route choices deviate from shortest travel time paths, what can occur due to multiple factors such as imperfect information, monetary costs and safety issues <span class="citation">(Larsen and El-Geneidy 2011; Zhu and Levinson 2015; Conway and Stewart 2019)</span>.</p>
 <p>This paper presents <a href="https://ipeagit.github.io/r5r/">r5r</a>, a new open source R package for rapid realistic routing on multimodal transport networks based on the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)</a>. R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal <span class="citation">(Conway, Byrd, and van der Linden 2017; Conway, Byrd, and Van Eggermond 2018)</span> to replace its predecessor OpenTripPlanner. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, what allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.</p>
 </div>
 <div id="methods-and-data" class="section level1">
