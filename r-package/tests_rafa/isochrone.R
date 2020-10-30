@@ -60,8 +60,7 @@
 #'                 mode = c("WALK", "TRANSIT"),
 #'                 departure_datetime = departure_datetime,
 #'                 cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120),
-#'                 max_walk_dist = Inf,
-#'                 max_trip_duration = 120L)
+#'                 max_walk_dist = Inf)
 #'                 }
 #' @export
 
