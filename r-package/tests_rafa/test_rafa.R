@@ -81,76 +81,36 @@ df <- get_all_od_combinations(origins, destinations)
 
 ##### TESTS isochrone ------------------------
 
- library(r5r)
+library(r5r)
+library(ggplot2)
 
- # build transport network
- data_path <- system.file("extdata/poa", package = "r5r")
- r5r_core <- setup_r5(data_path = data_path)
+# build transport network
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
 
- # load origin/destination points
- origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[5,]
+# load origin/point of interest
+origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[500,]
 
- departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-
-isochrone <- function(r5r_core,
-                      origin,
-                      destinations = NULL,
-                      mode = "WALK",
-                      departure_datetime = Sys.time(),
-                      cutoffs = c(15, 30, 45, 60, 75, 90, 120),
-                      max_walk_dist = Inf,
-                      max_trip_duration = 120L,
-                      walk_speed = 3.6,
-                      bike_speed = 12,
-                      max_rides = 3,
-                      n_threads = Inf,
-                      verbose = TRUE){
-
-# check cutoffs
-checkmate::assert_numeric(cutoffs, lower = 0)
-
-# if no 'destinations' are passed, use all network nodes as destination points
-if(is.null(destinations)){
-        network <- street_network_to_sf(r5r_core)
-        destinations = network[[1]]
-        }
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
 # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core=r5r_core,
-                           origins = origin,
-                           destinations = destinations,
-                           mode = mode,
-                           departure_datetime = departure_datetime,
-                           max_walk_dist = max_walk_dist,
-                           max_trip_duration = max_trip_duration,
-                           walk_speed = 3.6,
-                           bike_speed = 12,
-                           max_rides = 3,
-                           n_threads = Inf,
-                           verbose = TRUE)
-
-# include 0 in cutoffs
-if(min(cutoffs) >0){cutoffs <- sort(c(0, cutoffs))}
+iso <- isochrone(r5r_core,
+                 origin = origin,
+                 mode = c("WALK"),
+                 departure_datetime = departure_datetime,
+                 cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120),
+                 max_walk_dist = Inf)
 
 
-# aggregate travel-times
- ttm[, breaks := cut(x=travel_time, breaks=cutoffs)]
- table(ttm$breaks)
+network <- street_network_to_sf(r5r_core)
+road_network = network[[2]]
 
-# join ttm results to destinations
-setDT(destinations)[, index := as.character(index)]
-destinations[ttm, on=c('index' ='toId'), breaks := i.breaks]
-
-# back to sf
-destinations_sf <- st_as_sf(destinations)
-
-return(destinations_sf)
-}
 
 ggplot() +
-        geom_sf(data=destinations_sf, aes(color=breaks)) +
-        geom_point(data=origin, color='red', aes(x=lon, y=lat))
-
+        geom_sf(data=road_network, color='gray60') +
+        geom_sf(data=iso, aes(color=isocrhones), alpha=.2) +
+        geom_point(data=origin, color='red', aes(x=lon, y=lat)) +
+        theme_minimal()
 
 
 
