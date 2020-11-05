@@ -96,7 +96,7 @@ ttm <- travel_time_matrix(r5r_core,
                           max_trip_duration = max_trip_duration)
 
 # 3.2) or get detailed info on multiple alternative routes
-dit <- detailed_itineraries(r5r_core,
+det <- detailed_itineraries(r5r_core,
                             origins = points[370, ],
                             destinations = points[200, ],
                             mode,
