@@ -5,7 +5,9 @@
 # r5r v0.2.1 dev
 
 
-
+**Minor changes**
+* expanded number of routes in the sample GTFS for Porto Alegre, allowing for more
+complex/realistic examples.
 
 
 -------------------------------------------------------

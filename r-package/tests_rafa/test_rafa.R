@@ -444,5 +444,8 @@ beepr:beep()
 ggplot()+
         geom_sf(data=dit, color='black', alpha=.3)
 
+
+### pkgdown: update website ----------------
+
 # Run to build the website
 pkgdown::build_site()
