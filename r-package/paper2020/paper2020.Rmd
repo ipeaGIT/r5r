@@ -3,9 +3,9 @@ title: 'r5r: rapid realistic routing on multimodal transport networks with R5 in
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
-  html_document: default
   pdf_document: default
-abstract: "Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges regarding this task, such as the cost of licensed software and the long computation times to run complex scenarios. Conveyal's R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single origin/destination pair. This paper describes r5r, an open source R package built on top of R<sup>5</sup> that allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as it offers an easy-to-use powerful tool for robust planning and research."
+  html_document: default
+abstract: "Routing is a key step in transport planning. Nonetheless, researchers and practitioners still face challenges to perform this task due the costs of licensed software or the long computation times to run multiple routing analysis in complex transport networks. Conveyal's R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as accounting for service reliability issues and returning multiple travel time estimates and itineraries for a single or multiple origin/destination pairs. This paper describes r5r, an open source R package that leverages on R<sup>5</sup> to allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense. The development of this package contributes to the transport field as by offerin an easy-to-use powerful tool for robust planning and research."
 urlcolor: blue
 bibliography: references.json
 ---
@@ -43,7 +43,7 @@ The r5r package has low data requirements, enabling routing analysis on differen
 
 The r5r package has 3 fundamental functions:
 
--   `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function (1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the purposes of the package, and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS data sets to build a routable network object.
+-   `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function automatically (1) downloads/updates a compiled R<sup>5</sup> JAR file, tailored for the purposes of the package, and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS data sets to build a routable network object.
 
 -   `travel_time_matrix()`: computes travel time estimates between one or multiple origin/destination pairs for a single departure time or for multiple departure times over a time window. This function uses an R5-specific extension to the RAPTOR routing algorithm which provides an efficient and systematic sample of multiple departures per minute over a `time_window` set by the user [@conway2017evidencebased]. If the user passes a `time_window` parameter to the function, r5r calculates multiple travel time matrices departing each minute and return additional information on the percentile distribution of travel times that allows one to grasp service reliability issues.
 
@@ -53,16 +53,16 @@ Both routing functions are versatile so users can easily set customized inputs s
 
 # FINDINGS
 
-The package can be installed with the following command:
+The package can be installed with the following command[^1]:
 
 ```{r, message = FALSE, eval = FALSE}
 # stable version
 install.packages("r5r")
 ```
 
-The first step when using r5r is to set the amount of memory available to Java. By default `R` allocates only 512 MB of memory to the Java Virtual Machine (JVM), which is not enough for the tasks r5r is designed to carry out, such as calculating travel time matrices on large multimodal networks. To increase available memory to 2GB[^1], for example, the user needs to set the `java.parameters` option at the beginning of the script as follows:
+The first step when using r5r is to set the amount of memory available to Java. By default `R` allocates only 512 MB of memory to the Java Virtual Machine (JVM), which might not be enough to perform tasks on large multimodal networks. To increase available memory to 2GB, for example, the user needs to set the `java.parameters` option at the beginning of the script as follows:
 
-[^1]: Note that large study areas may require significantly more memory to run properly.
+[^1]: To use r5r, one needs to have locally installed Java SE Development Kit, version 11.0.8 or higher. Available at <https://www.oracle.com/java/technologies/javase-jdk11-downloads.html>.
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
