@@ -93,7 +93,6 @@ list.files(data_path)
 
 # read points of origin and destination
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
-points <- points[c(sample(1:nrow(points), 100))]
 head(points)
 ```
 
@@ -131,9 +130,47 @@ ttm <- travel_time_matrix(r5r_core,
 
 ttm
 ```
+
+#### Visualise Isochrones
+
+The sample points dataset provided form a grid covering the study area, so they can easily be used to build ishochrone-like visualizations. An example of how this can be achieved is presented below:
+
+```{r}
+cutoffs <- c(0, 30, 60, 90, 120)
+
+# get a sample of origins
+ids <- sample(ttm$fromId, size = 2)
+ttm_iso <- ttm[fromId %in% ids] 
+origins <- points[id %in% ids]
+setnames(origins, c("fromId", "lon", "lat"))
+
+# aggregate travel-times
+ttm_iso[, isochrones := cut(x=travel_time, breaks=cutoffs), by=.(fromId)]
+  
+# join ttm results to points
+ttm_iso[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
+ttm_iso <- na.omit(ttm_iso)
+
+ggplot(ttm_iso, aes(x=lon, y=lat, colour = isochrones)) +
+   geom_point(size = 2) +
+   geom_point(data = origins, aes(x=lon, y=lat), colour="blue", size = 2) +
+   coord_map() +
+   scale_colour_brewer(palette = "Reds") +
+   facet_wrap(~fromId) +
+   theme_minimal() +
+   theme(axis.title = element_blank(),
+         panel.border = element_rect(fill = NA, colour = "grey40"))
+```
+
+
+#### Time window feature
+
 The `time_window` parameter is set to 1 by default, which means that travel time estimates are calculated using a single departure time (specified by the `departure_datetime` parameter). Alternatively, a bigger time window can be specified. In such cases several travel time matrices are calculated using every minute from `departure_datetime` to the end of the given window as a distinct departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair, which can be overruled by the `percentiles` parameter.
 
 ```{r, message = FALSE}
+# sampling destination points
+points <- points[c(sample(1:nrow(points), 100))]
+
 mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 1000
 max_trip_duration <- 120
@@ -184,7 +221,7 @@ ggplot(plot_data) +
         y = "Travel Time (min)")
 ```
 
-Note that the leftmost origin/destination pairs do not exhibit any variation in the distribution of their travel time along the time window. This is because the trips between such pairs rely solely on walking to be completed, therefore are not susceptible to transit reliability issues.
+Note that the leftmost origin/destination pairs do not exhibit any variation in the distribution of their travel time along the time window. This happens because those pairs are in walking-distance from each other, and walking travel times are not affected by variations in the trip's departure time.
 
 
 ### Calculate detailed itineraries
@@ -212,19 +249,22 @@ dit <- detailed_itineraries(r5r_core,
                             departure_datetime = departure_datetime,
                             max_walk_dist = max_walk_dist,
                             max_trip_duration = max_trip_duration,
-                            shortest_path = FALSE)
+                            shortest_path = FALSE,
+                            verbose = FALSE)
 
 st_set_geometry(dit, NULL)
 ```
+
 A key feature of `detailed_itineraries()` is that it (optionally) provides multiple alternative routes between origin/destination pairs, when the `shortest_path` parameter is set to `FALSE`. This is the case in the example above, so `dit` holds information for multiple itineraries between the same origin/destination pairs, as can be seen below. 
+
 
 ```{r, message = FALSE}
 setDT(copy(dit))[, .(n_itineraries = uniqueN(option)), by = .(fromId, toId)]
 ```
 
-#### Visualize results
+#### Visualize itineraries
 
-`detailed_itineraries()` output is a `sf` object, which means that each trip segment is associated to a spatial geometry that can be plotted with common `R` packages, such as `ggplot2`. The package also offers a handy `street_network_to_sf()` function which extracts the OSM street network used by R<sup>5</sup> as a `sf` object and that can be used to provide geographic context for the visualization.
+The output of `detailed_itineraries()` is a `sf` object, which means that each trip segment is associated to a spatial geometry that can be plotted with common `R` packages, such as `ggplot2`. The package also offers a handy `street_network_to_sf()` function which extracts the OSM street network used by R<sup>5</sup> as a `sf` object and that can be used to provide geographic context for the visualization.
 
 ```{r, message = FALSE}
 # extract OSM network
@@ -240,7 +280,8 @@ ggplot() +
    theme(legend.position = "bottom", axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-The picture above can be used to compare the walking-only to the walking and transit itineraries between each origin/destination pair. Given that Porto Alegre's sample `GTFS.zip` file includes only very few public transport routes, the resulting plot picture some odd scenarios, such as a fairly lengthy circular-like bus route, in the leftmost facet, and a very long walking access trip to the bus, in the rightmost facet.
+The maps above demonstrate how the multiple itinerary options that R5 produces differ from each other. The walking-only trips can also be compared to the walking and transit itineraries between each origin/destination pair. 
+
 
 # Acknowledgments
 
