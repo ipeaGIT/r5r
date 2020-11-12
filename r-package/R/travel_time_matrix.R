@@ -205,6 +205,10 @@ travel_time_matrix <- function(r5r_core,
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
 
+  for(j in seq(from = 3, to = length(travel_times))){
+    set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
+  }
+
   return(travel_times)
 
 }
