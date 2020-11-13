@@ -203,12 +203,14 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
   expand_limits(y = 120) +
   scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
   theme_minimal() +
-  theme(axis.title.x = element_blank(), 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.x = element_blank(), 
         axis.text.x = element_blank(),
         axis.ticks = element_blank(),
         panel.border = element_rect(fill = NA, colour = "grey80", size=1)) +
-  labs(title = "Travel time variation among percentiles, per OD pair",
-       y = "Travel Time (min)")
+  labs(title = "Travel time uncertainty per destination",
+       y = "Travel Time (min)", x='Destinations')
 
 ```
 
