@@ -83,7 +83,7 @@ To illustrate its functionalities, the package includes sample datasets for the 
 -   A public transport network in `GTFS.zip` format.
 -   The spatial coordinates of points covering the area in `.csv` format.
 
-Additionally, the Porto Alegre dataset includes a `.csv` file containing the spatial coordinates of some of the city's points of interest. A sample of the Porto Alegre dataset, which will be used in the examples of this paper, is presented below:
+A sample of the Porto Alegre dataset, which will be used in the examples of this paper, is presented below:
 
 ```{r}
 # points to directory with data
@@ -195,11 +195,11 @@ As expected, there is little to no uncertainty in travel times from places that 
 ```{r, message = FALSE}
 # reshape data
 plot_data <- melt(ttm_tw, measure = patterns("^travel_time_p"), variable = "percentile", value = "travel_time")
-plot_data[, mediantt := median(travel_time), by=fromId]
+plot_data[, mediantt := median(travel_time, na.rm=T), by=fromId]
 
 ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
-  geom_point(alpha = 0.05, size = .7) +
-  geom_line(aes(y=mediantt, group=toId), color='blue') +
+  geom_point(alpha = 0.01, size = .7) +
+  geom_line(aes(y=mediantt, group=toId), color="#FE9F45", size=1.5) +
   expand_limits(y = 120) +
   scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
   theme_minimal() +
@@ -250,17 +250,9 @@ Often enough one wants more information than simply the travel time between orig
 
 
 ```{r, message = FALSE}
-# load points of interests and set origin and destination
-points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
-origins <- points[c(10, 14),]
-destinations <- points[c(12, 15),]
-
-# set restrictions
-max_walk_dist <- Inf
-
 dit <- detailed_itineraries(r5r_core,
-                            origins = origins,
-                            destinations = destinations,
+                            origins = points[612],# 793
+                            destinations = central_bus_stn,
                             mode = mode,
                             departure_datetime = departure_datetime,
                             max_walk_dist = max_walk_dist,
@@ -286,14 +278,15 @@ The output of `detailed_itineraries()` is an `sf` object, which means that each 
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
-dit$facet_labels <- paste0(dit$fromId, " to\n", dit$toId)
+dit$facet_labels <- paste0("Alternative #", dit$option)
+
 
 ggplot() +
-   geom_sf(data = street_net$edges, color = "gray85") +
-   geom_sf(data = dit, aes(color = mode), size = 1) +
-   facet_wrap(~ facet_labels, nrow = 1) +
-   theme_minimal() + 
-   theme(legend.position = "bottom", axis.text.x = element_text(angle = 30, hjust = 1))
+  geom_sf(data = street_net$edges, color = "gray85") +
+  geom_sf(data = dit, aes(color = mode), size = 1) +
+  facet_wrap(.~facet_labels) +
+  theme_minimal() + 
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
 The maps above demonstrate how the multiple itinerary options that R5 produces differ from each other. The walking-only trips can also be compared to the walking and transit itineraries between each origin/destination pair. 
