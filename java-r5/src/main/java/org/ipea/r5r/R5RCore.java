@@ -555,7 +555,9 @@ public class R5RCore {
             }
         }
 
-        return r5rThreadPool.submit(() ->
+        List<LinkedHashMap<String, ArrayList<Object>>> returnList;
+
+        returnList = r5rThreadPool.submit(() ->
                 Arrays.stream(originIndices).parallel()
                         .mapToObj(index -> {
                             LinkedHashMap<String, ArrayList<Object>> results =
@@ -569,6 +571,8 @@ public class R5RCore {
                             }
                             return results;
                         }).collect(Collectors.toList())).get();
+
+        return returnList;
     }
 
     private LinkedHashMap<String, ArrayList<Object>> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
@@ -654,11 +658,11 @@ public class R5RCore {
         travelTimesTable.addStringColumn("toId", "");
 
         if (percentiles.length == 1) {
-            travelTimesTable.addIntegerColumn("travel_time", null);
+            travelTimesTable.addIntegerColumn("travel_time", Integer.MAX_VALUE);
         } else {
             for (int p : percentiles) {
                 String ps = String.format("%03d", p);
-                travelTimesTable.addIntegerColumn("travel_time_p" + ps, null);
+                travelTimesTable.addIntegerColumn("travel_time_p" + ps, Integer.MAX_VALUE);
             }
         }
 
