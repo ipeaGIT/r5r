@@ -205,6 +205,12 @@ travel_time_matrix <- function(r5r_core,
   travel_times <- jdx::convertToR(travel_times)
   travel_times <- data.table::rbindlist(travel_times)
 
-  return(travel_times)
+  # convert eventual list columns to integer
+  for(j1 in seq_along(travel_times)) {
+    cl1 <- class(travel_times[[j1]])
+    if(cl1 == 'list') {
+      set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]])) }
+    }
 
+return(travel_times)
 }
