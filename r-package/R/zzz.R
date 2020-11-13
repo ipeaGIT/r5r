@@ -1,5 +1,5 @@
 # nocov start
-utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
+utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
 
 .onLoad = function(lib, pkg) {
   requireNamespace("sf")
@@ -17,7 +17,7 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%"))
 
 
 
-#' @importFrom data.table := %between% fifelse %chin%
+#' @importFrom data.table := %between% fifelse %chin% set
 #' @importFrom methods is signature
 NULL
 
@@ -33,4 +33,3 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
 
 
 # nocov end
-

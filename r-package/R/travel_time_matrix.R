@@ -209,12 +209,12 @@ travel_time_matrix <- function(r5r_core,
   for(j1 in seq_along(travel_times)) {
     cl1 <- class(travel_times[[j1]])
     if(cl1 == 'list') {
-      set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
+      data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
     }
 
   # replace travel-times of inviable trips with NAs
   for(j in seq(from = 3, to = length(travel_times))){
-    set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
+    data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
 
 return(travel_times)
