@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="r5r:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/r5r_jar</output-path>
+    <root id="archive" name="r5r.jar">
+      <element id="module-output" name="r5r" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../conveyal/r5/build/libs/r5-v6.0.0-4-gd8dbcda-all.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
