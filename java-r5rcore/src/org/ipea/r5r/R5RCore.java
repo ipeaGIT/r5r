@@ -2,7 +2,6 @@ package org.ipea.r5r;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import com.conveyal.file.FileUtils;
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
@@ -26,9 +25,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +34,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
-import java.util.zip.GZIPInputStream;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
@@ -542,21 +538,14 @@ public class R5RCore {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
-        InputStream is = null;
-        FreeFormPointSet destinationPoints = null;
-        try {
-            is = new GZIPInputStream(FileUtils.getInputStream(new File("test.zip")));
-            destinationPoints = new FreeFormPointSet(is);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        FreeFormPointSet destinationPoints = new FreeFormPointSet(toIds.length);
+        for (int i = 0; i < toIds.length; i++) {
+            destinationPoints.setId(i, toIds[i]);
+            destinationPoints.setLat(i, toLats[i]);
+            destinationPoints.setLon(i, toLons[i]);
+            destinationPoints.setCount(i, 1);
         }
-//        FreeFormPointSet destinationPoints = new FreeFormPointSet(toIds.length);
-//        for (int i = 0; i < toIds.length; i++) {
-//            destinationPoints.setId(i, toIds[i]);
-//            destinationPoints.setLat(i, toLats[i]);
-//            destinationPoints.setLon(i, toLons[i]);
-//            destinationPoints.setCount(i, 1);
-//        }
 
         String[] modes = accessModes.split(";");
         if (!accessModes.equals("") & modes.length > 0) {
