@@ -20,3 +20,5 @@ java-r5rcore/out/production/r5r/org/ipea/r5r/DetailedItineraryPlanner.class
 java-r5rcore/out/production/r5r/org/ipea/r5r/R5RCore.class
 java-r5rcore/out/production/r5r/org/ipea/r5r/RDataFrame.class
 java-r5rcore/out/production/r5r/org/ipea/r5r/TravelTimeMatrixComputer.class
+java-r5rcore/out
+java-r5rcore/libs

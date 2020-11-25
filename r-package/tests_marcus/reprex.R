@@ -5,8 +5,9 @@ library(r5r)
 
 # path <- system.file("extdata/poa", package = "r5r")
 path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
+r5r_core$silentMode()
 
 ##### input
 origins <- destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
@@ -30,7 +31,7 @@ system.time(
                             mode = mode,
                             max_walk_dist = 300,
                             max_trip_duration = 60,
-                            verbose = FALSE
+                            verbose = TRUE
   )
 )
 

@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.FreeFormPointSet;
@@ -114,18 +115,45 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.ERROR);
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(); //LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+//    <logger name="com.conveyal.osmlib" level="INFO" />
+//    <logger name="com.conveyal.gtfs" level="INFO" />
+//    <logger name="com.conveyal.r5.profile.ExecutionTimer" level="INFO"/>
+
+        Logger logger = loggerContext.getLogger("com.conveyal.r5");
+        logger.setLevel(Level.ERROR);
+
+        logger = loggerContext.getLogger("com.conveyal.osmlib");
+        logger.setLevel(Level.ERROR);
+
+        logger = loggerContext.getLogger("com.conveyal.gtfs");
+        logger.setLevel(Level.ERROR);
+
+        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
+        logger.setLevel(Level.ERROR);
     }
 
     public void verboseMode() {
-        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.INFO);
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();// LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+        Logger logger = loggerContext.getLogger("com.conveyal.r5");
+        logger.setLevel(Level.INFO);
+
+        logger = loggerContext.getLogger("com.conveyal.osmlib");
+        logger.setLevel(Level.INFO);
+
+        logger = loggerContext.getLogger("com.conveyal.gtfs");
+        logger.setLevel(Level.INFO);
+
+        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
+        logger.setLevel(Level.INFO);
     }
 
     public void setLogMode(String mode) {
-        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.valueOf(mode));
+        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();//  LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        Logger logger = loggerContext.getLogger("com.conveyal.r5");
+        logger.setLevel(Level.valueOf(mode));
     }
 
     private TransportNetwork transportNetwork;
