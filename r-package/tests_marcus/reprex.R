@@ -26,10 +26,11 @@ system.time(
                             destinations = destinations,
                             departure_datetime = lubridate::ymd_hm("2019-05-20 14:00"),
                             time_window = 15,
-                            percentiles = c(25, 50, 75, 100),
+                            percentiles = c(25, 50, 75, 99),
                             mode = mode,
                             max_walk_dist = 300,
-                            max_trip_duration = 60
+                            max_trip_duration = 60,
+                            verbose = FALSE
   )
 )
 

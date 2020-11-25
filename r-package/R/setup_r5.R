@@ -83,7 +83,10 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
-  rJava::.jinit(classpath = jar_file)
+    # rJava::.jinit(classpath = jar_file)
+  rJava::.jinit()
+  rJava::.jaddClassPath(path = file.path(.libPaths()[1], "r5r", "jar", "r5r_0_3_0.jar"))
+  rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")

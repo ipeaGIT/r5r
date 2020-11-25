@@ -1,11 +1,12 @@
 <component name="libraryTable">
-  <library name="r5-v6.0.0-4-gd8dbcda-all">
+  <library name="r5-v6.0.0-6-g106eecf-all">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../conveyal/r5/build/libs/r5-v6.0.0-4-gd8dbcda-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/r5-v6.0.0-6-g106eecf-all.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/test/java" />
     </SOURCES>
   </library>
 </component>
