@@ -5,7 +5,7 @@ library(r5r)
 
 # path <- system.file("extdata/poa", package = "r5r")
 path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, version = "6.0.0")
 
 
 ##### input
@@ -28,7 +28,7 @@ system.time(
                             time_window = 15,
                             percentiles = c(25, 50, 75, 100),
                             mode = mode,
-                            max_walk_dist = 300,
+                            max_walk_dist = 800,
                             max_trip_duration = 60
   )
 )

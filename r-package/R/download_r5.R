@@ -48,8 +48,8 @@ download_r5 <- function(version = "4.9.0",
                               sep = ';')
 
   # check most recent JAR release
+  metadata <- metadata[metadata$version == version, ]
   metadata <- subset(metadata, release_date == max(metadata$release_date))
-  release_date <- metadata$release_date
 
   # invalid version input
   if (!(version %in% metadata$version)){
@@ -58,7 +58,7 @@ download_r5 <- function(version = "4.9.0",
   } else {
     # generate inputs
     url <- subset(metadata, version == version)$download_path
-    file_name = paste0("r5r_v", version,"_",release_date,".jar")
+    file_name = basename(url)
     libs <- .libPaths()[1]
     destfile <- file.path(libs, "r5r", "jar", file_name)
   }
