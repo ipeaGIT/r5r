@@ -52,12 +52,13 @@ setup_r5 <- function(data_path,
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
 
-  # check if data_path has osm.pbf and gtfs data
+  # check if data_path has osm.pbf and gtfs data, or a network.dat file
+  any_network <- length(grep("network.dat", list.files(data_path))) > 0
   any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
   any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if (!any_pbf) stop("\nAn OSM PBF file is required to build a network.")
+  if (!(any_pbf | any_network)) stop("\nAn OSM PBF file is required to build a network.")
 
   # check if most recent JAR release is stored already. If not, download it
     # download metadata with jar file addresses
@@ -65,9 +66,10 @@ setup_r5 <- function(data_path,
                                 colClasses = 'character',
                                 header = T,
                                 sep = ';')
+    metadata <- metadata[metadata$version == version, ]
     metadata <- subset(metadata, release_date == max(metadata$release_date))
-    release_date <- metadata$release_date
-    file_name = paste0("r5r_v", version,"_",release_date,".jar")
+
+    file_name <- basename(metadata$download_path)
     jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
 
     # if temp_dir
@@ -83,9 +85,6 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
-    # rJava::.jinit(classpath = jar_file)
-  rJava::.jinit()
-  rJava::.jaddClassPath(path = file.path(.libPaths()[1], "r5r", "jar", "r5r_0_3_0.jar"))
   rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file

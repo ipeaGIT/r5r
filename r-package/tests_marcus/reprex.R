@@ -5,7 +5,11 @@ library(r5r)
 
 # path <- system.file("extdata/poa", package = "r5r")
 path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
+<<<<<<< HEAD
 r5r_core <- setup_r5(data_path = path, verbose = FALSE)
+=======
+r5r_core <- setup_r5(data_path = path, version = "6.0.0")
+>>>>>>> 7b392cfce048757bffa7417581977558d7e7de70
 
 r5r_core$silentMode()
 
@@ -29,9 +33,14 @@ system.time(
                             time_window = 15,
                             percentiles = c(25, 50, 75, 99),
                             mode = mode,
+<<<<<<< HEAD
                             max_walk_dist = 300,
                             max_trip_duration = 60,
                             verbose = TRUE
+=======
+                            max_walk_dist = 800,
+                            max_trip_duration = 60
+>>>>>>> 7b392cfce048757bffa7417581977558d7e7de70
   )
 )
 
