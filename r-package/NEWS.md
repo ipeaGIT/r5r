@@ -2,7 +2,7 @@
 
 
 -------------------------------------------------------
-# r5r v0.2.1 dev
+# r5r v0.2-1 dev
 
 
 **Minor changes**
@@ -13,7 +13,7 @@ sets `time_window` parameter. Closes #127.
 * remove repeated bus route alternatives from the output from `detailed_itineraries`
 
 -------------------------------------------------------
-# r5r v0.2.0
+# r5r v0.2-0
 
 **Major changes**
 
