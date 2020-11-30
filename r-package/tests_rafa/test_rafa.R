@@ -386,8 +386,9 @@ r5r_core <- setup_r5(path)
 
 ### CMD Check ----------------
 # Check package errors
-Sys.setenv(NOT_CRAN = "false")
+Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
+Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 devtools::check_win_release(pkg = ".")
