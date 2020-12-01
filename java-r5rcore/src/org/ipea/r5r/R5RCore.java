@@ -117,10 +117,6 @@ public class R5RCore {
     public void silentMode() {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(); //LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-//    <logger name="com.conveyal.osmlib" level="INFO" />
-//    <logger name="com.conveyal.gtfs" level="INFO" />
-//    <logger name="com.conveyal.r5.profile.ExecutionTimer" level="INFO"/>
-
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
         logger.setLevel(Level.ERROR);
 
@@ -194,6 +190,7 @@ public class R5RCore {
             transportNetwork.transitLayer.buildDistanceTables(null);
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 
