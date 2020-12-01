@@ -176,21 +176,30 @@ public class R5RCore {
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
-            transportNetwork = TransportNetwork.fromDirectory(new File(dataFolder));
-            try {
-                KryoNetworkSerializer.write(transportNetwork, new File(dataFolder, "network.dat"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            createR5Network(dataFolder);
         }
 
         try {
-            transportNetwork = KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
-//            transportNetwork.readOSM(new File(dir, "osm.mapdb"));
-            transportNetwork.transitLayer.buildDistanceTables(null);
+            loadR5Network(dataFolder);
         } catch (Exception e) {
             e.printStackTrace();
 
+            // network could not be loaded. create a new one
+            createR5Network(dataFolder);
+        }
+    }
+
+    private void loadR5Network(String dataFolder) throws Exception {
+        transportNetwork = KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
+        transportNetwork.transitLayer.buildDistanceTables(null);
+    }
+
+    private void createR5Network(String dataFolder) {
+        transportNetwork = TransportNetwork.fromDirectory(new File(dataFolder));
+        try {
+            KryoNetworkSerializer.write(transportNetwork, new File(dataFolder, "network.dat"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
