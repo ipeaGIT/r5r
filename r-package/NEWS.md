@@ -3,6 +3,8 @@
 -------------------------------------------------------
 # r5r v0.3-0 dev
 
+**Minor changes**
+- Add columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.
 
 -------------------------------------------------------
 # r5r v0.2-1
