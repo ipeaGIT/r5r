@@ -3,6 +3,11 @@
 -------------------------------------------------------
 # r5r v0.3-0 dev
 
+**Major changes**
+- Added Conveyal's R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed #105.
+
+
+
 **Minor changes**
 - Add columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.
 
