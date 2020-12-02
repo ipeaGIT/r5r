@@ -20,7 +20,7 @@ complex/realistic examples.
 * Fixes format of columns of the output of `travel_matrix_function` when the user 
 sets `time_window` parameter. Closes #127.
 * remove repeated bus route alternatives from the output from `detailed_itineraries`
-
+* Explicitly link destination points to street network before starting. Closes #121
 
 -------------------------------------------------------
 # r5r v0.2-0
