@@ -1,6 +1,5 @@
 # devtools::install_github("ipeaGIT/r5r", subdir = "r-package", force=T)
 
-library(r5r)
 library(sf)
 library(data.table)
 library(magrittr)
@@ -21,6 +20,10 @@ library(mapview)
 mapviewOptions(platform = 'leafgl')
 
 
+utils::remove.packages('r5r')
+devtools::install_github("ipeaGIT/r5r", subdir = "r-package", ref = 'detach_r5_codebase')
+library(r5r)
+
 
 
 ##### INPUT  ------------------------
@@ -29,10 +32,12 @@ mapviewOptions(platform = 'leafgl')
 
 
 # build transport network
-poa <- system.file("extdata/poa", package = "r5r")
+path <- system.file("extdata/poa", package = "r5r")
+list.files(path)
 spo <- system.file("extdata/spo", package = "r5r")
 
 # r5r::download_r5(force_update = T)
+r5r::download_r5()
 r5r_core <- setup_r5(data_path = path, verbose = F)
 
 # load origin/destination points
@@ -347,6 +352,10 @@ r5r_cov
 
 x <- as.data.frame(r5r_cov)
 covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
+
+Error (test-street_network_to_sf.R:14:3): street_network_to_sf - expected behavior
+Error (test-detailed_itineraries.R:169:3): detailed_itineraries output is correct
+
 
 
 ##### Profiling function ------------------------
