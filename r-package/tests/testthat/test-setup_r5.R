@@ -32,10 +32,10 @@ test_that("setup_r5 - expected errors", {
   # No OSM data
   testthat::expect_error( setup_r5(data_path = file.path(.libPaths()[1]) ) )
 
-  # remove existing network.dat
-    file.rename(file.path(path, "network.dat"), file.path(path, "network2.x"))
-    testthat::expect_error( setup_r5(data_path = path, version = "0") )
-    testthat::expect_error( setup_r5(data_path = path, verbose ='a') )
-    file.rename(file.path(path, "network2.x"), file.path(path, "network.dat"))
+  # # remove existing network.dat
+  #   file.rename(file.path(path, "network.dat"), file.path(path, "network2.x"))
+  #   testthat::expect_error( setup_r5(data_path = path, version = "0") )
+  #   testthat::expect_error( setup_r5(data_path = path, verbose ='a') )
+  #   file.rename(file.path(path, "network2.x"), file.path(path, "network.dat"))
 
   })
