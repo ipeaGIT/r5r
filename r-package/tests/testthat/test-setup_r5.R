@@ -8,6 +8,7 @@ path <- system.file("extdata/poa", package = "r5r")
 test_that("setup_r5 - expected behavior", {
 
   testthat::expect_message( setup_r5(data_path = path, verbose = F) )
+  testthat::expect_message( setup_r5(data_path = path, verbose = T) )
 
   # remove files GTFS
   #  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
@@ -27,6 +28,7 @@ test_that("setup_r5 - expected errors", {
 
   testthat::expect_error( setup_r5(data_path = NULL) )
   testthat::expect_error( setup_r5(data_path = 'a') )
+  testthat::expect_error(setup_r5(verbose = 'a'))
 
 
   # No OSM data

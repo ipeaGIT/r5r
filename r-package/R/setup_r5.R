@@ -35,7 +35,11 @@ setup_r5 <- function(data_path,
                      verbose = TRUE,
                      temp_dir = FALSE) {
 
-  # check Java version installed locally
+  # check inputs ------------------------------------------------------------
+  checkmate::assert_logical(verbose)
+  checkmate::assert_logical(temp_dir)
+
+  # check Java version installed locally ------------------------------------------------------------
     rJava::.jinit()
     ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
     ver <- as.numeric(gsub("\\..*","",ver))
@@ -44,7 +48,6 @@ setup_r5 <- function(data_path,
                         11.0.8 can be freely downloaded from
                         https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")}
 
-  checkmate::assert_logical(verbose)
 
   # check directory input
   if (is.null(data_path)){ stop("Please provide data_path.")}
