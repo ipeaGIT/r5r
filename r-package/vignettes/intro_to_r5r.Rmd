@@ -55,6 +55,7 @@ library(sf)
 library(data.table)
 library(ggplot2)
 library(mapview)
+mapviewOptions(platform = 'leafgl')
 ```
 
 The `r5r` package has 3 fundamental functions.
