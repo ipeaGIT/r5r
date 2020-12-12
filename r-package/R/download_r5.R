@@ -28,6 +28,12 @@ download_r5 <- function(version = "4.9.0",
                         force_update = FALSE,
                         temp_dir = FALSE) {
 
+  # check inputs ------------------------------------------------------------
+  checkmate::assert_logical(quiet)
+  checkmate::assert_logical(force_update)
+  checkmate::assert_logical(temp_dir)
+
+
   # set timeout options --------------------------------------------------
 
   old_options <- options()

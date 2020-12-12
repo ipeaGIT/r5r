@@ -18,5 +18,9 @@ test_that("download_r5 - expected errors", {
   testthat::expect_error( download_r5(version = "0") )
   testthat::expect_error( download_r5(version = NULL ) )
   testthat::expect_error(download_r5(force_update = 'a'))
+  testthat::expect_error(download_r5(quiet = 'a'))
+  testthat::expect_error(download_r5(temp_dir = 'a'))
 
   })
+
+
