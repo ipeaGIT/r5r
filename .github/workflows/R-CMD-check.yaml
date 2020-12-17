@@ -43,7 +43,7 @@ jobs:
 
       - name: Java Reconf
         run: |
-          R CMD javareconf
+          sudo R CMD javareconf
 
       - name: Query dependencies
         run: |
