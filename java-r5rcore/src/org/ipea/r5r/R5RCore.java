@@ -195,6 +195,11 @@ public class R5RCore {
     }
 
     private void createR5Network(String dataFolder) {
+        File dir = new File(dataFolder);
+        File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
+
+        for (File file:mapdbFiles) file.delete();
+
         transportNetwork = TransportNetwork.fromDirectory(new File(dataFolder));
         try {
             KryoNetworkSerializer.write(transportNetwork, new File(dataFolder, "network.dat"));
