@@ -44,7 +44,7 @@ jobs:
       - name: Java setup
         uses: actions/setup-java@v1
         with:
-          java-version: '>=11.0.8'
+          java-version: '11'
           java-package: jdk
 
       - name: Query dependencies
