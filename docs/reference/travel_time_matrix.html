@@ -279,8 +279,8 @@ routing. Transportation Science, 49(3), 591-604.</p></li>
 <span class='co'># build transport network</span>
 <span class='va'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/spo"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
 <span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>data_path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/RtmpQ3nbil/temp_libpath37c85483ee5/r5r/jar/r5r_v4.9.0_20201112.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Finished building network.dat at C:/Users/user/AppData/Local/Temp/RtmpQ3nbil/temp_libpath37c85483ee5/r5r/extdata/spo/network.dat</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/RtmpiWGXSS/temp_libpath3d604d4f2a23/r5r/jar/r5r_v4.9.0_20201112.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Finished building network.dat at C:/Users/user/AppData/Local/Temp/RtmpiWGXSS/temp_libpath3d604d4f2a23/r5r/extdata/spo/network.dat</span></div><div class='input'>
 <span class='co'># load origin/destination points</span>
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>data_path</span>, <span class='st'>"spo_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>,<span class='op'>]</span>
 
