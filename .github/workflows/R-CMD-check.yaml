@@ -41,6 +41,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Java Reconf
+        run: |
+          R CMD javareconf
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
