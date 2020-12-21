@@ -191,18 +191,16 @@ public class R5RCore {
             // network.dat file does not exist. create!
             transportNetwork = createR5Network(dataFolder);
         } else {
-            // network.dat file exists. try to load it
-
+            // network.dat file exists
             // check version
-            if (checkR5NetworkVersion(dataFolder)) {
-                // compatible versions, load network
-                transportNetwork = loadR5Network(dataFolder);
-            } else {
+            if (!checkR5NetworkVersion(dataFolder)) {
                 // incompatible versions. try to create a new one
                 // network could not be loaded, probably due to incompatible versions. create a new one
                 transportNetwork = createR5Network(dataFolder);
             }
         }
+        // compatible versions, load network
+        transportNetwork = loadR5Network(dataFolder);
         transportNetwork.transitLayer.buildDistanceTables(null);
     }
 
