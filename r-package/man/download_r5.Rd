@@ -5,7 +5,7 @@
 \title{Download R5 Jar file}
 \usage{
 download_r5(
-  version = "4.9.0",
+  version = "6.0.1",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
@@ -37,7 +37,7 @@ essential features. Source code available at https://github.com/ipeaGIT/r5r.
 
 library(r5r)
 
-download_r5(version = "4.9.0", temp_dir = TRUE)
+download_r5(version = "6.0.1", temp_dir = TRUE)
 }
 }
 \seealso{

@@ -31,7 +31,7 @@
 #' @export
 
 setup_r5 <- function(data_path,
-                     version = "4.9.0",
+                     version = "6.0.1",
                      verbose = TRUE,
                      temp_dir = FALSE) {
 
@@ -88,6 +88,9 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
+  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_3_0.jar")
+
+  rJava::.jaddClassPath(path = r5r_jar)
   rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file
