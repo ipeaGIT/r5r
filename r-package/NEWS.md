@@ -5,11 +5,11 @@
 
 **Major changes**
 - Added Conveyal's R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed #105.
-
-
+- Internal changes to make r5r compatible with R5 latest version 6.0.1.
 
 **Minor changes**
 - Add columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.
+- the `percentiles` parameter in the `travel_time_matrix` function now only accepts up to 5 cut points due to changes in R5.
 
 -------------------------------------------------------
 # r5r v0.2-1
