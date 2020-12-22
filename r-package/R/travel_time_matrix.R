@@ -25,7 +25,8 @@
 #'                    of trips. For example, if the 25 percentile of trips between
 #'                    A and B is 15 minutes, this means that 25% of all trips
 #'                    taken between A and B within the set time window are shorter
-#'                    than 15 minutes. For more details, see R5 documentation at
+#'                    than 15 minutes. Only the first 5 cut points of the percentiles
+#'                    are considered. For more details, see R5 documentation at
 #'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
@@ -156,6 +157,8 @@ travel_time_matrix <- function(r5r_core,
   draws <- as.integer(draws)
 
   # percentiles
+  percentiles <- percentiles[1:5]
+  percentiles <- percentiles[!is.na(percentiles)]
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)
 
