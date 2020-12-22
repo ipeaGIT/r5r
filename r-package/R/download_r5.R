@@ -19,7 +19,7 @@
 #'
 #' library(r5r)
 #'
-#' download_r5(version = "4.9.0", temp_dir = TRUE)
+#' download_r5(version = "6.0.1", temp_dir = TRUE)
 #' }
 #' @export
 
