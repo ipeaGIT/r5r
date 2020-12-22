@@ -170,7 +170,7 @@ times every minute within the set time window. By default the function outputs t
 ```{r, message = FALSE}
 
 time_window <- 120
-percentiles <- 1:100
+percentiles <- c(20, 40, 60, 80, 99)
 
 # calculate travel time matrix
 ttm_tw <- travel_time_matrix(r5r_core,
