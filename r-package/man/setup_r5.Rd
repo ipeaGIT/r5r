@@ -4,7 +4,7 @@
 \alias{setup_r5}
 \title{Create transport network used for routing in R5}
 \usage{
-setup_r5(data_path, version = "4.9.0", verbose = TRUE, temp_dir = FALSE)
+setup_r5(data_path, version = "6.0.1", verbose = TRUE, temp_dir = FALSE)
 }
 \arguments{
 \item{data_path}{character string, the directory where data inputs are stored

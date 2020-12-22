@@ -23,7 +23,7 @@
 #' }
 #' @export
 
-download_r5 <- function(version = "6.0.0",
+download_r5 <- function(version = "6.0.1",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {
