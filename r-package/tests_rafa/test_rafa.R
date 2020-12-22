@@ -1,5 +1,5 @@
 # devtools::install_github("ipeaGIT/r5r", subdir = "r-package", force=T)
-
+options(java.parameters = '-Xmx10G')
 library(sf)
 library(data.table)
 library(magrittr)
