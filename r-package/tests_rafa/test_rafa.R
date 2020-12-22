@@ -416,45 +416,12 @@ donottest
 donotrun
 175.84 sec elapsed
 
-# build binary
+
+# build binary -----------------
 system("R CMD build . --resave-data") # build tar.gz
 
 
 
-
-
-
-
-
-
-
-cities <- geobr::read_municipal_seat()
-cities <- subset(cities, abbrev_state == 'SP')
-sp <- subset(cities, name_muni  == 'São Paulo')
-
-
-# allocate RAM memory to Java
-options(java.parameters = "-Xmx20G")
-
-r5r_core <- r5r::setup_r5(data_path = 'E:/Dropbox/bases_de_dados/OSM/brasil/t')
-
-set.seed(1)
-orig <- cities[sample(1:645, 200),]
-dit <- r5r::detailed_itineraries(r5r_core,
-                                 origins = orig,
-                                 destinations = sp,
-                                 mode='car',
-                                 max_trip_duration = 600L, shortest_path = T)
-
-
-
-
-head(dit)
-plot(dit)
-beepr:beep()
-
-ggplot()+
-        geom_sf(data=dit, color='black', alpha=.3)
 
 
 ### pkgdown: update website ----------------
