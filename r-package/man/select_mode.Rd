@@ -8,6 +8,8 @@ select_mode(mode, mode_egress)
 }
 \arguments{
 \item{mode}{character string passed from routing functions.}
+
+\item{mode_egress}{character string passed from routing functions.}
 }
 \description{
 Select transport mode

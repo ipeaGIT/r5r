@@ -57,6 +57,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #' Select transport mode
 #'
 #' @param mode character string passed from routing functions.
+#' @param mode_egress character string passed from routing functions.
 #'
 #' @family support functions
 
