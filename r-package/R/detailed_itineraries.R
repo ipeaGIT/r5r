@@ -8,6 +8,10 @@
 #'                            containing the columns 'id', 'lon', 'lat'
 #' @param mode string. Transport modes allowed for the trips. Defaults to
 #'             "WALK". See details for other options.
+#' @param mode_egress string. Transport mode used after egress from public
+#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
+#'                    Defaults to "WALK". Ignored when public transport is not
+#'                    used.
 #' @param departure_datetime POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates.
@@ -87,6 +91,7 @@ detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
                                  mode = "WALK",
+                                 mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
                                  max_walk_dist = Inf,
                                  max_trip_duration = 120L,
@@ -118,7 +123,7 @@ detailed_itineraries <- function(r5r_core,
   checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
-  mode_list <- select_mode(mode)
+  mode_list <- select_mode(mode, mode_egress)
 
   # departure time
   departure <- posix_to_string(departure_datetime)

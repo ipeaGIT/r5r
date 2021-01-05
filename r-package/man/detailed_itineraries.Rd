@@ -9,6 +9,7 @@ detailed_itineraries(
   origins,
   destinations,
   mode = "WALK",
+  mode_egress = "WALK",
   departure_datetime = Sys.time(),
   max_walk_dist = Inf,
   max_trip_duration = 120L,
@@ -29,6 +30,11 @@ containing the columns 'id', 'lon', 'lat'}
 
 \item{mode}{string. Transport modes allowed for the trips. Defaults to
 "WALK". See details for other options.}
+
+\item{mode_egress}{string. Transport mode used after egress from public
+transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
+Defaults to "WALK". Ignored when public transport is not
+used.}
 
 \item{departure_datetime}{POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
