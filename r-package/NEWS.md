@@ -5,8 +5,8 @@
 
 **Minor changes**
 - Allow for combination of bicycle and public transport. Closed #135.
-- Added new parameter `mode_egress` to routing functions, so that user can  explicitly
-the transport mode used after egress from public transport. Closed #63.
+- Added new parameter `mode_egress` to routing functions, so that user can explicitly
+set the transport mode used after egress from public transport. Closed #63.
 
 
 
