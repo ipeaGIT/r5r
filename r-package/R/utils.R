@@ -299,10 +299,9 @@ download_metadata <- function(){
     metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
     t <- try( open.connection(con = url(metadata_link), open="rt", timeout=2),silent=T)
     if("try-error" %in% class(t)){stop('Internet connection problem. If this is not a connection problem in your network, please try r5r again in a few minutes.')}
-
     suppressWarnings(try(close.connection(conn),silent=T))
 
-    # download it and save to JAF folder
+    # download it and save it to JAR folder
     httr::GET(url= metadata_link, httr::write_disk(metadata_file, overwrite = T))
 
     # read metadata
