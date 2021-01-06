@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract OpenStreetMap network in sf format from a network.dat built with setup_r5 — street_network_to_sf • r5r</title>
+<title>Download metadata of R5 jar files — download_metadata • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Extract OpenStreetMap network in sf format from a network.dat built with setup_r5 — street_network_to_sf" />
-<meta property="og:description" content="Extract OpenStreetMap network in sf format from a network.dat built with setup_r5" />
+<meta property="og:title" content="Download metadata of R5 jar files — download_metadata" />
+<meta property="og:description" content="Support function to download metadata internally used in r5r" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -125,58 +125,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract OpenStreetMap network in sf format from a network.dat built with setup_r5</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/street_network_to_sf.R'><code>R/street_network_to_sf.R</code></a></small>
-    <div class="hidden name"><code>street_network_to_sf.Rd</code></div>
+    <h1>Download metadata of R5 jar files</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>download_metadata.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract OpenStreetMap network in sf format from a network.dat built with setup_r5</p>
+    <p>Support function to download metadata internally used in r5r</p>
     </div>
 
-    <pre class="usage"><span class='fu'>street_network_to_sf</span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>download_metadata</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>r5r_core</th>
-      <td><p>a rJava object, the output from 'r5r::setup_r5()'</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with two components of a street network in sf format: vertices
-(POINT) and edges (LINESTRING).</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other support functions: 
-<code><a href='assert_points_input.html'>assert_points_input</a>()</code>,
-<code><a href='posix_to_string.html'>posix_to_string</a>()</code>,
-<code><a href='select_mode.html'>select_mode</a>()</code>,
-<code><a href='set_max_rides.html'>set_max_rides</a>()</code>,
-<code><a href='set_max_street_time.html'>set_max_street_time</a>()</code>,
-<code><a href='set_n_threads.html'>set_n_threads</a>()</code>,
-<code><a href='set_speed.html'>set_speed</a>()</code>,
-<code><a href='set_verbose.html'>set_verbose</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span><span class='op'>)</span>
-
-<span class='co'># build transport network</span>
-<span class='va'>path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
-<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using cached version from C:/Users/user/AppData/Local/Temp/RtmpiUjXHm/temp_libpath449826d25ccf/r5r/jar/r5-v6.0.1-2-gf44e585-all.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/RtmpiUjXHm/temp_libpath449826d25ccf/r5r/extdata/poa/network.dat</span></div><div class='input'>
-<span class='co'># load origin/destination points</span>
-<span class='va'>street_net</span> <span class='op'>&lt;-</span> <span class='fu'>street_network_to_sf</span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span>
-
-<span class='fu'><a href='stop_r5.html'>stop_r5</a></span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>r5r_core has been successfully stopped.</span></div><div class='input'><span class='co'># }</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

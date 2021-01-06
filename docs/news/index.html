@@ -135,7 +135,8 @@
 <p><strong>Minor changes</strong></p>
 <ul>
 <li>Allow for combination of bicycle and public transport. Closed #135.</li>
-<li>Added new parameter <code>mode_egress</code> to routing functions, so that user can explicitly the transport mode used after egress from public transport. Closed #63.</li>
+<li>Added new parameter <code>mode_egress</code> to routing functions, so that users can explicitly set the transport mode used after egress from public transport (walk, car or bicycle). Closed #63.</li>
+<li>Allow for using the r5r package off-line, provided the user has successfully ran <code><a href="../reference/setup_r5.html">setup_r5()</a></code> before.</li>
 </ul>
 <hr>
 </div>
@@ -150,8 +151,8 @@
 </ul>
 <p><strong>Minor changes</strong></p>
 <ul>
-<li>Add columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.</li>
-<li>the <code>percentiles</code> parameter in the <code>travel_time_matrix</code> function now only accepts up to 5 cut points due to changes in R5.</li>
+<li>Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.</li>
+<li>The <code>percentiles</code> parameter in the <code>travel_time_matrix</code> function now only accepts up to 5 cut points due to changes in R5.</li>
 </ul>
 <hr>
 </div>
@@ -161,9 +162,9 @@
 </h1>
 <p><strong>Minor changes</strong></p>
 <ul>
-<li>expanded number of routes in the sample GTFS for Porto Alegre, allowing for more complex/realistic examples.</li>
+<li>Expanded number of routes in the sample GTFS for Porto Alegre, allowing for more complex/realistic examples.</li>
 <li>Fixes format of columns of the output of <code>travel_matrix_function</code> when the user sets <code>time_window</code> parameter. Closes #127.</li>
-<li>remove repeated bus route alternatives from the output from <code>detailed_itineraries</code>
+<li>Remove repeated bus route alternatives from the output from <code>detailed_itineraries</code>
 </li>
 <li>Explicitly link destination points to street network before starting. Closes #121</li>
 </ul>
@@ -179,8 +180,8 @@
 </ul>
 <p><strong>Minor changes</strong></p>
 <ul>
-<li>added a sample of frequency-based GTFS for Sao Paulo. Closed #116</li>
-<li>improved documentation of routing functions adding more info on the routing algorithms used in R5. Closes #114</li>
+<li>Added a sample of frequency-based GTFS for Sao Paulo. Closed #116</li>
+<li>Improved documentation of routing functions adding more info on the routing algorithms used in R5. Closes #114</li>
 </ul>
 <hr>
 </div>
