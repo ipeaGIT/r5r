@@ -394,11 +394,13 @@ options(java.parameters = "-Xmx16G")
 r5r_core <- setup_r5(path)
 
 ### CMD Check ----------------
-
 # Check package errors
+
+# LOCAL
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
 
+# CRAN
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
