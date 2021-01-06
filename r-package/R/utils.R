@@ -290,8 +290,6 @@ download_metadata <- function(){
   # IF metadata has been downloaded before
   if (checkmate::test_file_exists(metadata_file)) {
 
-    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
-                                colClasses = 'character', header = T, sep = ';')
     } else {
 
   # Download medata
@@ -304,11 +302,11 @@ download_metadata <- function(){
     # download it and save it to JAR folder
     utils::download.file(url=metadata_link, destfile=metadata_file,
                          overwrite=TRUE, quiet=TRUE)
-
-    # read metadata
-    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
-                                colClasses = 'character', header = T, sep = ';')
   }
+
+  # read metadata
+  metadata <- utils::read.csv(metadata_file,
+                              colClasses = 'character', header = T, sep = ';')
 
   return(metadata)
 }
