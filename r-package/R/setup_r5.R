@@ -65,10 +65,8 @@ setup_r5 <- function(data_path,
 
   # check if most recent JAR release is stored already. If not, download it
     # download metadata with jar file addresses
-    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
-                                colClasses = 'character',
-                                header = T,
-                                sep = ';')
+    metadata <- download_metadata()
+
     metadata <- metadata[metadata$version == version, ]
     metadata <- subset(metadata, release_date == max(metadata$release_date))
 

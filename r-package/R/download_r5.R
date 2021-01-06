@@ -48,10 +48,7 @@ download_r5 <- function(version = "6.0.1",
   # download metadata ------------------------------------------------------------
 
   # download metadata with jar file addresses
-  metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
-                              colClasses = 'character',
-                              header = T,
-                              sep = ';')
+  metadata <- download_metadata()
 
   # invalid version input
   if (!(version %in% metadata$version)){
