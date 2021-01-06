@@ -421,6 +421,11 @@ donotrun
 system("R CMD build . --resave-data") # build tar.gz
 
 
+mode_list
+mode_list <- list('direct_modes' = "WALK",
+                  'transit_mode' =  "",# "TRANSIT;TRAM;SUBWAY;RAIL;BUS;FERRY;CABLE_CAR;GONDOLA;FUNICULAR",
+                  'access_mode'  = "WALK",
+                  'egress_mode'  = "CAR")
 
 
 
