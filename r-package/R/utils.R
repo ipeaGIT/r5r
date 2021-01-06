@@ -272,3 +272,43 @@ set_max_rides <- function(r5r_core, max_rides) {
   r5r_core$setMaxTransfers(as.integer(max_rides))
 
 }
+
+
+
+
+
+#' Download metadata of R5 jar files
+#' @description Support function to download metadata internally used in r5r
+#' @family general support functions
+#'
+download_metadata <- function(){
+
+  # address of JAR folder and metadata file
+  jar_folder <- file.path(.libPaths()[1], "r5r", "jar")
+  metadata_file <- file.path(jar_folder, "metadata.csv")
+
+  # IF metadata has been downloaded before
+  if (checkmate::test_file_exists(metadata_file)) {
+
+    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
+                                colClasses = 'character', header = T, sep = ';')
+    } else {
+
+  # Download medata
+    # test server connection
+    metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
+    t <- try( open.connection(con = url(metadata_link), open="rt", timeout=2),silent=T)
+    if("try-error" %in% class(t)){stop('Internet connection problem. If this is not a connection problem in your network, please try r5r again in a few minutes.')}
+
+    suppressWarnings(try(close.connection(conn),silent=T))
+
+    # download it and save to JAF folder
+    httr::GET(url= metadata_link, httr::write_disk(metadata_file, overwrite = T))
+
+    # read metadata
+    metadata <- utils::read.csv('https://www.ipea.gov.br/geobr/r5r/metadata.csv',
+                                colClasses = 'character', header = T, sep = ';')
+  }
+
+  return(metadata)
+}
