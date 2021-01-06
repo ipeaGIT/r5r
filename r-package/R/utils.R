@@ -290,6 +290,8 @@ download_metadata <- function(){
   # IF metadata has been downloaded before
   if (checkmate::test_file_exists(metadata_file)) {
 
+    # skip
+
     } else {
 
   # Download medata
