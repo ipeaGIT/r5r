@@ -27,7 +27,7 @@ NULL
 if(getRversion() >= "2.15.1") utils::globalVariables(
   c('is', 'duration', 'fromId', 'toId', 'option', 'option', '.SD', 'geometry',
     'route', 'temp_duration', 'temp_route', 'route', 'temp_sign', '.I',
-    'segment_duration', 'total_duration', 'wait', 'release_date'))
+    'segment_duration', 'total_duration', 'wait', 'release_date', 'con'))
 
 
 

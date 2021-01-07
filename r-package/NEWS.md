@@ -1,7 +1,7 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.3-1 dev
+# r5r v0.3-1
 
 **Minor changes**
 - Allow for combination of bicycle and public transport. Closed #135.
