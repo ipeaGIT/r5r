@@ -1,7 +1,15 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.3-2 (dev)
+# r5r v0.3-3 (dev)
+
+
+
+-------------------------------------------------------
+# r5r v0.3-2
+
+**Minor changes**
+- r5r does not save the medatada file in the package directory anymore, following CRAN's policies. Closed #136.
 
 
 -------------------------------------------------------
