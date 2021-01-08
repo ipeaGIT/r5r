@@ -283,9 +283,8 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'
 download_metadata <- function(){
 
-  # address of JAR folder and metadata file
-  jar_folder <- file.path(.libPaths()[1], "r5r", "jar")
-  metadata_file <- file.path(jar_folder, "metadata.csv")
+  # create tempfile to save metadata
+  metadata_file <- file.path(tempdir(), "metadata.csv")
 
   # IF metadata has been downloaded before
   if (checkmate::test_file_exists(metadata_file)) {
