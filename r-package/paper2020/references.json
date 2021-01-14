@@ -359,5 +359,58 @@
 				]
 			]
 		}
-	}
+	},
+ {
+      "id":"stepniak2019impact",
+      "abstract":"In recent years there has been a significant increase of temporally variable analyses of accessibility by public transport as a result of the increased availability of open and standardized time table information in the form of GTFS (General Transit Feed Specification) data. To date, very little attention has been paid to systematically analyze the impact of temporal resolutions on the results. Different authors have applied different standards, often in an ad-hoc manner. In this study, we address the loss of precision associated with a stepwise reduction of the temporal resolution of travel time estimations based on GTFS data for the city of Szczecin in Poland. The paper aims to provide guidance to researchers and practitioners on the selection of appropriate temporal resolutions in accessibility studies. We test four sampling methods in order to analyze four different public transport frequency scenarios, three types of accessibility measures (travel time to the nearest provider, cumulative opportunities measure and potential accessibility) and seven types of destinations ranging from high to low centrality. Additionally, the impact on spatial disparities is explored using the Gini coefficient. We find that a reduction of temporal resolution is associated with a decrease in precision of public transport accessibility measurement. However, with up to 5-min resolutions this reduction is negligible, while computational time is reduced fivefold, compared to a 1-min resolution benchmark. Lower temporal resolutions still provide relatively precise estimations of travel times and accessibility measures. However, further resolution reductions are associated with decreasing reductions of computational time. As a result, we argue that 15-min temporal resolution provides a good balance between precision and computational time while providing very precise estimations of Gini coefficients (errors ≤0.001). A non-linear relationship is found between the public transport frequency and the loss of precision, with lower frequencies leading to a greater loss in precision. More attention should be paid to highly centralized services, in particular when analyzed using proximity and cumulative opportunities measures. Finally, the cumulative opportunities measure is found to be highly sensitive to changes in the temporal resolution and not suited for time-sensitive accessibility analysis.",
+      "accessed":{
+         "date-parts":[
+            [
+               2021,
+               1,
+               14
+            ]
+         ]
+      },
+      "author":[
+         {
+            "family":"Stępniak",
+            "given":"Marcin"
+         },
+         {
+            "family":"Pritchard",
+            "given":"John P."
+         },
+         {
+            "family":"Geurs",
+            "given":"Karst T."
+         },
+         {
+            "family":"Goliszek",
+            "given":"Sławomir"
+         }
+      ],
+      "container-title":"Journal of Transport Geography",
+      "container-title-short":"Journal of Transport Geography",
+      "DOI":"10.1016/j.jtrangeo.2019.01.007",
+      "ISSN":"0966-6923",
+      "issued":{
+         "date-parts":[
+            [
+               2019,
+               2,
+               1
+            ]
+         ]
+      },
+      "language":"en",
+      "page":"8-24",
+      "source":"ScienceDirect",
+      "title":"The impact of temporal resolution on public transport accessibility measurement: Review and case study in Poland",
+      "title-short":"The impact of temporal resolution on public transport accessibility measurement",
+      "type":"article-journal",
+      "URL":"http://www.sciencedirect.com/science/article/pii/S0966692318305209",
+      "volume":"75"
+   }
+
 ]
