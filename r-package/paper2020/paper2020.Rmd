@@ -3,10 +3,10 @@ title: 'r5r: rapid realistic routing on multimodal transport networks with R5 in
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:
-  word_document: default
-  pdf_document: default
-  html_document: default
-abstract: Routing is a key step in transport planning. Nonetheless, researchers and practitioners face challenges to perform this task, such as the costs of licensed software and long computation times. Conveyal’s R<sup>5<\sup> is a multimodal transport network router that offers meaningful planning features, such as calculating travel times over a time window and returning multiple itineraries for a single or multiple origin/destination pairs. This paper describes r5r, an open source R package that leverages on R<sup>5<\sup> to allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense.
+   html_document: default
+   word_document: default
+   pdf_document: default
+abstract: Routing is a key step in transport planning. Nonetheless, researchers and practitioners face challenges to perform this task, such as the costs of licensed software and long computation times. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers meaningful planning features, such as calculating travel times over a time window and returning multiple itineraries for a single or multiple origin/destination pairs. This paper describes r5r, an open source R package that leverages on R<sup>5</sup> to allow users to efficiently compute travel time matrices and generate detailed itineraries between a set of origins and destinations at no expense.
 urlcolor: blue
 bibliography: references.json
 ---
@@ -36,9 +36,7 @@ Transport routing is the process of finding alternative routes and costs that co
 
 While there is a growing number of open source routing models [@opentripplanneropentripplanner; @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently process large transport networks. This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source R package for routing on multimodal transport networks based on the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal [@conway2017evidencebased; @conway2018accounting] to provide an efficient backend for analytic applications - such as accessibility assessment. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, which allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.
 
-
 <!-- More importantly, those tools generate deterministic estimates of travel times without accounting for variability in results (due to service reliability issues, for example) and only return the fastest route option between a set of origins and destinations (see [@conway2018accounting] for a more in-depth discussion). This simple approach overlooks how often people's actual route choices deviate from shortest travel time paths, what can occur due to multiple factors such as imperfect information, monetary costs and safety issues [@larsen2011travel; @zhu2015people; @conway2019getting]. -->
-
 
 # METHODS AND DATA
 
@@ -46,13 +44,13 @@ The r5r package has low data requirements and is easily scalable, allowing fast 
 
 The r5r package has 3 fundamental functions:
 
--   `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function automatically (1) downloads/updates a compiled R<sup>5</sup> JAR file and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS datasets to build a routable network object.
+- `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function automatically (1) downloads/updates a compiled R<sup>5</sup> JAR file and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS datasets to build a routable network object.
 
--   `travel_time_matrix()`: computes travel time estimates between one or multiple origin/destination pairs for a single departure time or for multiple departure times over a `time_window` set by the user. This function uses an R5-specific extension to the RAPTOR routing algorithm which provides an efficient and systematic sampling of multiple simulated schedules when using frequency-based GTFS data  [@conway2017evidencebased]. 
+- `travel_time_matrix()`: computes travel time estimates between one or multiple origin/destination pairs for a single departure time or for multiple departure times over a `time_window` set by the user. This function uses an R5-specific extension to the RAPTOR routing algorithm which provides an efficient and systematic sampling of multiple simulated schedules when using frequency-based GTFS data [@conway2017evidencebased]. 
 
 <!-- If the user passes a `time_window` parameter to the function, r5r calculates multiple travel time matrices departing each minute and returns additional information on the percentile distribution of travel times that allows one to grasp service reliability issues. -->
 
--   `detailed_itineraries()`: computes detailed information on either the shortest or multiple alternative routes between one or multiple origin/destination pairs for a single departure time. The output includes detailed information on route alternatives such as the transport mode, waiting time, travel time and distance of each segment of the trip. This function uses an R5-specific extension[^1] to the McRAPTOR [@delling2015roundbased] routing algorithm to find optimal or less than optimal paths. 
+- `detailed_itineraries()`: computes detailed information on either the shortest or multiple alternative routes between one or multiple origin/destination pairs for a single departure time. The output includes detailed information on route alternatives such as the transport mode, waiting time, travel time and distance of each segment of the trip. This function uses an R5-specific extension[^1] to the McRAPTOR [@delling2015roundbased] routing algorithm to find optimal or less than optimal paths. 
 
 [^1]: The specific extension to McRAPTOR to do suboptimal path routing is not documented yet.
 
@@ -62,7 +60,7 @@ Both routing functions are versatile so users can easily set customized inputs s
 
 After installed with the `install.packages("r5r")` command, the package can be attached (alongside some other packages used in this article), as follows:
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning = FALSE}
 library(r5r)
 library(sf)
 library(data.table)
@@ -72,9 +70,9 @@ library(akima)
 
 The package includes sample datasets for the cities of São Paulo and Porto Alegre (both in Brazil). Each dataset includes:
 
--   An OSM network in `.pbf` format.
--   A public transport network in `GTFS.zip` format.
--   The spatial coordinates of points covering the area in `.csv` format.
+- An OSM network in `.pbf` format.
+- A public transport network in `GTFS.zip` format.
+- The spatial coordinates of points covering the area in `.csv` format.
 
 ### Build a routable transport network
 
@@ -93,7 +91,7 @@ The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed b
 
 The `travel_time_matrix()` function takes, as inputs, the spatial location of origins/destinations  (either as a spatial `sf POINT` object, or as a `data.frame` containing the columns `id`, `lon` and `lat`) and a few travel parameters such as _maximum trip duration_ or _walking distance_, and outputs travel time estimates for each origin-destination pair at a set `departure_datetime`. 
 
-To account for variations on service levels accross the day [@stepniak2019impact], the user can use the `time_window` parameter. In this case, several matrices are calculated using one departure time every minute within the set time window. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair  within that time window. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution. An example of the `travel_time_matrix()` function's usage is presented below:
+To account for variations on service levels across the day [@stepniak2019impact], the user can use the `time_window` parameter. In this case, several matrices are calculated usinh every minute within the set time window as a departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair  within that time window. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution. An example of the `travel_time_matrix()` function's usage is presented below:
 
 <!-- However, this can provide biased estimates due to how service levels varies across the day (reference to https://www.sciencedirect.com/science/article/pii/S0966692318305209).  -->
 
@@ -131,7 +129,7 @@ head(ttm)
 
 <!-- In the example above we calculated how the estimates of travel-time to arrive at the central bus station vary by place of trip origin.  -->
 
-The plot below shows travel times from all origin points to the central bus station at five percentiles (20th, 40th, 60th, 80th, 99th), thus showing how the estimated travel times are more uncertain when leaving from some places than others. As expected, there is little to no uncertainty in travel times from places that are very close (walking distance) to the central bus station, while travel times from places that are far away are more affected by variations in the trip's departure time and service frequency levels.
+The plot below shows travel times from all origin points to the central bus station at five percentiles (20th, 40th, 60th, 80th, 99th), thus showing how the estimated travel times are more uncertain when leaving from some places than others. As expected, there is little to no uncertainty in travel times from places that are very close (walking distance) to the central bus station, while travel times from places that are far away are more affected by variations in the departure time and service frequency levels.
 
 ```{r, message = FALSE}
 # select the travel time matrix departing from a given origin
@@ -140,7 +138,7 @@ ttm_tw <- ttm[toId %in% central_bus_stn$id ]
 
 # reshape data
 plot_data <- melt(ttm_tw, measure = patterns("^travel_time_p"), variable = "percentile", value = "travel_time")
-plot_data[, mediantt := median(travel_time, na.rm=T), by=fromId]
+plot_data[, mediantt := as.integer(median(travel_time, na.rm=T)), by=fromId]
 
 ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
   geom_point(alpha = 0.1, size = .7) +
@@ -163,18 +161,16 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
 <!-- If the destination points cover the entire study area, the output can easily be used to build ishochrone-like visualizations.  -->
 In our example, we can visualize the isochrone departing from the central bus station as follows:
 
-
 ```{r}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
-travel_times <- ttm[fromId %in% central_bus_stn$id ]
+travel_times <- ttm[fromId %in% central_bus_stn$id]
 travel_times[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
 travel_times[, mediantt := median(travel_time_p020, travel_time_p040, 
                                   travel_time_p060, travel_time_p080,
                                   travel_time_p099), by = toId]
  
-
 travel_times.interp <- with(travel_times, interp(lon, lat, mediantt)) %>% 
   with(cbind(travel_time=as.vector(z),  # Column-major order
              x=rep(x, times=length(y)),
@@ -193,7 +189,7 @@ ggplot(na.omit(travel_times.interp)) +
 
 # Acknowledgments
 
-The [R](https://github.com/conveyal/r5)<sup>5</sup> routing engine is developed at [Conveyal](https://www.conveyal.com/) with contributions from several developers. This work was supported by the Brazilian Institute for Applied Economic Research (Ipea).
+The [R<sup>5</sup>](https://github.com/conveyal/r5) routing engine is developed at [Conveyal](https://www.conveyal.com/) with contributions from several developers. This work was supported by the Brazilian Institute for Applied Economic Research (Ipea).
 
 # References
 
