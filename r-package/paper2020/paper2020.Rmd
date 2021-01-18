@@ -138,19 +138,18 @@ plot_data <- melt(ttm_tw, measure = patterns("^travel_time_p"), variable = "perc
 plot_data[, mediantt := as.integer(median(travel_time, na.rm=T)), by=fromId]
 
 ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
-  geom_point(alpha = 0.1, size = .7) +
+  geom_point(alpha = 0.3, size = .7) +
   geom_line(aes(y=mediantt, group=toId), color="#FE9F45", size=1.5) +
   expand_limits(y = 120) +
   scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        axis.title.x = element_blank(), 
         axis.text.x = element_blank(),
         axis.ticks = element_blank(),
         panel.border = element_rect(fill = NA, colour = "grey80", size=1)) +
   labs(title = "Travel time uncertainty per destination",
-       y = "Travel Time (min)", x='Destinations')
+       y = "Travel Time (min)", x='Destinations ordered by median travel time')
 ```
 
 #### Visualizing Isochrones
@@ -169,17 +168,17 @@ travel_times[, mediantt := median(travel_time_p020, travel_time_p040,
                                   travel_time_p060, travel_time_p080,
                                   travel_time_p099), by = toId]
  
-travel_times.interp <- with(travel_times, interp(lon, lat, mediantt)) %>% 
-  with(cbind(travel_time=as.vector(z),  # Column-major order
-             x=rep(x, times=length(y)),
-             y=rep(y, each=length(x)))) %>% 
-  as.data.frame()
+travel_times.interp <- with(travel_times, interp(lon, lat, mediantt)) %>%
+                        with(cbind(travel_time=as.vector(z),  # Column-major order
+                                   x=rep(x, times=length(y)),
+                                   y=rep(y, each=length(x)))) %>% as.data.frame()
 
 ggplot(na.omit(travel_times.interp)) +
-  geom_contour_filled(aes(x=x, y=y, z=travel_time)) +
+  geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.7) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
+  scale_fill_viridis_d(direction = -1, option = 'B') +
   coord_sf() +
-  labs(fill = "cutoff") +
+  labs(fill = "cutoff in minutes") +
   theme_minimal() +
   theme(axis.title = element_blank())
   
