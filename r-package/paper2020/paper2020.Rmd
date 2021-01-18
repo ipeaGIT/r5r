@@ -97,13 +97,14 @@ Since service levels can significantly vary across the day [@stepniak2019impact]
 # read points of origin and destination
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
+# routing inputs
 mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000
-max_trip_duration <- 120
+max_walk_dist <- 1000 # in meters
+max_trip_duration <- 120 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
-time_window <- 120
+time_window <- 120 # in minutes
 percentiles <- c(20, 40, 60, 80, 99)
 
 # calculate travel time matrix
@@ -125,12 +126,12 @@ head(ttm)
 
 <!-- In the example above we calculated how the estimates of travel-time to arrive at the central bus station vary by place of trip origin.  -->
 
-The plot below shows travel times from all origin points to the central bus station at five percentiles (20th, 40th, 60th, 80th, 99th), thus showing how the estimated travel times are more uncertain when leaving from some places than others. As expected, there is little to no uncertainty in travel times from places that are very close (walking distance) to the central bus station, while travel times from places that are far away are more affected by variations in the departure time and service frequency levels.
+The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (percentiles 20th, 40th, 60th, 80th, 99th), reflecting that these travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from farther away places are more affected by variations departure time and service frequency levels.
 
 ```{r, message = FALSE}
-# select the travel time matrix departing from a given origin
+# subset travel time matrix departing from a given origin
 central_bus_stn <- points[291,]
-ttm_tw <- ttm[toId %in% central_bus_stn$id ] 
+ttm_tw <- subset(ttm, toId %in% central_bus_stn$id)
 
 # reshape data
 plot_data <- melt(ttm_tw, measure = patterns("^travel_time_p"), variable = "percentile", value = "travel_time")
