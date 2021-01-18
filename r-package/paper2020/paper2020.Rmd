@@ -36,15 +36,15 @@ Transport routing is the process of finding the alternative routes and costs tha
 
 While there is a growing number of open source routing models [@opentripplanneropentripplanner; @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently process large transport networks. This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source R package for routing on multimodal transport networks based on the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal [@conway2017evidencebased; @conway2018accounting] to provide an efficient backend for analytic applications - such as accessibility analysis. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, which allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.
 
-<!-- More importantly, those tools generate deterministic estimates of travel times without accounting for variability in results (due to service reliability issues, for example) ... 666666666666
+<!-- More importantly, those tools generate deterministic estimates of travel times without accounting for variability in results (due to service reliability issues, for example) ... [rafa: the idea here is to emphasize the power of R5 with the time_window parameter. We certainly need to rephrase things, but perhaps we should stress this idea here -->
 
 # METHODS AND DATA
 
-The r5r package has low data requirements and is easily scalable, allowing fast computation of routes and travel times at either city or country-level analysis. It creates a routable transport network using street network data from [OpenStreetMap](https://www.openstreetmap.org/) (OSM), and it  automatically combines public transport data if they are provided by the user in the standard [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) format .
+The r5r package has low data requirements and is easily scalable, allowing fast computation of routes and travel times at either city or country-level analysis. It creates a routable transport network using street network data from [OpenStreetMap](https://www.openstreetmap.org/) (OSM), and it automatically combines public transport data if they are provided by the user in the standard [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) format.
 
 The r5r package has 3 fundamental functions:
 
--   `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function automatically (1) downloads/updates a compiled R<sup>5</sup> JAR file and stores it locally in the r5r package directory for future use; and (2) combines the OSM and GTFS datasets to build a routable network object.
+-   `setup_r5()`: builds a multimodal transport network used for routing in R<sup>5</sup>. This function automatically (1) downloads/updates a compiled R<sup>5</sup> JAR file and stores it locally for future use; and (2) combines the OSM and GTFS datasets to build a routable network object.
 
 -   `travel_time_matrix()`: computes travel time estimates between one or multiple origin/destination pairs for a single departure time or for multiple departure times over a `time_window` set by the user. This function uses an R5-specific extension to the RAPTOR routing algorithm which provides an efficient and systematic sampling of multiple simulated schedules when using frequency-based GTFS data [@conway2017evidencebased].
 
@@ -54,11 +54,11 @@ The r5r package has 3 fundamental functions:
 
 [^1]: The specific extension to McRAPTOR to do suboptimal path routing is not documented yet.
 
-Both routing functions are versatile so users can easily set customized inputs such as transport modes, departure date and times, walking and cycling speeds, maximum trip duration, walking distances and number of public transport transfers. We will focus on results obtained from `travel_time_matrix()` on the findings discussed in the following section.
+Both routing functions are versatile so users can easily set customized inputs such as transport modes, departure date and times, walking and cycling speeds, maximum trip duration, walking distances and number of public transport transfers. In the following section, we will focus on results obtained from `travel_time_matrix()`.
 
 # FINDINGS
 
-After installed with the `install.packages("r5r")` command, the package can be attached (alongside some other packages used in this article), as follows:
+After installed with the `install.packages("r5r")` command, the package can be attached (alongside some other packages to reproduce this article), as follows:
 
 ```{r, message = FALSE, warning = FALSE}
 library(r5r)
@@ -74,9 +74,9 @@ The package includes sample datasets for the cities of São Paulo and Porto Aleg
 -   A public transport network in `GTFS.zip` format.
 -   The spatial coordinates of points covering the area in `.csv` format.
 
-### Build a routable transport network
+### Building a routable transport network
 
-To build a routable transport network with r5r and load it in memory, the user needs one command line pointing to the location on disk where the input data is stored. In the examples of this paper, we will be using the provided Porto Alegre dataset.
+To build a routable transport network with r5r and load it in memory, the user need to run a command line pointing to the location on disk where the input data is stored. In the examples of this paper, we will be using the provided Porto Alegre dataset.
 
 ```{r, message = FALSE}
 # points to directory with data
@@ -87,15 +87,11 @@ r5r_core <- setup_r5(data_path, verbose = FALSE)
 
 The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed by `data_path` to create a multimodal transport network used for routing by R<sup>5</sup>. Multiple GTFS feeds can be used simultaneously, in which case R<sup>5</sup> will automatically merge all files into a single public transport network. The resulting `network.dat` as well as some other files used by R<sup>5</sup> are saved inside the supplied directory for later reuse.
 
-### Calculate a travel time matrix
+### Calculating a travel time matrix
 
-The `travel_time_matrix()` function takes, as inputs, the spatial location of origins/destinations (either as a spatial `sf POINT` object, or as a `data.frame` containing the columns `id`, `lon` and `lat`) and a few travel parameters such as *maximum trip duration* or *walking distance*, and outputs travel time estimates for each origin-destination pair at a set `departure_datetime`.
+The `travel_time_matrix()` function takes, as inputs, the spatial location of origins/destinations (either as a spatial `sf POINT` object, or as a `data.frame` containing the columns `id`, `lon` and `lat`) and a few travel parameters such as *maximum trip duration* or *walking distance*. It outputs travel time estimates for each origin-destination pair at a set `departure_datetime`.
 
-To account for variations on service levels across the day [@stepniak2019impact], the user can use the `time_window` parameter. In this case, several matrices are calculated usinh every minute within the set time window as a departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair within that time window. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution. An example of the `travel_time_matrix()` function's usage is presented below:
-
-<!-- However, this can provide biased estimates due to how service levels varies across the day (reference to https://www.sciencedirect.com/science/article/pii/S0966692318305209).  -->
-
-<!-- To account for these variations,  -->
+Since service levels can significantly vary across the day [@stepniak2019impact], users can account for this variation using the `time_window` parameter. In this case, several matrices are calculated using every minute within the set time window as a departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair within the time window. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution. An example of the function's usage is presented below:
 
 ```{r, message = FALSE}
 # read points of origin and destination
