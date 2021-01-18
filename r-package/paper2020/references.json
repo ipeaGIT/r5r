@@ -411,6 +411,45 @@
       "type":"article-journal",
       "URL":"http://www.sciencedirect.com/science/article/pii/S0966692318305209",
       "volume":"75"
-   }
+   },
+   	{
+		"id": "levinson2020manual",
+		"type": "article-journal",
+		"abstract": "This Manual is a guide for quantifying and evaluating access for anybody interested in truly understanding how to measure the performance of transport and land use configurations. It contains enough to help transport and planning professionals achieve a more comprehensive look at their city or region than traditional transport analysis allows. It provides a point of entry for interested members of the public as well as practitioners by being organized in a logical and straightforward way.",
+		"language": "en",
+		"note": "Accepted: 2020-11-05\npublisher: Committee of the Transport Access Manual, University of Sydney",
+		"source": "ses.library.usyd.edu.au",
+		"title": "Transport Access Manual: A Guide for Measuring Connection between People and Places",
+		"title-short": "Transport Access Manual",
+		"URL": "https://ses.library.usyd.edu.au/handle/2123/23733",
+		"author": [
+			{
+				"family": "Levinson",
+				"given": "David"
+			},
+			{
+				"family": "et al.",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2021",
+					1,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2020",
+					1,
+					1
+				]
+			]
+		}
+	}
 
 ]
