@@ -22,14 +22,6 @@ knitr::opts_chunk$set(
 set.seed(0)
 ```
 
-<!-- Examples of similar papers -->
-
-<!--  - https://transportfindings.org/article/8416-accessibility-toolbox-for-r-and-arcgis -->
-
-<!--  - https://transportfindings.org/article/6945-dodgr-an-r-package-for-network-flow-aggregation -->
-
-<!--  - https://joss.theoj.org/papers/10.21105/joss.01926 -->
-
 # RESEARCH QUESTIONS AND HYPOTHESES
 
 Transport routing is the process of finding the alternative routes and costs that connect places on a given transport network, and it is a key step in transport accessibility analysis, fleet allocation and transport simulation and planning more broadly [@levinson2020manual]. Researchers and practitioners still frequently face practical challenges when carrying out routing analysis tasks due to the monetary costs of licensed software, limited data availability for data hungry models, and the long computation times required to run multiple routing scenarios, particularly in large and complex multimodal transport networks.
@@ -124,9 +116,7 @@ head(ttm)
 
 #### Visualizing travel-time uncertainty
 
-<!-- In the example above we calculated how the estimates of travel-time to arrive at the central bus station vary by place of trip origin.  -->
-
-The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (percentiles 20th, 40th, 60th, 80th, 99th), reflecting that these travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from farther away places are more affected by variations departure time and service frequency levels.
+The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (percentiles 20th, 40th, 60th, 80th, 99th), reflecting that these travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from places farther away are more affected by departure time variations and service frequency levels.
 
 ```{r, message = FALSE}
 # subset travel time matrix departing from a given origin
@@ -153,8 +143,6 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
 ```
 
 #### Visualizing Isochrones
-
-<!-- If the destination points cover the entire study area, the output can easily be used to build ishochrone-like visualizations.  -->
 
 In our example, we can visualize the isochrone departing from the central bus station as follows:
 
@@ -189,31 +177,3 @@ ggplot(na.omit(travel_times.interp)) +
 The [R<sup>5</sup>](https://github.com/conveyal/r5) routing engine is developed at [Conveyal](https://www.conveyal.com/) with contributions from several developers. This work was supported by the Brazilian Institute for Applied Economic Research (Ipea).
 
 # References
-
-```{=html}
-<!-- old isochrone code
-# ```{r}
-# cutoffs <- seq(0, 120, 20)
-# 
-# # select the travel time matrix departing from a given origin
-# central_bus_stn <- points[291,]
-# ttm_iso <- ttm[fromId %in% central_bus_stn$id ] 
-# 
-# # aggregate travel-times
-# ttm_iso[, isochrones := cut(x=travel_time_p099, breaks=cutoffs), by= fromId]
-#   
-# # join travel-matrix results to points
-# ttm_iso[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
-# 
-# ggplot(ttm_iso, aes(x=lon, y=lat, colour = isochrones)) +
-#    geom_point(size = 2) +
-#    geom_point(data = central_bus_stn, aes(x=lon, y=lat), colour="blue", size = 2) +
-#    coord_map() +
-#    scale_colour_brewer(palette = "Reds") +
-#    facet_wrap(~fromId) +
-#    theme_minimal() +
-#    theme(axis.title = element_blank(),
-#          panel.border = element_rect(fill = NA, colour = "grey40"))
-# ```
- -->
-```
