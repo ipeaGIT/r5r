@@ -20,9 +20,9 @@ library(mapview)
 mapviewOptions(platform = 'leafgl')
 
 
-utils::remove.packages('r5r')
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package", ref = 'detach_r5_codebase')
-library(r5r)
+# utils::remove.packages('r5r')
+# devtools::install_github("ipeaGIT/r5r", subdir = "r-package", ref = 'detach_r5_codebase')
+# library(r5r)
 
 
 

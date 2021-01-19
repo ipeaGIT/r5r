@@ -3,6 +3,8 @@
 -------------------------------------------------------
 # r5r v0.3-3 (dev)
 
+**Minor changes**
+- fix conflict with `geobr` package when downloading metadata. Closed #137.
 
 
 -------------------------------------------------------

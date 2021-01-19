@@ -284,7 +284,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 download_metadata <- function(){
 
   # create tempfile to save metadata
-  metadata_file <- file.path(tempdir(), "metadata.csv")
+  metadata_file <- file.path(tempdir(), "metadata_r5r.csv")
 
   # IF metadata has been downloaded before
   if (checkmate::test_file_exists(metadata_file)) {
