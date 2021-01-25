@@ -228,7 +228,7 @@
 				"given": "Andrew"
 			},
 			{
-				"family": "Van Eggermond",
+				"family": "van Eggermond",
 				"given": "Michael"
 			}
 		],
@@ -450,6 +450,41 @@
 				]
 			]
 		}
-	}
+	},
+	 {
+    "id": "wessel2017constructing",
+    "abstract": "Journal of Transport Geography, 62 (2017) 92-97. doi:10.1016/j.jtrangeo.2017.04.012",
+    "author": [
+      {
+        "family": "Wessel",
+        "given": "Nate"
+      },
+      {
+        "family": "Allen",
+        "given": "Jeff"
+      },
+      {
+        "family": "Farber",
+        "given": "Steven"
+      }
+    ],
+    "container-title": "Journal of Transport Geography",
+    "container-title-short": "Journal of Transport Geography",
+    "DOI": "10.1016/j.jtrangeo.2017.04.012",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          6,
+          9
+        ]
+      ]
+    },
+    "page": "92-97",
+    "title": "Constructing a routable retrospective transit timetable from a real-time vehicle location feed and GTFS",
+    "type": "article-journal",
+    "URL": "http://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
+    "volume": "62"
+  }
 
 ]

@@ -6,7 +6,7 @@ output:
    html_document: default
    word_document: default
    pdf_document: default
-abstract: Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges to perform this task due to the cost of licensed software and long computation times. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers multiple planning features, such as calculating travel times over a time window, and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages on R<sup>5</sup> to allow users to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.
+abstract: Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges when performing this task due to long computation times and the cost of licensed software. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers multiple routing features, such as calculating travel times over a time window and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages R<sup>5</sup> to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.
 urlcolor: blue
 bibliography: references.json
 ---
@@ -24,15 +24,18 @@ set.seed(0)
 
 # RESEARCH QUESTIONS AND HYPOTHESES
 
-Transport routing is the process of finding the alternative routes and costs that connect places on a given transport network, and it is a key step in transport accessibility analysis, fleet allocation and transport simulation and planning more broadly [@levinson2020manual]. Researchers and practitioners still frequently face practical challenges when carrying out routing analysis tasks due to the monetary costs of licensed software, limited data availability for data hungry models, and the long computation times required to run multiple routing scenarios, particularly in large and complex multimodal transport networks.
+<!-- edited this because of grammar - costs don't connect places which was grammatically implied in the previous structure -->
+Transport routing is the process of finding the fastest or lowest-cost routes that connect places in a given transport network, and is a key step in transport accessibility analysis, fleet allocation and transport simulation and planning more broadly [@levinson2020manual]. However, researchers and practitioners often face practical challenges when carrying out routing tasks due to the costs of licensed software, limited data availability, and the long computation times required to run multiple routing scenarios, particularly in large and complex multimodal transport networks.
 
-While there is a growing number of open source routing models [@opentripplanneropentripplanner; @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently process large transport networks. This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open source R package for routing on multimodal transport networks based on the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5). R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal [@conway2017evidencebased; @conway2018accounting] to provide an efficient backend for analytic applications - such as accessibility analysis. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, which allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.
+<!-- MWC: I'm not sure I agree with this - OTP can handle large networks (and OTP 2.0 actually shares a lot of algorithms with R5), and there are also tools like osrm that can handle really large street routing problems. Is the problem more that the tools that can handle really large networks are inaccessible to researchers? -->
+While there are a growing number of open-source routing packages [@opentripplanneropentripplanner; @lovelace2019stplanr; @padgham2019dodgr], most options available do not efficiently process large transport networks. This paper presents [r5r](https://ipeagit.github.io/r5r/), a new open-source R package for routing on multimodal transport networks based on the [Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)](https://github.com/conveyal/r5) package. R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal [@conway2017evidencebased; @conway2018accounting] to provide an efficient backend for analytic applications, such as accessibility analysis. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, which allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.
 
 <!-- More importantly, those tools generate deterministic estimates of travel times without accounting for variability in results (due to service reliability issues, for example) ... [rafa: the idea here is to emphasize the power of R5 with the time_window parameter. We certainly need to rephrase things, but perhaps we should stress this idea here -->
 
 # METHODS AND DATA
 
-The r5r package has low data requirements and is easily scalable, allowing fast computation of routes and travel times at either city or country-level analysis. It creates a routable transport network using street network data from [OpenStreetMap](https://www.openstreetmap.org/) (OSM), and it automatically combines public transport data if they are provided by the user in the standard [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) format.
+<!-- Country-level analysis takes a ton of RAM (well, depending on the country)---Maybe we should say region-level instead? Like, the Netherlands is possible on high-end consumer hardware, but I suspect that, say, the US would overwhelm most commodity machines -->
+The r5r package has low data requirements and is easily scalable, allowing fast computation of routes and travel times for either city or country-level analysis. It creates a routable transport network using street network data from [OpenStreetMap](https://www.openstreetmap.org/) (OSM) and optionally public transport data in the [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) format.
 
 The r5r package has 3 fundamental functions:
 
@@ -42,15 +45,15 @@ The r5r package has 3 fundamental functions:
 
 <!-- If the user passes a `time_window` parameter to the function, r5r calculates multiple travel time matrices departing each minute and returns additional information on the percentile distribution of travel times that allows one to grasp service reliability issues. -->
 
--   `detailed_itineraries()`: computes detailed information on either the shortest or multiple alternative routes between one or multiple origin/destination pairs for a single departure time. The output includes detailed information on route alternatives such as the transport mode, waiting time, travel time and distance of each segment of the trip. This function uses an R5-specific extension[^1] to the McRAPTOR [@delling2015roundbased] routing algorithm to find optimal or less than optimal paths.
+-   `detailed_itineraries()`: computes detailed information on routes between one or multiple origin/destination pairs for a single departure time. The output includes detailed information on route alternatives such as the transport mode, waiting time, travel time and distance of each segment of the trip. This function uses an R<sup>5</sup>-specific extension[^1] to the McRAPTOR [@delling2015roundbased] routing algorithm to find both optimal and slightly suboptimal paths.
 
 [^1]: The specific extension to McRAPTOR to do suboptimal path routing is not documented yet.
 
-Both routing functions are versatile so users can easily set customized inputs such as transport modes, departure date and times, walking and cycling speeds, maximum trip duration, walking distances and number of public transport transfers. In the following section, we will focus on results obtained from `travel_time_matrix()`.
+Both routing functions are versatile so users can easily set customized inputs such as transport modes, departure dates and times, walking and cycling speeds, maximum trip duration, walking distances and number of public transport transfers. In the following section, we will focus on results obtained from `travel_time_matrix()`.
 
 # FINDINGS
 
-After installed with the `install.packages("r5r")` command, the package can be attached (alongside some other packages to reproduce this article), as follows:
+After it is installed with the `install.packages("r5r")` command, the package can be attached (alongside other packages to reproduce this article), as follows:
 
 ```{r, message = FALSE, warning = FALSE}
 library(r5r)
@@ -58,7 +61,10 @@ library(sf)
 library(data.table)
 library(ggplot2)
 library(akima)
+library(dplyr)
 ```
+
+For this article, we used r5r version XX and R5 version XX. <!-- TODO I'm running r5r from github, but we should use a prod release here. I do think we should include these version numbers -->
 
 The package includes sample datasets for the cities of São Paulo and Porto Alegre (both in Brazil). Each dataset includes:
 
@@ -68,8 +74,10 @@ The package includes sample datasets for the cities of São Paulo and Porto Aleg
 
 ### Building a routable transport network
 
-To build a routable transport network with r5r and load it in memory, the user need to run a command line pointing to the location on disk where the input data is stored. In the examples of this paper, we will be using the provided Porto Alegre dataset.
+To build a routable transport network with r5r and load it into memory, the user needs to call `setup_r5` with the path to the directory where OSM and GTFS data are stored. In the examples herein, we use the provided Porto Alegre dataset.
 
+<!-- We're getting an error about OSM data here: Continuing to load but ignoring generalized costs due to exception: java.lang.RuntimeException: All ways are expected to have generalized cost tags. Missing: slope_1:forward
+Digging through the R5 code though, it looks like this is harmless and is related to some Los Angeles-specific development work done at Conveyal -->
 ```{r, message = FALSE}
 # points to directory with data
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -77,13 +85,16 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 ```
 
-The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed by `data_path` to create a multimodal transport network used for routing by R<sup>5</sup>. Multiple GTFS feeds can be used simultaneously, in which case R<sup>5</sup> will automatically merge all files into a single public transport network. The resulting `network.dat` as well as some other files used by R<sup>5</sup> are saved inside the supplied directory for later reuse.
+The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed by `data_path` to create a multimodal transport network used for routing by R<sup>5</sup>. If multiple GTFS files are present, R<sup>5</sup> will merge them into a single transport network. The resulting `network.dat` as well as some other files used by R<sup>5</sup> are saved inside the supplied directory for later reuse.
 
 ### Calculating a travel time matrix
 
-The `travel_time_matrix()` function takes, as inputs, the spatial location of origins/destinations (either as a spatial `sf POINT` object, or as a `data.frame` containing the columns `id`, `lon` and `lat`) and a few travel parameters such as *maximum trip duration* or *walking distance*. It outputs travel time estimates for each origin-destination pair at a set `departure_datetime`.
+The `travel_time_matrix()` function takes, as inputs, the spatial location of origins/destinations (either as a spatial `sf POINT` object, or as a `data.frame` containing the columns `id`, `lon` and `lat`) and a few travel parameters such as *maximum trip duration*, or *walking distance*. It outputs travel time estimates for each origin-destination pair at a set `departure_datetime`.
 
-Since service levels can significantly vary across the day [@stepniak2019impact], users can account for this variation using the `time_window` parameter. In this case, several matrices are calculated using every minute within the set time window as a departure time. By default the function outputs the 50th percentile (i.e. the median) travel time between each origin and destination pair within the time window. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution. An example of the function's usage is presented below:
+<!-- It might be worthwhile to consider changing the defaults to use a longer time window, and to return more percentiles, so users don't have to set parameters to see variation -MWC -->
+Since service levels can significantly vary across the day [@stepniak2019impact], r5r provides a `time_window` parameter. When this parameter is set, R5 will compute travel times for trips at the specified departure time and every minute for `time_window` minutes after. The `percentiles` parameter allows the user to retrieve travel time estimates at different points of the distribution (by default the median). These percentiles reflect service variation over the time window, but do not reflect schedule deviation not represented in the GTFS, though tools exist to create GTFS which reflects schedule deviations [@wessel2017constructing].
+
+An example of the function's usage is presented below. Computing this 1227x1227 travel time matrix with a 120-minute time window takes less than 5 minutes on a MacBook Pro with a 3.1GHz Intel i7 and 16GB RAM. <!-- MWC: I think it makes sense to put performance stats here, but it might make sense to read this off of someone else's machine---I have R running inside Docker which may impose some overhead -->
 
 ```{r, message = FALSE}
 # read points of origin and destination
@@ -97,10 +108,10 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 time_window <- 120 # in minutes
-percentiles <- c(20, 40, 60, 80, 99)
+percentiles <- c(20, 40, 50, 60, 80, 99)
 
 # calculate travel time matrix
-ttm <- travel_time_matrix(r5r_core,
+computation_time <- system.time(ttm <- travel_time_matrix(r5r_core,
                           origins = points,
                           destinations = points,
                           mode = mode,
@@ -109,14 +120,14 @@ ttm <- travel_time_matrix(r5r_core,
                           max_trip_duration = max_trip_duration,
                           time_window = time_window,
                           percentiles = percentiles,
-                          verbose = FALSE)
-
+                          verbose = FALSE))
+print(paste('travel time matrix computed in', computation_time[['elapsed']], 'seconds'))
 head(ttm)
 ```
 
 #### Visualizing travel-time uncertainty
 
-The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (percentiles 20th, 40th, 60th, 80th, 99th), reflecting that these travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from places farther away are more affected by departure time variations and service frequency levels.
+The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (20th, 40th, 60th, 80th, and 99th percentiles), reflecting that travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from places farther away are more affected by departure time variations and service frequency levels. 
 
 ```{r, message = FALSE}
 # subset travel time matrix departing from a given origin
@@ -124,8 +135,7 @@ central_bus_stn <- points[291,]
 ttm_tw <- subset(ttm, toId %in% central_bus_stn$id)
 
 # reshape data
-plot_data <- melt(ttm_tw, measure = patterns("^travel_time_p"), variable = "percentile", value = "travel_time")
-plot_data[, mediantt := as.integer(median(travel_time, na.rm=T)), by=fromId]
+plot_data <- ttm_tw %>% rename(mediantt=travel_time_p050) %>% melt(measure = patterns("^travel_time_p"), variable = "percentile", value = "travel_time")
 
 ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
   geom_point(alpha = 0.1, size = .7) +
@@ -144,7 +154,11 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
 
 #### Visualizing Isochrones
 
-In our example, we can visualize the isochrone departing from the central bus station as follows:
+In our example, we can visualize the isochrone (area reachable within a certain amount of time) departing from the central bus station as follows:
+
+<!-- Travel time percentile 50 is the median, we shouldn't be calculating it from the other travel times -MWC -->
+<!-- For this map and the next, I couldn't figure it out but there must be a way to crop the map view so only the shaded
+     portion is visible? -MWC -->
 
 ```{r}
 # extract OSM network
@@ -152,11 +166,8 @@ street_net <- street_network_to_sf(r5r_core)
 
 travel_times <- ttm[fromId %in% central_bus_stn$id]
 travel_times[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
-travel_times[, mediantt := median(travel_time_p020, travel_time_p040, 
-                                  travel_time_p060, travel_time_p080,
-                                  travel_time_p099), by = toId]
  
-travel_times.interp <- with(travel_times, interp(lon, lat, mediantt)) %>%
+travel_times.interp <- with(travel_times, interp(lon, lat, travel_time_p050)) %>%
                         with(cbind(travel_time=as.vector(z),  # Column-major order
                                    x=rep(x, times=length(y)),
                                    y=rep(y, each=length(x)))) %>% as.data.frame()
@@ -164,12 +175,47 @@ travel_times.interp <- with(travel_times, interp(lon, lat, mediantt)) %>%
 ggplot(na.omit(travel_times.interp)) +
   geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.8) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
+  geom_point(aes(x=lon, y=lat, color='Central bus\nstation'), data=central_bus_stn) +
   scale_fill_viridis_d(direction = -1, option = 'B') +
+  scale_color_manual(values=c('Central bus\nstation'='black')) +
   coord_sf() +
-  labs(fill = "cutoff in minutes") +
+  labs(fill = "travel time (minutes)", color='') +
   theme_minimal() +
   theme(axis.title = element_blank())
-  
+
+```
+
+#### Creating accessibility metrics
+
+<!-- MWC: I added this section, and I think it's helpful to bring this full circle back to accessibility metrics. However, right now the accessibility metric is just assuming random numbers of opportunities at each node - we'd want to pull in some real data if we keep the section. -->
+
+Accessibility metrics measure the opportunities, such as jobs, a traveler could reach from a particular location [@levinson2020manual]. One of the simplest forms is a cumulative-opportunities metric, which sums all of the opportunities accessible from each location in less than a cutoff time. Using the travel time matrix and information on the number of opportunities available at each location, we can calculate and map accessibility:
+
+```{r}
+# for now just creating random access
+opportunities <- data.frame(toId=unique(ttm$toId), opportunities=runif(length(unique(ttm$toId)), 50, 1000))
+
+access <- ttm %>%
+  left_join(opportunities, by='toId') %>%
+  group_by(fromId) %>%
+  # sum all opportunities accessible within 20 minutes
+  summarize(acc=sum(opportunities[travel_time_p050 <= 20], na.rm=T))
+
+access.interp <- access %>%
+  inner_join(points, by=c('fromId'='id')) %>%
+  with(interp(lon, lat, acc)) %>%
+                        with(cbind(acc=as.vector(z),  # Column-major order
+                                   x=rep(x, times=length(y)),
+                                   y=rep(y, each=length(x)))) %>% as.data.frame()
+
+ggplot(na.omit(access.interp)) +
+  geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.8) +
+  geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
+  scale_fill_viridis_d(direction = -1, option = 'B') +
+  coord_sf() +
+  labs(fill = "Opportunities within\n20 minutes\n(median travel time)") +
+  theme_minimal() +
+  theme(axis.title = element_blank())
 ```
 
 # Acknowledgments
