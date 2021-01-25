@@ -169,16 +169,23 @@ travel_times[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
 travel_times.interp <- with(na.omit(travel_times), interp(lon, lat, travel_time_p050)) %>%
                         with(cbind(travel_time=as.vector(z),  # Column-major order
                                    x=rep(x, times=length(y)),
-                                   y=rep(y, each=length(x)))) %>% as.data.frame()
+                                   y=rep(y, each=length(x)))) %>% 
+  as.data.frame() %>% na.omit()
+
+# find isochrone's bounding box to crop the map below
+bb_x <- c(min(travel_times.interp$x), max(travel_times.interp$x))
+bb_y <- c(min(travel_times.interp$y), max(travel_times.interp$y))
 
 # plot
-ggplot(na.omit(travel_times.interp)) +
+ggplot(travel_times.interp) +
   geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.8) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
   geom_point(aes(x=lon, y=lat, color='Central bus\nstation'), data=central_bus_stn) +
   scale_fill_viridis_d(direction = -1, option = 'B') +
   scale_color_manual(values=c('Central bus\nstation'='black')) +
-  coord_sf() +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,0)) +
+  coord_sf(xlim = bb_x, ylim = bb_y) +
   labs(fill = "travel time (minutes)", color='') +
   theme_minimal() +
   theme(axis.title = element_blank())
@@ -209,7 +216,9 @@ ggplot(na.omit(access.interp)) +
   geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.8) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
   scale_fill_viridis_d(direction = -1, option = 'B') +
-  coord_sf() +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,0)) +
+  coord_sf(xlim = bb_x, ylim = bb_y) + 
   labs(fill = "Schools within\n20 minutes\n(median travel time)") +
   theme_minimal() +
   theme(axis.title = element_blank())
