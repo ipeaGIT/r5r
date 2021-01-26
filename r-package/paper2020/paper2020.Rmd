@@ -72,7 +72,8 @@ on the size of resident population and the number of schools in each location.
 To build a routable transport network with r5r and load it into memory, the user needs to call `setup_r5` with the path to the directory where OSM and GTFS data are stored. In the examples herein, we use the provided Porto Alegre dataset.
 
 ```{r, message = FALSE}
-# points to directory with data
+# system.file returns the directory with example data inside the r5r package
+# set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_core <- setup_r5(data_path, verbose = FALSE)
@@ -119,7 +120,7 @@ head(ttm)
 
 #### Visualizing travel-time uncertainty
 
-The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (20th, 40th, 50th, 60th, 80th, and 99th percentiles), reflecting that travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from places farther away are more affected by departure time variations and service frequency levels. 
+The plot below shows how the travel times to arrive at the central bus station from several origin points vary within the time window (5th, 25th, 50th, 75th, and 95th percentiles), reflecting that travel times are more uncertain when leaving from some places than others. While there is little to no uncertainty when departing from places that are very close (walking distance) to the central bus station, travel times from places farther away are more affected by departure time variations and service frequency levels. 
 
 ```{r, message = FALSE}
 # subset travel time matrix departing from a given origin
@@ -189,7 +190,7 @@ ggplot(travel_times.interp) +
 
 #### Creating accessibility metrics
 
-Accessibility metrics measure the opportunities, such as jobs, a traveler could reach from a particular location [@levinson2020manual]. One of the simplest forms is a cumulative-opportunities metric, which sums all of the opportunities accessible from each location in less than a cutoff time. Using the travel time matrix and information on the number of opportunities available at each location, we can calculate and map accessibility. In the example below we estimate the number of schools accessible by public transport in less than 20 minutes.
+Accessibility metrics measure the opportunities, such as jobs, a traveler could reach from a particular location [@levinson2020manual]. One of the simplest forms is a cumulative-opportunities metric, which sums all of the opportunities accessible from each location in less than a cutoff time. Using the travel time matrix and information on the number of opportunities available at each location, we can calculate and map accessibility. In the example below we compute the number of schools accessible by public transport in less than 20 minutes.
 
 ```{r}
 # merge schools information to travel time matrix
