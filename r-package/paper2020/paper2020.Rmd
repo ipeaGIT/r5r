@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 set.seed(0)
 ```
 
+*Keywords*: routing, transport networks, travel time, accessibility, travel impedance
+
 # RESEARCH QUESTIONS AND HYPOTHESES
 
 Transport routing is the process of finding the fastest or lowest-cost routes that connect places in a given transport network, and is a key step in transport accessibility analysis, fleet allocation and transport simulation and planning more broadly [@levinson2020manual]. However, researchers and practitioners often face practical challenges when carrying out routing tasks due to the costs of licensed software, limited data availability, and the long computation times required to run multiple routing scenarios, particularly in large and complex multimodal transport networks.
@@ -56,6 +58,7 @@ library(ggplot2)
 library(akima)
 library(dplyr)
 ```
+**Code 1: Load required libraries**
 
 For this article, we used r5r version v0.3-2 and R5 version v6.0.1.
 
@@ -78,6 +81,8 @@ data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 ```
+**Code 2: Set up routable transport network**
+
 
 The function uses the `.pbf` and the `GTFS.zip` files in the directory pointed by `data_path` to create a multimodal transport network used for routing by R<sup>5</sup>. If multiple GTFS files are present, R<sup>5</sup> will merge them into a single transport network. The resulting `network.dat` as well as some other files used by R<sup>5</sup> are saved inside the supplied directory for later reuse.
 
@@ -117,6 +122,7 @@ computation_time <- system.time(ttm <- travel_time_matrix(r5r_core,
 print(paste('travel time matrix computed in', computation_time[['elapsed']], 'seconds'))
 head(ttm)
 ```
+**Code 3: Compute travel time matrix**
 
 #### Visualizing travel-time uncertainty
 
@@ -145,9 +151,10 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
         axis.text.x = element_blank(),
         axis.ticks = element_blank(),
         panel.border = element_rect(fill = NA, colour = "grey80", size=1)) +
-  labs(title = "Travel time uncertainty per destination",
+  labs(title = " ",
        y = "Travel Time (min)", x='Origins ordered by median travel time')
 ```
+**Figure 1: Travel time uncertainty by trip origin**
 
 #### Visualizing Isochrones
 
@@ -187,6 +194,8 @@ ggplot(travel_times.interp) +
   theme(axis.title = element_blank())
 
 ```
+**Figure 2: Isochrones by public transport departing from the central bus station**
+
 
 #### Creating accessibility metrics
 
@@ -219,6 +228,7 @@ ggplot(na.omit(access.interp)) +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
+**Figure 3: Number of schools accessible by public transport in less than 20 minutes**
 
 # Acknowledgments
 
