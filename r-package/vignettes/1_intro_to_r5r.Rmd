@@ -2,15 +2,13 @@
 title: 'Intro to r5r: Rapid Realistic Routing with R5 in R'
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette: default
-  github_document: default
+output: rmarkdown::html_vignette
 abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R<sup>5</sup>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R<sup>5</sup> Java machine <https://github.com/conveyal/r5>"
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{1_intro_to_r5r} 
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Intro to r5r: Rapid Realistic Routing with R5 in R} 
   %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r, include = FALSE}

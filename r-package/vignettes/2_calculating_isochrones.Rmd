@@ -2,15 +2,13 @@
 title: 'Calculating and visualizing Isochrones'
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette: default
-  github_document: default
+output: rmarkdown::html_vignette
 abstract: "This vignette shows how to calculate and visualize isochrones in R using the `r5r` package."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{2_calculating_isochrones} 
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Calculating and visualizing Isochrones} 
   %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r, include = FALSE}
