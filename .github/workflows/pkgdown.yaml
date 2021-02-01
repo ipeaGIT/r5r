@@ -41,6 +41,7 @@ jobs:
 
       - name: Install package
         run: R CMD INSTALL .
+        working-directory: r-package
 
       - name: Deploy package
         run: |
