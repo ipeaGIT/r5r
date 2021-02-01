@@ -27,7 +27,7 @@ Depends:
 Suggests:
     akima,
     covr,
-    deplyr,
+    dplyr,
     ggplot2 (>= 3.3.1),
     knitr,
     mapview,
