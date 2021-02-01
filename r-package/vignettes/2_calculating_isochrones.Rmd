@@ -8,7 +8,7 @@ output:
 abstract: "This vignette shows how to calculate and visualize isochrones in R using the `r5r` package."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{r5r-intro} 
+  %\VignetteIndexEntry{2_calculating_isochrones} 
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown} 
 ---
