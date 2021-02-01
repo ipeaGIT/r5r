@@ -1,7 +1,8 @@
-pandoc: 2.7.3
+pandoc: 2.11.2
 pkgdown: 1.6.1.9000
 pkgdown_sha: e1e46f2e13c7efdb17bc4eae40bc3779c2b0b517
 articles:
-  intro_to_r5r: intro_to_r5r.html
-last_built: 2021-01-08T19:14Z
+  1_intro_to_r5r: 1_intro_to_r5r.html
+  2_calculating_isochrones: 2_calculating_isochrones.html
+last_built: 2021-02-01T01:51Z
 

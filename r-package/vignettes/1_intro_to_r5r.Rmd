@@ -1,5 +1,5 @@
 ---
-title: 'r5r: Rapid Realistic Routing with R5 in R'
+title: 'Intro to r5r: Rapid Realistic Routing with R5 in R'
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output:

@@ -81,7 +81,7 @@ or many origin destination pairs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-3</span>
       </span>
     </div>
 
@@ -98,7 +98,10 @@ or many origin destination pairs." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro_to_r5r.html">r5r: Rapid Realistic Routing with R5 in R</a>
+      <a href="../articles/1_intro_to_r5r.html">Intro to r5r: Rapid Realistic Routing with R5 in R</a>
+    </li>
+    <li>
+      <a href="../articles/2_calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
   </ul>
 </li>
@@ -274,8 +277,8 @@ routing. Transportation Science, 49(3), 591-604.</p></li>
 <span class='co'># build transport network</span>
 <span class='va'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
 <span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>data_path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>R5 will be saved to C:/Users/user/AppData/Local/Temp/Rtmp8GAolw/temp_libpath35e4e9c70af/r5r/jar/r5-v6.0.1-2-gf44e585-all.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/Rtmp8GAolw/temp_libpath35e4e9c70af/r5r/extdata/poa/network.dat</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>R5 will be saved to C:/Users/user/AppData/Local/Temp/RtmpsXpuUN/temp_libpath68c20b43e1a/r5r/jar/r5-v6.0.1-2-gf44e585-all.jar</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Using cached network.dat from C:/Users/user/AppData/Local/Temp/RtmpsXpuUN/temp_libpath68c20b43e1a/r5r/extdata/poa/network.dat</span></div><div class='input'>
 <span class='co'># load origin/destination points</span>
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>data_path</span>, <span class='st'>"poa_points_of_interest.csv"</span><span class='op'>)</span><span class='op'>)</span>
 

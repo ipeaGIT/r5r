@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>r5r: Rapid Realistic Routing with R5 in R • r5r</title>
+<title>Intro to r5r: Rapid Realistic Routing with R5 in R • r5r</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="r5r: Rapid Realistic Routing with R5 in R">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Intro to r5r: Rapid Realistic Routing with R5 in R">
 <meta property="og:description" content="r5r">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-3</span>
       </span>
     </div>
 
@@ -55,10 +55,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/creating_isochrones.html">Isochrones</a>
+      <a href="../articles/1_intro_to_r5r.html">Intro to r5r: Rapid Realistic Routing with R5 in R</a>
     </li>
     <li>
-      <a href="../articles/intro_to_r5r.html">r5r: Rapid Realistic Routing with R5 in R</a>
+      <a href="../articles/2_calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
   </ul>
 </li>
@@ -83,16 +83,16 @@
 
       
 
-      </header><script src="intro_to_r5r_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="1_intro_to_r5r_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>r5r: Rapid Realistic Routing with R5 in R</h1>
+      <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
             <h4 class="date">2021-01-31</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/intro_to_r5r.Rmd"><code>vignettes/intro_to_r5r.Rmd</code></a></small>
-      <div class="hidden name"><code>intro_to_r5r.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/1_intro_to_r5r.Rmd"><code>vignettes/1_intro_to_r5r.Rmd</code></a></small>
+      <div class="hidden name"><code>1_intro_to_r5r.Rmd</code></div>
 
     </div>
 
@@ -180,12 +180,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools</span>
-<span class="co">#&gt; 1: 89a9012a337ffff -51.22675 -30.09238        538       0</span>
-<span class="co">#&gt; 2: 89a90128483ffff -51.19951 -30.09609         65       0</span>
-<span class="co">#&gt; 3: 89a90129833ffff -51.17819 -30.02024        701       1</span>
-<span class="co">#&gt; 4: 89a90128c6fffff -51.23365 -30.03771        420       1</span>
-<span class="co">#&gt; 5: 89a90128ac3ffff -51.20884 -30.02595        544       0</span>
-<span class="co">#&gt; 6: 89a90129957ffff -51.18700 -30.01255        436       0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a9012990bffff -51.18998 -30.01091        746       0</span>
+<span class="co">#&gt; 2: 89a9012b3b7ffff -51.16599 -30.09479          0       0</span>
+<span class="co">#&gt; 3: 89a90129b0bffff -51.16836 -30.00303         90       0</span>
+<span class="co">#&gt; 4: 89a90129a83ffff -51.15393 -30.02230       1270       1</span>
+<span class="co">#&gt; 5: 89a90129bc7ffff -51.16859 -30.00856        866       0</span>
+<span class="co">#&gt; 6: 89a90129dc3ffff -51.18801 -30.03744       1490       0</span></code></pre></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">

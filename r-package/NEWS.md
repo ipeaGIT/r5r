@@ -5,6 +5,7 @@
 
 **Minor changes**
 - fix conflict with `geobr` package when downloading metadata. Closed #137.
+- New vignette to Calculate and visualize isochrones.
 
 
 -------------------------------------------------------

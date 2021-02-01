@@ -1,7 +1,7 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 0.3-2
+Version: 0.3-3
 Authors@R: c(
             person(given="Marcus", family="Saraiva", email="marcus.saraiva@gmail.com", role="aut", comment = c(ORCID = "0000-0001-6218-2338")),
             person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0003-2125-7465")),
@@ -16,7 +16,7 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              <https://github.com/conveyal/r5>. The package allows users to 
              generate detailed routing analysis or calculate travel time matrices
              using seamless parallel computing on top of the R5 Java machine.
-Date: 2021-01-24
+Date: 2021-01-31
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
 License: MIT + file LICENSE
@@ -27,6 +27,7 @@ Depends:
 Suggests:
     akima,
     covr,
+    deplyr,
     ggplot2 (>= 3.3.1),
     knitr,
     mapview,
