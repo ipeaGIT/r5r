@@ -87,7 +87,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # 3.1) calculate a travel time matrix
-ttm <- travel_time_matrix(r5r_core,
+ttm <- travel_time_matrix(r5r_core = r5r_core,
                           origins = points,
                           destinations = points,
                           mode = mode,
@@ -96,13 +96,13 @@ ttm <- travel_time_matrix(r5r_core,
                           max_trip_duration = max_trip_duration)
 
 # 3.2) or get detailed info on multiple alternative routes
-det <- detailed_itineraries(r5r_core,
+det <- detailed_itineraries(r5r_core = r5r_core,
                             origins = points[370, ],
                             destinations = points[200, ],
-                            mode,
-                            departure_datetime,
-                            max_walk_dist,
-                            max_trip_duration,
+                            mode = mode,
+                            departure_datetime = departure_datetime,
+                            max_walk_dist = max_walk_dist,
+                            max_trip_duration = max_trip_duration,
                             shortest_path = FALSE)
 ```
 
@@ -114,7 +114,7 @@ There is a growing number of `R` packages with functionalities for transport
 routing, analysis and planning more broadly. Here are few of theses packages.
 
 - [dodgr](https://github.com/ATFutures/dodgr): Distances on Directed Graphs in R
-- [gtfs-router](https://github.com/ATFutures/gtfs-router): R package for routing with GTFS data
+- [gtfsrouter](https://github.com/ATFutures/gtfs-router): R package for routing with GTFS data
 - [hereR](https://github.com/munterfinger/hereR): an R interface to the HERE REST APIs 
 - [opentripplanner](https://github.com/ropensci/opentripplanner): OpenTripPlanner for R
 - [stplanr](https://github.com/ropensci/stplanr): sustainable transport planning with R

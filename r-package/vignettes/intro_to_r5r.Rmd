@@ -157,11 +157,11 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 
 # calculate detailed itineraries
 dit <- detailed_itineraries(r5r_core = r5r_core,
-                            origins,
-                            destinations,
-                            mode,
-                            departure_datetime,
-                            max_walk_dist,
+                            origins = origins,
+                            destinations = destinations,
+                            mode = mode,
+                            departure_datetime = departure_datetime,
+                            max_walk_dist = max_walk_dist,
                             shortest_path = FALSE,
                             verbose = FALSE)
 
