@@ -35,6 +35,27 @@ system.time(
   )
 )
 
+destination <- destinations[100,]
+origin <- origins[200, ]
+
+dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination, mode = c("WALK", "TRANSIT"),
+                            # departure_datetime = lubridate::ymd_hm("2019-05-20 14:00"),
+                            departure_datetime = as.POSIXct("20-05-2019 9:14:20",format = "%d-%m-%Y %H:%M:%S"),
+                            max_walk_dist = 800,
+                            max_trip_duration = 60,
+                            shortest_path = FALSE
+                            )
+
+
+origin$lon <- origins[200, ]$lat
+origin$lat <- origins[200, ]$lon
+
+dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination, mode = c("BUS"),
+                            departure_datetime = lubridate::ymd_hm("2019-05-20 24:00"),
+                            max_walk_dist = Inf,
+                            max_trip_duration = 30
+)
+
 df %>% drop_na() %>% nrow()
 # user  system elapsed
 # 12.982   0.864   1.647
