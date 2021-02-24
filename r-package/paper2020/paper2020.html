@@ -11,7 +11,7 @@
 
 <meta name="author" content="Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway" />
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-24" />
 
 <title>r5r: rapid realistic routing on multimodal transport networks with R5 in R</title>
 
@@ -223,7 +223,7 @@ summary {
 
 <h1 class="title toc-ignore">r5r: rapid realistic routing on multimodal transport networks with R5 in R</h1>
 <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway</h4>
-<h4 class="date">2021-01-26</h4>
+<h4 class="date">2021-02-24</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges when performing this task due to long computation times and the cost of licensed software. Conveyal’s R<sup>5</sup> is a multimodal transport network router that offers multiple routing features, such as calculating travel times over a time window and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages R<sup>5</sup> to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.
@@ -236,7 +236,7 @@ Routing is a key step in transport planning and research. Nonetheless, researche
 <div id="research-questions-and-hypotheses" class="section level1">
 <h1>RESEARCH QUESTIONS AND HYPOTHESES</h1>
 <p>Transport routing is the process of finding the fastest or lowest-cost routes that connect places in a given transport network, and is a key step in transport accessibility analysis, fleet allocation and transport simulation and planning more broadly <span class="citation">(Levinson and et al. 2020)</span>. However, researchers and practitioners often face practical challenges when carrying out routing tasks due to the costs of licensed software, limited data availability, and the long computation times required to run multiple routing scenarios, particularly in large and complex multimodal transport networks.</p>
-<p>While there are a growing number of open-source routing packages <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available do not efficiently process large public transport networks and/or are not user-friendly. This paper presents <a href="https://ipeagit.github.io/r5r/">r5r</a>, a new open-source R package for routing on multimodal transport networks based on the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)</a> package. R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal <span class="citation">(Conway, Byrd, and van der Linden 2017; Conway, Byrd, and van Eggermond 2018)</span> to provide an efficient backend for analytic applications, such as accessibility analysis. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R, which allows users to efficiently calculate travel time matrices or generate multiple route alternatives between origins and destinations using seamless parallel computing.</p>
+<p>While there are a growing number of open-source routing packages <span class="citation">(OpenTripPlanner n.d.; Lovelace and Ellison 2019; Padgham 2019)</span>, most options available do not efficiently process large public transport networks and/or are not user-friendly. To fill this gap, this paper presents <a href="https://ipeagit.github.io/r5r/">r5r</a>, a new open-source R package for routing on multimodal transport networks based on the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks (R<sup>5</sup>)</a> package. R<sup>5</sup> is a powerful next-generation routing engine written in Java and developed at Conveyal <span class="citation">(Conway, Byrd, and van der Linden 2017; Conway, Byrd, and van Eggermond 2018)</span> to provide an efficient backend for analytic applications, such as accessibility analysis. The r5r package provides a simple and friendly interface to run R<sup>5</sup> locally from within R using seamless parallel computing. This tool can be used to address a variety of questions that require the efficient calculation of travel matrices or the examination of multimodal transport routes.</p>
 </div>
 <div id="methods-and-data" class="section level1">
 <h1>METHODS AND DATA</h1>
@@ -280,7 +280,7 @@ r5r_core &lt;- setup_r5(data_path, verbose = FALSE)</code></pre>
 <div id="calculating-a-travel-time-matrix" class="section level3">
 <h3>Calculating a travel time matrix</h3>
 <p>The <code>travel_time_matrix()</code> function takes, as inputs, the spatial location of origins/destinations (either as a spatial <code>sf POINT</code> object, or as a <code>data.frame</code> containing the columns <code>id</code>, <code>lon</code> and <code>lat</code>) and a few travel parameters such as <em>maximum trip duration</em>, or <em>walking distance</em>. It outputs travel time estimates for each origin-destination pair at a set <code>departure_datetime</code>.</p>
-<p>Since service levels can significantly vary across the day <span class="citation">(Stępniak et al. 2019)</span>, r5r provides a <code>time_window</code> parameter. When this parameter is set, R5 will compute travel times for trips at the specified departure time and every minute for <code>time_window</code> minutes after. The <code>percentiles</code> parameter allows the user to retrieve travel time estimates at different points of the distribution (by default the median). These percentiles reflect service variation over the time window, but do not reflect schedule deviation not represented in the GTFS, though tools exist to create GTFS which reflects schedule deviations <span class="citation">(Wessel, Allen, and Farber 2017)</span>.</p>
+<p>Since service levels can significantly vary across the day <span class="citation">(Stępniak et al. 2019)</span>, r5r provides a <code>time_window</code> parameter that can help address the aggregation component of the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019)</span>. When this parameter is set, R5 will compute travel times for trips at the specified departure time and every minute for <code>time_window</code> minutes after. The <code>percentiles</code> parameter allows the user to retrieve travel time estimates at different points of the distribution (by default the median). These percentiles reflect service variation over the time window, but do not reflect schedule deviation not represented in the GTFS, though tools exist to create GTFS which reflects schedule deviations <span class="citation">(Wessel, Allen, and Farber 2017)</span>.</p>
 <p>An example of the function’s usage is presented below. Computing this 1227x1227 travel time matrix with a 120-minute time window takes less than two minutes on a Windows machine with a 1.9GHz Intel i7 and 16GB RAM.</p>
 <pre class="r"><code># read points of origin and destination
 points &lt;- fread(file.path(data_path, &quot;poa_hexgrid.csv&quot;))
@@ -307,7 +307,7 @@ computation_time &lt;- system.time(ttm &lt;- travel_time_matrix(r5r_core,
                           percentiles = percentiles,
                           verbose = FALSE))
 print(paste(&#39;travel time matrix computed in&#39;, computation_time[[&#39;elapsed&#39;]], &#39;seconds&#39;))
-#&gt; [1] &quot;travel time matrix computed in 62.5 seconds&quot;
+#&gt; [1] &quot;travel time matrix computed in 53.98 seconds&quot;
 head(ttm)
 #&gt;             fromId            toId travel_time_p005 travel_time_p025
 #&gt; 1: 89a901291abffff 89a901291abffff                2                2
@@ -450,6 +450,9 @@ OpenTripPlanner. n.d. <span>“OpenTripPlanner.”</span> Accessed September 17,
 </div>
 <div id="ref-padgham2019dodgr" class="csl-entry">
 Padgham, Mark. 2019. <span>“Dodgr: An R Package for Network Flow Aggregation.”</span> <em>Transport Findings</em>. <a href="https://doi.org/10.32866/6945">https://doi.org/10.32866/6945</a>.
+</div>
+<div id="ref-pereiramtup2019" class="csl-entry">
+Pereira, Rafael H. M. 2019. <span>“Future Accessibility Impacts of Transport Policy Scenarios: Equity and Sensitivity to Travel Time Thresholds for Bus Rapid Transit Expansion in Rio de Janeiro.”</span> <em>Journal of Transport Geography</em> 74 (January): 321–32. <a href="https://doi.org/10.1016/j.jtrangeo.2018.12.005">https://doi.org/10.1016/j.jtrangeo.2018.12.005</a>.
 </div>
 <div id="ref-stepniak2019impact" class="csl-entry">
 Stępniak, Marcin, John P. Pritchard, Karst T. Geurs, and Sławomir Goliszek. 2019. <span>“The Impact of Temporal Resolution on Public Transport Accessibility Measurement: Review and Case Study in Poland.”</span> <em>Journal of Transport Geography</em> 75 (February): 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.
