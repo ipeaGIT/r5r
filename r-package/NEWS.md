@@ -4,8 +4,11 @@
 # r5r v0.3-3 (dev)
 
 **Minor changes**
-- fix conflict with `geobr` package when downloading metadata. Closed #137.
+- Fixed conflict with `geobr` package when downloading metadata. Closed #137.
 - New vignette to Calculate and visualize isochrones.
+- r5r now considers the user's time zone by default. Closes #147
+- Improved documentation of travel_time_matrix. Closes #149
+
 
 
 -------------------------------------------------------
