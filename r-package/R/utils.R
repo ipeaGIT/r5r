@@ -131,6 +131,7 @@ posix_to_string <- function(datetime) {
   checkmate::assert_posixct(datetime)
 
   tz = attr(datetime, "tzone")
+  if(is.null(tz)){tz <- ""}
 
   datetime_list <- list(
     date = strftime(datetime, format = "%Y-%m-%d", tz = tz),
