@@ -206,6 +206,7 @@
 			]
 		}
 	},
+  {"id":"morgan2019opentripplanner","abstract":"Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source Software, 4(44), 1926, https://doi.org/10.21105/joss.01926","accessed":{"date-parts":[[2021,2,24]]},"author":[{"family":"Morgan","given":"Malcolm"},{"family":"Young","given":"Marcus"},{"family":"Lovelace","given":"Robin"},{"family":"Hama","given":"Layik"}],"container-title":"Journal of Open Source Software","DOI":"10.21105/joss.01926","ISSN":"2475-9066","issue":"44","issued":{"date-parts":[[2019,12,2]]},"language":"en","page":"1926","source":"joss.theoj.org","title":"OpenTripPlanner for R","type":"article-journal","URL":"https://joss.theoj.org/papers/10.21105/joss.01926","volume":"4"},
 	{
 		"id": "conway2018accounting",
 		"type": "article-journal",
