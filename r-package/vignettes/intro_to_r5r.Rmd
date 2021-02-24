@@ -16,6 +16,18 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# removes files created by 'setup_r5()'
+data_path <- system.file("extdata/poa", package = "r5r")
+existing_files <- list.files(data_path)
+files_to_keep <- c(
+  "poa_hexgrid.csv", 
+  "poa_osm.pbf", 
+  "poa_points_of_interest.csv", 
+  "poa.zip"
+)
+files_to_remove <- existing_files[! existing_files %in% files_to_keep]
+invisible(file.remove(file.path(data_path, files_to_remove)))
 ```
 
 # Introduction 
@@ -47,7 +59,7 @@ Note: It's very important to allocate enough memory before attaching `r5r` or an
 
 Then we can load the packages used in this vignette:
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning = FALSE}
 library(r5r)
 library(sf)
 library(data.table)
@@ -76,6 +88,7 @@ To illustrate functionality, the package includes a small sample data for the ci
 * A public transport feed in `GTFS.zip` format;
 * A *points of interest* file, in `.csv` format, containing the names and spatial coordinates of 15 places within Porto Alegre;
 * The spatial coordinates of a regular hexagonal grid covering the sample area, in a `.csv` file, which can be used as origin/destination pairs in a travel time matrix calculation.
+
 
 ```{r}
 data_path <- system.file("extdata/poa", package = "r5r")

@@ -148,21 +148,31 @@ public class R5RCore {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();// LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
     }
 
     public void setLogMode(String mode) {
         LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();//  LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("com.conveyal.osmlib");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("com.conveyal.gtfs");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
         logger.setLevel(Level.valueOf(mode));
     }
 
@@ -382,7 +392,13 @@ public class R5RCore {
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
-        ProfileResponse response = query.getPlan(request);
+        ProfileResponse response = null;
+        try {
+            response = query.getPlan(request);
+        } catch (IllegalStateException e) {
+            LOG.error(String.format("Error while finding path between %s and %s", fromId, toId));
+            return null;
+        }
 
         if (!response.getOptions().isEmpty()) {
             return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
