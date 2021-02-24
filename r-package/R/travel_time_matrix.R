@@ -46,7 +46,9 @@
 #'                or FALSE to show only eventual ERROR messages.
 #'
 #' @return A data.table with travel time estimates (in minutes) between origin
-#' destination pairs by a given transport mode.
+#' destination pairs by a given transport mode. Note that origins/destinations
+#' that were beyond the maximum travel time, and/or origins that were far from
+#' the street network are not returned in the data.table.
 #'
 #' @details R5 allows for multiple combinations of transport modes. The options
 #'          include:
