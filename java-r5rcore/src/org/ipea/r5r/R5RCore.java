@@ -74,6 +74,16 @@ public class R5RCore {
     private double bikeSpeed;
     private int maxRides = 8; // max 8 number of rides in public transport trips
 
+    public int getSuboptimalMinutes() {
+        return suboptimalMinutes;
+    }
+
+    public void setSuboptimalMinutes(int suboptimalMinutes) {
+        this.suboptimalMinutes = suboptimalMinutes;
+    }
+
+    private int suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
+
     public int getTimeWindowSize() {
         return timeWindowSize;
     }
@@ -345,6 +355,7 @@ public class R5RCore {
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
         request.maxRides = this.maxRides;
+        request.suboptimalMinutes = this.suboptimalMinutes;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");

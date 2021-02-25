@@ -187,6 +187,15 @@ detailed_itineraries <- function(r5r_core,
   # set max transfers
   set_max_rides(r5r_core, max_rides)
 
+  # set suboptimal minutes
+  # if only the shortest path is requested, set suboptimal minutes to 0 minutes,
+  # else revert back to the 5 minutes default.
+  if (shortest_path) {
+    set_suboptimal_minutes(r5r_core, 0L)
+  } else {
+    set_suboptimal_minutes(r5r_core, 5L)
+  }
+
   # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
 

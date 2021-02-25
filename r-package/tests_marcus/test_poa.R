@@ -37,15 +37,15 @@ trip_date_time <- lubridate::as_datetime("2019-05-22 08:00:00")
 max_walk_distance = 8000L
 max_trip_duration = 120L
 
-r5r_core$setMaxTransfers(1L)
-
+tic()
 paths_df <- detailed_itineraries(r5r_core = r5r_core,
                                  origins = origin, destinations = destination,
                                  departure_datetime = trip_date_time,
                                  max_walk_dist = max_walk_distance,
                                  max_trip_duration = max_trip_duration,
                                  mode = c("WALK", "BUS"),
-                                 shortest_path = FALSE, verbose = TRUE)
+                                 shortest_path = TRUE, verbose = TRUE)
+toc()
 
 paths_df %>%
   filter(option == 1) %>%

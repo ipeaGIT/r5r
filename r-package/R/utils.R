@@ -274,7 +274,35 @@ set_max_rides <- function(r5r_core, max_rides) {
 
 }
 
+#' Set suboptimal minutes
+#'
+#' @description Set suboptimalMinutes parameter in R5.
+#'
+#' @param r5r_core rJava object to connect with R5 routing engine
+#' @param minutes numeric. The number of suboptimal minutes in a public transport
+#'                  point-to-point query. From R5's documentation:
+#'                  This parameter compensates for the fact that GTFS does not
+#'                  contain information about schedule deviation (lateness).
+#'                  The min-max travel time range for some trains is zero, since
+#'                  the trips are reported to always have the same timings in the
+#'                  schedule. Such an option does not overlap (temporally) its
+#'                  alternatives, and is too easily eliminated by an alternative
+#'                  that is only marginally better. We want to effectively push
+#'                  the max travel time of alternatives out a bit to account for
+#'                  the fact that they don't always run on schedule.
+#'
+#' @family support functions
 
+set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
+
+  checkmate::assert_numeric(suboptimal_minutes)
+
+  # R5 defaults subOptimalMinutes to 5L
+  if (is.infinite(suboptimal_minutes)) suboptimal_minutes <- 5L
+
+  r5r_core$setSuboptimalMinutes(as.integer(suboptimal_minutes))
+
+}
 
 
 
