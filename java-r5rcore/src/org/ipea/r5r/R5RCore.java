@@ -5,7 +5,6 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.analysis.BackendVersion;
 import com.conveyal.gtfs.model.Service;
-import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
 import com.conveyal.r5.OneOriginResult;
@@ -30,8 +29,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
-import com.esotericsoftware.kryo.util.DefaultStreamFactory;
-import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -75,7 +72,7 @@ public class R5RCore {
 
     private double walkSpeed;
     private double bikeSpeed;
-    private int maxTransfers = 8; // max 8 transfers in public transport trips
+    private int maxRides = 8; // max 8 number of rides in public transport trips
 
     public int getTimeWindowSize() {
         return timeWindowSize;
@@ -106,12 +103,12 @@ public class R5RCore {
         this.percentiles[0] = percentile;
     }
 
-    public int getMaxTransfers() {
-        return maxTransfers;
+    public int getMaxRides() {
+        return maxRides;
     }
 
-    public void setMaxTransfers(int maxTransfers) {
-        this.maxTransfers = maxTransfers;
+    public void setMaxRides(int maxRides) {
+        this.maxRides = maxRides;
     }
 
     public int getNumberOfThreads() {
@@ -347,7 +344,7 @@ public class R5RCore {
         request.maxTripDurationMinutes = maxTripDuration;
         request.computePaths = true;
         request.computeTravelTimeBreakdown = true;
-        request.maxRides = this.maxTransfers;
+        request.maxRides = this.maxRides;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -739,7 +736,7 @@ public class R5RCore {
         request.computePaths = false;
         request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
-        request.maxRides = this.maxTransfers;
+        request.maxRides = this.maxRides;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");

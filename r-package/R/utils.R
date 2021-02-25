@@ -270,7 +270,7 @@ set_max_rides <- function(r5r_core, max_rides) {
   # R5 defaults maxTransfers to 8L
   if (is.infinite(max_rides)) max_rides <- 8L
 
-  r5r_core$setMaxTransfers(as.integer(max_rides))
+  r5r_core$setMaxRides(as.integer(max_rides))
 
 }
 

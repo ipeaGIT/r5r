@@ -11,9 +11,9 @@ r5r_core <- setup_r5("/Users/marcussaraiva/Repos/data_r5r/poa/", verbose = FALSE
 toc()
 
 # Load points of interest
-points <- read.csv(system.file("extdata/poa_points_of_interest.csv", package = "r5r"))
+points <- read.csv(system.file("extdata/poa/poa_points_of_interest.csv", package = "r5r"))
 
-points_hex <- read.csv(system.file("extdata/poa_hexgrid.csv", package = "r5r"))
+points_hex <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 
 
 # routes
@@ -62,8 +62,12 @@ tic()
 ttm <- travel_time_matrix(r5r_core,
                           origins=sample_n(points_hex, 400),
                           destinations=sample_n(points_hex, 200),
-                          mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
-                          max_trip_duration = 120L, verbose = FALSE)
+                          mode = c("WALK", "BUS"),
+                          departure_datetime =  trip_date_time, max_walk_dist = 2000,
+                          max_trip_duration = 120L,
+                          time_window = 60,
+                          percentiles = c(5, 25, 50, 75, 95),
+                          verbose = FALSE)
 toc()
 
 ttm %>% filter(travel_time < 120) %>% View()
