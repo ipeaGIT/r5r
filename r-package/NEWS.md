@@ -1,24 +1,32 @@
 # log history of r5r package development
 
 -------------------------------------------------------
+
 # r5r v0.3-3 (dev)
 
-**Minor changes**
-- Fixed conflict with `geobr` package when downloading metadata. Closed #137.
-- New vignette to Calculate and visualize isochrones.
-- r5r now considers the user's time zone by default. Closes #147
-- Improved documentation of travel_time_matrix. Closes #149
+### New features
 
+- New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
 
+### Bug fixes
+
+- Fixed [introductory vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html) to list only files that are included in the package installation. Closes [#111](https://github.com/ipeaGIT/r5r/issues/111).
+- Fixed conflict with `{geobr}` package when downloading metadata. Closed [#137](https://github.com/ipeaGIT/r5r/issues/137).
+- Fixed a bug when when parsing date and time from `departure_datetime` in `detailed_itineraries()` and `travel_time_matrix()`. Closes [#147](https://github.com/ipeaGIT/r5r/issues/147).
+
+### Notes
+
+- Improved documentation of `travel_time_matrix()`. Closes [#149](https://github.com/ipeaGIT/r5r/issues/149).
 
 -------------------------------------------------------
+
 # r5r v0.3-2
 
 **Minor changes**
 - r5r does not save the medatada file in the package directory anymore, following CRAN's policies. Closed #136.
 
-
 -------------------------------------------------------
+
 # r5r v0.3-1
 
 **Minor changes**
@@ -29,9 +37,8 @@ car or bicycle). Closed #63.
 - Allow for using the r5r package off-line, provided the user has successfully ran
 `setup_r5()` before.
 
-
-
 -------------------------------------------------------
+
 # r5r v0.3-0
 
 **Major changes**
@@ -42,9 +49,8 @@ car or bicycle). Closed #63.
 - Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.
 - The `percentiles` parameter in the `travel_time_matrix` function now only accepts up to 5 cut points due to changes in R5.
 
-
-
 -------------------------------------------------------
+
 # r5r v0.2-1
 
 **Minor changes**
@@ -55,9 +61,8 @@ sets `time_window` parameter. Closes #127.
 * Remove repeated bus route alternatives from the output from `detailed_itineraries`
 * Explicitly link destination points to street network before starting. Closes #121
 
-
-
 -------------------------------------------------------
+
 # r5r v0.2-0
 
 **Major changes**
@@ -73,9 +78,8 @@ and #118
 * Improved documentation of routing functions adding more info on the routing 
 algorithms used in R5. Closes #114
 
-
-
 -------------------------------------------------------
+
 # r5r v0.1-1
 
 **Minor changes**
@@ -85,9 +89,8 @@ algorithms used in R5. Closes #114
   * Appropriate hyperlinks indocumentation
   * Metadata is now downloaded from https:// server
 
-
-
 -------------------------------------------------------
+
 # r5r v0.1.0
 
 * Launch of **r5r** v0.1.0 on [CRAN](https://CRAN.R-project.org/package=r5r).
