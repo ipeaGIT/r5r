@@ -4,27 +4,21 @@
 
 # r5r v0.3-3 (dev)
 
-### New features
-
+**Major changes**
 - New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
 - Significant performance increase in `detailed_itineraries()` when 
 `shortest_path = TRUE`. Closes [#153](https://github.com/ipeaGIT/r5r/issues/153).
 
-### Minor changes
-
+**Minor changes**
 - `travel_time_matrix()` and `detailed_itineraries()` now output more detailed
 messages in the console, when `verbose = TRUE`. This shall make debugging the
 package much easier.
+- Improved documentation of `travel_time_matrix()`. Closes [#149](https://github.com/ipeaGIT/r5r/issues/149).
 
-### Bug fixes
-
+**Bug fixes**
 - Fixed [introductory vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html) to list only files that are included in the package installation. Closes [#111](https://github.com/ipeaGIT/r5r/issues/111).
 - Fixed conflict with `{geobr}` package when downloading metadata. Closed [#137](https://github.com/ipeaGIT/r5r/issues/137).
 - Fixed a bug when when parsing date and time from `departure_datetime` in `detailed_itineraries()` and `travel_time_matrix()`. Closes [#147](https://github.com/ipeaGIT/r5r/issues/147).
-
-### Notes
-
-- Improved documentation of `travel_time_matrix()`. Closes [#149](https://github.com/ipeaGIT/r5r/issues/149).
 
 -------------------------------------------------------
 
