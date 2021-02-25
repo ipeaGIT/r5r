@@ -25,6 +25,7 @@ Other support functions:
 \code{\link{set_max_street_time}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
+\code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
 \code{\link{street_network_to_sf}()}
 }

@@ -7,6 +7,14 @@
 ### New features
 
 - New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
+- Significant performance increase in `detailed_itineraries()` when 
+`shortest_path = TRUE`. Closes [#153](https://github.com/ipeaGIT/r5r/issues/153).
+
+### Minor changes
+
+- `travel_time_matrix()` and `detailed_itineraries()` now output more detailed
+messages in the console, when `verbose = TRUE`. This shall make debugging the
+package much easier.
 
 ### Bug fixes
 
