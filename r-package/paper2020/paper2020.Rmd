@@ -158,7 +158,19 @@ ggplot(data=plot_data, aes(y = travel_time, x = reorder(fromId, mediantt))) +
   labs(title = " ",
        y = "Travel Time (min)", x='Origins ordered by median travel time')
 ```
+
 **Figure 1: Travel time uncertainty by trip origin**
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+# save plot
+ggsave(file='figure1.jpeg',width = 18, height = 14, units = 'cm', dpi = 400 )
+```
+
 
 #### Visualizing Isochrones
 
@@ -198,8 +210,18 @@ ggplot(travel_times.interp) +
   theme(axis.title = element_blank())
 
 ```
+
 **Figure 2: Isochrones by public transport departing from the central bus station**
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+# save plot
+ggsave(file='figure2.jpeg',width = 18, height = 14, units = 'cm', dpi = 400 )
+```
 
 #### Creating accessibility metrics
 
@@ -232,7 +254,18 @@ ggplot(na.omit(access.interp)) +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
+
 **Figure 3: Number of schools accessible by public transport in less than 20 minutes**
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+# save plot
+ggsave(file='figure3.jpeg',width = 18, height = 14, units = 'cm', dpi = 400 )
+```
 
 # Acknowledgments
 
