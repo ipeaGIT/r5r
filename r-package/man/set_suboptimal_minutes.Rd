@@ -9,7 +9,7 @@ set_suboptimal_minutes(r5r_core, suboptimal_minutes)
 \arguments{
 \item{r5r_core}{rJava object to connect with R5 routing engine}
 
-\item{minutes}{numeric. The number of suboptimal minutes in a public transport
+\item{suboptimal_minutes}{numeric. The number of suboptimal minutes in a public transport
 point-to-point query. From R5's documentation:
 This parameter compensates for the fact that GTFS does not
 contain information about schedule deviation (lateness).

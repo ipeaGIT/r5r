@@ -279,7 +279,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 #' @description Set suboptimalMinutes parameter in R5.
 #'
 #' @param r5r_core rJava object to connect with R5 routing engine
-#' @param minutes numeric. The number of suboptimal minutes in a public transport
+#' @param suboptimal_minutes numeric. The number of suboptimal minutes in a public transport
 #'                  point-to-point query. From R5's documentation:
 #'                  This parameter compensates for the fact that GTFS does not
 #'                  contain information about schedule deviation (lateness).
