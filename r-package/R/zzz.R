@@ -11,8 +11,9 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
 
   packageStartupMessage(paste0("Please make sure you have already allocated ",
                                "some memory to Java by running:\n",
-                               "  options(java.parameters = '-Xmx2G')"))
-
+                               "  options(java.parameters = '-Xmx2G').\n",
+                               "Currently, Java memory is set to ",
+                               getOption("java.parameters")))
 }
 
 
