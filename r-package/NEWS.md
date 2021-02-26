@@ -6,6 +6,7 @@
 
 **Major changes**
 - New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
+- New vignette to [calculate and visualize accessibility](https://ipeagit.github.io/r5r/articles/calculating_accessibility.html).
 - Significant performance increase in `detailed_itineraries()` when 
 `shortest_path = TRUE`. Closes [#153](https://github.com/ipeaGIT/r5r/issues/153).
 
