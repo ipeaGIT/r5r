@@ -1,0 +1,172 @@
+---
+title: 'Calculating and visualizing Accessibility'
+author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+abstract: "This vignette shows how to calculate and visualize accessibility in R using the `r5r` package."
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{Calculating and visualizing Accessibility} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+bibliography: references.json
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction 
+
+Accessibility metrics measure the ease with which opportunities, such as jobs,
+can be reached by a traveler from a particular location [@levinson2020manual]. One
+of the simplest forms of accessibility metrics is the cumulative-opportunities, 
+which counts all of the opportunities accessible from each location in less than a 
+cutoff time. Using a travel time matrix and information on the number of opportunities 
+available at each location, we can calculate and map accessibility. This vignette 
+shows how to do that in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html).
+
+In this reproducible example, we will be using a sample data set for the city of 
+Porto Alegre (Brazil) included in `r5r`. We can compute accessibility in 5 quick 
+steps:
+
+1. Increase Java memory and load libraries
+2. Build routable transport network
+3. Calculate travel times
+4. Calculate Accessibility
+5. Map Accessibility
+
+## 1. Increase Java memory and load libraries
+
+Before we start, we need to increase the memory available to Java and load the 
+packages used in this vignette
+
+```{r, message = FALSE, eval = FALSE}
+options(java.parameters = "-Xmx2G")
+
+library(r5r)
+library(sf)
+library(data.table)
+library(ggplot2)
+library(akima)
+library(dplyr)
+```
+
+
+## 2. Build routable transport network with `setup_r5()`
+
+To build a routable transport network with r5r and load it into memory, the user 
+needs to call `setup_r5` with the path to the directory where OpenStreetMap and 
+GTFS data are stored.
+
+```{r, message = FALSE, eval = FALSE}
+# system.file returns the directory with example data inside the r5r package
+# set data path to directory containing your own data if not using the examples
+data_path <- system.file("extdata/poa", package = "r5r")
+
+r5r_core <- setup_r5(data_path, verbose = FALSE)
+```
+
+
+## 3. Calculate travel times
+
+In this example, we will be calculating the travel times by public transport between
+all city blocks in the city of Porto Alegre. With the code below we compute 
+multiple travel time estimates departing every minute over a 60-minute time window, 
+between 2pm and 3pm.
+
+```{r, message = FALSE, eval = FALSE}
+# read all points in the city
+points <- fread(file.path(data_path, "poa_hexgrid.csv"))
+
+# routing inputs
+mode <- c("WALK", "TRANSIT")
+max_walk_dist <- 1000 # in meters
+max_trip_duration <- 60 # in minutes
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+time_window <- 60 # in minutes
+percentiles <- 50
+
+# calculate travel time matrix
+ttm <- travel_time_matrix(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          mode = mode,
+                          departure_datetime = departure_datetime,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          time_window = time_window,
+                          percentiles = percentiles,
+                          verbose = FALSE)
+
+head(ttm)
+#>             fromId            toId travel_time 
+#> 1: 89a901291abffff 89a901291abffff           2 
+#> 2: 89a901291abffff 89a901295b7ffff          45 
+#> 3: 89a901291abffff 89a9012809bffff          49 
+#> 4: 89a901291abffff 89a901285cfffff          38 
+#> 5: 89a901291abffff 89a90129977ffff          52 
+#> 6: 89a901291abffff 89a90128e27ffff          48 
+```
+
+## 4. Calculate Accessibility
+
+Once we have the travel time matrix at hand, calculating accessibility is simple. 
+The sample data provided contains information on the spatial distribution
+of schools in Porto Alegre, which we will use to compute the number of schools 
+accessible by public transport in less than 20 minutes. 
+
+```{r, message = FALSE, eval = FALSE}
+# merge schools information to travel time matrix
+ttm[points, on=c('toId' ='id'), schools := i.schools]
+
+# calculate number of schools accessible
+access <- ttm[travel_time <= 20, .(acc = sum(schools)), by=fromId]
+```
+
+## 5. Map Accessibility
+
+The final step is mapping the accessibility results calculated earlier. The code
+below demonstrates how to do that, with some extra steps to produce a prettier map.
+
+```{r, message = FALSE, eval = FALSE}
+# interpolate estimates to get spatially smooth result
+access.interp <- access %>%
+  inner_join(points, by=c('fromId'='id')) %>%
+  with(interp(lon, lat, acc)) %>%
+                        with(cbind(acc=as.vector(z),  # Column-major order
+                                   x=rep(x, times=length(y)),
+                                   y=rep(y, each=length(x)))) %>% as.data.frame() %>% na.omit()
+
+# find results' bounding box to crop the map
+bb_x <- c(min(access.interp$x), max(access.interp$x))
+bb_y <- c(min(access.interp$y), max(access.interp$y))
+
+# extract OSM network, to plot over map
+street_net <- street_network_to_sf(r5r_core)
+
+# plot
+ggplot(na.omit(access.interp)) +
+  geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.8) +
+  geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
+  scale_fill_viridis_d(direction = -1, option = 'B') +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,0)) +
+  coord_sf(xlim = bb_x, ylim = bb_y) + 
+  labs(fill = "Schools within\n20 minutes\n(median travel time)") +
+  theme_minimal() +
+  theme(axis.title = element_blank())
+```
+
+```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_accessibility.png?raw=true")
+```
+
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+
+## References

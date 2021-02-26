@@ -1,0 +1,531 @@
+[
+	{
+		"id": "padgham2019dodgr",
+		"type": "article-journal",
+		"abstract": "Allocation of flows throughout networks is a common problem in transport research, yet there are very few computational tools available, and almost no open source tools. We describe a new software package, “dodgr” (Distances On Directed GRaphs) capable of extremely efficient flow aggregation over millions of routes within a network. This package represents a much needed advance in transport research, enabling aggregation at the finest scales of individual street segments, with results able to be direcly viewed with modern web-rendering and interactive viewing tools such as deck.gl.",
+		"container-title": "Transport Findings",
+		"DOI": "10.32866/6945",
+		"note": "publisher: Network Design Lab",
+		"title": "dodgr: An R Package for Network Flow Aggregation",
+		"author": [
+			{
+				"family": "Padgham",
+				"given": "Mark"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			],
+			"season": "02-14"
+		}
+	},
+	{
+		"id": "larsen2011travel",
+		"type": "article-journal",
+		"abstract": "This study examines the personal factors that influence cycling facility usage and how specific facility types and their spatial characteristics affect route choice. This study is based on an online survey of 2917 cyclists from Montréal, Quebec, Canada. Respondent’s most frequent home-based trips are modeled using a geographic information system. Several statistical models are used to measure the cycling patterns associated with different types of utilitarian cyclists. Experienced cyclists are less likely to use cycling facilities compared to other kinds of cyclists. Overall, cyclists add greater distance to their trips for facilities that are segregated from vehicle traffic, however, this additional diversion distance is best explained by facility length and supply of nearby facilities.",
+		"container-title": "Transportation Research Part D: Transport and Environment",
+		"DOI": "10.1016/j.trd.2010.07.011",
+		"ISSN": "13619209",
+		"issue": "2",
+		"journalAbbreviation": "Transportation Research Part D: Transport and Environment",
+		"language": "en",
+		"page": "172-177",
+		"source": "DOI.org (Crossref)",
+		"title": "A travel behavior analysis of urban cycling facilities in Montréal, Canada",
+		"URL": "https://linkinghub.elsevier.com/retrieve/pii/S1361920910001100",
+		"volume": "16",
+		"author": [
+			{
+				"family": "Larsen",
+				"given": "Jacob"
+			},
+			{
+				"family": "El-Geneidy",
+				"given": "Ahmed"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2011",
+					3
+				]
+			]
+		}
+	},
+	{
+		"id": "zhu2015people",
+		"type": "article-journal",
+		"container-title": "PLOS ONE",
+		"DOI": "10.1371/journal.pone.0134322",
+		"ISSN": "1932-6203",
+		"issue": "8",
+		"journalAbbreviation": "PLoS ONE",
+		"language": "en",
+		"page": "e0134322",
+		"source": "DOI.org (Crossref)",
+		"title": "Do People Use the Shortest Path? An Empirical Test of Wardrop’s First Principle",
+		"title-short": "Do People Use the Shortest Path?",
+		"URL": "https://dx.plos.org/10.1371/journal.pone.0134322",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Zhu",
+				"given": "Shanjiang"
+			},
+			{
+				"family": "Levinson",
+				"given": "David"
+			}
+		],
+		"editor": [
+			{
+				"family": "Ropert-Coudert",
+				"given": "Yan"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8,
+					12
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2019getting",
+		"type": "article-journal",
+		"container-title": "International Journal of Geographical Information Science",
+		"DOI": "10.1080/13658816.2019.1605075",
+		"ISSN": "1365-8816, 1362-3087",
+		"issue": "9",
+		"journalAbbreviation": "International Journal of Geographical Information Science",
+		"language": "en",
+		"page": "1759-1787",
+		"source": "DOI.org (Crossref)",
+		"title": "Getting Charlie off the MTA: a multiobjective optimization method to account for cost constraints in public transit accessibility metrics",
+		"title-short": "Getting Charlie off the MTA",
+		"URL": "https://www.tandfonline.com/doi/full/10.1080/13658816.2019.1605075",
+		"volume": "33",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Stewart",
+				"given": "Anson F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					9,
+					2
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2017evidencebased",
+		"type": "article-journal",
+		"container-title": "Transportation Research Record: Journal of the Transportation Research Board",
+		"DOI": "10.3141/2653-06",
+		"ISSN": "0361-1981, 2169-4052",
+		"issue": "1",
+		"journalAbbreviation": "Transportation Research Record",
+		"language": "en",
+		"page": "45-53",
+		"source": "DOI.org (Crossref)",
+		"title": "Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks",
+		"URL": "http://journals.sagepub.com/doi/10.3141/2653-06",
+		"volume": "2653",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "Linden",
+				"given": "Marco",
+				"non-dropping-particle": "van der"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2017",
+					1
+				]
+			]
+		}
+	},
+  {"id":"morgan2019opentripplanner","abstract":"Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source Software, 4(44), 1926, https://doi.org/10.21105/joss.01926","accessed":{"date-parts":[[2021,2,24]]},"author":[{"family":"Morgan","given":"Malcolm"},{"family":"Young","given":"Marcus"},{"family":"Lovelace","given":"Robin"},{"family":"Hama","given":"Layik"}],"container-title":"Journal of Open Source Software","DOI":"10.21105/joss.01926","ISSN":"2475-9066","issue":"44","issued":{"date-parts":[[2019,12,2]]},"language":"en","page":"1926","source":"joss.theoj.org","title":"OpenTripPlanner for R","type":"article-journal","URL":"https://joss.theoj.org/papers/10.21105/joss.01926","volume":"4"},
+	{
+		"id": "conway2018accounting",
+		"type": "article-journal",
+		"container-title": "Journal of Transport and Land Use",
+		"DOI": "10.5198/jtlu.2018.1074",
+		"ISSN": "1938-7849",
+		"issue": "1",
+		"journalAbbreviation": "JTLU",
+		"source": "DOI.org (Crossref)",
+		"title": "Accounting for uncertainty and variation in accessibility metrics for public transport sketch planning",
+		"URL": "https://www.jtlu.org/index.php/jtlu/article/view/1074",
+		"volume": "11",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "van Eggermond",
+				"given": "Michael"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2018",
+					7,
+					23
+				]
+			]
+		}
+	},
+	{
+		"id": "lovelace2019stplanr",
+		"type": "article-journal",
+		"container-title": "The R Journal",
+		"DOI": "10.32614/RJ-2018-053",
+		"ISSN": "2073-4859",
+		"issue": "2",
+		"journalAbbreviation": "The R Journal",
+		"language": "en",
+		"page": "7",
+		"source": "DOI.org (Crossref)",
+		"title": "stplanr: A Package for Transport Planning",
+		"title-short": "stplanr",
+		"URL": "https://journal.r-project.org/archive/2018/RJ-2018-053/index.html",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Lovelace",
+				"given": "Robin"
+			},
+			{
+				"family": "Ellison",
+				"given": "Richard"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			]
+		}
+	},
+	{
+		"id": "opentripplanneropentripplanner",
+		"type": "webpage",
+		"title": "OpenTripPlanner",
+		"URL": "http://www.opentripplanner.org/",
+		"author": [
+			{
+				"family": "OpenTripPlanner",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		}
+	},
+	{
+		"id": "delling2015roundbased",
+		"type": "article-journal",
+		"container-title": "Transportation Science",
+		"DOI": "10.1287/trsc.2014.0534",
+		"ISSN": "0041-1655, 1526-5447",
+		"issue": "3",
+		"journalAbbreviation": "Transportation Science",
+		"language": "en",
+		"page": "591-604",
+		"source": "DOI.org (Crossref)",
+		"title": "Round-Based Public Transit Routing",
+		"URL": "http://pubsonline.informs.org/doi/10.1287/trsc.2014.0534",
+		"volume": "49",
+		"author": [
+			{
+				"family": "Delling",
+				"given": "Daniel"
+			},
+			{
+				"family": "Pajor",
+				"given": "Thomas"
+			},
+			{
+				"family": "Werneck",
+				"given": "Renato F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					10,
+					22
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8
+				]
+			]
+		}
+	},
+ {
+      "id":"stepniak2019impact",
+      "abstract":"In recent years there has been a significant increase of temporally variable analyses of accessibility by public transport as a result of the increased availability of open and standardized time table information in the form of GTFS (General Transit Feed Specification) data. To date, very little attention has been paid to systematically analyze the impact of temporal resolutions on the results. Different authors have applied different standards, often in an ad-hoc manner. In this study, we address the loss of precision associated with a stepwise reduction of the temporal resolution of travel time estimations based on GTFS data for the city of Szczecin in Poland. The paper aims to provide guidance to researchers and practitioners on the selection of appropriate temporal resolutions in accessibility studies. We test four sampling methods in order to analyze four different public transport frequency scenarios, three types of accessibility measures (travel time to the nearest provider, cumulative opportunities measure and potential accessibility) and seven types of destinations ranging from high to low centrality. Additionally, the impact on spatial disparities is explored using the Gini coefficient. We find that a reduction of temporal resolution is associated with a decrease in precision of public transport accessibility measurement. However, with up to 5-min resolutions this reduction is negligible, while computational time is reduced fivefold, compared to a 1-min resolution benchmark. Lower temporal resolutions still provide relatively precise estimations of travel times and accessibility measures. However, further resolution reductions are associated with decreasing reductions of computational time. As a result, we argue that 15-min temporal resolution provides a good balance between precision and computational time while providing very precise estimations of Gini coefficients (errors ≤0.001). A non-linear relationship is found between the public transport frequency and the loss of precision, with lower frequencies leading to a greater loss in precision. More attention should be paid to highly centralized services, in particular when analyzed using proximity and cumulative opportunities measures. Finally, the cumulative opportunities measure is found to be highly sensitive to changes in the temporal resolution and not suited for time-sensitive accessibility analysis.",
+      "accessed":{
+         "date-parts":[
+            [
+               2021,
+               1,
+               14
+            ]
+         ]
+      },
+      "author":[
+         {
+            "family":"Stępniak",
+            "given":"Marcin"
+         },
+         {
+            "family":"Pritchard",
+            "given":"John P."
+         },
+         {
+            "family":"Geurs",
+            "given":"Karst T."
+         },
+         {
+            "family":"Goliszek",
+            "given":"Sławomir"
+         }
+      ],
+      "container-title":"Journal of Transport Geography",
+      "container-title-short":"Journal of Transport Geography",
+      "DOI":"10.1016/j.jtrangeo.2019.01.007",
+      "ISSN":"0966-6923",
+      "issued":{
+         "date-parts":[
+            [
+               2019,
+               2,
+               1
+            ]
+         ]
+      },
+      "language":"en",
+      "page":"8-24",
+      "source":"ScienceDirect",
+      "title":"The impact of temporal resolution on public transport accessibility measurement: Review and case study in Poland",
+      "title-short":"The impact of temporal resolution on public transport accessibility measurement",
+      "type":"article-journal",
+      "URL":"http://www.sciencedirect.com/science/article/pii/S0966692318305209",
+      "volume":"75"
+   },
+   	{
+		"id": "levinson2020manual",
+		"type": "article-journal",
+		"abstract": "This Manual is a guide for quantifying and evaluating access for anybody interested in truly understanding how to measure the performance of transport and land use configurations. It contains enough to help transport and planning professionals achieve a more comprehensive look at their city or region than traditional transport analysis allows. It provides a point of entry for interested members of the public as well as practitioners by being organized in a logical and straightforward way.",
+		"language": "en",
+		"note": "Accepted: 2020-11-05\npublisher: Committee of the Transport Access Manual, University of Sydney",
+		"source": "ses.library.usyd.edu.au",
+		"title": "Transport Access Manual: A Guide for Measuring Connection between People and Places",
+		"title-short": "Transport Access Manual",
+		"URL": "https://ses.library.usyd.edu.au/handle/2123/23733",
+		"author": [
+			{
+				"family": "Levinson",
+				"given": "David"
+			},
+			{
+				"family": "et al.",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2021",
+					1,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2020",
+					1,
+					1
+				]
+			]
+		}
+	},
+	 {
+    "id": "wessel2017constructing",
+    "abstract": "Journal of Transport Geography, 62 (2017) 92-97. doi:10.1016/j.jtrangeo.2017.04.012",
+    "author": [
+      {
+        "family": "Wessel",
+        "given": "Nate"
+      },
+      {
+        "family": "Allen",
+        "given": "Jeff"
+      },
+      {
+        "family": "Farber",
+        "given": "Steven"
+      }
+    ],
+    "container-title": "Journal of Transport Geography",
+    "container-title-short": "Journal of Transport Geography",
+    "DOI": "10.1016/j.jtrangeo.2017.04.012",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          6,
+          9
+        ]
+      ]
+    },
+    "page": "92-97",
+    "title": "Constructing a routable retrospective transit timetable from a real-time vehicle location feed and GTFS",
+    "type": "article-journal",
+    "URL": "http://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
+    "volume": "62"
+  },
+  
+  {
+		"id": "pereiramtup2019",
+		"type": "article-journal",
+		"abstract": "The accessibility impacts of transport projects ex-post implementation are generally evaluated using cumulative opportunity measures based on a single travel time threshold. Fewer studies have explored how accessibility appraisal of transport plans can be used to evaluate policy scenarios and their impacts for different social groups or examined whether the results of project appraisals are sensitive to the time threshold of choice. This paper analyzes how different scenarios of full and partial implementation of the TransBrasil BRT project in Rio de Janeiro (Brazil) will likely impact the number of jobs accessible to the population of different income levels. The analysis is conducted under various travel time thresholds of 30, 60, 90 and 120 min to test whether the results are sensitive to the boundary effect of the modifiable temporal unit problem (MTUP). Compared to a partial operation scenario, the full implementation of TransBrasil that extends this corridor into the city center would lead to higher accessibility gains due to network effects of connecting this BRT to other transport modes. Nonetheless, the size of the accessibility impacts of the proposed BRT as well as its distribution across income classes would significantly change depending on the time threshold chosen for the accessibility analysis. Considering cut-off times of 30 or 60 min, both scenarios of TransBrasil would lead to higher accessibility impacts in general and particularly for low-income groups, moving Rio towards a more equitable transportation system. However, under longer thresholds of 90 and 120 min, an evaluation of this project would find much smaller accessibility gains more evenly distributed by income levels. The paper highlights how time threshold choice in cumulative opportunity measures can have important but overlooked implications for policy evaluation and it calls for further research on the MTUP in future transport and mobility studies.",
+		"container-title": "Journal of Transport Geography",
+		"DOI": "10.1016/j.jtrangeo.2018.12.005",
+		"ISSN": "0966-6923",
+		"journalAbbreviation": "Journal of Transport Geography",
+		"page": "321-332",
+		"source": "ScienceDirect",
+		"title": "Future accessibility impacts of transport policy scenarios: Equity and sensitivity to travel time thresholds for Bus Rapid Transit expansion in Rio de Janeiro",
+		"title-short": "Future accessibility impacts of transport policy scenarios",
+		"URL": "http://www.sciencedirect.com/science/article/pii/S0966692318302047",
+		"volume": "74",
+		"author": [
+			{
+				"family": "Pereira",
+				"given": "Rafael H. M."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2018",
+					12,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					1,
+					1
+				]
+			]
+		}
+	}
+
+]
