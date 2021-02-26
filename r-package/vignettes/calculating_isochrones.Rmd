@@ -18,21 +18,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction 
+# Introduction
 
-An isochrone of a given place includes all the areaas reachable from that place within a certain amount of time. This vignette shows how to calculate and visualize isochrones in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html)."
+An isochrone of a given place includes all the areas reachable from that place within a certain amount of time. This vignette shows how to calculate and visualize isochrones in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html).
 
-In this reproducible example, we will be using a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. Our aim here is to  calculate several isochrones departing from the departing from the central bus station given different travel time thresholds. We'll do this in 4 quick steps:
-1. Increase Java memory and load libraries
-2. Build routable transport network
-3. Calculate travel times
+In this reproducible example, we will be using a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. Our aim here is to calculate several isochrones departing from the central bus station given different travel time thresholds. We'll do this in 4 quick steps: 
+
+1. Increase Java memory and load libraries 
+2. Build routable transport network 
+3. Calculate travel times 
 4. Map Isochrones
-
-
 
 ## 1. Increase Java memory and load libraries
 
-Before we start, we need to increase the memory available to Java and load the packages used in this vignette
+Before we start, we need to increase the memory available to Java and load the packages used in this vignette.
 
 ```{r, message = FALSE, eval = FALSE}
 options(java.parameters = "-Xmx2G")
@@ -43,14 +42,11 @@ library(data.table)
 library(ggplot2)
 library(akima)
 library(dplyr)
-
 ```
-
-
 
 ## 2. Build routable transport network with `setup_r5()`
 
-To build a routable transport network with r5r and load it into memory, the user needs to call `setup_r5` with the path to the directory where OpenStreetMap and GTFS data are stored.
+To build a routable transport network with `r5r` and load it into memory, the user needs to call `setup_r5` with the path to the directory where OpenStreetMap and GTFS data are stored.
 
 ```{r, message = FALSE, eval = FALSE}
 # system.file returns the directory with example data inside the r5r package
@@ -59,7 +55,6 @@ data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 ```
-
 
 ## 3. Calculate travel times
 
@@ -105,7 +100,6 @@ head(ttm)
 
 ```
 
-
 ## 4. Map Isochrones
 
 Now we only need to organize the travel time matrix output `ttm` and plot it on the map.
@@ -132,7 +126,8 @@ bb_y <- c(min(travel_times.interp$y), max(travel_times.interp$y))
 ggplot(travel_times.interp) +
   geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.8) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
-  geom_point(aes(x=lon, y=lat, color='Central bus\nstation'), data=central_bus_stn) +
+  geom_point(aes(x=lon, y=lat, color='Central bus\nstation'),
+             data=central_bus_stn) +
   scale_fill_viridis_d(direction = -1, option = 'B') +
   scale_color_manual(values=c('Central bus\nstation'='black')) +
   scale_x_continuous(expand=c(0,0)) +
@@ -141,8 +136,8 @@ ggplot(travel_times.interp) +
   labs(fill = "travel time (minutes)", color='') +
   theme_minimal() +
   theme(axis.title = element_blank())
-
 ```
+
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_isochrone.png?raw=true")
 ```
