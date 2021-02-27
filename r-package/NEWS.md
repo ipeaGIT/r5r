@@ -15,6 +15,9 @@
 messages in the console, when `verbose = TRUE`. This shall make debugging the
 package much easier.
 - Improved documentation of `travel_time_matrix()`. Closes [#149](https://github.com/ipeaGIT/r5r/issues/149).
+- Checks origins/destinations inputs to make sure they have and `id` column. Closes [#154](https://github.com/ipeaGIT/r5r/issues/154).
+
+
 
 **Bug fixes**
 - Fixed [introductory vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html) to list only files that are included in the package installation. Closes [#111](https://github.com/ipeaGIT/r5r/issues/111).
