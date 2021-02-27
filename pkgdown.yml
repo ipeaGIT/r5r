@@ -2,7 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  calculating_accessibility: calculating_accessibility.html
   calculating_isochrones: calculating_isochrones.html
   intro_to_r5r: intro_to_r5r.html
-last_built: 2021-02-25T00:22Z
+last_built: 2021-02-27T22:47Z
 

@@ -102,6 +102,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/calculating_accessibility.html">Calculating and visualizing Accessibility</a>
+    </li>
+    <li>
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
@@ -141,12 +144,23 @@
 <h1 class="page-header" data-toc-text="0.3-3">
 <a href="#r5r-v03-3-dev" class="anchor"></a>r5r v0.3-3 (dev)<small> Unreleased </small>
 </h1>
+<p><strong>Major changes</strong></p>
+<ul>
+<li>New vignette to <a href="https://ipeagit.github.io/r5r/articles/calculating_isochrones.html">calculate and visualize isochrones</a>.</li>
+<li>New vignette to <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html">calculate and visualize accessibility</a>.</li>
+<li>Significant performance increase in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> when <code>shortest_path = TRUE</code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/153">#153</a>.</li>
+</ul>
 <p><strong>Minor changes</strong></p>
 <ul>
-<li>Fixed conflict with <code>geobr</code> package when downloading metadata. Closed #137.</li>
-<li>New vignette to Calculate and visualize isochrones.</li>
-<li>r5r now considers the user’s time zone by default. Closes #147</li>
-<li>Improved documentation of travel_time_matrix. Closes #149</li>
+<li>
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> now output more detailed messages in the console, when <code>verbose = TRUE</code>. This shall make debugging the package much easier.</li>
+<li>Improved documentation of <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/149">#149</a>.</li>
+</ul>
+<p><strong>Bug fixes</strong></p>
+<ul>
+<li>Fixed <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html">introductory vignette</a> to list only files that are included in the package installation. Closes <a href="https://github.com/ipeaGIT/r5r/issues/111">#111</a>.</li>
+<li>Fixed conflict with <code>{geobr}</code> package when downloading metadata. Closed <a href="https://github.com/ipeaGIT/r5r/issues/137">#137</a>.</li>
+<li>Fixed a bug when when parsing date and time from <code>departure_datetime</code> in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> and <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/147">#147</a>.</li>
 </ul>
 <hr>
 </div>
