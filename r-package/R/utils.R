@@ -171,8 +171,7 @@ assert_points_input <- function(df, name) {
       data.table::setDT(df)
       data.table::setnames(df, "x", "lon")
       data.table::setnames(df, "y", "lat")
-      data.table::setnames(df, names(df)[1], "id")
-
+      checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
     }
 
     checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)
