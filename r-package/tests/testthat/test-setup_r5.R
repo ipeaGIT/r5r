@@ -1,4 +1,4 @@
-context("download_r5")
+context("setup_r5")
 
 testthat::skip_on_cran()
 
@@ -12,11 +12,10 @@ test_that("setup_r5 - expected behavior", {
 
   # remove files GTFS
   #  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
-  testthat::expect_message( setup_r5(data_path = path, verbose = F) )
+  # testthat::expect_message( setup_r5(data_path = path, verbose = F) )
   #  file.rename(file.path(path, "poa.x"), file.path(path, "poa.zip"))
 
-  testthat::expect_message(setup_r5(data_path = path, version='4.9.0', verbose = F))
-
+  testthat::expect_message(setup_r5(data_path = path, version='6.0.1', verbose = F))
 
 })
 
@@ -30,6 +29,8 @@ test_that("setup_r5 - expected errors", {
   testthat::expect_error( setup_r5(data_path = 'a') )
   testthat::expect_error(setup_r5(verbose = 'a'))
 
+  # old version of R5
+  # testthat::expect_error(setup_r5(data_path = path, version='4.9.0', verbose = F))
 
   # No OSM data
   testthat::expect_error( setup_r5(data_path = file.path(.libPaths()[1]) ) )
@@ -41,3 +42,5 @@ test_that("setup_r5 - expected errors", {
   #   file.rename(file.path(path, "network2.x"), file.path(path, "network.dat"))
 
   })
+
+stop_r5()
