@@ -408,6 +408,8 @@ devtools::check_win_release(pkg = ".")
 
 beepr::beep()
 
+
+
 tictoc::tic()
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
