@@ -12,3 +12,4 @@
 ^inst/extdata/.*/.*\.mapdb$
 ^inst/extdata/.*/.*\.mapdb\.p$
 ^\.github$
+^inst/img
