@@ -2,7 +2,7 @@
 
 -------------------------------------------------------
 
-# r5r v0.3-3 (dev)
+# r5r v0.3-3
 
 **Major changes**
 - New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
