@@ -9,6 +9,7 @@
 - New vignette to [calculate and visualize accessibility](https://ipeagit.github.io/r5r/articles/calculating_accessibility.html).
 - Significant performance increase in `detailed_itineraries()` when 
 `shortest_path = TRUE`. Closes [#153](https://github.com/ipeaGIT/r5r/issues/153).
+- [Paper on the r5r package published on **Findings**](https://doi.org/10.32866/001c.21262). Closes [#108](https://github.com/ipeaGIT/r5r/issues/108).
 
 **Minor changes**
 - `travel_time_matrix()` and `detailed_itineraries()` now output more detailed
