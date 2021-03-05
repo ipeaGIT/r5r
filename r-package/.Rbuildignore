@@ -13,3 +13,4 @@
 ^inst/extdata/.*/.*\.mapdb\.p$
 ^\.github$
 ^inst/img
+^man/figures
