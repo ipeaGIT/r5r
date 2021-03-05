@@ -414,11 +414,8 @@ tictoc::tic()
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
 
-donottest
-219.34 sec elapsed
 
-donotrun
-175.84 sec elapsed
+
 
 
 # build binary -----------------
