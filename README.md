@@ -134,4 +134,22 @@ at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
  The R package **r5r** is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:
 
-* Saraiva et al., (2020) **r5r: Rapid realistic routing on multimodal transport networks with R5**. GitHub repository - https://github.com/ipeaGIT/r5r
+* Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., & Conway, M. W. (2021). **r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R**. *Findings*, 21262. [https://doi.org/10.32866/001c.21262](https://doi.org/10.32866/001c.21262)
+
+```
+@article{pereira_r5r_2021,
+	title = {r5r: Rapid Realistic Routing on Multimodal Transport Networks with {R}$^{\textrm{5}}$ in R},
+	shorttitle = {r5r},
+	url = {https://findingspress.org/article/21262-r5r-rapid-realistic-routing-on-multimodal-transport-networks-with-r-5-in-r},
+	doi = {10.32866/001c.21262},
+	abstract = {Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges when performing this task due to long computation times and the cost of licensed software. R{\textasciicircum}5{\textasciicircum} is a multimodal transport network router that offers multiple routing features, such as calculating travel times over a time window and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages R{\textasciicircum}5{\textasciicircum} to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.},
+	language = {en},
+	urldate = {2021-03-04},
+	journal = {Findings},
+	author = {Pereira, Rafael H. M. and Saraiva, Marcus and Herszenhut, Daniel and Braga, Carlos Kaue Vieira and Conway, Matthew Wigginton},
+	month = mar,
+	year = {2021},
+	note = {Publisher: Network Design Lab}
+}
+```
+
