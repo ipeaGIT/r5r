@@ -3,8 +3,8 @@ options(java.parameters = "-Xmx16G")
 
 library(r5r)
 
-# path <- system.file("extdata/poa", package = "r5r")
-path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
+path <- system.file("extdata/poa", package = "r5r")
+# path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
 r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
 r5r_core$silentMode()
@@ -43,7 +43,7 @@ dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destinati
                             departure_datetime = as.POSIXct("20-05-2019 9:14:20",format = "%d-%m-%Y %H:%M:%S"),
                             max_walk_dist = 800,
                             max_trip_duration = 60,
-                            shortest_path = FALSE
+                            shortest_path = TRUE
                             )
 
 
