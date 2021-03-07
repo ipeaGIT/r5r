@@ -1,6 +1,11 @@
 # log history of r5r package development
 
 -------------------------------------------------------
+# r5r v0.3-4 (dev)
+
+**Bug fixes**
+- Fixed a bug in `detailed_itineraries()` that caused a crash when the shape of 
+a route in the input GTFS is broken. Closes [#145](https://github.com/ipeaGIT/r5r/issues/145)
 
 # r5r v0.3-3
 

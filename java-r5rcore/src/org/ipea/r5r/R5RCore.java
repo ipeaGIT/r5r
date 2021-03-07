@@ -445,8 +445,13 @@ public class R5RCore {
         pathOptionsTable.addStringColumn("route", "");
         if (!dropItineraryGeometry) pathOptionsTable.addStringColumn("geometry", "");
 
+        LOG.info("Building itinerary options table.");
+        LOG.info("{} itineraries found.", pathOptions.size());
+
         int optionIndex = 0;
         for (ProfileOption option : pathOptions) {
+            LOG.info("Itinerary option {} of {}: {}", optionIndex + 1, pathOptions.size(), option.summary);
+
             if (option.stats.avg > (maxTripDuration * 60)) continue;
 
             if (option.transit == null) { // no transit, maybe has direct access legs
@@ -457,6 +462,8 @@ public class R5RCore {
                         // if a direct walking trip is found that is longer than maxWalkTime, then drop it
                         if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
                         pathOptionsTable.append();
+
+                        LOG.info("  direct {}", segment.toString());
 
                         optionIndex++;
                         pathOptionsTable.set("option", optionIndex);
@@ -482,6 +489,8 @@ public class R5RCore {
                     for (StreetSegment segment : option.access) {
                         pathOptionsTable.append();
 
+                        LOG.info("  access {}", segment.toString());
+
                         pathOptionsTable.set("option", optionIndex);
                         segmentIndex++;
                         pathOptionsTable.set("segment", segmentIndex);
@@ -499,31 +508,50 @@ public class R5RCore {
 
                 for (TransitSegment transit : option.transit) {
 
+                    if (!transit.segmentPatterns.isEmpty()) {
 //                    for (SegmentPattern pattern : transit.segmentPatterns) {
                         // Use only first of many possible repeated patterns
                         SegmentPattern pattern = transit.segmentPatterns.get(0);
-                        pathOptionsTable.append();
+                        if (pattern != null) {
 
-                        segmentIndex++;
-                        TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
+                            LOG.info("  transit pattern index {}", pattern.patternIdx);
 
-                        StringBuilder geometry = new StringBuilder();
-                        int accDistance = buildTransitGeometryAndCalculateDistance(pattern, tripPattern, geometry);
+                            TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
 
-                        pathOptionsTable.set("option", optionIndex);
-                        pathOptionsTable.set("segment", segmentIndex);
-                        pathOptionsTable.set("mode", transit.mode.toString());
-                        pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
-                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                        pathOptionsTable.set("distance", accDistance);
-                        pathOptionsTable.set("route", tripPattern.routeId);
-                        pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
-                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
+                            if (tripPattern != null) {
+                                pathOptionsTable.append();
+
+                                segmentIndex++;
+
+                                StringBuilder geometry = new StringBuilder();
+                                int accDistance = 0;
+
+                                try {
+                                    accDistance = buildTransitGeometryAndCalculateDistance(pattern, tripPattern, geometry);
+                                } catch (Exception e) {
+                                    geometry = new StringBuilder("LINESTRING EMPTY");
+                                }
+
+                                pathOptionsTable.set("option", optionIndex);
+                                pathOptionsTable.set("segment", segmentIndex);
+                                pathOptionsTable.set("mode", transit.mode.toString());
+                                pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
+                                pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                                pathOptionsTable.set("distance", accDistance);
+                                pathOptionsTable.set("route", tripPattern.routeId);
+                                pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
+                                if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
+                            }
+                        }
 //                    }
+                    }
+
 
                     // middle leg: walk between stops/stations
                     if (transit.middle != null) {
                         pathOptionsTable.append();
+
+                        LOG.info("  middle {}", transit.middle.toString());
 
                         pathOptionsTable.set("option", optionIndex);
                         segmentIndex++;
@@ -544,6 +572,8 @@ public class R5RCore {
                 if (option.egress != null) {
                     for (StreetSegment segment : option.egress) {
                         pathOptionsTable.append();
+
+                        LOG.info("  egress {}", segment.toString());
 
                         pathOptionsTable.set("option", optionIndex);
                         segmentIndex++;
