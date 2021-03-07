@@ -136,6 +136,7 @@ at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
 * Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., & Conway, M. W. (2021). **r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R**. *Findings*, 21262. [https://doi.org/10.32866/001c.21262](https://doi.org/10.32866/001c.21262)
 
+BibTeX:
 ```
 @article{pereira_r5r_2021,
 	title = {r5r: Rapid Realistic Routing on Multimodal Transport Networks with {R}$^{\textrm{5}}$ in R},
@@ -151,5 +152,6 @@ at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 	year = {2021},
 	note = {Publisher: Network Design Lab}
 }
+
 ```
 
