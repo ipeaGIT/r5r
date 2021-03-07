@@ -5,8 +5,8 @@
 #' @param ... \code{r5r_core} objects currently running. By default, if no cores
 #'            are supplied all running cores are stopped.
 #'
-#' @examples
-#' \dontrun{library(r5r)
+#' @examples \dontrun{
+#' library(r5r)
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
 #'

@@ -61,8 +61,7 @@
 #'
 #' @family routing
 #'
-#' @examples
-#' \donttest{
+#' @examples \donttest{
 #' library(r5r)
 #'
 #' # build transport network

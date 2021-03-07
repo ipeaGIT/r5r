@@ -1,13 +1,7 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.3-4 (dev)
-
-**Bug fixes**
-- Fixed a bug in `detailed_itineraries()` that caused a crash when the shape of 
-a route in the input GTFS is broken. Closes [#145](https://github.com/ipeaGIT/r5r/issues/145)
-
-# r5r v0.3-3
+# r5r v0.3-3 (dev)
 
 **Major changes**
 - New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
@@ -23,12 +17,12 @@ package much easier.
 - Improved documentation of `travel_time_matrix()`. Closes [#149](https://github.com/ipeaGIT/r5r/issues/149).
 - Checks origins/destinations inputs to make sure they have and `id` column. Closes [#154](https://github.com/ipeaGIT/r5r/issues/154).
 
-
-
 **Bug fixes**
 - Fixed [introductory vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html) to list only files that are included in the package installation. Closes [#111](https://github.com/ipeaGIT/r5r/issues/111).
 - Fixed conflict with `{geobr}` package when downloading metadata. Closed [#137](https://github.com/ipeaGIT/r5r/issues/137).
 - Fixed a bug when when parsing date and time from `departure_datetime` in `detailed_itineraries()` and `travel_time_matrix()`. Closes [#147](https://github.com/ipeaGIT/r5r/issues/147).
+**Bug fixes**
+- Fixed a bug in `detailed_itineraries()` that caused a crash when the shape of a route in the input GTFS is broken. Closes [#145](https://github.com/ipeaGIT/r5r/issues/145)
 
 -------------------------------------------------------
 
