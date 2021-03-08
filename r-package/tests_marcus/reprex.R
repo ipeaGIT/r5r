@@ -2,6 +2,9 @@
 options(java.parameters = "-Xmx16G")
 
 library(r5r)
+library(tidyverse)
+library(sf)
+library(mapview)
 
 path <- system.file("extdata/poa", package = "r5r")
 # path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
@@ -43,9 +46,10 @@ dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destinati
                             departure_datetime = as.POSIXct("20-05-2019 9:14:20",format = "%d-%m-%Y %H:%M:%S"),
                             max_walk_dist = 800,
                             max_trip_duration = 60,
-                            shortest_path = TRUE
+                            shortest_path = TRUE,
+                            verbose = FALSE
                             )
-
+mapview(dit, zcol="route")
 
 origin$lon <- origins[200, ]$lat
 origin$lat <- origins[200, ]$lon
