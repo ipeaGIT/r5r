@@ -149,6 +149,9 @@ public class R5RCore {
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
         logger.setLevel(Level.ERROR);
+
+        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
+        logger.setLevel(Level.ERROR);
     }
 
     public void verboseMode() {
@@ -165,6 +168,9 @@ public class R5RCore {
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
         logger.setLevel(Level.ALL);
+
+        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
+        logger.setLevel(Level.ALL);
     }
 
     public void setLogMode(String mode) {
@@ -180,6 +186,9 @@ public class R5RCore {
         logger.setLevel(Level.valueOf(mode));
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
         logger.setLevel(Level.valueOf(mode));
     }
 
@@ -404,13 +413,31 @@ public class R5RCore {
         try {
             response = query.getPlan(request);
         } catch (IllegalStateException e) {
+            LOG.error(String.format("Error (*illegal state*) while finding path between %s and %s", fromId, toId));
+            LOG.error(e.getMessage());
+            return null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            LOG.error(String.format("Error (*array out of bounds*) while finding path between %s and %s", fromId, toId));
+            LOG.error(e.getMessage());
+            return null;
+        } catch (Exception e) {
             LOG.error(String.format("Error while finding path between %s and %s", fromId, toId));
+            LOG.error(e.getMessage());
             return null;
         }
 
         if (!response.getOptions().isEmpty()) {
-            return buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
-                    maxWalkTime, maxTripDuration, dropItineraryGeometry, response.getOptions());
+            LinkedHashMap<String, ArrayList<Object>> pathOptionsTable;
+
+            try {
+                pathOptionsTable = buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
+                        maxWalkTime, maxTripDuration, dropItineraryGeometry, response.getOptions());
+            } catch (Exception e) {
+                LOG.error(String.format("Error while collecting paths between %s and %s", fromId, toId));
+                return null;
+            }
+
+            return pathOptionsTable;
         } else {
             return null;
         }

@@ -18,7 +18,7 @@
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
-#' @examples \dontrun{
+#' @examples \dontrun{ if (interactive()) {
 #'
 #' library(r5r)
 #'
@@ -27,7 +27,7 @@
 #'
 #' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 #'
-#' }
+#' } }
 #' @export
 
 setup_r5 <- function(data_path,

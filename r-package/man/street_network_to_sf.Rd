@@ -17,7 +17,7 @@ A list with two components of a street network in sf format: vertices
 Extract OpenStreetMap network in sf format from a network.dat built with setup_r5
 }
 \examples{
-\donttest{
+\dontrun{ if (interactive()) {
 
 library(r5r)
 
@@ -29,7 +29,7 @@ r5r_core <- setup_r5(data_path = path)
 street_net <- street_network_to_sf(r5r_core)
 
 stop_r5(r5r_core)
-}
+} }
 }
 \seealso{
 Other support functions: 

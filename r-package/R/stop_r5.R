@@ -5,15 +5,15 @@
 #' @param ... \code{r5r_core} objects currently running. By default, if no cores
 #'            are supplied all running cores are stopped.
 #'
-#' @examples \dontrun{
-#' library(r5r)
+#' @examples \dontrun{ if (interactive()) {
+#'   library(r5r)
 #'
-#' path <- system.file("extdata/poa", package = "r5r")
+#'   path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(data_path = path)
+#'   r5r_core <- setup_r5(data_path = path)
 #'
-#' stop_r5(r5r_core)
-#' }
+#'   stop_r5(r5r_core)
+#' } }
 #'
 #' @export
 
