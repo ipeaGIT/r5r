@@ -43,10 +43,11 @@ setup_r5 <- function(data_path,
     rJava::.jinit()
     ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
     ver <- as.numeric(gsub("\\..*","",ver))
-    if (ver < 11){stop("This package requires the Java SE Development Kit 11.0.8
-                        or higher. Please update your Java installation. The jdk
-                        11.0.8 can be freely downloaded from
-                        https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")}
+    if (ver != 11){stop("This package requires the Java SE Development Kit 11.
+                        Please update your Java installation. The jdk 11 can be
+                        downloaded from either:
+                         - openjdk: https://jdk.java.net/java-se-ri/11
+                         - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")}
 
 
   # check directory input

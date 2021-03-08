@@ -176,36 +176,27 @@ df <- detailed_itineraries(r5r_core,
 
 
 ##### TESTS travel_time_matrix ------------------------
-options(java.parameters = "-Xmx16G")
+library(r5r)
+
+# set up
+data_path <- system.file("extdata/spo", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
 
 # input
-origins <- destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))[c(1,100,300,500),]
+points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-# input
-origins = points
-destinations = points
-mode = c('WALK', 'TRANSIT')
-max_trip_duration = 600L
-departure_datetime = as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' # estimate travel time matrix
+ttm <- travel_time_matrix(r5r_core,
+                   origins = points,
+                   destinations = points,
+                   mode = c("WALK", "TRANSIT"),
+                   departure_datetime = departure_datetime,
+                   max_walk_dist = Inf,
+                   max_trip_duration = 120L)
 
 
- system.time(
- df <- travel_time_matrix( r5r_core = r5r_core,
-                           origins = origins,
-                           destinations = destinations,
-                           mode = mode,
-                          # transit_modes = transit_modes,
-                           max_trip_duration = max_trip_duration,
-                          verbose = F
-                           )
-)
 
- head(tt)
- nrow(tt)
-
- 1474469/ 143.64
- 245480 /32.74
- 523074 / 46.96
 
 
 
@@ -405,6 +396,10 @@ Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 devtools::check_win_release(pkg = ".")
+
+# devtools::check_win_oldrelease()
+# devtools::check_win_devel()
+
 
 beepr::beep()
 
