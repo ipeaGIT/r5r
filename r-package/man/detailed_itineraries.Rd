@@ -104,7 +104,7 @@ routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-\donttest{
+\dontrun{ if (interactive()) {
 library(r5r)
 
 # build transport network
@@ -126,7 +126,7 @@ dit <- detailed_itineraries(r5r_core,
                             max_trip_duration = 120L)
 
 stop_r5(r5r_core)
-}
+} }
 }
 \seealso{
 Other routing: 

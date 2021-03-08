@@ -14,14 +14,14 @@ are supplied all running cores are stopped.}
 Stops running r5r cores.
 }
 \examples{
-\dontrun{
-library(r5r)
+\dontrun{ if (interactive()) {
+  library(r5r)
 
-path <- system.file("extdata/poa", package = "r5r")
+  path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path = path)
+  r5r_core <- setup_r5(data_path = path)
 
-stop_r5(r5r_core)
-}
+  stop_r5(r5r_core)
+} }
 
 }
