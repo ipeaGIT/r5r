@@ -102,7 +102,7 @@
 
 <div id="r5r-rapid-realistic-routing-with-r5-in-r-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#r5r-rapid-realistic-routing-with-r5-in-r-" class="anchor"></a>r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/r5r_blue.png" alt="logo" width="160">
+<a href="#r5r-rapid-realistic-routing-with-r5-in-r-" class="anchor"></a>r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="180">
 </h1></div>
 <!-- badges: start -->
 
@@ -112,7 +112,11 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>To use <code>r5r</code>, you need to have <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Java SE Development Kit 11.0.8</a> installed on your computer. No worries, you don’t have to pay for it.</p>
+<p>To use <code>r5r</code>, you need to have <em>Java SE Development Kit 11</em> installed on your computer. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below:</p>
+<ul>
+<li><a href="http://jdk.java.net/java-se-ri/11">OpenJDK</a></li>
+<li><a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Oracle</a></li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># From CRAN</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"r5r"</span><span class="op">)</span>
@@ -158,11 +162,11 @@
 
 <span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span><span class="op">)</span>
-<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
+<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
 <span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># 2) load origin/destination points and set arguments</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"BUS"</span><span class="op">)</span>
 <span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
@@ -170,22 +174,22 @@
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
 <span class="co"># 3.1) calculate a travel time matrix</span>
-<span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,
+<span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
                           origins <span class="op">=</span> <span class="va">points</span>,
                           destinations <span class="op">=</span> <span class="va">points</span>,
-                          <span class="va">mode</span>,
-                          <span class="va">departure_datetime</span>,
-                          <span class="va">max_walk_dist</span>,
-                          <span class="va">max_trip_duration</span><span class="op">)</span>
+                          mode <span class="op">=</span> <span class="va">mode</span>,
+                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
+                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
 <span class="co"># 3.2) or get detailed info on multiple alternative routes</span>
-<span class="va">dit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span><span class="va">r5r_core</span>,
+<span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
                             origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">370</span>, <span class="op">]</span>,
                             destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">200</span>, <span class="op">]</span>,
-                            <span class="va">mode</span>,
-                            <span class="va">departure_datetime</span>,
-                            <span class="va">max_walk_dist</span>,
-                            <span class="va">max_trip_duration</span>,
+                            mode <span class="op">=</span> <span class="va">mode</span>,
+                            departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
+                            max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                            max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                             shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div id="related-r-packages" class="section level4">
 <h4 class="hasAnchor">
@@ -196,7 +200,7 @@
 <li>
 <a href="https://github.com/ATFutures/dodgr">dodgr</a>: Distances on Directed Graphs in R</li>
 <li>
-<a href="https://github.com/ATFutures/gtfs-router">gtfs-router</a>: R package for routing with GTFS data</li>
+<a href="https://github.com/ATFutures/gtfs-router">gtfsrouter</a>: R package for routing with GTFS data</li>
 <li>
 <a href="https://github.com/munterfinger/hereR">hereR</a>: an R interface to the HERE REST APIs</li>
 <li>
@@ -217,13 +221,29 @@
 </div>
 <div id="citation-" class="section level1">
 <h1 class="hasAnchor">
-<a href="#citation-" class="anchor"></a>Citation <img align="right" src="https://raw.githubusercontent.com/ipeaGIT/r5r/master/r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
+<a href="#citation-" class="anchor"></a>Citation <img align="right" src="r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
 </h1>
 <p>The R package <strong>r5r</strong> is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:</p>
 <ul>
-<li>Saraiva et al., (2020) <strong>r5r: Rapid realistic routing on multimodal transport networks with R5</strong>. GitHub repository - <a href="https://github.com/ipeaGIT/r5r" class="uri">https://github.com/ipeaGIT/r5r</a>
+<li>Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &amp; Conway, M. W. (2021). <strong>r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R</strong>. <em>Findings</em>, 21262. <a href="https://doi.org/10.32866/001c.21262">https://doi.org/10.32866/001c.21262</a>
 </li>
 </ul>
+<p>BibTeX:</p>
+<pre><code>@article{pereira_r5r_2021,
+    title = {r5r: Rapid Realistic Routing on Multimodal Transport Networks with {R}$^{\textrm{5}}$ in R},
+    shorttitle = {r5r},
+    url = {https://findingspress.org/article/21262-r5r-rapid-realistic-routing-on-multimodal-transport-networks-with-r-5-in-r},
+    doi = {10.32866/001c.21262},
+    abstract = {Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges when performing this task due to long computation times and the cost of licensed software. R{\textasciicircum}5{\textasciicircum} is a multimodal transport network router that offers multiple routing features, such as calculating travel times over a time window and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages R{\textasciicircum}5{\textasciicircum} to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.},
+    language = {en},
+    urldate = {2021-03-04},
+    journal = {Findings},
+    author = {Pereira, Rafael H. M. and Saraiva, Marcus and Herszenhut, Daniel and Braga, Carlos Kaue Vieira and Conway, Matthew Wigginton},
+    month = mar,
+    year = {2021},
+    note = {Publisher: Network Design Lab}
+}
+</code></pre>
 </div>
 
   </div>
