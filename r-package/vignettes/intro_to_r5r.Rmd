@@ -36,9 +36,14 @@ invisible(file.remove(file.path(data_path, files_to_remove)))
 
 # Installation
 
-To use `r5r`, you need to have [Java SE Development Kit 11.0.8](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) installed on your computer. No worries, it's free.
+To use `r5r`, you need to have *Java SE Development Kit 11* installed on your computer. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
 
-You can install `r5r` from CRAN, of the development version from github.
+- [OpenJDK](http://jdk.java.net/java-se-ri/11)
+
+- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+
+You can install `r5r` from CRAN, or the development version from github.
+
 ```{r, eval = FALSE}
 # CRAN
 install.packages('r5r')
