@@ -6,6 +6,9 @@
 [![R build status](https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/r5r/actions)
 ![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg) [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Publication](https://img.shields.io/badge/DOI-10.32866/001c.21262-9cf)](https://doi.org/10.32866/001c.21262)
+
+
 <!-- badges: end -->
 
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
