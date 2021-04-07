@@ -98,7 +98,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 class="date">2021-03-10</h4>
+            <h4 class="date">2021-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/intro_to_r5r.Rmd"><code>../vignettes/intro_to_r5r.Rmd</code></a></small>
       <div class="hidden name"><code>intro_to_r5r.Rmd</code></div>
@@ -119,8 +119,12 @@
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
-<p>To use <code>r5r</code>, you need to have <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Java SE Development Kit 11.0.8</a> installed on your computer. No worries, it’s free.</p>
-<p>You can install <code>r5r</code> from CRAN, of the development version from github.</p>
+<p>To use <code>r5r</code>, you need to have <em>Java SE Development Kit 11</em> installed on your computer. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below:</p>
+<ul>
+<li><p><a href="http://jdk.java.net/java-se-ri/11">OpenJDK</a></p></li>
+<li><p><a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Oracle</a></p></li>
+</ul>
+<p>You can install <code>r5r</code> from CRAN, or the development version from github.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># CRAN</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span>
@@ -186,12 +190,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools</span>
-<span class="co">#&gt; 1: 89a90129a1bffff -51.14764 -30.01728        574       1</span>
-<span class="co">#&gt; 2: 89a9012816bffff -51.20985 -30.05084       1852       0</span>
-<span class="co">#&gt; 3: 89a90129547ffff -51.14679 -30.07146        230       0</span>
-<span class="co">#&gt; 4: 89a9012aeafffff -51.24768 -30.08365          0       0</span>
-<span class="co">#&gt; 5: 89a901298c3ffff -51.16639 -30.02957        177       0</span>
-<span class="co">#&gt; 6: 89a9012814bffff -51.20401 -30.05688       1763       0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a9012a14bffff -51.22719 -30.10342        972       0</span>
+<span class="co">#&gt; 2: 89a90129ac7ffff -51.14775 -30.02005        808       0</span>
+<span class="co">#&gt; 3: 89a90129a3bffff -51.15348 -30.01123        186       1</span>
+<span class="co">#&gt; 4: 89a901291b7ffff -51.16442 -30.05609        243       0</span>
+<span class="co">#&gt; 5: 89a9012ae23ffff -51.24449 -30.07977        532       0</span>
+<span class="co">#&gt; 6: 89a9012a107ffff -51.24241 -30.10351        885       0</span></code></pre></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">
