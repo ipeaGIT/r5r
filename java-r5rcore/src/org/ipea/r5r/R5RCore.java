@@ -741,13 +741,34 @@ public class R5RCore {
         int[] originIndices = new int[fromIds.length];
         for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
 
+        ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+        DataOutputStream pointStream = new DataOutputStream(dataStream);
 
-        FreeFormPointSet destinationPoints = new FreeFormPointSet(toIds.length);
-        for (int i = 0; i < toIds.length; i++) {
-            destinationPoints.setId(i, toIds[i]);
-            destinationPoints.setLat(i, toLats[i]);
-            destinationPoints.setLon(i, toLons[i]);
-            destinationPoints.setCount(i, 1);
+        try {
+            pointStream.writeInt(toIds.length);
+            for (String toId : toIds) {
+                pointStream.writeUTF(toId);
+            }
+            for (double toLat : toLats) {
+                pointStream.writeDouble(toLat);
+            }
+            for (double toLon : toLons) {
+                pointStream.writeDouble(toLon);
+            }
+            for (int i = 0; i < toIds.length; i++) {
+                pointStream.writeDouble(1.0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayInputStream pointsInput = new ByteArrayInputStream(dataStream.toByteArray());
+
+        FreeFormPointSet destinationPoints = null;
+        try {
+            destinationPoints = new FreeFormPointSet(pointsInput);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         String[] modes = accessModes.split(";");
