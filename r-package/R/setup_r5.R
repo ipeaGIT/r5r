@@ -10,7 +10,7 @@
 #' @param data_path character string, the directory where data inputs are stored
 #'                  and where the built network.dat will be saved.
 #' @param version character string, the version of R5 to be used. Defaults to
-#'                latest version '4.9.0'.
+#'                latest version '6.2.0'.
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR and WARNING messages.
 #' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
@@ -31,7 +31,7 @@
 #' @export
 
 setup_r5 <- function(data_path,
-                     version = "6.0.1",
+                     version = "6.2.0",
                      verbose = TRUE,
                      temp_dir = FALSE) {
 
@@ -43,7 +43,7 @@ setup_r5 <- function(data_path,
     rJava::.jinit()
     ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
     ver <- as.numeric(gsub("\\..*","",ver))
-    if (ver < 11){
+    if (ver != 11){
       stop(
         "This package requires the Java SE Development Kit 11.\n",
         "Please update your Java installation. The jdk 11 can be downloaded from either:\n",

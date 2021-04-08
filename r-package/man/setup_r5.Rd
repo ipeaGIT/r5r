@@ -4,14 +4,14 @@
 \alias{setup_r5}
 \title{Create transport network used for routing in R5}
 \usage{
-setup_r5(data_path, version = "6.0.1", verbose = TRUE, temp_dir = FALSE)
+setup_r5(data_path, version = "6.2.0", verbose = TRUE, temp_dir = FALSE)
 }
 \arguments{
 \item{data_path}{character string, the directory where data inputs are stored
 and where the built network.dat will be saved.}
 
 \item{version}{character string, the version of R5 to be used. Defaults to
-latest version '4.9.0'.}
+latest version '6.2.0'.}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR and WARNING messages.}

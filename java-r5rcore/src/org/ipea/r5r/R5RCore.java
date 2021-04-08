@@ -361,8 +361,8 @@ public class R5RCore {
         request.walkSpeed = (float) this.walkSpeed;
         request.bikeSpeed = (float) this.bikeSpeed;
         request.maxTripDurationMinutes = maxTripDuration;
-        request.computePaths = true;
-        request.computeTravelTimeBreakdown = true;
+//        request.computePaths = true;
+//        request.computeTravelTimeBreakdown = true;
         request.maxRides = this.maxRides;
         request.suboptimalMinutes = this.suboptimalMinutes;
 
@@ -822,8 +822,8 @@ public class R5RCore {
         request.maxCarTime = maxTripDuration;
         request.maxTripDurationMinutes = maxTripDuration;
         request.makeTauiSite = false;
-        request.computePaths = false;
-        request.computeTravelTimeBreakdown = false;
+//        request.computePaths = false;
+//        request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
         request.maxRides = this.maxRides;
 

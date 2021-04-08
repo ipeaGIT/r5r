@@ -3,6 +3,7 @@ options(java.parameters = "-Xmx12G")
 devtools::load_all(".")
 library("tidyverse")
 library("tictoc")
+library("r5r")
 
 # Start R5R core
 # r5r_core <- setup_r5(system.file("extdata", package = "r5r"), verbose = FALSE)
@@ -70,7 +71,7 @@ ttm <- travel_time_matrix(r5r_core,
                           verbose = FALSE)
 toc()
 
-ttm %>% filter(travel_time < 120) %>% View()
+ttm %>% filter(travel_time_p050 < 120) %>% View()
 
 tic()
 ttm <- travel_time_matrix(r5r_core, points_hex, points_hex, mode = c("WALK", "BUS"), trip_date_time, max_walk_dist = 2000,
@@ -83,7 +84,7 @@ ttm %>%
   filter(fromId %in% hex_sample) %>%
   left_join(points_hex, by=c("toId"="id")) %>%
   ggplot() +
-  geom_point(aes(x=lon, y=lat, colour=travel_time), size=0.5) +
+  geom_point(aes(x=lon, y=lat, colour=travel_time_p050), size=3) +
   scale_color_distiller(palette = "Spectral") +
   facet_wrap(~fromId, ncol=2) +
   theme_minimal() +
