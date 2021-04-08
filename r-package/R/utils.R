@@ -252,9 +252,11 @@ set_speed <- function(r5r_core, speed, mode) {
 
 #' Set max Level of Transit Stress (LTS)
 #'
-#' @param r5r_core
-#' @param max_lts
-#'
+#' @param r5r_core rJava object to connect with R5 routing engine
+#' @param max_lts numeric (between 1 and 4). The maximum level of traffic stress
+#' that cyclists will tolerate. A value of 1 means cyclists will only travel
+#' through the quietest streets, while a value of 4 indicates cyclists can travel
+#' through any road.
 #'
 #' @family support functions
 set_max_lts <- function(r5r_core, max_lts) {

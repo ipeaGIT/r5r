@@ -24,6 +24,10 @@
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
 #' @param max_rides numeric. The max number of public transport rides allowed in
 #'                  the same trip. Defaults to 3.
+#' @param max_lts  numeric (between 1 and 4). The maximum level of traffic stress
+#'                 that cyclists will tolerate. A value of 1 means cyclists will
+#'                 only travel through the quietest streets, while a value of 4
+#'                 indicates cyclists can travel through any road.
 #' @param shortest_path logical. Whether the function should only return the
 #'                      fastest route alternative (the default) or multiple
 #'                      alternatives.

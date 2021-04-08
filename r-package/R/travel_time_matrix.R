@@ -40,6 +40,10 @@
 #' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
 #' @param max_rides numeric. The max number of public transport rides allowed in
 #'                  the same trip. Defaults to 3.
+#' @param max_lts  numeric (between 1 and 4). The maximum level of traffic stress
+#'                 that cyclists will tolerate. A value of 1 means cyclists will
+#'                 only travel through the quietest streets, while a value of 4
+#'                 indicates cyclists can travel through any road.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. TRUE to show detailed output messages (the default)

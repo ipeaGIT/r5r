@@ -18,6 +18,7 @@ Select transport mode
 Other support functions: 
 \code{\link{assert_points_input}()},
 \code{\link{posix_to_string}()},
+\code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},
 \code{\link{set_max_street_time}()},
 \code{\link{set_n_threads}()},
