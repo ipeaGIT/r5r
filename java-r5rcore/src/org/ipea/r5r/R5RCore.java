@@ -74,6 +74,16 @@ public class R5RCore {
     private double bikeSpeed;
     private int maxRides = 8; // max 8 number of rides in public transport trips
 
+    public int getMaxLevelTrafficStress() {
+        return maxLevelTrafficStress;
+    }
+
+    public void setMaxLevelTrafficStress(int maxLevelTrafficStress) {
+        this.maxLevelTrafficStress = maxLevelTrafficStress;
+    }
+
+    private int maxLevelTrafficStress = 4;
+
     public int getSuboptimalMinutes() {
         return suboptimalMinutes;
     }
@@ -365,6 +375,7 @@ public class R5RCore {
 //        request.computeTravelTimeBreakdown = true;
         request.maxRides = this.maxRides;
         request.suboptimalMinutes = this.suboptimalMinutes;
+        request.bikeTrafficStress = this.maxLevelTrafficStress;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -826,6 +837,7 @@ public class R5RCore {
 //        request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
         request.maxRides = this.maxRides;
+        request.bikeTrafficStress = this.maxLevelTrafficStress;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
