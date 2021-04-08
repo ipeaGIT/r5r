@@ -4,10 +4,8 @@ options(java.parameters = "-Xmx16G")
 library(r5r)
 library(sf)
 library(data.table)
-library(ggplot2)
-library(akima)
 library(dplyr)
-library(patchwork)
+library(mapview)
 
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not using the examples
@@ -34,12 +32,10 @@ percentiles <- 50
 
 route_lts <- function(bike_lts) {
 
-  r5r_core$setMaxLevelTrafficStress(as.integer(bike_lts))
-
-
   # calculate travel time matrix
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
+                              max_lts = bike_lts,
                               drop_geometry = FALSE) %>%
     mutate(lts = bike_lts)
 }

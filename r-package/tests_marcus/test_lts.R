@@ -1,6 +1,6 @@
-##### Reprex 1 - Parallel Computing #####
-options(java.parameters = "-Xmx16G")
+options(java.parameters = "-Xmx2G")
 
+# devtools::load_all(".")
 library(r5r)
 library(sf)
 library(data.table)
@@ -30,16 +30,9 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 time_window <- 1 # in minutes
 percentiles <- 50
 
-# find isochrone's bounding box to crop the map below
-# bb_x <- c(min(travel_times.interp$x), max(travel_times.interp$x))
-# bb_y <- c(min(travel_times.interp$y), max(travel_times.interp$y))
-
 plot_lts <- function(bike_lts) {
 
-  r5r_core$setMaxLevelTrafficStress(as.integer(bike_lts))
-
-
-  # calculate travel time matrix
+ # calculate travel time matrix
   computation_time <- system.time(ttm <- travel_time_matrix(r5r_core,
                                                             origins = central_bus_stn,
                                                             destinations = points,
@@ -49,6 +42,7 @@ plot_lts <- function(bike_lts) {
                                                             max_trip_duration = max_trip_duration,
                                                             time_window = time_window,
                                                             percentiles = percentiles,
+                                                            max_lts = bike_lts,
                                                             verbose = FALSE))
   print(paste('travel time matrix computed in', computation_time[['elapsed']], 'seconds'))
   head(ttm)
@@ -78,7 +72,6 @@ plot_lts <- function(bike_lts) {
     scale_color_manual(values=c('Central bus\nstation'='black')) +
     scale_x_continuous(expand=c(0,0)) +
     scale_y_continuous(expand=c(0,0)) +
-    coord_sf(xlim = bb_x, ylim = bb_y) +
     labs(title = paste0("Isochrone, LTS ", bike_lts),
          fill = "travel time (minutes)", color='') +
     theme_minimal() +
@@ -92,10 +85,12 @@ p_lts2 <- plot_lts(2)
 p_lts3 <- plot_lts(3)
 p_lts4 <- plot_lts(4)
 
-p_lts1 + p_lts2 + p_lts3 + p_lts4
+p_combined <- p_lts1 + p_lts2 + p_lts3 + p_lts4
 
 # save plot
-ggsave(file=sprintf('lts.jpeg', bike_lts),width = 24, height = 14, scale = 1.6,
+ggsave(file='lts.jpeg',
+       plot = p_combined,
+       width = 24, height = 14, scale = 1.6,
        units = 'cm', dpi = 300 )
 
 
