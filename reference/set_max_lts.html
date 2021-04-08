@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Set suboptimal minutes — set_suboptimal_minutes • r5r</title>
+<title>Set max Level of Transit Stress (LTS) — set_max_lts • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Set suboptimal minutes — set_suboptimal_minutes" />
-<meta property="og:description" content="Set suboptimalMinutes parameter in R5." />
+<meta property="og:title" content="Set max Level of Transit Stress (LTS) — set_max_lts" />
+<meta property="og:description" content="Set max Level of Transit Stress (LTS)" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -137,16 +137,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Set suboptimal minutes</h1>
+    <h1>Set max Level of Transit Stress (LTS)</h1>
     <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/utils.R'><code>R/utils.R</code></a></small>
-    <div class="hidden name"><code>set_suboptimal_minutes.Rd</code></div>
+    <div class="hidden name"><code>set_max_lts.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Set suboptimalMinutes parameter in R5.</p>
+    <p>Set max Level of Transit Stress (LTS)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>set_suboptimal_minutes</span><span class='op'>(</span><span class='va'>r5r_core</span>, <span class='va'>suboptimal_minutes</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>set_max_lts</span><span class='op'>(</span><span class='va'>r5r_core</span>, <span class='va'>max_lts</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,18 +156,11 @@
       <td><p>rJava object to connect with R5 routing engine</p></td>
     </tr>
     <tr>
-      <th>suboptimal_minutes</th>
-      <td><p>numeric. The number of suboptimal minutes in a public transport
-point-to-point query. From R5's documentation:
-This parameter compensates for the fact that GTFS does not
-contain information about schedule deviation (lateness).
-The min-max travel time range for some trains is zero, since
-the trips are reported to always have the same timings in the
-schedule. Such an option does not overlap (temporally) its
-alternatives, and is too easily eliminated by an alternative
-that is only marginally better. We want to effectively push
-the max travel time of alternatives out a bit to account for
-the fact that they don't always run on schedule.</p></td>
+      <th>max_lts</th>
+      <td><p>numeric (between 1 and 4). The maximum level of traffic stress
+that cyclists will tolerate. A value of 1 means cyclists will only travel
+through the quietest streets, while a value of 4 indicates cyclists can travel
+through any road.</p></td>
     </tr>
     </table>
 
@@ -177,11 +170,11 @@ the fact that they don't always run on schedule.</p></td>
 <code><a href='assert_points_input.html'>assert_points_input</a>()</code>,
 <code><a href='posix_to_string.html'>posix_to_string</a>()</code>,
 <code><a href='select_mode.html'>select_mode</a>()</code>,
-<code><a href='set_max_lts.html'>set_max_lts</a>()</code>,
 <code><a href='set_max_rides.html'>set_max_rides</a>()</code>,
 <code><a href='set_max_street_time.html'>set_max_street_time</a>()</code>,
 <code><a href='set_n_threads.html'>set_n_threads</a>()</code>,
 <code><a href='set_speed.html'>set_speed</a>()</code>,
+<code><a href='set_suboptimal_minutes.html'>set_suboptimal_minutes</a>()</code>,
 <code><a href='set_verbose.html'>set_verbose</a>()</code>,
 <code><a href='street_network_to_sf.html'>street_network_to_sf</a>()</code></p></div>
 

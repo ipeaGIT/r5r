@@ -162,6 +162,7 @@ multiple origin destination pairs.</p>
   walk_speed <span class='op'>=</span> <span class='fl'>3.6</span>,
   bike_speed <span class='op'>=</span> <span class='fl'>12</span>,
   max_rides <span class='op'>=</span> <span class='fl'>3</span>,
+  max_lts <span class='op'>=</span> <span class='fl'>4</span>,
   n_threads <span class='op'>=</span> <span class='cn'>Inf</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
@@ -241,6 +242,13 @@ to 120 minutes (2 hours).</p></td>
       <th>max_rides</th>
       <td><p>numeric. The max number of public transport rides allowed in
 the same trip. Defaults to 3.</p></td>
+    </tr>
+    <tr>
+      <th>max_lts</th>
+      <td><p>numeric (between 1 and 4). The maximum level of traffic stress
+that cyclists will tolerate. A value of 1 means cyclists will
+only travel through the quietest streets, while a value of 4
+indicates cyclists can travel through any road.</p></td>
     </tr>
     <tr>
       <th>n_threads</th>
