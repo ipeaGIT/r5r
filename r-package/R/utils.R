@@ -250,7 +250,23 @@ set_speed <- function(r5r_core, speed, mode) {
 
 }
 
+#' Set max Level of Transit Stress (LTS)
+#'
+#' @param r5r_core
+#' @param max_lts
+#'
+#'
+#' @family support functions
+set_max_lts <- function(r5r_core, max_lts) {
+  checkmate::assert_numeric(max_lts)
 
+  if (max_lts < 1 | max_lts > 4) {
+    stop(paste0(max_lts, " is not a valid value for the maximum Level of Transit Stress (LTS).\n",
+                "Please enter a value between 1 and 4."))
+  }
+
+  r5r_core$setMaxLevelTrafficStress(as.integer(max_lts))
+}
 
 #' Set max number of transfers
 #'

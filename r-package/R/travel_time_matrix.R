@@ -114,6 +114,7 @@ travel_time_matrix <- function(r5r_core,
                                walk_speed = 3.6,
                                bike_speed = 12,
                                max_rides = 3,
+                               max_lts = 4,
                                n_threads = Inf,
                                verbose = TRUE) {
 
@@ -182,6 +183,9 @@ travel_time_matrix <- function(r5r_core,
 
   # set max transfers
   set_max_rides(r5r_core, max_rides)
+
+  # set max lts (level of traffic stress)
+  set_max_lts(r5r_core, max_lts)
 
   # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)

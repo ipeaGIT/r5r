@@ -8,7 +8,7 @@ library(mapview)
 
 path <- system.file("extdata/poa", package = "r5r")
 # path <- "/Users/marcussaraiva/Repos/r5r_benchmarks/data/poa"
-r5r_core <- setup_r5(data_path = path, verbose = FALSE)
+r5r_core <- setup_r5(data_path = path, verbose = FALSE, version = "6.2.0")
 
 r5r_core$silentMode()
 
@@ -30,7 +30,7 @@ system.time(
                             destinations = destinations,
                             departure_datetime = lubridate::ymd_hm("2019-05-20 14:00"),
                             time_window = 15,
-                            percentiles = c(25, 50, 75, 99),
+                            percentiles = 50,
                             mode = mode,
                             max_walk_dist = 300,
                             max_trip_duration = 60,

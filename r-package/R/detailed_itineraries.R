@@ -97,6 +97,7 @@ detailed_itineraries <- function(r5r_core,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
                                  max_rides = 3,
+                                 max_lts = 4,
                                  shortest_path = TRUE,
                                  n_threads = Inf,
                                  verbose = TRUE,
@@ -185,6 +186,9 @@ detailed_itineraries <- function(r5r_core,
 
   # set max transfers
   set_max_rides(r5r_core, max_rides)
+
+  # max_lts
+  set_max_lts(r5r_core, max_lts)
 
   # set suboptimal minutes
   # if only the shortest path is requested, set suboptimal minutes to 0 minutes,
