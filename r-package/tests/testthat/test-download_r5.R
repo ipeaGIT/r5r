@@ -1,5 +1,8 @@
 context("download_r5")
 
+# skips tests on CRAN
+testthat::skip_on_cran()
+
 # expected behavior
 test_that("download_r5 - expected behavior", {
 

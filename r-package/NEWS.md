@@ -1,11 +1,17 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.3-4 (dev)
+# r5r v0.4.0
 
 **Major changes**
 - Updated R5 to version 6.2. Closes [#158](https://github.com/ipeaGIT/r5r/issues/158).
-- Added `max_lts` parameter to `detailed_itineraries()` and `travel_time_matrix()` functions. LTS stands for Level of Traffic Stress, and allows modeling of bicycle comfort in routing analysis. Additional information can be found in [Conveyal's documentation](https://docs.conveyal.com/learn-more/traffic-stress) as well as blog posts [1](https://blog.conveyal.com/bike-lts-with-single-point-analysis-in-conveyal-55eecff8c0c7) and [2](https://blog.conveyal.com/modeling-bicycle-comfort-with-conveyal-analysis-part-2-6c0a3d004c6a).
+- Added `max_lts` parameter to `detailed_itineraries()` and `travel_time_matrix()` functions. LTS stands for Level of Traffic Stress, and allows modeling of bicycle comfort in routing analysis. Additional information can be found in [Conveyal's documentation](https://docs.conveyal.com/learn-more/traffic-stress) as well as blog posts [1](https://blog.conveyal.com/bike-lts-with-single-point-analysis-in-conveyal-55eecff8c0c7) and [2](https://blog.conveyal.com/modeling-bicycle-comfort-with-conveyal-analysis-part-2-6c0a3d004c6a). Closes [#160](https://github.com/ipeaGIT/r5r/issues/160)
+
+**Minor changes**
+- new support function `check_connection()` to check internect connection before
+download files from Ipea server.
+
+
 
 -------------------------------------------------------
 # r5r v0.3-3
