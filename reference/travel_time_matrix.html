@@ -81,7 +81,7 @@ multiple origin destination pairs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4</span>
       </span>
     </div>
 
@@ -248,7 +248,8 @@ the same trip. Defaults to 3.</p></td>
       <td><p>numeric (between 1 and 4). The maximum level of traffic stress
 that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4
-indicates cyclists can travel through any road.</p></td>
+indicates cyclists can travel through any road. Deafaults to 2.
+See details for more information.</p></td>
     </tr>
     <tr>
       <th>n_threads</th>
@@ -268,10 +269,9 @@ or FALSE to show only eventual ERROR messages.</p></td>
 destination pairs by a given transport mode. Note that origins/destinations
 that were beyond the maximum travel time, and/or origins that were far from
 the street network are not returned in the data.table.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="transpor-modes-"><a class="anchor" href="#transpor-modes-"></a>Transpor modes:</h2>
 
-    <p>R5 allows for multiple combinations of transport modes. The options
-include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Transit modes</h3>
+    <p>R5 allows for multiple combinations of transport modes. The options include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Transit modes</h3>
 
 
 <p>TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
@@ -281,6 +281,29 @@ include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#argume
 
 
 <p>WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK</p>
+
+    <h2 class="hasAnchor" id="max-lts-maximum-level-of-traffic-stress-"><a class="anchor" href="#max-lts-maximum-level-of-traffic-stress-"></a>max_lts, Maximum Level of Traffic Stress:</h2>
+
+    <p>When cycling is enabled in R5, setting <code>max_lts</code> will allow cycling only on
+streets with a given level of danger/stress. Setting <code>max_lts</code> to 1, for example,
+will allow cycling only on separated bicycle infrastructure or low-traffic
+streets; routing will revert to walking when traversing any links with LTS
+exceeding 1. Setting <code>max_lts</code> to 3 will allow cycling on links with LTS 1, 2,
+or 3.</p>
+<p>The default methodology for assigning LTS values to network edges is based on
+commonly tagged attributes of OSM ways. See more info about LTS at
+<a href='https://docs.conveyal.com/learn-more/traffic-stress'>https://docs.conveyal.com/learn-more/traffic-stress</a>. In summary:</p><ul>
+<li><p><strong>LTS 1</strong>: Tolerable for children. This includes low-speed, low-volume streets,
+as well as those with separated bicycle facilities (such as parking-protected
+lanes or cycle tracks).</p></li>
+<li><p><strong>LTS 2</strong>: Tolerable for the mainstream adult population. This includes streets
+where cyclists have dedicated lanes and only have to interact with traffic at
+formal crossing.</p></li>
+<li><p><strong>LTS 3</strong>: Tolerable for “enthused and confident” cyclists. This includes streets
+which may involve close proximity to moderate- or high-speed vehicular traffic.</p></li>
+<li><p><strong>LTS 4</strong>: Tolerable for only “strong and fearless” cyclists. This includes streets
+where cyclists are required to mix with moderate- to high-speed vehicular traffic.</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="routing-algorithm-"><a class="anchor" href="#routing-algorithm-"></a>Routing algorithm:</h2>
 

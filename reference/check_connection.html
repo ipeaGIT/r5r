@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Download metadata of R5 jar files — download_metadata • r5r</title>
+<title>Check internet connection with Ipea server — check_connection • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Download metadata of R5 jar files — download_metadata" />
-<meta property="og:description" content="Support function to download metadata internally used in r5r" />
+<meta property="og:title" content="Check internet connection with Ipea server — check_connection" />
+<meta property="og:description" content="Checks if there is internet connection to Ipea server to download geobr data." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -137,23 +137,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Download metadata of R5 jar files</h1>
+    <h1>Check internet connection with Ipea server</h1>
     <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/utils.R'><code>R/utils.R</code></a></small>
-    <div class="hidden name"><code>download_metadata.Rd</code></div>
+    <div class="hidden name"><code>check_connection.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Support function to download metadata internally used in r5r</p>
+    <p>Checks if there is internet connection to Ipea server to download geobr data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>download_metadata</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>check_connection</span><span class='op'>(</span>
+  file_url <span class='op'>=</span> <span class='st'>"https://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv"</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>file_url</th>
+      <td><p>A string with the file_url address of an geobr dataset</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Logic <code>TRUE or </code>FALSE`.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other support functions: 
 <code><a href='assert_points_input.html'>assert_points_input</a>()</code>,
-<code><a href='check_connection.html'>check_connection</a>()</code>,
+<code><a href='download_metadata.html'>download_metadata</a>()</code>,
 <code><a href='posix_to_string.html'>posix_to_string</a>()</code>,
 <code><a href='select_mode.html'>select_mode</a>()</code>,
 <code><a href='set_max_lts.html'>set_max_lts</a>()</code>,

@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 class="date">2021-04-08</h4>
+            <h4 class="date">2021-04-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/intro_to_r5r.Rmd"><code>../vignettes/intro_to_r5r.Rmd</code></a></small>
       <div class="hidden name"><code>intro_to_r5r.Rmd</code></div>
@@ -190,12 +190,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools</span>
-<span class="co">#&gt; 1: 89a90128373ffff -51.19143 -30.04686       2316       0</span>
-<span class="co">#&gt; 2: 89a90128e4bffff -51.20322 -30.03753       1831       0</span>
-<span class="co">#&gt; 3: 89a901299dbffff -51.18425 -30.01972       1009       0</span>
-<span class="co">#&gt; 4: 89a9012a207ffff -51.19996 -30.10714         30       0</span>
-<span class="co">#&gt; 5: 89a9012a1a3ffff -51.24858 -30.10575       1407       0</span>
-<span class="co">#&gt; 6: 89a9012a117ffff -51.24252 -30.10627        588       0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a9012831bffff -51.19166 -30.05239        967       0</span>
+<span class="co">#&gt; 2: 89a901286d3ffff -51.16885 -30.09038         79       0</span>
+<span class="co">#&gt; 3: 89a90128367ffff -51.19430 -30.04245       1167       0</span>
+<span class="co">#&gt; 4: 89a9012911bffff -51.14920 -30.05600       1175       1</span>
+<span class="co">#&gt; 5: 89a90129d2fffff -51.19958 -30.02258        779       0</span>
+<span class="co">#&gt; 6: 89a90128897ffff -51.24269 -30.03555          0       0</span></code></pre></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">
