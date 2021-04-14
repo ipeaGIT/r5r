@@ -325,7 +325,7 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 #' Download metadata of R5 jar files
 #' @description Support function to download metadata internally used in r5r
-#' @family general support functions
+#' @family support functions
 #'
 download_metadata <- function(){
 
@@ -342,9 +342,7 @@ download_metadata <- function(){
   # Download medata
     # test server connection
     metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
-    t <- try( open.connection(con = url(metadata_link), open="rt", timeout=2),silent=TRUE)
-    if("try-error" %in% class(t)){stop('Internet connection problem. If this is not a connection problem in your network, please try r5r again in a few minutes.')}
-    suppressWarnings(try(close.connection(con),silent=TRUE))
+    check_connection(metadata_link)
 
     # download it and save it to JAR folder
     utils::download.file(url=metadata_link, destfile=metadata_file,
@@ -356,4 +354,34 @@ download_metadata <- function(){
                               colClasses = 'character', header = T, sep = ';')
 
   return(metadata)
+}
+
+
+
+#' Check internet connection with Ipea server
+#'
+#' @description
+#' Checks if there is internet connection to Ipea server to download geobr data.
+#'
+#' @param file_url A string with the file_url address of an geobr dataset
+#'
+#' @return Logic `TRUE or `FALSE`.
+#'
+#' @export
+#' @family support functions
+#'
+check_connection <- function(file_url = 'https://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv'){
+
+  # check internet connection
+  if (!curl::has_internet()) {
+    message("No internet connection.")
+    return(invisible(NULL))
+  }
+
+  # test server connection
+  # crul::ok(file_url)
+  if (httr::http_error(httr::GET(file_url))) {
+    message("Problem connecting to data server. Please try geobr again in a few minutes.")
+    return(invisible(NULL))
+  }
 }

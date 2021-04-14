@@ -88,6 +88,7 @@ download_r5 <- function(version = "6.0.1",
       dir.create(file.path(libs, "r5r", "jar"))
     }
     message("R5 will be saved to ", destfile)
+    check_connection(url)
     utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
     return(destfile)
 

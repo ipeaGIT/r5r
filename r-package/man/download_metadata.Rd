@@ -9,4 +9,19 @@ download_metadata()
 \description{
 Support function to download metadata internally used in r5r
 }
-\concept{general support functions}
+\seealso{
+Other support functions: 
+\code{\link{assert_points_input}()},
+\code{\link{check_connection}()},
+\code{\link{posix_to_string}()},
+\code{\link{select_mode}()},
+\code{\link{set_max_lts}()},
+\code{\link{set_max_rides}()},
+\code{\link{set_max_street_time}()},
+\code{\link{set_n_threads}()},
+\code{\link{set_speed}()},
+\code{\link{set_suboptimal_minutes}()},
+\code{\link{set_verbose}()},
+\code{\link{street_network_to_sf}()}
+}
+\concept{support functions}
