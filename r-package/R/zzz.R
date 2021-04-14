@@ -20,6 +20,7 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
 
 #' @importFrom data.table := %between% fifelse %chin% set
 #' @importFrom methods is signature
+#' @importFrom curl has_internet
 NULL
 
 

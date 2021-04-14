@@ -18,7 +18,7 @@ travel_time_matrix(
   walk_speed = 3.6,
   bike_speed = 12,
   max_rides = 3,
-  max_lts = 4,
+  max_lts = 2,
   n_threads = Inf,
   verbose = TRUE
 )
@@ -76,7 +76,7 @@ the same trip. Defaults to 3.}
 \item{max_lts}{numeric (between 1 and 4). The maximum level of traffic stress
 that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4
-indicates cyclists can travel through any road. Deafaults to 2.
+indicates cyclists can travel through any road. Defaults to 2.
 See details for more information.}
 
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
