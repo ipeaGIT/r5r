@@ -8,7 +8,7 @@
 #'
 #' @family support functions
 #'
-#' @examples \dontrun{ if (interactive()) {
+#' @examples if (interactive()) {
 #'
 #' library(r5r)
 #'
@@ -16,11 +16,11 @@
 #' path <- system.file("extdata/poa", package = "r5r")
 #' r5r_core <- setup_r5(data_path = path)
 #'
-#' # load origin/destination points
+#' # extract street network from r5r_core
 #' street_net <- street_network_to_sf(r5r_core)
 #'
 #' stop_r5(r5r_core)
-#' } }
+#' }
 #' @export
 
 street_network_to_sf <- function(r5r_core) {

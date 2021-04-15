@@ -151,7 +151,7 @@ routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-\dontrun{ if (interactive()) {
+if (interactive()) {
 library(r5r)
 
 # build transport network
@@ -174,7 +174,7 @@ ttm <- travel_time_matrix(r5r_core,
 
 stop_r5(r5r_core)
 
-} }
+}
 }
 \seealso{
 Other routing: 

@@ -33,12 +33,12 @@ compilation of R5 tailored for the purposes of r5r that keeps R5's
 essential features. Source code available at https://github.com/ipeaGIT/r5r.
 }
 \examples{
-\dontrun{ if (interactive()) {
+if (interactive()) {
 
 library(r5r)
 
 download_r5(version = "6.0.1", temp_dir = TRUE)
-} }
+}
 }
 \seealso{
 Other setup: 
