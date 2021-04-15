@@ -103,7 +103,7 @@
 #'  routing. Transportation Science, 49(3), 591-604.
 #'
 #' @family routing
-#' @examples \dontrun{ if (interactive()) {
+#' @examples if (interactive()) {
 #' library(r5r)
 #'
 #' # build transport network
@@ -126,7 +126,7 @@
 #'
 #' stop_r5(r5r_core)
 #'
-#' } }
+#' }
 #' @export
 
 travel_time_matrix <- function(r5r_core,

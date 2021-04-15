@@ -16,12 +16,12 @@
 #' @return A jar file is saved locally in the r5r package directory
 #' @family setup
 #' @export
-#' @examples \dontrun{ if (interactive()) {
+#' @examples if (interactive()) {
 #'
 #' library(r5r)
 #'
 #' download_r5(version = "6.0.1", temp_dir = TRUE)
-#' } }
+#' }
 
 download_r5 <- function(version = "6.0.1",
                         quiet = FALSE,
