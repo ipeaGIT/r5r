@@ -15,6 +15,8 @@
 #'   stop_r5(r5r_core)
 #' } }
 #'
+#' @return No return value, called for side effects.
+#' @family support functions
 #' @export
 
 stop_r5 <- function(...) {

@@ -5,6 +5,7 @@
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param verbose logical, passed from function above
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
 
 set_verbose <- function(r5r_core, verbose) {
@@ -29,6 +30,7 @@ set_verbose <- function(r5r_core, verbose) {
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
 #'                          to 120 minutes (2 hours). Passed from routing functions.
 #'
+#' @return An `integer` representing the maximum number of minutes walking
 #' @family support functions
 
 set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
@@ -59,6 +61,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #' @param mode character string passed from routing functions.
 #' @param mode_egress character string passed from routing functions.
 #'
+#' @return A `list` with the transport modes used in the routing.
 #' @family support functions
 
 select_mode <- function(mode, mode_egress) {
@@ -122,6 +125,7 @@ select_mode <- function(mode, mode_egress) {
 #'
 #' @param datetime An object of POSIXct class.
 #'
+#' @return A `list` with the `date` and `time` of the trip departure as characters
 #' @return A list with 'date' and 'departure_time' names.
 #'
 #' @family support functions
@@ -150,7 +154,6 @@ posix_to_string <- function(datetime) {
 #' @param name Object name.
 #'
 #' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
-#'
 #' @family support functions
 
 assert_points_input <- function(df, name) {
@@ -203,6 +206,7 @@ assert_points_input <- function(df, name) {
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
 
 set_n_threads <- function(r5r_core, n_threads) {
@@ -236,6 +240,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 #' @param speed A numeric representing the speed in km/h.
 #' @param mode Either \code{"bike"} or \code{"walk"}.
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
 
 set_speed <- function(r5r_core, speed, mode) {
@@ -258,7 +263,9 @@ set_speed <- function(r5r_core, speed, mode) {
 #' through the quietest streets, while a value of 4 indicates cyclists can travel
 #' through any road.
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
+#'
 set_max_lts <- function(r5r_core, max_lts) {
   checkmate::assert_numeric(max_lts)
 
@@ -278,7 +285,9 @@ set_max_lts <- function(r5r_core, max_lts) {
 #' @param max_rides numeric. The max number of public transport rides
 #'                  allowed in the same trip. Passed from routing function.
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
+#'
 
 set_max_rides <- function(r5r_core, max_rides) {
 
@@ -308,6 +317,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'                  the max travel time of alternatives out a bit to account for
 #'                  the fact that they don't always run on schedule.
 #'
+#' @return No return value, called for side effects.
 #' @family support functions
 
 set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
@@ -325,6 +335,8 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 #' Download metadata of R5 jar files
 #' @description Support function to download metadata internally used in r5r
+#'
+#' @return A `data.frame` with url address of r5r Jar files
 #' @family support functions
 #'
 download_metadata <- function(){
@@ -365,9 +377,7 @@ download_metadata <- function(){
 #'
 #' @param file_url A string with the file_url address of an geobr dataset
 #'
-#' @return Logic `TRUE or `FALSE`.
-#'
-#' @export
+#' @return No return value, called for side effects.
 #' @family support functions
 #'
 check_connection <- function(file_url = 'https://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv'){

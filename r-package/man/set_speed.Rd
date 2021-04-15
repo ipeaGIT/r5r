@@ -13,6 +13,9 @@ set_speed(r5r_core, speed, mode)
 
 \item{mode}{Either \code{"bike"} or \code{"walk"}.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 This function receives the walk and bike 'speed' inputs in Km/h
 from routing functions above and converts them to meters per second, which is
@@ -31,6 +34,7 @@ Other support functions:
 \code{\link{set_n_threads}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

@@ -12,7 +12,7 @@ check_connection(
 \item{file_url}{A string with the file_url address of an geobr dataset}
 }
 \value{
-Logic \verb{TRUE or }FALSE`.
+No return value, called for side effects.
 }
 \description{
 Checks if there is internet connection to Ipea server to download geobr data.
@@ -30,6 +30,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

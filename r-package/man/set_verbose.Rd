@@ -11,6 +11,9 @@ set_verbose(r5r_core, verbose)
 
 \item{verbose}{logical, passed from function above}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Set verbose argument
 }
@@ -27,6 +30,7 @@ Other support functions:
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

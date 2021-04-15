@@ -10,6 +10,8 @@ posix_to_string(datetime)
 \item{datetime}{An object of POSIXct class.}
 }
 \value{
+A \code{list} with the \code{date} and \code{time} of the trip departure as characters
+
 A list with 'date' and 'departure_time' names.
 }
 \description{
@@ -28,6 +30,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

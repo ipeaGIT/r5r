@@ -44,6 +44,7 @@ Other support functions:
 \code{\link{set_n_threads}()},
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
-\code{\link{set_verbose}()}
+\code{\link{set_verbose}()},
+\code{\link{stop_r5}()}
 }
 \concept{support functions}

@@ -14,6 +14,9 @@ that cyclists will tolerate. A value of 1 means cyclists will only travel
 through the quietest streets, while a value of 4 indicates cyclists can travel
 through any road.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Set max Level of Transit Stress (LTS)
 }
@@ -30,6 +33,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

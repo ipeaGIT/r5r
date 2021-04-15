@@ -11,6 +11,9 @@ select_mode(mode, mode_egress)
 
 \item{mode_egress}{character string passed from routing functions.}
 }
+\value{
+A \code{list} with the transport modes used in the routing.
+}
 \description{
 Select transport mode
 }
@@ -27,6 +30,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
+\code{\link{stop_r5}()},
 \code{\link{street_network_to_sf}()}
 }
 \concept{support functions}

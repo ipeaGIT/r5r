@@ -16,7 +16,7 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              <https://github.com/conveyal/r5>. The package allows users to 
              generate detailed routing analysis or calculate travel time matrices
              using seamless parallel computing on top of the R5 Java machine.
-Date: 2021-04-14
+Date: 2021-04-15
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
 License: MIT + file LICENSE
