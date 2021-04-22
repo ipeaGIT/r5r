@@ -93,4 +93,15 @@ ggsave(file='lts.jpeg',
        width = 24, height = 14, scale = 1.6,
        units = 'cm', dpi = 300 )
 
-
+ggplot(travel_times) +
+  geom_density_2d(aes(x=lon, y=lat, fill=travel_time), alpha=.8) +
+  geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.7) +
+  geom_point(aes(x=lon, y=lat, color='Central bus\nstation'), data=central_bus_stn) +
+  scale_fill_viridis_d(direction = -1, option = 'B') +
+  scale_color_manual(values=c('Central bus\nstation'='black')) +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,0)) +
+  labs(title = paste0("Isochrone, LTS ", bike_lts),
+       fill = "travel time (minutes)", color='') +
+  theme_minimal() +
+  theme(axis.title = element_blank())

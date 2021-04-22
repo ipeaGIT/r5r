@@ -8,9 +8,7 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
 import com.conveyal.r5.OneOriginResult;
-import com.conveyal.r5.analyst.FreeFormPointSet;
-import com.conveyal.r5.analyst.PointSet;
-import com.conveyal.r5.analyst.TravelTimeComputer;
+import com.conveyal.r5.analyst.*;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.ProfileResponse;
@@ -20,6 +18,7 @@ import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
+import com.conveyal.r5.streets.StreetLayer;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
@@ -35,6 +34,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
+import org.opengis.metadata.quality.GriddedDataPositionalAccuracy;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -123,6 +123,19 @@ public class R5RCore {
         this.percentiles[0] = percentile;
     }
 
+    Grid gridPointSet = null;
+    private Grid getGridPointSet(int zoom) {
+        if (gridPointSet == null || gridPointSet.zoom != zoom) {
+            gridPointSet = new Grid(zoom, this.transportNetwork.getEnvelope());
+        }
+
+        return gridPointSet;
+    }
+
+    private Grid getGridPointSet() {
+        return getGridPointSet(9);
+    }
+
     public int getMaxRides() {
         return maxRides;
     }
@@ -168,19 +181,19 @@ public class R5RCore {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();// LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
 
         logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
 
         logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
 
         logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
     }
 
     public void setLogMode(String mode) {
@@ -221,6 +234,7 @@ public class R5RCore {
 
         this.walkSpeed = 1.0f;
         this.bikeSpeed = 3.3f;
+        this.gridPointSet = null;
 
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
@@ -236,8 +250,8 @@ public class R5RCore {
             }
         }
         // compatible versions, load network
-        transportNetwork = loadR5Network(dataFolder);
-        transportNetwork.transitLayer.buildDistanceTables(null);
+        this.transportNetwork = loadR5Network(dataFolder);
+        this.transportNetwork.transitLayer.buildDistanceTables(null);
     }
 
     private TransportNetwork loadR5Network(String dataFolder) {
@@ -984,6 +998,10 @@ public class R5RCore {
             bicycleCol.add(edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
             carCol.add(edgeCursor.allowsStreetMode(StreetMode.CAR));
             geometryCol.add(edgeCursor.getGeometry().toString());
+
+//            edgeCursor.setWalkTimeFactor();
+//            edgeCursor.getEdgeIndex();
+//            edgeCursor.seek();
         }
 
         // Return a list of dataframes
@@ -1112,6 +1130,155 @@ public class R5RCore {
         return servicesTable.getDataFrame();
     }
 
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
+                                                               String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+
+        RegionalTask request = new RegionalTask();
+
+        request.scenario = new Scenario();
+        request.scenario.id = "id";
+        request.scenarioId = request.scenario.id;
+
+        request.zoneId = transportNetwork.getTimeZone();
+        request.fromLat = fromLat;
+        request.fromLon = fromLon;
+        request.walkSpeed = (float) this.walkSpeed;
+        request.bikeSpeed = (float) this.bikeSpeed;
+        request.streetTime = maxTripDuration;
+        request.maxWalkTime = maxWalkTime;
+        request.maxBikeTime = maxTripDuration;
+        request.maxCarTime = maxTripDuration;
+        request.maxTripDurationMinutes = maxTripDuration;
+        request.makeTauiSite = false;
+//        request.computePaths = false;
+//        request.computeTravelTimeBreakdown = false;
+        request.recordTimes = true;
+        request.recordAccessibility = false;
+        request.maxRides = this.maxRides;
+        request.bikeTrafficStress = this.maxLevelTrafficStress;
+
+        request.directModes = EnumSet.noneOf(LegMode.class);
+        String[] modes = directModes.split(";");
+        if (!directModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.directModes.add(LegMode.valueOf(mode));
+            }
+        }
+
+        request.transitModes = EnumSet.noneOf(TransitModes.class);
+        modes = transitModes.split(";");
+        if (!transitModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.transitModes.add(TransitModes.valueOf(mode));
+            }
+        }
+
+        request.accessModes = EnumSet.noneOf(LegMode.class);
+        modes = accessModes.split(";");
+        if (!accessModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.accessModes.add(LegMode.valueOf(mode));
+            }
+        }
+
+        request.egressModes = EnumSet.noneOf(LegMode.class);
+        modes = egressModes.split(";");
+        if (!egressModes.equals("") & modes.length > 0) {
+            for (String mode : modes) {
+                request.egressModes.add(LegMode.valueOf(mode));
+            }
+        }
+
+        request.date = LocalDate.parse(date);
+
+        int secondsFromMidnight = getSecondsFromMidnight(departureTime);
+
+        request.fromTime = secondsFromMidnight;
+        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+
+        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+
+        request.destinationPointSets = new PointSet[1];
+        request.destinationPointSets[0] = getGridPointSet(zoom);
+
+        request.percentiles = new int[1];
+        request.percentiles[0] = 50;
+
+        LOG.info("checking grid point set");
+        LOG.info(gridPointSet.toString());
+
+        LOG.info(request.getWebMercatorExtents().toString());
+
+        LOG.info("compute travel times");
+
+        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
+
+        OneOriginResult travelTimeResults = computer.computeTravelTimes();
+
+//        // Build return table
+//        RDataFrame isochronesTable = new RDataFrame();
+//        isochronesTable.addDoubleColumn("lat", 0.0);
+//        isochronesTable.addDoubleColumn("lon", 0.0);
+//        isochronesTable.addDoubleColumn("travel_time", 0.0);
+//
+//        for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
+//            isochronesTable.append();
+//            isochronesTable.set("lat", gridPointSet.getLat(i));
+//            isochronesTable.set("lon", gridPointSet.getLon(i));
+//            isochronesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][i]);
+//        }
+//        if (isochronesTable.nRow() > 0) {
+//            return isochronesTable.getDataFrame();
+//        } else {
+//            return null;
+//        }
+
+
+
+
+
+        int[] times = travelTimeResults.travelTimes.getValues()[0];
+        for (int i = 0; i < times.length; i++) {
+            if (times[i] > maxTripDuration) times[i] = maxTripDuration * 2;
+
+            times[i] = times[i] * 60;
+
+//            if (times[i] > cutoffs[cutoffs.length-1]) times[i] = Integer.MAX_VALUE;
+        }
+
+        LOG.info("build return table");
+
+        // Build return table
+        WebMercatorExtents extents = WebMercatorExtents.forPointsets(request.destinationPointSets);
+        WebMercatorGridPointSet isoGrid = new WebMercatorGridPointSet(extents);
+
+        RDataFrame isochronesTable = new RDataFrame();
+        isochronesTable.addStringColumn("from_id", fromId);
+        isochronesTable.addIntegerColumn("cutoff", 0);
+        isochronesTable.addStringColumn("geometry", "");
+
+
+        for (int cutoff:cutoffs) {
+            LOG.info("call isochrone function");
+            IsochroneFeature isochroneFeature = new IsochroneFeature(cutoff*60, isoGrid, times);
+
+            LOG.info("convert isochrone to string");
+            isochronesTable.append();
+            isochronesTable.set("cutoff", cutoff);
+            isochronesTable.set("geometry", isochroneFeature.geometry.toString());
+
+        }
+
+        if (isochronesTable.nRow() > 0) {
+            return isochronesTable.getDataFrame();
+        } else {
+            return null;
+        }
+
+
+
+    }
 
 
 }
