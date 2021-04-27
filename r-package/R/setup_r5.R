@@ -89,7 +89,7 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
-  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_3_4.jar")
+  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_4_0.jar")
 
   rJava::.jaddClassPath(path = r5r_jar)
   rJava::.jaddClassPath(path = jar_file)
