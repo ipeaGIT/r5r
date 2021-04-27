@@ -19,12 +19,9 @@ import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
-<<<<<<< HEAD
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.streets.LinkedPointSet;
-=======
 import com.conveyal.r5.streets.StreetLayer;
->>>>>>> isochrone
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
@@ -187,19 +184,19 @@ public class R5RCore {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();// LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
 
         logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
     }
 
     public void setLogMode(String mode) {
