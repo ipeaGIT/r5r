@@ -1425,21 +1425,21 @@ public class R5RCore {
             5.7862890496126462E-01, 1.6358571778476885E-01, 9.4846184210137130E-02,
             5.5464612133430242E-02 };
 
-    public static double[] slopeSpeedCoefficient(double[] slope, double[] altitude) {
+    public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {
         double[] results = new double[slope.length];
 
         int[] indices = new int[slope.length];
         for (int i = 0; i < slope.length; i++) { indices[i] = i; }
 
         Arrays.stream(indices).parallel().forEach(index -> {
-            results[index] = slopeSpeedCoefficient(slope[index], altitude[index]);
+            results[index] = bikeSpeedCoefficientOTP(slope[index], altitude[index]);
         });
 
         return results;
 
     }
 
-    public static double slopeSpeedCoefficient(double slope, double altitude) {
+    public static double bikeSpeedCoefficientOTP(double slope, double altitude) {
         /*
          * computed by asking ZunZun for a quadratic b-spline approximating some values from
          * http://www.analyticcycling.com/ForcesSpeed_Page.html fixme: should clamp to local speed

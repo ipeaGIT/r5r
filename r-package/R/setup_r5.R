@@ -103,8 +103,6 @@ setup_r5 <- function(data_path,
 
     message("\nUsing cached network.dat from ", dat_file)
 
-    return(r5r_core)
-
   } else {
 
     # build new r5r_core
@@ -118,7 +116,17 @@ setup_r5 <- function(data_path,
 
     message("\nFinished building network.dat at ", dat_file)
 
-    return(r5r_core)
-
   }
+
+  # check for any elevation files in data_path (*.tif)
+  tif_files <- list.files(path = data_path, pattern = "*.tif$", full.names = TRUE)
+
+  # if there are any .tif files in the data_path folder, apply elevetion to street network
+  if (length(tif_files) > 0) {
+    apply_elevation(r5r_core, tif_files[1])
+  }
+
+  return(r5r_core)
+
+
 }
