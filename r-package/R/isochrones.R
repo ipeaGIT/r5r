@@ -164,6 +164,9 @@ isochrones <- function(r5r_core,
   # origins and destinations
   origins <- assert_points_input(origins, "origins")
 
+  # cutoff times
+  checkmate::assert_numeric(cutoffs)
+  cutoffs = as.integer(cutoffs)
 
   # set r5r_core options ----------------------------------------------------
 
@@ -209,7 +212,25 @@ isochrones <- function(r5r_core,
 
   # convert travel_times from java object to data.table
   isochrones <- jdx::convertToR(isochrones)
-  # isochrones <- data.table::rbindlist(isochrones)
+  # r5r_core returns a list when multiple origins are provided, in which case
+  # they need to be combined into a single data.table
+  if (!is.data.frame(isochrones)) isochrones <- data.table::rbindlist(isochrones)
+
+  # convert to SF and fix geometries (sometimes, R5 produces self-intersecting
+  # polygons)
+  isochrones$geometry <- st_as_sfc(isochrones$geometry)
+  isochrones <- st_as_sf(isochrones) %>% st_make_valid()
+
+  # each isochrone is a full polygon which contains all lower cutoff isochrones
+  # we need to cut holes isochrone to avoid overlapping geometries
+  isochrones <- isochrones %>%
+    group_by(from_id) %>%
+    mutate(geom = lag(geometry)) %>%
+    mutate(geometry = map2(geometry, geom, st_difference)) %>%
+    select(-geom) %>%
+    filter(!st_is_empty(geometry))
+  # CRS = WGS 84
+  st_crs(isochrones) <- 4326
 
   return(isochrones)
 }

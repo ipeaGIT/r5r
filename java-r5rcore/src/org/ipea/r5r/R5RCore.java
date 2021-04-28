@@ -806,9 +806,8 @@ public class R5RCore {
             }
         }
 
-        List<LinkedHashMap<String, ArrayList<Object>>> returnList;
-
         FreeFormPointSet finalDestinationPoints = destinationPoints;
+        List<LinkedHashMap<String, ArrayList<Object>>> returnList;
         returnList = r5rThreadPool.submit(() ->
                 Arrays.stream(originIndices).parallel()
                         .mapToObj(index -> {
@@ -1219,6 +1218,52 @@ public class R5RCore {
         return servicesTable.getDataFrame();
     }
 
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
+                                                               String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+        int[] cutoffTimes = new int[1];
+        cutoffTimes[0] = cutoffs;
+
+        return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
+                date, departureTime, maxWalkTime, maxTripDuration);
+    }
+
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
+                                                               String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+
+        int[] cutoffTimes = new int[1];
+        cutoffTimes[0] = cutoffs;
+
+        return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
+                date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
+                                                               String directModes, String transitModes, String accessModes, String egressModes,
+                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+
+        int[] requestIndices = new int[fromId.length];
+        for (int i = 0; i < fromId.length; i++) requestIndices[i] = i;
+
+        return r5rThreadPool.submit(() ->
+                Arrays.stream(requestIndices).parallel()
+                        .mapToObj(index -> {
+                            LinkedHashMap<String, ArrayList<Object>> results = null;
+                            try {
+                                results = isochrones(fromId[index], fromLat[index], fromLon[index], cutoffs, zoom,
+                                        directModes, transitModes, accessModes, egressModes,
+                                        date, departureTime, maxWalkTime, maxTripDuration);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return results;
+                        }).
+                        collect(Collectors.toList())).get();
+    }
+
     public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
                                                                String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
@@ -1329,14 +1374,11 @@ public class R5RCore {
 
         int[] times = travelTimeResults.travelTimes.getValues()[0];
         for (int i = 0; i < times.length; i++) {
-            if (times[i] > maxTripDuration) times[i] = maxTripDuration * 2;
-
-            times[i] = times[i] * 60;
-
-//            if (times[i] > cutoffs[cutoffs.length-1]) times[i] = Integer.MAX_VALUE;
+            // convert travel times from minutes to seconds
+            // this test is necessary because unreachable grid cells have travel time = Integer.MAX_VALUE, and
+            // multiplying Integer.MAX_VALUE by 60 causes errors in the isochrone algorithm
+            if (times[i] <= maxTripDuration) times[i] = times[i] * 60;
         }
-
-        LOG.info("build return table");
 
         // Build return table
         WebMercatorExtents extents = WebMercatorExtents.forPointsets(request.destinationPointSets);
@@ -1349,14 +1391,11 @@ public class R5RCore {
 
 
         for (int cutoff:cutoffs) {
-            LOG.info("call isochrone function");
             IsochroneFeature isochroneFeature = new IsochroneFeature(cutoff*60, isoGrid, times);
 
-            LOG.info("convert isochrone to string");
             isochronesTable.append();
             isochronesTable.set("cutoff", cutoff);
             isochronesTable.set("geometry", isochroneFeature.geometry.toString());
-
         }
 
         if (isochronesTable.nRow() > 0) {
@@ -1364,8 +1403,6 @@ public class R5RCore {
         } else {
             return null;
         }
-
-
 
     }
 

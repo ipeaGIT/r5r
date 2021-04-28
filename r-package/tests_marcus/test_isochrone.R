@@ -11,7 +11,10 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
+poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 central_bus_stn <- points[291,]
+
+origins <- poi[c(1, 3, 10, 15),]
 
 # points %>% mapview(xcol="lon", ycol="lat", crs=4326)
 # market <- points[id == "89a90128843ffff",]
@@ -23,29 +26,49 @@ max_trip_duration <- 60 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
-cutoffs = c(5L, 15L, 30L, 45L)
+cutoffs = c(1, 5, seq(10, 60, 10))
 
 iso <- isochrones(r5r_core,
-                  origins = central_bus_stn,
+                  origins = origins,
                   cutoffs = cutoffs,
-                  zoom = 14L,
+                  zoom = 11L,
                   mode = mode,
                   max_walk_dist = max_walk_dist,
                   max_trip_duration = max_trip_duration,
                   departure_datetime = departure_datetime,
                   verbose = TRUE
                   )
+
+iso <- rbindlist(iso)
 iso$geometry <- st_as_sfc(iso$geometry)
-iso <- st_as_sf(iso)
+iso <- st_as_sf(iso) %>% st_make_valid()
 iso <- iso %>%
-  st_make_valid() %>%
+  group_by(from_id) %>%
   mutate(geom = lag(geometry)) %>%
   mutate(geometry = map2(geometry, geom, st_difference)) %>%
+  # mutate(geometry = map(geometry, st_cast, to = "MULTIPOLYGON")) %>%
   select(-geom)
+# CRS = WGS 84
 st_crs(iso) <- 4326
+st_cast(iso, to = "POLYGON")
 
-iso2 <- iso %>% filter(cutoff > 10)
+setDT(iso)
+iso[st_is_empty(geometry), geometry := st_polygon()]
+
+iso[st_is_empty(iso),]$geometry <- st_polygon()
+
+
+# iso2 <- iso %>% filter(cutoff > 10)
 mapview(iso, zcol = "cutoff")
+mapview(iso %>% filter(from_id == "public_market"), zcol = "cutoff")
+mapview(iso %>% filter(from_id == "bus_central_station"), zcol = "cutoff")
+
+iso %>%
+  # filter(cutoff <= 20) %>%
+  mutate(cutoff = factor(cutoff)) %>%
+  ggplot() + geom_sf(aes(fill=cutoff)) +
+  scale_fill_brewer(direction = -1) +
+  facet_wrap(~from_id)
 
 iso %>%
   mutate(geom = lag(geometry)) %>%
