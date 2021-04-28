@@ -1365,7 +1365,11 @@ public class R5RCore {
             // convert travel times from minutes to seconds
             // this test is necessary because unreachable grid cells have travel time = Integer.MAX_VALUE, and
             // multiplying Integer.MAX_VALUE by 60 causes errors in the isochrone algorithm
-            if (times[i] <= maxTripDuration) times[i] = times[i] * 60;
+            if (times[i] <= maxTripDuration) {
+                times[i] = times[i] * 60;
+            } else {
+                times[i] = Integer.MAX_VALUE;
+            }
         }
 
         // Build return table
