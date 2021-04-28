@@ -1015,11 +1015,6 @@ public class R5RCore {
     }
 
     public LinkedHashMap<String, Object> getEdges() {
-        ProfileRequest request = new ProfileRequest();
-        request.walkSpeed = 1.0f;
-        request.bikeSpeed = 1.0f;
-
-
         // Build edges return table
         ArrayList<Integer> edgeIndexCol = new ArrayList<>();
         ArrayList<Double> lengthCol = new ArrayList<>();
@@ -1027,8 +1022,6 @@ public class R5RCore {
         ArrayList<Double> startLonCol = new ArrayList<>();
         ArrayList<Double> endLatCol = new ArrayList<>();
         ArrayList<Double> endLonCol = new ArrayList<>();
-        ArrayList<Double> walkMultiplierCol = new ArrayList<>();
-        ArrayList<Double> bikeMultiplierCol = new ArrayList<>();
 
         LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
         edgesTable.put("edge_index", edgeIndexCol);
@@ -1037,8 +1030,6 @@ public class R5RCore {
         edgesTable.put("start_lon", startLonCol);
         edgesTable.put("end_lat", endLatCol);
         edgesTable.put("end_lon", endLonCol);
-        edgesTable.put("walk_multiplier", walkMultiplierCol);
-        edgesTable.put("bike_multiplier", bikeMultiplierCol);
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
 
@@ -1050,13 +1041,6 @@ public class R5RCore {
             startLonCol.add(edgeCursor.getGeometry().getStartPoint().getX());
             endLatCol.add(edgeCursor.getGeometry().getEndPoint().getY());
             endLonCol.add(edgeCursor.getGeometry().getEndPoint().getX());
-
-            int traversalTimeWalk = edges.edgeTraversalTimes.traversalTimeSeconds(edgeCursor, StreetMode.WALK, request);
-            int traversalTimeBike = edges.edgeTraversalTimes.traversalTimeSeconds(edgeCursor, StreetMode.BICYCLE, request);
-
-            walkMultiplierCol.add(edgeCursor.getLengthM() / traversalTimeWalk);
-            bikeMultiplierCol.add(edgeCursor.getLengthM() / traversalTimeBike);
-
         }
 
         return edgesTable;

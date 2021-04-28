@@ -39,7 +39,7 @@ apply_elevation <- function(r5r_core, raster_file) {
   edges[, end_elev := end_elev ]
 
   # calculate slopes and flatten segments that are too steep
-  edges[, slope = (end_elev - start_elev) / length]
+  edges[, slope := (end_elev - start_elev) / length]
   edges[is.na(slope), slope := 0.0]
   edges[slope < -1.0, slope := 0.0]
   edges[slope >  1.0, slope := 0.0]
@@ -51,7 +51,7 @@ apply_elevation <- function(r5r_core, raster_file) {
   # included in r5r_core
   # the function has 2 parameters: slope and altitute
   bike_mult <- r5r_core$bikeSpeedCoefficientOTP(edges$slope, edges$start_elev)
-  edges[, bike_multiplier := 1 / bike_multipliers] # values need to be inverted
+  edges[, bike_multiplier := 1 / bike_mult] # values need to be inverted
 
   # update walk and bike weights in r5r_core
   id <- as.integer(edges$edge_index)

@@ -224,13 +224,13 @@ isochrones <- function(r5r_core,
   # each isochrone is a full polygon which contains all lower cutoff isochrones
   # we need to cut holes isochrone to avoid overlapping geometries
   isochrones <- isochrones %>%
-    group_by(from_id) %>%
-    mutate(geom = lag(geometry)) %>%
-    mutate(geometry = map2(geometry, geom, st_difference)) %>%
-    select(-geom) %>%
-    filter(!st_is_empty(geometry))
+    dplyr::group_by(from_id) %>%
+    dplyr::mutate(geom = dplyr::lag(geometry)) %>%
+    dplyr::mutate(geometry = purrr::map2(geometry, geom, sf::st_difference)) %>%
+    dplyr::select(-geom) %>%
+    dplyr::filter(!sf::st_is_empty(geometry))
   # CRS = WGS 84
-  st_crs(isochrones) <- 4326
+  sf::st_crs(isochrones) <- 4326
 
   return(isochrones)
 }
