@@ -2,16 +2,22 @@
 % Please edit documentation in R/elevation_utils.R
 \name{tobler_hiking}
 \alias{tobler_hiking}
-\title{Title}
+\title{Tobler's hiking function}
 \usage{
 tobler_hiking(slope)
 }
 \arguments{
-\item{slope}{}
+\item{slope}{numeric. Terrain's slope.}
 }
 \value{
-
+numeric. Tobler's weighting factor
 }
 \description{
-Title
+Calculates effect of the topography on walking speeds, using
+Tobler's hiking function.
 }
+\seealso{
+Other elevation support functions: 
+\code{\link{apply_elevation}()}
+}
+\concept{elevation support functions}

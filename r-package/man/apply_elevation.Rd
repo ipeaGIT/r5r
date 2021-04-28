@@ -2,16 +2,26 @@
 % Please edit documentation in R/elevation_utils.R
 \name{apply_elevation}
 \alias{apply_elevation}
-\title{Title}
+\title{Apply elevation to street network}
 \usage{
 apply_elevation(r5r_core, raster_file)
 }
 \arguments{
-\item{raster_file}{}
+\item{r5r_core}{a rJava object to connect with R5 routing engine}
+
+\item{raster_file}{string. Path to a raster file containing the study area's
+topography.}
 }
 \value{
-
+No return value, called for side effects.
 }
 \description{
-Title
+Loads a Digital Elevation Model (DEM) from a raster file and
+weights the street network for walking and cycling according to
+the terrain's slopes
 }
+\seealso{
+Other elevation support functions: 
+\code{\link{tobler_hiking}()}
+}
+\concept{elevation support functions}

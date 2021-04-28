@@ -1,11 +1,14 @@
-#' Title
+############# Support functions for r5r
+
+#' Tobler's hiking function
 #'
-#' @param slope
+#' @description Calculates effect of the topography on walking speeds, using
+#'              Tobler's hiking function.
 #'
-#' @return
-#' @export
+#' @param slope numeric. Terrain's slope.
 #'
-#' @examples
+#' @return numeric. Tobler's weighting factor
+#' @family elevation support functions
 tobler_hiking <- function(slope) {
   C <- 1.19403
 
@@ -14,22 +17,25 @@ tobler_hiking <- function(slope) {
   return(1 / tobler_factor)
 }
 
-#' Title
+#' Apply elevation to street network
 #'
-#' @param r5r_core
-#' @param raster_file
+#' @description Loads a Digital Elevation Model (DEM) from a raster file and
+#'              weights the street network for walking and cycling according to
+#'              the terrain's slopes
 #'
-#' @return
-#' @export
+#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @param raster_file string. Path to a raster file containing the study area's
+#'                    topography.
 #'
-#' @examples
+#' @return No return value, called for side effects.
+#' @family elevation support functions
 apply_elevation <- function(r5r_core, raster_file) {
   # load raster file containing elevation data
   dem <- raster::raster(raster_file)
 
   # extract street edges from r5r_core
   edges <- r5r_core$getEdges()
-  edges <- jdx::convertToR(edges) %>% setDT()
+  edges <- jdx::convertToR(edges) %>% data.table::setDT()
 
   # extract each edge's elevation from DEM and store in edges data.frame
   start_elev  <- raster::extract(dem, edges %>% dplyr::select(start_lon, start_lat))

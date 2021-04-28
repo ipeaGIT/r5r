@@ -1,4 +1,4 @@
-#' Calculate travel time matrix between origin destination pairs
+#' Produce isochrones for a set of origin points and cutoff travel times
 #'
 #' @description Creation of isochrones.
 #'
@@ -31,6 +31,9 @@
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. TRUE to show detailed output messages (the default)
 #'                or FALSE to show only eventual ERROR messages.
+#' @param cutoffs numeric. Cutoff times, in minutes, for isochrone calculation.
+#' @param zoom numeric. Scale of the Web Mercator grid where travel times will
+#'             be computed. Defaults to 11.
 #'
 #' @return A data.table with travel time estimates (in minutes) between origin
 #' destination pairs by a given transport mode. Note that origins/destinations
@@ -114,7 +117,7 @@
 isochrones <- function(r5r_core,
                       origins,
                       cutoffs = c(15L, 30L, 45L, 60L),
-                      zoom = 9L,
+                      zoom = 11,
                       mode = "WALK",
                       mode_egress = "WALK",
                       departure_datetime = Sys.time(),
@@ -168,6 +171,10 @@ isochrones <- function(r5r_core,
   checkmate::assert_numeric(cutoffs)
   cutoffs = as.integer(cutoffs)
 
+  # zoom
+  checkmate::assert_numeric(zoom)
+  zoom = as.integer(zoom)
+
   # set r5r_core options ----------------------------------------------------
 
   # time window
@@ -218,8 +225,8 @@ isochrones <- function(r5r_core,
 
   # convert to SF and fix geometries (sometimes, R5 produces self-intersecting
   # polygons)
-  isochrones$geometry <- st_as_sfc(isochrones$geometry)
-  isochrones <- st_as_sf(isochrones) %>% st_make_valid()
+  isochrones$geometry <- sf::st_as_sfc(isochrones$geometry)
+  isochrones <- sf::st_as_sf(isochrones) %>% sf::st_make_valid()
 
   # each isochrone is a full polygon which contains all lower cutoff isochrones
   # we need to cut holes isochrone to avoid overlapping geometries

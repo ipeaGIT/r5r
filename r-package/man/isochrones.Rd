@@ -2,13 +2,13 @@
 % Please edit documentation in R/isochrones.R
 \name{isochrones}
 \alias{isochrones}
-\title{Calculate travel time matrix between origin destination pairs}
+\title{Produce isochrones for a set of origin points and cutoff travel times}
 \usage{
 isochrones(
   r5r_core,
   origins,
   cutoffs = c(15L, 30L, 45L, 60L),
-  zoom = 9L,
+  zoom = 11,
   mode = "WALK",
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
@@ -27,6 +27,11 @@ isochrones(
 
 \item{origins}{a spatial sf POINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}
+
+\item{cutoffs}{numeric. Cutoff times, in minutes, for isochrone calculation.}
+
+\item{zoom}{numeric. Scale of the Web Mercator grid where travel times will
+be computed. Defaults to 11.}
 
 \item{mode}{string. Transport modes allowed for the trips. Defaults to
 "WALK". See details for other options.}

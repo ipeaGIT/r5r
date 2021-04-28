@@ -213,10 +213,10 @@ test_that("detailed_itineraries output is correct", {
   origins      <- points[10,]
   destinations <- points[12,]
 
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 3.6)
+  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
   duration_lower_speed <- data.table::setDT(df)$segment_duration
 
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
+  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 5)
   duration_higher_speed <- data.table::setDT(df)$segment_duration
 
   expect_true(duration_higher_speed < duration_lower_speed)

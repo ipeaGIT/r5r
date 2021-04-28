@@ -1073,6 +1073,10 @@ public class R5RCore {
         }
     }
 
+    public void dropElevation() {
+        resetEdges();
+    }
+
     private void buildEdgeTraversalTimes(EdgeStore edges) {
         if (edges.edgeTraversalTimes == null) {
             edges.edgeTraversalTimes = new EdgeTraversalTimes(edges);
