@@ -45,6 +45,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -254,6 +255,9 @@ public class R5RCore {
         }
         // compatible versions, load network
         this.transportNetwork = loadR5Network(dataFolder);
+    }
+
+    public void buildDistanceTables() {
         this.transportNetwork.transitLayer.buildDistanceTables(null);
     }
 
@@ -391,8 +395,9 @@ public class R5RCore {
 //        request.computePaths = true;
 //        request.computeTravelTimeBreakdown = true;
         request.maxRides = this.maxRides;
-        request.suboptimalMinutes = this.suboptimalMinutes;
         request.bikeTrafficStress = this.maxLevelTrafficStress;
+
+        request.suboptimalMinutes = this.suboptimalMinutes;
 
         request.directModes = EnumSet.noneOf(LegMode.class);
         String[] modes = directModes.split(";");
@@ -431,9 +436,13 @@ public class R5RCore {
         int secondsFromMidnight = getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + 60; // 1 minute, ignoring time window parameter (this.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+//        request.toTime = secondsFromMidnight + 60; // 1 minute, ignoring time window parameter (this.timeWindowSize * 60);
 
-        request.monteCarloDraws = 1;
+//        LOG.info("from time {}", request.fromTime);
+//        LOG.info("to time {}", request.toTime);
+
+        request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
@@ -458,8 +467,11 @@ public class R5RCore {
             LinkedHashMap<String, ArrayList<Object>> pathOptionsTable;
 
             try {
+                // if only the shortest path is requested, return min travel times instead of avg
+                boolean shortestPath = (this.suboptimalMinutes == 0);
+
                 pathOptionsTable = buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
-                        maxWalkTime, maxTripDuration, dropItineraryGeometry, response.getOptions());
+                        maxWalkTime, maxTripDuration, shortestPath, dropItineraryGeometry, response.getOptions());
             } catch (Exception e) {
                 LOG.error(String.format("Error while collecting paths between %s and %s", fromId, toId));
                 return null;
@@ -481,6 +493,7 @@ public class R5RCore {
     private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            int maxWalkTime, int maxTripDuration,
+                                                                           boolean shortestPath,
                                                                            boolean dropItineraryGeometry,
                                                                            List<ProfileOption> pathOptions) {
         RDataFrame pathOptionsTable = new RDataFrame();
@@ -498,6 +511,10 @@ public class R5RCore {
         pathOptionsTable.addDoubleColumn("wait", 0.0);
         pathOptionsTable.addIntegerColumn("distance", 0);
         pathOptionsTable.addStringColumn("route", "");
+        pathOptionsTable.addStringColumn("board_time", "");
+        pathOptionsTable.addStringColumn("alight_time", "");
+        pathOptionsTable.addIntegerColumn("boards", 0);
+        pathOptionsTable.addIntegerColumn("alights", 0);
         if (!dropItineraryGeometry) pathOptionsTable.addStringColumn("geometry", "");
 
         LOG.info("Building itinerary options table.");
@@ -507,7 +524,11 @@ public class R5RCore {
         for (ProfileOption option : pathOptions) {
             LOG.info("Itinerary option {} of {}: {}", optionIndex + 1, pathOptions.size(), option.summary);
 
-            if (option.stats.avg > (maxTripDuration * 60)) continue;
+            if (shortestPath) {
+                if (option.stats.min > (maxTripDuration * 60)) continue;
+            } else {
+                if (option.stats.avg > (maxTripDuration * 60)) continue;
+            }
 
             if (option.transit == null) { // no transit, maybe has direct access legs
                 if (option.access != null) {
@@ -525,7 +546,11 @@ public class R5RCore {
                         pathOptionsTable.set("segment", 1);
                         pathOptionsTable.set("mode", segment.mode.toString());
                         pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        if (shortestPath) {
+                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
+                        } else {
+                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        }
 
                         // segment.distance value is inaccurate, so it's better to get distances from street edges
                         int dist = calculateSegmentLength(segment);
@@ -551,7 +576,12 @@ public class R5RCore {
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
                         pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+
+                        if (shortestPath) {
+                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
+                        } else {
+                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        }
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = calculateSegmentLength(segment);
@@ -590,11 +620,26 @@ public class R5RCore {
                                 pathOptionsTable.set("option", optionIndex);
                                 pathOptionsTable.set("segment", segmentIndex);
                                 pathOptionsTable.set("mode", transit.mode.toString());
-                                pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
-                                pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+
+                                if (shortestPath) {
+                                    pathOptionsTable.set("total_duration", option.stats.min / 60.0);
+                                    pathOptionsTable.set("segment_duration", transit.rideStats.min / 60.0);
+                                    pathOptionsTable.set("wait", transit.waitStats.min / 60.0);
+                                } else {
+                                    pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                                    pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
+                                    pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
+                                }
+
                                 pathOptionsTable.set("distance", accDistance);
                                 pathOptionsTable.set("route", tripPattern.routeId);
-                                pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
+
+                                pathOptionsTable.set("board_time", pattern.fromDepartureTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
+                                pathOptionsTable.set("alight_time", pattern.toArrivalTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
+
+                                pathOptionsTable.set("boards", pattern.fromDepartureTime.size());
+                                pathOptionsTable.set("alights", pattern.toArrivalTime.size());
+
                                 if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
                             }
                         }
@@ -613,7 +658,12 @@ public class R5RCore {
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", transit.middle.mode.toString());
                         pathOptionsTable.set("segment_duration",transit.middle.duration / 60.0);
-                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+
+                        if (shortestPath) {
+                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
+                        } else {
+                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        }
 
                         // getting distances from street edges, which are more accurate than segment.distance
                         int dist = calculateSegmentLength(transit.middle);
@@ -635,7 +685,11 @@ public class R5RCore {
                         pathOptionsTable.set("segment", segmentIndex);
                         pathOptionsTable.set("mode", segment.mode.toString());
                         pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-                        pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        if (shortestPath) {
+                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
+                        } else {
+                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
+                        }
 
                         // getting distances from street edges, that are more accurate than segment.distance
                         int dist = calculateSegmentLength(segment);

@@ -126,6 +126,8 @@ setup_r5 <- function(data_path,
     apply_elevation(r5r_core, tif_files[1])
   }
 
+  r5r_core$buildDistanceTables()
+
   return(r5r_core)
 
 
