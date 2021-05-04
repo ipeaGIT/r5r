@@ -16,12 +16,9 @@ import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
-import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
-import com.conveyal.r5.streets.LinkedPointSet;
-import com.conveyal.r5.streets.StreetLayer;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.*;
 import com.conveyal.r5.transit.TripPattern;
@@ -35,7 +32,6 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
-import org.opengis.metadata.quality.GriddedDataPositionalAccuracy;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -161,45 +157,15 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(); //LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-
-        Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.ERROR);
-
-        logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.ERROR);
-
-        logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.ERROR);
-
-        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.ERROR);
-
-        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
-        logger.setLevel(Level.ERROR);
+        setLogMode("ERROR");
     }
 
     public void verboseMode() {
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();// LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-
-        Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.ALL);
-
-        logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.ALL);
-
-        logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.ALL);
-
-        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.ALL);
-
-        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
-        logger.setLevel(Level.ALL);
+        setLogMode("ALL");
     }
 
     public void setLogMode(String mode) {
-        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();//  LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
 
         Logger logger = loggerContext.getLogger("com.conveyal.r5");
         logger.setLevel(Level.valueOf(mode));
@@ -495,6 +461,8 @@ public class R5RCore {
                                                                            boolean shortestPath,
                                                                            boolean dropItineraryGeometry,
                                                                            List<ProfileOption> pathOptions) {
+
+        // Build data.frame to return data to R in tabular form
         RDataFrame pathOptionsTable = new RDataFrame();
         pathOptionsTable.addStringColumn("fromId", fromId);
         pathOptionsTable.addDoubleColumn("fromLat", fromLat);
@@ -512,8 +480,6 @@ public class R5RCore {
         pathOptionsTable.addStringColumn("route", "");
         pathOptionsTable.addStringColumn("board_time", "");
         pathOptionsTable.addStringColumn("alight_time", "");
-        pathOptionsTable.addIntegerColumn("boards", 0);
-        pathOptionsTable.addIntegerColumn("alights", 0);
         if (!dropItineraryGeometry) pathOptionsTable.addStringColumn("geometry", "");
 
         LOG.info("Building itinerary options table.");
@@ -523,6 +489,7 @@ public class R5RCore {
         for (ProfileOption option : pathOptions) {
             LOG.info("Itinerary option {} of {}: {}", optionIndex + 1, pathOptions.size(), option.summary);
 
+            LOG.info("travel time min {}, avg {}", option.stats.min, option.stats.avg);
             if (shortestPath) {
                 if (option.stats.min > (maxTripDuration * 60)) continue;
             } else {
@@ -535,6 +502,7 @@ public class R5RCore {
 
                         // maxStreetTime parameter only affects access and egress walking segments, but no direct trips
                         // if a direct walking trip is found that is longer than maxWalkTime, then drop it
+                        LOG.info("segment duration {}", segment.duration);
                         if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
                         pathOptionsTable.append();
 
@@ -635,9 +603,6 @@ public class R5RCore {
 
                                 pathOptionsTable.set("board_time", pattern.fromDepartureTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
                                 pathOptionsTable.set("alight_time", pattern.toArrivalTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
-
-                                pathOptionsTable.set("boards", pattern.fromDepartureTime.size());
-                                pathOptionsTable.set("alights", pattern.toArrivalTime.size());
 
                                 if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
                             }
@@ -1000,103 +965,83 @@ public class R5RCore {
 
     public List<Object> getStreetNetwork() {
         // Build vertices return table
-        ArrayList<Integer> indexCol = new ArrayList<>();
-        ArrayList<Double> latCol = new ArrayList<>();
-        ArrayList<Double> lonCol = new ArrayList<>();
-        ArrayList<Boolean> parkAndRideCol = new ArrayList<>();
-        ArrayList<Boolean> bikeSharingCol = new ArrayList<>();
-
-        LinkedHashMap<String, Object> verticesTable = new LinkedHashMap<>();
-        verticesTable.put("index", indexCol);
-        verticesTable.put("lat", latCol);
-        verticesTable.put("lon", lonCol);
-        verticesTable.put("park_and_ride", parkAndRideCol);
-        verticesTable.put("bike_sharing", bikeSharingCol);
+        RDataFrame verticesTable = new RDataFrame();
+        verticesTable.addIntegerColumn("index", 0);
+        verticesTable.addDoubleColumn("lat", 0.0);
+        verticesTable.addDoubleColumn("lon", 0.0);
+        verticesTable.addBooleanColumn("park_and_ride", false);
+        verticesTable.addBooleanColumn("bike_sharing", false);
 
         VertexStore vertices = transportNetwork.streetLayer.vertexStore;
 
         VertexStore.Vertex vertexCursor = vertices.getCursor();
         while (vertexCursor.advance()) {
-            indexCol.add(vertexCursor.index);
-            latCol.add(vertexCursor.getLat());
-            lonCol.add(vertexCursor.getLon());
-            parkAndRideCol.add(vertexCursor.getFlag(VertexStore.VertexFlag.PARK_AND_RIDE));
-            bikeSharingCol.add(vertexCursor.getFlag(VertexStore.VertexFlag.BIKE_SHARING));
+            verticesTable.append();
+            verticesTable.set("index", vertexCursor.index);
+            verticesTable.set("lat", vertexCursor.getLat());
+            verticesTable.set("lon", vertexCursor.getLon());
+            verticesTable.set("park_and_ride", vertexCursor.getFlag(VertexStore.VertexFlag.PARK_AND_RIDE));
+            verticesTable.set("bike_sharing", vertexCursor.getFlag(VertexStore.VertexFlag.BIKE_SHARING));
         }
 
         // Build edges return table
-        ArrayList<Integer> fromVertexCol = new ArrayList<>();
-        ArrayList<Integer> toVertexCol = new ArrayList<>();
-        ArrayList<Double> lengthCol = new ArrayList<>();
-        ArrayList<Boolean> walkCol = new ArrayList<>();
-        ArrayList<Boolean> bicycleCol = new ArrayList<>();
-        ArrayList<Boolean> carCol = new ArrayList<>();
-        ArrayList<String> geometryCol = new ArrayList<>();
-
-        LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
-        edgesTable.put("from_vertex", fromVertexCol);
-        edgesTable.put("to_vertex", toVertexCol);
-        edgesTable.put("length", lengthCol);
-        edgesTable.put("walk", walkCol);
-        edgesTable.put("bicycle", bicycleCol);
-        edgesTable.put("car", carCol);
-        edgesTable.put("geometry", geometryCol);
+        RDataFrame edgesTable = new RDataFrame();
+        edgesTable.addIntegerColumn("from_vertex", 0);
+        edgesTable.addIntegerColumn("to_vertex", 0);
+        edgesTable.addDoubleColumn("length", 0.0);
+        edgesTable.addBooleanColumn("walk", false);
+        edgesTable.addBooleanColumn("bicycle", false);
+        edgesTable.addBooleanColumn("car", false);
+        edgesTable.addStringColumn("geometry", "");
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
 
         EdgeStore.Edge edgeCursor = edges.getCursor();
         while (edgeCursor.advance()) {
-            fromVertexCol.add(edgeCursor.getFromVertex());
-            toVertexCol.add(edgeCursor.getToVertex());
-            lengthCol.add(edgeCursor.getLengthM());
-            walkCol.add(edgeCursor.allowsStreetMode(StreetMode.WALK));
-            bicycleCol.add(edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
-            carCol.add(edgeCursor.allowsStreetMode(StreetMode.CAR));
-            geometryCol.add(edgeCursor.getGeometry().toString());
-
-//            edgeCursor.setWalkTimeFactor();
-//            edgeCursor.getEdgeIndex();
-//            edgeCursor.seek();
+            edgesTable.append();
+            edgesTable.set("from_vertex", edgeCursor.getFromVertex());
+            edgesTable.set("to_vertex", edgeCursor.getToVertex());
+            edgesTable.set("length", edgeCursor.getLengthM());
+            edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
+            edgesTable.set("bicycle", edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
+            edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
+            edgesTable.set("geometry", edgeCursor.getGeometry().toString());
         }
 
         // Return a list of dataframes
         List<Object> transportNetworkList = new ArrayList<>();
-        transportNetworkList.add(verticesTable);
-        transportNetworkList.add(edgesTable);
+        transportNetworkList.add(verticesTable.getDataFrame());
+        transportNetworkList.add(edgesTable.getDataFrame());
 
         return transportNetworkList;
     }
 
-    public LinkedHashMap<String, Object> getEdges() {
+    public LinkedHashMap<String, ArrayList<Object>> getEdges() {
         // Build edges return table
-        ArrayList<Integer> edgeIndexCol = new ArrayList<>();
-        ArrayList<Double> lengthCol = new ArrayList<>();
-        ArrayList<Double> startLatCol = new ArrayList<>();
-        ArrayList<Double> startLonCol = new ArrayList<>();
-        ArrayList<Double> endLatCol = new ArrayList<>();
-        ArrayList<Double> endLonCol = new ArrayList<>();
-
-        LinkedHashMap<String, Object> edgesTable = new LinkedHashMap<>();
-        edgesTable.put("edge_index", edgeIndexCol);
-        edgesTable.put("length", lengthCol);
-        edgesTable.put("start_lat", startLatCol);
-        edgesTable.put("start_lon", startLonCol);
-        edgesTable.put("end_lat", endLatCol);
-        edgesTable.put("end_lon", endLonCol);
+        RDataFrame edgesTable = new RDataFrame();
+        edgesTable.addIntegerColumn("edge_index", 0);
+        edgesTable.addDoubleColumn("length", 0.0);
+        edgesTable.addDoubleColumn("start_lat", 0.0);
+        edgesTable.addDoubleColumn("start_lon", 0.0);
+        edgesTable.addDoubleColumn("end_lat", 0.0);
+        edgesTable.addDoubleColumn("end_lon", 0.0);
+        edgesTable.addStringColumn("geometry", "");
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
 
         EdgeStore.Edge edgeCursor = edges.getCursor();
         while (edgeCursor.advance()) {
-            edgeIndexCol.add(edgeCursor.getEdgeIndex());
-            lengthCol.add(edgeCursor.getLengthM());
-            startLatCol.add(edgeCursor.getGeometry().getStartPoint().getY());
-            startLonCol.add(edgeCursor.getGeometry().getStartPoint().getX());
-            endLatCol.add(edgeCursor.getGeometry().getEndPoint().getY());
-            endLonCol.add(edgeCursor.getGeometry().getEndPoint().getX());
+            edgesTable.append();
+            edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
+            edgesTable.set("length", edgeCursor.getLengthM());
+            edgesTable.set("start_lat", edgeCursor.getGeometry().getStartPoint().getY());
+            edgesTable.set("start_lon", edgeCursor.getGeometry().getStartPoint().getX());
+            edgesTable.set("end_lat", edgeCursor.getGeometry().getEndPoint().getY());
+            edgesTable.set("end_lon", edgeCursor.getGeometry().getEndPoint().getX());
+            edgesTable.set("geometry", edgeCursor.getGeometry().toString());
         }
 
-        return edgesTable;
+        return edgesTable.getDataFrame();
     }
 
     public void updateEdges(int[] edgeIndices, double[] walkTimeFactor, double[] bikeTimeFactor) {

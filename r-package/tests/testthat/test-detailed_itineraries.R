@@ -24,7 +24,7 @@ default_tester <- function(r5r_core,
                            max_rides = 3,
                            shortest_path = TRUE,
                            n_threads = Inf,
-                           verbose = FALSE,
+                           verbose = TRUE,
                            drop_geometry = FALSE) {
 
  results <- detailed_itineraries(
@@ -221,7 +221,7 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
-  # expect bike segments to be shorter when setting higher walk speeds
+  # expect bike segments to be shorter when setting higher cycling speeds
   # ps: same as with walk_speeds
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,

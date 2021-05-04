@@ -29,13 +29,16 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 
 time_window <- 1 # in minutes
 percentiles <- 50
-
+bike_lts <- 1
 route_lts <- function(bike_lts) {
-
+  r5r_core$setTimeWindowSize(1L)
+  r5r_core$setNumberOfMonteCarloDraws(5L)
+  r5r_core$setPercentiles(50L)
+  r5r_core$dropElevation()
   # calculate travel time matrix
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
-                              max_lts = bike_lts,
+                              max_lts = bike_lts, verbose = TRUE,
                               drop_geometry = FALSE) %>%
     mutate(lts = bike_lts)
 }
@@ -47,5 +50,6 @@ dit_df <- rbind(
   route_lts(4)
 )
 
-
+edges <- r5r_core$getEdges()
+edges <- jdx::convertToR(edges)
 dit_df %>% mapview::mapview(zcol = "lts")
