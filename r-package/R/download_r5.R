@@ -76,7 +76,7 @@ download_r5 <- function(version = "6.0.1",
   if (!is.logical(force_update)){stop(paste0("force_update must be either TRUE or FALSE"))}
 
   if (checkmate::test_file_exists(destfile) & force_update==FALSE) {
-    message("Using cached version from ", destfile)
+    message("Using cached R5 version from ", destfile)
     return(destfile)
   } else {
 
