@@ -354,11 +354,16 @@ download_metadata <- function(){
   # Download medata
     # test server connection
     metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
-    check_connection(metadata_link)
+    if (check_connection(metadata_link)) {
+      # download it and save it to JAR folder
+      utils::download.file(url=metadata_link, destfile=metadata_file,
+                           overwrite=TRUE, quiet=TRUE)
+    } else {
+      message("Using cached metadata file.")
 
-    # download it and save it to JAR folder
-    utils::download.file(url=metadata_link, destfile=metadata_file,
-                         overwrite=TRUE, quiet=TRUE)
+      metadata_file <- file.path(.libPaths()[1], "r5r", "extdata", "metadata_r5r.csv")
+    }
+
   }
 
   # read metadata
@@ -385,13 +390,15 @@ check_connection <- function(file_url = 'https://www.ipea.gov.br/geobr/metadata/
   # check internet connection
   if (!curl::has_internet()) {
     message("No internet connection.")
-    return(invisible(NULL))
+    return(FALSE)
   }
 
   # test server connection
   # crul::ok(file_url)
   if (httr::http_error(httr::GET(file_url))) {
-    message("Problem connecting to data server. Please try geobr again in a few minutes.")
-    return(invisible(NULL))
+    message("Problem connecting to data server.")
+    return(FALSE)
   }
+
+  return(TRUE)
 }
