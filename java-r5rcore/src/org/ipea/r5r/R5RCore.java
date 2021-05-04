@@ -23,9 +23,7 @@ import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.streets.LinkedPointSet;
 import com.conveyal.r5.streets.StreetLayer;
 import com.conveyal.r5.streets.VertexStore;
-import com.conveyal.r5.transit.RouteInfo;
-import com.conveyal.r5.transit.TransitLayer;
-import com.conveyal.r5.transit.TransportNetwork;
+import com.conveyal.r5.transit.*;
 import com.conveyal.r5.transit.TripPattern;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -259,6 +257,7 @@ public class R5RCore {
 
     public void buildDistanceTables() {
         this.transportNetwork.transitLayer.buildDistanceTables(null);
+        new TransferFinder(transportNetwork).findTransfers();
     }
 
     private TransportNetwork loadR5Network(String dataFolder) {
@@ -1112,7 +1111,6 @@ public class R5RCore {
             edgeCursor.setWalkTimeFactor(walkTimeFactor[i]);
             edgeCursor.setBikeTimeFactor(bikeTimeFactor[i]);
         }
-
     }
 
     public void resetEdges() {
@@ -1129,6 +1127,7 @@ public class R5RCore {
 
     public void dropElevation() {
         resetEdges();
+        buildDistanceTables();
     }
 
     private void buildEdgeTraversalTimes(EdgeStore edges) {

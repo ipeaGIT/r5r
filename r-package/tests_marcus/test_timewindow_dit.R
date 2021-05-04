@@ -6,7 +6,7 @@ library(sf)
 library(data.table)
 library(dplyr)
 library(mapview)
-
+library(tidyverse)
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -32,14 +32,26 @@ percentiles <- 50
 
 route_tw <- function(tw) {
 
+  time_to_string <- function(t) {
+    m <- trunc(t)
+    s <- t - trunc(t)
+    s <- trunc(s * 60)
+    return(paste(m, s, sep=":"))
+  }
+
   r5r_core$setTimeWindowSize(as.integer(tw))
   r5r_core$setNumberOfMonteCarloDraws(as.integer(tw * 5))
 
   # calculate travel time matrix
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
-                              drop_geometry = FALSE, shortest_path = TRUE) %>%
-    mutate(time_window = tw)
+                              walk_speed = 4.68,
+                              drop_geometry = FALSE, shortest_path = TRUE, verbose = TRUE) %>%
+    mutate(time_window = tw,
+           total = segment_duration + lead(wait),
+           segment_duration = map_chr(segment_duration, time_to_string),
+           wait = map_chr(wait, time_to_string)) %>%
+    mutate(total = map_chr(total, time_to_string))
 }
 
 dit_df <- route_tw(1)
