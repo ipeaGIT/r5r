@@ -1,11 +1,13 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.4.1 (dev)
+# r5r v0.4-1 (dev)
 
+**Bug fixes**
+- Fixed bug that prevented r5r from running without internet connection. Closes [#163](https://github.com/ipeaGIT/r5r/issues/163).
 
 -------------------------------------------------------
-# r5r v0.4.0
+# r5r v0.4-0
 
 **Major changes**
 - Updated R5 to version 6.2. Closes [#158](https://github.com/ipeaGIT/r5r/issues/158).
@@ -114,7 +116,7 @@ algorithms used in R5. Closes #114
 
 -------------------------------------------------------
 
-# r5r v0.1.0
+# r5r v0.1-0
 
 * Launch of **r5r** v0.1.0 on [CRAN](https://CRAN.R-project.org/package=r5r).
 * Package website https://ipeagit.github.io/r5r/
