@@ -7,6 +7,7 @@ import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.Utils.Utils;
 
 import java.text.ParseException;
 import java.time.LocalDate;

@@ -15,6 +15,8 @@ import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TripPattern;
 import com.conveyal.r5.transit.*;
+import org.ipea.r5r.Utils.ElevationUtils;
+import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
@@ -266,8 +268,7 @@ public class R5RCore {
             return null;
         }
     }
-
-
+    
     private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            int maxWalkTime, int maxTripDuration,
