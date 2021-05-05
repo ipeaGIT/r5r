@@ -157,30 +157,11 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        setLogMode("ERROR");
+        Utils.setLogMode("ERROR");
     }
 
     public void verboseMode() {
-        setLogMode("ALL");
-    }
-
-    public void setLogMode(String mode) {
-        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
-
-        Logger logger = loggerContext.getLogger("com.conveyal.r5");
-        logger.setLevel(Level.valueOf(mode));
-
-        logger = loggerContext.getLogger("com.conveyal.osmlib");
-        logger.setLevel(Level.valueOf(mode));
-
-        logger = loggerContext.getLogger("com.conveyal.gtfs");
-        logger.setLevel(Level.valueOf(mode));
-
-        logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
-        logger.setLevel(Level.valueOf(mode));
-
-        logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
-        logger.setLevel(Level.valueOf(mode));
+        Utils.setLogMode("ALL");
     }
 
     private TransportNetwork transportNetwork;
@@ -204,114 +185,16 @@ public class R5RCore {
         this.bikeSpeed = 3.3f;
         this.gridPointSet = null;
 
-        File file = new File(dataFolder, "network.dat");
-        if (!file.isFile()) {
-            // network.dat file does not exist. create!
-            transportNetwork = createR5Network(dataFolder);
-        } else {
-            // network.dat file exists
-            // check version
-            if (!checkR5NetworkVersion(dataFolder)) {
-                // incompatible versions. try to create a new one
-                // network could not be loaded, probably due to incompatible versions. create a new one
-                transportNetwork = createR5Network(dataFolder);
-            }
-        }
-        // compatible versions, load network
-        this.transportNetwork = loadR5Network(dataFolder);
+        this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
     }
+
 
     public void buildDistanceTables() {
         this.transportNetwork.transitLayer.buildDistanceTables(null);
         new TransferFinder(transportNetwork).findTransfers();
     }
 
-    private TransportNetwork loadR5Network(String dataFolder) {
-        try {
-            TransportNetwork tn = KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
-            return tn ;
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
-    private TransportNetwork createR5Network(String dataFolder) {
-        File dir = new File(dataFolder);
-        File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
-
-        for (File file:mapdbFiles) file.delete();
-
-        TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
-//        transportNetwork.transitLayer.buildDistanceTables(null);
-        try {
-            KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
-            return tn;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private boolean checkR5NetworkVersion(String dataFolder) throws FileNotFoundException {
-        LOG.info("Reading transport network...");
-
-        File file = new File(dataFolder, "network.dat");
-        Input input = new Input(new FileInputStream(file));
-        Kryo kryo = makeKryo();
-        byte[] header = new byte[KryoNetworkSerializer.HEADER.length];
-        input.read(header, 0, header.length);
-        if (!Arrays.equals(KryoNetworkSerializer.HEADER, header)) {
-            throw new RuntimeException("Unrecognized file header. Is this an R5 Kryo network?");
-        }
-        String version = kryo.readObject(input, String.class);
-        String commit = kryo.readObject(input, String.class);
-        LOG.info("Loading {} file saved by R5 version {} commit {}", new String(header), version, commit);
-
-        input.close();
-
-        if (!BackendVersion.instance.version.equals(version)) {
-            LOG.error(String.format("File version %s is not compatible with this R5 version %s",
-                    version, BackendVersion.instance.version));
-            return false;
-        } else { return true; }
-    }
-
-    /**
-     * Factory method ensuring that we configure Kryo exactly the same way when saving and loading networks, without
-     * duplicating code. We could explicitly register all classes in this method, which would avoid writing out the
-     * class names the first time they are encountered and guarantee that the desired serialization approach was used.
-     * Because these networks are so big though, pre-registration should provide very little savings.
-     * Registration is more important for small network messages.
-     */
-    private static Kryo makeKryo () {
-        Kryo kryo;
-        kryo = new Kryo();
-        // Auto-associate classes with default serializers the first time each class is encountered.
-        kryo.setRegistrationRequired(false);
-        // Handle references and loops in the object graph, do not repeatedly serialize the same instance.
-        kryo.setReferences(true);
-        // Hash maps generally cannot be properly serialized just by serializing their fields.
-        // Kryo's default serializers and instantiation strategies don't seem to deal well with Trove primitive maps.
-        // Certain Trove class hierarchies are Externalizable though, and define their own optimized serialization
-        // methods. addDefaultSerializer will create a serializer instance for any subclass of the specified class.
-        // The TPrimitiveHash hierarchy includes all the trove primitive-primitive and primitive-Object implementations.
-        kryo.addDefaultSerializer(TPrimitiveHash.class, ExternalizableSerializer.class);
-        // We've got a custom serializer for primitive int array lists, because there are a lot of them and the custom
-        // implementation is much faster than deferring to their Externalizable implementation.
-        kryo.register(TIntArrayList.class, new TIntArrayListSerializer());
-        // Likewise for TIntIntHashMaps - there are lots of them in the distance tables.
-        kryo.register(TIntIntHashMap.class, new TIntIntHashMapSerializer());
-        // Kryo's default instantiation and deserialization of BitSets leaves them empty.
-        // The Kryo BitSet serializer in magro/kryo-serializers naively writes out a dense stream of booleans.
-        // BitSet's built-in Java serializer saves the internal bitfields, which is efficient. We use that one.
-        kryo.register(BitSet.class, new JavaSerializer());
-        // Instantiation strategy: how should Kryo make new instances of objects when they are deserialized?
-        // The default strategy requires every class you serialize, even in your dependencies, to have a zero-arg
-        // constructor (which can be private). The setInstantiatorStrategy method completely replaces that default
-        // strategy. The nesting below specifies the Java approach as a fallback strategy to the default strategy.
-        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
-        return kryo;
-    }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> planMultipleTrips(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                             String[] toIds, double[] toLats, double[] toLons,
