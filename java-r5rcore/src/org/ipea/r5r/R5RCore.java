@@ -12,7 +12,6 @@ import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
-import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TripPattern;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
@@ -743,7 +742,6 @@ public class R5RCore {
         } else {
             return null;
         }
-
     }
 
     public List<Object> getStreetNetwork() {
@@ -990,7 +988,7 @@ public class R5RCore {
         isochroneBuilder.setResolution(zoom);
 
         // Build isochrones and return data to R as a list of data.frames
-        return isochroneBuilder.build();
+        return isochroneBuilder.run();
     }
 
     public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {

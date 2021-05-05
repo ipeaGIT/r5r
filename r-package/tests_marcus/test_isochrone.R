@@ -12,7 +12,7 @@ r5r_core <- setup_r5(data_path, verbose = FALSE)
 
 poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- poi[c(1, 3, 10, 15),]
-
+origins <- poi[1, ]
 # routing inputs
 mode <- c("WALK", "BUS")
 max_walk_dist <- 1000 # in meters
@@ -21,7 +21,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 cutoffs = c(1, 5, seq(10, 60, 10))
-
+cutoffs = c(20)
 iso <- isochrones(r5r_core,
                   origins = origins,
                   cutoffs = cutoffs,
