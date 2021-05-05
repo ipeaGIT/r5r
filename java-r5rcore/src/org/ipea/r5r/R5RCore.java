@@ -1082,41 +1082,8 @@ public class R5RCore {
                                                                String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
 
-        RegionalTask request = new RegionalTask();
+        RegionalTask request = buildRequest(fromLat, fromLon, directModes, accessModes, transitModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
 
-        request.scenario = new Scenario();
-        request.scenario.id = "id";
-        request.scenarioId = request.scenario.id;
-
-        request.zoneId = transportNetwork.getTimeZone();
-        request.fromLat = fromLat;
-        request.fromLon = fromLon;
-        request.walkSpeed = (float) this.walkSpeed;
-        request.bikeSpeed = (float) this.bikeSpeed;
-        request.streetTime = maxTripDuration;
-        request.maxWalkTime = maxWalkTime;
-        request.maxBikeTime = maxTripDuration;
-        request.maxCarTime = maxTripDuration;
-        request.maxTripDurationMinutes = maxTripDuration;
-        request.makeTauiSite = false;
-        request.recordTimes = true;
-        request.recordAccessibility = false;
-        request.maxRides = this.maxRides;
-        request.bikeTrafficStress = this.maxLevelTrafficStress;
-
-        request.directModes = setLegModes(directModes);
-        request.accessModes = setLegModes(accessModes);
-        request.egressModes = setLegModes(egressModes);
-        request.transitModes = setTransitModes(transitModes);
-
-        request.date = LocalDate.parse(date);
-
-        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
-
-        request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
-
-        request.monteCarloDraws = this.numberOfMonteCarloDraws;
 
         request.destinationPointSets = new PointSet[1];
         request.destinationPointSets[0] = getGridPointSet(zoom);
@@ -1171,6 +1138,45 @@ public class R5RCore {
             return null;
         }
 
+    }
+
+    private RegionalTask buildRequest(double fromLat, double fromLon, String directModes, String accessModes, String transitModes, String egressModes, String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+        RegionalTask request = new RegionalTask();
+
+        request.scenario = new Scenario();
+        request.scenario.id = "id";
+        request.scenarioId = request.scenario.id;
+
+        request.zoneId = transportNetwork.getTimeZone();
+        request.fromLat = fromLat;
+        request.fromLon = fromLon;
+        request.walkSpeed = (float) this.walkSpeed;
+        request.bikeSpeed = (float) this.bikeSpeed;
+        request.streetTime = maxTripDuration;
+        request.maxWalkTime = maxWalkTime;
+        request.maxBikeTime = maxTripDuration;
+        request.maxCarTime = maxTripDuration;
+        request.maxTripDurationMinutes = maxTripDuration;
+        request.makeTauiSite = false;
+        request.recordTimes = true;
+        request.recordAccessibility = false;
+        request.maxRides = this.maxRides;
+        request.bikeTrafficStress = this.maxLevelTrafficStress;
+
+        request.directModes = setLegModes(directModes);
+        request.accessModes = setLegModes(accessModes);
+        request.egressModes = setLegModes(egressModes);
+        request.transitModes = setTransitModes(transitModes);
+
+        request.date = LocalDate.parse(date);
+
+        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
+
+        request.fromTime = secondsFromMidnight;
+        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+
+        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+        return request;
     }
 
     public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {
