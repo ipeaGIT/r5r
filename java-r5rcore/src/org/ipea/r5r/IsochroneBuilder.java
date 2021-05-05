@@ -7,7 +7,6 @@ import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -18,43 +17,29 @@ import java.util.stream.Collectors;
 
 public class IsochroneBuilder {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(IsochroneBuilder.class);
-
-    ForkJoinPool r5rThreadPool;
-    TransportNetwork transportNetwork;
-    RoutingProperties routingProperties;
+    private final ForkJoinPool r5rThreadPool;
+    private final TransportNetwork transportNetwork;
+    private final RoutingProperties routingProperties;
 
     int nIsochrones;
 
-    String[] fromIds;
-    double[] fromLats;
-    double[] fromLons;
+    private String[] fromIds;
+    private double[] fromLats;
+    private double[] fromLons;
 
-    int[] cutoffs;
-    int zoom;
+    private int[] cutoffs;
 
-    EnumSet<LegMode> directModes;
-    EnumSet<TransitModes> transitModes;
-    EnumSet<LegMode> accessModes;
-    EnumSet<LegMode> egressModes;
+    private EnumSet<LegMode> directModes;
+    private EnumSet<TransitModes> transitModes;
+    private EnumSet<LegMode> accessModes;
+    private EnumSet<LegMode> egressModes;
 
-    String departureDate;
-    String departureTime;
-    int maxWalkTime;
-    int maxTripDuration;
+    private String departureDate;
+    private String departureTime;
+    private int maxWalkTime;
+    private int maxTripDuration;
 
-    Grid gridPointSet = null;
-    private Grid getGridPointSet(int zoom) {
-        if (gridPointSet == null || gridPointSet.zoom != zoom) {
-            gridPointSet = new Grid(zoom, this.transportNetwork.getEnvelope());
-        }
-
-        return gridPointSet;
-    }
-
-    private Grid getGridPointSet() {
-        return getGridPointSet(9);
-    }
+    private Grid gridPointSet = null;
 
     public IsochroneBuilder(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
@@ -75,7 +60,6 @@ public class IsochroneBuilder {
         this.accessModes = Utils.setLegModes(accessModes);
         this.egressModes = Utils.setLegModes(egressModes);
         this.transitModes = Utils.setTransitModes(transitModes);
-
     }
 
     public void setDepartureDateTime(String departureDate, String departureTime) {
@@ -89,7 +73,7 @@ public class IsochroneBuilder {
     }
 
     public void setResolution(int resolution) {
-        this.zoom = resolution;
+        this.gridPointSet = new Grid(resolution, this.transportNetwork.getEnvelope());
     }
 
     public void setCutoffs(int[] cutoffs) {
@@ -118,24 +102,28 @@ public class IsochroneBuilder {
     }
 
     private LinkedHashMap<String, ArrayList<Object>> buildIsochrone(int index) throws ParseException {
+        // Build request
         RegionalTask request = buildRequest(index);
 
+        // Calculate travel times and convert to seconds
+        int[] times = computeTravelTimes(request);
 
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = getGridPointSet(zoom);
+        // Build isochrone features
+        List<IsochroneFeature> isochroneFeatures = buildIsochroneFeatures(request, times);
 
-        request.percentiles = new int[1];
-        request.percentiles[0] = 50;
+        // Build return table
+        RDataFrame isochronesTable = buildIsochronesTable(fromIds[index], isochroneFeatures);
 
-        LOG.info("checking grid point set");
-        LOG.info(gridPointSet.toString());
+        // Return isochrones
+        if (isochronesTable.nRow() > 0) {
+            return isochronesTable.getDataFrame();
+        } else {
+            return null;
+        }
+    }
 
-        LOG.info(request.getWebMercatorExtents().toString());
-
-        LOG.info("compute travel times");
-
-        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
-
+    private int[] computeTravelTimes(RegionalTask request) {
+        TravelTimeComputer computer = new TravelTimeComputer(request, this.transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
 
         int[] times = travelTimeResults.travelTimes.getValues()[0];
@@ -149,31 +137,32 @@ public class IsochroneBuilder {
                 times[i] = Integer.MAX_VALUE;
             }
         }
+        return times;
+    }
 
-        // Build return table
+    private List<IsochroneFeature> buildIsochroneFeatures(RegionalTask request, int[] times) {
         WebMercatorExtents extents = WebMercatorExtents.forPointsets(request.destinationPointSets);
         WebMercatorGridPointSet isoGrid = new WebMercatorGridPointSet(extents);
 
+        List<IsochroneFeature> isochroneFeatures = new LinkedList<>();
+        for (int cutoff:cutoffs) {
+            isochroneFeatures.add(new IsochroneFeature(cutoff*60, isoGrid, times));
+        }
+        return isochroneFeatures;
+    }
+
+    private RDataFrame buildIsochronesTable(String fromId, List<IsochroneFeature> isochroneFeatures) {
         RDataFrame isochronesTable = new RDataFrame();
-        isochronesTable.addStringColumn("from_id", fromIds[index]);
+        isochronesTable.addStringColumn("from_id", fromId);
         isochronesTable.addIntegerColumn("cutoff", 0);
         isochronesTable.addStringColumn("geometry", "");
 
-
-        for (int cutoff:cutoffs) {
-            IsochroneFeature isochroneFeature = new IsochroneFeature(cutoff*60, isoGrid, times);
-
+        for (IsochroneFeature isochroneFeature : isochroneFeatures) {
             isochronesTable.append();
-            isochronesTable.set("cutoff", cutoff);
+            isochronesTable.set("cutoff", isochroneFeature.cutoffSec / 60);
             isochronesTable.set("geometry", isochroneFeature.geometry.toString());
         }
-
-        if (isochronesTable.nRow() > 0) {
-            return isochronesTable.getDataFrame();
-        } else {
-            return null;
-        }
-
+        return isochronesTable;
     }
 
     private RegionalTask buildRequest(int index) throws ParseException {
@@ -212,6 +201,12 @@ public class IsochroneBuilder {
         request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60);
 
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
+
+        request.destinationPointSets = new PointSet[1];
+        request.destinationPointSets[0] = this.gridPointSet;
+
+        request.percentiles = new int[1];
+        request.percentiles[0] = 50;
         return request;
     }
 
