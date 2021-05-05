@@ -3,14 +3,43 @@ package org.ipea.r5r;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import com.conveyal.r5.api.util.LegMode;
+import com.conveyal.r5.api.util.TransitModes;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EnumSet;
 
 public class Utils {
+
+    public static EnumSet<LegMode> setLegModes(String modes) {
+        EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);
+
+        String[] modesArray = modes.split(";");
+        if (!modes.equals("") & modesArray.length > 0) {
+            for (String mode : modesArray) {
+                legModes.add(LegMode.valueOf(mode));
+            }
+        }
+
+        return legModes;
+    }
+
+    public static EnumSet<TransitModes> setTransitModes(String modes) {
+        EnumSet<TransitModes> transitModes = EnumSet.noneOf(TransitModes.class);
+
+        String[] modesArray = modes.split(";");
+        if (!modes.equals("") & modesArray.length > 0) {
+            for (String mode : modesArray) {
+                transitModes.add(TransitModes.valueOf(mode));
+            }
+        }
+
+        return transitModes;
+    }
 
     public static int getSecondsFromMidnight(String departureTime) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");

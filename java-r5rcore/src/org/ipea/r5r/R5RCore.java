@@ -35,64 +35,58 @@ public class R5RCore {
     private int numberOfThreads;
     ForkJoinPool r5rThreadPool;
 
+    RoutingProperties routingProperties = new RoutingProperties();
+
     public double getWalkSpeed() {
-        return walkSpeed;
+        return this.routingProperties.walkSpeed;
     }
 
     public void setWalkSpeed(double walkSpeed) {
-        this.walkSpeed = walkSpeed;
+        this.routingProperties.walkSpeed = walkSpeed;
     }
 
     public double getBikeSpeed() {
-        return bikeSpeed;
+        return this.routingProperties.bikeSpeed;
     }
 
     public void setBikeSpeed(double bikeSpeed) {
-        this.bikeSpeed = bikeSpeed;
+        this.routingProperties.bikeSpeed = bikeSpeed;
     }
 
-    private double walkSpeed;
-    private double bikeSpeed;
-    private int maxRides = 8; // max 8 number of rides in public transport trips
 
     public int getMaxLevelTrafficStress() {
-        return maxLevelTrafficStress;
+        return this.routingProperties.maxLevelTrafficStress;
     }
 
     public void setMaxLevelTrafficStress(int maxLevelTrafficStress) {
-        this.maxLevelTrafficStress = maxLevelTrafficStress;
+        this.routingProperties.maxLevelTrafficStress = maxLevelTrafficStress;
     }
 
-    private int maxLevelTrafficStress = 4;
 
     public int getSuboptimalMinutes() {
-        return suboptimalMinutes;
+        return this.routingProperties.suboptimalMinutes;
     }
 
     public void setSuboptimalMinutes(int suboptimalMinutes) {
-        this.suboptimalMinutes = suboptimalMinutes;
+        this.routingProperties.suboptimalMinutes = suboptimalMinutes;
     }
 
-    private int suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
-
     public int getTimeWindowSize() {
-        return timeWindowSize;
+        return this.routingProperties.timeWindowSize;
     }
 
     public void setTimeWindowSize(int timeWindowSize) {
-        this.timeWindowSize = timeWindowSize;
+        this.routingProperties.timeWindowSize = timeWindowSize;
     }
 
     public int getNumberOfMonteCarloDraws() {
-        return numberOfMonteCarloDraws;
+        return this.routingProperties.numberOfMonteCarloDraws;
     }
 
     public void setNumberOfMonteCarloDraws(int numberOfMonteCarloDraws) {
-        this.numberOfMonteCarloDraws = numberOfMonteCarloDraws;
+        this.routingProperties.numberOfMonteCarloDraws = numberOfMonteCarloDraws;
     }
 
-    private int timeWindowSize = 60; // minutes
-    private int numberOfMonteCarloDraws = 220; //
     private int[] percentiles = {50};
 
     public void setPercentiles(int[] percentiles) {
@@ -104,25 +98,13 @@ public class R5RCore {
         this.percentiles[0] = percentile;
     }
 
-    Grid gridPointSet = null;
-    private Grid getGridPointSet(int zoom) {
-        if (gridPointSet == null || gridPointSet.zoom != zoom) {
-            gridPointSet = new Grid(zoom, this.transportNetwork.getEnvelope());
-        }
-
-        return gridPointSet;
-    }
-
-    private Grid getGridPointSet() {
-        return getGridPointSet(9);
-    }
 
     public int getMaxRides() {
-        return maxRides;
+        return this.routingProperties.maxRides;
     }
 
     public void setMaxRides(int maxRides) {
-        this.maxRides = maxRides;
+        this.routingProperties.maxRides = maxRides;
     }
 
     public int getNumberOfThreads() {
@@ -164,10 +146,6 @@ public class R5RCore {
 
         setNumberOfThreadsToMax();
 
-        this.walkSpeed = 1.0f;
-        this.bikeSpeed = 3.3f;
-        this.gridPointSet = null;
-
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
     }
 
@@ -206,31 +184,7 @@ public class R5RCore {
                         collect(Collectors.toList())).get();
     }
 
-    private EnumSet<LegMode> setLegModes(String modes) {
-        EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);
 
-        String[] modesArray = modes.split(";");
-        if (!modes.equals("") & modesArray.length > 0) {
-            for (String mode : modesArray) {
-                legModes.add(LegMode.valueOf(mode));
-            }
-        }
-
-        return legModes;
-    }
-
-    private EnumSet<TransitModes> setTransitModes(String modes) {
-        EnumSet<TransitModes> transitModes = EnumSet.noneOf(TransitModes.class);
-
-        String[] modesArray = modes.split(";");
-        if (!modes.equals("") & modesArray.length > 0) {
-            for (String mode : modesArray) {
-                transitModes.add(TransitModes.valueOf(mode));
-            }
-        }
-
-        return transitModes;
-    }
 
     public LinkedHashMap<String, ArrayList<Object>> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
@@ -246,33 +200,33 @@ public class R5RCore {
         request.maxWalkTime = maxWalkTime;
         request.maxBikeTime = maxTripDuration;
         request.maxCarTime = maxTripDuration;
-        request.walkSpeed = (float) this.walkSpeed;
-        request.bikeSpeed = (float) this.bikeSpeed;
+        request.walkSpeed = (float) this.routingProperties.walkSpeed;
+        request.bikeSpeed = (float) this.routingProperties.bikeSpeed;
         request.maxTripDurationMinutes = maxTripDuration;
 //        request.computePaths = true;
 //        request.computeTravelTimeBreakdown = true;
-        request.maxRides = this.maxRides;
-        request.bikeTrafficStress = this.maxLevelTrafficStress;
+        request.maxRides = this.routingProperties.maxRides;
+        request.bikeTrafficStress = this.routingProperties.maxLevelTrafficStress;
 
-        request.suboptimalMinutes = this.suboptimalMinutes;
+        request.suboptimalMinutes = this.routingProperties.suboptimalMinutes;
 
-        request.directModes = setLegModes(directModes);
-        request.accessModes = setLegModes(accessModes);
-        request.egressModes = setLegModes(egressModes);
-        request.transitModes = setTransitModes(transitModes);
+        request.directModes = Utils.setLegModes(directModes);
+        request.accessModes = Utils.setLegModes(accessModes);
+        request.egressModes = Utils.setLegModes(egressModes);
+        request.transitModes = Utils.setTransitModes(transitModes);
 
         request.date = LocalDate.parse(date);
 
         int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + (this.routingProperties.timeWindowSize * 60);
 //        request.toTime = secondsFromMidnight + 60; // 1 minute, ignoring time window parameter (this.timeWindowSize * 60);
 
 //        LOG.info("from time {}", request.fromTime);
 //        LOG.info("to time {}", request.toTime);
 
-        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+        request.monteCarloDraws = this.routingProperties.numberOfMonteCarloDraws;
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
@@ -298,7 +252,7 @@ public class R5RCore {
 
             try {
                 // if only the shortest path is requested, return min travel times instead of avg
-                boolean shortestPath = (this.suboptimalMinutes == 0);
+                boolean shortestPath = (this.routingProperties.suboptimalMinutes == 0);
 
                 pathOptionsTable = buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
                         maxWalkTime, maxTripDuration, shortestPath, dropItineraryGeometry, response.getOptions());
@@ -714,8 +668,8 @@ public class R5RCore {
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
         request.fromLon = fromLon;
-        request.walkSpeed = (float) this.walkSpeed;
-        request.bikeSpeed = (float) this.bikeSpeed;
+        request.walkSpeed = (float) this.routingProperties.walkSpeed;
+        request.bikeSpeed = (float) this.routingProperties.bikeSpeed;
         request.streetTime = maxTripDuration;
         request.maxWalkTime = maxWalkTime;
         request.maxBikeTime = maxTripDuration;
@@ -725,22 +679,22 @@ public class R5RCore {
 //        request.computePaths = false;
 //        request.computeTravelTimeBreakdown = false;
         request.recordTimes = true;
-        request.maxRides = this.maxRides;
-        request.bikeTrafficStress = this.maxLevelTrafficStress;
+        request.maxRides = this.routingProperties.maxRides;
+        request.bikeTrafficStress = this.routingProperties.maxLevelTrafficStress;
 
-        request.directModes = setLegModes(directModes);
-        request.accessModes = setLegModes(accessModes);
-        request.egressModes = setLegModes(egressModes);
-        request.transitModes = setTransitModes(transitModes);
+        request.directModes = Utils.setLegModes(directModes);
+        request.accessModes = Utils.setLegModes(accessModes);
+        request.egressModes = Utils.setLegModes(egressModes);
+        request.transitModes = Utils.setTransitModes(transitModes);
 
         request.date = LocalDate.parse(date);
 
         int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + (this.routingProperties.timeWindowSize * 60);
 
-        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+        request.monteCarloDraws = this.routingProperties.numberOfMonteCarloDraws;
 
         request.destinationPointSets = new PointSet[1];
         request.destinationPointSets[0] = destinationPoints;
@@ -1043,14 +997,21 @@ public class R5RCore {
                 date, departureTime, maxWalkTime, maxTripDuration);
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
+    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
                                                                String directModes, String transitModes, String accessModes, String egressModes,
-                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
+        String[] fromIds = new String[1];
+        double[] fromLats = new double[1];
+        double[] fromLons = new double[1];
         int[] cutoffTimes = new int[1];
+
+        fromIds[0] = fromId;
+        fromLats[0] = fromLat;
+        fromLons[0] = fromLon;
         cutoffTimes[0] = cutoffs;
 
-        return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
+        return isochrones(fromIds, fromLats, fromLons, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
                 date, departureTime, maxWalkTime, maxTripDuration);
 
     }
@@ -1059,86 +1020,97 @@ public class R5RCore {
                                                                String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
-        int[] requestIndices = new int[fromId.length];
-        for (int i = 0; i < fromId.length; i++) requestIndices[i] = i;
+        IsochroneBuilder isochroneBuilder = new IsochroneBuilder(r5rThreadPool, this.transportNetwork, this.routingProperties);
+        isochroneBuilder.setOrigins(fromId, fromLat, fromLon);
+        isochroneBuilder.setModes(directModes, accessModes, transitModes, egressModes);
+        isochroneBuilder.setDepartureDateTime(date, departureTime);
+        isochroneBuilder.setTripDuration(maxWalkTime, maxTripDuration);
+        isochroneBuilder.setCutoffs(cutoffs);
+        isochroneBuilder.setResolution(zoom);
 
-        return r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results = null;
-                            try {
-                                results = isochrones(fromId[index], fromLat[index], fromLon[index], cutoffs, zoom,
-                                        directModes, transitModes, accessModes, egressModes,
-                                        date, departureTime, maxWalkTime, maxTripDuration);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
-                        collect(Collectors.toList())).get();
+        return isochroneBuilder.build();
+
+
+//        int[] requestIndices = new int[fromId.length];
+//        for (int i = 0; i < fromId.length; i++) requestIndices[i] = i;
+//
+//        return r5rThreadPool.submit(() ->
+//                Arrays.stream(requestIndices).parallel()
+//                        .mapToObj(index -> {
+//                            LinkedHashMap<String, ArrayList<Object>> results = null;
+//                            try {
+//                                results = isochrones(fromId[index], fromLat[index], fromLon[index], cutoffs, zoom,
+//                                        directModes, transitModes, accessModes, egressModes,
+//                                        date, departureTime, maxWalkTime, maxTripDuration);
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                            return results;
+//                        }).
+//                        collect(Collectors.toList())).get();
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
-                                                               String directModes, String transitModes, String accessModes, String egressModes,
-                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
-
-        RegionalTask request = buildRequest(fromLat, fromLon, directModes, accessModes, transitModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
-
-
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = getGridPointSet(zoom);
-
-        request.percentiles = new int[1];
-        request.percentiles[0] = 50;
-
-        LOG.info("checking grid point set");
-        LOG.info(gridPointSet.toString());
-
-        LOG.info(request.getWebMercatorExtents().toString());
-
-        LOG.info("compute travel times");
-
-        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
-
-        OneOriginResult travelTimeResults = computer.computeTravelTimes();
-
-        int[] times = travelTimeResults.travelTimes.getValues()[0];
-        for (int i = 0; i < times.length; i++) {
-            // convert travel times from minutes to seconds
-            // this test is necessary because unreachable grid cells have travel time = Integer.MAX_VALUE, and
-            // multiplying Integer.MAX_VALUE by 60 causes errors in the isochrone algorithm
-            if (times[i] <= maxTripDuration) {
-                times[i] = times[i] * 60;
-            } else {
-                times[i] = Integer.MAX_VALUE;
-            }
-        }
-
-        // Build return table
-        WebMercatorExtents extents = WebMercatorExtents.forPointsets(request.destinationPointSets);
-        WebMercatorGridPointSet isoGrid = new WebMercatorGridPointSet(extents);
-
-        RDataFrame isochronesTable = new RDataFrame();
-        isochronesTable.addStringColumn("from_id", fromId);
-        isochronesTable.addIntegerColumn("cutoff", 0);
-        isochronesTable.addStringColumn("geometry", "");
-
-
-        for (int cutoff:cutoffs) {
-            IsochroneFeature isochroneFeature = new IsochroneFeature(cutoff*60, isoGrid, times);
-
-            isochronesTable.append();
-            isochronesTable.set("cutoff", cutoff);
-            isochronesTable.set("geometry", isochroneFeature.geometry.toString());
-        }
-
-        if (isochronesTable.nRow() > 0) {
-            return isochronesTable.getDataFrame();
-        } else {
-            return null;
-        }
-
-    }
+//    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
+//                                                               String directModes, String transitModes, String accessModes, String egressModes,
+//                                                               String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
+//
+//        RegionalTask request = buildRequest(fromLat, fromLon, directModes, accessModes, transitModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+//
+//
+//        request.destinationPointSets = new PointSet[1];
+//        request.destinationPointSets[0] = getGridPointSet(zoom);
+//
+//        request.percentiles = new int[1];
+//        request.percentiles[0] = 50;
+//
+//        LOG.info("checking grid point set");
+//        LOG.info(gridPointSet.toString());
+//
+//        LOG.info(request.getWebMercatorExtents().toString());
+//
+//        LOG.info("compute travel times");
+//
+//        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
+//
+//        OneOriginResult travelTimeResults = computer.computeTravelTimes();
+//
+//        int[] times = travelTimeResults.travelTimes.getValues()[0];
+//        for (int i = 0; i < times.length; i++) {
+//            // convert travel times from minutes to seconds
+//            // this test is necessary because unreachable grid cells have travel time = Integer.MAX_VALUE, and
+//            // multiplying Integer.MAX_VALUE by 60 causes errors in the isochrone algorithm
+//            if (times[i] <= maxTripDuration) {
+//                times[i] = times[i] * 60;
+//            } else {
+//                times[i] = Integer.MAX_VALUE;
+//            }
+//        }
+//
+//        // Build return table
+//        WebMercatorExtents extents = WebMercatorExtents.forPointsets(request.destinationPointSets);
+//        WebMercatorGridPointSet isoGrid = new WebMercatorGridPointSet(extents);
+//
+//        RDataFrame isochronesTable = new RDataFrame();
+//        isochronesTable.addStringColumn("from_id", fromId);
+//        isochronesTable.addIntegerColumn("cutoff", 0);
+//        isochronesTable.addStringColumn("geometry", "");
+//
+//
+//        for (int cutoff:cutoffs) {
+//            IsochroneFeature isochroneFeature = new IsochroneFeature(cutoff*60, isoGrid, times);
+//
+//            isochronesTable.append();
+//            isochronesTable.set("cutoff", cutoff);
+//            isochronesTable.set("geometry", isochroneFeature.geometry.toString());
+//        }
+//
+//        if (isochronesTable.nRow() > 0) {
+//            return isochronesTable.getDataFrame();
+//        } else {
+//            return null;
+//        }
+//
+//    }
 
     private RegionalTask buildRequest(double fromLat, double fromLon, String directModes, String accessModes, String transitModes, String egressModes, String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException {
         RegionalTask request = new RegionalTask();
@@ -1150,8 +1122,8 @@ public class R5RCore {
         request.zoneId = transportNetwork.getTimeZone();
         request.fromLat = fromLat;
         request.fromLon = fromLon;
-        request.walkSpeed = (float) this.walkSpeed;
-        request.bikeSpeed = (float) this.bikeSpeed;
+        request.walkSpeed = (float) this.routingProperties.walkSpeed;
+        request.bikeSpeed = (float) this.routingProperties.bikeSpeed;
         request.streetTime = maxTripDuration;
         request.maxWalkTime = maxWalkTime;
         request.maxBikeTime = maxTripDuration;
@@ -1160,22 +1132,22 @@ public class R5RCore {
         request.makeTauiSite = false;
         request.recordTimes = true;
         request.recordAccessibility = false;
-        request.maxRides = this.maxRides;
-        request.bikeTrafficStress = this.maxLevelTrafficStress;
+        request.maxRides = this.routingProperties.maxRides;
+        request.bikeTrafficStress = this.routingProperties.maxLevelTrafficStress;
 
-        request.directModes = setLegModes(directModes);
-        request.accessModes = setLegModes(accessModes);
-        request.egressModes = setLegModes(egressModes);
-        request.transitModes = setTransitModes(transitModes);
+        request.directModes = Utils.setLegModes(directModes);
+        request.accessModes = Utils.setLegModes(accessModes);
+        request.egressModes = Utils.setLegModes(egressModes);
+        request.transitModes = Utils.setTransitModes(transitModes);
 
         request.date = LocalDate.parse(date);
 
         int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + (this.routingProperties.timeWindowSize * 60);
 
-        request.monteCarloDraws = this.numberOfMonteCarloDraws;
+        request.monteCarloDraws = this.routingProperties.numberOfMonteCarloDraws;
         return request;
     }
 
