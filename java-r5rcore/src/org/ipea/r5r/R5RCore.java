@@ -398,7 +398,7 @@ public class R5RCore {
 
         request.date = LocalDate.parse(date);
 
-        int secondsFromMidnight = getSecondsFromMidnight(departureTime);
+        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
         request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
@@ -448,12 +448,6 @@ public class R5RCore {
         }
     }
 
-    private int getSecondsFromMidnight(String departureTime) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        Date reference = dateFormat.parse("00:00:00");
-        Date date = dateFormat.parse(departureTime);
-        return (int) ((date.getTime() - reference.getTime()) / 1000L);
-    }
 
     private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
@@ -903,7 +897,7 @@ public class R5RCore {
 
         request.date = LocalDate.parse(date);
 
-        int secondsFromMidnight = getSecondsFromMidnight(departureTime);
+        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
         request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
@@ -1308,7 +1302,7 @@ public class R5RCore {
 
         request.date = LocalDate.parse(date);
 
-        int secondsFromMidnight = getSecondsFromMidnight(departureTime);
+        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
         request.toTime = secondsFromMidnight + (this.timeWindowSize * 60);
