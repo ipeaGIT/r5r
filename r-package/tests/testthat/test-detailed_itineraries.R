@@ -24,7 +24,7 @@ default_tester <- function(r5r_core,
                            max_rides = 3,
                            shortest_path = TRUE,
                            n_threads = Inf,
-                           verbose = TRUE,
+                           verbose = FALSE,
                            drop_geometry = FALSE) {
 
  results <- detailed_itineraries(
