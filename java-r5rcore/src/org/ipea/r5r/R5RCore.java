@@ -268,7 +268,7 @@ public class R5RCore {
             return null;
         }
     }
-    
+
     private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            int maxWalkTime, int maxTripDuration,
