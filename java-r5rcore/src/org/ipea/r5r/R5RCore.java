@@ -490,11 +490,7 @@ public class R5RCore {
             LOG.info("Itinerary option {} of {}: {}", optionIndex + 1, pathOptions.size(), option.summary);
 
             LOG.info("travel time min {}, avg {}", option.stats.min, option.stats.avg);
-            if (shortestPath) {
-                if (option.stats.min > (maxTripDuration * 60)) continue;
-            } else {
-                if (option.stats.avg > (maxTripDuration * 60)) continue;
-            }
+            if (option.stats.avg > (maxTripDuration * 60)) continue;
 
             if (option.transit == null) { // no transit, maybe has direct access legs
                 if (option.access != null) {
