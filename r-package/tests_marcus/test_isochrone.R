@@ -10,6 +10,7 @@ library(mapview)
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 
+points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- poi[c(1, 3, 10, 15),]
 # origins <- poi[1, ]
@@ -39,3 +40,9 @@ iso %>%
   scale_fill_brewer(direction = -1) +
   facet_wrap(~from_id)
 
+
+snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon)
+snap_df <- jdx::convertToR(snap_df)
+
+mapview(snap_df, xcol="lon", ycol="lat", crs = 4326, color = "green") +
+mapview(snap_df, xcol="snap_lon", ycol="snap_lat", crs = 4326, color = "red")

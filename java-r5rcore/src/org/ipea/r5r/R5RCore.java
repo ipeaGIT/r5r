@@ -6,6 +6,8 @@ import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.linearref.LengthIndexedLine;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -295,6 +297,23 @@ public class R5RCore {
         return isochroneBuilder.run();
     }
 
+    // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
+    public LinkedHashMap<String, Object> findSnapPoints(String fromId, double fromLat, double fromLon) throws ExecutionException, InterruptedException {
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return findSnapPoints(fromIds, fromLats, fromLons);
+    }
+
+    public LinkedHashMap<String, Object> findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon) throws ExecutionException, InterruptedException {
+        SnapFinder snapFinder = new SnapFinder(r5rThreadPool, this.transportNetwork);
+        snapFinder.setOrigins(fromId, fromLat, fromLon);
+        return snapFinder.run();
+    }
+
+
+
     // ---------------------------------------------------------------------------------------------------
     //                                    UTILITY FUNCTIONS
     // ---------------------------------------------------------------------------------------------------
@@ -432,6 +451,7 @@ public class R5RCore {
 
             servicesTable.set("active_on_date", service.activeOn(LocalDate.parse(date)));
         }
+
 
         return servicesTable.getDataFrame();
     }
