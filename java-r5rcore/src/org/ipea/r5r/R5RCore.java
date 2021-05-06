@@ -2,29 +2,27 @@ package org.ipea.r5r;
 
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.OneOriginResult;
-import com.conveyal.r5.analyst.*;
+import com.conveyal.r5.analyst.FreeFormPointSet;
+import com.conveyal.r5.analyst.PointSet;
+import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
-import com.conveyal.r5.api.ProfileResponse;
-import com.conveyal.r5.api.util.*;
-import com.conveyal.r5.common.GeometryUtils;
-import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
-import com.conveyal.r5.transit.TripPattern;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
@@ -156,388 +154,48 @@ public class R5RCore {
         new TransferFinder(transportNetwork).findTransfers();
     }
 
+    public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
+                                                                   String directModes, String transitModes, String accessModes, String egressModes,
+                                                                   String date, String departureTime, int maxWalkTime, int maxTripDuration,
+                                                                   boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
 
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> planMultipleTrips(String[] fromIds, double[] fromLats, double[] fromLons,
+        return detailedItineraries(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes,
+                date, departureTime, maxWalkTime, maxTripDuration, dropItineraryGeometry);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxTripDuration,
                                                                             boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
 
-        int[] requestIndices = new int[fromIds.length];
-        for (int i = 0; i < fromIds.length; i++) requestIndices[i] = i;
+        DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
+        detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
+        detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
+        detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
+        detailedItineraryPlanner.setTripDuration(maxWalkTime, maxTripDuration);
+        if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
-        return r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results =
-                                    null;
-                            try {
-                                results = planSingleTrip(fromIds[index], fromLats[index], fromLons[index],
-                                        toIds[index], toLats[index], toLons[index],
-                                        directModes, transitModes, accessModes, egressModes, date, departureTime,
-                                        maxWalkTime, maxTripDuration, dropItineraryGeometry);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
-                        collect(Collectors.toList())).get();
+        return detailedItineraryPlanner.run();
     }
 
 
 
-    public LinkedHashMap<String, ArrayList<Object>> planSingleTrip(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
-                                                                   String directModes, String transitModes, String accessModes, String egressModes,
-                                                                   String date, String departureTime, int maxWalkTime, int maxTripDuration,
-                                                                   boolean dropItineraryGeometry) throws ParseException {
-        RegionalTask request = new RegionalTask();
-        request.zoneId = transportNetwork.getTimeZone();
-        request.fromLat = fromLat;
-        request.fromLon = fromLon;
-        request.toLat = toLat;
-        request.toLon = toLon;
-        request.streetTime = maxTripDuration;
-        request.maxWalkTime = maxWalkTime;
-        request.maxBikeTime = maxTripDuration;
-        request.maxCarTime = maxTripDuration;
-        request.walkSpeed = (float) this.routingProperties.walkSpeed;
-        request.bikeSpeed = (float) this.routingProperties.bikeSpeed;
-        request.maxTripDurationMinutes = maxTripDuration;
-//        request.computePaths = true;
-//        request.computeTravelTimeBreakdown = true;
-        request.maxRides = this.routingProperties.maxRides;
-        request.bikeTrafficStress = this.routingProperties.maxLevelTrafficStress;
 
-        request.suboptimalMinutes = this.routingProperties.suboptimalMinutes;
 
-        request.directModes = Utils.setLegModes(directModes);
-        request.accessModes = Utils.setLegModes(accessModes);
-        request.egressModes = Utils.setLegModes(egressModes);
-        request.transitModes = Utils.setTransitModes(transitModes);
 
-        request.date = LocalDate.parse(date);
 
-        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
-        request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (this.routingProperties.timeWindowSize * 60);
-//        request.toTime = secondsFromMidnight + 60; // 1 minute, ignoring time window parameter (this.timeWindowSize * 60);
-
-//        LOG.info("from time {}", request.fromTime);
-//        LOG.info("to time {}", request.toTime);
-
-        request.monteCarloDraws = this.routingProperties.numberOfMonteCarloDraws;
-
-        PointToPointQuery query = new PointToPointQuery(transportNetwork);
-
-        ProfileResponse response = null;
-        try {
-            response = query.getPlan(request);
-        } catch (IllegalStateException e) {
-            LOG.error(String.format("Error (*illegal state*) while finding path between %s and %s", fromId, toId));
-            LOG.error(e.getMessage());
-            return null;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            LOG.error(String.format("Error (*array out of bounds*) while finding path between %s and %s", fromId, toId));
-            LOG.error(e.getMessage());
-            return null;
-        } catch (Exception e) {
-            LOG.error(String.format("Error while finding path between %s and %s", fromId, toId));
-            LOG.error(e.getMessage());
-            return null;
-        }
-
-        if (!response.getOptions().isEmpty()) {
-            LinkedHashMap<String, ArrayList<Object>> pathOptionsTable;
-
-            try {
-                // if only the shortest path is requested, return min travel times instead of avg
-                boolean shortestPath = (this.routingProperties.suboptimalMinutes == 0);
-
-                pathOptionsTable = buildPathOptionsTable(fromId, fromLat, fromLon, toId, toLat, toLon,
-                        maxWalkTime, maxTripDuration, shortestPath, dropItineraryGeometry, response.getOptions());
-            } catch (Exception e) {
-                LOG.error(String.format("Error while collecting paths between %s and %s", fromId, toId));
-                return null;
-            }
-
-            return pathOptionsTable;
-        } else {
-            return null;
-        }
-    }
-
-    private LinkedHashMap<String, ArrayList<Object>> buildPathOptionsTable(String fromId, double fromLat, double fromLon,
-                                                                           String toId, double toLat, double toLon,
-                                                                           int maxWalkTime, int maxTripDuration,
-                                                                           boolean shortestPath,
-                                                                           boolean dropItineraryGeometry,
-                                                                           List<ProfileOption> pathOptions) {
-
-        // Build data.frame to return data to R in tabular form
-        RDataFrame pathOptionsTable = new RDataFrame();
-        pathOptionsTable.addStringColumn("fromId", fromId);
-        pathOptionsTable.addDoubleColumn("fromLat", fromLat);
-        pathOptionsTable.addDoubleColumn("fromLon", fromLon);
-        pathOptionsTable.addStringColumn("toId", toId);
-        pathOptionsTable.addDoubleColumn("toLat", toLat);
-        pathOptionsTable.addDoubleColumn("toLon", toLon);
-        pathOptionsTable.addIntegerColumn("option", 0);
-        pathOptionsTable.addIntegerColumn("segment", 0);
-        pathOptionsTable.addStringColumn("mode", "");
-        pathOptionsTable.addIntegerColumn("total_duration", 0);
-        pathOptionsTable.addDoubleColumn("segment_duration", 0.0);
-        pathOptionsTable.addDoubleColumn("wait", 0.0);
-        pathOptionsTable.addIntegerColumn("distance", 0);
-        pathOptionsTable.addStringColumn("route", "");
-        pathOptionsTable.addStringColumn("board_time", "");
-        pathOptionsTable.addStringColumn("alight_time", "");
-        if (!dropItineraryGeometry) pathOptionsTable.addStringColumn("geometry", "");
-
-        LOG.info("Building itinerary options table.");
-        LOG.info("{} itineraries found.", pathOptions.size());
-
-        int optionIndex = 0;
-        for (ProfileOption option : pathOptions) {
-            LOG.info("Itinerary option {} of {}: {}", optionIndex + 1, pathOptions.size(), option.summary);
-
-            LOG.info("travel time min {}, avg {}", option.stats.min, option.stats.avg);
-            if (option.stats.avg > (maxTripDuration * 60)) continue;
-
-            if (option.transit == null) { // no transit, maybe has direct access legs
-                if (option.access != null) {
-                    for (StreetSegment segment : option.access) {
-
-                        // maxStreetTime parameter only affects access and egress walking segments, but no direct trips
-                        // if a direct walking trip is found that is longer than maxWalkTime, then drop it
-                        LOG.info("segment duration {}", segment.duration);
-                        if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
-                        pathOptionsTable.append();
-
-                        LOG.info("  direct {}", segment.toString());
-
-                        optionIndex++;
-                        pathOptionsTable.set("option", optionIndex);
-                        pathOptionsTable.set("segment", 1);
-                        pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-                        if (shortestPath) {
-                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
-                        } else {
-                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                        }
-
-                        // segment.distance value is inaccurate, so it's better to get distances from street edges
-                        int dist = calculateSegmentLength(segment);
-                        pathOptionsTable.set("distance", dist / 1000);
-
-                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
-                    }
-                }
-
-            } else { // option has transit
-                optionIndex++;
-                int segmentIndex = 0;
-
-                // first leg: access to station
-                if (option.access != null) {
-                    for (StreetSegment segment : option.access) {
-                        pathOptionsTable.append();
-
-                        LOG.info("  access {}", segment.toString());
-
-                        pathOptionsTable.set("option", optionIndex);
-                        segmentIndex++;
-                        pathOptionsTable.set("segment", segmentIndex);
-                        pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-
-                        if (shortestPath) {
-                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
-                        } else {
-                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                        }
-
-                        // getting distances from street edges, that are more accurate than segment.distance
-                        int dist = calculateSegmentLength(segment);
-                        pathOptionsTable.set("distance", dist / 1000);
-
-                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
-                    }
-                }
-
-                for (TransitSegment transit : option.transit) {
-
-                    if (!transit.segmentPatterns.isEmpty()) {
-//                    for (SegmentPattern pattern : transit.segmentPatterns) {
-                        // Use only first of many possible repeated patterns
-                        SegmentPattern pattern = transit.segmentPatterns.get(0);
-                        if (pattern != null) {
-
-                            LOG.info("  transit pattern index {}", pattern.patternIdx);
-
-                            TripPattern tripPattern = transportNetwork.transitLayer.tripPatterns.get(pattern.patternIdx);
-
-                            if (tripPattern != null) {
-                                pathOptionsTable.append();
-
-                                segmentIndex++;
-
-                                StringBuilder geometry = new StringBuilder();
-                                int accDistance = 0;
-
-                                try {
-                                    accDistance = buildTransitGeometryAndCalculateDistance(pattern, tripPattern, geometry);
-                                } catch (Exception e) {
-                                    geometry = new StringBuilder("LINESTRING EMPTY");
-                                }
-
-                                pathOptionsTable.set("option", optionIndex);
-                                pathOptionsTable.set("segment", segmentIndex);
-                                pathOptionsTable.set("mode", transit.mode.toString());
-
-                                if (shortestPath) {
-                                    pathOptionsTable.set("total_duration", option.stats.min / 60.0);
-                                    pathOptionsTable.set("segment_duration", transit.rideStats.min / 60.0);
-                                    pathOptionsTable.set("wait", transit.waitStats.min / 60.0);
-                                } else {
-                                    pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                                    pathOptionsTable.set("segment_duration", transit.rideStats.avg / 60.0);
-                                    pathOptionsTable.set("wait", transit.waitStats.avg / 60.0);
-                                }
-
-                                pathOptionsTable.set("distance", accDistance);
-                                pathOptionsTable.set("route", tripPattern.routeId);
-
-                                pathOptionsTable.set("board_time", pattern.fromDepartureTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
-                                pathOptionsTable.set("alight_time", pattern.toArrivalTime.get(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
-
-                                if (!dropItineraryGeometry) pathOptionsTable.set("geometry", geometry.toString());
-                            }
-                        }
-//                    }
-                    }
-
-
-                    // middle leg: walk between stops/stations
-                    if (transit.middle != null) {
-                        pathOptionsTable.append();
-
-                        LOG.info("  middle {}", transit.middle.toString());
-
-                        pathOptionsTable.set("option", optionIndex);
-                        segmentIndex++;
-                        pathOptionsTable.set("segment", segmentIndex);
-                        pathOptionsTable.set("mode", transit.middle.mode.toString());
-                        pathOptionsTable.set("segment_duration",transit.middle.duration / 60.0);
-
-                        if (shortestPath) {
-                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
-                        } else {
-                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                        }
-
-                        // getting distances from street edges, which are more accurate than segment.distance
-                        int dist = calculateSegmentLength(transit.middle);
-                        pathOptionsTable.set("distance", dist / 1000);
-                        if (!dropItineraryGeometry)
-                            pathOptionsTable.set("geometry", transit.middle.geometry.toString());
-                    }
-                }
-
-                // last leg: walk to destination
-                if (option.egress != null) {
-                    for (StreetSegment segment : option.egress) {
-                        pathOptionsTable.append();
-
-                        LOG.info("  egress {}", segment.toString());
-
-                        pathOptionsTable.set("option", optionIndex);
-                        segmentIndex++;
-                        pathOptionsTable.set("segment", segmentIndex);
-                        pathOptionsTable.set("mode", segment.mode.toString());
-                        pathOptionsTable.set("segment_duration", segment.duration / 60.0);
-                        if (shortestPath) {
-                            pathOptionsTable.set("total_duration", option.stats.min / 60.0);
-                        } else {
-                            pathOptionsTable.set("total_duration", option.stats.avg / 60.0);
-                        }
-
-                        // getting distances from street edges, that are more accurate than segment.distance
-                        int dist = calculateSegmentLength(segment);
-                        pathOptionsTable.set("distance", dist / 1000);
-
-                        if (!dropItineraryGeometry) pathOptionsTable.set("geometry", segment.geometry.toString());
-                    }
-                }
-            }
-        }
-
-        if (pathOptionsTable.nRow() > 0) {
-            return pathOptionsTable.getDataFrame();
-        } else {
-            return null;
-        }
-
-    }
-
-    private int buildTransitGeometryAndCalculateDistance(SegmentPattern segmentPattern,
-                                                         TripPattern tripPattern,
-                                                         StringBuilder geometry) {
-        Coordinate previousCoordinate = new Coordinate(0, 0);
-        double accDistance = 0;
-
-        if (tripPattern.shape != null) {
-            List<LineString> shapeSegments = tripPattern.getHopGeometries(transportNetwork.transitLayer);
-            int firstStop = segmentPattern.fromIndex;
-            int lastStop = segmentPattern.toIndex;
-
-            for (int i = firstStop; i < lastStop; i++) {
-                for (Coordinate coordinate : shapeSegments.get(i).getCoordinates()) {
-                    if (geometry.toString().equals("")) {
-                        geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
-                    } else {
-                        geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
-                        accDistance += GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
-                    }
-                    previousCoordinate.x = coordinate.x;
-                    previousCoordinate.y = coordinate.y;
-
-                }
-            }
-            geometry.append(")");
-
-        } else {
-            for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
-                int stopIdx = tripPattern.stops[stop];
-                Coordinate coordinate = transportNetwork.transitLayer.getCoordinateForStopFixed(stopIdx);
-
-                coordinate.x = coordinate.x / FIXED_FACTOR;
-                coordinate.y = coordinate.y / FIXED_FACTOR;
-
-                if (geometry.toString().equals("")) {
-                    geometry.append("LINESTRING (").append(coordinate.x).append(" ").append(coordinate.y);
-                } else {
-                    geometry.append(", ").append(coordinate.x).append(" ").append(coordinate.y);
-                    accDistance += GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
-                }
-                previousCoordinate.x = coordinate.x;
-                previousCoordinate.y = coordinate.y;
-            }
-            geometry.append(")");
-        }
-
-        return (int) accDistance;
-    }
-
-    private int calculateSegmentLength(StreetSegment segment) {
-        int sum = 0;
-        for (StreetEdgeInfo streetEdgeInfo : segment.streetEdges) {
-            sum += streetEdgeInfo.distance;
-        }
-        return sum;
-    }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrixParallel(String fromId, double fromLat, double fromLon,
                                                                                    String[] toIds, double[] toLats, double[] toLons,
@@ -959,15 +617,10 @@ public class R5RCore {
                                                                String directModes, String transitModes, String accessModes, String egressModes,
                                                                String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
-        String[] fromIds = new String[1];
-        double[] fromLats = new double[1];
-        double[] fromLons = new double[1];
-        int[] cutoffTimes = new int[1];
-
-        fromIds[0] = fromId;
-        fromLats[0] = fromLat;
-        fromLons[0] = fromLon;
-        cutoffTimes[0] = cutoffs;
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+        int[] cutoffTimes = {cutoffs};
 
         return isochrones(fromIds, fromLats, fromLons, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
                 date, departureTime, maxWalkTime, maxTripDuration);

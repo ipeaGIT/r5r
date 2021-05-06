@@ -23,10 +23,10 @@ public abstract class R5Process {
     protected final RoutingProperties routingProperties;
 
     protected String[] fromIds;
-    private double[] fromLats;
-    private double[] fromLons;
+    protected double[] fromLats;
+    protected double[] fromLons;
 
-    int nOrigins;
+    protected int nOrigins;
 
     private EnumSet<LegMode> directModes;
     private EnumSet<TransitModes> transitModes;
@@ -36,7 +36,7 @@ public abstract class R5Process {
     private String departureDate;
     private String departureTime;
 
-    private int maxWalkTime;
+    protected int maxWalkTime;
     protected int maxTripDuration;
 
     public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {

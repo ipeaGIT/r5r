@@ -12,7 +12,8 @@ r5r_core <- setup_r5(data_path, verbose = FALSE)
 
 poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 origins <- poi[c(1, 3, 10, 15),]
-origins <- poi[1, ]
+# origins <- poi[1, ]
+
 # routing inputs
 mode <- c("WALK", "BUS")
 max_walk_dist <- 1000 # in meters

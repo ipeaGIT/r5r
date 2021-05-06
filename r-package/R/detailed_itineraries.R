@@ -236,30 +236,7 @@ detailed_itineraries <- function(r5r_core,
 
   # call r5r_core method ----------------------------------------------------
 
-  # if a single origin is provided, calls sequential function planSingleTrip
-  # else, calls parallel function planMultipleTrips
-
-  if (n_origs == 1 && n_dests == 1) {
-
-    path_options <- r5r_core$planSingleTrip(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_street_time,
-                                            max_trip_duration,
-                                            drop_geometry)
-
-  } else {
-
-    path_options <- r5r_core$planMultipleTrips(origins$id,
+  path_options <- r5r_core$detailedItineraries(origins$id,
                                                origins$lat,
                                                origins$lon,
                                                destinations$id,
@@ -274,8 +251,6 @@ detailed_itineraries <- function(r5r_core,
                                                max_street_time,
                                                max_trip_duration,
                                                drop_geometry)
-
-  }
 
 
   # process results ---------------------------------------------------------

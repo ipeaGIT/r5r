@@ -16,7 +16,7 @@ public class RoutingProperties {
         maxRides = 8; // max 8 number of rides in public transport trips
         maxLevelTrafficStress = 4;
         suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
-        timeWindowSize = 60; // minutes
-        numberOfMonteCarloDraws = 60; //
+        timeWindowSize = 1; // minutes
+        numberOfMonteCarloDraws = 1; //
     }
 }
