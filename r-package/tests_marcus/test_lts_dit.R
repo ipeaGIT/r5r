@@ -21,7 +21,7 @@ origin <- points[10,] # Farrapos train station
 destination <- points[12,] # Praia de Belas shopping mall
 
 # routing inputs
-mode <- c("BICYCLE")
+mode <- c("BUS")
 max_walk_dist <- 1000 # in meters
 max_trip_duration <- 60 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
@@ -39,7 +39,7 @@ route_lts <- function(bike_lts) {
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
                               max_walk_dist = Inf, max_trip_duration = 140L,
-                              max_lts = 4, verbose = TRUE, shortest_path = FALSE,
+                              max_lts = 4, verbose = TRUE, shortest_path = TRUE,
                               drop_geometry = FALSE) %>%
     mutate(lts = bike_lts)
 }

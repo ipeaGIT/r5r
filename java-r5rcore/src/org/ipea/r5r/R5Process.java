@@ -28,13 +28,13 @@ public abstract class R5Process {
 
     protected int nOrigins;
 
-    private EnumSet<LegMode> directModes;
-    private EnumSet<TransitModes> transitModes;
-    private EnumSet<LegMode> accessModes;
-    private EnumSet<LegMode> egressModes;
+    protected EnumSet<LegMode> directModes;
+    protected EnumSet<TransitModes> transitModes;
+    protected EnumSet<LegMode> accessModes;
+    protected EnumSet<LegMode> egressModes;
 
-    private String departureDate;
-    private String departureTime;
+    protected String departureDate;
+    protected String departureTime;
 
     protected int maxWalkTime;
     protected int maxTripDuration;
@@ -108,6 +108,8 @@ public abstract class R5Process {
         request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60);
 
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
+
+        request.percentiles = routingProperties.percentiles;
 
         return request;
     }

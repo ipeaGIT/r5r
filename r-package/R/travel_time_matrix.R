@@ -224,20 +224,20 @@ travel_time_matrix <- function(r5r_core,
 
   # call r5r_core method ----------------------------------------------------
 
-  travel_times <- r5r_core$travelTimeMatrixParallel(origins$id,
-                                                    origins$lat,
-                                                    origins$lon,
-                                                    destinations$id,
-                                                    destinations$lat,
-                                                    destinations$lon,
-                                                    mode_list$direct_modes,
-                                                    mode_list$transit_mode,
-                                                    mode_list$access_mode,
-                                                    mode_list$egress_mode,
-                                                    departure$date,
-                                                    departure$time,
-                                                    max_street_time,
-                                                    max_trip_duration)
+  travel_times <- r5r_core$travelTimeMatrix(origins$id,
+                                            origins$lat,
+                                            origins$lon,
+                                            destinations$id,
+                                            destinations$lat,
+                                            destinations$lon,
+                                            mode_list$direct_modes,
+                                            mode_list$transit_mode,
+                                            mode_list$access_mode,
+                                            mode_list$egress_mode,
+                                            departure$date,
+                                            departure$time,
+                                            max_street_time,
+                                            max_trip_duration)
 
 
   # process results ---------------------------------------------------------

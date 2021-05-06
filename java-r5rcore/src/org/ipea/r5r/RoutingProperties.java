@@ -9,6 +9,7 @@ public class RoutingProperties {
     public int suboptimalMinutes; // Suboptimal minutes in point-to-point queries
     public int timeWindowSize; // minutes
     public int numberOfMonteCarloDraws; //
+    public int[] percentiles = {50};
 
     public RoutingProperties() {
         walkSpeed = 1.0f;
@@ -16,7 +17,10 @@ public class RoutingProperties {
         maxRides = 8; // max 8 number of rides in public transport trips
         maxLevelTrafficStress = 4;
         suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
-        timeWindowSize = 1; // minutes
-        numberOfMonteCarloDraws = 1; //
+        timeWindowSize = 60; // minutes
+        numberOfMonteCarloDraws = 60; //
+
+        percentiles = new int[1];
+        percentiles[0] = 50;
     }
 }

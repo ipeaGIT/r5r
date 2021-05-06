@@ -38,6 +38,9 @@ public class DetailedItineraryPlanner extends R5Process {
 
     public DetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
+
+        routingProperties.timeWindowSize = 1; // minutes
+        routingProperties.numberOfMonteCarloDraws = 1; //
     }
 
     public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
@@ -69,7 +72,6 @@ public class DetailedItineraryPlanner extends R5Process {
 
     public LinkedHashMap<String, ArrayList<Object>> planSingleTrip(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
-
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
@@ -120,6 +122,7 @@ public class DetailedItineraryPlanner extends R5Process {
 
         request.percentiles = new int[1];
         request.percentiles[0] = 50;
+
 
         return request;
     }
