@@ -6,7 +6,6 @@ import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
-import org.locationtech.jts.geom.Coordinate;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -18,8 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-
-import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
 public class R5RCore {
 

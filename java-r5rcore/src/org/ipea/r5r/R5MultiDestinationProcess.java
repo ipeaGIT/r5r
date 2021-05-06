@@ -2,9 +2,6 @@ package org.ipea.r5r;
 
 import com.conveyal.r5.transit.TransportNetwork;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
 public abstract class R5MultiDestinationProcess extends R5Process {
