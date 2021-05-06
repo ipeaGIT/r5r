@@ -9,12 +9,10 @@ import org.ipea.r5r.Utils.Utils;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 public abstract class R5Process {
 
@@ -70,7 +68,25 @@ public abstract class R5Process {
         this.maxTripDuration = maxTripDuration;
     }
 
-    public abstract List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException;
+    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
+        int[] requestIndices = new int[nOrigins];
+        for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
+
+        return r5rThreadPool.submit(() ->
+                Arrays.stream(requestIndices).parallel()
+                        .mapToObj(index -> {
+                            LinkedHashMap<String, ArrayList<Object>> results = null;
+                            try {
+                                results = runProcess(index);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return results;
+                        }).
+                        collect(Collectors.toList())).get();
+    }
+
+    protected abstract LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException;
 
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();

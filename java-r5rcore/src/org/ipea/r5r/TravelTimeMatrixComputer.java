@@ -5,11 +5,9 @@ import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
@@ -17,34 +15,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
-public class TravelTimeMatrixComputer extends R5Process {
+public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
-    protected String[] toIds;
-    private double[] toLats;
-    private double[] toLons;
-
-    private int nDestinations;
-
     private FreeFormPointSet destinationPoints;
-
-    public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
-        this.toIds = toIds;
-        this.toLats = toLats;
-        this.toLons = toLons;
-
-        this.nDestinations = toIds.length;
-    }
 
     public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
@@ -53,9 +34,12 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     @Override
     public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        int[] originIndices = new int[fromIds.length];
-        for (int i = 0; i < fromIds.length; i++) originIndices[i] = i;
+        buildDestinationPointSet();
+        return super.run();
+    }
 
+
+    private void buildDestinationPointSet() {
         ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
         DataOutputStream pointStream = new DataOutputStream(dataStream);
 
@@ -90,25 +74,10 @@ public class TravelTimeMatrixComputer extends R5Process {
                 transportNetwork.linkageCache.getLinkage(destinationPoints, transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
             }
         }
-
-        List<LinkedHashMap<String, ArrayList<Object>>> returnList;
-        returnList = r5rThreadPool.submit(() ->
-                Arrays.stream(originIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results =
-                                    null;
-                            try {
-                                results = travelTimesFromOrigin(index);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).collect(Collectors.toList())).get();
-
-        return returnList;
     }
 
-    private LinkedHashMap<String, ArrayList<Object>> travelTimesFromOrigin(int index) throws ParseException {
+    @Override
+    protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
         request.percentiles = this.routingProperties.percentiles;

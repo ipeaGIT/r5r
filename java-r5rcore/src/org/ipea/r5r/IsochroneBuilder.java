@@ -35,28 +35,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     @Override
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        int[] requestIndices = new int[nOrigins];
-        for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
-
-        List<LinkedHashMap<String, ArrayList<Object>>> resultsList;
-        resultsList = r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results = null;
-                            try {
-                                results = buildIsochrone(index);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
-                        collect(Collectors.toList())).get();
-
-        return resultsList;
-    }
-
-    private LinkedHashMap<String, ArrayList<Object>> buildIsochrone(int index) throws ParseException {
+    protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
         // Build request
         RegionalTask request = buildRequest(index);
 

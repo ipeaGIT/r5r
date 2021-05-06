@@ -14,24 +14,15 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
 
-public class DetailedItineraryPlanner extends R5Process {
+public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DetailedItineraryPlanner.class);
-
-    protected String[] toIds;
-    private double[] toLats;
-    private double[] toLons;
-
-    private int nDestinations;
 
     private boolean dropItineraryGeometry = false;
     public void dropItineraryGeometry() { dropItineraryGeometry = true; }
@@ -43,34 +34,8 @@ public class DetailedItineraryPlanner extends R5Process {
         routingProperties.numberOfMonteCarloDraws = 1; //
     }
 
-    public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
-        this.toIds = toIds;
-        this.toLats = toLats;
-        this.toLons = toLons;
-
-        this.nDestinations = toIds.length;
-    }
-
     @Override
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        int[] requestIndices = new int[fromIds.length];
-        for (int i = 0; i < fromIds.length; i++) requestIndices[i] = i;
-
-        return r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results = null;
-                            try {
-                                results = planSingleTrip(index);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
-                        collect(Collectors.toList())).get();
-    }
-
-    public LinkedHashMap<String, ArrayList<Object>> planSingleTrip(int index) throws ParseException {
+    public LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
