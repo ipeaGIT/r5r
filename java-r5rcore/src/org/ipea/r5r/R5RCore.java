@@ -253,97 +253,6 @@ public class R5RCore {
         return travelTimeMatrixComputer.run();
     }
 
-//    private LinkedHashMap<String, ArrayList<Object>> travelTimesFromOrigin(String fromId, double fromLat, double fromLon,
-//                                                                           String[] toIds, double[] toLats, double[] toLons,
-//                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-//                                                                           String date, String departureTime,
-//                                                                           int maxWalkTime, int maxTripDuration, FreeFormPointSet destinationPoints) throws ParseException {
-//
-//        RegionalTask request = new RegionalTask();
-//
-//        request.scenario = new Scenario();
-//        request.scenario.id = "id";
-//        request.scenarioId = request.scenario.id;
-//
-//        request.zoneId = transportNetwork.getTimeZone();
-//        request.fromLat = fromLat;
-//        request.fromLon = fromLon;
-//        request.walkSpeed = (float) this.routingProperties.walkSpeed;
-//        request.bikeSpeed = (float) this.routingProperties.bikeSpeed;
-//        request.streetTime = maxTripDuration;
-//        request.maxWalkTime = maxWalkTime;
-//        request.maxBikeTime = maxTripDuration;
-//        request.maxCarTime = maxTripDuration;
-//        request.maxTripDurationMinutes = maxTripDuration;
-//        request.makeTauiSite = false;
-////        request.computePaths = false;
-////        request.computeTravelTimeBreakdown = false;
-//        request.recordTimes = true;
-//        request.maxRides = this.routingProperties.maxRides;
-//        request.bikeTrafficStress = this.routingProperties.maxLevelTrafficStress;
-//
-//        request.directModes = Utils.setLegModes(directModes);
-//        request.accessModes = Utils.setLegModes(accessModes);
-//        request.egressModes = Utils.setLegModes(egressModes);
-//        request.transitModes = Utils.setTransitModes(transitModes);
-//
-//        request.date = LocalDate.parse(date);
-//
-//        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
-//
-//        request.fromTime = secondsFromMidnight;
-//        request.toTime = secondsFromMidnight + (this.routingProperties.timeWindowSize * 60);
-//
-//        request.monteCarloDraws = this.routingProperties.numberOfMonteCarloDraws;
-//
-//        request.destinationPointSets = new PointSet[1];
-//        request.destinationPointSets[0] = destinationPoints;
-//
-//        request.percentiles = this.percentiles;
-//
-//        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
-//
-//        OneOriginResult travelTimeResults = computer.computeTravelTimes();
-//
-//        // Build return table
-//        RDataFrame travelTimesTable = new RDataFrame();
-//        travelTimesTable.addStringColumn("fromId", fromId);
-//        travelTimesTable.addStringColumn("toId", "");
-//
-//        if (percentiles.length == 1) {
-//            travelTimesTable.addIntegerColumn("travel_time", Integer.MAX_VALUE);
-//        } else {
-//            for (int p : percentiles) {
-//                String ps = String.format("%03d", p);
-//                travelTimesTable.addIntegerColumn("travel_time_p" + ps, Integer.MAX_VALUE);
-//            }
-//        }
-//
-//        for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
-//            if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
-//                travelTimesTable.append();
-//                travelTimesTable.set("toId", toIds[i]);
-//                if (percentiles.length == 1) {
-//                    travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][i]);
-//                } else {
-//                    for (int p = 0; p < percentiles.length; p++) {
-//                        int tt = travelTimeResults.travelTimes.getValues()[p][i];
-//                        String ps = String.format("%03d", percentiles[p]);
-//                        if (tt < maxTripDuration) {
-//                            travelTimesTable.set("travel_time_p" + ps, tt);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (travelTimesTable.nRow() > 0) {
-//            return travelTimesTable.getDataFrame();
-//        } else {
-//            return null;
-//        }
-//    }
-
     // ----------------------------------  ISOCHRONES  -----------------------------------------
 
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
@@ -386,6 +295,11 @@ public class R5RCore {
         return isochroneBuilder.run();
     }
 
+    // ---------------------------------------------------------------------------------------------------
+    //                                    UTILITY FUNCTIONS
+    // ---------------------------------------------------------------------------------------------------
+
+
     public List<Object> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
         StreetNetwork streetNetwork = new StreetNetwork(this.transportNetwork);
@@ -410,6 +324,7 @@ public class R5RCore {
         return transportNetworkList;
     }
 
+    // ----------------------------------  ELEVATION  -----------------------------------------
 
     public LinkedHashMap<String, ArrayList<Object>> getEdges() {
         // Build edges return table
@@ -480,6 +395,24 @@ public class R5RCore {
         }
     }
 
+
+    public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {
+        double[] results = new double[slope.length];
+
+        int[] indices = new int[slope.length];
+        for (int i = 0; i < slope.length; i++) { indices[i] = i; }
+
+        Arrays.stream(indices).parallel().forEach(index -> {
+            results[index] = bikeSpeedCoefficientOTP(slope[index], altitude[index]);
+        });
+
+        return results;
+    }
+
+    public static double bikeSpeedCoefficientOTP(double slope, double altitude) {
+        return ElevationUtils.bikeSpeedCoefficientOTP(slope, altitude);
+    }
+
     // Returns list of public transport services active on a given date
     public LinkedHashMap<String, ArrayList<Object>> getTransitServicesByDate(String date) {
         RDataFrame servicesTable = new RDataFrame();
@@ -503,23 +436,4 @@ public class R5RCore {
         return servicesTable.getDataFrame();
     }
 
-
-
-
-    public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {
-        double[] results = new double[slope.length];
-
-        int[] indices = new int[slope.length];
-        for (int i = 0; i < slope.length; i++) { indices[i] = i; }
-
-        Arrays.stream(indices).parallel().forEach(index -> {
-            results[index] = bikeSpeedCoefficientOTP(slope[index], altitude[index]);
-        });
-
-        return results;
-    }
-
-    public static double bikeSpeedCoefficientOTP(double slope, double altitude) {
-        return ElevationUtils.bikeSpeedCoefficientOTP(slope, altitude);
-    }
 }
