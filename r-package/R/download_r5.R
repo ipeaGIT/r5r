@@ -20,10 +20,10 @@
 #'
 #' library(r5r)
 #'
-#' download_r5(version = "6.0.1", temp_dir = TRUE)
+#' download_r5(version = "6.2", temp_dir = TRUE)
 #' }
 
-download_r5 <- function(version = "6.0.1",
+download_r5 <- function(version = "6.2",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {

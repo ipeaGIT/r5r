@@ -3,18 +3,14 @@ package org.ipea.r5r;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.*;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.analyst.scenario.Scenario;
-import com.conveyal.r5.api.util.LegMode;
-import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.Utils.Utils;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 public class IsochroneBuilder extends R5Process {
 

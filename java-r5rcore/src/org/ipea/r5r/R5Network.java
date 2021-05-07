@@ -46,27 +46,23 @@ public class R5Network {
 
     public static TransportNetwork loadR5Network(String dataFolder) {
         try {
-            TransportNetwork tn = KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
-            return tn ;
+            return KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
         } catch (Exception e) {
             return null;
         }
     }
 
-    public static TransportNetwork createR5Network(String dataFolder) {
+    public static void createR5Network(String dataFolder) {
         File dir = new File(dataFolder);
         File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
 
         for (File file:mapdbFiles) file.delete();
 
         TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
-//        transportNetwork.transitLayer.buildDistanceTables(null);
         try {
             KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
-            return tn;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 

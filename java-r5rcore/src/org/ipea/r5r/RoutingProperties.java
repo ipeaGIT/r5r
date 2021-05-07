@@ -19,8 +19,5 @@ public class RoutingProperties {
         suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
         timeWindowSize = 60; // minutes
         numberOfMonteCarloDraws = 60; //
-
-        percentiles = new int[1];
-        percentiles[0] = 50;
     }
 }

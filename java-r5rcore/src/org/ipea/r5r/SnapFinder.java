@@ -8,7 +8,6 @@ import com.conveyal.r5.transit.TransportNetwork;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
@@ -42,7 +41,7 @@ public class SnapFinder {
         this.nOrigins = fromIds.length;
     }
 
-    public LinkedHashMap<String, Object> run() throws ExecutionException, InterruptedException {
+    public LinkedHashMap<String, Object> run() {
         int[] requestIndices = new int[nOrigins];
         for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
 

@@ -33,7 +33,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
         if (response == null) return null;
 
         if (!response.getOptions().isEmpty()) {
-            PathOptionsTable pathOptionsTable = new PathOptionsTable(transportNetwork, request, response);
+            PathOptionsTable pathOptionsTable = new PathOptionsTable(transportNetwork, response);
             pathOptionsTable.setOrigin(fromIds[index], fromLats[index], fromLons[index]);
             pathOptionsTable.setDestination(toIds[index], toLats[index], toLons[index]);
             pathOptionsTable.setTripDuration(maxWalkTime, maxTripDuration);
@@ -51,7 +51,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
     private ProfileResponse runQuery(int index, RegionalTask request) {
         PointToPointQuery query = new PointToPointQuery(transportNetwork);
 
-        ProfileResponse response = null;
+        ProfileResponse response;
         try {
             response = query.getPlan(request);
         } catch (IllegalStateException e) {

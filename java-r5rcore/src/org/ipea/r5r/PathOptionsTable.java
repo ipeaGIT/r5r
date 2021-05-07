@@ -1,6 +1,5 @@
 package org.ipea.r5r;
 
-import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.common.GeometryUtils;
@@ -10,7 +9,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +21,6 @@ public class PathOptionsTable {
 
     private final TransportNetwork transportNetwork;
     private final ProfileResponse response;
-    private final RegionalTask request;
     private RDataFrame optionsDataFrame;
 
     // origin-destination
@@ -59,9 +56,8 @@ public class PathOptionsTable {
 
     public LinkedHashMap<String, ArrayList<Object>> getDataFrame() { return optionsDataFrame.getDataFrame(); }
 
-    public PathOptionsTable(TransportNetwork transportNetwork, RegionalTask request, ProfileResponse response) {
+    public PathOptionsTable(TransportNetwork transportNetwork, ProfileResponse response) {
         this.transportNetwork = transportNetwork;
-        this.request = request;
         this.response = response;
     }
 
@@ -279,7 +275,6 @@ public class PathOptionsTable {
 
                 }
             }
-            geometry.append(")");
 
         } else {
             for (int stop = segmentPattern.fromIndex; stop <= segmentPattern.toIndex; stop++) {
@@ -298,8 +293,9 @@ public class PathOptionsTable {
                 previousCoordinate.x = coordinate.x;
                 previousCoordinate.y = coordinate.y;
             }
-            geometry.append(")");
         }
+        // close geometry definition with )
+        geometry.append(")");
 
         return (int) accDistance;
     }

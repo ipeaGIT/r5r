@@ -8,7 +8,6 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,8 +21,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
-
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
     private FreeFormPointSet destinationPoints;
 
