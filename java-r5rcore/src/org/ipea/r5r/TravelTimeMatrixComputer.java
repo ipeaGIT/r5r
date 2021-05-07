@@ -83,23 +83,18 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
         request.percentiles = this.routingProperties.percentiles;
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
-
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
+        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index]);
+        populateDataFrame(travelTimeResults, travelTimesTable);
 
-        // Build return table
-        RDataFrame travelTimesTable = new RDataFrame();
-        travelTimesTable.addStringColumn("fromId", fromIds[index]);
-        travelTimesTable.addStringColumn("toId", "");
-
-        if (this.routingProperties.percentiles.length == 1) {
-            travelTimesTable.addIntegerColumn("travel_time", Integer.MAX_VALUE);
+        if (travelTimesTable.nRow() > 0) {
+            return travelTimesTable.getDataFrame();
         } else {
-            for (int p : this.routingProperties.percentiles) {
-                String ps = String.format("%03d", p);
-                travelTimesTable.addIntegerColumn("travel_time_p" + ps, Integer.MAX_VALUE);
-            }
+            return null;
         }
+    }
 
+    private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
         for (int i = 0; i < travelTimeResults.travelTimes.nPoints; i++) {
             if (travelTimeResults.travelTimes.getValues()[0][i] <= maxTripDuration) {
                 travelTimesTable.append();
@@ -117,12 +112,23 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
                 }
             }
         }
+    }
 
-        if (travelTimesTable.nRow() > 0) {
-            return travelTimesTable.getDataFrame();
+    private RDataFrame buildDataFrameStructure(String fromId) {
+        // Build return table
+        RDataFrame travelTimesTable = new RDataFrame();
+        travelTimesTable.addStringColumn("fromId", fromId);
+        travelTimesTable.addStringColumn("toId", "");
+
+        if (this.routingProperties.percentiles.length == 1) {
+            travelTimesTable.addIntegerColumn("travel_time", Integer.MAX_VALUE);
         } else {
-            return null;
+            for (int p : this.routingProperties.percentiles) {
+                String ps = String.format("%03d", p);
+                travelTimesTable.addIntegerColumn("travel_time_p" + ps, Integer.MAX_VALUE);
+            }
         }
+        return travelTimesTable;
     }
 
     @Override
