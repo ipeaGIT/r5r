@@ -279,6 +279,19 @@ public class R5RCore {
 
     }
 
+    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
+                                                                     String directModes, String transitModes, String accessModes, String egressModes,
+                                                                     String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return isochrones(fromIds, fromLats, fromLons, cutoffs, zoom, directModes, transitModes, accessModes, egressModes,
+                date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
