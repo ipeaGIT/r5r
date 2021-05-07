@@ -20,6 +20,11 @@ public class SnapFinder {
     protected String[] fromIds;
     protected double[] fromLats;
     protected double[] fromLons;
+    private StreetMode mode;
+
+    public void setMode(String mode) {
+        this.mode = StreetMode.valueOf(mode);
+    }
 
     protected int nOrigins;
 
@@ -42,24 +47,28 @@ public class SnapFinder {
 
         double[] snapLats = new double[nOrigins];
         double[] snapLons = new double[nOrigins];
+        int[] distance = new int[nOrigins];
 
         Arrays.stream(requestIndices).parallel().forEach(index -> {
             Split split = Split.find(fromLats[index], fromLons[index], StreetLayer.INITIAL_LINK_RADIUS_METERS,
-                    this.transportNetwork.streetLayer, StreetMode.WALK);
+                    this.transportNetwork.streetLayer, this.mode);
 
             if (split == null) {
                 split = Split.find(fromLats[index], fromLons[index], StreetLayer.LINK_RADIUS_METERS,
-                        this.transportNetwork.streetLayer, StreetMode.WALK);
+                        this.transportNetwork.streetLayer, this.mode);
                 if (split == null) {
                     snapLats[index] = fromLats[index];
                     snapLons[index] = fromLons[index];
+                    distance[index] = -1;
                 } else {
                     snapLats[index] = split.fixedLat / FIXED_FACTOR;
                     snapLons[index] = split.fixedLon / FIXED_FACTOR;
+                    distance[index] = (int) StreetLayer.LINK_RADIUS_METERS;
                 }
             } else {
                 snapLats[index] = split.fixedLat / FIXED_FACTOR;
                 snapLons[index] = split.fixedLon / FIXED_FACTOR;
+                distance[index] = StreetLayer.INITIAL_LINK_RADIUS_METERS;
             }
         });
 
@@ -70,6 +79,7 @@ public class SnapFinder {
         snapTable.put("lon", fromLons);
         snapTable.put("snap_lat", snapLats);
         snapTable.put("snap_lon", snapLons);
+        snapTable.put("snap_distance", distance);
 
         return snapTable;
 

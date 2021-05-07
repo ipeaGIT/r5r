@@ -1,13 +1,12 @@
 package org.ipea.r5r;
 
 import com.conveyal.gtfs.model.Service;
+import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.linearref.LengthIndexedLine;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -298,18 +297,37 @@ public class R5RCore {
     }
 
     // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
-    public LinkedHashMap<String, Object> findSnapPoints(String fromId, double fromLat, double fromLon) throws ExecutionException, InterruptedException {
+    public LinkedHashMap<String, Object> findSnapPoints(String fromId, double fromLat, double fromLon, String mode) throws ExecutionException, InterruptedException {
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
-        return findSnapPoints(fromIds, fromLats, fromLons);
+        return findSnapPoints(fromIds, fromLats, fromLons, mode);
     }
 
-    public LinkedHashMap<String, Object> findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon) throws ExecutionException, InterruptedException {
+    public LinkedHashMap<String, Object> findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, String mode) throws ExecutionException, InterruptedException {
         SnapFinder snapFinder = new SnapFinder(r5rThreadPool, this.transportNetwork);
         snapFinder.setOrigins(fromId, fromLat, fromLon);
+        snapFinder.setMode(mode);
         return snapFinder.run();
+    }
+
+    public LinkedHashMap<String, ArrayList<Object>> getGrid(int resolution) {
+        Grid gridPointSet = new Grid(resolution, this.transportNetwork.getEnvelope());
+
+        RDataFrame gridTable = new RDataFrame();
+        gridTable.addStringColumn("id", "");
+        gridTable.addDoubleColumn("lat", 0.0);
+        gridTable.addDoubleColumn("lon", 0.0);
+
+        for (int i = 0; i < gridPointSet.featureCount(); i++) {
+            gridTable.append();
+            gridTable.set("id", i);
+            gridTable.set("lat", gridPointSet.getLat(i));
+            gridTable.set("lon", gridPointSet.getLon(i));
+        }
+
+        return gridTable.getDataFrame();
     }
 
 

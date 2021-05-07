@@ -41,8 +41,13 @@ iso %>%
   facet_wrap(~from_id)
 
 
-snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon)
+snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, "BICYCLE")
 snap_df <- jdx::convertToR(snap_df)
 
-mapview(snap_df, xcol="lon", ycol="lat", crs = 4326, color = "green") +
-mapview(snap_df, xcol="snap_lon", ycol="snap_lat", crs = 4326, color = "red")
+mapview(snap_df, xcol="snap_lon", ycol="snap_lat", zcol = "snap_distance", crs = 4326)
+
+
+grid_df <- r5r_core$getGrid(8L)
+grid_df <- jdx::convertToR(grid_df)
+
+grid_df %>% mapview(xcol="lon", ycol="lat", crs = 4326)
