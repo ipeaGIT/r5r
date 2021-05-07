@@ -1,5 +1,6 @@
 package org.ipea.r5r;
 
+import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.Split;
 import com.conveyal.r5.streets.StreetLayer;
@@ -47,28 +48,40 @@ public class SnapFinder {
 
         double[] snapLats = new double[nOrigins];
         double[] snapLons = new double[nOrigins];
-        int[] distance = new int[nOrigins];
+        double[] distance = new double[nOrigins];
+        int[] radius = new int[nOrigins];
 
         Arrays.stream(requestIndices).parallel().forEach(index -> {
             Split split = Split.find(fromLats[index], fromLons[index], StreetLayer.INITIAL_LINK_RADIUS_METERS,
                     this.transportNetwork.streetLayer, this.mode);
 
-            if (split == null) {
+            if (split != null) {
+                // found split at StreetLayer.INITIAL_LINK_RADIUS_METERS
+                snapLats[index] = split.fixedLat / FIXED_FACTOR;
+                snapLons[index] = split.fixedLon / FIXED_FACTOR;
+                distance[index] = 0;
+                radius[index] = StreetLayer.INITIAL_LINK_RADIUS_METERS;
+            } else {
+                // try finding split at larger radius
                 split = Split.find(fromLats[index], fromLons[index], StreetLayer.LINK_RADIUS_METERS,
                         this.transportNetwork.streetLayer, this.mode);
-                if (split == null) {
+                if (split != null) {
+                    // found split at StreetLayer.LINK_RADIUS_METERS
+                    snapLats[index] = split.fixedLat / FIXED_FACTOR;
+                    snapLons[index] = split.fixedLon / FIXED_FACTOR;
+                    distance[index] = 0;
+                    radius[index] = (int) StreetLayer.LINK_RADIUS_METERS;
+                } else {
+                    // did not find split
                     snapLats[index] = fromLats[index];
                     snapLons[index] = fromLons[index];
                     distance[index] = -1;
-                } else {
-                    snapLats[index] = split.fixedLat / FIXED_FACTOR;
-                    snapLons[index] = split.fixedLon / FIXED_FACTOR;
-                    distance[index] = (int) StreetLayer.LINK_RADIUS_METERS;
+                    radius[index] = -1;
                 }
-            } else {
-                snapLats[index] = split.fixedLat / FIXED_FACTOR;
-                snapLons[index] = split.fixedLon / FIXED_FACTOR;
-                distance[index] = StreetLayer.INITIAL_LINK_RADIUS_METERS;
+            }
+
+            if (distance[index] == 0) {
+                distance[index] = GeometryUtils.distance(fromLats[index], fromLons[index], snapLats[index], snapLons[index]);
             }
         });
 
@@ -79,6 +92,7 @@ public class SnapFinder {
         snapTable.put("lon", fromLons);
         snapTable.put("snap_lat", snapLats);
         snapTable.put("snap_lon", snapLons);
+        snapTable.put("search_radius", radius);
         snapTable.put("snap_distance", distance);
 
         return snapTable;

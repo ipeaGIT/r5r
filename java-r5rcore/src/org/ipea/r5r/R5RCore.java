@@ -322,7 +322,7 @@ public class R5RCore {
 
         for (int i = 0; i < gridPointSet.featureCount(); i++) {
             gridTable.append();
-            gridTable.set("id", i);
+            gridTable.set("id", String.valueOf(i));
             gridTable.set("lat", gridPointSet.getLat(i));
             gridTable.set("lon", gridPointSet.getLon(i));
         }

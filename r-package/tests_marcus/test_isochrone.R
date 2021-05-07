@@ -44,10 +44,25 @@ iso %>%
 snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, "BICYCLE")
 snap_df <- jdx::convertToR(snap_df)
 
-mapview(snap_df, xcol="snap_lon", ycol="snap_lat", zcol = "snap_distance", crs = 4326)
+snap_df %>%
+  mapview(xcol="snap_lon", ycol="snap_lat", zcol = "snap_distance", crs = 4326)
 
 
-grid_df <- r5r_core$getGrid(8L)
+
+grid_df <- r5r_core$getGrid(11L)
 grid_df <- jdx::convertToR(grid_df)
 
 grid_df %>% mapview(xcol="lon", ycol="lat", crs = 4326)
+grid_snap_df <- r5r_core$findSnapPoints(as.character(grid_df$id), grid_df$lat, grid_df$lon, "WALK")
+grid_snap_df <- jdx::convertToR(grid_snap_df)
+
+grid_snap_df %>%
+  # filter(search_radius != -1) %>%
+  mutate(search_radius = factor(search_radius, levels = c(-1, 300, 1600)))%>%
+  ggplot(aes(x=lon, y=lat)) +
+  geom_contour_filled(aes(z=snap_distance)) +
+  # geom_point(, color = search_radius)) +
+  coord_map()
+
+  mapview(xcol="lon", ycol="lat", zcol="search_radius",  crs = 4326)
+
