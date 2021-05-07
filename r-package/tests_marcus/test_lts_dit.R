@@ -39,7 +39,7 @@ route_lts <- function(bike_lts) {
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
                               max_walk_dist = Inf, max_trip_duration = 140L,
-                              max_lts = 4, verbose = TRUE, shortest_path = TRUE,
+                              max_lts = bike_lts, verbose = TRUE, shortest_path = TRUE,
                               drop_geometry = FALSE) %>%
     mutate(lts = bike_lts)
 }
