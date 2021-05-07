@@ -21,7 +21,7 @@ origin <- points[10,] # Farrapos train station
 destination <- points[12,] # Praia de Belas shopping mall
 
 # routing inputs
-mode <- c("BICYCLE")
+mode <- c("BUS")
 max_walk_dist <- 1000 # in meters
 max_trip_duration <- 60 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
@@ -29,17 +29,21 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 
 time_window <- 1 # in minutes
 percentiles <- 50
-
+bike_lts <- 2
 route_lts <- function(bike_lts) {
-
+  # r5r_core$setTimeWindowSize(1L)
+  # r5r_core$setNumberOfMonteCarloDraws(5L)
+  # r5r_core$setPercentiles(50L)
+  # r5r_core$dropElevation()
   # calculate travel time matrix
   dit <- detailed_itineraries(r5r_core, origins = origin, destinations = destination,
                               mode = mode, departure_datetime = departure_datetime,
-                              max_lts = bike_lts,
+                              max_walk_dist = Inf, max_trip_duration = 140L,
+                              max_lts = bike_lts, verbose = TRUE, shortest_path = TRUE,
                               drop_geometry = FALSE) %>%
     mutate(lts = bike_lts)
 }
-
+dit %>% mapview::mapview(zcol="mode")
 dit_df <- rbind(
   route_lts(1),
   route_lts(2),
@@ -47,5 +51,6 @@ dit_df <- rbind(
   route_lts(4)
 )
 
-
+edges <- r5r_core$getEdges()
+edges <- jdx::convertToR(edges)
 dit_df %>% mapview::mapview(zcol = "lts")

@@ -221,7 +221,7 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
-  # expect bike segments to be shorter when setting higher walk speeds
+  # expect bike segments to be shorter when setting higher cycling speeds
   # ps: same as with walk_speeds
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,

@@ -1,7 +1,7 @@
 options(java.parameters = "-Xmx2G")
 
-# devtools::load_all(".")
-library(r5r)
+devtools::load_all(".")
+# library(r5r)
 library(sf)
 library(data.table)
 library(ggplot2)
@@ -13,7 +13,7 @@ library(patchwork)
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path, verbose = TRUE)
 
 # read points of origin and destination
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
