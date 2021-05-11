@@ -48,40 +48,26 @@ public class SnapFinder {
         double[] snapLats = new double[nOrigins];
         double[] snapLons = new double[nOrigins];
         double[] distance = new double[nOrigins];
-        int[] radius = new int[nOrigins];
+        boolean[] found = new boolean[nOrigins];
 
         Arrays.stream(requestIndices).parallel().forEach(index -> {
-            Split split = Split.find(fromLats[index], fromLons[index], StreetLayer.INITIAL_LINK_RADIUS_METERS,
-                    this.transportNetwork.streetLayer, this.mode);
+            Split split = transportNetwork.streetLayer.findSplit(fromLats[index], fromLons[index],
+                    StreetLayer.LINK_RADIUS_METERS, this.mode);
 
             if (split != null) {
                 // found split at StreetLayer.INITIAL_LINK_RADIUS_METERS
                 snapLats[index] = split.fixedLat / FIXED_FACTOR;
                 snapLons[index] = split.fixedLon / FIXED_FACTOR;
-                distance[index] = 0;
-                radius[index] = StreetLayer.INITIAL_LINK_RADIUS_METERS;
+                distance[index] = GeometryUtils.distance(fromLats[index], fromLons[index], snapLats[index], snapLons[index]);
+                found[index] = true;
             } else {
-                // try finding split at larger radius
-                split = Split.find(fromLats[index], fromLons[index], StreetLayer.LINK_RADIUS_METERS,
-                        this.transportNetwork.streetLayer, this.mode);
-                if (split != null) {
-                    // found split at StreetLayer.LINK_RADIUS_METERS
-                    snapLats[index] = split.fixedLat / FIXED_FACTOR;
-                    snapLons[index] = split.fixedLon / FIXED_FACTOR;
-                    distance[index] = 0;
-                    radius[index] = (int) StreetLayer.LINK_RADIUS_METERS;
-                } else {
-                    // did not find split
-                    snapLats[index] = fromLats[index];
-                    snapLons[index] = fromLons[index];
-                    distance[index] = -1;
-                    radius[index] = -1;
-                }
+                // did not find split
+                snapLats[index] = fromLats[index];
+                snapLons[index] = fromLons[index];
+                distance[index] = -1;
+                found[index] = false;
             }
 
-            if (distance[index] == 0) {
-                distance[index] = GeometryUtils.distance(fromLats[index], fromLons[index], snapLats[index], snapLons[index]);
-            }
         });
 
         // Build edges return table
@@ -91,8 +77,8 @@ public class SnapFinder {
         snapTable.put("lon", fromLons);
         snapTable.put("snap_lat", snapLats);
         snapTable.put("snap_lon", snapLons);
-        snapTable.put("search_radius", radius);
-        snapTable.put("snap_distance", distance);
+        snapTable.put("distance", distance);
+        snapTable.put("found", found);
 
         return snapTable;
 
