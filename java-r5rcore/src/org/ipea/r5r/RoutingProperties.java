@@ -10,6 +10,7 @@ public class RoutingProperties {
     public int timeWindowSize; // minutes
     public int numberOfMonteCarloDraws; //
     public int[] percentiles = {50};
+    public int [] cutoffs = {30};
 
     public RoutingProperties() {
         walkSpeed = 1.0f;

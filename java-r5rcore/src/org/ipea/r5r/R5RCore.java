@@ -85,6 +85,15 @@ public class R5RCore {
         this.routingProperties.percentiles[0] = percentile;
     }
 
+    public void setCutoffs(int[] cutoffs) {
+        this.routingProperties.cutoffs = cutoffs;
+    }
+
+    public void setCutoffs(int cutoff) {
+        this.routingProperties.cutoffs = new int[1];
+        this.routingProperties.cutoffs[0] = cutoff;
+    }
+
     public int getMaxRides() {
         return this.routingProperties.maxRides;
     }
@@ -247,6 +256,76 @@ public class R5RCore {
         TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);
         travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons);
+        travelTimeMatrixComputer.setModes(directModes, accessModes, transitModes, egressModes);
+        travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
+        travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxTripDuration);
+
+        return travelTimeMatrixComputer.run();
+    }
+
+    // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
+                                                                           String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
+                                                                           String directModes, String transitModes, String accessModes, String egressModes,
+                                                                           String date, String departureTime,
+                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                           String toId, double toLat, double toLon,  int opportunities,
+                                                                           String directModes, String transitModes, String accessModes, String egressModes,
+                                                                           String date, String departureTime,
+                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+        int[] opportunitiesVector = {opportunities};
+
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
+                                                                           String toId, double toLat, double toLon, int opportunities,
+                                                                           String directModes, String transitModes, String accessModes, String egressModes,
+                                                                           String date, String departureTime,
+                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+        int[] opportunitiesVector = {opportunities};
+
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+
+    }
+
+    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+                                                                           String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
+                                                                           String directModes, String transitModes, String accessModes, String egressModes,
+                                                                           String date, String departureTime,
+                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+
+        TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);
+        travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons, opportunities);
         travelTimeMatrixComputer.setModes(directModes, accessModes, transitModes, egressModes);
         travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
         travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxTripDuration);
