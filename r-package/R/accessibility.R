@@ -130,22 +130,22 @@
 #' @export
 
 accessibility <- function(r5r_core,
-                               origins,
-                               destinations,
-                               mode = "WALK",
-                               mode_egress = "WALK",
-                               departure_datetime = Sys.time(),
-                               time_window = 1L,
-                               percentiles = 50L,
-                               cutoffs = 30L,
-                               max_walk_dist = Inf,
-                               max_trip_duration = 120L,
-                               walk_speed = 3.6,
-                               bike_speed = 12,
-                               max_rides = 3,
-                               max_lts = 2,
-                               n_threads = Inf,
-                               verbose = TRUE) {
+                          origins,
+                          destinations,
+                          mode = "WALK",
+                          mode_egress = "WALK",
+                          departure_datetime = Sys.time(),
+                          time_window = 1L,
+                          percentiles = 50L,
+                          cutoffs = 30L,
+                          max_walk_dist = Inf,
+                          max_trip_duration = 120L,
+                          walk_speed = 3.6,
+                          bike_speed = 12,
+                          max_rides = 3,
+                          max_lts = 2,
+                          n_threads = Inf,
+                          verbose = TRUE) {
 
 
   # set data.table options --------------------------------------------------

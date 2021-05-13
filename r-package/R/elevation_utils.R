@@ -35,7 +35,8 @@ apply_elevation <- function(r5r_core, raster_file) {
 
   # extract street edges from r5r_core
   edges <- r5r_core$getEdges()
-  edges <- jdx::convertToR(edges) %>% data.table::setDT()
+  edges <- jdx::convertToR(edges)
+  data.table::setDT(edges)
 
   # extract each edge's elevation from DEM and store in edges data.frame
   start_elev  <- raster::extract(dem, edges %>% dplyr::select(start_lon, start_lat))
