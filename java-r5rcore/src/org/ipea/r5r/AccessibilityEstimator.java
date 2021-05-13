@@ -5,9 +5,12 @@ import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
+import com.conveyal.r5.analyst.decay.StepDecayFunction;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.esotericsoftware.minlog.Log;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,6 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 public class AccessibilityEstimator extends R5MultiDestinationProcess {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AccessibilityEstimator.class);
 
     private FreeFormPointSet destinationPoints;
 
@@ -76,10 +81,6 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        request.percentiles = this.routingProperties.percentiles;
-        request.recordAccessibility = true;
-        request.recordTimes = false;
-
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index]);
@@ -124,8 +125,18 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = super.buildRequest(index);
 
+        request.destinationPointSetKeys = new String[1];
+        request.destinationPointSetKeys[0] = "opportunities";
         request.destinationPointSets = new PointSet[1];
         request.destinationPointSets[0] = destinationPoints;
+
+        request.percentiles = this.routingProperties.percentiles;
+        request.recordAccessibility = true;
+        request.recordTimes = false;
+        request.includePathResults = false;
+        request.decayFunction = new StepDecayFunction();
+
+        request.cutoffsMinutes = routingProperties.cutoffs;
 
         return request;
     }

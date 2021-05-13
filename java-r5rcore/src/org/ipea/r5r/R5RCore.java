@@ -323,14 +323,14 @@ public class R5RCore {
                                                                            int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
 
-        TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
-        travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);
-        travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons, opportunities);
-        travelTimeMatrixComputer.setModes(directModes, accessModes, transitModes, egressModes);
-        travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
-        travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxTripDuration);
+        AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        accessibilityEstimator.setOrigins(fromIds, fromLats, fromLons);
+        accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities);
+        accessibilityEstimator.setModes(directModes, accessModes, transitModes, egressModes);
+        accessibilityEstimator.setDepartureDateTime(date, departureTime);
+        accessibilityEstimator.setTripDuration(maxWalkTime, maxTripDuration);
 
-        return travelTimeMatrixComputer.run();
+        return accessibilityEstimator.run();
     }
 
     // ----------------------------------  ISOCHRONES  -----------------------------------------
