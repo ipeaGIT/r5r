@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
+import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.*;
@@ -267,6 +268,7 @@ public class R5RCore {
 
     public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
+                                                                           String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
@@ -275,13 +277,14 @@ public class R5RCore {
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities,
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities, decayFunction, decayValue,
                 directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,  int opportunities,
+                                                                        String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
@@ -291,13 +294,14 @@ public class R5RCore {
         double[] toLons = {toLon};
         int[] opportunitiesVector = {opportunities};
 
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector,
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
                 directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon, int opportunities,
+                                                                        String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
@@ -311,21 +315,23 @@ public class R5RCore {
         double[] toLons = {toLon};
         int[] opportunitiesVector = {opportunities};
 
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector,
+        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
                 directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                           String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                        String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
+                                                                        String decayFunction, double decayValue,
+                                                                        String directModes, String transitModes, String accessModes, String egressModes,
+                                                                        String date, String departureTime,
+                                                                        int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
 
         AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         accessibilityEstimator.setOrigins(fromIds, fromLats, fromLons);
         accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities);
+        accessibilityEstimator.setDecayFunction(decayFunction, decayValue);
         accessibilityEstimator.setModes(directModes, accessModes, transitModes, egressModes);
         accessibilityEstimator.setDepartureDateTime(date, departureTime);
         accessibilityEstimator.setTripDuration(maxWalkTime, maxTripDuration);
@@ -564,6 +570,41 @@ public class R5RCore {
 
 
         return servicesTable.getDataFrame();
+    }
+
+    public double[] testDecay(String decayFunctionName, double decayValue) {
+        DecayFunction decayFunction = null;
+        decayFunctionName = decayFunctionName.toUpperCase();
+        if (decayFunctionName.equals("STEP")) { decayFunction = new StepDecayFunction(); }
+        if (decayFunctionName.equals("EXPONENTIAL")) { decayFunction = new ExponentialDecayFunction(); }
+
+        if (decayFunctionName.equals("FIXED_EXPONENTIAL")) {
+            decayFunction = new FixedExponentialDecayFunction();
+            ((FixedExponentialDecayFunction) decayFunction).decayConstant = decayValue;
+        }
+        if (decayFunctionName.equals("LINEAR")) {
+            decayFunction = new LinearDecayFunction();
+            ((LinearDecayFunction) decayFunction).widthMinutes = (int) decayValue;
+        }
+        if (decayFunctionName.equals("LOGISTIC")) {
+            decayFunction = new LogisticDecayFunction();
+            ((LogisticDecayFunction) decayFunction).standardDeviationMinutes = decayValue;
+        }
+
+        if (decayFunction != null) {
+            decayFunction.prepare();
+            double[] decay = new double [3600];
+            for (int i = 0; i < 3600; i++) {
+                decay[i] = decayFunction.computeWeight(1800, i+1);
+            }
+            return decay;
+            
+        } else {
+            return null;
+        }
+
+
+
     }
 
 }

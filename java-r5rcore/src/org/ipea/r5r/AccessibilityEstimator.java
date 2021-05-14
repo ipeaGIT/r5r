@@ -5,11 +5,10 @@ import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.analyst.decay.StepDecayFunction;
+import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
-import com.esotericsoftware.minlog.Log;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +27,27 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AccessibilityEstimator.class);
 
     private FreeFormPointSet destinationPoints;
+    private DecayFunction decayFunction;
+
+    public void setDecayFunction(String decayFunction, double decayValue) {
+        decayFunction = decayFunction.toUpperCase();
+        if (decayFunction.equals("STEP")) { this.decayFunction = new StepDecayFunction(); }
+        if (decayFunction.equals("EXPONENTIAL")) { this.decayFunction = new ExponentialDecayFunction(); }
+
+        if (decayFunction.equals("FIXED_EXPONENTIAL")) {
+            this.decayFunction = new FixedExponentialDecayFunction();
+            ((FixedExponentialDecayFunction) this.decayFunction).decayConstant = decayValue;
+        }
+        if (decayFunction.equals("LINEAR")) {
+            this.decayFunction = new LinearDecayFunction();
+            ((LinearDecayFunction) this.decayFunction).widthMinutes = (int) decayValue;
+        }
+        if (decayFunction.equals("LOGISTIC")) {
+            this.decayFunction = new LogisticDecayFunction();
+            ((LogisticDecayFunction) this.decayFunction).standardDeviationMinutes = decayValue;
+        }
+        this.decayFunction.prepare();
+    }
 
     public AccessibilityEstimator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
@@ -134,7 +154,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
         request.recordAccessibility = true;
         request.recordTimes = false;
         request.includePathResults = false;
-        request.decayFunction = new StepDecayFunction();
+        request.decayFunction = this.decayFunction;
 
         request.cutoffsMinutes = routingProperties.cutoffs;
 

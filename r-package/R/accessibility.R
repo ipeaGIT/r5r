@@ -138,6 +138,8 @@ accessibility <- function(r5r_core,
                           time_window = 1L,
                           percentiles = 50L,
                           cutoffs = 30L,
+                          decay_function = "STEP",
+                          decay_value = 1.0,
                           max_walk_dist = Inf,
                           max_trip_duration = 120L,
                           walk_speed = 3.6,
@@ -202,6 +204,10 @@ accessibility <- function(r5r_core,
   checkmate::assert_numeric(cutoffs)
   cutoffs <- as.integer(cutoffs)
 
+  # decay
+  checkmate::assert_numeric(decay_value)
+  decay_value <- as.double(decay_value)
+
 
   # set r5r_core options ----------------------------------------------------
 
@@ -232,20 +238,22 @@ accessibility <- function(r5r_core,
   # call r5r_core method ----------------------------------------------------
 
   accessibility <- r5r_core$accessibility(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            destinations$opportunities,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_street_time,
-                                            max_trip_duration)
+                                          origins$lat,
+                                          origins$lon,
+                                          destinations$id,
+                                          destinations$lat,
+                                          destinations$lon,
+                                          destinations$opportunities,
+                                          decay_function,
+                                          decay_value,
+                                          mode_list$direct_modes,
+                                          mode_list$transit_mode,
+                                          mode_list$access_mode,
+                                          mode_list$egress_mode,
+                                          departure$date,
+                                          departure$time,
+                                          max_street_time,
+                                          max_trip_duration)
 
 
   # process results ---------------------------------------------------------
