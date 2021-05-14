@@ -1,6 +1,6 @@
-library(tidyverse)
+# library(tidyverse)
 library(r5r)
-library(sf)
+# library(sf)
 
 # initialize r5r
 data_path <- system.file("extdata/poa", package = "r5r")

@@ -39,8 +39,8 @@ apply_elevation <- function(r5r_core, raster_file) {
   data.table::setDT(edges)
 
   # extract each edge's elevation from DEM and store in edges data.frame
-  start_elev  <- raster::extract(dem, edges %>% dplyr::select(start_lon, start_lat))
-  end_elev <- raster::extract(dem, edges %>% dplyr::select(end_lon, end_lat))
+  start_elev  <- raster::extract(dem, edges[, .(start_lon, start_lat)])
+  end_elev <- raster::extract(dem, edges[, .(end_lon, end_lat)])
 
   edges[, start_elev := start_elev]
   edges[, end_elev := end_elev ]
