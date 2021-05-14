@@ -8,6 +8,8 @@ import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.*;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
+import org.locationtech.jts.geom.Polygon;
+import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -417,12 +419,23 @@ public class R5RCore {
         gridTable.addStringColumn("id", "");
         gridTable.addDoubleColumn("lat", 0.0);
         gridTable.addDoubleColumn("lon", 0.0);
+        gridTable.addStringColumn("geometry", "");
 
-        for (int i = 0; i < gridPointSet.featureCount(); i++) {
-            gridTable.append();
-            gridTable.set("id", String.valueOf(i));
-            gridTable.set("lat", gridPointSet.getLat(i));
-            gridTable.set("lon", gridPointSet.getLon(i));
+        int i = 0;
+        for (int x = 0; x < gridPointSet.width; x++) {
+            for (int y = 0; y < gridPointSet.height; y++) {
+                i++;
+
+                double lat = Grid.pixelToCenterLat(y + gridPointSet.north, resolution);
+                double lon = Grid.pixelToCenterLon(x + gridPointSet.west, resolution);
+                Polygon pixelPolygon = Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution);
+
+                gridTable.append();
+                gridTable.set("id", String.valueOf(i));
+                gridTable.set("lat", lat);
+                gridTable.set("lon", lon);
+                gridTable.set("geometry", pixelPolygon.toString());
+            }
         }
 
         return gridTable.getDataFrame();
