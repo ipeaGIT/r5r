@@ -1,4 +1,5 @@
 # library(tidyverse)
+options(java.parameters = '-Xmx10G')
 library(r5r)
 library(sf)
 library(tidyverse)
@@ -9,7 +10,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path, verbose = FALSE)
 
 # get regular grid at resolution 8
-grid_df <- r5r_core$getGrid(8L)
+grid_df <- r5r_core$getGrid(11L)
 grid_df <- jdx::convertToR(grid_df)
 grid_df$geometry <- st_as_sfc(grid_df$geometry)
 grid_df <- st_as_sf(grid_df, crs = 4326)
@@ -55,4 +56,20 @@ hex %>%
 
 min(hex$lat)
 
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
+ttm <- travel_time_matrix(r5r_core, origins = grid_df[20000,], destinations = grid_df,
+                          departure_datetime = departure_datetime,
+                          mode = c("BICYCLE"), max_trip_duration = 30,
+                          max_walk_dist = 800)
+
+ttm %>% left_join(grid_df, by = c("toId"="id")) %>%
+  mutate(travel_time = travel_time %/% 2) %>%
+  st_as_sf(crs = 4326) %>%
+  mapview(zcol="travel_time")
+  ggplot() +
+  geom_sf(aes(geometry=geometry, fill=travel_time), color=NA) +
+  scale_fill_distiller(palette = "Spectral")
+
+View()
+grid_df

@@ -25,9 +25,9 @@ import java.util.concurrent.ForkJoinPool;
 public class R5RCore {
 
     private int numberOfThreads;
-    ForkJoinPool r5rThreadPool;
+    private ForkJoinPool r5rThreadPool;
 
-    RoutingProperties routingProperties = new RoutingProperties();
+    private final RoutingProperties routingProperties = new RoutingProperties();
 
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
@@ -127,7 +127,7 @@ public class R5RCore {
         Utils.setLogMode("ALL");
     }
 
-    private TransportNetwork transportNetwork;
+    private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
@@ -580,7 +580,6 @@ public class R5RCore {
 
             servicesTable.set("active_on_date", service.activeOn(LocalDate.parse(date)));
         }
-
 
         return servicesTable.getDataFrame();
     }
