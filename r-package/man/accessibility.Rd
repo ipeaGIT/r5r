@@ -14,6 +14,8 @@ accessibility(
   time_window = 1L,
   percentiles = 50L,
   cutoffs = 30L,
+  decay_function = "step",
+  decay_value = 1,
   max_walk_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
@@ -59,6 +61,14 @@ taken between A and B within the set time window are shorter
 than 15 minutes. Only the first 5 cut points of the percentiles
 are considered. For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+
+\item{cutoffs}{numeric. Cutoff times in minutes for calculating cumulative
+opportunities accessibility.}
+
+\item{decay_function}{string. Choice of decay function 'step', 'exponential',
+'fixed_exponential'.}
+
+\item{decay_value}{numeric. Extra parameter to be passed to \code{decay_function}.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
 whole trip. Defaults to no restrictions on walking, as

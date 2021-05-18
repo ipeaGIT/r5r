@@ -23,7 +23,7 @@
 #' download_r5(version = "6.2", temp_dir = TRUE)
 #' }
 
-download_r5 <- function(version = "6.2",
+download_r5 <- function(version = "6.2.0",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {

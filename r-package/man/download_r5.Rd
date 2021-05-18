@@ -5,7 +5,7 @@
 \title{Download R5 Jar file}
 \usage{
 download_r5(
-  version = "6.2",
+  version = "6.2.0",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE

@@ -31,6 +31,11 @@
 #'                    than 15 minutes. Only the first 5 cut points of the percentiles
 #'                    are considered. For more details, see R5 documentation at
 #'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
+#' @param cutoffs numeric. Cutoff times in minutes for calculating cumulative
+#'                opportunities accessibility.
+#' @param decay_function string. Choice of decay function 'step', 'exponential',
+#'                       'fixed_exponential'.
+#' @param decay_value numeric. Extra parameter to be passed to `decay_function`.
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
@@ -138,7 +143,7 @@ accessibility <- function(r5r_core,
                           time_window = 1L,
                           percentiles = 50L,
                           cutoffs = 30L,
-                          decay_function = "STEP",
+                          decay_function = "step",
                           decay_value = 1.0,
                           max_walk_dist = Inf,
                           max_trip_duration = 120L,
