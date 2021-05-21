@@ -67,7 +67,6 @@ public class SnapFinder {
                 distance[index] = -1;
                 found[index] = false;
             }
-
         });
 
         // Build edges return table

@@ -4,8 +4,6 @@
 #' @param points a spatial sf POINT object, or a data.frame
 #'               containing the columns 'id', 'lon', 'lat'
 #' @param mode string. Defaults to "WALK", also allows "BICYCLE", and "CAR".
-#' @param n_threads numeric. The number of threads to use in parallel computing.
-#'                  Defaults to use all available threads (Inf).
 #'
 #' @return A data.table with the original points as well as their respective
 #'         snapped coordinates on the street network.
@@ -13,20 +11,7 @@
 #'
 find_snap <- function(r5r_core,
                       points,
-                      mode = "WALK",
-                      n_threads = Inf) {
-
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
-  old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+                      mode = "WALK") {
 
   # check inputs ------------------------------------------------------------
 
@@ -40,9 +25,6 @@ find_snap <- function(r5r_core,
 
   # origins and destinations
   points  <- assert_points_input(points, "points")
-
-  # set number of threads to be used by r5 and data.table
-  set_n_threads(r5r_core, n_threads)
 
   # snap points to street network
   snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, mode)
