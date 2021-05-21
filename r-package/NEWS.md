@@ -3,6 +3,9 @@
 -------------------------------------------------------
 # r5r v0.4-1 (dev)
 
+**Minor changes**
+- The `street_network_to_sf()` now has a more clean output when the provided GTFS covers a larger area than the street network pbf. Closes [#173](https://github.com/ipeaGIT/r5r/issues/173)
+
 **Bug fixes**
 - Fixed bug that prevented r5r from running without internet connection. Closes [#163](https://github.com/ipeaGIT/r5r/issues/163).
 
