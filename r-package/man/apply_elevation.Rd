@@ -4,7 +4,7 @@
 \alias{apply_elevation}
 \title{Apply elevation to street network}
 \usage{
-apply_elevation(r5r_core, raster_file)
+apply_elevation(r5r_core, raster_files)
 }
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}

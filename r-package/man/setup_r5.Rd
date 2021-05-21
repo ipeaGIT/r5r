@@ -4,7 +4,13 @@
 \alias{setup_r5}
 \title{Create transport network used for routing in R5}
 \usage{
-setup_r5(data_path, version = "6.2.0", verbose = TRUE, temp_dir = FALSE)
+setup_r5(
+  data_path,
+  version = "6.2.0",
+  verbose = TRUE,
+  temp_dir = FALSE,
+  use_elevation = FALSE
+)
 }
 \arguments{
 \item{data_path}{character string, the directory where data inputs are stored
@@ -18,6 +24,10 @@ FALSE to show only eventual ERROR and WARNING messages.}
 
 \item{temp_dir}{logical, whether the R5 Jar file should be saved in temporary
 directory. Defaults to FALSE}
+
+\item{use_elevation}{boolean. If TRUE, load any tif files containing elevation
+found in the data_path folder and calculate impedances for
+walking and cycling based on street slopes.}
 }
 \value{
 An rJava object to connect with R5 routing engine

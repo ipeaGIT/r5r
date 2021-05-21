@@ -29,7 +29,8 @@ decays %>%
   ggplot(aes(x=secs/60, y=decay, color=fun)) +
   geom_point() +
   geom_vline(xintercept = 30) +
-  facet_wrap(~fun)
+  facet_wrap(~fun) +
+  theme(legend.position = "none")
 
 
 
@@ -216,3 +217,20 @@ ggplot(df_access) +
        subtitle = "considering different decay functions",
        caption = "cutoff = 30min, exponential decay = 0.001, linear width = 10, logistic st.dev = 20")
 
+
+######### ELEVATION
+tobler_hiking <- function(slope) {
+  C <- 1.19403
+
+  tobler_factor <- C * exp(-3.5 * abs(slope+0.05))
+
+  return(1 / tobler_factor)
+}
+
+t_factor = tobler_hiking(9L:-13L)
+plot(t_factor)
+
+slopes <- as.double(9.0:-13.0)
+alts <- as.double(rep(0.0, 23))
+b_factor <- r5r_core$bikeSpeedCoefficientOTP(slopes, alts)
+plot(b_factor)

@@ -24,14 +24,20 @@ tobler_hiking <- function(slope) {
 #'              the terrain's slopes
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param raster_file string. Path to a raster file containing the study area's
-#'                    topography.
+#' @param raster_file string. Path to raster files containing the study area's
+#'                    topography. If a list is provided, all the rasters are
+#'                    automatically merged.
 #'
 #' @return No return value, called for side effects.
 #' @family elevation support functions
-apply_elevation <- function(r5r_core, raster_file) {
-  # load raster file containing elevation data
-  dem <- raster::raster(raster_file)
+apply_elevation <- function(r5r_core, raster_files) {
+  # load raster files containing elevation data
+  if (length(raster_files) == 1) {
+    dem <- raster::raster(raster_files[1])
+  } else {
+    dem_files <- lapply(raster_files, raster::raster)
+    dem <- do.call(raster::merge, dem_files)
+  }
 
   # extract street edges from r5r_core
   edges <- r5r_core$getEdges()

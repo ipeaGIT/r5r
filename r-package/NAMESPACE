@@ -3,6 +3,7 @@
 export(accessibility)
 export(detailed_itineraries)
 export(download_r5)
+export(find_snap)
 export(isochrones)
 export(setup_r5)
 export(stop_r5)
