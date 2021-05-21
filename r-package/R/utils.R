@@ -158,31 +158,23 @@ posix_to_string <- function(datetime) {
 
 assert_points_input <- function(df, name) {
 
-  # check if 'df' is a data.frame or a sf
+  # check if 'df' is a data.frame or a POINT sf
 
   if (is(df, "data.frame")) {
 
     if (is(df, "sf")) {
 
-      if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) == "POINT") {
+      if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
 
-        df <- sfheaders::sf_to_df(df, fill = TRUE)
-        data.table::setDT(df)
-        data.table::setnames(df, "x", "lon")
-        data.table::setnames(df, "y", "lat")
-        checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
-
-      } else {
-
-        df <- sf::st_centroid(df)
-        df <- sfheaders::sf_to_df(df, fill = TRUE)
-        data.table::setDT(df)
-        data.table::setnames(df, "x", "lon")
-        data.table::setnames(df, "y", "lat")
-        checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
+        stop(paste0("'", name, "' must be either a 'data.frame' or a 'POINT sf'."))
 
       }
 
+      df <- sfheaders::sf_to_df(df, fill = TRUE)
+      data.table::setDT(df)
+      data.table::setnames(df, "x", "lon")
+      data.table::setnames(df, "y", "lat")
+      checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
     }
 
     checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)
@@ -201,7 +193,7 @@ assert_points_input <- function(df, name) {
 
   }
 
-  stop(paste0("'", name, "' must be either a 'data.frame' or a 'sf'."))
+  stop(paste0("'", name, "' must be either a 'data.frame' or a 'sf POINT'."))
 
 }
 
