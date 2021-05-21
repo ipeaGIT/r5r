@@ -8,7 +8,7 @@ library(mapview)
 
 # initialize r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path, verbose = FALSE, use_elevation = TRUE)
 
 # get regular grid at resolution 8
 grid_df <- r5r_core$getGrid(8L)
@@ -21,14 +21,10 @@ grid_df %>% mutate(id = as.integer(id)) %>% mapview::mapview(alpha.regions = 0)
   mapview::mapview(snap_df %>% filter(point_id=="4"), xcol="snap_lon", ycol="snap_lat")
 
 
-# snap grid to street network
-snap_df <- r5r_core$findSnapPoints(grid_df$id, grid_df$lat, grid_df$lon, "CAR")
-snap_df <- jdx::convertToR(snap_df)
-snap_df <- snap_df %>%
-  filter(found == TRUE)
+snap_df <- find_snap(r5r_core, grid_df, "BICYCLE") %>% arrange(distance)
 
 mapview::mapview(snap_df, xcol="lon", ycol="lat", crs=4326)
-mapview::mapview(snap_df, xcol="snap_lon", ycol="snap_lat", zcol="found", crs=4326)
+mapview::mapview(snap_df %>% drop_na(), xcol="snap_lon", ycol="snap_lat", zcol="distance", crs=4326)
 
 leafsync::sync(mv1, mv2)
 
