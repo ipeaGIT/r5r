@@ -31,7 +31,7 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'route', 'temp_duration', 'temp_route', 'route', 'temp_sign', '.I',
     'segment_duration', 'total_duration', 'wait', 'release_date', 'con',
     "start_lon", "start_lat", "end_lon", "end_lat", "slope",
-    "walk_multiplier", "bike_multiplier", "from_id", "geom"))
+    "walk_multiplier", "bike_multiplier"))
 
 
 

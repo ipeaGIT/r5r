@@ -9,7 +9,7 @@ library(tidyverse)
 library(patchwork)
 
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, use_elevation = TRUE, verbose = FALSE)
 
 ### test decays
 decay_step <- r5r_core$testDecay("STEP", 30)
@@ -18,7 +18,7 @@ decay_fixed_exp <- r5r_core$testDecay("FIXED_EXPONENTIAL", 0.001)
 decay_logistic <- r5r_core$testDecay("LOGISTIC", 10)
 decay_linear <- r5r_core$testDecay("LINEAR", 10)
 
-decays <- data_frame(secs = 1:3600,
+decays <- tibble(secs = 1:3600,
                      decay_step,
                      decay_exp,
                      decay_fixed_exp,
@@ -42,10 +42,9 @@ destinations <- destinations[opportunities > 0]
 
 trip_date = "2019-05-20"
 departure_time = "14:00:00"
-mode = c('WALK', 'TRANSIT')
+mode = c('WALK')
 
 ##### cumulative opportunities, by travel time percentile and cutoff
-
 system.time(
   df_acc <- r5r::accessibility( r5r_core = r5r_core,
                             origins = origins,
@@ -67,7 +66,7 @@ df_acc$geometry <- h3jsr::h3_to_polygon(df_acc$from_id)
 df_acc$percentile <- paste0(df_acc$percentile, "th")
 df_acc$cutoff <- paste0(df_acc$cutoff, " min")
 
-ggplot(df_acc %>% filter(accessibility > 0)) +
+p_elev <- ggplot(df_acc %>% filter(accessibility > 0)) +
   geom_sf(aes(geometry=geometry, fill=accessibility), color = NA) +
   coord_sf(datum = NA) +
   scale_fill_distiller(palette = "Spectral") +

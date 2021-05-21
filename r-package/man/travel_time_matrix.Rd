@@ -179,7 +179,6 @@ stop_r5(r5r_core)
 \seealso{
 Other routing: 
 \code{\link{accessibility}()},
-\code{\link{detailed_itineraries}()},
-\code{\link{isochrones}()}
+\code{\link{detailed_itineraries}()}
 }
 \concept{routing}

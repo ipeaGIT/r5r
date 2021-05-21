@@ -191,7 +191,6 @@ stop_r5(r5r_core)
 \seealso{
 Other routing: 
 \code{\link{detailed_itineraries}()},
-\code{\link{isochrones}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}

@@ -4,7 +4,7 @@
 \alias{find_snap}
 \title{Find snapped locations of input points on street network}
 \usage{
-find_snap(r5r_core, points, mode = "WALK", n_threads = Inf)
+find_snap(r5r_core, points, mode = "WALK")
 }
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
@@ -13,9 +13,6 @@ find_snap(r5r_core, points, mode = "WALK", n_threads = Inf)
 containing the columns 'id', 'lon', 'lat'}
 
 \item{mode}{string. Defaults to "WALK", also allows "BICYCLE", and "CAR".}
-
-\item{n_threads}{numeric. The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
 }
 \value{
 A data.table with the original points as well as their respective

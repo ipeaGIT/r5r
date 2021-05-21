@@ -129,8 +129,8 @@ setup_r5 <- function(data_path,
 
     # if there are any .tif files in the data_path folder, apply elevation to street network
     if (length(tif_files) > 0) {
-      message(sprintf("%s TIF files found in data path. Loading elevation into street edges.\n", length(tif_files)),
-              "DISCLAIMER: this is an r5r specific feature, and it will be deprecated once native support for elevation data is added to R5.")
+      message(sprintf("%s TIFF file(s) found in data path. Loading elevation into street edges.\n", length(tif_files)),
+              "DISCLAIMER: this is an r5r specific feature, and it will be deprecated once native support\nfor elevation data is added to R5.")
       apply_elevation(r5r_core, tif_files)
     }
   }
