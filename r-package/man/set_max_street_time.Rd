@@ -27,6 +27,7 @@ Other support functions:
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
 \code{\link{download_metadata}()},
+\code{\link{find_snap}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_lts}()},

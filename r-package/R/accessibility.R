@@ -1,11 +1,15 @@
-#' Estimates cumulative opportunities accessibility
+#' Calculate access to opportunities
 #'
-#' @description Fast computation of cumulative opportunities accessibility for
-#'              different travel time cutoffs and percentiles.
+#' @description Fast computation of access to opportunities given a transport
+#'              given a selected decay function. See `details` for the available
+#'              decay functions.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param origins,destinations a spatial sf POINT object, or a data.frame
 #'                containing the columns 'id', 'lon', 'lat'
+#' @param opportunities_colname string. The column name in the `destinations`
+#'        input that tells the number of opportunities in each location.
+#'        Defaults to "opportunities".
 #' @param mode string. Transport modes allowed for the trips. Defaults to
 #'             "WALK". See details for other options.
 #' @param mode_egress string. Transport mode used after egress from public
@@ -31,10 +35,12 @@
 #'                    than 15 minutes. Only the first 5 cut points of the percentiles
 #'                    are considered. For more details, see R5 documentation at
 #'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
+#' @param decay_function string. Choice of one of the following decay functions:
+#'                       'logistic', 'fixed_exponential', 'half_life_exponential',
+#'                       'linear', and 'step'. Defaults to 'step', which yields cumulative
+#'                       opportunity metrics. More info in `details`.
 #' @param cutoffs numeric. Cutoff times in minutes for calculating cumulative
 #'                opportunities accessibility.
-#' @param decay_function string. Choice of decay function 'step', 'exponential',
-#'                       'fixed_exponential'.
 #' @param decay_value numeric. Extra parameter to be passed to `decay_function`.
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
@@ -61,7 +67,44 @@
 #' the street network are not returned in the data.table.
 #'
 #' @details
-#'  # Transpor modes:
+#'  # Decay functions:
+#'  R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions#half-life-exponential-decay}
+#'  The options include:
+#'
+#'  ## Step `step` (cumulative opportunity)
+#'  A binary decay function used to calculate cumulative opportunity metrics.
+#'
+#'  ## Logistic CDF `logistic`
+#'  This is the logistic function, i.e. the cumulative distribution function of
+#'  the logistic distribution, expressed such that its parameters are the median
+#'  (inflection point) and standard deviation. This function applies a sigmoid
+#'  rolloff that has a convenient relationship to discrete choice theory. Its
+#'  parameters can be set to reflect a whole population's tolerance for making
+#'  trips with different travel times. The function's value represents the
+#'  probability that a randomly chosen member of the population would accept
+#'  making a trip, given its duration. Opportunities are then weighted by how
+#'  likely it is a person would consider them "reachable".
+#'
+#'  ### calibration
+#'  The median parameter is controlled by the `cutoff` parameter, leaving only
+#'  the standard deviation to configure.
+#'
+#'  ## Exponential `fixed_exponential`
+#'  This function is of the form e-λt where λ is a single fixed decay constant
+#'  in the range (0, 1). It is constrained to be positive to ensure weights
+#'  decrease (rather than grow) with increasing travel time.
+#'
+#'  ## Half-life Exponential Decay `half_life_exponential`
+#'  This is similar to the fixed-exponential option above, but in this case the
+#'  decay parameter is inferred from the Analysis cutoff setting, which is
+#'  treated as the half-life.
+#'
+#'  ## Linear `linear`
+#'  This is a simple, vaguely sigmoid option, which may be useful when you have
+#'  a sense of a maximum travel time that would be tolerated by any traveler,
+#'  and a minimum time below which all travel is perceived to be equally easy.
+#'
+#'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:
 #'
 #'   ## Transit modes
@@ -121,13 +164,13 @@
 #' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 #'
 #' # estimate travel time matrix
-#' ttm <- travel_time_matrix(r5r_core,
-#'                           origins = points,
-#'                           destinations = points,
-#'                           mode = c("WALK", "TRANSIT"),
-#'                           departure_datetime = departure_datetime,
-#'                           max_walk_dist = Inf,
-#'                           max_trip_duration = 120L)
+#' access <- travel_time_matrix(r5r_core,
+#'                              origins = points,
+#'                              destinations = points,
+#'                              mode = c("WALK", "TRANSIT"),
+#'                              departure_datetime = departure_datetime,
+#'                              max_walk_dist = Inf,
+#'                              max_trip_duration = 120L)
 #'
 #' stop_r5(r5r_core)
 #'

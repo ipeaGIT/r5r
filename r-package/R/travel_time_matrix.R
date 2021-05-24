@@ -56,7 +56,7 @@
 #' the street network are not returned in the data.table.
 #'
 #' @details
-#'  # Transpor modes:
+#'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:
 #'
 #'   ## Transit modes

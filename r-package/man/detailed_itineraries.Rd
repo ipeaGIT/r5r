@@ -83,7 +83,7 @@ and travel times are in minutes.
 Fast computation of (multiple) detailed itineraries between one
 or many origin destination pairs.
 }
-\section{Transpor modes:}{
+\section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:
 \subsection{Transit modes}{
 

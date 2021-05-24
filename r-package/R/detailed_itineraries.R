@@ -40,7 +40,7 @@
 #'                      geometry column. It can be helpful for saving memory.
 #'
 #' @details
-#'  # Transpor modes:
+#'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:
 #'
 #'   ## Transit modes

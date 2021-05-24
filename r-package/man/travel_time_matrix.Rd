@@ -95,7 +95,7 @@ the street network are not returned in the data.table.
 Fast computation of travel time estimates between one or
 multiple origin destination pairs.
 }
-\section{Transpor modes:}{
+\section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:
 \subsection{Transit modes}{
 
