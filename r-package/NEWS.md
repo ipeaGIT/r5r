@@ -3,6 +3,10 @@
 -------------------------------------------------------
 # r5r v0.4-1 (dev)
 
+**Major changes**
+- New function `find_snap()` to help the used identify where in the street network
+the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
+
 **Bug fixes**
 - Fixed bug that prevented r5r from running without internet connection. Closes [#163](https://github.com/ipeaGIT/r5r/issues/163).
 
