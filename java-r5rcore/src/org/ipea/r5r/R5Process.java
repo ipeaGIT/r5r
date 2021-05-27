@@ -83,7 +83,7 @@ public abstract class R5Process {
                                 results = runProcess(index);
 
                                 if (!Utils.verbose) {
-                                    System.out.print("\rOrigin " + totalProcessed.getAndIncrement() + " of " + nOrigins + " processed.              ");
+                                    System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.                 ");
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();

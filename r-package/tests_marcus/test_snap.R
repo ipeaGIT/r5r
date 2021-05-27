@@ -89,3 +89,5 @@ system.time(
   ttm_orig <- accessibility(r5r_core, origins = original, destinations = original,
                             verbose = FALSE)
 )
+
+
