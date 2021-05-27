@@ -69,5 +69,8 @@ public class Utils {
 
         logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
         logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.PathOptionsTable");
+        logger.setLevel(Level.valueOf(mode));
     }
 }
