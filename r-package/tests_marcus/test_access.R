@@ -237,3 +237,35 @@ slopes <- as.double(9.0:-13.0)
 alts <- as.double(rep(0.0, 23))
 b_factor <- r5r_core$bikeSpeedCoefficientOTP(slopes, alts)
 plot(b_factor)
+
+
+library(r5r)
+
+# build transport network
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
+
+# load origin/destination points
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+
+
+# estimate travel time matrix
+system.time(
+  access <- accessibility(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          opportunities_colname = "schools",
+                          mode = "WALK",
+                          cutoffs = c(25, 30),
+                          max_trip_duration = 30,
+                          verbose = FALSE)
+)
+
+
+left_join(access, points, by=c("from_id"="id")) %>%
+  ggplot(aes(x=lon, y=lat, color=accessibility)) +
+  geom_point() +
+  scale_color_distiller(palette = "Spectral") +
+  facet_wrap(~cutoff)
+
+
