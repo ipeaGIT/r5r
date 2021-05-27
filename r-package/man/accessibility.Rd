@@ -30,7 +30,8 @@ accessibility(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{destinations}{}
+\item{origins, destinations}{a spatial sf POINT object, or a data.frame
+containing the columns 'id', 'lon', 'lat'}
 
 \item{opportunities_colname}{string. The column name in the \code{destinations}
 input that tells the number of opportunities in each location.

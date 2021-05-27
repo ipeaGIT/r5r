@@ -4,6 +4,8 @@
 #'              decay function. See `details` for the available decay functions.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
+#' @param origins,destinations a spatial sf POINT object, or a data.frame
+#'                containing the columns 'id', 'lon', 'lat'
 #' @param opportunities_colname string. The column name in the `destinations`
 #'        input that tells the number of opportunities in each location.
 #'        Defaults to "opportunities".
@@ -60,8 +62,6 @@
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. TRUE to show detailed output messages (the default)
 #'                or FALSE to show only eventual ERROR messages.
-#' @param origins
-#' @param destinations
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.

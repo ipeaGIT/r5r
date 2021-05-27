@@ -1,7 +1,6 @@
 package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.analyst.decay.DecayFunction;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public abstract class R5Process {
@@ -73,18 +73,27 @@ public abstract class R5Process {
         int[] requestIndices = new int[nOrigins];
         for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
 
-        return r5rThreadPool.submit(() ->
+        AtomicInteger totalProcessed = new AtomicInteger(1);
+
+        List<LinkedHashMap<String, ArrayList<Object>>> processResults = r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
                         .mapToObj(index -> {
                             LinkedHashMap<String, ArrayList<Object>> results = null;
                             try {
                                 results = runProcess(index);
+
+                                if (!Utils.verbose) {
+                                    System.out.print("\rOrigin " + totalProcessed.getAndIncrement() + " of " + nOrigins + " processed.              ");
+                                }
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                             return results;
                         }).
                         collect(Collectors.toList())).get();
+
+        System.out.println("\n");
+        return processResults;
     }
 
     protected abstract LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException;

@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.IntStream;
 
 public class R5RCore {
 
@@ -120,11 +121,11 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        Utils.setLogMode("ERROR");
+        Utils.setLogMode("ERROR", false);
     }
 
     public void verboseMode() {
-        Utils.setLogMode("ALL");
+        Utils.setLogMode("ALL", true);
     }
 
     private final TransportNetwork transportNetwork;
@@ -412,33 +413,42 @@ public class R5RCore {
         return snapFinder.run();
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> getGrid(int resolution) {
+    public LinkedHashMap<String, Object> getGrid(int resolution) {
+        return getGrid(resolution, true);
+    }
+
+    public LinkedHashMap<String, Object> getGrid(int resolution, boolean dropGeometry) {
         Grid gridPointSet = new Grid(resolution, this.transportNetwork.getEnvelope());
 
-        RDataFrame gridTable = new RDataFrame();
-        gridTable.addStringColumn("id", "");
-        gridTable.addDoubleColumn("lat", 0.0);
-        gridTable.addDoubleColumn("lon", 0.0);
-        gridTable.addStringColumn("geometry", "");
+        String[] id = new String[gridPointSet.featureCount()];
+        double[] lat = new double[gridPointSet.featureCount()];
+        double[] lon = new double[gridPointSet.featureCount()];
+        String[] geometry = new String[gridPointSet.featureCount()];
 
-        int i = 0;
-        for (int x = 0; x < gridPointSet.width; x++) {
-            for (int y = 0; y < gridPointSet.height; y++) {
-                i++;
+        IntStream.range(0, gridPointSet.featureCount()).parallel().forEach(index -> {
+            int x = index % gridPointSet.width;
+            int y = index / gridPointSet.width;
 
-                double lat = Grid.pixelToCenterLat(y + gridPointSet.north, resolution);
-                double lon = Grid.pixelToCenterLon(x + gridPointSet.west, resolution);
-                Polygon pixelPolygon = Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution);
+            id[index] = String.valueOf(index);
+            lat[index] = Grid.pixelToCenterLat(y + gridPointSet.north, resolution);
+            lon[index] = Grid.pixelToCenterLon(x + gridPointSet.west, resolution);
 
-                gridTable.append();
-                gridTable.set("id", String.valueOf(i));
-                gridTable.set("lat", lat);
-                gridTable.set("lon", lon);
-                gridTable.set("geometry", pixelPolygon.toString());
+            if (!dropGeometry) {
+                geometry[index] = Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution).toString();
             }
+        });
+
+        // Build edges return table
+        LinkedHashMap<String, Object> gridTable = new LinkedHashMap<>();
+        gridTable.put("id", id);
+        gridTable.put("lat", lat);
+        gridTable.put("lon", lon);
+
+        if (!dropGeometry) {
+            gridTable.put("geometry", geometry);
         }
 
-        return gridTable.getDataFrame();
+        return gridTable;
     }
 
 

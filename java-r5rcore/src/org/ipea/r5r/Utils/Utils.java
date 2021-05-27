@@ -15,6 +15,8 @@ import java.util.EnumSet;
 
 public class Utils {
 
+    static public boolean verbose = true;
+
     public static EnumSet<LegMode> setLegModes(String modes) {
         EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);
 
@@ -48,7 +50,9 @@ public class Utils {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
-    public static void setLogMode(String mode) {
+    public static void setLogMode(String mode, boolean verbose) {
+        Utils.verbose = verbose;
+
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         Logger logger = loggerContext.getLogger("com.conveyal.r5");

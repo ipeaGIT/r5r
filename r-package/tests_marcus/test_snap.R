@@ -11,17 +11,25 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path, verbose = FALSE, use_elevation = TRUE)
 
 # get regular grid at resolution 8
-grid_df <- r5r_core$getGrid(8L)
-grid_df <- jdx::convertToR(grid_df)
-grid_df$geometry <- st_as_sfc(grid_df$geometry)
-grid_df <- st_as_sf(grid_df, crs = 4326)
+  grid_df <- r5r_core$getGrid(8L, TRUE)
+  grid_df <- jdx::convertToR(grid_df)
+
+
+# grid_df$geometry <- st_as_sfc(grid_df$geometry)
+# grid_df <- st_as_sf(grid_df, crs = 4326)
+
+grid_df %>%
+  mapview(xcol="lon", ycol="lat", crs=4326)
 
 grid_df %>% mutate(id = as.integer(id)) %>% mapview::mapview(alpha.regions = 0)
   mapview::mapview(snap_df, xcol="lon", ycol="lat")
   mapview::mapview(snap_df %>% filter(point_id=="4"), xcol="snap_lon", ycol="snap_lat")
 
+r5r_core$silentMode()
+system.time(
+  snap_df <- find_snap(r5r_core, grid_df, "WALK")
+)
 
-snap_df <- find_snap(r5r_core, grid_df, "BICYCLE") %>% arrange(distance)
 
 mapview::mapview(snap_df, xcol="lon", ycol="lat", crs=4326)
 mapview::mapview(snap_df %>% drop_na(), xcol="snap_lon", ycol="snap_lat", zcol="distance", crs=4326)
@@ -32,8 +40,10 @@ leafsync::sync(mv1, mv2)
 original <- snap_df %>% select(id = point_id, lat, lon)
 snapped <- snap_df %>% select(id = point_id, lat = snap_lat, lon = snap_lon)
 
-ttm_orig <- travel_time_matrix(r5r_core, origins = original, destinations = original,
-                          verbose = FALSE)
+system.time(
+  ttm_orig <- travel_time_matrix(r5r_core, origins = original, destinations = original,
+                                 verbose = FALSE)
+)
 
 ttm_snap <- travel_time_matrix(r5r_core, origins = snapped, destinations = snapped,
                           verbose = FALSE)
