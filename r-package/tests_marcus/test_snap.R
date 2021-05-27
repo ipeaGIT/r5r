@@ -81,4 +81,11 @@ ttm %>% left_join(grid_df, by = c("toId"="id")) %>%
 View()
 grid_df
 
-accessibility()
+
+original <- dplyr::select(snap_df, id = point_id, lat, lon)
+original$opportunities <- 1
+
+system.time(
+  ttm_orig <- accessibility(r5r_core, origins = original, destinations = original,
+                            verbose = FALSE)
+)
