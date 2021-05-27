@@ -37,8 +37,10 @@ decays %>%
 ##### input
 origins <- destinations <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r")) %>% setDT()
 
-destinations[, opportunities := schools]
-destinations <- destinations[opportunities > 0]
+origins <- origins[population > 0]
+destinations <- destinations[schools > 0]
+# destinations[, opportunities := schools]
+# destinations <- destinations[opportunities > 0]
 
 trip_date = "2019-05-20"
 departure_time = "14:00:00"
@@ -49,11 +51,13 @@ system.time(
   df_acc <- r5r::accessibility( r5r_core = r5r_core,
                             origins = origins,
                             destinations = destinations,
+                            opportunities_colname = "schools",
                             departure_datetime = lubridate::ymd_hm("2019-05-20 14:00"),
                             time_window = 30,
                             percentiles = c(25, 50, 75),
                             cutoffs = c(15, 30, 45),
-                            decay_function = "STEP",
+                            decay_function = "LOGISTIC",
+                            decay_value = 1,
                             mode = mode,
                             max_walk_dist = 1000,
                             max_trip_duration = 45,

@@ -19,6 +19,7 @@ Checks if there is internet connection to Ipea server to download geobr data.
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{download_metadata}()},
 \code{\link{find_snap}()},

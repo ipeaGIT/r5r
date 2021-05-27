@@ -24,6 +24,7 @@ Set max street time
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
 \code{\link{download_metadata}()},

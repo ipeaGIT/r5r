@@ -94,10 +94,12 @@
 #'  in the range (0, 1). It is constrained to be positive to ensure weights
 #'  decrease (rather than grow) with increasing travel time.
 #'
-#'  ## Half-life Exponential Decay `half_life_exponential`
+#'  ## Half-life Exponential Decay `exponential`
 #'  This is similar to the fixed-exponential option above, but in this case the
 #'  decay parameter is inferred from the Analysis cutoff setting, which is
 #'  treated as the half-life.
+#'
+#'  \deqn{exp(log(0.5) * t/c)}
 #'
 #'  ## Linear `linear`
 #'  This is a simple, vaguely sigmoid option, which may be useful when you have
@@ -236,6 +238,12 @@ accessibility <- function(r5r_core,
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
 
+  # opportunities
+  checkmate::assert_character(opportunities_colname)
+  checkmate::assert_names(names(destinations), must.include = opportunities_colname,
+                          .var.name = "destinations")
+  checkmate::assert_numeric(destinations[, get(opportunities_colname)])
+  opportunities_data <- as.integer(destinations[, get(opportunities_colname)])
 
   # time window
   checkmate::assert_numeric(time_window)
@@ -254,9 +262,7 @@ accessibility <- function(r5r_core,
   cutoffs <- as.integer(cutoffs)
 
   # decay
-  checkmate::assert_numeric(decay_value)
-  decay_value <- as.double(decay_value)
-
+  decay_list <- assert_decay_function(decay_function, decay_value)
 
   # set r5r_core options ----------------------------------------------------
 
@@ -292,9 +298,9 @@ accessibility <- function(r5r_core,
                                           destinations$id,
                                           destinations$lat,
                                           destinations$lon,
-                                          destinations$opportunities,
-                                          decay_function,
-                                          decay_value,
+                                          opportunities_data,
+                                          decay_list$fun,
+                                          decay_list$value,
                                           mode_list$direct_modes,
                                           mode_list$transit_mode,
                                           mode_list$access_mode,

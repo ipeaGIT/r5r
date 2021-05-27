@@ -148,11 +148,13 @@ in the range (0, 1). It is constrained to be positive to ensure weights
 decrease (rather than grow) with increasing travel time.
 }
 
-\subsection{Half-life Exponential Decay \code{half_life_exponential}}{
+\subsection{Half-life Exponential Decay \code{exponential}}{
 
 This is similar to the fixed-exponential option above, but in this case the
 decay parameter is inferred from the Analysis cutoff setting, which is
 treated as the half-life.
+
+\deqn{exp(log(0.5) * t/c)}
 }
 
 \subsection{Linear \code{linear}}{

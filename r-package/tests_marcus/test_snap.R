@@ -70,3 +70,5 @@ ttm %>% left_join(grid_df, by = c("toId"="id")) %>%
 
 View()
 grid_df
+
+accessibility()
