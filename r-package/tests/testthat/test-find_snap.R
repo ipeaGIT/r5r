@@ -24,7 +24,7 @@ test_that("adequately raises errors", {
   # invalid r5r_core
   expect_error( find_snap(r5r_core='a', points = points, mode = 'WALK') )
 
-  # invalid r5r_core
+  # invalid points
   expect_error( find_snap(r5r_core=r5r_core, points = 'a', mode = 'WALK') )
 
 })

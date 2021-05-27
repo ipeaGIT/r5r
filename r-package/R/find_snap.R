@@ -5,7 +5,7 @@
 #' first round is unsuccessful, then R5 expands the search radius to 1.6 km.
 #' Points that aren't linked to the street network after those two rounds are
 #' returned with `NA` coordinates and `found = FALSE`. Please note that the
-#' location of the snapped points depend on the transport mode set by the user.
+#' location of the snapped points depends on the transport mode set by the user.
 #'
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
@@ -34,9 +34,9 @@
 #' points <- read.csv(file.path(path, "spo_hexgrid.csv"))
 #'
 #' # find where origin or destination points are snapped
-#' street_net <- find_snap(r5r_core,
-#'                         points = points,
-#'                         mode = 'CAR')
+#' snap_df <- find_snap(r5r_core,
+#'                      points = points,
+#'                      mode = 'CAR')
 #'
 #' stop_r5(r5r_core)
 #' }

@@ -26,7 +26,7 @@ network in two rounds. First, it uses a search radius of 300 meters. If the
 first round is unsuccessful, then R5 expands the search radius to 1.6 km.
 Points that aren't linked to the street network after those two rounds are
 returned with \code{NA} coordinates and \code{found = FALSE}. Please note that the
-location of the snapped points depend on the transport mode set by the user.
+location of the snapped points depends on the transport mode set by the user.
 }
 \examples{
 if (interactive()) {
@@ -41,9 +41,9 @@ r5r_core <- setup_r5(data_path = path)
 points <- read.csv(file.path(path, "spo_hexgrid.csv"))
 
 # find where origin or destination points are snapped
-street_net <- find_snap(r5r_core,
-                        points = points,
-                        mode = 'CAR')
+snap_df <- find_snap(r5r_core,
+                     points = points,
+                     mode = 'CAR')
 
 stop_r5(r5r_core)
 }

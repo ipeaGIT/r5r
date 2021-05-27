@@ -30,8 +30,7 @@ accessibility(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'}
+\item{destinations}{}
 
 \item{opportunities_colname}{string. The column name in the \code{destinations}
 input that tells the number of opportunities in each location.
@@ -49,33 +48,36 @@ networks, please check \code{calendar.txt} within
 the GTFS file for valid dates.}
 
 \item{time_window}{numeric. Time window in minutes for which r5r will
-calculate multiple travel time matrices departing each
-minute. By default, the number of simulations is 5 times
-the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure times.
-This parameter is only used with frequency-based GTFS files.
-See details for further information.}
+calculate travel times departing each minute. When using
+frequency-based GTFS files, 5 Monte Carlo simulations will
+be run for each minute in the time window. See details for
+further information.}
 
-\item{percentiles}{numeric vector. Defaults to '50', returning the median
-travel time for a given time_window. If a numeric vector is passed,
-for example c(25, 50, 75), the function will return
-additional columns with the travel times within percentiles
-of trips. For example, if the 25 percentile of trips between
-A and B is 15 minutes, this means that 25\% of all trips
-taken between A and B within the set time window are shorter
-than 15 minutes. Only the first 5 cut points of the percentiles
-are considered. For more details, see R5 documentation at
+\item{percentiles}{numeric vector. Defaults to '50', returning the accessibility
+value for the median travel time computed for a given
+time_window. If a numeric vector is passed, for example
+c(25, 50, 75), the function will return accessibility
+estimates for each percentile, by travel time cutoff. Only
+the first 5 cut points of the percentiles are considered.
+For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
 
 \item{decay_function}{string. Choice of one of the following decay functions:
-'logistic', 'fixed_exponential', 'half_life_exponential',
-'linear', and 'step'. Defaults to 'step', which yields cumulative
-opportunity metrics. More info in \code{details}.}
+'step', 'exponential', 'fixed_exponential', 'linear',
+and 'logistic'. Defaults to 'step', which yields
+cumulative opportunities accessibility metrics.
+More info in \code{details}.}
 
 \item{cutoffs}{numeric. Cutoff times in minutes for calculating cumulative
-opportunities accessibility.}
+opportunities accessibility when using the 'step decay function'.
+This parameter has different effects for each of the other decay
+functions: it indicates the 'median' (or inflection point) of
+the decay curves in the 'logistic' and 'linear' functions, and
+the 'half-life' in the 'exponential' function. It has no effect
+when using the 'fixed exponential' function.}
 
-\item{decay_value}{numeric. Extra parameter to be passed to \code{decay_function}.}
+\item{decay_value}{numeric. Extra parameter to be passed to the selected
+\code{decay_function}.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
 whole trip. Defaults to no restrictions on walking, as
@@ -104,22 +106,19 @@ Defaults to use all available threads (Inf).}
 or FALSE to show only eventual ERROR messages.}
 }
 \value{
-A data.table with travel time estimates (in minutes) between origin
-destination pairs by a given transport mode. Note that origins/destinations
-that were beyond the maximum travel time, and/or origins that were far from
-the street network are not returned in the data.table.
+A data.table with accessibility estimates for all origin points, by
+a given transport mode, and per travel time cutoff and percentile.
 }
 \description{
-Fast computation of access to opportunities given a transport
-given a selected decay function. See \code{details} for the available
-decay functions.
+Fast computation of access to opportunities given a selected
+decay function. See \code{details} for the available decay functions.
 }
 \section{Decay functions:}{
-R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions#half-life-exponential-decay}
+R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions}
 The options include:
-\subsection{Step \code{step} (cumulative opportunity)}{
+\subsection{Step \code{step} (cumulative opportunities)}{
 
-A binary decay function used to calculate cumulative opportunity metrics.
+A binary decay function used to calculate cumulative opportunities metrics.
 }
 
 \subsection{Logistic CDF \code{logistic}}{
@@ -136,25 +135,29 @@ likely it is a person would consider them "reachable".
 \subsection{calibration}{
 
 The median parameter is controlled by the \code{cutoff} parameter, leaving only
-the standard deviation to configure.
+the standard deviation to configure through the \code{decay_value} parameter.
 }
 
 }
 
-\subsection{Exponential \code{fixed_exponential}}{
+\subsection{Fixed Exponential \code{fixed_exponential}}{
 
 This function is of the form e-λt where λ is a single fixed decay constant
 in the range (0, 1). It is constrained to be positive to ensure weights
 decrease (rather than grow) with increasing travel time.
+\subsection{calibration}{
+
+This function is controlled exclusively by the λ constant, given by the
+\code{decay_value} parameter. Values provided in \code{cutoffs} are ignored.
+}
+
 }
 
 \subsection{Half-life Exponential Decay \code{exponential}}{
 
 This is similar to the fixed-exponential option above, but in this case the
-decay parameter is inferred from the Analysis cutoff setting, which is
-treated as the half-life.
-
-\deqn{exp(log(0.5) * t/c)}
+decay parameter is inferred from the \code{cutoffs} parameter values, which is
+treated as the half-life of the decay.
 }
 
 \subsection{Linear \code{linear}}{
@@ -162,6 +165,12 @@ treated as the half-life.
 This is a simple, vaguely sigmoid option, which may be useful when you have
 a sense of a maximum travel time that would be tolerated by any traveler,
 and a minimum time below which all travel is perceived to be equally easy.
+\subsection{calibration}{
+
+The transition region is transposable and symmetric around the \code{cutoffs}
+parameter values, taking \code{decay_value} minutes to taper down from one to zero.
+}
+
 }
 }
 
@@ -205,7 +214,7 @@ where cyclists are required to mix with moderate- to high-speed vehicular traffi
 }
 
 \section{Routing algorithm:}{
-The travel_time_matrix function uses an R5-specific extension to the RAPTOR
+The \code{accessibility()} function uses an R5-specific extension to the RAPTOR
 routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
 systematic sample of one departure per minute over the time window set by the
 user in the 'time_window' parameter. A detailed description of base RAPTOR
@@ -225,22 +234,20 @@ if (interactive()) {
 library(r5r)
 
 # build transport network
-data_path <- system.file("extdata/spo", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/destination points
-points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
-
-# estimate travel time matrix
-access <- travel_time_matrix(r5r_core,
-                             origins = points,
-                             destinations = points,
-                             mode = c("WALK", "TRANSIT"),
-                             departure_datetime = departure_datetime,
-                             max_walk_dist = Inf,
-                             max_trip_duration = 120L)
+  access <- accessibility(r5r_core,
+                          origins = points,
+                          destinations = points,
+                          opportunities_colname = "schools",
+                          mode = "WALK",
+                          cutoffs = c(25, 30),
+                          max_trip_duration = 30,
+                          verbose = FALSE)
 
 stop_r5(r5r_core)
 
