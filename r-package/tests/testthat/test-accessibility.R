@@ -11,7 +11,6 @@ points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
 # create testing function
 
-
 default_tester <- function(r5r_core=r5r_core,
                            origins = points[1:10,],
                            destinations = points[1:10,],
@@ -125,27 +124,45 @@ test_that("adequately raises errors", {
   expect_error(default_tester(r5r_core, verbose = 1))
   expect_error(default_tester(r5r_core, verbose = NULL))
 
-})
-
-test_that("adequately raises warnings - needs java", {
-
-  # error/warning related to using wrong origins/destinations column types
-  origins <- destinations <- points[1:2, ]
-
-  origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
-  destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
-
-  expect_warning(default_tester(r5r_core, origins = origins_numeric_id))
-  expect_warning(default_tester(r5r_core, destinations = destinations_numeric_id))
-
+  # decay_function
+  expect_error(default_tester(r5r_core, decay_function = "fixed_exponential"))
+  expect_error(default_tester(r5r_core, decay_function = "bananas"))
+  expect_error(default_tester(r5r_core, opportunities_colname = "bananas"))
+  expect_error(default_tester(r5r_core, cutoffs = "bananas"))
+  expect_error(default_tester(r5r_core, decay_value = "bananas"))
 
 })
 
+# test_that("adequately raises warnings - needs java", {
+#
+#   # error/warning related to using wrong origins/destinations column types
+#   origins <- destinations <- points[1:2, ]
+#
+#   origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
+#   destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
+#
+#   expect_warning(default_tester(r5r_core, origins = origins_numeric_id))
+#   expect_error(default_tester(r5r_core, destinations = destinations_numeric_id))
+#
+#
+# })
 
-# adequate behaviour ------------------------------------------------------
+
+# adequate behavior ------------------------------------------------------
 
 
 test_that("output is correct", {
+
+  # decay functions
+  expect_true(is(default_tester(r5r_core, decay_function = "step"), "data.table"))
+  expect_true(is(default_tester(r5r_core, decay_function = "exponential"), "data.table"))
+  expect_true(is(default_tester(r5r_core, decay_function = "linear"), "data.table"))
+  expect_true(is(default_tester(r5r_core, decay_function = "logistic"), "data.table"))
+  expect_true(is(default_tester(r5r_core, decay_function = "fixed_exponential", decay_value=.4), "data.table"))
+
+
+
+
 
   #  * output class ---------------------------------------------------------
 
@@ -163,62 +180,17 @@ test_that("output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$toId) == "character")
-  expect_true(typeof(result_df_input$travel_time) == "integer")
+  expect_true(typeof(result_df_input$from_id ) == "character")
+  expect_true(typeof(result_df_input$accessibility) == "integer")
 
 
   #  * r5r options ----------------------------------------------------------
 
 
-  # expect walking trips to be shorter when setting higher walk speeds
-
-  max_trip_duration <- 500L
-  origins <- destinations <- points[1:15,]
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "WALK", walk_speed = 3.6, max_trip_duration = max_trip_duration)
-  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time)]
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "WALK", walk_speed = 4, max_trip_duration = max_trip_duration)
-  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time)]
-
-  expect_true(travel_time_higher_speed < travel_time_lower_speed)
-
-  # expect bike segments to be shorter when setting higher walk speeds
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "BICYCLE", walk_speed = 12, max_trip_duration = max_trip_duration)
-  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time)]
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "BICYCLE", walk_speed = 13, max_trip_duration = max_trip_duration)
-  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time)]
-
-  expect_true(travel_time_higher_speed < travel_time_lower_speed)
 
 
-  #  * arguments ------------------------------------------------------------
 
 
-  # expect all travel times to be lower than max_trip_duration
-
-  max_trip_duration <- 60L
-
-  df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
-  max_duration <- data.table::setDT(df)[, max(travel_time)]
-
-  expect_true(max_duration <= max_trip_duration)
-
-  # expect number of rows to be lower than or equal to nrow(origins) * nrow(destinations)
-
-  max_trip_duration <- 300L
-
-  df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
-  n_rows <- nrow(df)
-
-  expect_true(n_rows <= nrow(origins) * nrow(destinations))
 
 })
 
