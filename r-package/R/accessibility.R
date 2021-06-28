@@ -247,8 +247,8 @@ accessibility <- function(r5r_core,
   checkmate::assert_character(opportunities_colname)
   checkmate::assert_names(names(destinations), must.include = opportunities_colname,
                           .var.name = "destinations")
-  checkmate::assert_numeric(destinations[, get(opportunities_colname)])
-  opportunities_data <- as.integer(destinations[, get(opportunities_colname)])
+  checkmate::assert_numeric(destinations[, opportunities_colname])
+  opportunities_data <- as.integer(destinations[, opportunities_colname])
 
   # time window
   checkmate::assert_numeric(time_window)
