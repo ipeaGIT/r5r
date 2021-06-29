@@ -46,6 +46,10 @@ the GTFS file for valid dates.}
 whole trip. Defaults to no restrictions on walking, as
 long as \code{max_trip_duration} is respected.}
 
+\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) for the
+whole trip. Defaults to no restrictions on cycling, as
+long as \code{max_trip_duration} is respected.}
+
 \item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).}
 

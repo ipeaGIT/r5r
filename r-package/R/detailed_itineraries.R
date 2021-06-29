@@ -18,6 +18,9 @@
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
+#' @param max_bike_dist numeric. Maximum cycling distance (in meters) for the
+#'                      whole trip. Defaults to no restrictions on cycling, as
+#'                      long as \code{max_trip_duration} is respected.
 #' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
