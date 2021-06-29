@@ -18,6 +18,7 @@ accessibility(
   cutoffs = 30L,
   decay_value = 1,
   max_walk_dist = Inf,
+  max_bike_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -82,6 +83,10 @@ when using the 'fixed exponential' function.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
 whole trip. Defaults to no restrictions on walking, as
+long as \code{max_trip_duration} is respected.}
+
+\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) for the
+whole trip. Defaults to no restrictions on cycling, as
 long as \code{max_trip_duration} is respected.}
 
 \item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults

@@ -12,6 +12,7 @@ detailed_itineraries(
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
   max_walk_dist = Inf,
+  max_bike_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
