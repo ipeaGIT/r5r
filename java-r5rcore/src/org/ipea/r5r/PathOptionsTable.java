@@ -44,10 +44,12 @@ public class PathOptionsTable {
         this.toLon = toLon;
     }
     private int maxWalkTime;
+    private int maxBikeTime;
     private int maxTripDuration;
 
-    public void setTripDuration(int walkTime, int tripDuration) {
+    public void setTripDuration(int walkTime, int bikeTime, int tripDuration) {
         this.maxWalkTime = walkTime;
+        this.maxBikeTime = bikeTime;
         this.maxTripDuration = tripDuration;
     }
 
@@ -112,6 +114,7 @@ public class PathOptionsTable {
                         // if a direct walking trip is found that is longer than maxWalkTime, then drop it
                         LOG.info("segment duration {}", segment.duration);
                         if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
+                        if (segment.mode == LegMode.BICYCLE & (segment.duration / 60) > maxBikeTime) continue;
                         optionsDataFrame.append();
 
                         LOG.info("  direct {}", segment.toString());

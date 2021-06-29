@@ -36,7 +36,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
             PathOptionsTable pathOptionsTable = new PathOptionsTable(transportNetwork, response);
             pathOptionsTable.setOrigin(fromIds[index], fromLats[index], fromLons[index]);
             pathOptionsTable.setDestination(toIds[index], toLats[index], toLons[index]);
-            pathOptionsTable.setTripDuration(maxWalkTime, maxTripDuration);
+            pathOptionsTable.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
 
             if (dropItineraryGeometry) pathOptionsTable.dropItineraryGeometry();
 

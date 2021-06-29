@@ -36,6 +36,7 @@ public abstract class R5Process {
     protected String departureTime;
 
     protected int maxWalkTime;
+    protected int maxBikeTime;
     protected int maxTripDuration;
 
     public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
@@ -64,8 +65,9 @@ public abstract class R5Process {
         this.departureTime = departureTime;
     }
 
-    public void setTripDuration(int maxWalkTime, int maxTripDuration) {
+    public void setTripDuration(int maxWalkTime, int maxBikeTime, int maxTripDuration) {
         this.maxWalkTime = maxWalkTime;
+        this.maxBikeTime = maxBikeTime;
         this.maxTripDuration = maxTripDuration;
     }
 
@@ -112,7 +114,7 @@ public abstract class R5Process {
         request.bikeSpeed = (float) routingProperties.bikeSpeed;
         request.streetTime = maxTripDuration;
         request.maxWalkTime = maxWalkTime;
-        request.maxBikeTime = maxTripDuration;
+        request.maxBikeTime = maxBikeTime;
         request.maxCarTime = maxTripDuration;
         request.maxTripDurationMinutes = maxTripDuration;
         request.makeTauiSite = false;

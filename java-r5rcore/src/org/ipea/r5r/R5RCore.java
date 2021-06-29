@@ -5,14 +5,13 @@ import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
-import com.conveyal.r5.transit.*;
+import com.conveyal.r5.transit.TransferFinder;
+import com.conveyal.r5.transit.TransportNetwork;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
-import org.locationtech.jts.geom.Polygon;
-import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -162,7 +161,7 @@ public class R5RCore {
 
     public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
-                                                                   String date, String departureTime, int maxWalkTime, int maxTripDuration,
+                                                                   String date, String departureTime, int maxWalkTime, int maxBikeTime,  int maxTripDuration,
                                                                    boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
@@ -174,14 +173,14 @@ public class R5RCore {
 
         return detailedItineraries(fromIds, fromLats, fromLons, toIds, toLats, toLons,
                 directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxTripDuration, dropItineraryGeometry);
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration, dropItineraryGeometry);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
-                                                                            String date, String departureTime, int maxWalkTime, int maxTripDuration,
+                                                                            String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
                                                                             boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
 
         DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
@@ -189,7 +188,7 @@ public class R5RCore {
         detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
         detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
         detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
-        detailedItineraryPlanner.setTripDuration(maxWalkTime, maxTripDuration);
+        detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
         if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
         return detailedItineraryPlanner.run();
@@ -205,14 +204,14 @@ public class R5RCore {
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
         return travelTimeMatrix(fromIds, fromLats, fromLons, toIds, toLats, toLons,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
@@ -220,14 +219,14 @@ public class R5RCore {
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] toIds = {toId};
         double[] toLats = {toLat};
         double[] toLons = {toLon};
 
         return travelTimeMatrix(fromIds, fromLats, fromLons, toIds, toLats, toLons,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
@@ -235,7 +234,7 @@ public class R5RCore {
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
@@ -246,7 +245,7 @@ public class R5RCore {
         double[] toLons = {toLon};
 
         return travelTimeMatrix(fromIds, fromLats, fromLons, toIds, toLats, toLons,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
@@ -254,7 +253,7 @@ public class R5RCore {
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
 
         TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
@@ -262,7 +261,7 @@ public class R5RCore {
         travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons);
         travelTimeMatrixComputer.setModes(directModes, accessModes, transitModes, egressModes);
         travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
-        travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxTripDuration);
+        travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
 
         return travelTimeMatrixComputer.run();
     }
@@ -274,14 +273,14 @@ public class R5RCore {
                                                                            String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
         return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
@@ -290,7 +289,7 @@ public class R5RCore {
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] toIds = {toId};
         double[] toLats = {toLat};
@@ -298,7 +297,7 @@ public class R5RCore {
         int[] opportunitiesVector = {opportunities};
 
         return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
@@ -307,7 +306,7 @@ public class R5RCore {
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
-                                                                           int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
@@ -319,7 +318,7 @@ public class R5RCore {
         int[] opportunitiesVector = {opportunities};
 
         return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxTripDuration);
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime,  maxBikeTime, maxTripDuration);
 
     }
 
@@ -328,7 +327,7 @@ public class R5RCore {
                                                                         String decayFunction, double decayValue,
                                                                         String directModes, String transitModes, String accessModes, String egressModes,
                                                                         String date, String departureTime,
-                                                                        int maxWalkTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                                                                        int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
 
         AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
@@ -337,7 +336,7 @@ public class R5RCore {
         accessibilityEstimator.setDecayFunction(decayFunction, decayValue);
         accessibilityEstimator.setModes(directModes, accessModes, transitModes, egressModes);
         accessibilityEstimator.setDepartureDateTime(date, departureTime);
-        accessibilityEstimator.setTripDuration(maxWalkTime, maxTripDuration);
+        accessibilityEstimator.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
 
         return accessibilityEstimator.run();
     }
@@ -346,16 +345,16 @@ public class R5RCore {
 
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
         int[] cutoffTimes = {cutoffs};
 
         return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxTripDuration);
+                date, departureTime, maxWalkTime,maxBikeTime, maxTripDuration);
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
@@ -363,33 +362,33 @@ public class R5RCore {
         int[] cutoffTimes = {cutoffs};
 
         return isochrones(fromIds, fromLats, fromLons, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxTripDuration);
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
         return isochrones(fromIds, fromLats, fromLons, cutoffs, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxTripDuration);
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
         // Instantiate IsochroneBuilder object and set properties
         IsochroneBuilder isochroneBuilder = new IsochroneBuilder(r5rThreadPool, this.transportNetwork, this.routingProperties);
         isochroneBuilder.setOrigins(fromId, fromLat, fromLon);
         isochroneBuilder.setModes(directModes, accessModes, transitModes, egressModes);
         isochroneBuilder.setDepartureDateTime(date, departureTime);
-        isochroneBuilder.setTripDuration(maxWalkTime, maxTripDuration);
+        isochroneBuilder.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
         isochroneBuilder.setCutoffs(cutoffs);
         isochroneBuilder.setResolution(zoom);
 

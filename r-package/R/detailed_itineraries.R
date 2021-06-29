@@ -121,6 +121,7 @@ detailed_itineraries <- function(r5r_core,
                                  mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
                                  max_walk_dist = Inf,
+                                 max_bike_dist = Inf,
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
@@ -161,9 +162,12 @@ detailed_itineraries <- function(r5r_core,
   max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance and max_street_time
-  max_street_time <- set_max_street_time(max_walk_dist,
-                                        walk_speed,
-                                        max_trip_duration)
+  max_walk_time <- set_max_street_time(max_walk_dist,
+                                       walk_speed,
+                                       max_trip_duration)
+  max_bike_time <- set_max_street_time(max_bike_dist,
+                                       bike_speed,
+                                       max_trip_duration)
 
   # shortest_path
   checkmate::assert_logical(shortest_path)
@@ -248,7 +252,8 @@ detailed_itineraries <- function(r5r_core,
                                                mode_list$egress_mode,
                                                departure$date,
                                                departure$time,
-                                               max_street_time,
+                                               max_walk_time,
+                                               max_bike_time,
                                                max_trip_duration,
                                                drop_geometry)
 
@@ -272,7 +277,7 @@ detailed_itineraries <- function(r5r_core,
 
       path_options <- data.table::rbindlist(path_options)
 
-      if (length(path_options) == 0) return(path_options)
+      if (nrow(path_options) == 0) return(path_options)
 
     }
 

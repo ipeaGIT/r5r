@@ -47,6 +47,9 @@
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
+#' @param max_bike_dist numeric. Maximum cycling distance (in meters) for the
+#'                      whole trip. Defaults to no restrictions on cycling, as
+#'                      long as \code{max_trip_duration} is respected.
 #' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
@@ -197,6 +200,7 @@ accessibility <- function(r5r_core,
                           cutoffs = 30L,
                           decay_value = 1.0,
                           max_walk_dist = Inf,
+                          max_bike_dist = Inf,
                           max_trip_duration = 120L,
                           walk_speed = 3.6,
                           bike_speed = 12,
@@ -234,12 +238,16 @@ accessibility <- function(r5r_core,
   checkmate::assert_numeric(max_trip_duration)
   max_trip_duration <- as.integer(max_trip_duration)
 
-  # max_walking_distance and max_street_time
-  max_street_time <- set_max_street_time(max_walk_dist,
-                                         walk_speed,
-                                         max_trip_duration)
+  # max_walking_distance, max_bike_distance, and max_street_time
+  max_walk_time <- set_max_street_time(max_walk_dist,
+                                       walk_speed,
+                                       max_trip_duration)
 
-  # origins and destinations
+  max_bike_time <- set_max_street_time(max_bike_dist,
+                                       bike_speed,
+                                       max_trip_duration)
+
+    # origins and destinations
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
 
@@ -312,7 +320,8 @@ accessibility <- function(r5r_core,
                                           mode_list$egress_mode,
                                           departure$date,
                                           departure$time,
-                                          max_street_time,
+                                          max_walk_time,
+                                          max_bike_time,
                                           max_trip_duration)
 
 
