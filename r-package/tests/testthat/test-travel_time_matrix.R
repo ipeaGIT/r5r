@@ -20,6 +20,7 @@ default_tester <- function(r5r_core,
                            time_window = 1L,
                            percentiles = 50L,
                            max_walk_dist = Inf,
+                           max_bike_dist = Inf,
                            max_trip_duration = 120L,
                            walk_speed = 3.6,
                            bike_speed = 12,
@@ -36,6 +37,7 @@ default_tester <- function(r5r_core,
     time_window = time_window,
     percentiles = percentiles,
     max_walk_dist = max_walk_dist,
+    max_bike_dist = max_bike_dist,
     max_trip_duration = max_trip_duration,
     walk_speed = walk_speed,
     bike_speed = bike_speed,
@@ -95,6 +97,10 @@ test_that("adequately raises errors", {
   # errors related to max_walk_dist
   expect_error(default_tester(r5r_core, max_walk_dist = "1000"))
   expect_error(default_tester(r5r_core, max_walk_dist = NULL))
+
+  # errors related to max_bike_dist
+  expect_error(default_tester(r5r_core, max_bike_dist = "1000"))
+  expect_error(default_tester(r5r_core, max_bike_dist = NULL))
 
   # error/warning related to max_street_time
   expect_error(default_tester(r5r_core, max_trip_duration = "120"))

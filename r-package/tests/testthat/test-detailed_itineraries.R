@@ -18,6 +18,7 @@ default_tester <- function(r5r_core,
                            departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            max_walk_dist = Inf,
+                           max_bike_dist = Inf,
                            max_trip_duration = 120L,
                            walk_speed = 3.6,
                            bike_speed = 12,
@@ -34,6 +35,7 @@ default_tester <- function(r5r_core,
    mode = mode,
    departure_datetime = departure_datetime,
    max_walk_dist = max_walk_dist,
+   max_bike_dist = max_bike_dist,
    max_trip_duration = max_trip_duration,
    walk_speed = walk_speed,
    bike_speed = bike_speed,
@@ -101,7 +103,11 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_core, max_walk_dist = "1"))
   expect_error(default_tester(r5r_core, max_walk_dist = NULL))
 
-  # error/warning related to max_street_time
+  # errors related to max_bike_dist
+  expect_error(default_tester(r5r_core, max_bike_dist = "1"))
+  expect_error(default_tester(r5r_core, max_bike_dist = NULL))
+
+    # error/warning related to max_street_time
   expect_error(default_tester(r5r_core, max_trip_duration = "120"))
 
   # error related to non-numeric walk_speed
