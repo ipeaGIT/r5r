@@ -1,7 +1,7 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.4-1 (dev)
+# r5r v0.5-0 (dev)
 
 **Major changes**
 - New function `accessibility()` to calculate access to opportunities. Closes [#169](https://github.com/ipeaGIT/r5r/issues/169)
@@ -12,7 +12,7 @@ the input of origin and destination points are snapped to. Closes [168](https://
 - New parameter `max_bike_dist` added to routing and accessibility functions. Closes [#174](https://github.com/ipeaGIT/r5r/issues/174)
 
 - Implemented temporary solution for elevation. Closes [#171](https://github.com/ipeaGIT/r5r/issues/171). Now r5r can read Digital Elevation Model (DEM) data from raster files in `.tif` format to weight the
-street network for walking and cycling according to the terrain's slopes. Ideally, we would like to see an solution that accounts for elevation implemented upstream in R5. For now, this is a temporary solution implemented within r5r.
+street network for walking and cycling according to the terrain's slopes. Ideally, we would like to see a solution that accounts for elevation implemented upstream in R5. For now, this is a temporary solution implemented within r5r.
 
 **Bug fixes**
 - Fixed bug that prevented r5r from running without internet connection. Closes [#163](https://github.com/ipeaGIT/r5r/issues/163).
