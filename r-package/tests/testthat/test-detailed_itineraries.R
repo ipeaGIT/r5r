@@ -251,12 +251,12 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(max_n_options == 1)
 
-  # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
-
-  df <- default_tester(r5r_core, shortest_path = FALSE)
-  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
-
-  expect_true(max_n_options > 1)
+  # # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
+  #
+  # df <- default_tester(r5r_core, shortest_path = FALSE)
+  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  #
+  # expect_true(max_n_options > 1)
 
   # expect all route options to have lower total duration than max_trip_duration
 
