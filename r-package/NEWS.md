@@ -4,6 +4,8 @@
 # r5r v0.4-1 (dev)
 
 **Major changes**
+- New function `accessibility()` to calculate access to opportunities. Closes [#169](https://github.com/ipeaGIT/r5r/issues/169)
+
 - New function `find_snap()` to help the used identify where in the street network
 the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
 
