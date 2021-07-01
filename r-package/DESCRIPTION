@@ -44,7 +44,6 @@ Imports:
     rJava (>= 0.9-10),
     sf (>= 0.9-3),
     sfheaders,
-    raster,
     utils
 SystemRequirements: Java JDK (>= 11.0)
 Roxygen: list(markdown = TRUE)
