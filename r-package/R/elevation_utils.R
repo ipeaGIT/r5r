@@ -10,6 +10,9 @@
 #' @return numeric. Tobler's weighting factor
 #' @family elevation support functions
 tobler_hiking <- function(slope) {
+
+  checkmate::assert_class(slope, "numeric")
+
   C <- 1.19403
 
   tobler_factor <- C * exp(-3.5 * abs(slope+0.05))
@@ -31,6 +34,12 @@ tobler_hiking <- function(slope) {
 #' @return No return value, called for side effects.
 #' @family elevation support functions
 apply_elevation <- function(r5r_core, raster_files) {
+
+  # check inputs ------------------------------------------------------------
+  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::expect_file_exists(raster_files)
+
+
   # load raster files containing elevation data
   if (length(raster_files) == 1) {
     dem <- raster::raster(raster_files[1])

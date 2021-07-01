@@ -329,6 +329,10 @@ covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testtha
 covr::function_coverage(fun=r5r::posix_to_string, test_file("tests/testthat/test-utils.R"))
 covr::function_coverage(fun=r5r::assert_points_input, test_file("tests/testthat/test-utils.R"))
 
+covr::function_coverage(fun=tobler_hiking, test_file("tests/testthat/test-elevation_utils.R"))
+# covr::function_coverage(fun=apply_elevation, test_file("tests/testthat/test-elevation_utils.R"))
+
+
 covr::function_coverage(fun=r5r::find_snap, test_file("tests/testthat/test-find_snap.R"))
 
 
