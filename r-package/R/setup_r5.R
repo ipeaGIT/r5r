@@ -42,6 +42,7 @@ setup_r5 <- function(data_path,
   # check inputs ------------------------------------------------------------
   checkmate::assert_logical(verbose)
   checkmate::assert_logical(temp_dir)
+  checkmate::assert_logical(use_elevation)
 
   # check Java version installed locally ------------------------------------------------------------
     rJava::.jinit()
