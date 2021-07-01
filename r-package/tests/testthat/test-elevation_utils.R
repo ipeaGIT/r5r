@@ -26,12 +26,16 @@ test_that("tobler_hiking", {
 
 test_that("apply_elevation", {
 
-  expect_silent( r5r:::apply_elevation(r5r_core, raster_poa) )
-  expect_silent( r5r:::apply_elevation(r5r_core, c(raster_poa,raster_poa)) )
+  if (requireNamespace("rgdal", quietly = TRUE)) {
+
+    expect_silent( r5r:::apply_elevation(r5r_core, raster_poa) )
+    expect_silent( r5r:::apply_elevation(r5r_core, c(raster_poa,raster_poa)) )
+
+  }
 
   expect_error( r5r:::apply_elevation('bananas', raster_poa) )
   expect_error( r5r:::apply_elevation(r5r_core, 'bananas') )
 
-  })
+})
 
 stop_r5(r5r_core)
