@@ -110,7 +110,7 @@ Defaults to use all available threads (Inf).}
 
 \item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).
 If verbose is set to \code{FALSE}, r5r prints a progress counter and
-eventual \code{ERROR} messages. Setting \code{verbose} to  \code{TRUE} imposes
+eventual \code{ERROR} messages. Setting \code{verbose} to  \code{FALSE} imposes
 a small penalty for computation efficiency.}
 }
 \value{

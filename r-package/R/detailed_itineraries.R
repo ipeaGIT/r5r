@@ -39,7 +39,7 @@
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. `TRUE` to show detailed output messages (the default).
 #'                If verbose is set to `FALSE`, r5r prints a progress counter and
-#'                eventual `ERROR` messages. Setting `verbose` to  `TRUE` imposes
+#'                eventual `ERROR` messages. Setting `verbose` to  `FALSE` imposes
 #'                a small penalty for computation efficiency.
 #' @param drop_geometry logical. Indicates whether R5 should drop segment's
 #'                      geometry column. It can be helpful for saving memory.
