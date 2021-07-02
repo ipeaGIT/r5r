@@ -95,12 +95,12 @@
 #'  the standard deviation to configure through the `decay_value` parameter.
 #'
 #'  ## Fixed Exponential `fixed_exponential`
-#'  This function is of the form e-λt where λ is a single fixed decay constant
+#'  This function is of the form e-Lt where L is a single fixed decay constant
 #'  in the range (0, 1). It is constrained to be positive to ensure weights
 #'  decrease (rather than grow) with increasing travel time.
 #'
 #'  ### calibration
-#'  This function is controlled exclusively by the λ constant, given by the
+#'  This function is controlled exclusively by the L constant, given by the
 #'  `decay_value` parameter. Values provided in `cutoffs` are ignored.
 
 #'  ## Half-life Exponential Decay `exponential`
