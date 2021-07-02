@@ -87,8 +87,10 @@ See details for more information.}
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical. TRUE to show detailed output messages (the default)
-or FALSE to show only eventual ERROR messages.}
+\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).
+If verbose is set to \code{FALSE}, r5r prints a progress counter and
+eventual \code{ERROR} messages. Setting \code{verbose} to  \code{TRUE} imposes
+a small penalty for computation efficiency.}
 }
 \value{
 A data.table with travel time estimates (in minutes) between origin

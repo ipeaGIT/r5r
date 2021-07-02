@@ -37,8 +37,10 @@
 #'                      alternatives.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
-#' @param verbose logical. TRUE to show detailed output messages (the default)
-#'                or FALSE to show only eventual ERROR messages.
+#' @param verbose logical. `TRUE` to show detailed output messages (the default).
+#'                If verbose is set to `FALSE`, r5r prints a progress counter and
+#'                eventual `ERROR` messages. Setting `verbose` to  `TRUE` imposes
+#'                a small penalty for computation efficiency.
 #' @param drop_geometry logical. Indicates whether R5 should drop segment's
 #'                      geometry column. It can be helpful for saving memory.
 #'
