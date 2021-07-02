@@ -48,7 +48,7 @@ To use `r5r`, you need to have *Java SE Development Kit 11* installed on your co
 
 ## Usage
 
-The package has three fundamental functions.
+The package has four fundamental functions.
 
 1. `setup_r5`
    * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)
