@@ -18,6 +18,7 @@ default_tester <- function(r5r_core,
                            departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            max_walk_dist = Inf,
+                           max_bike_dist = Inf,
                            max_trip_duration = 120L,
                            walk_speed = 3.6,
                            bike_speed = 12,
@@ -34,6 +35,7 @@ default_tester <- function(r5r_core,
    mode = mode,
    departure_datetime = departure_datetime,
    max_walk_dist = max_walk_dist,
+   max_bike_dist = max_bike_dist,
    max_trip_duration = max_trip_duration,
    walk_speed = walk_speed,
    bike_speed = bike_speed,
@@ -101,7 +103,11 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_core, max_walk_dist = "1"))
   expect_error(default_tester(r5r_core, max_walk_dist = NULL))
 
-  # error/warning related to max_street_time
+  # errors related to max_bike_dist
+  expect_error(default_tester(r5r_core, max_bike_dist = "1"))
+  expect_error(default_tester(r5r_core, max_bike_dist = NULL))
+
+    # error/warning related to max_street_time
   expect_error(default_tester(r5r_core, max_trip_duration = "120"))
 
   # error related to non-numeric walk_speed
@@ -213,15 +219,15 @@ test_that("detailed_itineraries output is correct", {
   origins      <- points[10,]
   destinations <- points[12,]
 
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 3.6)
+  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
   duration_lower_speed <- data.table::setDT(df)$segment_duration
 
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
+  df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 5)
   duration_higher_speed <- data.table::setDT(df)$segment_duration
 
   expect_true(duration_higher_speed < duration_lower_speed)
 
-  # expect bike segments to be shorter when setting higher walk speeds
+  # expect bike segments to be shorter when setting higher cycling speeds
   # ps: same as with walk_speeds
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,
@@ -245,12 +251,12 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(max_n_options == 1)
 
-  # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
-
-  df <- default_tester(r5r_core, shortest_path = FALSE)
-  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
-
-  expect_true(max_n_options > 1)
+  # # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
+  #
+  # df <- default_tester(r5r_core, shortest_path = FALSE)
+  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  #
+  # expect_true(max_n_options > 1)
 
   # expect all route options to have lower total duration than max_trip_duration
 

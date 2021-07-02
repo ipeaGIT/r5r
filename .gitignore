@@ -23,3 +23,4 @@ java-r5rcore/out/production/r5r/org/ipea/r5r/TravelTimeMatrixComputer.class
 java-r5rcore/out
 java-r5rcore/libs
 .DS_Store
+java-r5rcore/target

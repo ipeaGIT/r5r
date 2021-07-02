@@ -18,6 +18,9 @@
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
 #'                      whole trip. Defaults to no restrictions on walking, as
 #'                      long as \code{max_trip_duration} is respected.
+#' @param max_bike_dist numeric. Maximum cycling distance (in meters) for the
+#'                      whole trip. Defaults to no restrictions on cycling, as
+#'                      long as \code{max_trip_duration} is respected.
 #' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
@@ -40,7 +43,7 @@
 #'                      geometry column. It can be helpful for saving memory.
 #'
 #' @details
-#'  # Transpor modes:
+#'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:
 #'
 #'   ## Transit modes
@@ -121,6 +124,7 @@ detailed_itineraries <- function(r5r_core,
                                  mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
                                  max_walk_dist = Inf,
+                                 max_bike_dist = Inf,
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
@@ -161,9 +165,12 @@ detailed_itineraries <- function(r5r_core,
   max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance and max_street_time
-  max_street_time <- set_max_street_time(max_walk_dist,
-                                        walk_speed,
-                                        max_trip_duration)
+  max_walk_time <- set_max_street_time(max_walk_dist,
+                                       walk_speed,
+                                       max_trip_duration)
+  max_bike_time <- set_max_street_time(max_bike_dist,
+                                       bike_speed,
+                                       max_trip_duration)
 
   # shortest_path
   checkmate::assert_logical(shortest_path)
@@ -236,30 +243,7 @@ detailed_itineraries <- function(r5r_core,
 
   # call r5r_core method ----------------------------------------------------
 
-  # if a single origin is provided, calls sequential function planSingleTrip
-  # else, calls parallel function planMultipleTrips
-
-  if (n_origs == 1 && n_dests == 1) {
-
-    path_options <- r5r_core$planSingleTrip(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_street_time,
-                                            max_trip_duration,
-                                            drop_geometry)
-
-  } else {
-
-    path_options <- r5r_core$planMultipleTrips(origins$id,
+  path_options <- r5r_core$detailedItineraries(origins$id,
                                                origins$lat,
                                                origins$lon,
                                                destinations$id,
@@ -271,11 +255,10 @@ detailed_itineraries <- function(r5r_core,
                                                mode_list$egress_mode,
                                                departure$date,
                                                departure$time,
-                                               max_street_time,
+                                               max_walk_time,
+                                               max_bike_time,
                                                max_trip_duration,
                                                drop_geometry)
-
-  }
 
 
   # process results ---------------------------------------------------------
@@ -297,7 +280,7 @@ detailed_itineraries <- function(r5r_core,
 
       path_options <- data.table::rbindlist(path_options)
 
-      if (length(path_options) == 0) return(path_options)
+      if (nrow(path_options) == 0) return(path_options)
 
     }
 

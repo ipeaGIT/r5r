@@ -14,6 +14,7 @@ travel_time_matrix(
   time_window = 1L,
   percentiles = 50L,
   max_walk_dist = Inf,
+  max_bike_dist = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -63,6 +64,10 @@ are considered. For more details, see R5 documentation at
 whole trip. Defaults to no restrictions on walking, as
 long as \code{max_trip_duration} is respected.}
 
+\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) for the
+whole trip. Defaults to no restrictions on cycling, as
+long as \code{max_trip_duration} is respected.}
+
 \item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).}
 
@@ -95,7 +100,7 @@ the street network are not returned in the data.table.
 Fast computation of travel time estimates between one or
 multiple origin destination pairs.
 }
-\section{Transpor modes:}{
+\section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:
 \subsection{Transit modes}{
 
@@ -178,6 +183,7 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other routing: 
+\code{\link{accessibility}()},
 \code{\link{detailed_itineraries}()}
 }
 \concept{routing}

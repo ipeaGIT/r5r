@@ -15,6 +15,9 @@
 #'                FALSE to show only eventual ERROR and WARNING messages.
 #' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
 #'                 directory. Defaults to FALSE
+#' @param use_elevation boolean. If TRUE, load any tif files containing elevation
+#'                      found in the data_path folder and calculate impedances for
+#'                      walking and cycling based on street slopes.
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
@@ -33,11 +36,13 @@
 setup_r5 <- function(data_path,
                      version = "6.2.0",
                      verbose = TRUE,
-                     temp_dir = FALSE) {
+                     temp_dir = FALSE,
+                     use_elevation = FALSE) {
 
   # check inputs ------------------------------------------------------------
   checkmate::assert_logical(verbose)
   checkmate::assert_logical(temp_dir)
+  checkmate::assert_logical(use_elevation)
 
   # check Java version installed locally ------------------------------------------------------------
     rJava::.jinit()
@@ -89,7 +94,7 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
-  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_3_4.jar")
+  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_5_0.jar")
 
   rJava::.jaddClassPath(path = r5r_jar)
   rJava::.jaddClassPath(path = jar_file)
@@ -102,8 +107,6 @@ setup_r5 <- function(data_path,
     r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
 
     message("\nUsing cached network.dat from ", dat_file)
-
-    return(r5r_core)
 
   } else {
 
@@ -118,7 +121,25 @@ setup_r5 <- function(data_path,
 
     message("\nFinished building network.dat at ", dat_file)
 
-    return(r5r_core)
-
   }
+
+  # elevation
+  if (use_elevation) {
+    # check for any elevation files in data_path (*.tif)
+    tif_files <- list.files(path = data_path, pattern = "*.tif$", full.names = TRUE)
+
+    # if there are any .tif files in the data_path folder, apply elevation to street network
+    if (length(tif_files) > 0) {
+      message(sprintf("%s TIFF file(s) found in data path. Loading elevation into street edges.\n", length(tif_files)),
+              "DISCLAIMER: this is an r5r specific feature, and it will be deprecated once native support\nfor elevation data is added to R5.")
+      apply_elevation(r5r_core, tif_files)
+    }
+  }
+
+  # finish R5's setup by pre-calculating distances between transit stops and street network
+  r5r_core$buildDistanceTables()
+
+  return(r5r_core)
+
+
 }
