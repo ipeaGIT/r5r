@@ -48,7 +48,7 @@ To use `r5r`, you need to have *Java SE Development Kit 11* installed on your co
 
 ## Usage
 
-The package has three fundamental functions.
+The package has four fundamental functions.
 
 1. `setup_r5`
    * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)
@@ -65,6 +65,12 @@ The package has three fundamental functions.
 3. `travel_time_matrix`
    * Fast function that returns a simple 'data.frame' with travel time 
    estimates between one or multiple origin destination pairs.
+
+4. `accessibility`
+   * Fast computation of access to opportunities. The function returns a `data.table` 
+   with accessibility estimates for all origin points by  transport mode given a selected
+   decay function. Multiple decay functions are available, including step (cumulative 
+   opportunities), logistic, fixed Exponential and linear.
 
 ### Demonstration on sample data
 See a detailed demonstration of `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). To illustrate
@@ -107,6 +113,17 @@ det <- detailed_itineraries(r5r_core = r5r_core,
                             max_walk_dist = max_walk_dist,
                             max_trip_duration = max_trip_duration,
                             shortest_path = FALSE)
+
+# 4) Calculate number of schools accessible within 20 minutes 
+access <- accessibility(r5r_core = r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colname = "schools",
+                        decay_function = "step",
+                        cutoffs = 21,
+                        mode =  c("WALK", "TRANSIT"),
+                        verbose = FALSE)
+
 ```
 
 
