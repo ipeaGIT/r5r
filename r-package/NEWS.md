@@ -10,8 +10,7 @@
 **Major changes**
 - New function `accessibility()` to calculate access to opportunities. Closes [#169](https://github.com/ipeaGIT/r5r/issues/169)
 
-- New function `find_snap()` to help the used identify where in the street network
-the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
+- New function `find_snap()` to help users identify where in the street network the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
 
 - New parameter `max_bike_dist` added to routing and accessibility functions. Closes [#174](https://github.com/ipeaGIT/r5r/issues/174)
 
@@ -23,7 +22,7 @@ street network for walking and cycling according to the terrain's slopes. Ideall
 
 - The size of poa.zip sample GTFS data has been reduced due to CRAN policies. Closes [#172](https://github.com/ipeaGIT/r5r/issues/172).
 
-- Progress counter implmenented. Closes [150](https://github.com/ipeaGIT/r5r/issues/150). When the `verbose` parameter is set to `FALSE`, r5r prints a progress counter and eventual `ERROR` messages. This comes with a minor penalty for computation performance. Hence we have kept `verbose` defautls to `TRUE`.
+- Progress counter Implemented. Closes [150](https://github.com/ipeaGIT/r5r/issues/150). When the `verbose` parameter is set to `FALSE`, r5r prints a progress counter and eventual `ERROR` messages. This comes with a minor penalty for computation performance. Hence we have kept `verbose` defautls to `TRUE`.
 
 
 **Bug fixes**
