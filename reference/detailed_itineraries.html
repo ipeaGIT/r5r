@@ -81,7 +81,7 @@ or many origin destination pairs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -156,6 +156,7 @@ or many origin destination pairs.</p>
   mode_egress <span class='op'>=</span> <span class='st'>"WALK"</span>,
   departure_datetime <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span>,
   max_walk_dist <span class='op'>=</span> <span class='cn'>Inf</span>,
+  max_bike_dist <span class='op'>=</span> <span class='cn'>Inf</span>,
   max_trip_duration <span class='op'>=</span> <span class='fl'>120L</span>,
   walk_speed <span class='op'>=</span> <span class='fl'>3.6</span>,
   bike_speed <span class='op'>=</span> <span class='fl'>12</span>,
@@ -204,6 +205,12 @@ whole trip. Defaults to no restrictions on walking, as
 long as <code>max_trip_duration</code> is respected.</p></td>
     </tr>
     <tr>
+      <th>max_bike_dist</th>
+      <td><p>numeric. Maximum cycling distance (in meters) for the
+whole trip. Defaults to no restrictions on cycling, as
+long as <code>max_trip_duration</code> is respected.</p></td>
+    </tr>
+    <tr>
       <th>max_trip_duration</th>
       <td><p>numeric. Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).</p></td>
@@ -242,8 +249,10 @@ Defaults to use all available threads (Inf).</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>logical. TRUE to show detailed output messages (the default)
-or FALSE to show only eventual ERROR messages.</p></td>
+      <td><p>logical. <code>TRUE</code> to show detailed output messages (the default).
+If verbose is set to <code>FALSE</code>, r5r prints a progress counter and
+eventual <code>ERROR</code> messages. Setting <code>verbose</code> to  <code>FALSE</code> imposes
+a small penalty for computation efficiency.</p></td>
     </tr>
     <tr>
       <th>drop_geometry</th>
@@ -257,7 +266,7 @@ geometry column. It can be helpful for saving memory.</p></td>
     <p>A LINESTRING sf with detailed information about the itineraries
 between specified origins and destinations. Distances are in meters
 and travel times are in minutes.</p>
-    <h2 class="hasAnchor" id="transpor-modes-"><a class="anchor" href="#transpor-modes-"></a>Transpor modes:</h2>
+    <h2 class="hasAnchor" id="transport-modes-"><a class="anchor" href="#transport-modes-"></a>Transport modes:</h2>
 
     <p>R5 allows for multiple combinations of transport modes. The options include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Transit modes</h3>
 
@@ -308,6 +317,7 @@ routing. Transportation Science, 49(3), 591-604.</p></li>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other routing: 
+<code><a href='accessibility.html'>accessibility</a>()</code>,
 <code><a href='travel_time_matrix.html'>travel_time_matrix</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

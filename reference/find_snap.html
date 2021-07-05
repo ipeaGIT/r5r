@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Set max street time — set_max_street_time • r5r</title>
+<title>Find snapped locations of input points on street network — find_snap • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,13 @@
 
 
 
-<meta property="og:title" content="Set max street time — set_max_street_time" />
-<meta property="og:description" content="Set max street time" />
+<meta property="og:title" content="Find snapped locations of input points on street network — find_snap" />
+<meta property="og:description" content="R5 tries to snap origin and destination points to the street
+network in two rounds. First, it uses a search radius of 300 meters. If the
+first round is unsuccessful, then R5 expands the search radius to 1.6 km.
+Points that aren't linked to the street network after those two rounds are
+returned with NA coordinates and found = FALSE. Please note that the
+location of the snapped points depends on the transport mode set by the user." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -137,40 +142,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Set max street time</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/utils.R'><code>R/utils.R</code></a></small>
-    <div class="hidden name"><code>set_max_street_time.Rd</code></div>
+    <h1>Find snapped locations of input points on street network</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/find_snap.R'><code>R/find_snap.R</code></a></small>
+    <div class="hidden name"><code>find_snap.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Set max street time</p>
+    <p>R5 tries to snap origin and destination points to the street
+network in two rounds. First, it uses a search radius of 300 meters. If the
+first round is unsuccessful, then R5 expands the search radius to 1.6 km.
+Points that aren't linked to the street network after those two rounds are
+returned with <code>NA</code> coordinates and <code>found = FALSE</code>. Please note that the
+location of the snapped points depends on the transport mode set by the user.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>set_max_street_time</span><span class='op'>(</span><span class='va'>max_walk_dist</span>, <span class='va'>walk_speed</span>, <span class='va'>max_trip_duration</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>find_snap</span><span class='op'>(</span><span class='va'>r5r_core</span>, <span class='va'>points</span>, mode <span class='op'>=</span> <span class='st'>"WALK"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>max_walk_dist</th>
-      <td><p>numeric, Maximum walking distance (in meters) for the
-whole trip. Passed from routing functions.</p></td>
+      <th>r5r_core</th>
+      <td><p>a rJava object to connect with R5 routing engine</p></td>
     </tr>
     <tr>
-      <th>walk_speed</th>
-      <td><p>numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
-Passed from routing functions.</p></td>
+      <th>points</th>
+      <td><p>a spatial sf POINT object, or a data.frame
+containing the columns 'id', 'lon', 'lat'</p></td>
     </tr>
     <tr>
-      <th>max_trip_duration</th>
-      <td><p>numeric, Maximum trip duration in seconds. Defaults
-to 120 minutes (2 hours). Passed from routing functions.</p></td>
+      <th>mode</th>
+      <td><p>string. Defaults to "WALK", also allows "BICYCLE", and "CAR".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code>integer</code> representing the maximum number of minutes walking</p>
+    <p>A data.table with the original points as well as their respective
+snapped coordinates on the street network and the Euclidean distance
+between original points and their respective snapped location. Points
+that could not be snapped show <code>NA</code> coordinates and <code>found = FALSE</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other support functions: 
@@ -178,11 +189,11 @@ to 120 minutes (2 hours). Passed from routing functions.</p></td>
 <code><a href='assert_points_input.html'>assert_points_input</a>()</code>,
 <code><a href='check_connection.html'>check_connection</a>()</code>,
 <code><a href='download_metadata.html'>download_metadata</a>()</code>,
-<code><a href='find_snap.html'>find_snap</a>()</code>,
 <code><a href='posix_to_string.html'>posix_to_string</a>()</code>,
 <code><a href='select_mode.html'>select_mode</a>()</code>,
 <code><a href='set_max_lts.html'>set_max_lts</a>()</code>,
 <code><a href='set_max_rides.html'>set_max_rides</a>()</code>,
+<code><a href='set_max_street_time.html'>set_max_street_time</a>()</code>,
 <code><a href='set_n_threads.html'>set_n_threads</a>()</code>,
 <code><a href='set_speed.html'>set_speed</a>()</code>,
 <code><a href='set_suboptimal_minutes.html'>set_suboptimal_minutes</a>()</code>,
@@ -190,6 +201,26 @@ to 120 minutes (2 hours). Passed from routing functions.</p></td>
 <code><a href='stop_r5.html'>stop_r5</a>()</code>,
 <code><a href='street_network_to_sf.html'>street_network_to_sf</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span><span class='op'>)</span>
+
+<span class='co'># build transport network</span>
+<span class='va'>path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/spo"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
+<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>path</span><span class='op'>)</span>
+
+<span class='co'># load origin/destination points</span>
+<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>path</span>, <span class='st'>"spo_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># find where origin or destination points are snapped</span>
+<span class='va'>snap_df</span> <span class='op'>&lt;-</span> <span class='fu'>find_snap</span><span class='op'>(</span><span class='va'>r5r_core</span>,
+                     points <span class='op'>=</span> <span class='va'>points</span>,
+                     mode <span class='op'>=</span> <span class='st'>'CAR'</span><span class='op'>)</span>
+
+<span class='fu'><a href='stop_r5.html'>stop_r5</a></span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span>
+<span class='op'>}</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

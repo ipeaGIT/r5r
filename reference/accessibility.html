@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate travel time matrix between origin destination pairs — travel_time_matrix • r5r</title>
+<title>Calculate access to opportunities — accessibility • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Calculate travel time matrix between origin destination pairs — travel_time_matrix" />
-<meta property="og:description" content="Fast computation of travel time estimates between one or
-multiple origin destination pairs." />
+<meta property="og:title" content="Calculate access to opportunities — accessibility" />
+<meta property="og:description" content="Fast computation of access to opportunities given a selected
+decay function. See details for the available decay functions." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -138,25 +138,29 @@ multiple origin destination pairs." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate travel time matrix between origin destination pairs</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/travel_time_matrix.R'><code>R/travel_time_matrix.R</code></a></small>
-    <div class="hidden name"><code>travel_time_matrix.Rd</code></div>
+    <h1>Calculate access to opportunities</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/accessibility.R'><code>R/accessibility.R</code></a></small>
+    <div class="hidden name"><code>accessibility.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fast computation of travel time estimates between one or
-multiple origin destination pairs.</p>
+    <p>Fast computation of access to opportunities given a selected
+decay function. See <code>details</code> for the available decay functions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>travel_time_matrix</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>accessibility</span><span class='op'>(</span>
   <span class='va'>r5r_core</span>,
   <span class='va'>origins</span>,
   <span class='va'>destinations</span>,
+  opportunities_colname <span class='op'>=</span> <span class='st'>"opportunities"</span>,
   mode <span class='op'>=</span> <span class='st'>"WALK"</span>,
   mode_egress <span class='op'>=</span> <span class='st'>"WALK"</span>,
   departure_datetime <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span>,
   time_window <span class='op'>=</span> <span class='fl'>1L</span>,
   percentiles <span class='op'>=</span> <span class='fl'>50L</span>,
+  decay_function <span class='op'>=</span> <span class='st'>"step"</span>,
+  cutoffs <span class='op'>=</span> <span class='fl'>30L</span>,
+  decay_value <span class='op'>=</span> <span class='fl'>1</span>,
   max_walk_dist <span class='op'>=</span> <span class='cn'>Inf</span>,
   max_bike_dist <span class='op'>=</span> <span class='cn'>Inf</span>,
   max_trip_duration <span class='op'>=</span> <span class='fl'>120L</span>,
@@ -181,6 +185,12 @@ multiple origin destination pairs.</p>
 containing the columns 'id', 'lon', 'lat'</p></td>
     </tr>
     <tr>
+      <th>opportunities_colname</th>
+      <td><p>string. The column name in the <code>destinations</code>
+input that tells the number of opportunities in each location.
+Defaults to "opportunities".</p></td>
+    </tr>
+    <tr>
       <th>mode</th>
       <td><p>string. Transport modes allowed for the trips. Defaults to
 "WALK". See details for other options.</p></td>
@@ -200,25 +210,44 @@ the GTFS file for valid dates.</p></td>
     <tr>
       <th>time_window</th>
       <td><p>numeric. Time window in minutes for which r5r will
-calculate multiple travel time matrices departing each
-minute. By default, the number of simulations is 5 times
-the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure times.
-This parameter is only used with frequency-based GTFS files.
-See details for further information.</p></td>
+calculate travel times departing each minute. When using
+frequency-based GTFS files, 5 Monte Carlo simulations will
+be run for each minute in the time window. See details for
+further information.</p></td>
     </tr>
     <tr>
       <th>percentiles</th>
-      <td><p>numeric vector. Defaults to '50', returning the median
-travel time for a given time_window. If a numeric vector is passed,
-for example c(25, 50, 75), the function will return
-additional columns with the travel times within percentiles
-of trips. For example, if the 25 percentile of trips between
-A and B is 15 minutes, this means that 25% of all trips
-taken between A and B within the set time window are shorter
-than 15 minutes. Only the first 5 cut points of the percentiles
-are considered. For more details, see R5 documentation at
+      <td><p>numeric vector. Defaults to '50', returning the accessibility
+value for the median travel time computed for a given
+time_window. If a numeric vector is passed, for example
+c(25, 50, 75), the function will return accessibility
+estimates for each percentile, by travel time cutoff. Only
+the first 5 cut points of the percentiles are considered.
+For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'</p></td>
+    </tr>
+    <tr>
+      <th>decay_function</th>
+      <td><p>string. Choice of one of the following decay functions:
+'step', 'exponential', 'fixed_exponential', 'linear',
+and 'logistic'. Defaults to 'step', which yields
+cumulative opportunities accessibility metrics.
+More info in <code>details</code>.</p></td>
+    </tr>
+    <tr>
+      <th>cutoffs</th>
+      <td><p>numeric. Cutoff times in minutes for calculating cumulative
+opportunities accessibility when using the 'step decay function'.
+This parameter has different effects for each of the other decay
+functions: it indicates the 'median' (or inflection point) of
+the decay curves in the 'logistic' and 'linear' functions, and
+the 'half-life' in the 'exponential' function. It has no effect
+when using the 'fixed exponential' function.</p></td>
+    </tr>
+    <tr>
+      <th>decay_value</th>
+      <td><p>numeric. Extra parameter to be passed to the selected
+<code>decay_function</code>.</p></td>
     </tr>
     <tr>
       <th>max_walk_dist</th>
@@ -274,10 +303,68 @@ a small penalty for computation efficiency.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.table with travel time estimates (in minutes) between origin
-destination pairs by a given transport mode. Note that origins/destinations
-that were beyond the maximum travel time, and/or origins that were far from
-the street network are not returned in the data.table.</p>
+    <p>A data.table with accessibility estimates for all origin points, by
+a given transport mode, and per travel time cutoff and percentile.</p>
+    <h2 class="hasAnchor" id="decay-functions-"><a class="anchor" href="#decay-functions-"></a>Decay functions:</h2>
+
+    <p>R5 allows for multiple decay functions. More info at <a href='https://docs.conveyal.com/learn-more/decay-functions'>https://docs.conveyal.com/learn-more/decay-functions</a>
+The options include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Step <code>step</code> (cumulative opportunities)</h3>
+
+
+<p>A binary decay function used to calculate cumulative opportunities metrics.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Logistic CDF <code>logistic</code></h3>
+
+
+<p>This is the logistic function, i.e. the cumulative distribution function of
+the logistic distribution, expressed such that its parameters are the median
+(inflection point) and standard deviation. This function applies a sigmoid
+rolloff that has a convenient relationship to discrete choice theory. Its
+parameters can be set to reflect a whole population's tolerance for making
+trips with different travel times. The function's value represents the
+probability that a randomly chosen member of the population would accept
+making a trip, given its duration. Opportunities are then weighted by how
+likely it is a person would consider them "reachable".</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>calibration</h4>
+
+
+<p>The median parameter is controlled by the <code>cutoff</code> parameter, leaving only
+the standard deviation to configure through the <code>decay_value</code> parameter.</p>
+
+
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Fixed Exponential <code>fixed_exponential</code></h3>
+
+
+<p>This function is of the form e-Lt where L is a single fixed decay constant
+in the range (0, 1). It is constrained to be positive to ensure weights
+decrease (rather than grow) with increasing travel time.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>calibration</h4>
+
+
+<p>This function is controlled exclusively by the L constant, given by the
+<code>decay_value</code> parameter. Values provided in <code>cutoffs</code> are ignored.</p>
+
+
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Half-life Exponential Decay <code>exponential</code></h3>
+
+
+<p>This is similar to the fixed-exponential option above, but in this case the
+decay parameter is inferred from the <code>cutoffs</code> parameter values, which is
+treated as the half-life of the decay.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Linear <code>linear</code></h3>
+
+
+<p>This is a simple, vaguely sigmoid option, which may be useful when you have
+a sense of a maximum travel time that would be tolerated by any traveler,
+and a minimum time below which all travel is perceived to be equally easy.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>calibration</h4>
+
+
+<p>The transition region is transposable and symmetric around the <code>cutoffs</code>
+parameter values, taking <code>decay_value</code> minutes to taper down from one to zero.</p>
+
+
+
     <h2 class="hasAnchor" id="transport-modes-"><a class="anchor" href="#transport-modes-"></a>Transport modes:</h2>
 
     <p>R5 allows for multiple combinations of transport modes. The options include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Transit modes</h3>
@@ -316,7 +403,7 @@ where cyclists are required to mix with moderate- to high-speed vehicular traffi
 
     <h2 class="hasAnchor" id="routing-algorithm-"><a class="anchor" href="#routing-algorithm-"></a>Routing algorithm:</h2>
 
-    <p>The travel_time_matrix function uses an R5-specific extension to the RAPTOR
+    <p>The <code>accessibility()</code> function uses an R5-specific extension to the RAPTOR
 routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
 systematic sample of one departure per minute over the time window set by the
 user in the 'time_window' parameter. A detailed description of base RAPTOR
@@ -332,30 +419,28 @@ routing. Transportation Science, 49(3), 591-604.</p></li>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other routing: 
-<code><a href='accessibility.html'>accessibility</a>()</code>,
-<code><a href='detailed_itineraries.html'>detailed_itineraries</a>()</code></p></div>
+<code><a href='detailed_itineraries.html'>detailed_itineraries</a>()</code>,
+<code><a href='travel_time_matrix.html'>travel_time_matrix</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/r5r'>r5r</a></span><span class='op'>)</span>
 
 <span class='co'># build transport network</span>
-<span class='va'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/spo"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
+<span class='va'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
 <span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>data_path</span><span class='op'>)</span>
 
 <span class='co'># load origin/destination points</span>
-<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>data_path</span>, <span class='st'>"spo_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>,<span class='op'>]</span>
+<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>data_path</span>, <span class='st'>"poa_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='va'>departure_datetime</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='st'>"13-05-2019 14:00:00"</span>, format <span class='op'>=</span> <span class='st'>"%d-%m-%Y %H:%M:%S"</span><span class='op'>)</span>
-
-<span class='co'># estimate travel time matrix</span>
-<span class='va'>ttm</span> <span class='op'>&lt;-</span> <span class='fu'>travel_time_matrix</span><span class='op'>(</span><span class='va'>r5r_core</span>,
+  <span class='va'>access</span> <span class='op'>&lt;-</span> <span class='fu'>accessibility</span><span class='op'>(</span><span class='va'>r5r_core</span>,
                           origins <span class='op'>=</span> <span class='va'>points</span>,
                           destinations <span class='op'>=</span> <span class='va'>points</span>,
-                          mode <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"WALK"</span>, <span class='st'>"TRANSIT"</span><span class='op'>)</span>,
-                          departure_datetime <span class='op'>=</span> <span class='va'>departure_datetime</span>,
-                          max_walk_dist <span class='op'>=</span> <span class='cn'>Inf</span>,
-                          max_trip_duration <span class='op'>=</span> <span class='fl'>120L</span><span class='op'>)</span>
+                          opportunities_colname <span class='op'>=</span> <span class='st'>"schools"</span>,
+                          mode <span class='op'>=</span> <span class='st'>"WALK"</span>,
+                          cutoffs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>25</span>, <span class='fl'>30</span><span class='op'>)</span>,
+                          max_trip_duration <span class='op'>=</span> <span class='fl'>30</span>,
+                          verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='fu'><a href='stop_r5.html'>stop_r5</a></span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span>
 

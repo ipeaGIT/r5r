@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>The package has three fundamental functions.</p>
+<p>The package has four fundamental functions.</p>
 <ol>
 <li>
 <code>setup_r5</code>
@@ -150,6 +150,12 @@
 <code>travel_time_matrix</code>
 <ul>
 <li>Fast function that returns a simple ‘data.frame’ with travel time estimates between one or multiple origin destination pairs.</li>
+</ul>
+</li>
+<li>
+<code>accessibility</code>
+<ul>
+<li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed Exponential and linear.</li>
 </ul>
 </li>
 </ol>
@@ -191,7 +197,17 @@
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                             max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
                             max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="co"># 4) Calculate number of schools accessible within 20 minutes </span>
+<span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
+                        origins <span class="op">=</span> <span class="va">points</span>,
+                        destinations <span class="op">=</span> <span class="va">points</span>,
+                        opportunities_colname <span class="op">=</span> <span class="st">"schools"</span>,
+                        decay_function <span class="op">=</span> <span class="st">"step"</span>,
+                        cutoffs <span class="op">=</span> <span class="fl">21</span>,
+                        mode <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
+                        verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div id="related-r-packages" class="section level4">
 <h4 class="hasAnchor">
 <a href="#related-r-packages" class="anchor"></a><strong>Related R packages</strong>
@@ -294,7 +310,7 @@
 <li><a href="https://CRAN.R-project.org/package=r5r"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a></li>
 <li><a href="https://github.com/ipeaGIT/r5r/actions"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://doi.org/10.32866/001c.21262"><img src="https://img.shields.io/badge/DOI-10.32866/001c.21262-9cf" alt="Publication"></a></li>
+<li><a href="https://doi.org/10.32866/001c.21262"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></li>
 </ul>
 </div>
 </div>
