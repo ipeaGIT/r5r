@@ -53,7 +53,7 @@ jobs:
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
         working-directory: r-package
 
-     - name: Install dependencies
+      - name: Install dependencies
         run: |
           install.packages(c("remotes"))
           remotes::install_deps(dependencies = TRUE)
