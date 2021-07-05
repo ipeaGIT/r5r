@@ -1,7 +1,11 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.5-0 (dev)
+# r5r v0.5.1 (dev)
+
+
+-------------------------------------------------------
+# r5r v0.5.0
 
 **Major changes**
 - New function `accessibility()` to calculate access to opportunities. Closes [#169](https://github.com/ipeaGIT/r5r/issues/169)

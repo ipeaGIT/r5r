@@ -102,7 +102,7 @@
 #'  ### calibration
 #'  This function is controlled exclusively by the L constant, given by the
 #'  `decay_value` parameter. Values provided in `cutoffs` are ignored.
-
+#'
 #'  ## Half-life Exponential Decay `exponential`
 #'  This is similar to the fixed-exponential option above, but in this case the
 #'  decay parameter is inferred from the `cutoffs` parameter values, which is
