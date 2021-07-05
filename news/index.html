@@ -153,7 +153,7 @@
 <p><strong>Major changes</strong></p>
 <ul>
 <li><p>New function <code><a href="../reference/accessibility.html">accessibility()</a></code> to calculate access to opportunities. Closes <a href="https://github.com/ipeaGIT/r5r/issues/169">#169</a></p></li>
-<li><p>New function <code><a href="../reference/find_snap.html">find_snap()</a></code> to help the used identify where in the street network the input of origin and destination points are snapped to. Closes <a href="https://github.com/ipeaGIT/r5r/issues/168">168</a>.</p></li>
+<li><p>New function <code><a href="../reference/find_snap.html">find_snap()</a></code> to help users identify where in the street network the input of origin and destination points are snapped to. Closes <a href="https://github.com/ipeaGIT/r5r/issues/168">168</a>.</p></li>
 <li><p>New parameter <code>max_bike_dist</code> added to routing and accessibility functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/174">#174</a></p></li>
 <li><p>Implemented temporary solution for elevation. Closes <a href="https://github.com/ipeaGIT/r5r/issues/171">#171</a>. Now r5r can read Digital Elevation Model (DEM) data from raster files in <code>.tif</code> format to weight the street network for walking and cycling according to the terrain’s slopes. Ideally, we would like to see a solution that accounts for elevation implemented upstream in R5. For now, this is a temporary solution implemented within r5r.</p></li>
 </ul>
@@ -161,7 +161,7 @@
 <ul>
 <li><p>The <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> now has a more clean output when the provided GTFS covers a larger area than the street network pbf. Closes <a href="https://github.com/ipeaGIT/r5r/issues/173">#173</a></p></li>
 <li><p>The size of poa.zip sample GTFS data has been reduced due to CRAN policies. Closes <a href="https://github.com/ipeaGIT/r5r/issues/172">#172</a>.</p></li>
-<li><p>Progress counter implmenented. Closes <a href="https://github.com/ipeaGIT/r5r/issues/150">150</a>. When the <code>verbose</code> parameter is set to <code>FALSE</code>, r5r prints a progress counter and eventual <code>ERROR</code> messages. This comes with a minor penalty for computation performance. Hence we have kept <code>verbose</code> defautls to <code>TRUE</code>.</p></li>
+<li><p>Progress counter Implemented. Closes <a href="https://github.com/ipeaGIT/r5r/issues/150">150</a>. When the <code>verbose</code> parameter is set to <code>FALSE</code>, r5r prints a progress counter and eventual <code>ERROR</code> messages. This comes with a minor penalty for computation performance. Hence we have kept <code>verbose</code> defautls to <code>TRUE</code>.</p></li>
 </ul>
 <p><strong>Bug fixes</strong></p>
 <ul>
