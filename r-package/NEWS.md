@@ -3,6 +3,10 @@
 -------------------------------------------------------
 # r5r v0.5.1 (dev)
 
+**Minor changes**
+
+- New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
+
 
 -------------------------------------------------------
 # r5r v0.5.0
