@@ -9,7 +9,8 @@ setup_r5(
   version = "6.2.0",
   verbose = TRUE,
   temp_dir = FALSE,
-  use_elevation = FALSE
+  use_elevation = FALSE,
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -25,9 +26,14 @@ FALSE to show only eventual ERROR and WARNING messages.}
 \item{temp_dir}{logical, whether the R5 Jar file should be saved in temporary
 directory. Defaults to FALSE}
 
-\item{use_elevation}{boolean. If TRUE, load any tif files containing elevation
-found in the data_path folder and calculate impedances for
-walking and cycling based on street slopes.}
+\item{use_elevation}{logical. If TRUE, load any tif files containing
+elevation found in the data_path folder and calculate
+impedances for walking and cycling based on street
+slopes.}
+
+\item{overwrite}{logical, whether to overwrite an existing \code{network.dat} or
+to use a cached file. Defaults to FALSE (i.e. use a cached
+network).}
 }
 \value{
 An rJava object to connect with R5 routing engine

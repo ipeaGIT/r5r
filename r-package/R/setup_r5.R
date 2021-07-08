@@ -15,9 +15,13 @@
 #'                FALSE to show only eventual ERROR and WARNING messages.
 #' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
 #'                 directory. Defaults to FALSE
-#' @param use_elevation boolean. If TRUE, load any tif files containing elevation
-#'                      found in the data_path folder and calculate impedances for
-#'                      walking and cycling based on street slopes.
+#' @param use_elevation logical. If TRUE, load any tif files containing
+#'                      elevation found in the data_path folder and calculate
+#'                      impedances for walking and cycling based on street
+#'                      slopes.
+#' @param overwrite logical, whether to overwrite an existing `network.dat` or
+#'                  to use a cached file. Defaults to FALSE (i.e. use a cached
+#'                  network).
 #'
 #' @return An rJava object to connect with R5 routing engine
 #' @family setup
@@ -37,28 +41,30 @@ setup_r5 <- function(data_path,
                      version = "6.2.0",
                      verbose = TRUE,
                      temp_dir = FALSE,
-                     use_elevation = FALSE) {
+                     use_elevation = FALSE,
+                     overwrite = FALSE) {
 
   # check inputs ------------------------------------------------------------
+
+  checkmate::assert_directory_exists(data_path)
   checkmate::assert_logical(verbose)
   checkmate::assert_logical(temp_dir)
   checkmate::assert_logical(use_elevation)
+  checkmate::assert_logical(overwrite)
 
-  # check Java version installed locally ------------------------------------------------------------
-    rJava::.jinit()
-    ver <- rJava::.jcall("java.lang.System","S","getProperty","java.version")
-    ver <- as.numeric(gsub("\\..*","",ver))
-    if (ver != 11){
-      stop(
-        "This package requires the Java SE Development Kit 11.\n",
-        "Please update your Java installation. The jdk 11 can be downloaded from either:\n",
-        "  - openjdk: https://jdk.java.net/java-se-ri/11\n",
-        "  - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html"
-      )
-    }
+  # check Java version installed locally ---------------------------------------
 
-  # check directory input
-  if (is.null(data_path)){ stop("Please provide data_path.")}
+  rJava::.jinit()
+  ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
+  ver <- as.numeric(gsub("\\..*", "", ver))
+  if (ver != 11) {
+    stop(
+      "This package requires the Java SE Development Kit 11.\n",
+      "Please update your Java installation. The jdk 11 can be downloaded from either:\n",
+      "  - openjdk: https://jdk.java.net/java-se-ri/11\n",
+      "  - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html"
+    )
+  }
 
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
@@ -69,7 +75,8 @@ setup_r5 <- function(data_path,
   any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if (!(any_pbf | any_network)) stop("\nAn OSM PBF file is required to build a network.")
+  if (!(any_pbf | any_network))
+    stop("\nAn OSM PBF file is required to build a network.")
 
   # check if most recent JAR release is stored already. If not, download it
     # download metadata with jar file addresses
@@ -82,9 +89,7 @@ setup_r5 <- function(data_path,
     jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
 
     # if temp_dir
-    if( temp_dir==TRUE){
-      jar_file <- paste0(tempdir(),"\\", file_name)
-    }
+    if (temp_dir == TRUE) jar_file <- file.path(tempdir(), file_name)
 
 
   if (checkmate::test_file_exists(jar_file)) {
@@ -102,7 +107,7 @@ setup_r5 <- function(data_path,
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")
 
-  if (checkmate::test_file_exists(dat_file)) {
+  if (checkmate::test_file_exists(dat_file) && !overwrite) {
 
     r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
 
@@ -110,10 +115,19 @@ setup_r5 <- function(data_path,
 
   } else {
 
+    # clean up any files that might have been created by previous r5r usage
+    # if the files do not exist 'file.remove()' will raise an error, which is
+    # suppressed here
+    mapdb_files <- list.files(data_path)
+    mapdb_files <- mapdb_files[grepl("\\.mapdb", mapdb_files)]
+    suppressWarnings(
+      invisible(file.remove(dat_file, mapdb_files))
+    )
+
     # build new r5r_core
     r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
 
-    # display a warning message if there is a PBF file but no GTFS data
+    # display a message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
       message(paste("\nNo public transport data (gtfs) provided.",
                     "Graph will be built with the street network only."))
