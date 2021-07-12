@@ -63,8 +63,10 @@
 #'                 See details for more information.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
-#' @param verbose logical. TRUE to show detailed output messages (the default)
-#'                or FALSE to show only eventual ERROR messages.
+#' @param verbose logical. `TRUE` to show detailed output messages (the default).
+#'                If verbose is set to `FALSE`, r5r prints a progress counter and
+#'                eventual `ERROR` messages. Setting `verbose` to  `FALSE` imposes
+#'                a small penalty for computation efficiency.
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.
@@ -93,14 +95,14 @@
 #'  the standard deviation to configure through the `decay_value` parameter.
 #'
 #'  ## Fixed Exponential `fixed_exponential`
-#'  This function is of the form e-λt where λ is a single fixed decay constant
+#'  This function is of the form e-Lt where L is a single fixed decay constant
 #'  in the range (0, 1). It is constrained to be positive to ensure weights
 #'  decrease (rather than grow) with increasing travel time.
 #'
 #'  ### calibration
-#'  This function is controlled exclusively by the λ constant, given by the
+#'  This function is controlled exclusively by the L constant, given by the
 #'  `decay_value` parameter. Values provided in `cutoffs` are ignored.
-
+#'
 #'  ## Half-life Exponential Decay `exponential`
 #'  This is similar to the fixed-exponential option above, but in this case the
 #'  decay parameter is inferred from the `cutoffs` parameter values, which is

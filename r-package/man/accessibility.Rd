@@ -108,8 +108,10 @@ See details for more information.}
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical. TRUE to show detailed output messages (the default)
-or FALSE to show only eventual ERROR messages.}
+\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).
+If verbose is set to \code{FALSE}, r5r prints a progress counter and
+eventual \code{ERROR} messages. Setting \code{verbose} to  \code{FALSE} imposes
+a small penalty for computation efficiency.}
 }
 \value{
 A data.table with accessibility estimates for all origin points, by
@@ -148,12 +150,12 @@ the standard deviation to configure through the \code{decay_value} parameter.
 
 \subsection{Fixed Exponential \code{fixed_exponential}}{
 
-This function is of the form e-λt where λ is a single fixed decay constant
+This function is of the form e-Lt where L is a single fixed decay constant
 in the range (0, 1). It is constrained to be positive to ensure weights
 decrease (rather than grow) with increasing travel time.
 \subsection{calibration}{
 
-This function is controlled exclusively by the λ constant, given by the
+This function is controlled exclusively by the L constant, given by the
 \code{decay_value} parameter. Values provided in \code{cutoffs} are ignored.
 }
 

@@ -1,21 +1,39 @@
 # log history of r5r package development
 
 -------------------------------------------------------
-# r5r v0.5-0 (dev)
+# r5r v0.5.1 (dev)
+
+**Minor changes**
+
+- New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
+
+
+-------------------------------------------------------
+# r5r v0.5.0
 
 **Major changes**
 - New function `accessibility()` to calculate access to opportunities. Closes [#169](https://github.com/ipeaGIT/r5r/issues/169)
 
-- New function `find_snap()` to help the used identify where in the street network
-the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
+- New function `find_snap()` to help users identify where in the street network the input of origin and destination points are snapped to. Closes [168](https://github.com/ipeaGIT/r5r/issues/168).
 
 - New parameter `max_bike_dist` added to routing and accessibility functions. Closes [#174](https://github.com/ipeaGIT/r5r/issues/174)
 
 - Implemented temporary solution for elevation. Closes [#171](https://github.com/ipeaGIT/r5r/issues/171). Now r5r can read Digital Elevation Model (DEM) data from raster files in `.tif` format to weight the
 street network for walking and cycling according to the terrain's slopes. Ideally, we would like to see a solution that accounts for elevation implemented upstream in R5. For now, this is a temporary solution implemented within r5r.
 
+**Minor changes**
+- The `street_network_to_sf()` now has a more clean output when the provided GTFS covers a larger area than the street network pbf. Closes [#173](https://github.com/ipeaGIT/r5r/issues/173)
+
+- The size of poa.zip sample GTFS data has been reduced due to CRAN policies. Closes [#172](https://github.com/ipeaGIT/r5r/issues/172).
+
+- Progress counter Implemented. Closes [150](https://github.com/ipeaGIT/r5r/issues/150). When the `verbose` parameter is set to `FALSE`, r5r prints a progress counter and eventual `ERROR` messages. This comes with a minor penalty for computation performance. Hence we have kept `verbose` defautls to `TRUE`.
+
+
 **Bug fixes**
 - Fixed bug that prevented r5r from running without internet connection. Closes [#163](https://github.com/ipeaGIT/r5r/issues/163).
+
+
+
 
 -------------------------------------------------------
 # r5r v0.4-0
