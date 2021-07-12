@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -55,12 +56,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     }
 
     @Override
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        buildDestinationPointSet();
-        return super.run();
-    }
-
-    private void buildDestinationPointSet() {
+    protected void buildDestinationPointSet() {
         ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
         DataOutputStream pointStream = new DataOutputStream(dataStream);
 
@@ -130,7 +126,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
         }
     }
 
-    private RDataFrame buildDataFrameStructure(String fromId) {
+    protected RDataFrame buildDataFrameStructure(String fromId) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame();
         travelTimesTable.addStringColumn("from_id", fromId);

@@ -59,12 +59,14 @@ find_snap <- function(r5r_core,
   points  <- assert_points_input(points, "points")
 
   # snap points to street network
-  snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, mode)
-  snap_df <- jdx::convertToR(snap_df)
+  system.time(snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, mode))
+  system.time(snap_df <- jdx::convertToR(snap_df))
   data.table::setDT(snap_df)
 
   snap_df[found == FALSE, `:=`(snap_lat = NA, snap_lon = NA, distance = NA)]
 
   return(snap_df)
 }
+
+
 

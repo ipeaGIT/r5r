@@ -82,10 +82,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     private RDataFrame buildIsochronesTable(String fromId, List<IsochroneFeature> isochroneFeatures) {
-        RDataFrame isochronesTable = new RDataFrame();
-        isochronesTable.addStringColumn("from_id", fromId);
-        isochronesTable.addIntegerColumn("cutoff", 0);
-        isochronesTable.addStringColumn("geometry", "");
+        RDataFrame isochronesTable = buildDataFrameStructure(fromId);
 
         for (IsochroneFeature isochroneFeature : isochroneFeatures) {
             isochronesTable.append();
@@ -94,6 +91,18 @@ public class IsochroneBuilder extends R5Process {
         }
         return isochronesTable;
     }
+
+    @Override
+    protected RDataFrame buildDataFrameStructure(String fromId) {
+        RDataFrame isochronesTable = new RDataFrame();
+
+        isochronesTable.addStringColumn("from_id", fromId);
+        isochronesTable.addIntegerColumn("cutoff", 0);
+        isochronesTable.addStringColumn("geometry", "");
+
+        return isochronesTable;
+    }
+
 
     @Override
     protected RegionalTask buildRequest(int index) throws ParseException {

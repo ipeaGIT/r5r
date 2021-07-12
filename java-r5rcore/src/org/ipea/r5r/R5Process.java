@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class R5Process {
 
@@ -72,30 +73,47 @@ public abstract class R5Process {
     }
 
     public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        int[] requestIndices = new int[nOrigins];
-        for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
-
+        int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
         List<LinkedHashMap<String, ArrayList<Object>>> processResults = r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results = null;
-                            try {
-                                results = runProcess(index);
-
-                                if (!Utils.verbose) {
-                                    System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.                 ");
-                                }
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
+                        .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
-
         System.out.println("\n");
-        return processResults;
+        
+        RDataFrame mergedDataFrame = buildDataFrameStructure("");
+        for (LinkedHashMap<String, ArrayList<Object>> dataFrame : processResults) {
+
+            for (String key : dataFrame.keySet()) {
+                ArrayList<Object> originArray = dataFrame.get(key);
+                ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
+
+                destinationArray.addAll(originArray);
+
+                originArray.clear();
+            }
+        }
+
+        List<LinkedHashMap<String, ArrayList<Object>>> resultList = new LinkedList<LinkedHashMap<String, ArrayList<Object>>>();
+        resultList.add(mergedDataFrame.getDataFrame());
+        return resultList;
+    }
+
+    protected abstract RDataFrame buildDataFrameStructure(String fromId);
+
+    private LinkedHashMap<String, ArrayList<Object>> tryRunProcess(AtomicInteger totalProcessed, int index) {
+        LinkedHashMap<String, ArrayList<Object>> results = null;
+        try {
+            results = runProcess(index);
+
+            if (!Utils.verbose) {
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.                 ");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return results;
     }
 
     protected abstract LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException;

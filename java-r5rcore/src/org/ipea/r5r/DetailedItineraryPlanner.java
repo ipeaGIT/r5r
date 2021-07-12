@@ -26,6 +26,33 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
     }
 
     @Override
+    protected void buildDestinationPointSet() {
+        // not required in this class
+    }
+
+    @Override
+    protected RDataFrame buildDataFrameStructure(String fromId) {
+        RDataFrame itinerariesDataFrame = new RDataFrame();
+        itinerariesDataFrame.addStringColumn("fromId", fromId);
+        itinerariesDataFrame.addDoubleColumn("fromLat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("fromLon", 0.0);
+        itinerariesDataFrame.addStringColumn("toId", "");
+        itinerariesDataFrame.addDoubleColumn("toLat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("toLon", 0.0);
+        itinerariesDataFrame.addIntegerColumn("option", 0);
+        itinerariesDataFrame.addIntegerColumn("segment", 0);
+        itinerariesDataFrame.addStringColumn("mode", "");
+        itinerariesDataFrame.addIntegerColumn("total_duration", 0);
+        itinerariesDataFrame.addDoubleColumn("segment_duration", 0.0);
+        itinerariesDataFrame.addDoubleColumn("wait", 0.0);
+        itinerariesDataFrame.addIntegerColumn("distance", 0);
+        itinerariesDataFrame.addStringColumn("route", "");
+        if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
+
+        return itinerariesDataFrame;
+    }
+
+    @Override
     public LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 

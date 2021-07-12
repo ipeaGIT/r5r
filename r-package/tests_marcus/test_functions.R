@@ -24,12 +24,12 @@ ttm <- travel_time_matrix(r5r_core, origins = points,
                           verbose = FALSE)
 
 dit <- detailed_itineraries(r5r_core,
-                            origins =points[1047, ],
-                          destinations = points[590, ],
-                          mode = c("WALK"),
-                          max_trip_duration = 60,
-                          max_walk_dist = 800,
-                          max_bike_dist = 800,
+                            origins =points,
+                          destinations = points[1227:1,],
+                          mode = c("BICYCLE"),
+                          max_trip_duration = 120,
+                          max_walk_dist = Inf,
+                          max_bike_dist = Inf,
                           verbose = FALSE)
 mapview::mapview(dit)
 mapview::mapview(points, xcol="lon", ycol="lat", crs = 4326)
