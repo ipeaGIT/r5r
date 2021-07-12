@@ -254,6 +254,7 @@ travel_time_matrix <- function(r5r_core,
 
   # convert travel_times from java object to data.table
   travel_times <- jdx::convertToR(travel_times)
+  data.table::setDT(travel_times)
 
   # convert eventual list columns to integer
   for(j1 in seq_along(travel_times)) {
@@ -267,5 +268,5 @@ travel_time_matrix <- function(r5r_core,
     data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
 
-return(travel_times)
+  return(travel_times)
 }
