@@ -70,7 +70,7 @@ public abstract class R5MultiDestinationProcess extends R5Process {
                 transportNetwork.linkageCache.getLinkage(destinationPoints, transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
             }
         }
-    };
+    }
 
     public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
         int[] opportunities = new int[toIds.length];
@@ -87,6 +87,4 @@ public abstract class R5MultiDestinationProcess extends R5Process {
 
         this.nDestinations = toIds.length;
     }
-
-
 }

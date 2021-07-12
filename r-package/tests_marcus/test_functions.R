@@ -1,3 +1,6 @@
+options(java.parameters = '-Xmx16384m')
+options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
+
 library(r5r)
 library(ggplot2)
 
@@ -7,6 +10,9 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- r5r_core$getGrid(11L)
+points <- jdx::convertToR(points)
+points$schools <- 1
 
 system.time(
   access <- accessibility(r5r_core,
