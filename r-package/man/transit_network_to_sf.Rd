@@ -11,7 +11,7 @@ transit_network_to_sf(r5r_core)
 }
 \value{
 A list with two components of a transit network in sf format:
-route shapes (LINESTRING) and stops (POINT).
+route shapes (LINESTRING) and transit stops (POINT).
 }
 \description{
 Extract transit network in sf format from a network.dat built with setup_r5

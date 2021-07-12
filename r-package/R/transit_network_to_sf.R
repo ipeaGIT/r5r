@@ -4,7 +4,7 @@
 #' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
 #'
 #' @return A list with two components of a transit network in sf format:
-#'         route shapes (LINESTRING) and stops (POINT).
+#'         route shapes (LINESTRING) and transit stops (POINT).
 #'
 #' @family support functions
 #'
