@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
@@ -106,6 +103,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
         }
     }
 
+    @Override
     protected RDataFrame buildDataFrameStructure(String fromId) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame();

@@ -254,7 +254,6 @@ travel_time_matrix <- function(r5r_core,
 
   # convert travel_times from java object to data.table
   travel_times <- jdx::convertToR(travel_times)
-  travel_times <- data.table::rbindlist(travel_times)
 
   # convert eventual list columns to integer
   for(j1 in seq_along(travel_times)) {

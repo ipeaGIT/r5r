@@ -4,7 +4,6 @@ import com.conveyal.r5.transit.TransportNetwork;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -22,7 +21,7 @@ public abstract class R5MultiDestinationProcess extends R5Process {
     }
 
     @Override
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
+    public LinkedHashMap<String, ArrayList<Object>> run() throws ExecutionException, InterruptedException {
         buildDestinationPointSet();
         return super.run();
     }

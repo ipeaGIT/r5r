@@ -9,7 +9,6 @@ import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,14 +17,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 public class AccessibilityEstimator extends R5MultiDestinationProcess {
-
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AccessibilityEstimator.class);
 
     private FreeFormPointSet destinationPoints;
     private DecayFunction decayFunction;
@@ -126,6 +120,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
         }
     }
 
+    @Override
     protected RDataFrame buildDataFrameStructure(String fromId) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame();

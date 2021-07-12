@@ -72,7 +72,7 @@ public abstract class R5Process {
         this.maxTripDuration = maxTripDuration;
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
+    public LinkedHashMap<String, ArrayList<Object>> run() throws ExecutionException, InterruptedException {
         int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
@@ -81,23 +81,23 @@ public abstract class R5Process {
                         .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
         System.out.println("\n");
-        
+
         RDataFrame mergedDataFrame = buildDataFrameStructure("");
         for (LinkedHashMap<String, ArrayList<Object>> dataFrame : processResults) {
 
-            for (String key : dataFrame.keySet()) {
-                ArrayList<Object> originArray = dataFrame.get(key);
-                ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
+            if (dataFrame != null) {
+                for (String key : dataFrame.keySet()) {
+                    ArrayList<Object> originArray = dataFrame.get(key);
+                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
 
-                destinationArray.addAll(originArray);
+                    destinationArray.addAll(originArray);
 
-                originArray.clear();
+                    originArray.clear();
+                }
             }
         }
 
-        List<LinkedHashMap<String, ArrayList<Object>>> resultList = new LinkedList<LinkedHashMap<String, ArrayList<Object>>>();
-        resultList.add(mergedDataFrame.getDataFrame());
-        return resultList;
+        return mergedDataFrame.getDataFrame();
     }
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId);

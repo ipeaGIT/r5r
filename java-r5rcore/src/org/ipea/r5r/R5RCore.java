@@ -159,7 +159,7 @@ public class R5RCore {
 
     // ----------------------------------  DETAILED ITINERARIES  -----------------------------------------
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
+    public LinkedHashMap<String, ArrayList<Object>> detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
                                                                    String date, String departureTime, int maxWalkTime, int maxBikeTime,  int maxTripDuration,
                                                                    boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
@@ -177,7 +177,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
+    public LinkedHashMap<String, ArrayList<Object>> detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
@@ -200,7 +200,7 @@ public class R5RCore {
 
     // ----------------------------------  TRAVEL TIME MATRIX  -----------------------------------------
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -215,7 +215,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -230,7 +230,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -249,7 +249,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -268,7 +268,7 @@ public class R5RCore {
 
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
+    public LinkedHashMap<String, ArrayList<Object>> accessibility(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
                                                                            String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -284,7 +284,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+    public LinkedHashMap<String, ArrayList<Object>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,  int opportunities,
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -301,7 +301,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String fromId, double fromLat, double fromLon,
+    public LinkedHashMap<String, ArrayList<Object>> accessibility(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon, int opportunities,
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -322,7 +322,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+    public LinkedHashMap<String, ArrayList<Object>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                         String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
                                                                         String decayFunction, double decayValue,
                                                                         String directModes, String transitModes, String accessModes, String egressModes,
@@ -343,7 +343,7 @@ public class R5RCore {
 
     // ----------------------------------  ISOCHRONES  -----------------------------------------
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
         int[] cutoffTimes = {cutoffs};
@@ -352,7 +352,7 @@ public class R5RCore {
                 date, departureTime, maxWalkTime,maxBikeTime, maxTripDuration);
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
@@ -366,7 +366,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
@@ -379,7 +379,7 @@ public class R5RCore {
 
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
+    public LinkedHashMap<String, ArrayList<Object>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
