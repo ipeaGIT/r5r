@@ -1,18 +1,11 @@
 package org.ipea.r5r;
 
 import com.conveyal.r5.OneOriginResult;
-import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.api.util.LegMode;
-import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,49 +13,8 @@ import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
-    private FreeFormPointSet destinationPoints;
-
     public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
-        destinationPoints = null;
-    }
-
-    @Override
-    protected void buildDestinationPointSet() {
-        ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-        DataOutputStream pointStream = new DataOutputStream(dataStream);
-
-        try {
-            pointStream.writeInt(toIds.length);
-            for (String toId : toIds) {
-                pointStream.writeUTF(toId);
-            }
-            for (double toLat : toLats) {
-                pointStream.writeDouble(toLat);
-            }
-            for (double toLon : toLons) {
-                pointStream.writeDouble(toLon);
-            }
-            for (int i = 0; i < toIds.length; i++) {
-                pointStream.writeDouble(1.0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ByteArrayInputStream pointsInput = new ByteArrayInputStream(dataStream.toByteArray());
-
-        try {
-            destinationPoints = new FreeFormPointSet(pointsInput);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (!this.directModes.isEmpty()) {
-            for (LegMode mode : this.directModes) {
-                transportNetwork.linkageCache.getLinkage(destinationPoints, transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
-            }
-        }
     }
 
     @Override

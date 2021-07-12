@@ -82,6 +82,12 @@ public abstract class R5Process {
                         collect(Collectors.toList())).get();
         System.out.println("\n");
 
+        RDataFrame mergedDataFrame = mergeResults(processResults);
+
+        return mergedDataFrame.getDataFrame();
+    }
+
+    private RDataFrame mergeResults(List<LinkedHashMap<String, ArrayList<Object>>> processResults) {
         RDataFrame mergedDataFrame = buildDataFrameStructure("");
         for (LinkedHashMap<String, ArrayList<Object>> dataFrame : processResults) {
 
@@ -96,8 +102,7 @@ public abstract class R5Process {
                 }
             }
         }
-
-        return mergedDataFrame.getDataFrame();
+        return mergedDataFrame;
     }
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId);
