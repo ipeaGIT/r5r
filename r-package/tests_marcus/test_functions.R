@@ -46,3 +46,11 @@ system.time(
 )
 dit %>% ggplot() + geom_sf()
 mapview::mapview(points, xcol="lon", ycol="lat", crs = 4326)
+
+street_net <- street_network_to_sf(r5r_core)
+mapview::mapview(street_net$vertices)
+mapview::mapview(street_net$edges)
+
+transit_net <- transit_network_to_sf(r5r_core)
+mapview::mapview(transit_net$stops %>% filter(linked_to_street == TRUE))
+mapview::mapview(transit_net$routes)

@@ -32,15 +32,15 @@ transit_network_to_sf <- function(r5r_core) {
   # Get transit network from R5R core
   network <- r5r_core$getTransitNetwork()
 
-  # Convert stops to SF (point)
-  stops_df <- jdx::convertToR(network$get(0L), array.order = "column-major")
-  stops_sf <- sfheaders::sf_point(stops_df, x='lon', y='lat', keep = TRUE)
-  sf::st_crs(stops_sf) <- 4326 # WGS 84
-
   # Convert edges to SF (linestring)
-  routes_df <- jdx::convertToR(network$get(1L), array.order = "column-major")
+  routes_df <- jdx::convertToR(network$get(0L), array.order = "column-major")
   data.table::setDT(routes_df)[, geometry := sf::st_as_sfc(geometry)]
   routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
+
+  # Convert stops to SF (point)
+  stops_df <- jdx::convertToR(network$get(1L), array.order = "column-major")
+  stops_sf <- sfheaders::sf_point(stops_df, x='lon', y='lat', keep = TRUE)
+  sf::st_crs(stops_sf) <- 4326 # WGS 84
 
   # gather in a list
   transit_network <- list(stops = stops_sf, routes = routes_sf)
