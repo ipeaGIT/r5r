@@ -56,7 +56,7 @@ public class PathOptionsTable {
     private boolean dropItineraryGeometry = false;
     public void dropItineraryGeometry() { this.dropItineraryGeometry = true; }
 
-    public LinkedHashMap<String, ArrayList<Object>> getDataFrame() { return optionsDataFrame.getDataFrame(); }
+    public RDataFrame getDataFrame() { return optionsDataFrame; }
 
     public PathOptionsTable(TransportNetwork transportNetwork, ProfileResponse response) {
         this.transportNetwork = transportNetwork;

@@ -53,7 +53,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
     }
 
     @Override
-    public LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
+    public RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
         ProfileResponse response = runQuery(index, request);

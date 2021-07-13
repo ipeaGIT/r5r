@@ -31,7 +31,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     @Override
-    protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
+    protected RDataFrame runProcess(int index) throws ParseException {
         // Build request
         RegionalTask request = buildRequest(index);
 
@@ -46,7 +46,7 @@ public class IsochroneBuilder extends R5Process {
 
         // Return isochrones
         if (isochronesTable.nRow() > 0) {
-            return isochronesTable.getDataFrame();
+            return isochronesTable;
         } else {
             return null;
         }

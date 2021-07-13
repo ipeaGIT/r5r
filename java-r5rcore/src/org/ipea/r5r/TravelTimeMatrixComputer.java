@@ -18,7 +18,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     }
 
     @Override
-    protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
+    protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
         request.percentiles = this.routingProperties.percentiles;
@@ -29,7 +29,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
         populateDataFrame(travelTimeResults, travelTimesTable);
 
         if (travelTimesTable.nRow() > 0) {
-            return travelTimesTable.getDataFrame();
+            return travelTimesTable;
         } else {
             return null;
         }

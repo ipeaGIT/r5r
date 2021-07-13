@@ -76,7 +76,7 @@ public abstract class R5Process {
         int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
-        List<LinkedHashMap<String, ArrayList<Object>>> processResults = r5rThreadPool.submit(() ->
+        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
                         .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
@@ -89,13 +89,13 @@ public abstract class R5Process {
         return mergedDataFrame.getDataFrame();
     }
 
-    private RDataFrame mergeResults(List<LinkedHashMap<String, ArrayList<Object>>> processResults) {
+    private RDataFrame mergeResults(List<RDataFrame> processResults) {
         RDataFrame mergedDataFrame = buildDataFrameStructure("");
-        for (LinkedHashMap<String, ArrayList<Object>> dataFrame : processResults) {
+        for (RDataFrame dataFrame : processResults) {
 
             if (dataFrame != null) {
-                for (String key : dataFrame.keySet()) {
-                    ArrayList<Object> originArray = dataFrame.get(key);
+                for (String key : dataFrame.getDataFrame().keySet()) {
+                    ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
                     ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
 
                     destinationArray.addAll(originArray);
@@ -109,8 +109,8 @@ public abstract class R5Process {
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId);
 
-    private LinkedHashMap<String, ArrayList<Object>> tryRunProcess(AtomicInteger totalProcessed, int index) {
-        LinkedHashMap<String, ArrayList<Object>> results = null;
+    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
+        RDataFrame results = null;
         try {
             results = runProcess(index);
 
@@ -123,7 +123,7 @@ public abstract class R5Process {
         return results;
     }
 
-    protected abstract LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException;
+    protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();

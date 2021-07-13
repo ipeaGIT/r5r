@@ -14,10 +14,12 @@ points <- r5r_core$getGrid(11L)
 points <- jdx::convertToR(points)
 points$schools <- 1
 
+dest <- dplyr::sample_n(points, 5000)
+
 system.time(
   access <- accessibility(r5r_core,
                         origins = points,
-                        destinations = points,
+                        destinations = dest,
                         opportunities_colname = "schools",
                         mode = "WALK",
                         cutoffs = c(25, 30),
@@ -27,7 +29,7 @@ system.time(
 
 system.time(
   ttm <- travel_time_matrix(r5r_core, origins = points,
-                            destinations = points,
+                            destinations = dest,
                             mode = c("BICYCLE"),
                             max_trip_duration = 30,
                             max_walk_dist = 800,
