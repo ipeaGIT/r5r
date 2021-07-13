@@ -10,10 +10,13 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+dest <- points
+
 points <- r5r_core$getGrid(11L)
 points <- jdx::convertToR(points)
 points$schools <- 1
 
+dest <- points
 dest <- dplyr::sample_n(points, 5000)
 
 system.time(

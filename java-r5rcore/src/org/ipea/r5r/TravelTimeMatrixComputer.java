@@ -7,8 +7,6 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
@@ -25,7 +23,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
-        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index]);
+        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
 
         if (travelTimesTable.nRow() > 0) {
@@ -56,9 +54,9 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     }
 
     @Override
-    protected RDataFrame buildDataFrameStructure(String fromId) {
+    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         // Build return table
-        RDataFrame travelTimesTable = new RDataFrame();
+        RDataFrame travelTimesTable = new RDataFrame(nRows);
         travelTimesTable.addStringColumn("fromId", fromId);
         travelTimesTable.addStringColumn("toId", "");
 

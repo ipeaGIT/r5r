@@ -31,8 +31,8 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
     }
 
     @Override
-    protected RDataFrame buildDataFrameStructure(String fromId) {
-        RDataFrame itinerariesDataFrame = new RDataFrame();
+    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
+        RDataFrame itinerariesDataFrame = new RDataFrame(nRows);
         itinerariesDataFrame.addStringColumn("fromId", fromId);
         itinerariesDataFrame.addDoubleColumn("fromLat", 0.0);
         itinerariesDataFrame.addDoubleColumn("fromLon", 0.0);

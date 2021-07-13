@@ -14,11 +14,18 @@ public class RDataFrame {
     public int nRow() {
         return rowCount;
     }
+    private int capacity = 10;
 
     private final LinkedHashMap<String, ArrayList<Object>> dataFrame;
     private final LinkedHashMap<String, Object> defaultValues;
 
     public RDataFrame() {
+        this(10);
+    }
+
+    public RDataFrame(int capacity) {
+        this.capacity = capacity;
+        
         dataFrame = new LinkedHashMap<>();
         defaultValues = new LinkedHashMap<>();
     }
@@ -53,21 +60,21 @@ public class RDataFrame {
     }
 
     public void addStringColumn(String columnName, String defaultValue) {
-        ArrayList<Object> column = new ArrayList<>();
+        ArrayList<Object> column = new ArrayList<>(capacity);
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
     }
 
     public void addBooleanColumn(String columnName, Boolean defaultValue) {
-        ArrayList<Object> column = new ArrayList<>();
+        ArrayList<Object> column = new ArrayList<>(capacity);
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
     }
 
     public void addIntegerColumn(String columnName, Integer defaultValue) {
-        ArrayList<Object> column = new ArrayList<>();
+        ArrayList<Object> column = new ArrayList<>(capacity);
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
@@ -75,7 +82,7 @@ public class RDataFrame {
     }
 
     public void addDoubleColumn(String columnName, Double defaultValue) {
-        ArrayList<Object> column = new ArrayList<>();
+        ArrayList<Object> column = new ArrayList<>(capacity);
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);

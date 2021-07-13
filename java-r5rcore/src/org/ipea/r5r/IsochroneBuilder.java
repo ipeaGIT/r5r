@@ -82,7 +82,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     private RDataFrame buildIsochronesTable(String fromId, List<IsochroneFeature> isochroneFeatures) {
-        RDataFrame isochronesTable = buildDataFrameStructure(fromId);
+        RDataFrame isochronesTable = buildDataFrameStructure(fromId, 10);
 
         for (IsochroneFeature isochroneFeature : isochroneFeatures) {
             isochronesTable.append();
@@ -93,8 +93,8 @@ public class IsochroneBuilder extends R5Process {
     }
 
     @Override
-    protected RDataFrame buildDataFrameStructure(String fromId) {
-        RDataFrame isochronesTable = new RDataFrame();
+    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
+        RDataFrame isochronesTable = new RDataFrame(nRows);
 
         isochronesTable.addStringColumn("from_id", fromId);
         isochronesTable.addIntegerColumn("cutoff", 0);

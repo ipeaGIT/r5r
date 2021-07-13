@@ -46,7 +46,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
-        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index]);
+        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
 
         if (travelTimesTable.nRow() > 0) {
@@ -74,9 +74,9 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     }
 
     @Override
-    protected RDataFrame buildDataFrameStructure(String fromId) {
+    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         // Build return table
-        RDataFrame travelTimesTable = new RDataFrame();
+        RDataFrame travelTimesTable = new RDataFrame(nRows);
         travelTimesTable.addStringColumn("from_id", fromId);
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("cutoff", 0);

@@ -90,24 +90,47 @@ public abstract class R5Process {
     }
 
     private RDataFrame mergeResults(List<RDataFrame> processResults) {
-        RDataFrame mergedDataFrame = buildDataFrameStructure("");
+        int nRows = 0;
         for (RDataFrame dataFrame : processResults) {
-
             if (dataFrame != null) {
-                for (String key : dataFrame.getDataFrame().keySet()) {
-                    ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
-                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
-
-                    destinationArray.addAll(originArray);
-
-                    originArray.clear();
-                }
+                nRows = nRows + dataFrame.nRow();
             }
         }
+
+        RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
+
+        mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(
+                key -> {
+                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
+                    for (RDataFrame dataFrame : processResults) {
+                        if (dataFrame != null) {
+                            ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
+                            destinationArray.addAll(originArray);
+
+                            originArray.clear();
+                        }
+                    }
+                }
+        );
+//
+//
+//        for (RDataFrame dataFrame : processResults) {
+//
+//            if (dataFrame != null) {
+//                for (String key : dataFrame.getDataFrame().keySet()) {
+//                    ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
+//                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
+//
+//                    destinationArray.addAll(originArray);
+//
+//                    originArray.clear();
+//                }
+//            }
+//        }
         return mergedDataFrame;
     }
 
-    protected abstract RDataFrame buildDataFrameStructure(String fromId);
+    protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
 
     private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
         RDataFrame results = null;
