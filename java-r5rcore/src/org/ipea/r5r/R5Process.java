@@ -112,21 +112,7 @@ public abstract class R5Process {
                     }
                 }
         );
-//
-//
-//        for (RDataFrame dataFrame : processResults) {
-//
-//            if (dataFrame != null) {
-//                for (String key : dataFrame.getDataFrame().keySet()) {
-//                    ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
-//                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
-//
-//                    destinationArray.addAll(originArray);
-//
-//                    originArray.clear();
-//                }
-//            }
-//        }
+
         return mergedDataFrame;
     }
 
