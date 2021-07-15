@@ -12,7 +12,7 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 dest <- points
 
-points <- r5r_core$getGrid(11L)
+points <- r5r_core$getGrid(12L)
 points <- jdx::convertToR(points)
 points$schools <- 1
 
@@ -59,3 +59,5 @@ mapview::mapview(street_net$edges)
 transit_net <- transit_network_to_sf(r5r_core)
 mapview::mapview(transit_net$stops %>% filter(linked_to_street == TRUE))
 mapview::mapview(transit_net$routes)
+
+snap <- r5r::find_snap(r5r_core, points)

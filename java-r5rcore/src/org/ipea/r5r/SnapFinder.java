@@ -6,6 +6,7 @@ import com.conveyal.r5.streets.Split;
 import com.conveyal.r5.streets.StreetLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
