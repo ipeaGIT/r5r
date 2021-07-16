@@ -79,10 +79,14 @@ public class Utils {
         logger = loggerContext.getLogger("org.eclipse.jetty");
         logger.setLevel(Level.valueOf(mode));
 
+        logger = loggerContext.getLogger("com.conveyal.r5.profile.FastRaptorWorker");
+        logger.setLevel(Level.valueOf(mode));
+
         logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
         logger.setLevel(Level.valueOf(mode));
 
-        logger = loggerContext.getLogger("com.conveyal.r5.profile.FastRaptorWorker");
+        logger = loggerContext.getLogger("org.ipea.r5r.PathOptionsTable");
         logger.setLevel(Level.valueOf(mode));
+
     }
 }
