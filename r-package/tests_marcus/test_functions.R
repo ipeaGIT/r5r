@@ -3,7 +3,7 @@ options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
 
 library(r5r)
 library(ggplot2)
-
+library(data.table)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
@@ -12,7 +12,7 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 dest <- points
 
-points <- r5r_core$getGrid(12L)
+points <- r5r_core$getGrid(11L)
 points <- jdx::convertToR(points)
 points$schools <- 1
 
@@ -47,7 +47,8 @@ system.time(
                           max_trip_duration = 120,
                           max_walk_dist = Inf,
                           max_bike_dist = Inf,
-                          verbose = FALSE)
+                          verbose = FALSE,
+                          drop_geometry = TRUE)
 )
 dit %>% ggplot() + geom_sf()
 mapview::mapview(points, xcol="lon", ycol="lat", crs = 4326)
@@ -61,3 +62,32 @@ mapview::mapview(transit_net$stops %>% filter(linked_to_street == TRUE))
 mapview::mapview(transit_net$routes)
 
 snap <- r5r::find_snap(r5r_core, points)
+
+system.time(ttm2 <- data.table::copy(ttm))
+
+## raw ttm
+
+v_from <- ttm$get("fromId")
+jdx::convertToR(ttm$keySet())
+
+ttm_dt <- data.table::data.table(fromId = ttm$get("fromId"),
+                                 toId = ttm$get("toId"))
+ttm_dt$travel_time <- ttm$get("travel_time")
+head(ttm_dt, 10000) %>% View()
+
+ttm$get("fromId")
+ttm$get("fromId")
+
+rJava::.jcall(obj = ttm, returnSig = "java/lang/Object", method = "get", "fromId")
+system.time(ttm$get("fromId"))
+.jcall("java/lang/System","S","getProperty","os.name")
+
+system.time(r5r_core$buildVector(900000000L))
+
+system.time(v <- r5r_core$v)
+View(v)
+v_dt <- data.table(v = v)
+
+cat("Gathering results")
+cat('\014')
+message("Gathering results", appendLF = FALSE)

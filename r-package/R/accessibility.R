@@ -330,8 +330,10 @@ accessibility <- function(r5r_core,
   # process results ---------------------------------------------------------
 
   # convert travel_times from java object to data.table
+  cat("Preparing final output...")
   accessibility <- jdx::convertToR(accessibility)
   data.table::setDT(accessibility)
+  cat(" DONE!\n")
 
   return(accessibility)
 }

@@ -19,6 +19,9 @@ public class RDataFrame {
     private final LinkedHashMap<String, ArrayList<Object>> dataFrame;
     private final LinkedHashMap<String, Object> defaultValues;
 
+    private final ArrayList<String> columnNames;
+    private final ArrayList<String> columnTypes;
+
     public RDataFrame() {
         this(10);
     }
@@ -28,6 +31,9 @@ public class RDataFrame {
         
         dataFrame = new LinkedHashMap<>();
         defaultValues = new LinkedHashMap<>();
+
+        columnNames = new ArrayList<>();
+        columnTypes = new ArrayList<>();
     }
 
     public void append() {
@@ -64,6 +70,9 @@ public class RDataFrame {
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
+
+        columnNames.add(columnName);
+        columnTypes.add("String");
     }
 
     public void addBooleanColumn(String columnName, Boolean defaultValue) {
@@ -71,6 +80,9 @@ public class RDataFrame {
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
+
+        columnNames.add(columnName);
+        columnTypes.add("Boolean");
     }
 
     public void addIntegerColumn(String columnName, Integer defaultValue) {
@@ -79,6 +91,8 @@ public class RDataFrame {
 
         defaultValues.put(columnName, defaultValue);
 
+        columnNames.add(columnName);
+        columnTypes.add("Integer");
     }
 
     public void addDoubleColumn(String columnName, Double defaultValue) {
@@ -86,6 +100,13 @@ public class RDataFrame {
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
+
+        columnNames.add(columnName);
+        columnTypes.add("Double");
     }
+
+    public int getColumnCount() { return columnNames.size(); }
+    public String getColumnName(int index) { return columnNames.get(index); }
+    public String getColumnType(int index) { return columnTypes.get(index); }
 }
 
