@@ -6,7 +6,7 @@
 \usage{
 setup_r5(
   data_path,
-  version = "6.2.0",
+  version = "6.4.0",
   verbose = TRUE,
   temp_dir = FALSE,
   use_elevation = FALSE,
@@ -18,7 +18,7 @@ setup_r5(
 and where the built network.dat will be saved.}
 
 \item{version}{character string, the version of R5 to be used. Defaults to
-latest version '6.2.0'.}
+latest version '6.4.0'.}
 
 \item{verbose}{logical, TRUE to show detailed output messages (Default) or
 FALSE to show only eventual ERROR and WARNING messages.}

@@ -17,7 +17,7 @@ test_that("setup_r5 - expected behavior", {
   # testthat::expect_message( setup_r5(data_path = path, verbose = F) )
   #  file.rename(file.path(path, "poa.x"), file.path(path, "poa.zip"))
 
-  testthat::expect_message(setup_r5(data_path = path, version='6.0.1', verbose = F))
+  testthat::expect_message(setup_r5(data_path = path, version='6.4.0', verbose = F))
 
 })
 

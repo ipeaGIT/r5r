@@ -48,7 +48,7 @@ system.time(
                           max_walk_dist = Inf,
                           max_bike_dist = Inf,
                           verbose = FALSE,
-                          drop_geometry = TRUE)
+                          drop_geometry = FALSE)
 )
 dit %>% ggplot() + geom_sf()
 mapview::mapview(points, xcol="lon", ycol="lat", crs = 4326)

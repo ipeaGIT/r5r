@@ -6,7 +6,7 @@
 #' essential features. Source code available at https://github.com/ipeaGIT/r5r.
 #'
 #' @param version character string with the version of R5 to be downloaded.
-#'                Defaults to latest version '1.0'.
+#'                Defaults to latest version '6.4'.
 #' @param quiet logical, passed to download.file. Defaults to FALSE
 #' @param force_update logical, Replaces the jar file stored locally with a new
 #'                     one. Defaults to FALSE.
@@ -23,7 +23,7 @@
 #' download_r5(version = "6.2", temp_dir = TRUE)
 #' }
 
-download_r5 <- function(version = "6.2.0",
+download_r5 <- function(version = "6.4.0",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {

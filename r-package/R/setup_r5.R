@@ -10,7 +10,7 @@
 #' @param data_path character string, the directory where data inputs are stored
 #'                  and where the built network.dat will be saved.
 #' @param version character string, the version of R5 to be used. Defaults to
-#'                latest version '6.2.0'.
+#'                latest version '6.4.0'.
 #' @param verbose logical, TRUE to show detailed output messages (Default) or
 #'                FALSE to show only eventual ERROR and WARNING messages.
 #' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
@@ -38,7 +38,7 @@
 #' @export
 
 setup_r5 <- function(data_path,
-                     version = "6.2.0",
+                     version = "6.4.0",
                      verbose = TRUE,
                      temp_dir = FALSE,
                      use_elevation = FALSE,
@@ -99,7 +99,7 @@ setup_r5 <- function(data_path,
   }
 
   # start R5 JAR
-  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_5_0.jar")
+  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_6_0.jar")
 
   rJava::.jaddClassPath(path = r5r_jar)
   rJava::.jaddClassPath(path = jar_file)
