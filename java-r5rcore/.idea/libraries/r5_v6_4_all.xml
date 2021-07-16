@@ -4,6 +4,11 @@
       <root url="jar://$PROJECT_DIR$/libs/r5-v6.4-all.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../conveyal/r5/r5/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../../conveyal/r5/r5/src/test/java" />
+      <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/test/java" />
+    </SOURCES>
   </library>
 </component>

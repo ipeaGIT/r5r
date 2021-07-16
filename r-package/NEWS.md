@@ -11,7 +11,7 @@
 for consolidating outputs. Closes [#180](https://github.com/ipeaGIT/r5r/issues/180)
 
 - New function `transit_network_to_sf()`, to extract the public transport network 
-from R5 as simple features. Closes [#179](https://github.com/ipeaGIT/r5r/issues/179)
+from R5 as simple features. Issue [#179](https://github.com/ipeaGIT/r5r/issues/179)
 
 **Minor changes**
 
