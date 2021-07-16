@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -140,10 +140,20 @@
       <small>Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="r5r-v051-dev" class="section level1">
-<h1 class="page-header" data-toc-text="0.5.1">
-<a href="#r5r-v051-dev" class="anchor"></a>r5r v0.5.1 (dev)<small> Unreleased </small>
+    <div id="r5r-v060-dev" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.0">
+<a href="#r5r-v060-dev" class="anchor"></a>r5r v0.6.0 (dev)<small> Unreleased </small>
 </h1>
+<p><strong>Major changes</strong></p>
+<ul>
+<li><p>Updated R5 to version 6.4. Closes <a href="https://github.com/ipeaGIT/r5r/issues/182">#182</a>.</p></li>
+<li><p>Significant performance improvements in all functions, due to a faster method for consolidating outputs. Closes <a href="https://github.com/ipeaGIT/r5r/issues/180">#180</a></p></li>
+<li><p>New function <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code>, to extract the public transport network from R5 as simple features. Issue <a href="https://github.com/ipeaGIT/r5r/issues/179">#179</a></p></li>
+</ul>
+<p><strong>Minor changes</strong></p>
+<ul>
+<li>New <code><a href="../reference/setup_r5.html">setup_r5()</a></code> parameter, <code>overwrite</code>, that forces the building of a new <code>network.dat</code>, even if one already exists.</li>
+</ul>
 <hr>
 </div>
     <div id="r5r-v050" class="section level1">
