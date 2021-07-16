@@ -1,12 +1,11 @@
 options(java.parameters = '-Xmx16384m')
-options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
 
 library(r5r)
 library(ggplot2)
 library(data.table)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = TRUE)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
