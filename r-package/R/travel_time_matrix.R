@@ -178,7 +178,7 @@ travel_time_matrix <- function(r5r_core,
   departure <- posix_to_string(departure_datetime)
 
   # max trip duration
-  checkmate::assert_numeric(max_trip_duration)
+  checkmate::assert_numeric(max_trip_duration, lower=1)
   max_trip_duration <- as.integer(max_trip_duration)
 
   # max_walking_distance, max_bike_distance, and max_street_time
@@ -192,10 +192,12 @@ travel_time_matrix <- function(r5r_core,
   # origins and destinations
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
-
-
+  
+  checkmate::assert_subset("id", names(origins))
+  checkmate::assert_subset("id", names(destinations))
+  
   # time window
-  checkmate::assert_numeric(time_window)
+  checkmate::assert_numeric(time_window, lower=1)
   time_window <- as.integer(time_window)
   draws <- time_window *5
   draws <- as.integer(draws)
