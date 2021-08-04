@@ -196,7 +196,8 @@ used.</p></td>
       <th>departure_datetime</th>
       <td><p>POSIXct object. If working with public transport
 networks, please check <code>calendar.txt</code> within
-the GTFS file for valid dates.</p></td>
+the GTFS file for valid dates. See details for
+further information on how datetimes are parsed.</p></td>
     </tr>
     <tr>
       <th>max_walk_dist</th>
@@ -314,6 +315,15 @@ McRAPTOR can be found in Delling et al (2015).</p><ul>
 routing. Transportation Science, 49(3), 591-604.</p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="datetime-parsing"><a class="anchor" href="#datetime-parsing"></a>Datetime parsing</h2>
+
+    <p><code>r5r</code> ignores the timezone attribute of datetime objects when parsing dates
+and times, using the study area's timezone instead. For example, let's say
+you are running some calculations using Rio de Janeiro, Brazil, as your study
+area. The datetime <code><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")</a></code> will be parsed as May 13th, 2019, 14:00h in
+Rio's local time, as expected. But <code><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S", tz = "Europe/Paris")</a></code> will also be parsed as
+the exact same date and time in Rio's local time, perhaps surprisingly,
+ignoring the timezone attribute.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other routing: 
