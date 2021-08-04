@@ -1,6 +1,6 @@
 package org.ipea.r5r;
 
-import com.conveyal.analysis.BackendVersion;
+import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
@@ -9,6 +9,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.esotericsoftware.kryo.util.DefaultStreamFactory;
+import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -23,6 +25,17 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 public class R5Network {
+
+    /**
+     * This string should be changed to a new value each time the network storage format changes.
+     * I considered using an ISO date string but that could get confusing when seen in filenames.
+     */
+    public static final String NETWORK_FORMAT_VERSION = "nv1";
+
+    public static final byte[] HEADER = "R5NETWORK".getBytes();
+
+    /** Set this to true to count instances and print a report including which serializer is handling each class. */
+    private static final boolean COUNT_CLASS_INSTANCES = false;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5Network.class);
 
@@ -72,20 +85,20 @@ public class R5Network {
         File file = new File(dataFolder, "network.dat");
         Input input = new Input(new FileInputStream(file));
         Kryo kryo = makeKryo();
-        byte[] header = new byte[KryoNetworkSerializer.HEADER.length];
+        byte[] header = new byte[HEADER.length];
         input.read(header, 0, header.length);
-        if (!Arrays.equals(KryoNetworkSerializer.HEADER, header)) {
+        if (!Arrays.equals(HEADER, header)) {
             throw new RuntimeException("Unrecognized file header. Is this an R5 Kryo network?");
         }
-        String version = kryo.readObject(input, String.class);
+        String formatVersion = kryo.readObject(input, String.class);
         String commit = kryo.readObject(input, String.class);
-        LOG.info("Loading {} file saved by R5 version {} commit {}", new String(header), version, commit);
-
         input.close();
 
-        if (!BackendVersion.instance.version.equals(version)) {
-            LOG.error(String.format("File version %s is not compatible with this R5 version %s",
-                    version, BackendVersion.instance.version));
+        LOG.info("Loading network from file format version {}, written by R5 commit {}", formatVersion, commit);
+
+        if (!NETWORK_FORMAT_VERSION.equals(formatVersion)) {
+            LOG.error(String.format("File format version is %s, this R5 requires %s",
+                    formatVersion, NETWORK_FORMAT_VERSION));
             return false;
         } else { return true; }
     }
@@ -99,7 +112,11 @@ public class R5Network {
      */
     private static Kryo makeKryo () {
         Kryo kryo;
-        kryo = new Kryo();
+        if (COUNT_CLASS_INSTANCES) {
+            kryo = new Kryo(new InstanceCountingClassResolver(), new MapReferenceResolver(), new DefaultStreamFactory());
+        } else {
+            kryo = new Kryo();
+        }
         // Auto-associate classes with default serializers the first time each class is encountered.
         kryo.setRegistrationRequired(false);
         // Handle references and loops in the object graph, do not repeatedly serialize the same instance.

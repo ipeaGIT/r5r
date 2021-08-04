@@ -5,7 +5,7 @@
 \title{Download R5 Jar file}
 \usage{
 download_r5(
-  version = "6.2.0",
+  version = "6.4.0",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
@@ -13,7 +13,7 @@ download_r5(
 }
 \arguments{
 \item{version}{character string with the version of R5 to be downloaded.
-Defaults to latest version '1.0'.}
+Defaults to latest version '6.4'.}
 
 \item{quiet}{logical, passed to download.file. Defaults to FALSE}
 

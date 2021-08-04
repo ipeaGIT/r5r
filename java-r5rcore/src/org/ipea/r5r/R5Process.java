@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class R5Process {
 
@@ -71,34 +72,67 @@ public abstract class R5Process {
         this.maxTripDuration = maxTripDuration;
     }
 
-    public List<LinkedHashMap<String, ArrayList<Object>>> run() throws ExecutionException, InterruptedException {
-        int[] requestIndices = new int[nOrigins];
-        for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
-
+    public LinkedHashMap<String, ArrayList<Object>> run() throws ExecutionException, InterruptedException {
+        int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
-        List<LinkedHashMap<String, ArrayList<Object>>> processResults = r5rThreadPool.submit(() ->
+        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> {
-                            LinkedHashMap<String, ArrayList<Object>> results = null;
-                            try {
-                                results = runProcess(index);
-
-                                if (!Utils.verbose) {
-                                    System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.                 ");
-                                }
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            return results;
-                        }).
+                        .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
+        System.out.print(".. DONE!\n");
 
-        System.out.println("\n");
-        return processResults;
+        System.out.print("Consolidating results...");
+        RDataFrame mergedDataFrame = mergeResults(processResults);
+        System.out.print(" DONE!\n");
+
+        return mergedDataFrame.getDataFrame();
     }
 
-    protected abstract LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException;
+    private RDataFrame mergeResults(List<RDataFrame> processResults) {
+        int nRows = 0;
+        for (RDataFrame dataFrame : processResults) {
+            if (dataFrame != null) {
+                nRows = nRows + dataFrame.nRow();
+            }
+        }
+
+        RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
+
+        mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(
+                key -> {
+                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
+                    for (RDataFrame dataFrame : processResults) {
+                        if (dataFrame != null) {
+                            ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
+                            destinationArray.addAll(originArray);
+
+                            originArray.clear();
+                        }
+                    }
+                }
+        );
+
+        return mergedDataFrame;
+    }
+
+    protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
+
+    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
+        RDataFrame results = null;
+        try {
+            results = runProcess(index);
+
+            if (!Utils.verbose) {
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();

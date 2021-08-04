@@ -64,6 +64,7 @@ Other support functions:
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
 \code{\link{stop_r5}()},
-\code{\link{street_network_to_sf}()}
+\code{\link{street_network_to_sf}()},
+\code{\link{transit_network_to_sf}()}
 }
 \concept{support functions}

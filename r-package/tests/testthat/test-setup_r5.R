@@ -1,6 +1,6 @@
 context("setup_r5")
 
-testthat::skip_on_cran()
+# testthat::skip_on_cran()
 
 path <- system.file("extdata/poa", package = "r5r")
 
@@ -17,7 +17,7 @@ test_that("setup_r5 - expected behavior", {
   # testthat::expect_message( setup_r5(data_path = path, verbose = F) )
   #  file.rename(file.path(path, "poa.x"), file.path(path, "poa.zip"))
 
-  testthat::expect_message(setup_r5(data_path = path, version='6.0.1', verbose = F))
+  testthat::expect_message(setup_r5(data_path = path, version='6.4.0', verbose = F))
 
 })
 
@@ -44,5 +44,23 @@ test_that("setup_r5 - expected errors", {
   #   file.rename(file.path(path, "network2.x"), file.path(path, "network.dat"))
 
   })
+
+test_that("'overwrite' parameter works correctly", {
+
+  testthat::expect_error(setup_r5(path, overwrite = 1))
+
+  # since a network was already created, if overwrite = FALSE it should use it
+  testthat::expect_message(
+    r5r_core <- setup_r5(path, verbose = FALSE),
+    regexp = "Using cached network\\.dat from "
+  )
+
+  # but if overwrite = TRUE, then it should create a new network anyway
+  testthat::expect_message(
+    r5r_core <- setup_r5(path, verbose = FALSE, overwrite = TRUE),
+    regexp = "Finished building network\\.dat at "
+  )
+
+})
 
 stop_r5()

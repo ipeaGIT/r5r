@@ -6,7 +6,7 @@
 #' essential features. Source code available at https://github.com/ipeaGIT/r5r.
 #'
 #' @param version character string with the version of R5 to be downloaded.
-#'                Defaults to latest version '1.0'.
+#'                Defaults to latest version '6.4'.
 #' @param quiet logical, passed to download.file. Defaults to FALSE
 #' @param force_update logical, Replaces the jar file stored locally with a new
 #'                     one. Defaults to FALSE.
@@ -23,12 +23,13 @@
 #' download_r5(version = "6.2", temp_dir = TRUE)
 #' }
 
-download_r5 <- function(version = "6.2.0",
+download_r5 <- function(version = "6.4.0",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {
 
   # check inputs ------------------------------------------------------------
+
   checkmate::assert_logical(quiet)
   checkmate::assert_logical(force_update)
   checkmate::assert_logical(temp_dir)
@@ -65,17 +66,13 @@ download_r5 <- function(version = "6.2.0",
   }
 
   # if temp_dir
-  if( temp_dir==TRUE){
-    destfile <- paste0(tempdir(),"\\", file_name)
-    }
+  if (temp_dir) destfile <- file.path(tempdir(), file_name)
 
-
-  # check cached file ------------------------------------------------------------
+  # check cached file ----------------------------------------------------------
 
   # check for existing file
-  if (!is.logical(force_update)){stop(paste0("force_update must be either TRUE or FALSE"))}
 
-  if (checkmate::test_file_exists(destfile) & force_update==FALSE) {
+  if (checkmate::test_file_exists(destfile) && (force_update == FALSE)) {
     message("Using cached R5 version from ", destfile)
     return(destfile)
   } else {

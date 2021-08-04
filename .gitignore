@@ -24,3 +24,4 @@ java-r5rcore/out
 java-r5rcore/libs
 .DS_Store
 java-r5rcore/target
+.*.swp

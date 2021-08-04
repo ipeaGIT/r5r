@@ -31,7 +31,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     @Override
-    protected LinkedHashMap<String, ArrayList<Object>> runProcess(int index) throws ParseException {
+    protected RDataFrame runProcess(int index) throws ParseException {
         // Build request
         RegionalTask request = buildRequest(index);
 
@@ -46,7 +46,7 @@ public class IsochroneBuilder extends R5Process {
 
         // Return isochrones
         if (isochronesTable.nRow() > 0) {
-            return isochronesTable.getDataFrame();
+            return isochronesTable;
         } else {
             return null;
         }
@@ -82,10 +82,7 @@ public class IsochroneBuilder extends R5Process {
     }
 
     private RDataFrame buildIsochronesTable(String fromId, List<IsochroneFeature> isochroneFeatures) {
-        RDataFrame isochronesTable = new RDataFrame();
-        isochronesTable.addStringColumn("from_id", fromId);
-        isochronesTable.addIntegerColumn("cutoff", 0);
-        isochronesTable.addStringColumn("geometry", "");
+        RDataFrame isochronesTable = buildDataFrameStructure(fromId, 10);
 
         for (IsochroneFeature isochroneFeature : isochroneFeatures) {
             isochronesTable.append();
@@ -94,6 +91,18 @@ public class IsochroneBuilder extends R5Process {
         }
         return isochronesTable;
     }
+
+    @Override
+    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
+        RDataFrame isochronesTable = new RDataFrame(nRows);
+
+        isochronesTable.addStringColumn("from_id", fromId);
+        isochronesTable.addIntegerColumn("cutoff", 0);
+        isochronesTable.addStringColumn("geometry", "");
+
+        return isochronesTable;
+    }
+
 
     @Override
     protected RegionalTask buildRequest(int index) throws ParseException {

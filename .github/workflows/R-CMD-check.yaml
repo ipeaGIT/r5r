@@ -65,13 +65,19 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install system dependencies
+      - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
           while read -r cmd
           do
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+        working-directory: r-package
+
+      - name: Install system dependencies (MacOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install pkg-config gdal proj geos
         working-directory: r-package
 
       - name: Install dependencies

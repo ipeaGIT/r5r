@@ -44,6 +44,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
-\code{\link{street_network_to_sf}()}
+\code{\link{street_network_to_sf}()},
+\code{\link{transit_network_to_sf}()}
 }
 \concept{support functions}
