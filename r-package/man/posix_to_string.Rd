@@ -10,9 +10,8 @@ posix_to_string(datetime)
 \item{datetime}{An object of POSIXct class.}
 }
 \value{
-A \code{list} with the \code{date} and \code{time} of the trip departure as characters
-
-A list with 'date' and 'departure_time' names.
+A \code{list} with the \code{date} and \code{time} of the trip departure as
+characters.
 }
 \description{
 Generate date and departure time strings from POSIXct

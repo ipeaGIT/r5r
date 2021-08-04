@@ -39,15 +39,16 @@ Defaults to "WALK".}
 
 \item{departure_datetime}{POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
-the GTFS file for valid dates.}
+the GTFS file for valid dates. See details for
+further information on how datetimes are parsed.}
 
 \item{time_window}{numeric. Time window in minutes for which r5r will
 calculate multiple travel time matrices departing each
 minute. By default, the number of simulations is 5 times
 the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure times.
-This parameter is only used with frequency-based GTFS files.
-See details for further information.}
+size to '1', the function only considers 5 departure
+times. This parameter is only used with frequency-based
+GTFS files. See details for further information.}
 
 \item{percentiles}{numeric vector. Defaults to '50', returning the median
 travel time for a given time_window. If a numeric vector is passed,
@@ -155,6 +156,16 @@ combined schedule and headway-based networks. Transportation Research Record,
 \item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
 routing. Transportation Science, 49(3), 591-604.
 }
+}
+
+\section{Datetime parsing}{
+\code{r5r} ignores the timezone attribute of datetime objects when parsing dates
+and times, using the study area's timezone instead. For example, let's say
+you are running some calculations using Rio de Janeiro, Brazil, as your study
+area. The datetime \code{as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")} will be parsed as May 13th, 2019, 14:00h in
+Rio's local time, as expected. But \code{as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S", tz = "Europe/Paris")} will also be parsed as
+the exact same date and time in Rio's local time, perhaps surprisingly,
+ignoring the timezone attribute.
 }
 
 \examples{

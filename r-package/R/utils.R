@@ -125,8 +125,8 @@ select_mode <- function(mode, mode_egress) {
 #'
 #' @param datetime An object of POSIXct class.
 #'
-#' @return A `list` with the `date` and `time` of the trip departure as characters
-#' @return A list with 'date' and 'departure_time' names.
+#' @return A `list` with the `date` and `time` of the trip departure as
+#'   characters.
 #'
 #' @family support functions
 
@@ -134,8 +134,8 @@ posix_to_string <- function(datetime) {
 
   checkmate::assert_posixct(datetime)
 
-  tz = attr(datetime, "tzone")
-  if(is.null(tz)){tz <- ""}
+  tz <- attr(datetime, "tzone")
+  if (is.null(tz)) tz <- ""
 
   datetime_list <- list(
     date = strftime(datetime, format = "%Y-%m-%d", tz = tz),
