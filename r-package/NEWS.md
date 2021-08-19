@@ -19,6 +19,9 @@ from R5 as simple features. Closes [#179](https://github.com/ipeaGIT/r5r/issues/
 - Improved documentation of parameter `departure_datetime` to clarify the parameter must be set to local time. Closes  [#188](https://github.com/ipeaGIT/r5r/issues/188)
 - Improved documentation regarding personalized LTS values. [Closes #190]( https://github.com/ipeaGIT/r5r/issues/190).
 - Improved documentation of `transit_network_to_sf()` regarding stops that are not snapped to road network. [Closes #192]( https://github.com/ipeaGIT/r5r/issues/192).
+- Improved documentation of `max_walking_dist` and `max_cycling_dist` parameters. [Closes #193]( https://github.com/ipeaGIT/r5r/issues/193).
+
+
 
 -------------------------------------------------------
 # r5r v0.5.0

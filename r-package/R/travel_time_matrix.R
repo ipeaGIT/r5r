@@ -32,12 +32,30 @@
 #'                    than 15 minutes. Only the first 5 cut points of the percentiles
 #'                    are considered. For more details, see R5 documentation at
 #'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
-#' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
-#'                      whole trip. Defaults to no restrictions on walking, as
-#'                      long as \code{max_trip_duration} is respected.
-#' @param max_bike_dist numeric. Maximum cycling distance (in meters) for the
-#'                      whole trip. Defaults to no restrictions on cycling, as
-#'                      long as \code{max_trip_duration} is respected.
+#' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
+#'                      and egress the transit network, or to make transfers
+#'                      within the network. Defaults to no restrictions as long
+#'                      as `max_trip_duration` is respected. The max distance is
+#'                      considered separately for each leg (e.g. if you set
+#'                      `max_walk_dist` to 1000, you could potentially walk up
+#'                      to 1 km to reach transit, and up to _another_  1 km to
+#'                      reach the destination after leaving transit). Obs: if you
+#'                      want to set the maximum walking distance considering
+#'                      walking-only trips you have to set the `max_trip_duration`
+#'                      accordingly (e.g. to set a distance of 1 km assuming a
+#'                      walking speed of 3.6 km/h you have to set `max_trip_duration = 1 / 3.6 * 60`).
+#' @param max_bike_dist numeric. Maximum cycling distance (in meters) to access
+#'                      and egress the transit network. Defaults to no
+#'                      restrictions as long as `max_trip_duration` is respected.
+#'                      The max distance is considered separately for each leg
+#'                      (e.g. if you set `max_bike_dist` to 1000, you could
+#'                      potentially cycle up to 1 km to reach transit, and up
+#'                      to _another_ 1 km to reach the destination after leaving
+#'                      transit). Obs: if you want to set the maximum cycling
+#'                      distance considering cycling-only trips you have to set
+#'                      the `max_trip_duration` accordingly (e.g. to set a
+#'                      distance of 5 km assuming a cycling speed of 12 km/h you
+#'                      have to set `max_trip_duration = 5 / 12 * 60`).
 #' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
