@@ -20,7 +20,7 @@ to 120 minutes (2 hours). Passed from routing functions.}
 An \code{integer} representing the maximum number of minutes walking
 }
 \description{
-Set max street time
+Converts a time duration and speed input and converts it to distances.
 }
 \seealso{
 Other support functions: 

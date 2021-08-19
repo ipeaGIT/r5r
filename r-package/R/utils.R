@@ -23,6 +23,8 @@ set_verbose <- function(r5r_core, verbose) {
 
 #' Set max street time
 #'
+#' Converts a time duration and speed input and converts it to distances.
+#'
 #' @param max_walk_dist numeric, Maximum walking distance (in meters) for the
 #'                      whole trip. Passed from routing functions.
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
