@@ -151,6 +151,9 @@
 #'- **LTS 4**: Tolerable for only “strong and fearless” cyclists. This includes streets
 #'  where cyclists are required to mix with moderate- to high-speed vehicular traffic.
 #'
+#'  For advanced users, you can provide custom LTS values by adding a tag
+#'  <key = "lts> to the `osm.pbf` file
+#'
 #' # Routing algorithm:
 #' The `accessibility()` function uses an R5-specific extension to the RAPTOR
 #' routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a

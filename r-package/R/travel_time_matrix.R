@@ -95,6 +95,9 @@
 #'- **LTS 4**: Tolerable for only “strong and fearless” cyclists. This includes streets
 #'  where cyclists are required to mix with moderate- to high-speed vehicular traffic.
 #'
+#'  For advanced users, you can provide custom LTS values by adding a tag
+#'  <key = "lts> to the `osm.pbf` file
+#'
 #' # Routing algorithm:
 #' The travel_time_matrix function uses an R5-specific extension to the RAPTOR
 #' routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
@@ -205,10 +208,10 @@ travel_time_matrix <- function(r5r_core,
   # origins and destinations
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
-  
+
   checkmate::assert_subset("id", names(origins))
   checkmate::assert_subset("id", names(destinations))
-  
+
   # time window
   checkmate::assert_numeric(time_window, lower=1)
   time_window <- as.integer(time_window)

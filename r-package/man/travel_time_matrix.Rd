@@ -140,6 +140,9 @@ which may involve close proximity to moderate- or high-speed vehicular traffic.
 \item \strong{LTS 4}: Tolerable for only “strong and fearless” cyclists. This includes streets
 where cyclists are required to mix with moderate- to high-speed vehicular traffic.
 }
+
+For advanced users, you can provide custom LTS values by adding a tag
+<key = "lts> to the \code{osm.pbf} file
 }
 
 \section{Routing algorithm:}{
