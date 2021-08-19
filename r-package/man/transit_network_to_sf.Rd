@@ -11,7 +11,11 @@ transit_network_to_sf(r5r_core)
 }
 \value{
 A list with two components of a transit network in sf format:
-route shapes (LINESTRING) and transit stops (POINT).
+route shapes (LINESTRING) and transit stops (POINT). Some transit
+stops might be returned with empty geometry (missing \code{NA} spatial
+coordinates). This may occur when a transit stop is not snapped
+to the road network, possibly because the \code{gtfs.zip} input data
+covers an area larger than the \code{osm.pbf} input data.
 }
 \description{
 Extract transit network in sf format from a network.dat built with setup_r5

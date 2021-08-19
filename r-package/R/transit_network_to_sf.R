@@ -4,7 +4,11 @@
 #' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
 #'
 #' @return A list with two components of a transit network in sf format:
-#'         route shapes (LINESTRING) and transit stops (POINT).
+#'         route shapes (LINESTRING) and transit stops (POINT). Some transit
+#'         stops might be returned with empty geometry (missing `NA` spatial
+#'         coordinates). This may occur when a transit stop is not snapped
+#'         to the road network, possibly because the `gtfs.zip` input data
+#'         covers an area larger than the `osm.pbf` input data.
 #'
 #' @family support functions
 #'
