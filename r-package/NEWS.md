@@ -13,6 +13,10 @@ for consolidating outputs. Closes [#180](https://github.com/ipeaGIT/r5r/issues/1
 - New function `transit_network_to_sf()`, to extract the public transport network 
 from R5 as simple features. Closes [#179](https://github.com/ipeaGIT/r5r/issues/179)
 
+- New `progress` parameter in the `accessibility()`, `travel_time_matrix`, and
+`detailed_itineraries()` functions, to show or hide the progress counter 
+indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
+
 **Minor changes**
 
 - New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
