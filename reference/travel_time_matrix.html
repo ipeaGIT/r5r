@@ -165,7 +165,8 @@ multiple origin destination pairs.</p>
   max_rides <span class='op'>=</span> <span class='fl'>3</span>,
   max_lts <span class='op'>=</span> <span class='fl'>2</span>,
   n_threads <span class='op'>=</span> <span class='cn'>Inf</span>,
-  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  progress <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -284,10 +285,16 @@ Defaults to use all available threads (Inf).</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>logical. <code>TRUE</code> to show detailed output messages (the default).
-If verbose is set to <code>FALSE</code>, r5r prints a progress counter and
-eventual <code>ERROR</code> messages. Setting <code>verbose</code> to  <code>FALSE</code> imposes
-a small penalty for computation efficiency.</p></td>
+      <td><p>logical. <code>TRUE</code> to show detailed output messages (the default).</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>logical. <code>TRUE</code> to show a progress counter. Only works when
+<code>verbose</code> is set to <code>FALSE</code>, so the progress counter does not
+interfere with R5's output messages. Setting <code>progress</code> to <code>TRUE</code>
+may impose a small penalty for computation efficiency, because
+the progress counter must be synchronized among all active
+threads.</p></td>
     </tr>
     </table>
 
