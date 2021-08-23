@@ -110,11 +110,10 @@ public class PathOptionsTable {
                 if (option.access != null) {
                     for (StreetSegment segment : option.access) {
 
-                        // maxStreetTime parameter only affects access and egress walking segments, but no direct trips
-                        // if a direct walking trip is found that is longer than maxWalkTime, then drop it
+                        // R5 returns some trips which duration is longer than maxTripDuration, so we need to drop those trips
                         LOG.info("segment duration {}", segment.duration);
-                        if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxWalkTime) continue;
-                        if (segment.mode == LegMode.BICYCLE & (segment.duration / 60) > maxBikeTime) continue;
+                        if (segment.mode == LegMode.WALK & (segment.duration / 60) > maxTripDuration) continue;
+                        if (segment.mode == LegMode.BICYCLE & (segment.duration / 60) > maxTripDuration) continue;
                         optionsDataFrame.append();
 
                         LOG.info("  direct {}", segment.toString());

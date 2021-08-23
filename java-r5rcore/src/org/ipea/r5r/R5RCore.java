@@ -127,6 +127,10 @@ public class R5RCore {
         Utils.setLogMode("ALL", true);
     }
 
+    public void setProgress(boolean progress) {
+        Utils.progress = progress;
+    }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);

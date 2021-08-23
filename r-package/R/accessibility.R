@@ -83,9 +83,12 @@
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. `TRUE` to show detailed output messages (the default).
-#'                If verbose is set to `FALSE`, r5r prints a progress counter and
-#'                eventual `ERROR` messages. Setting `verbose` to  `FALSE` imposes
-#'                a small penalty for computation efficiency.
+#' @param progress logical. `TRUE` to show a progress counter. Only works when
+#'                `verbose` is set to `FALSE`, so the progress counter does not
+#'                interfere with R5's output messages. Setting `progress` to `TRUE`
+#'                may impose a small penalty for computation efficiency, because
+#'                the progress counter must be synchronized among all active
+#'                threads.
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.
@@ -243,7 +246,8 @@ accessibility <- function(r5r_core,
                           max_rides = 3,
                           max_lts = 2,
                           n_threads = Inf,
-                          verbose = TRUE) {
+                          verbose = TRUE,
+                          progress = TRUE) {
 
 
   # set data.table options --------------------------------------------------
@@ -338,6 +342,9 @@ accessibility <- function(r5r_core,
   # set verbose
   set_verbose(r5r_core, verbose)
 
+  # set progress
+  set_progress(r5r_core, progress)
+
 
   # call r5r_core method ----------------------------------------------------
 
@@ -364,10 +371,10 @@ accessibility <- function(r5r_core,
   # process results ---------------------------------------------------------
 
   # convert travel_times from java object to data.table
-  cat("Preparing final output...")
+  if (!verbose & progress) { cat("Preparing final output...") }
   accessibility <- jdx::convertToR(accessibility)
   data.table::setDT(accessibility)
-  cat(" DONE!\n")
+  if (!verbose & progress) { cat(" DONE!\n") }
 
   return(accessibility)
 }

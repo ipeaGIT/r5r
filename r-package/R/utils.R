@@ -19,7 +19,24 @@ set_verbose <- function(r5r_core, verbose) {
 
 }
 
+#' Set progress argument
+#'
+#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @param progress logical, passed from function above
+#'
+#' @return No return value, called for side effects.
+#' @family support functions
 
+set_progress <- function(r5r_core, progress) {
+
+  # Indicates whether or not a progress counter must be printed during long
+  # computations. Applies to detailed_itineraries(), travel_time_matrix(), and
+  # accessibility() functions
+
+  checkmate::assert_logical(progress)
+
+  r5r_core$setProgress(progress)
+}
 
 #' Set max street time
 #'

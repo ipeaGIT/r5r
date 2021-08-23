@@ -80,16 +80,20 @@ public abstract class R5Process {
                 Arrays.stream(requestIndices).parallel()
                         .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
-        System.out.print(".. DONE!\n");
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print(".. DONE!\n");
+        }
 
-        System.out.print("Consolidating results...");
         RDataFrame mergedDataFrame = mergeResults(processResults);
-        System.out.print(" DONE!\n");
 
         return mergedDataFrame.getDataFrame();
     }
 
     private RDataFrame mergeResults(List<RDataFrame> processResults) {
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print("Consolidating results...");
+        }
+
         int nRows = 0;
         for (RDataFrame dataFrame : processResults) {
             if (dataFrame != null) {
@@ -113,6 +117,10 @@ public abstract class R5Process {
                 }
         );
 
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print(" DONE!\n");
+        }
+
         return mergedDataFrame;
     }
 
@@ -123,7 +131,7 @@ public abstract class R5Process {
         try {
             results = runProcess(index);
 
-            if (!Utils.verbose) {
+            if (!Utils.verbose & Utils.progress) {
                 System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
             }
         } catch (ParseException e) {

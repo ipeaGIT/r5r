@@ -16,6 +16,7 @@ import java.util.EnumSet;
 public class Utils {
 
     static public boolean verbose = true;
+    static public boolean progress = true;
 
     public static EnumSet<LegMode> setLegModes(String modes) {
         EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);

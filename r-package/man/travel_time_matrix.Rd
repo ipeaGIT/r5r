@@ -21,7 +21,8 @@ travel_time_matrix(
   max_rides = 3,
   max_lts = 2,
   n_threads = Inf,
-  verbose = TRUE
+  verbose = TRUE,
+  progress = TRUE
 )
 }
 \arguments{
@@ -106,10 +107,14 @@ See details for more information.}
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).
-If verbose is set to \code{FALSE}, r5r prints a progress counter and
-eventual \code{ERROR} messages. Setting \code{verbose} to  \code{FALSE} imposes
-a small penalty for computation efficiency.}
+\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).}
+
+\item{progress}{logical. \code{TRUE} to show a progress counter. Only works when
+\code{verbose} is set to \code{FALSE}, so the progress counter does not
+interfere with R5's output messages. Setting \code{progress} to \code{TRUE}
+may impose a small penalty for computation efficiency, because
+the progress counter must be synchronized among all active
+threads.}
 }
 \value{
 A data.table with travel time estimates (in minutes) between origin
