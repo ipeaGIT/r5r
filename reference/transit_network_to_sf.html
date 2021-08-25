@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract transit network in sf format from a network.dat built with setup_r5 — transit_network_to_sf • r5r</title>
+<title>Extract transit network in sf format — transit_network_to_sf • r5r</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,9 @@
 
 
 
-<meta property="og:title" content="Extract transit network in sf format from a network.dat built with setup_r5 — transit_network_to_sf" />
-<meta property="og:description" content="Extract transit network in sf format from a network.dat built with setup_r5" />
+<meta property="og:title" content="Extract transit network in sf format — transit_network_to_sf" />
+<meta property="og:description" content="Extract transit network in sf format from a network.dat file
+built with the setup_r5 function." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -137,13 +138,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract transit network in sf format from a network.dat built with setup_r5</h1>
+    <h1>Extract transit network in sf format</h1>
     <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/r5r/tree/master/r-package/R/transit_network_to_sf.R'><code>R/transit_network_to_sf.R</code></a></small>
     <div class="hidden name"><code>transit_network_to_sf.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract transit network in sf format from a network.dat built with setup_r5</p>
+    <p>Extract transit network in <code>sf</code> format from a <code>network.dat</code> file
+built with the <code><a href='setup_r5.html'>setup_r5</a></code> function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>transit_network_to_sf</span><span class='op'>(</span><span class='va'>r5r_core</span><span class='op'>)</span></pre>
@@ -160,11 +162,13 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list with two components of a transit network in sf format:
-route shapes (LINESTRING) and transit stops (POINT). Some transit
-stops might be returned with geometry <code>POINT EMPTY</code> (i.e. missing <code>NA</code>
-spatial coordinates). This may occur when a transit stop is not snapped
-to the road network, possibly because the <code>gtfs.zip</code> input data
-covers an area larger than the <code>osm.pbf</code> input data.</p>
+route shapes (LINESTRING) and transit stops (POINT). The same
+<code>route_id</code>/<code>short_name</code> might appear with different geometries. This
+occurs when a route has two different shape_ids. Some transit stops
+might be returned with geometry <code>POINT EMPTY</code> (i.e. missing <code>NA</code>
+spatial coordinates). This may occur when a transit stop is not
+snapped to the road network, possibly because the <code>gtfs.zip</code> input
+data covers an area larger than the <code>osm.pbf</code> input data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other support functions: 
