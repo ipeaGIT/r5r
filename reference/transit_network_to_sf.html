@@ -161,8 +161,8 @@
 
     <p>A list with two components of a transit network in sf format:
 route shapes (LINESTRING) and transit stops (POINT). Some transit
-stops might be returned with empty geometry (missing <code>NA</code> spatial
-coordinates). This may occur when a transit stop is not snapped
+stops might be returned with geometry <code>POINT EMPTY</code> (i.e. missing <code>NA</code>
+spatial coordinates). This may occur when a transit stop is not snapped
 to the road network, possibly because the <code>gtfs.zip</code> input data
 covers an area larger than the <code>osm.pbf</code> input data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
