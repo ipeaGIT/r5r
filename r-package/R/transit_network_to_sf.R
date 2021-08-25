@@ -5,8 +5,8 @@
 #'
 #' @return A list with two components of a transit network in sf format:
 #'         route shapes (LINESTRING) and transit stops (POINT). Some transit
-#'         stops might be returned with empty geometry (missing `NA` spatial
-#'         coordinates). This may occur when a transit stop is not snapped
+#'         stops might be returned with geometry `POINT EMPTY` (i.e. missing `NA`
+#'         spatial coordinates). This may occur when a transit stop is not snapped
 #'         to the road network, possibly because the `gtfs.zip` input data
 #'         covers an area larger than the `osm.pbf` input data.
 #'
@@ -43,6 +43,7 @@ transit_network_to_sf <- function(r5r_core) {
 
   # Convert stops to SF (point)
   stops_df <- jdx::convertToR(network$get(1L), array.order = "column-major")
+  data.table::setDT(stops_df)[, lat := ifelse(lat==-1,NA,lat)][, lon := ifelse(lon==-1,NA,lon)]
   stops_sf <- sfheaders::sf_point(stops_df, x='lon', y='lat', keep = TRUE)
   sf::st_crs(stops_sf) <- 4326 # WGS 84
 
