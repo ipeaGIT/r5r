@@ -2,6 +2,8 @@
 utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
 
 .onLoad = function(lib, pkg) {
+  rJava::.jpackage(name = "r5r")
+
   requireNamespace("sf")
   requireNamespace("rJava")
   requireNamespace("data.table")
@@ -30,7 +32,7 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
   c('is', 'duration', 'fromId', 'toId', 'option', 'option', '.SD', 'geometry',
     'route', 'temp_duration', 'temp_route', 'route', 'temp_sign', '.I',
     'segment_duration', 'total_duration', 'wait', 'release_date', 'con',
-    "start_lon", "start_lat", "end_lon", "end_lat", "slope",
+    "start_lon", "start_lat", "end_lon", "end_lat", "slope", "lat", "lon",
     "walk_multiplier", "bike_multiplier", "found"))
 
 

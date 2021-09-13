@@ -3,6 +3,7 @@ package org.ipea.r5r;
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.point_to_point.builder.TNBuilderConfig;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
@@ -126,8 +127,8 @@ public class R5RCore {
         Utils.setLogMode("ALL", true);
     }
 
-    public void setBenchmarkMode(boolean mode) {
-        Utils.benchmark = mode;
+    public void setProgress(boolean progress) {
+        Utils.progress = progress;
     }
 
     private final TransportNetwork transportNetwork;
@@ -627,8 +628,12 @@ public class R5RCore {
             return null;
         }
 
+    }
 
+    public String defaultBuildConfig() {
+        TNBuilderConfig builderConfig = TNBuilderConfig.defaultConfig();
 
+        return builderConfig.toString();
     }
 
 }

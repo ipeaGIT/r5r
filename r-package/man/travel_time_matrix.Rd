@@ -21,7 +21,8 @@ travel_time_matrix(
   max_rides = 3,
   max_lts = 2,
   n_threads = Inf,
-  verbose = TRUE
+  verbose = TRUE,
+  progress = TRUE
 )
 }
 \arguments{
@@ -39,15 +40,16 @@ Defaults to "WALK".}
 
 \item{departure_datetime}{POSIXct object. If working with public transport
 networks, please check \code{calendar.txt} within
-the GTFS file for valid dates.}
+the GTFS file for valid dates. See details for
+further information on how datetimes are parsed.}
 
 \item{time_window}{numeric. Time window in minutes for which r5r will
 calculate multiple travel time matrices departing each
 minute. By default, the number of simulations is 5 times
 the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure times.
-This parameter is only used with frequency-based GTFS files.
-See details for further information.}
+size to '1', the function only considers 5 departure
+times. This parameter is only used with frequency-based
+GTFS files. See details for further information.}
 
 \item{percentiles}{numeric vector. Defaults to '50', returning the median
 travel time for a given time_window. If a numeric vector is passed,
@@ -60,13 +62,31 @@ than 15 minutes. Only the first 5 cut points of the percentiles
 are considered. For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
 
-\item{max_walk_dist}{numeric. Maximum walking distance (in meters) for the
-whole trip. Defaults to no restrictions on walking, as
-long as \code{max_trip_duration} is respected.}
+\item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
+and egress the transit network, or to make transfers
+within the network. Defaults to no restrictions as long
+as \code{max_trip_duration} is respected. The max distance is
+considered separately for each leg (e.g. if you set
+\code{max_walk_dist} to 1000, you could potentially walk up
+to 1 km to reach transit, and up to \emph{another}  1 km to
+reach the destination after leaving transit). Obs: if you
+want to set the maximum walking distance considering
+walking-only trips you have to set the \code{max_trip_duration}
+accordingly (e.g. to set a distance of 1 km assuming a
+walking speed of 3.6 km/h you have to set \code{max_trip_duration = 1 / 3.6 * 60}).}
 
-\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) for the
-whole trip. Defaults to no restrictions on cycling, as
-long as \code{max_trip_duration} is respected.}
+\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) to access
+and egress the transit network. Defaults to no
+restrictions as long as \code{max_trip_duration} is respected.
+The max distance is considered separately for each leg
+(e.g. if you set \code{max_bike_dist} to 1000, you could
+potentially cycle up to 1 km to reach transit, and up
+to \emph{another} 1 km to reach the destination after leaving
+transit). Obs: if you want to set the maximum cycling
+distance considering cycling-only trips you have to set
+the \code{max_trip_duration} accordingly (e.g. to set a
+distance of 5 km assuming a cycling speed of 12 km/h you
+have to set \code{max_trip_duration = 5 / 12 * 60}).}
 
 \item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults
 to 120 minutes (2 hours).}
@@ -87,10 +107,14 @@ See details for more information.}
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).
-If verbose is set to \code{FALSE}, r5r prints a progress counter and
-eventual \code{ERROR} messages. Setting \code{verbose} to  \code{FALSE} imposes
-a small penalty for computation efficiency.}
+\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).}
+
+\item{progress}{logical. \code{TRUE} to show a progress counter. Only works when
+\code{verbose} is set to \code{FALSE}, so the progress counter does not
+interfere with R5's output messages. Setting \code{progress} to \code{TRUE}
+may impose a small penalty for computation efficiency, because
+the progress counter must be synchronized among all active
+threads.}
 }
 \value{
 A data.table with travel time estimates (in minutes) between origin
@@ -139,6 +163,9 @@ which may involve close proximity to moderate- or high-speed vehicular traffic.
 \item \strong{LTS 4}: Tolerable for only “strong and fearless” cyclists. This includes streets
 where cyclists are required to mix with moderate- to high-speed vehicular traffic.
 }
+
+For advanced users, you can provide custom LTS values by adding a tag
+<key = "lts> to the \code{osm.pbf} file
 }
 
 \section{Routing algorithm:}{
@@ -155,6 +182,16 @@ combined schedule and headway-based networks. Transportation Research Record,
 \item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
 routing. Transportation Science, 49(3), 591-604.
 }
+}
+
+\section{Datetime parsing}{
+\code{r5r} ignores the timezone attribute of datetime objects when parsing dates
+and times, using the study area's timezone instead. For example, let's say
+you are running some calculations using Rio de Janeiro, Brazil, as your study
+area. The datetime \code{as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")} will be parsed as May 13th, 2019, 14:00h in
+Rio's local time, as expected. But \code{as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S", tz = "Europe/Paris")} will also be parsed as
+the exact same date and time in Rio's local time, perhaps surprisingly,
+ignoring the timezone attribute.
 }
 
 \examples{

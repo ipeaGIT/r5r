@@ -17,6 +17,7 @@ public class Utils {
 
     static public boolean verbose = true;
     static public boolean benchmark = false;
+    static public boolean progress = true;
 
     public static EnumSet<LegMode> setLegModes(String modes) {
         EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);
@@ -68,10 +69,26 @@ public class Utils {
         logger = loggerContext.getLogger("com.conveyal.r5.profile.ExecutionTimer");
         logger.setLevel(Level.valueOf(mode));
 
+        logger = loggerContext.getLogger("graphql.GraphQL");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.mongodb.driver.connection");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.eclipse.jetty");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.eclipse.jetty");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("com.conveyal.r5.profile.FastRaptorWorker");
+        logger.setLevel(Level.valueOf(mode));
+
         logger = loggerContext.getLogger("org.ipea.r5r.R5RCore");
         logger.setLevel(Level.valueOf(mode));
 
         logger = loggerContext.getLogger("org.ipea.r5r.PathOptionsTable");
         logger.setLevel(Level.valueOf(mode));
+
     }
 }

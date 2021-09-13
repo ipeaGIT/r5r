@@ -16,7 +16,8 @@
 #'                    Defaults to "WALK".
 #' @param departure_datetime POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates.
+#'                           the GTFS file for valid dates. See details for
+#'                           further information on how datetimes are parsed.
 #' @param time_window numeric. Time window in minutes for which r5r will
 #'                    calculate travel times departing each minute. When using
 #'                    frequency-based GTFS files, 5 Monte Carlo simulations will
@@ -44,12 +45,30 @@
 #'                when using the 'fixed exponential' function.
 #' @param decay_value numeric. Extra parameter to be passed to the selected
 #'                `decay_function`.
-#' @param max_walk_dist numeric. Maximum walking distance (in meters) for the
-#'                      whole trip. Defaults to no restrictions on walking, as
-#'                      long as \code{max_trip_duration} is respected.
-#' @param max_bike_dist numeric. Maximum cycling distance (in meters) for the
-#'                      whole trip. Defaults to no restrictions on cycling, as
-#'                      long as \code{max_trip_duration} is respected.
+#' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
+#'                      and egress the transit network, or to make transfers
+#'                      within the network. Defaults to no restrictions as long
+#'                      as `max_trip_duration` is respected. The max distance is
+#'                      considered separately for each leg (e.g. if you set
+#'                      `max_walk_dist` to 1000, you could potentially walk up
+#'                      to 1 km to reach transit, and up to _another_  1 km to
+#'                      reach the destination after leaving transit). Obs: if you
+#'                      want to set the maximum walking distance considering
+#'                      walking-only trips you have to set the `max_trip_duration`
+#'                      accordingly (e.g. to set a distance of 1 km assuming a
+#'                      walking speed of 3.6 km/h you have to set `max_trip_duration = 1 / 3.6 * 60`).
+#' @param max_bike_dist numeric. Maximum cycling distance (in meters) to access
+#'                      and egress the transit network. Defaults to no
+#'                      restrictions as long as `max_trip_duration` is respected.
+#'                      The max distance is considered separately for each leg
+#'                      (e.g. if you set `max_bike_dist` to 1000, you could
+#'                      potentially cycle up to 1 km to reach transit, and up
+#'                      to _another_ 1 km to reach the destination after leaving
+#'                      transit). Obs: if you want to set the maximum cycling
+#'                      distance considering cycling-only trips you have to set
+#'                      the `max_trip_duration` accordingly (e.g. to set a
+#'                      distance of 5 km assuming a cycling speed of 12 km/h you
+#'                      have to set `max_trip_duration = 5 / 12 * 60`).
 #' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
 #'                          to 120 minutes (2 hours).
 #' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
@@ -64,9 +83,12 @@
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. `TRUE` to show detailed output messages (the default).
-#'                If verbose is set to `FALSE`, r5r prints a progress counter and
-#'                eventual `ERROR` messages. Setting `verbose` to  `FALSE` imposes
-#'                a small penalty for computation efficiency.
+#' @param progress logical. `TRUE` to show a progress counter. Only works when
+#'                `verbose` is set to `FALSE`, so the progress counter does not
+#'                interfere with R5's output messages. Setting `progress` to `TRUE`
+#'                may impose a small penalty for computation efficiency, because
+#'                the progress counter must be synchronized among all active
+#'                threads.
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.
@@ -150,6 +172,9 @@
 #'- **LTS 4**: Tolerable for only “strong and fearless” cyclists. This includes streets
 #'  where cyclists are required to mix with moderate- to high-speed vehicular traffic.
 #'
+#'  For advanced users, you can provide custom LTS values by adding a tag
+#'  <key = "lts> to the `osm.pbf` file
+#'
 #' # Routing algorithm:
 #' The `accessibility()` function uses an R5-specific extension to the RAPTOR
 #' routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
@@ -162,6 +187,18 @@
 #'  2653(1), 45-53.
 #'  - Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
 #'  routing. Transportation Science, 49(3), 591-604.
+#'
+#' # Datetime parsing
+#'
+#' `r5r` ignores the timezone attribute of datetime objects when parsing dates
+#' and times, using the study area's timezone instead. For example, let's say
+#' you are running some calculations using Rio de Janeiro, Brazil, as your study
+#' area. The datetime `as.POSIXct("13-05-2019 14:00:00",
+#' format = "%d-%m-%Y %H:%M:%S")` will be parsed as May 13th, 2019, 14:00h in
+#' Rio's local time, as expected. But `as.POSIXct("13-05-2019 14:00:00",
+#' format = "%d-%m-%Y %H:%M:%S", tz = "Europe/Paris")` will also be parsed as
+#' the exact same date and time in Rio's local time, perhaps surprisingly,
+#' ignoring the timezone attribute.
 #'
 #' @family routing
 #' @examples if (interactive()) {
@@ -209,7 +246,8 @@ accessibility <- function(r5r_core,
                           max_rides = 3,
                           max_lts = 2,
                           n_threads = Inf,
-                          verbose = TRUE) {
+                          verbose = TRUE,
+                          progress = TRUE) {
 
 
   # set data.table options --------------------------------------------------
@@ -304,6 +342,9 @@ accessibility <- function(r5r_core,
   # set verbose
   set_verbose(r5r_core, verbose)
 
+  # set progress
+  set_progress(r5r_core, progress)
+
 
   # call r5r_core method ----------------------------------------------------
 
@@ -330,10 +371,10 @@ accessibility <- function(r5r_core,
   # process results ---------------------------------------------------------
 
   # convert travel_times from java object to data.table
-  cat("Preparing final output...")
+  if (!verbose & progress) { cat("Preparing final output...") }
   accessibility <- jdx::convertToR(accessibility)
   data.table::setDT(accessibility)
-  cat(" DONE!\n")
+  if (!verbose & progress) { cat(" DONE!\n") }
 
   return(accessibility)
 }

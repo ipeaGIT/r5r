@@ -319,10 +319,12 @@ mapview(street_net) + points_sf
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
 covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
-covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
 covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat/test-detailed_itineraries.R"))
 
-covr::function_coverage(fun=r5r::accessibility, test_file("tests/testthat/test-accessibility.R"))
+covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
+covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))
+
+
 
 
 covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testthat/test-utils.R"))

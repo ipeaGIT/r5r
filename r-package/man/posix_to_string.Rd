@@ -10,9 +10,8 @@ posix_to_string(datetime)
 \item{datetime}{An object of POSIXct class.}
 }
 \value{
-A \code{list} with the \code{date} and \code{time} of the trip departure as characters
-
-A list with 'date' and 'departure_time' names.
+A \code{list} with the \code{date} and \code{time} of the trip departure as
+characters.
 }
 \description{
 Generate date and departure time strings from POSIXct
@@ -29,6 +28,7 @@ Other support functions:
 \code{\link{set_max_rides}()},
 \code{\link{set_max_street_time}()},
 \code{\link{set_n_threads}()},
+\code{\link{set_progress}()},
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},

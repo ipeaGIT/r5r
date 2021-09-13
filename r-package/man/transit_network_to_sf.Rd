@@ -2,7 +2,7 @@
 % Please edit documentation in R/transit_network_to_sf.R
 \name{transit_network_to_sf}
 \alias{transit_network_to_sf}
-\title{Extract transit network in sf format from a network.dat built with setup_r5}
+\title{Extract transit network in sf format}
 \usage{
 transit_network_to_sf(r5r_core)
 }
@@ -11,10 +11,17 @@ transit_network_to_sf(r5r_core)
 }
 \value{
 A list with two components of a transit network in sf format:
-route shapes (LINESTRING) and transit stops (POINT).
+route shapes (LINESTRING) and transit stops (POINT). The same
+\code{route_id}/\code{short_name} might appear with different geometries. This
+occurs when a route has two different shape_ids. Some transit stops
+might be returned with geometry \verb{POINT EMPTY} (i.e. missing \code{NA}
+spatial coordinates). This may occur when a transit stop is not
+snapped to the road network, possibly because the \code{gtfs.zip} input
+data covers an area larger than the \code{osm.pbf} input data.
 }
 \description{
-Extract transit network in sf format from a network.dat built with setup_r5
+Extract transit network in \code{sf} format from a \code{network.dat} file
+built with the \code{\link{setup_r5}} function.
 }
 \examples{
 if (interactive()) {
@@ -44,6 +51,7 @@ Other support functions:
 \code{\link{set_max_rides}()},
 \code{\link{set_max_street_time}()},
 \code{\link{set_n_threads}()},
+\code{\link{set_progress}()},
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},

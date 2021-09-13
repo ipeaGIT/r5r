@@ -81,10 +81,11 @@ public abstract class R5Process {
                         .mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         collect(Collectors.toList())).get();
         System.out.print(".. DONE!\n");
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print(".. DONE!\n");
+        }
 
-        System.out.print("Consolidating results...");
         RDataFrame mergedDataFrame = mergeResults(processResults);
-        System.out.print(" DONE!\n");
 
         return mergedDataFrame.getDataFrame();
     }
@@ -112,6 +113,10 @@ public abstract class R5Process {
     protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     private RDataFrame mergeResults(List<RDataFrame> processResults) {
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print("Consolidating results...");
+        }
+
         int nRows = 0;
         for (RDataFrame dataFrame : processResults) {
             if (dataFrame != null) {
@@ -138,10 +143,30 @@ public abstract class R5Process {
                 }
         );
 
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print(" DONE!\n");
+        }
+
         return mergedDataFrame;
     }
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
+
+    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
+        RDataFrame results = null;
+        try {
+            results = runProcess(index);
+
+            if (!Utils.verbose & Utils.progress) {
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();
