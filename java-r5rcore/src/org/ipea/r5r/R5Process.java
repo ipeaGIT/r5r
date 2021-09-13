@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.lang.Math.max;
+
 public abstract class R5Process {
 
     protected final ForkJoinPool r5rThreadPool;
@@ -95,7 +97,7 @@ public abstract class R5Process {
         try {
             long start = System.currentTimeMillis();
             results = runProcess(index);
-            long duration = System.currentTimeMillis() - start;
+            long duration = max(System.currentTimeMillis() - start, 0L);
 
             if (results != null & Utils.benchmark) {
                 results.addLongColumn("execution_time", duration);
