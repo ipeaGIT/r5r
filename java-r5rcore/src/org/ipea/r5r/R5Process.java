@@ -152,22 +152,6 @@ public abstract class R5Process {
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
 
-    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
-        RDataFrame results = null;
-        try {
-            results = runProcess(index);
-
-            if (!Utils.verbose & Utils.progress) {
-                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
-
-    protected abstract RDataFrame runProcess(int index) throws ParseException;
-
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();
 
