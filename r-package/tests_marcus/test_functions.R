@@ -19,6 +19,7 @@ points$schools <- 1
 dest <- points
 dest <- dplyr::sample_n(points, 5000)
 
+r5r_core$setBenchmarkMode(TRUE)
 system.time(
   access <- accessibility(r5r_core,
                         origins = points,

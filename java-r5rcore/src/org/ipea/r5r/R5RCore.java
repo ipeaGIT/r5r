@@ -54,7 +54,6 @@ public class R5RCore {
         this.routingProperties.maxLevelTrafficStress = maxLevelTrafficStress;
     }
 
-
     public int getSuboptimalMinutes() {
         return this.routingProperties.suboptimalMinutes;
     }
@@ -125,6 +124,10 @@ public class R5RCore {
 
     public void verboseMode() {
         Utils.setLogMode("ALL", true);
+    }
+
+    public void setBenchmarkMode(boolean mode) {
+        Utils.benchmark = mode;
     }
 
     private final TransportNetwork transportNetwork;

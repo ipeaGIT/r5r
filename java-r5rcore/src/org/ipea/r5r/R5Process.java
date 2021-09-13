@@ -89,6 +89,28 @@ public abstract class R5Process {
         return mergedDataFrame.getDataFrame();
     }
 
+    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
+        RDataFrame results = null;
+        try {
+            long start = System.currentTimeMillis();
+            results = runProcess(index);
+            long end = System.currentTimeMillis();
+
+            if (results != null & Utils.benchmark) {
+                results.addIntegerColumn("execution_time", (int) (end - start));
+            }
+
+            if (!Utils.verbose) {
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    protected abstract RDataFrame runProcess(int index) throws ParseException;
+
     private RDataFrame mergeResults(List<RDataFrame> processResults) {
         int nRows = 0;
         for (RDataFrame dataFrame : processResults) {
@@ -98,6 +120,9 @@ public abstract class R5Process {
         }
 
         RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
+        if (Utils.benchmark) {
+            mergedDataFrame.addIntegerColumn("execution_time", 0);
+        }
 
         mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(
                 key -> {
@@ -117,22 +142,6 @@ public abstract class R5Process {
     }
 
     protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
-
-    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
-        RDataFrame results = null;
-        try {
-            results = runProcess(index);
-
-            if (!Utils.verbose) {
-                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
-
-    protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = new RegionalTask();
