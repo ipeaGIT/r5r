@@ -67,6 +67,7 @@ public class RDataFrame {
 
     public void addStringColumn(String columnName, String defaultValue) {
         ArrayList<Object> column = new ArrayList<>(capacity);
+        for (int i = 0; i < nRow(); i++) { column.add(defaultValue); }
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
@@ -77,6 +78,7 @@ public class RDataFrame {
 
     public void addBooleanColumn(String columnName, Boolean defaultValue) {
         ArrayList<Object> column = new ArrayList<>(capacity);
+        for (int i = 0; i < nRow(); i++) { column.add(defaultValue); }
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
@@ -87,6 +89,7 @@ public class RDataFrame {
 
     public void addIntegerColumn(String columnName, Integer defaultValue) {
         ArrayList<Object> column = new ArrayList<>(capacity);
+        for (int i = 0; i < rowCount; i++) { column.add(defaultValue); }
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
@@ -97,6 +100,7 @@ public class RDataFrame {
 
     public void addDoubleColumn(String columnName, Double defaultValue) {
         ArrayList<Object> column = new ArrayList<>(capacity);
+        for (int i = 0; i < nRow(); i++) { column.add(defaultValue); }
         dataFrame.put(columnName, column);
 
         defaultValues.put(columnName, defaultValue);
