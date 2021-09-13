@@ -95,10 +95,10 @@ public abstract class R5Process {
         try {
             long start = System.currentTimeMillis();
             results = runProcess(index);
-            long end = System.currentTimeMillis();
+            long duration = System.currentTimeMillis() - start;
 
             if (results != null & Utils.benchmark) {
-                results.addIntegerColumn("execution_time", (int) (end - start));
+                results.addLongColumn("execution_time", duration);
             }
 
             if (!Utils.verbose) {
@@ -126,7 +126,7 @@ public abstract class R5Process {
 
         RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
         if (Utils.benchmark) {
-            mergedDataFrame.addIntegerColumn("execution_time", 0);
+            mergedDataFrame.addLongColumn("execution_time", 0L);
         }
 
         mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(

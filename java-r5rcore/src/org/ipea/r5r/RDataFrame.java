@@ -60,6 +60,11 @@ public class RDataFrame {
         column.set(column.size() - 1, value);
     }
 
+    public void set(String columnName, Long value) {
+        List<Object> column = dataFrame.get(columnName);
+        column.set(column.size() - 1, value);
+    }
+
     public void set(String columnName, Double value) {
         List<Object> column = dataFrame.get(columnName);
         column.set(column.size() - 1, value);
@@ -96,6 +101,17 @@ public class RDataFrame {
 
         columnNames.add(columnName);
         columnTypes.add("Integer");
+    }
+
+    public void addLongColumn(String columnName, Long defaultValue) {
+        ArrayList<Object> column = new ArrayList<>(capacity);
+        for (int i = 0; i < rowCount; i++) { column.add(defaultValue); }
+        dataFrame.put(columnName, column);
+
+        defaultValues.put(columnName, defaultValue);
+
+        columnNames.add(columnName);
+        columnTypes.add("Long");
     }
 
     public void addDoubleColumn(String columnName, Double defaultValue) {

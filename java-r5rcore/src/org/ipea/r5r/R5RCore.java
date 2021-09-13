@@ -131,6 +131,10 @@ public class R5RCore {
         Utils.progress = progress;
     }
 
+    public void setBenchmark(boolean benchmark) {
+        Utils.benchmark = benchmark;
+    }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);

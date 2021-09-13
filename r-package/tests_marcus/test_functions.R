@@ -19,7 +19,7 @@ points$schools <- 1
 dest <- points
 dest <- dplyr::sample_n(points, 5000)
 
-r5r_core$setBenchmarkMode(TRUE)
+r5r_core$setBenchmark(TRUE)
 system.time(
   access <- accessibility(r5r_core,
                         origins = points,
@@ -34,9 +34,10 @@ system.time(
 system.time(
   ttm <- travel_time_matrix(r5r_core, origins = points,
                             destinations = dest,
-                            mode = c("BICYCLE"),
+                            mode = c("WALK"),
                             max_trip_duration = 30,
                             max_walk_dist = 800,
+                            time_window = 1,
                             verbose = FALSE)
 )
 
