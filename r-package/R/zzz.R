@@ -2,7 +2,7 @@
 utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
 
 .onLoad = function(lib, pkg) {
-  rJava::.jpackage(name = "r5r")
+  # rJava::.jpackage(name = "r5r")
 
   requireNamespace("sf")
   requireNamespace("rJava")

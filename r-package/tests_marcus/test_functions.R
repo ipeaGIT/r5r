@@ -6,9 +6,12 @@ library(ggplot2)
 library(data.table)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path = data_path, verbose = TRUE, overwrite = FALSE)
 
 # load origin/destination points
+
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 dest <- points
 
@@ -45,12 +48,13 @@ system.time(
   dit <- detailed_itineraries(r5r_core,
                             origins =points,
                           destinations = points[1227:1,],
-                          mode = c("BICYCLE"),
-                          max_trip_duration = 120,
-                          max_walk_dist = Inf,
-                          max_bike_dist = Inf,
+                          mode = c("TRANSIT"),
+                          max_trip_duration = 60,
+                          max_walk_dist = 1000,
+                          max_bike_dist = 1000,
                           verbose = FALSE,
-                          drop_geometry = FALSE)
+                          drop_geometry = FALSE,
+                          departure_datetime = departure_datetime)
 )
 dit %>% ggplot() + geom_sf()
 mapview::mapview(points, xcol="lon", ycol="lat", crs = 4326)
@@ -60,9 +64,12 @@ mapview::mapview(street_net$vertices)
 mapview::mapview(street_net$edges)
 
 transit_net <- transit_network_to_sf(r5r_core)
-mapview::mapview(transit_net$stops %>% filter(linked_to_street == TRUE))
+mapview::mapview(transit_net$stops |> filter(linked_to_street == TRUE))
 mapview::mapview(transit_net$routes)
 
+transit_net <- r5r_core$getTransitNetwork()
+transit_net <- jdx::convertToR(transit_net)
+transit_net[2] |> as.data.frame()
 snap <- r5r::find_snap(r5r_core, points)
 
 system.time(ttm2 <- data.table::copy(ttm))
