@@ -300,17 +300,20 @@ travel_time_matrix <- function(r5r_core,
   travel_times <- jdx::convertToR(travel_times)
   data.table::setDT(travel_times)
 
-  # convert eventual list columns to integer
-  for(j1 in seq_along(travel_times)) {
-    cl1 <- class(travel_times[[j1]])
-    if(cl1 == 'list') {
-      data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
+  # only perform following operations when result is not empty
+  if (nrow(travel_times) > 0) {
+    # convert eventual list columns to integer
+    for(j1 in seq_along(travel_times)) {
+      cl1 <- class(travel_times[[j1]])
+      if(cl1 == 'list') {
+        data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
     }
 
-  # replace travel-times of inviable trips with NAs
-  for(j in seq(from = 3, to = length(travel_times))){
-    data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
+    # replace travel-times of inviable trips with NAs
+    for(j in seq(from = 3, to = length(travel_times))){
+      data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
+  }
 
   if (!verbose & progress) { cat(" DONE!\n") }
   return(travel_times)

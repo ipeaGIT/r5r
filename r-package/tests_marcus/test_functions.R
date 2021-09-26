@@ -13,6 +13,11 @@ r5r_core <- setup_r5(data_path = data_path, verbose = TRUE, overwrite = FALSE)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+
+points <- points %>%
+  st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
+  st_transform(31982)
+
 dest <- points
 
 points <- r5r_core$getGrid(11L)
@@ -22,7 +27,7 @@ points$schools <- 1
 dest <- points
 dest <- dplyr::sample_n(points, 5000)
 
-r5r_core$setBenchmark(TRUE)
+r5r_core$setBenchmark(FALSE)
 system.time(
   access <- accessibility(r5r_core,
                         origins = points,
