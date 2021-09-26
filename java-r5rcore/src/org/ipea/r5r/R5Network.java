@@ -39,7 +39,7 @@ public class R5Network {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5Network.class);
 
-    public static TransportNetwork checkAndLoadR5Network(String dataFolder) throws FileNotFoundException {
+    public static TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
@@ -57,12 +57,8 @@ public class R5Network {
         return R5Network.loadR5Network(dataFolder);
     }
 
-    public static TransportNetwork loadR5Network(String dataFolder) {
-        try {
-            return KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
-        } catch (Exception e) {
-            return null;
-        }
+    public static TransportNetwork loadR5Network(String dataFolder) throws Exception {
+        return KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
     }
 
     public static void createR5Network(String dataFolder) {

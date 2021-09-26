@@ -139,11 +139,11 @@ public class R5RCore {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
-    public R5RCore(String dataFolder) throws FileNotFoundException {
+    public R5RCore(String dataFolder) throws Exception {
         this(dataFolder, true);
     }
 
-    public R5RCore(String dataFolder, boolean verbose) throws FileNotFoundException {
+    public R5RCore(String dataFolder, boolean verbose) throws Exception {
         if (verbose) {
             verboseMode();
         } else {
