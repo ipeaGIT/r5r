@@ -42,7 +42,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
         itinerariesDataFrame.addIntegerColumn("option", 0);
         itinerariesDataFrame.addIntegerColumn("segment", 0);
         itinerariesDataFrame.addStringColumn("mode", "");
-        itinerariesDataFrame.addIntegerColumn("total_duration", 0);
+        itinerariesDataFrame.addDoubleColumn("total_duration", 0.0);
         itinerariesDataFrame.addDoubleColumn("segment_duration", 0.0);
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
         itinerariesDataFrame.addIntegerColumn("distance", 0);

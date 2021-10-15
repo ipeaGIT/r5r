@@ -167,7 +167,7 @@ public class R5RCore {
 
     // ----------------------------------  DETAILED ITINERARIES  -----------------------------------------
 
-    public LinkedHashMap<String, ArrayList<Object>> detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
+    public RDataFrame detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
                                                                    String date, String departureTime, int maxWalkTime, int maxBikeTime,  int maxTripDuration,
                                                                    boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
@@ -185,7 +185,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
+    public RDataFrame detailedItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
@@ -208,7 +208,7 @@ public class R5RCore {
 
     // ----------------------------------  TRAVEL TIME MATRIX  -----------------------------------------
 
-    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public RDataFrame travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -223,7 +223,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public RDataFrame travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -238,7 +238,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public RDataFrame travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -257,7 +257,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public RDataFrame travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -276,7 +276,7 @@ public class R5RCore {
 
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
 
-    public LinkedHashMap<String, ArrayList<Object>> accessibility(String fromId, double fromLat, double fromLon,
+    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
                                                                            String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -292,7 +292,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+    public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,  int opportunities,
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -309,7 +309,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> accessibility(String fromId, double fromLat, double fromLon,
+    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon, int opportunities,
                                                                         String decayFunction, double decayValue,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
@@ -330,7 +330,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
+    public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                         String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
                                                                         String decayFunction, double decayValue,
                                                                         String directModes, String transitModes, String accessModes, String egressModes,
@@ -351,7 +351,7 @@ public class R5RCore {
 
     // ----------------------------------  ISOCHRONES  -----------------------------------------
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
+    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
         int[] cutoffTimes = {cutoffs};
@@ -360,7 +360,7 @@ public class R5RCore {
                 date, departureTime, maxWalkTime,maxBikeTime, maxTripDuration);
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
+    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
@@ -374,7 +374,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
+    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
@@ -387,7 +387,7 @@ public class R5RCore {
 
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
+    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
                                                                      String directModes, String transitModes, String accessModes, String egressModes,
                                                                      String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
 
@@ -405,7 +405,7 @@ public class R5RCore {
     }
 
     // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
-    public LinkedHashMap<String, Object> findSnapPoints(String fromId, double fromLat, double fromLon, String mode) throws ExecutionException, InterruptedException {
+    public RDataFrame findSnapPoints(String fromId, double fromLat, double fromLon, String mode) throws ExecutionException, InterruptedException {
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
@@ -413,46 +413,38 @@ public class R5RCore {
         return findSnapPoints(fromIds, fromLats, fromLons, mode);
     }
 
-    public LinkedHashMap<String, Object> findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, String mode) throws ExecutionException, InterruptedException {
+    public RDataFrame findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, String mode) throws ExecutionException, InterruptedException {
         SnapFinder snapFinder = new SnapFinder(r5rThreadPool, this.transportNetwork);
         snapFinder.setOrigins(fromId, fromLat, fromLon);
         snapFinder.setMode(mode);
         return snapFinder.run();
     }
 
-    public LinkedHashMap<String, Object> getGrid(int resolution) {
+    public RDataFrame getGrid(int resolution) {
         return getGrid(resolution, true);
     }
 
-    public LinkedHashMap<String, Object> getGrid(int resolution, boolean dropGeometry) {
+    public RDataFrame getGrid(int resolution, boolean dropGeometry) {
         Grid gridPointSet = new Grid(resolution, this.transportNetwork.getEnvelope());
 
-        String[] id = new String[gridPointSet.featureCount()];
-        double[] lat = new double[gridPointSet.featureCount()];
-        double[] lon = new double[gridPointSet.featureCount()];
-        String[] geometry = new String[gridPointSet.featureCount()];
+        RDataFrame gridTable = new RDataFrame(gridPointSet.featureCount());
+        gridTable.addStringColumn("id", "");
+        gridTable.addDoubleColumn("lat", 0.0);
+        gridTable.addDoubleColumn("lon", 0.0);
+        if (!dropGeometry) { gridTable.addStringColumn("geometry", ""); }
 
-        IntStream.range(0, gridPointSet.featureCount()).parallel().forEach(index -> {
+        for (int index = 0; index < gridPointSet.featureCount(); index++) {
             int x = index % gridPointSet.width;
             int y = index / gridPointSet.width;
 
-            id[index] = String.valueOf(index);
-            lat[index] = Grid.pixelToCenterLat(y + gridPointSet.north, resolution);
-            lon[index] = Grid.pixelToCenterLon(x + gridPointSet.west, resolution);
+            gridTable.append();
+            gridTable.set("id", String.valueOf(index));
+            gridTable.set("lat", Grid.pixelToCenterLat(y + gridPointSet.north, resolution));
+            gridTable.set("lon", Grid.pixelToCenterLon(x + gridPointSet.west, resolution));
 
             if (!dropGeometry) {
-                geometry[index] = Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution).toString();
+                gridTable.set("geometry", Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution).toString());
             }
-        });
-
-        // Build edges return table
-        LinkedHashMap<String, Object> gridTable = new LinkedHashMap<>();
-        gridTable.put("id", id);
-        gridTable.put("lat", lat);
-        gridTable.put("lon", lon);
-
-        if (!dropGeometry) {
-            gridTable.put("geometry", geometry);
         }
 
         return gridTable;
@@ -465,33 +457,33 @@ public class R5RCore {
     // ---------------------------------------------------------------------------------------------------
 
 
-    public List<Object> getStreetNetwork() {
+    public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
         StreetNetwork streetNetwork = new StreetNetwork(this.transportNetwork);
 
         // Return a list of dataframes
-        List<Object> transportNetworkList = new ArrayList<>();
-        transportNetworkList.add(streetNetwork.verticesTable.getDataFrame());
-        transportNetworkList.add(streetNetwork.edgesTable.getDataFrame());
+        List<RDataFrame> transportNetworkList = new ArrayList<>();
+        transportNetworkList.add(streetNetwork.verticesTable);
+        transportNetworkList.add(streetNetwork.edgesTable);
 
         return transportNetworkList;
     }
 
-    public List<Object> getTransitNetwork() {
+    public List<RDataFrame> getTransitNetwork() {
         // Convert R5's transit network to Simple Features objects
         TransitNetwork transitNetwork = new TransitNetwork(this.transportNetwork);
 
         // Return a list of dataframes
-        List<Object> transportNetworkList = new ArrayList<>();
-        transportNetworkList.add(transitNetwork.routesTable.getDataFrame());
-        transportNetworkList.add(transitNetwork.stopsTable.getDataFrame());
+        List<RDataFrame> transportNetworkList = new ArrayList<>();
+        transportNetworkList.add(transitNetwork.routesTable);
+        transportNetworkList.add(transitNetwork.stopsTable);
 
         return transportNetworkList;
     }
 
     // ----------------------------------  ELEVATION  -----------------------------------------
 
-    public LinkedHashMap<String, ArrayList<Object>> getEdges() {
+    public RDataFrame getEdges() {
         // Build edges return table
         RDataFrame edgesTable = new RDataFrame();
         edgesTable.addIntegerColumn("edge_index", 0);
@@ -516,7 +508,7 @@ public class R5RCore {
             edgesTable.set("geometry", edgeCursor.getGeometry().toString());
         }
 
-        return edgesTable.getDataFrame();
+        return edgesTable;
     }
 
     public void updateEdges(int[] edgeIndices, double[] walkTimeFactor, double[] bikeTimeFactor) {
@@ -579,7 +571,7 @@ public class R5RCore {
     }
 
     // Returns list of public transport services active on a given date
-    public LinkedHashMap<String, ArrayList<Object>> getTransitServicesByDate(String date) {
+    public RDataFrame getTransitServicesByDate(String date) {
         RDataFrame servicesTable = new RDataFrame();
         servicesTable.addStringColumn("service_id", "");
         servicesTable.addStringColumn("start_date", "");
@@ -598,7 +590,7 @@ public class R5RCore {
             servicesTable.set("active_on_date", service.activeOn(LocalDate.parse(date)));
         }
 
-        return servicesTable.getDataFrame();
+        return servicesTable;
     }
 
     public double[] testDecay(String decayFunctionName, double decayValue) {

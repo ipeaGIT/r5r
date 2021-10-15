@@ -9,6 +9,7 @@ import com.conveyal.r5.transit.TransportNetwork;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;
@@ -42,43 +43,44 @@ public class SnapFinder {
         this.nOrigins = fromIds.length;
     }
 
-    public LinkedHashMap<String, Object> run() {
-        int[] requestIndices = new int[nOrigins];
-        for (int i = 0; i < nOrigins; i++) requestIndices[i] = i;
+    public RDataFrame run() {
+        // Build edges return table
+        RDataFrame snapTable = new RDataFrame(nOrigins);
+        snapTable.addStringColumn("point_id", "");
+        snapTable.addDoubleColumn("lat", 0.0);
+        snapTable.addDoubleColumn("lon", 0.0);
+        snapTable.addDoubleColumn("snap_lat", 0.0);
+        snapTable.addDoubleColumn("snap_lon", 0.0);
+        snapTable.addDoubleColumn("distance", 0.0);
+        snapTable.addBooleanColumn("found", false);
 
-        double[] snapLats = new double[nOrigins];
-        double[] snapLons = new double[nOrigins];
-        double[] distance = new double[nOrigins];
-        boolean[] found = new boolean[nOrigins];
+        for (int index = 0; index < nOrigins; index++) {
+            snapTable.append();
 
-        Arrays.stream(requestIndices).parallel().forEach(index -> {
+            snapTable.set("point_id", fromIds[index]);
+            snapTable.set("lat", fromLats[index]);
+            snapTable.set("lon", fromLons[index]);
+
             Split split = transportNetwork.streetLayer.findSplit(fromLats[index], fromLons[index],
                     StreetLayer.LINK_RADIUS_METERS, this.mode);
 
             if (split != null) {
                 // found split at StreetLayer.INITIAL_LINK_RADIUS_METERS
-                snapLats[index] = split.fixedLat / FIXED_FACTOR;
-                snapLons[index] = split.fixedLon / FIXED_FACTOR;
-                distance[index] = GeometryUtils.distance(fromLats[index], fromLons[index], snapLats[index], snapLons[index]);
-                found[index] = true;
+                double snapLat = split.fixedLat / FIXED_FACTOR;
+                double snapLon = split.fixedLon / FIXED_FACTOR;
+
+                snapTable.set("snap_lat", snapLat);
+                snapTable.set("snap_lon", snapLon);
+                snapTable.set("distance", GeometryUtils.distance(fromLats[index], fromLons[index], snapLat, snapLon));
+                snapTable.set("found", true);
             } else {
                 // did not find split
-                snapLats[index] = fromLats[index];
-                snapLons[index] = fromLons[index];
-                distance[index] = -1;
-                found[index] = false;
+                snapTable.set("snap_lat", fromLats[index]);
+                snapTable.set("snap_lon", fromLons[index]);
+                snapTable.set("distance", -1.0);
+                snapTable.set("found", false);
             }
-        });
-
-        // Build edges return table
-        LinkedHashMap<String, Object> snapTable = new LinkedHashMap<>();
-        snapTable.put("point_id", fromIds);
-        snapTable.put("lat", fromLats);
-        snapTable.put("lon", fromLons);
-        snapTable.put("snap_lat", snapLats);
-        snapTable.put("snap_lon", snapLons);
-        snapTable.put("distance", distance);
-        snapTable.put("found", found);
+        }
 
         return snapTable;
 

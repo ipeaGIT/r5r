@@ -74,7 +74,7 @@ public abstract class R5Process {
         this.maxTripDuration = maxTripDuration;
     }
 
-    public LinkedHashMap<String, ArrayList<Object>> run() throws ExecutionException, InterruptedException {
+    public RDataFrame run() throws ExecutionException, InterruptedException {
         int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
@@ -87,9 +87,7 @@ public abstract class R5Process {
             System.out.print(".. DONE!\n");
         }
 
-        RDataFrame mergedDataFrame = mergeResults(processResults);
-
-        return mergedDataFrame.getDataFrame();
+        return mergeResults(processResults);
     }
 
     private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {

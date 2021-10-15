@@ -287,7 +287,7 @@ accessibility <- function(r5r_core,
                                        bike_speed,
                                        max_trip_duration)
 
-    # origins and destinations
+  # origins and destinations
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
 
@@ -372,8 +372,7 @@ accessibility <- function(r5r_core,
 
   # convert travel_times from java object to data.table
   if (!verbose & progress) { cat("Preparing final output...") }
-  accessibility <- jdx::convertToR(accessibility)
-  data.table::setDT(accessibility)
+  accessibility <- java_to_dt(accessibility)
   if (!verbose & progress) { cat(" DONE!\n") }
 
   return(accessibility)

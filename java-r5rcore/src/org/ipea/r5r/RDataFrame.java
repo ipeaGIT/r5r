@@ -1,6 +1,7 @@
 package org.ipea.r5r;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -128,5 +129,34 @@ public class RDataFrame {
     public int getColumnCount() { return columnNames.size(); }
     public String getColumnName(int index) { return columnNames.get(index); }
     public String getColumnType(int index) { return columnTypes.get(index); }
+    public String getColumnType(String name) {
+        int index = columnNames.indexOf(name);
+        return columnTypes.get(index);
+    }
+
+    public String[] getColumnNames() { return columnNames.toArray(String[]::new); }
+    public String[] getColumnTypes() { return columnTypes.toArray(String[]::new); }
+
+    public ArrayList<Object> get(String columnName) { return dataFrame.get(columnName); }
+
+    public String[] getStringColumn(String columnName) { return dataFrame.get(columnName).toArray(String[]::new); }
+    public int[] getIntegerColumn(String columnName) {
+        return dataFrame.get(columnName).stream().mapToInt(i -> (int) i).toArray();
+    }
+    public long[] getLongColumn(String columnName) {
+        return dataFrame.get(columnName).stream().mapToLong(i -> (long) i).toArray();
+    }
+    public double[] getDoubleColumn(String columnName) {
+        return dataFrame.get(columnName).stream().mapToDouble(d -> (double) d).toArray();
+    }
+    public boolean[] getBooleanColumn(String columnName) {
+        ArrayList<Object> columnContents = dataFrame.get(columnName);
+        int size = columnContents.size();
+        boolean[] v = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            v[i] = (boolean) columnContents.get(i);
+        }
+        return v;
+    }
 }
 

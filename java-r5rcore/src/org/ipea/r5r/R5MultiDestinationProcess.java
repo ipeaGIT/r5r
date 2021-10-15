@@ -9,8 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -30,7 +28,7 @@ public abstract class R5MultiDestinationProcess extends R5Process {
     }
 
     @Override
-    public LinkedHashMap<String, ArrayList<Object>> run() throws ExecutionException, InterruptedException {
+    public RDataFrame run() throws ExecutionException, InterruptedException {
         buildDestinationPointSet();
         return super.run();
     }

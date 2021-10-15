@@ -39,7 +39,6 @@ Imports:
     data.table,
     httr,
     methods,
-    jdx (>= 0.1.4),
     raster,
     rJava (>= 0.9-10),
     sf (>= 0.9-3),

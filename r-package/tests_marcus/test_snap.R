@@ -12,7 +12,8 @@ r5r_core <- setup_r5(data_path, verbose = FALSE, use_elevation = TRUE)
 
 # get regular grid at resolution 8
   grid_df <- r5r_core$getGrid(8L, TRUE)
-  grid_df <- jdx::convertToR(grid_df)
+  grid_df <- java_to_dt(grid_df)
+  # grid_df <- jdx::convertToR(grid_df)
 
 
 # grid_df$geometry <- st_as_sfc(grid_df$geometry)

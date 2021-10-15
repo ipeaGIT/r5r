@@ -316,7 +316,7 @@ detailed_itineraries <- function(r5r_core,
 
   } else {
 
-    path_options <- jdx::convertToR(path_options)
+    path_options <- java_to_dt(path_options)
 
     if (!is.data.frame(path_options)) {
 
@@ -330,8 +330,6 @@ detailed_itineraries <- function(r5r_core,
 
   # return either the fastest or multiple itineraries between an o-d pair (untie
   # it by the option number, if necessary)
-
-  data.table::setDT(path_options)
 
   path_options[, total_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
 

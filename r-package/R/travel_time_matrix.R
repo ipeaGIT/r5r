@@ -297,8 +297,7 @@ travel_time_matrix <- function(r5r_core,
   # convert travel_times from java object to data.table
   if (!verbose & progress) { cat("Preparing final output...") }
 
-  travel_times <- jdx::convertToR(travel_times)
-  data.table::setDT(travel_times)
+  travel_times <- java_to_dt(travel_times)
 
   # only perform following operations when result is not empty
   if (nrow(travel_times) > 0) {
