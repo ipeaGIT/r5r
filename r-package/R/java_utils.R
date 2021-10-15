@@ -17,7 +17,6 @@ java_to_dt <- function(obj) {
   # get column names from Java table
   columns <- obj$getColumnNames()
 
-  column_name = columns[2]
   # get the contents of each column in a vector, and return them in a list
   dt <- lapply(columns, function(column_name) {
     # check column data type, so we can call the appropriate Java function
