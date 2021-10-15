@@ -142,3 +142,17 @@ v_dt <- data.table(v = v)
 cat("Gathering results")
 cat('\014')
 message("Gathering results", appendLF = FALSE)
+
+
+system.time(
+  dit <- detailed_itineraries(r5r_core,
+                              origins =poi[10,],
+                              destinations = poi[12,],
+                              mode = c("WALK"),
+                              max_trip_duration = 30,
+                              max_walk_dist = 1000,
+                              max_bike_dist = 1000,
+                              verbose = FALSE,
+                              drop_geometry = FALSE,
+                              departure_datetime = departure_datetime)
+)

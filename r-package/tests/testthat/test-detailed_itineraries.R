@@ -271,17 +271,17 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(max_duration < max_trip_duration)
 
-  # expect a NULL data.table as output when no routes are found between the pairs
+  # expect an empty data.table as output when no routes are found between the pairs
 
   df <- default_tester(r5r_core, origins = points[10,], destinations = points[12,],
                        mode = "WALK", max_trip_duration = 30L)
 
-  expect_true(length(df) == 0)
+  expect_true(nrow(df) == 0)
 
   df <- default_tester(r5r_core, origins = points[10:11,], destinations = points[12,],
                        mode = "WALK", max_trip_duration = 30L)
 
-  expect_true(length(df) == 0)
+  expect_true(nrow(df) == 0)
 
 })
 

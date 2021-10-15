@@ -328,6 +328,8 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
+  if (nrow(path_options) == 0) return(path_options)
+
   # return either the fastest or multiple itineraries between an o-d pair (untie
   # it by the option number, if necessary)
 
