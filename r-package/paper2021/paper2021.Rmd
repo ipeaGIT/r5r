@@ -182,7 +182,9 @@ street_net <- street_network_to_sf(r5r_core)
 
 # select trips departing the bus central station and add coordinates of destinations
 travel_times <- ttm[fromId %in% central_bus_stn$id]
+travel_times <- travel_times[, .(fromId, toId, travel_time_p050)]
 travel_times[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
+
 
 # interpolate estimates to get spatially smooth result
 travel_times.interp <- with(na.omit(travel_times), interp(lon, lat, travel_time_p050)) %>%
