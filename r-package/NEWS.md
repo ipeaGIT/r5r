@@ -17,7 +17,7 @@ from R5 as simple features. Closes [#179](https://github.com/ipeaGIT/r5r/issues/
 `detailed_itineraries()` functions, to show or hide the progress counter 
 indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
 
-- Removed dependency on the `jdx` package. Closes [#206](https://github.com/ipeaGIT/r5r/issues/206)
+- Created new support function `java_to_dt()` and removed dependency on the `jdx` package. Closes [#206](https://github.com/ipeaGIT/r5r/issues/206)
 
 **Minor changes**
 
