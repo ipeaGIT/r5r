@@ -31,6 +31,6 @@ java_to_dt <- function(obj) {
   })
 
   # convert list of vectors to a data.table, and rename columns accordingly
-  dt <- data.table::as.data.table(dt)
+  data.table::setDT(dt)
   data.table::setnames(dt, new = columns)
 }
