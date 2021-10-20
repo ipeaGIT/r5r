@@ -17,6 +17,8 @@ from R5 as simple features. Closes [#179](https://github.com/ipeaGIT/r5r/issues/
 `detailed_itineraries()` functions, to show or hide the progress counter 
 indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
 
+- Removed dependency on the `jdx` package. Closes [#206](https://github.com/ipeaGIT/r5r/issues/206)
+
 **Minor changes**
 
 - New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
