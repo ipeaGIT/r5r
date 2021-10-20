@@ -187,11 +187,23 @@ assert_points_input <- function(df, name) {
         stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
       }
 
+      if (sf::st_crs(df) != sf::st_crs(4326))
+        stop(
+          "'", name, "' CRS must be WGS 84 (EPSG 4326). ",
+          "Please use either sf::set_crs() to set it or ",
+          "sf::st_transform() to reproject it."
+        )
+
       df <- sfheaders::sf_to_df(df, fill = TRUE)
       data.table::setDT(df)
       data.table::setnames(df, "x", "lon")
       data.table::setnames(df, "y", "lat")
-      checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
+      checkmate::assert_names(
+        names(df),
+        must.include = c("id"),
+        .var.name = name
+      )
+
     }
 
     checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)

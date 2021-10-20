@@ -28,8 +28,9 @@ travel_time_matrix(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'}
+\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
+data.frame containing the columns 'id', 'lon',
+'lat'.}
 
 \item{mode}{string. Transport modes allowed for the trips. Defaults to
 "WALK". See details for other options.}
