@@ -184,9 +184,7 @@ assert_points_input <- function(df, name) {
     if (is(df, "sf")) {
 
       if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
-
-        stop(paste0("'", name, "' must be either a 'data.frame' or a 'POINT sf'."))
-
+        stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
       }
 
       df <- sfheaders::sf_to_df(df, fill = TRUE)
