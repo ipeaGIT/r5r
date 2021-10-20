@@ -263,7 +263,6 @@ public class R5RCore {
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-
         TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);
         travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons);

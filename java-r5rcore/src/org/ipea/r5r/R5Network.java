@@ -65,7 +65,7 @@ public class R5Network {
         File dir = new File(dataFolder);
         File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
 
-        for (File file:mapdbFiles) file.delete();
+        if (mapdbFiles != null) { for (File file:mapdbFiles) file.delete(); }
 
         TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
         try {
