@@ -302,15 +302,12 @@ travel_time_matrix <- function(r5r_core,
 
   # only perform following operations when result is not empty
   if (nrow(travel_times) > 0) {
-    # convert eventual list columns to integer
-    for(j1 in seq_along(travel_times)) {
-      cl1 <- class(travel_times[[j1]])
-      if(cl1 == 'list') {
-        data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
-    }
-
     # replace travel-times of nonviable trips with NAs
-    for(j in seq(from = 3, to = length(travel_times))){
+    #   the first column with travel time information is column 3, because
+    #     columns 1 and 2 contain the id's of OD point (hence from = 3)
+    #   the percentiles parameter indicates how many travel times columns we'll,
+    #     have, with a minimum of 1 (in which case, to = 3).
+    for(j in seq(from = 3, to = (length(percentiles) + 2))){
       data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
   }
