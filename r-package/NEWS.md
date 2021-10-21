@@ -22,10 +22,11 @@ indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
 **Minor changes**
 
 - New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
-- Improved documentation of parameter `departure_datetime` to clarify the parameter must be set to local time. Closes  [#188](https://github.com/ipeaGIT/r5r/issues/188)
-- Improved documentation regarding personalized LTS values. [Closes #190]( https://github.com/ipeaGIT/r5r/issues/190).
-- Improved documentation of `transit_network_to_sf()` regarding stops that are not snapped to road network. [Closes #192]( https://github.com/ipeaGIT/r5r/issues/192).
+- Improved documentation of parameter `departure_datetime` to clarify the parameter must be set to local time. Closes [#188](https://github.com/ipeaGIT/r5r/issues/188)
+- Improved documentation regarding personalized LTS values. [Closes #190](https://github.com/ipeaGIT/r5r/issues/190).
+- Improved documentation of `transit_network_to_sf()` regarding stops that are not snapped to road network. [Closes #192](https://github.com/ipeaGIT/r5r/issues/192).
 - Improved documentation of `max_walking_dist` and `max_cycling_dist` parameters. [Closes #193]( https://github.com/ipeaGIT/r5r/issues/193).
+- Started raising an error if the CRS of origins/destinations is not WGS 84. Closes [#201](https://github.com/ipeaGIT/r5r/issues/201).
 
 
 

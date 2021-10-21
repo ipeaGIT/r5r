@@ -169,8 +169,16 @@ test_that("detailed_itineraries output is correct", {
   # expect results to be of class 'sf' and 'data.table', independently of the
   # class of 'origins'/'destinations', when drop_geometry = FALSE
 
-  origins_sf      <- sf::st_as_sf(points[1:2,], coords = c("lon", "lat"))
-  destinations_sf <- sf::st_as_sf(points[2:1,], coords = c("lon", "lat"))
+  origins_sf <- sf::st_as_sf(
+    points[1:2,],
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+  destinations_sf <- sf::st_as_sf(
+    points[2:1,],
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)

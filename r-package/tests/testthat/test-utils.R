@@ -81,13 +81,20 @@ test_that("posix_to_string output is coherent", {
 
 # assert_points_input -----------------------------------------------------
 
+sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326)
 
 test_that("assert_points_input adequately raises warnings and errors", {
 
-  multipoint_points <- sf::st_cast(sf::st_as_sf(points, coords = c("lon", "lat")), "MULTIPOINT")
-  list_points <- setNames(lapply(names(points), function(i) points[[i]]), names(points))
-
   # object class
+
+  multipoint_points <- sf::st_cast(
+    sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326),
+    "MULTIPOINT"
+  )
+  list_points <- setNames(
+    lapply(names(points), function(i) points[[i]]),
+    names(points)
+  )
 
   expect_error(assert_points_input(as.matrix(points), "points"))
   expect_error(assert_points_input(list_points, "points"))
@@ -96,18 +103,28 @@ test_that("assert_points_input adequately raises warnings and errors", {
   # object columns types
 
   points_numeric_id <- data.table::setDT(data.table::copy(points))[, id := 1:.N]
-  points_char_lat <- data.table::setDT(data.table::copy(points))[, lat := as.character(lat)]
-  points_char_lon <- data.table::setDT(data.table::copy(points))[, lon := as.character(lon)]
+  points_char_lat <- data.table::setDT(data.table::copy(points))[
+    ,
+    lat := as.character(lat)
+  ]
+  points_char_lon <- data.table::setDT(data.table::copy(points))[
+    ,
+    lon := as.character(lon)
+  ]
 
   expect_warning(assert_points_input(points_numeric_id, "points"))
   expect_error(assert_points_input(points_char_lat, "points"))
   expect_error(assert_points_input(points_char_lon, "points"))
 
+  # object crs
+
+  wrong_crs_sf <- sf::st_transform(sf_points, 4674)
+  expect_error(assert_points_input(wrong_crs_sf, "points"))
+
 })
 
 test_that("assert_points_input output is coherent", {
 
-  sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"))
   sf_points_output <- assert_points_input(sf_points, "points")
 
   df_points_output <- assert_points_input(points, "points")

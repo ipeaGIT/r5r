@@ -4,8 +4,9 @@
 #'              or many origin destination pairs.
 #'
 #' @param r5r_core rJava object to connect with R5 routing engine
-#' @param origins,destinations either a spatial sf POINT object or a data.frame
-#'                            containing the columns 'id', 'lon', 'lat'
+#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
+#'                             data.frame containing the columns 'id', 'lon',
+#'                             'lat'.
 #' @param mode string. Transport modes allowed for the trips. Defaults to
 #'             "WALK". See details for other options.
 #' @param mode_egress string. Transport mode used after egress from public
@@ -348,7 +349,7 @@ detailed_itineraries <- function(r5r_core,
     # itineraries with the same signature (sequence of routes) are filtered to
     # keep the one with the shortest duration
 
-    path_options[, temp_route := ifelse(route == "", mode, route)]
+    path_options[, temp_route := fifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
     path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
