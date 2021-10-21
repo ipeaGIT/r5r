@@ -79,14 +79,18 @@ t_ttm_breakdown <- system.time(
                               verbose = FALSE)
 )
 
-t_ttm_normal
-t_ttm_breakdown
+View(ttm_b_mean)
 
-# rbind(
-#   ttm_n %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "normal"),
-#   ttm_b %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "breakdown")
-# ) %>%
-#   ggplot(aes(execution_time)) + geom_histogram() + facet_wrap(~method, scales = "free")
+# ttm_first <- read_csv("ttm_first_option.csv")
+# ttm_b_mean %>% write_csv(file = "ttm_first_option.csv")
+# t_ttm_normal
+# t_ttm_breakdown
+
+rbind(
+  ttm_n %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "normal"),
+  ttm_b_mean %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "breakdown")
+) %>%
+  ggplot(aes(execution_time)) + geom_histogram() + facet_wrap(~method, scales = "free")
 
 
 

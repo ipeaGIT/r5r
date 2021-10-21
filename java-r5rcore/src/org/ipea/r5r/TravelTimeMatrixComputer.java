@@ -1,5 +1,6 @@
 package org.ipea.r5r;
 
+import com.amazonaws.util.StringUtils;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
@@ -7,9 +8,7 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
@@ -47,8 +46,8 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     }
 
     private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
+        // summarize travel paths, if required
         ArrayList<String[]>[] pathResults =  null;
-
         if (this.routingProperties.travelTimesBreakdown) {
             pathResults = travelTimeResults.paths.summarizeIterations(this.routingProperties.travelTimesBreakdownStat);
         }
@@ -56,46 +55,58 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
         for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
             if (travelTimeResults.travelTimes.getValues()[0][destination] <= maxTripDuration) {
 
+                // add new row to data frame
                 travelTimesTable.append();
 
-                // fill travel times for destination
+                // set destination id
                 travelTimesTable.set("toId", toIds[destination]);
-                if (this.routingProperties.percentiles.length == 1) {
-                    travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][destination]);
-                } else {
-                    for (int p = 0; p < this.routingProperties.percentiles.length; p++) {
-                        int tt = travelTimeResults.travelTimes.getValues()[p][destination];
-                        String ps = String.format("%03d", this.routingProperties.percentiles[p]);
-                        if (tt < maxTripDuration) {
-                            travelTimesTable.set("travel_time_p" + ps, tt);
-                        }
-                    }
-                }
+
+                // fill travel times for destination
+                populateTravelTimes(travelTimeResults, travelTimesTable, destination);
 
                 // fill travel details for destination
-                if (this.routingProperties.travelTimesBreakdown & pathResults != null) {
-                    if (!pathResults[destination].isEmpty()) {
-                        // get only first recorded path
-                        String[] a = pathResults[destination].get(0);
+                populateTravelTimesBreakdown(travelTimesTable, pathResults, destination);
+            }
+        }
+    }
 
-                        String routes = a[ROUTES_INDEX];
-                        travelTimesTable.set("routes", routes);
-                        if (!Objects.equals(routes, ""))
-                            travelTimesTable.set("n_rides", routes.split("\\|").length);
-
-                        travelTimesTable.set("access_time", parseTravelTime(a[ACCESS_TIME_INDEX]));
-                        travelTimesTable.set("wait_time", parseTravelTime(a[WAIT_TIME_INDEX]));
-                        travelTimesTable.set("ride_time", parseTravelTime(a[RIDE_TIME_INDEX]));
-                        travelTimesTable.set("transfer_time", parseTravelTime(a[TRANSFER_TIME_INDEX]));
-                        travelTimesTable.set("egress_time", parseTravelTime(a[EGRESS_TIME_INDEX]));
-                        travelTimesTable.set("total_time", parseTravelTime(a[TOTAL_TIME_INDEX]));
-                    }
+    private void populateTravelTimes(OneOriginResult travelTimeResults, RDataFrame travelTimesTable, int destination) {
+        if (this.routingProperties.percentiles.length == 1) {
+            travelTimesTable.set("travel_time", travelTimeResults.travelTimes.getValues()[0][destination]);
+        } else {
+            for (int p = 0; p < this.routingProperties.percentiles.length; p++) {
+                int tt = travelTimeResults.travelTimes.getValues()[p][destination];
+                String ps = String.format("%03d", this.routingProperties.percentiles[p]);
+                if (tt < maxTripDuration) {
+                    travelTimesTable.set("travel_time_p" + ps, tt);
                 }
             }
         }
     }
 
-    private double parseTravelTime(String a) {
+    private void populateTravelTimesBreakdown(RDataFrame travelTimesTable, ArrayList<String[]>[] pathResults, int destination) {
+        if (this.routingProperties.travelTimesBreakdown & pathResults != null) {
+            if (!pathResults[destination].isEmpty()) {
+                // get only first recorded path
+                String[] a = pathResults[destination].get(0);
+
+                String routes = a[ROUTES_INDEX];
+                travelTimesTable.set("routes", routes);
+
+                if (!routes.equals(""))
+                    travelTimesTable.set("n_rides", routes.split("\\|").length);
+
+                travelTimesTable.set("access_time", parseAndSumTravelTimes(a[ACCESS_TIME_INDEX]));
+                travelTimesTable.set("wait_time", parseAndSumTravelTimes(a[WAIT_TIME_INDEX]));
+                travelTimesTable.set("ride_time", parseAndSumTravelTimes(a[RIDE_TIME_INDEX]));
+                travelTimesTable.set("transfer_time", parseAndSumTravelTimes(a[TRANSFER_TIME_INDEX]));
+                travelTimesTable.set("egress_time", parseAndSumTravelTimes(a[EGRESS_TIME_INDEX]));
+                travelTimesTable.set("total_time", parseAndSumTravelTimes(a[TOTAL_TIME_INDEX]));
+            }
+        }
+    }
+
+    private double parseAndSumTravelTimes(String a) {
         if (a == null) return 0.0;
         if (a.equals("")) return 0.0;
 
