@@ -426,47 +426,43 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 
 
-#' Download metadata of R5 jar files
-#' @description Support function to download metadata internally used in r5r
+#' Get most recent JAR filename from metadata
 #'
-#' @return A `data.frame` with url address of r5r Jar files
+#' Returns the most recent JAR filename from metadata, depending on the version.
+#'
+#' @param version A string, the version of R5's to get the filename of.
+#'
+#' @return The filename as a string.
+#'
 #' @family support functions
-#'
-download_metadata <- function(){
+filename_from_metadata <- function(version) {
 
-  # create tempfile to save metadata
-  metadata_file <- file.path(tempdir(), "metadata_r5r.csv")
+  checkmate::assert_string(version)
 
-  # IF metadata has been downloaded before
-  if (checkmate::test_file_exists(metadata_file)) {
+  metadata <- system.file("extdata/metadata_r5r.csv", package = "r5r")
+  metadata <- data.table::fread(metadata)
 
-    # skip
+  # check for invalid 'version' input
 
-    } else {
-
-  # Download medata
-    # test server connection
-    metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
-    if (check_connection(metadata_link)) {
-      # download it and save it to JAR folder
-      utils::download.file(url=metadata_link, destfile=metadata_file,
-                           overwrite=TRUE, quiet=TRUE)
-    } else {
-      message("Using cached metadata file.")
-
-      metadata_file <- file.path(
-        system.file("extdata", package = "r5r"),
-        "metadata_r5r.csv"
-      )
-    }
-
+  if (!(version %in% metadata$version)) {
+    stop(
+      "Error: Invalid value to argument 'version'. ",
+      "Please use one of the following: ",
+      paste(unique(metadata$version), collapse = "; ")
+    )
   }
 
-  # read metadata
-  metadata <- utils::read.csv(metadata_file,
-                              colClasses = 'character', header = T, sep = ';')
+  # check which jar file to download based on the 'version' parameter
 
-  return(metadata)
+  env <- environment()
+  metadata <- metadata[version == get("version", envir = env)]
+  metadata <- metadata[release_date == max(release_date)]
+  url <- metadata$download_path
+
+  filename <- basename(url)
+
+  return(filename)
+
 }
 
 

@@ -39,11 +39,11 @@ network).}
 An rJava object to connect with R5 routing engine
 }
 \description{
-Combine data inputs in a directory to build a multimodal
-transport network used for routing in R5. The directory must contain at
-least one street network file (in .pbf format). One or more public transport
-data sets (in GTFS.zip format) are optional. If there is more than one GTFS file
-in the directory, both files will be merged. If there is already a 'network.dat'
+Combine data inputs in a directory to build a multimodal transport network
+used for routing in R5. The directory must contain at least one street
+network file (in .pbf format). One or more public transport data sets (in
+GTFS.zip format) are optional. If there is more than one GTFS file in the
+directory, both files will be merged. If there is already a 'network.dat'
 file in the directory the function will simply read it and load it to memory.
 }
 \examples{

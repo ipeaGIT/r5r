@@ -165,4 +165,17 @@ test_that("set_speed adequately raises warnings and errors", {
 
 })
 
+
+# filename_from_metadata --------------------------------------------------
+
+
+test_that("raises error if version is not a string", {
+  expect_error(filename_from_metadata(version = 6))
+})
+
+test_that("returns expected result", {
+  expect_equal("r5r_v4.9.0_20201112.jar", filename_from_metadata("4.9.0"))
+})
+
+
 stop_r5(r5r_core)

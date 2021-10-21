@@ -1,12 +1,12 @@
 #' Download R5 Jar file
 #'
-#' @description Download a compiled JAR file of R5 and saves it locally.
-#' The JAR file is saved within the package directory. The package uses a
-#' compilation of R5 tailored for the purposes of r5r that keeps R5's
-#' essential features. Source code available at https://github.com/ipeaGIT/r5r.
+#' Download a compiled JAR file of R5 and saves it locally. The JAR file is
+#' saved within the package directory. The package uses a compilation of R5
+#' tailored for the purposes of r5r that keeps R5's essential features. Source
+#' code available at https://github.com/ipeaGIT/r5r.
 #'
-#' @param version character string with the version of R5 to be downloaded.
-#'                Defaults to latest version '6.4'.
+#' @param version string with the version of R5 to be downloaded. Defaults to
+#'                latest version '6.4'.
 #' @param quiet logical, passed to download.file. Defaults to FALSE
 #' @param force_update logical, Replaces the jar file stored locally with a new
 #'                     one. Defaults to FALSE.
@@ -43,31 +43,19 @@ download_r5 <- function(version = "6.4.0",
   options(timeout = max(600, getOption("timeout")))
 
 
-  # download metadata -----------------------------------------------------
-
-  # download metadata with jar file addresses
-  metadata <- download_metadata()
-
-  # invalid version input
-  if (!(version %in% metadata$version)) {
-    stop(
-      "Error: Invalid value to argument 'version'. ",
-      "Please use one of the following: ",
-      paste(unique(metadata$version), collapse = "; ")
-    )
-  }
-
-  # generate inputs
-  metadata <- metadata[metadata$version == version, ]
-  metadata <- subset(metadata, release_date == max(metadata$release_date))
-  url <- subset(metadata, version == version)$download_path
-  file_name <- basename(url)
-  destfile <- file.path(system.file("jar", package = "r5r"), file_name)
-
-  # if temp_dir
-  if (temp_dir) destfile <- file.path(tempdir(), file_name)
-
   # download R5's jar -----------------------------------------------------
+
+  filename <- filename_from_metadata(version)
+  download_url <- file.path(
+    "https://www.ipea.gov.br/geobr/r5r/jar_repo",
+    filename
+  )
+
+  destfile <- data.table::fifelse(
+    temp_dir,
+    file.path(tempdir(), filename),
+    file.path(system.file("jar", package = "r5r"), filename)
+  )
 
   # check if the file exists, and returns its path if it does. otherwise,
   # download it from IPEA's server - if there's no internet connection "fail
@@ -78,7 +66,7 @@ download_r5 <- function(version = "6.4.0",
     return(destfile)
   }
 
-  if (!check_connection(url)) {
+  if (!check_connection(download_url)) {
     if (!quiet)
       message(
         "Problem connecting to the data server. ",
@@ -92,7 +80,7 @@ download_r5 <- function(version = "6.4.0",
 
   if (!quiet) message("R5 will be saved to ", destfile)
   utils::download.file(
-    url = url,
+    url = download_url,
     destfile = destfile,
     mode = "wb",
     quiet = quiet
