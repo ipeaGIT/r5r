@@ -13,6 +13,8 @@ travel_time_matrix(
   departure_datetime = Sys.time(),
   time_window = 1L,
   percentiles = 50L,
+  breakdown = FALSE,
+  breakdown_stat = "MEAN",
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,
@@ -62,6 +64,20 @@ taken between A and B within the set time window are shorter
 than 15 minutes. Only the first 5 cut points of the percentiles
 are considered. For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+
+\item{breakdown}{logic. If \code{FALSE} (default), the function returns a simple
+output with columns origin, destination and travel time
+percentiles. If \code{TRUE}, r5r breaks down the trip information
+and returns more columns with estimates of \code{access_time},
+\code{waiting_time}, \code{ride_time}, \code{transfer_time}, \code{total_time} , \code{n_rides}
+and \code{route}. Warning: Setting \code{TRUE} makes the function
+significantly slower.}
+
+\item{breakdown_stat}{string. If \code{min}, all the brokendown trip informantion
+is based on the trip itinerary with the smallest waiting time in the
+time window. If \code{breakdown_stat = mean}, the information is based on
+the trip itinerary whose waiting time is the closest to the average
+waiting time in the time window.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
 and egress the transit network, or to make transfers

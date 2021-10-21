@@ -18,6 +18,7 @@ Generate date and departure time strings from POSIXct
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_breakdown_stat}()},
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},

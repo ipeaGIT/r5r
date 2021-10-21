@@ -9,6 +9,7 @@ import com.conveyal.r5.transit.TransportNetwork;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
@@ -77,7 +78,10 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
                         // get only first recorded path
                         String[] a = pathResults[destination].get(0);
 
-                        travelTimesTable.set("routes", a[ROUTES_INDEX]);
+                        String routes = a[ROUTES_INDEX];
+                        travelTimesTable.set("routes", routes);
+                        if (!Objects.equals(routes, ""))
+                            travelTimesTable.set("n_rides", routes.split("\\|").length);
 
                         travelTimesTable.set("access_time", parseTravelTime(a[ACCESS_TIME_INDEX]));
                         travelTimesTable.set("wait_time", parseTravelTime(a[WAIT_TIME_INDEX]));
@@ -125,6 +129,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
             travelTimesTable.addDoubleColumn("total_time", 0.0);
 
             travelTimesTable.addStringColumn("routes", "");
+            travelTimesTable.addIntegerColumn("n_rides", 0);
         }
         return travelTimesTable;
     }

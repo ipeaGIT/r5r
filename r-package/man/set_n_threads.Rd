@@ -19,6 +19,7 @@ Sets number of threads to be used by the r5r .jar.
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_breakdown_stat}()},
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},

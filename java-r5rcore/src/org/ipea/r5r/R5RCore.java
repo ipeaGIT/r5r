@@ -117,7 +117,7 @@ public class R5RCore {
             this.routingProperties.travelTimesBreakdownStat = PathResult.Stat.MINIMUM;
         }
         if (stat.equals("MEAN") | stat.equals("AVG") | stat.equals("AVERAGE")) {
-            this.routingProperties.travelTimesBreakdownStat = PathResult.Stat.MINIMUM;
+            this.routingProperties.travelTimesBreakdownStat = PathResult.Stat.MEAN;
         }
     }
 

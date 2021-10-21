@@ -269,6 +269,29 @@ assert_decay_function <- function(decay_function, decay_value) {
   return(decay_list)
 }
 
+#' Assert travel times breakdown stat parameter value
+#'
+#' @param breakdown_stat Name of statistic function (minimum or average/mean).
+#'
+#' @return A character with the validated statistic function name.
+#' @family support functions
+
+assert_breakdown_stat <- function(breakdown_stat) {
+  # list of all decay functions
+  stat_functions  <- c('MIN', 'MINIMUM', 'MEAN', 'AVG', 'AVERAGE')
+
+  # check if decay_function is valid
+  checkmate::assert_character(breakdown_stat)
+  breakdown_stat <- toupper(breakdown_stat)
+
+  if (!breakdown_stat %chin% stat_functions) {
+    stop(paste0(breakdown_stat, " is not a valid 'statistic function'.\nPlease use one of the following: ",
+                paste(unique(stat_functions), collapse = ", ")))
+  }
+
+  return(breakdown_stat)
+}
+
 #' Set number of threads
 #'
 #' @description Sets number of threads to be used by the r5r .jar.
