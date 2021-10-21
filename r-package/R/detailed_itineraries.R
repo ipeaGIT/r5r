@@ -348,7 +348,7 @@ detailed_itineraries <- function(r5r_core,
     # itineraries with the same signature (sequence of routes) are filtered to
     # keep the one with the shortest duration
 
-    path_options[, temp_route := ifelse(route == "", mode, route)]
+    path_options[, temp_route := fifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
     path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]

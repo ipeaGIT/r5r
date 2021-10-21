@@ -308,7 +308,7 @@ travel_time_matrix <- function(r5r_core,
         data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
     }
 
-    # replace travel-times of inviable trips with NAs
+    # replace travel-times of nonviable trips with NAs
     for(j in seq(from = 3, to = length(travel_times))){
       data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
