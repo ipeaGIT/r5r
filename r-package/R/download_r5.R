@@ -20,7 +20,7 @@
 #'
 #' library(r5r)
 #'
-#' download_r5(version = "6.2", temp_dir = TRUE)
+#' download_r5(version = "6.4.0", temp_dir = TRUE)
 #' }
 
 download_r5 <- function(version = "6.4.0",
@@ -28,66 +28,76 @@ download_r5 <- function(version = "6.4.0",
                         force_update = FALSE,
                         temp_dir = FALSE) {
 
-  # check inputs ------------------------------------------------------------
+  # check inputs ----------------------------------------------------------
 
   checkmate::assert_logical(quiet)
   checkmate::assert_logical(force_update)
   checkmate::assert_logical(temp_dir)
 
 
-  # set timeout options --------------------------------------------------
+  # set timeout options ---------------------------------------------------
 
   old_options <- options()
+  on.exit(options(old_options), add = TRUE)
 
-  on.exit({
-    options(old_options)
-  })
-
-  options(timeout=600)
+  options(timeout = max(600, getOption("timeout")))
 
 
-  # download metadata ------------------------------------------------------------
+  # download metadata -----------------------------------------------------
 
   # download metadata with jar file addresses
   metadata <- download_metadata()
 
   # invalid version input
-  if (!(version %in% metadata$version)){
-    stop(paste0("Error: Invalid Value to argument 'version'. Please use one of the following: ",
-                paste(unique(metadata$version), collapse = "; ")))
-  } else {
-    # generate inputs
-    metadata <- metadata[metadata$version == version, ]
-    metadata <- subset(metadata, release_date == max(metadata$release_date))
-    url <- subset(metadata, version == version)$download_path
-    file_name = basename(url)
-    libs <- .libPaths()[1]
-    destfile <- file.path(libs, "r5r", "jar", file_name)
+  if (!(version %in% metadata$version)) {
+    stop(
+      "Error: Invalid value to argument 'version'. ",
+      "Please use one of the following: ",
+      paste(unique(metadata$version), collapse = "; ")
+    )
   }
+
+  # generate inputs
+  metadata <- metadata[metadata$version == version, ]
+  metadata <- subset(metadata, release_date == max(metadata$release_date))
+  url <- subset(metadata, version == version)$download_path
+  file_name <- basename(url)
+  destfile <- file.path(system.file("jar", package = "r5r"), file_name)
 
   # if temp_dir
   if (temp_dir) destfile <- file.path(tempdir(), file_name)
 
-  # check cached file ----------------------------------------------------------
+  # download R5's jar -----------------------------------------------------
 
-  # check for existing file
+  # check if the file exists, and returns its path if it does. otherwise,
+  # download it from IPEA's server - if there's no internet connection "fail
+  # gracefully" (i.e invisibly returns NULL and outputs a informative message)"
 
-  if (checkmate::test_file_exists(destfile) && (force_update == FALSE)) {
-    message("Using cached R5 version from ", destfile)
+  if (file.exists(destfile) && (force_update == FALSE)) {
+    if (!quiet) message("Using cached R5 version from ", destfile)
     return(destfile)
-  } else {
-
-
-  # Download JAR file ------------------------------------------------------------
-
-    # download file if it does not exist
-    if (!checkmate::test_directory_exists(file.path(libs, "r5r", "jar"))) {
-      dir.create(file.path(libs, "r5r", "jar"))
-    }
-    message("R5 will be saved to ", destfile)
-    check_connection(url)
-    utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
-    return(destfile)
-
   }
+
+  if (!check_connection(url)) {
+    if (!quiet)
+      message(
+        "Problem connecting to the data server. ",
+        "Please try again in a few minutes."
+      )
+    return(invisible(NULL))
+  }
+
+  jar_dir <- system.file("jar", package = "r5r")
+  if (!dir.exists(jar_dir)) dir.create(jar_dir)
+
+  if (!quiet) message("R5 will be saved to ", destfile)
+  utils::download.file(
+    url = url,
+    destfile = destfile,
+    mode = "wb",
+    quiet = quiet
+  )
+
+  return(destfile)
+
 }

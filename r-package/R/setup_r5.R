@@ -86,7 +86,7 @@ setup_r5 <- function(data_path,
     metadata <- subset(metadata, release_date == max(metadata$release_date))
 
     file_name <- basename(metadata$download_path)
-    jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
+    jar_file <- file.path(system.file("jar", package = "r5r"), file_name)
 
     # if temp_dir
     if (temp_dir == TRUE) jar_file <- file.path(tempdir(), file_name)

@@ -454,7 +454,10 @@ download_metadata <- function(){
     } else {
       message("Using cached metadata file.")
 
-      metadata_file <- file.path(.libPaths()[1], "r5r", "extdata", "metadata_r5r.csv")
+      metadata_file <- file.path(
+        system.file("extdata", package = "r5r"),
+        "metadata_r5r.csv"
+      )
     }
 
   }
