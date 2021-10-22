@@ -13,6 +13,6 @@ java_to_dt(obj)
 An R data.table
 }
 \description{
-#' @description Converts a Java object returned by r5r_core to an R data.table
+Converts a Java object returned by r5r_core to an R data.table
 }
 \concept{java support functions}
