@@ -6,7 +6,7 @@ testthat::skip_on_cran()
 # load required data and setup r5r_core
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
 # create testing function
@@ -176,7 +176,11 @@ test_that("output is correct", {
   # expect results to be of class 'data.table', independently of the class of
   # 'origins'/'destinations'
 
-  origins_sf <- destinations_sf <-  sf::st_as_sf(points[1:10,], coords = c("lon", "lat"))
+  origins_sf <- destinations_sf <- sf::st_as_sf(
+    points[1:10,],
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)

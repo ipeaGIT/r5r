@@ -19,13 +19,16 @@ indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
 
 - Created new support function `java_to_dt()` and removed dependency on the `jdx` package. Closes [#206](https://github.com/ipeaGIT/r5r/issues/206)
 
+- Reduced r5r's internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn't been downloaded before. Closes [#197](https://github.com/ipeaGIT/r5r/issues/197).
+
 **Minor changes**
 
 - New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
-- Improved documentation of parameter `departure_datetime` to clarify the parameter must be set to local time. Closes  [#188](https://github.com/ipeaGIT/r5r/issues/188)
-- Improved documentation regarding personalized LTS values. [Closes #190]( https://github.com/ipeaGIT/r5r/issues/190).
-- Improved documentation of `transit_network_to_sf()` regarding stops that are not snapped to road network. [Closes #192]( https://github.com/ipeaGIT/r5r/issues/192).
+- Improved documentation of parameter `departure_datetime` to clarify the parameter must be set to local time. Closes [#188](https://github.com/ipeaGIT/r5r/issues/188)
+- Improved documentation regarding personalized LTS values. [Closes #190](https://github.com/ipeaGIT/r5r/issues/190).
+- Improved documentation of `transit_network_to_sf()` regarding stops that are not snapped to road network. [Closes #192](https://github.com/ipeaGIT/r5r/issues/192).
 - Improved documentation of `max_walking_dist` and `max_cycling_dist` parameters. [Closes #193]( https://github.com/ipeaGIT/r5r/issues/193).
+- Started raising an error if the CRS of origins/destinations is not WGS 84. Closes [#201](https://github.com/ipeaGIT/r5r/issues/201).
 
 
 

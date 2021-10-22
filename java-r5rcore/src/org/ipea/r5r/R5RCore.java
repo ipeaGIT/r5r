@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
+import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.point_to_point.builder.TNBuilderConfig;
 import com.conveyal.r5.streets.EdgeStore;
@@ -12,16 +13,13 @@ import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.IntStream;
 
 public class R5RCore {
 
@@ -105,6 +103,28 @@ public class R5RCore {
         this.routingProperties.maxRides = maxRides;
     }
 
+    public void setTravelTimesBreakdown(boolean detailedTravelTimes) {
+        this.routingProperties.travelTimesBreakdown = detailedTravelTimes;
+    }
+
+    public boolean getTravelTimesBreakdown() {
+        return this.routingProperties.travelTimesBreakdown;
+    }
+
+    public void setTravelTimesBreakdownStat(String stat) {
+        stat = stat.toUpperCase();
+        if (stat.equals("MIN") | stat.equals("MINIMUM")) {
+            this.routingProperties.travelTimesBreakdownStat = PathResult.Stat.MINIMUM;
+        }
+        if (stat.equals("MEAN") | stat.equals("AVG") | stat.equals("AVERAGE")) {
+            this.routingProperties.travelTimesBreakdownStat = PathResult.Stat.MEAN;
+        }
+    }
+
+    public String getTravelTimesBreakdownStat() {
+        return this.routingProperties.travelTimesBreakdownStat.toString();
+    }
+
     public int getNumberOfThreads() {
         return this.numberOfThreads;
     }
@@ -133,6 +153,20 @@ public class R5RCore {
 
     public void setBenchmark(boolean benchmark) {
         Utils.benchmark = benchmark;
+    }
+
+    public void setCsvOutput(String csvFolder) {
+        if (!csvFolder.equals("")) {
+            Utils.saveOutputToCsv = true;
+            Utils.outputCsvFolder = csvFolder;
+        } else {
+            Utils.saveOutputToCsv = false;
+            Utils.outputCsvFolder = "";
+        }
+    }
+
+    public String getOutputCsvFolder () {
+        return Utils.outputCsvFolder;
     }
 
     private final TransportNetwork transportNetwork;
@@ -262,7 +296,6 @@ public class R5RCore {
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
 
         TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);

@@ -1,5 +1,7 @@
 package org.ipea.r5r;
 
+import com.conveyal.r5.analyst.cluster.PathResult;
+
 public class RoutingProperties {
 
     public double walkSpeed;
@@ -11,6 +13,8 @@ public class RoutingProperties {
     public int numberOfMonteCarloDraws; //
     public int[] percentiles = {50};
     public int [] cutoffs = {30};
+    public boolean travelTimesBreakdown;
+    public PathResult.Stat travelTimesBreakdownStat;
 
     public RoutingProperties() {
         walkSpeed = 1.0f;
@@ -20,5 +24,8 @@ public class RoutingProperties {
         suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
         timeWindowSize = 60; // minutes
         numberOfMonteCarloDraws = 60; //
+
+        travelTimesBreakdown = false;
+        travelTimesBreakdownStat = PathResult.Stat.MEAN;
     }
 }

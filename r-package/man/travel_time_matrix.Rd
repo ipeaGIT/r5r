@@ -13,6 +13,8 @@ travel_time_matrix(
   departure_datetime = Sys.time(),
   time_window = 1L,
   percentiles = 50L,
+  breakdown = FALSE,
+  breakdown_stat = "MEAN",
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,
@@ -28,8 +30,9 @@ travel_time_matrix(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'}
+\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
+data.frame containing the columns 'id', 'lon',
+'lat'.}
 
 \item{mode}{string. Transport modes allowed for the trips. Defaults to
 "WALK". See details for other options.}
@@ -61,6 +64,20 @@ taken between A and B within the set time window are shorter
 than 15 minutes. Only the first 5 cut points of the percentiles
 are considered. For more details, see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+
+\item{breakdown}{logic. If \code{FALSE} (default), the function returns a simple
+output with columns origin, destination and travel time
+percentiles. If \code{TRUE}, r5r breaks down the trip information
+and returns more columns with estimates of \code{access_time},
+\code{waiting_time}, \code{ride_time}, \code{transfer_time}, \code{total_time} , \code{n_rides}
+and \code{route}. Warning: Setting \code{TRUE} makes the function
+significantly slower.}
+
+\item{breakdown_stat}{string. If \code{min}, all the brokendown trip informantion
+is based on the trip itinerary with the smallest waiting time in the
+time window. If \code{breakdown_stat = mean}, the information is based on
+the trip itinerary whose waiting time is the closest to the average
+waiting time in the time window.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
 and egress the transit network, or to make transfers
@@ -149,8 +166,9 @@ exceeding 1. Setting \code{max_lts} to 3 will allow cycling on links with LTS 1,
 or 3.
 
 The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS at
-\url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+commonly tagged attributes of OSM ways. See more info about LTS in the original
+documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+In summary:
 \itemize{
 \item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume streets,
 as well as those with separated bicycle facilities (such as parking-protected
@@ -200,7 +218,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]

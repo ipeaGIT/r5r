@@ -4,8 +4,9 @@
 #'              or many origin destination pairs.
 #'
 #' @param r5r_core rJava object to connect with R5 routing engine
-#' @param origins,destinations either a spatial sf POINT object or a data.frame
-#'                            containing the columns 'id', 'lon', 'lat'
+#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
+#'                             data.frame containing the columns 'id', 'lon',
+#'                             'lat'.
 #' @param mode string. Transport modes allowed for the trips. Defaults to
 #'             "WALK". See details for other options.
 #' @param mode_egress string. Transport mode used after egress from public
@@ -86,8 +87,9 @@
 #' or 3.
 #'
 #' The default methodology for assigning LTS values to network edges is based on
-#' commonly tagged attributes of OSM ways. See more info about LTS at
-#' \url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+#' commonly tagged attributes of OSM ways. See more info about LTS in the original
+#' documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+#' In summary:
 #'
 #'- **LTS 1**: Tolerable for children. This includes low-speed, low-volume streets,
 #'  as well as those with separated bicycle facilities (such as parking-protected
@@ -136,7 +138,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -348,7 +350,7 @@ detailed_itineraries <- function(r5r_core,
     # itineraries with the same signature (sequence of routes) are filtered to
     # keep the one with the shortest duration
 
-    path_options[, temp_route := ifelse(route == "", mode, route)]
+    path_options[, temp_route := fifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
 
     path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
@@ -363,7 +365,7 @@ detailed_itineraries <- function(r5r_core,
   # options
   path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
 
-  # if results includes the geometry, convert path_options from data.frame to
+  # if results include the geometry, convert path_options from data.frame to
   # data.table with sfc column
   if (!drop_geometry) {
 

@@ -19,6 +19,9 @@ public class Utils {
     static public boolean benchmark = false;
     static public boolean progress = true;
 
+    static public boolean saveOutputToCsv = false;
+    static public String outputCsvFolder = "";
+
     public static EnumSet<LegMode> setLegModes(String modes) {
         EnumSet<LegMode> legModes = EnumSet.noneOf(LegMode.class);
 

@@ -32,8 +32,9 @@ accessibility(
 \arguments{
 \item{r5r_core}{a rJava object to connect with R5 routing engine}
 
-\item{origins, destinations}{a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'}
+\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
+data.frame containing the columns 'id', 'lon',
+'lat'.}
 
 \item{opportunities_colname}{string. The column name in the \code{destinations}
 input that tells the number of opportunities in each location.
@@ -146,7 +147,8 @@ Fast computation of access to opportunities given a selected
 decay function. See \code{details} for the available decay functions.
 }
 \section{Decay functions:}{
-R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions}
+R5 allows for multiple decay functions. More info in the original R5
+documentation from Conveyal, at \url{https://docs.conveyal.com/learn-more/decay-functions}
 The options include:
 \subsection{Step \code{step} (cumulative opportunities)}{
 
@@ -229,8 +231,9 @@ exceeding 1. Setting \code{max_lts} to 3 will allow cycling on links with LTS 1,
 or 3.
 
 The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS at
-\url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+commonly tagged attributes of OSM ways. See more info about LTS in the original
+documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+In summary:
 \itemize{
 \item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume streets,
 as well as those with separated bicycle facilities (such as parking-protected
@@ -280,7 +283,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))

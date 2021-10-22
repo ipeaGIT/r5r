@@ -7,6 +7,7 @@ import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.transit.TransportNetwork;
 import org.ipea.r5r.Utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
@@ -81,6 +82,7 @@ public abstract class R5Process {
         List<RDataFrame> processResults = r5rThreadPool.submit(() ->
                 Arrays.stream(requestIndices).parallel()
                         .mapToObj(index -> tryRunProcess(totalProcessed, index)).
+                        filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
         System.out.print(".. DONE!\n");
         if (!Utils.verbose & Utils.progress) {
@@ -101,13 +103,20 @@ public abstract class R5Process {
                 results.addLongColumn("execution_time", duration);
             }
 
+            if (Utils.saveOutputToCsv & results != null) {
+                String filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + ".csv";
+                results.saveToCsv(filename);
+                results.clear();
+            }
+
             if (!Utils.verbose) {
                 System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
             }
-        } catch (ParseException e) {
+        } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
         }
-        return results;
+
+        return Utils.saveOutputToCsv ? null : results;
     }
 
     protected abstract RDataFrame runProcess(int index) throws ParseException;
@@ -117,12 +126,10 @@ public abstract class R5Process {
             System.out.print("Consolidating results...");
         }
 
-        int nRows = 0;
-        for (RDataFrame dataFrame : processResults) {
-            if (dataFrame != null) {
-                nRows = nRows + dataFrame.nRow();
-            }
-        }
+        int nRows;
+        nRows = processResults.stream()
+                .mapToInt(RDataFrame::nRow)
+                .sum();
 
         RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
         if (Utils.benchmark) {
@@ -132,16 +139,16 @@ public abstract class R5Process {
         mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(
                 key -> {
                     ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
-                    for (RDataFrame dataFrame : processResults) {
-                        if (dataFrame != null) {
-                            ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
-                            destinationArray.addAll(originArray);
+                    processResults.forEach(
+                            dataFrame -> {
+                                ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
+                                destinationArray.addAll(originArray);
 
-                            originArray.clear();
-                        }
-                    }
+                                originArray.clear();
+                            });
                 }
         );
+        mergedDataFrame.updateRowCount();
 
         if (!Utils.verbose & Utils.progress) {
             System.out.print(" DONE!\n");

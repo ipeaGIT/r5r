@@ -4,7 +4,7 @@ testthat::skip_on_cran()
 
 # load required data and setup r5r_obj
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 
@@ -19,6 +19,17 @@ test_that("set_verbose adequately raises warnings and errors", {
 
 })
 
+
+# set_progress -------------------------------------------------------------
+
+
+test_that("set_progress adequately raises warnings and errors", {
+
+  expect_error(set_progress("r5r_obj", TRUE))
+  expect_error(set_progress(r5r_obj, "TRUE"))
+  expect_error(set_progress(r5r_obj, 1))
+
+})
 
 # set_max_street_time -----------------------------------------------------
 
@@ -81,13 +92,20 @@ test_that("posix_to_string output is coherent", {
 
 # assert_points_input -----------------------------------------------------
 
+sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326)
 
 test_that("assert_points_input adequately raises warnings and errors", {
 
-  multipoint_points <- sf::st_cast(sf::st_as_sf(points, coords = c("lon", "lat")), "MULTIPOINT")
-  list_points <- setNames(lapply(names(points), function(i) points[[i]]), names(points))
-
   # object class
+
+  multipoint_points <- sf::st_cast(
+    sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326),
+    "MULTIPOINT"
+  )
+  list_points <- setNames(
+    lapply(names(points), function(i) points[[i]]),
+    names(points)
+  )
 
   expect_error(assert_points_input(as.matrix(points), "points"))
   expect_error(assert_points_input(list_points, "points"))
@@ -96,18 +114,28 @@ test_that("assert_points_input adequately raises warnings and errors", {
   # object columns types
 
   points_numeric_id <- data.table::setDT(data.table::copy(points))[, id := 1:.N]
-  points_char_lat <- data.table::setDT(data.table::copy(points))[, lat := as.character(lat)]
-  points_char_lon <- data.table::setDT(data.table::copy(points))[, lon := as.character(lon)]
+  points_char_lat <- data.table::setDT(data.table::copy(points))[
+    ,
+    lat := as.character(lat)
+  ]
+  points_char_lon <- data.table::setDT(data.table::copy(points))[
+    ,
+    lon := as.character(lon)
+  ]
 
   expect_warning(assert_points_input(points_numeric_id, "points"))
   expect_error(assert_points_input(points_char_lat, "points"))
   expect_error(assert_points_input(points_char_lon, "points"))
 
+  # object crs
+
+  wrong_crs_sf <- sf::st_transform(sf_points, 4674)
+  expect_error(assert_points_input(wrong_crs_sf, "points"))
+
 })
 
 test_that("assert_points_input output is coherent", {
 
-  sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"))
   sf_points_output <- assert_points_input(sf_points, "points")
 
   df_points_output <- assert_points_input(points, "points")
@@ -126,6 +154,38 @@ test_that("assert_points_input output is coherent", {
 
 })
 
+
+
+# assert_decay_function -----------------------------------------------------
+
+test_that("assert_decay_function adequately raises warnings and errors", {
+
+  expect_error(assert_decay_function(decay_function='STEP', decay_value=NULL))
+  expect_error(assert_decay_function(decay_function='STEP', decay_value='bananas'))
+  expect_error(assert_decay_function(decay_function='bananas', decay_value=4))
+  expect_error(assert_decay_function(decay_function= 444, decay_value=4))
+  expect_error(assert_decay_function(decay_function= 'LOGISTIC', decay_value=0.4))
+})
+
+test_that("assert_decay_function expected behavior", {
+  expect_equal(class(assert_decay_function(decay_function='STEP', decay_value=4)), 'list')
+})
+
+
+
+
+# assert_breakdown_stat -----------------------------------------------------
+
+test_that("assert_breakdown_stat adequately raises warnings and errors", {
+
+  expect_error(assert_breakdown_stat(breakdown_stat='bananas'))
+  expect_error(assert_breakdown_stat(breakdown_stat=111))
+  expect_error(assert_breakdown_stat(breakdown_stat=NULL))
+})
+
+test_that("assert_breakdown_stat expected behavior", {
+  expect_equal(class(assert_breakdown_stat(breakdown_stat='min')), 'character')
+})
 
 # set_n_threads -----------------------------------------------------------
 
@@ -147,5 +207,18 @@ test_that("set_speed adequately raises warnings and errors", {
   expect_error(set_speed(r5r_obj, "3.6", "walk"))
 
 })
+
+
+# filename_from_metadata --------------------------------------------------
+
+
+test_that("raises error if version is not a string", {
+  expect_error(filename_from_metadata(version = 6))
+})
+
+test_that("returns expected result", {
+  expect_equal("r5r_v4.9.0_20201112.jar", filename_from_metadata("4.9.0"))
+})
+
 
 stop_r5(r5r_core)

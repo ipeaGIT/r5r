@@ -184,16 +184,26 @@ assert_points_input <- function(df, name) {
     if (is(df, "sf")) {
 
       if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
-
-        stop(paste0("'", name, "' must be either a 'data.frame' or a 'POINT sf'."))
-
+        stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
       }
+
+      if (sf::st_crs(df) != sf::st_crs(4326))
+        stop(
+          "'", name, "' CRS must be WGS 84 (EPSG 4326). ",
+          "Please use either sf::set_crs() to set it or ",
+          "sf::st_transform() to reproject it."
+        )
 
       df <- sfheaders::sf_to_df(df, fill = TRUE)
       data.table::setDT(df)
       data.table::setnames(df, "x", "lon")
       data.table::setnames(df, "y", "lat")
-      checkmate::assert_names(names(df), must.include = c("id"), .var.name = name)
+      checkmate::assert_names(
+        names(df),
+        must.include = c("id"),
+        .var.name = name
+      )
+
     }
 
     checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)
@@ -257,6 +267,29 @@ assert_decay_function <- function(decay_function, decay_value) {
 
   decay_list <- list("fun" = decay_function, "value" = decay_value)
   return(decay_list)
+}
+
+#' Assert travel times breakdown stat parameter value
+#'
+#' @param breakdown_stat Name of statistic function (minimum or average/mean).
+#'
+#' @return A character with the validated statistic function name.
+#' @family support functions
+
+assert_breakdown_stat <- function(breakdown_stat) {
+  # list of all decay functions
+  stat_functions  <- c('MIN', 'MINIMUM', 'MEAN', 'AVG', 'AVERAGE')
+
+  # check if decay_function is valid
+  checkmate::assert_character(breakdown_stat)
+  breakdown_stat <- toupper(breakdown_stat)
+
+  if (!breakdown_stat %chin% stat_functions) {
+    stop(paste0(breakdown_stat, " is not a valid 'statistic function'.\nPlease use one of the following: ",
+                paste(unique(stat_functions), collapse = ", ")))
+  }
+
+  return(breakdown_stat)
 }
 
 #' Set number of threads
@@ -393,44 +426,43 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 
 
-#' Download metadata of R5 jar files
-#' @description Support function to download metadata internally used in r5r
+#' Get most recent JAR filename from metadata
 #'
-#' @return A `data.frame` with url address of r5r Jar files
+#' Returns the most recent JAR filename from metadata, depending on the version.
+#'
+#' @param version A string, the version of R5's to get the filename of.
+#'
+#' @return The filename as a string.
+#'
 #' @family support functions
-#'
-download_metadata <- function(){
+filename_from_metadata <- function(version) {
 
-  # create tempfile to save metadata
-  metadata_file <- file.path(tempdir(), "metadata_r5r.csv")
+  checkmate::assert_string(version)
 
-  # IF metadata has been downloaded before
-  if (checkmate::test_file_exists(metadata_file)) {
+  metadata <- system.file("extdata/metadata_r5r.csv", package = "r5r")
+  metadata <- data.table::fread(metadata)
 
-    # skip
+  # check for invalid 'version' input
 
-    } else {
-
-  # Download medata
-    # test server connection
-    metadata_link <- 'https://www.ipea.gov.br/geobr/r5r/metadata.csv'
-    if (check_connection(metadata_link)) {
-      # download it and save it to JAR folder
-      utils::download.file(url=metadata_link, destfile=metadata_file,
-                           overwrite=TRUE, quiet=TRUE)
-    } else {
-      message("Using cached metadata file.")
-
-      metadata_file <- file.path(.libPaths()[1], "r5r", "extdata", "metadata_r5r.csv")
-    }
-
+  if (!(version %in% metadata$version)) {
+    stop(
+      "Error: Invalid value to argument 'version'. ",
+      "Please use one of the following: ",
+      paste(unique(metadata$version), collapse = "; ")
+    )
   }
 
-  # read metadata
-  metadata <- utils::read.csv(metadata_file,
-                              colClasses = 'character', header = T, sep = ';')
+  # check which jar file to download based on the 'version' parameter
 
-  return(metadata)
+  env <- environment()
+  metadata <- metadata[version == get("version", envir = env)]
+  metadata <- metadata[release_date == max(release_date)]
+  url <- metadata$download_path
+
+  filename <- basename(url)
+
+  return(filename)
+
 }
 
 

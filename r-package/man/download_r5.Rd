@@ -12,8 +12,8 @@ download_r5(
 )
 }
 \arguments{
-\item{version}{character string with the version of R5 to be downloaded.
-Defaults to latest version '6.4'.}
+\item{version}{string with the version of R5 to be downloaded. Defaults to
+latest version '6.4'.}
 
 \item{quiet}{logical, passed to download.file. Defaults to FALSE}
 
@@ -27,17 +27,17 @@ directory. Defaults to FALSE}
 A jar file is saved locally in the r5r package directory
 }
 \description{
-Download a compiled JAR file of R5 and saves it locally.
-The JAR file is saved within the package directory. The package uses a
-compilation of R5 tailored for the purposes of r5r that keeps R5's
-essential features. Source code available at https://github.com/ipeaGIT/r5r.
+Download a compiled JAR file of R5 and saves it locally. The JAR file is
+saved within the package directory. The package uses a compilation of R5
+tailored for the purposes of r5r that keeps R5's essential features. Source
+code available at https://github.com/ipeaGIT/r5r.
 }
 \examples{
 if (interactive()) {
 
 library(r5r)
 
-download_r5(version = "6.2", temp_dir = TRUE)
+download_r5(version = "6.4.0", temp_dir = TRUE)
 }
 }
 \seealso{

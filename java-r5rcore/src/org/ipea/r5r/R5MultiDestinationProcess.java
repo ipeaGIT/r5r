@@ -1,6 +1,7 @@
 package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.FreeFormPointSet;
+import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
@@ -84,5 +85,8 @@ public abstract class R5MultiDestinationProcess extends R5Process {
         this.opportunities = opportunities;
 
         this.nDestinations = toIds.length;
+
+        // set maxDestinations in R5 for detailed path information retrieval
+        PathResult.maxDestinations = this.nDestinations;
     }
 }

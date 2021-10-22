@@ -6,7 +6,7 @@ testthat::skip_on_cran()
 # load required data and setup r5r_core
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # create testing function
@@ -169,8 +169,16 @@ test_that("detailed_itineraries output is correct", {
   # expect results to be of class 'sf' and 'data.table', independently of the
   # class of 'origins'/'destinations', when drop_geometry = FALSE
 
-  origins_sf      <- sf::st_as_sf(points[1:2,], coords = c("lon", "lat"))
-  destinations_sf <- sf::st_as_sf(points[2:1,], coords = c("lon", "lat"))
+  origins_sf <- sf::st_as_sf(
+    points[1:2,],
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+  destinations_sf <- sf::st_as_sf(
+    points[2:1,],
+    coords = c("lon", "lat"),
+    crs = 4326
+  ) 
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)

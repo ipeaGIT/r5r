@@ -1,11 +1,11 @@
 #' Create transport network used for routing in R5
 #'
-#' @description Combine data inputs in a directory to build a multimodal
-#'  transport network used for routing in R5. The directory must contain at
-#'  least one street network file (in .pbf format). One or more public transport
-#'  data sets (in GTFS.zip format) are optional. If there is more than one GTFS file
-#'  in the directory, both files will be merged. If there is already a 'network.dat'
-#'  file in the directory the function will simply read it and load it to memory.
+#' Combine data inputs in a directory to build a multimodal transport network
+#' used for routing in R5. The directory must contain at least one street
+#' network file (in .pbf format). One or more public transport data sets (in
+#' GTFS.zip format) are optional. If there is more than one GTFS file in the
+#' directory, both files will be merged. If there is already a 'network.dat'
+#' file in the directory the function will simply read it and load it to memory.
 #'
 #' @param data_path character string, the directory where data inputs are stored
 #'                  and where the built network.dat will be saved.
@@ -60,7 +60,8 @@ setup_r5 <- function(data_path,
   if (ver != 11) {
     stop(
       "This package requires the Java SE Development Kit 11.\n",
-      "Please update your Java installation. The jdk 11 can be downloaded from either:\n",
+      "Please update your Java installation. ",
+      "The jdk 11 can be downloaded from either:\n",
       "  - openjdk: https://jdk.java.net/java-se-ri/11\n",
       "  - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html"
     )
@@ -78,28 +79,30 @@ setup_r5 <- function(data_path,
   if (!(any_pbf | any_network))
     stop("\nAn OSM PBF file is required to build a network.")
 
-  # check if most recent JAR release is stored already. If not, download it
-    # download metadata with jar file addresses
-    metadata <- download_metadata()
+  # check if the most recent JAR release is stored already. If it's not
+  # download it
 
-    metadata <- metadata[metadata$version == version, ]
-    metadata <- subset(metadata, release_date == max(metadata$release_date))
+  filename <- filename_from_metadata(version)
 
-    file_name <- basename(metadata$download_path)
-    jar_file <- file.path(.libPaths()[1], "r5r", "jar", file_name)
-
-    # if temp_dir
-    if (temp_dir == TRUE) jar_file <- file.path(tempdir(), file_name)
-
+  jar_file <- data.table::fifelse(
+    temp_dir,
+    file.path(tempdir(), filename),
+    file.path(system.file("jar", package = "r5r"), filename)
+  )
 
   if (checkmate::test_file_exists(jar_file)) {
-    message("Using cached version from ", jar_file)
+    if (!verbose) message("Using cached version from ", jar_file)
   } else {
-    download_r5(version = version, temp_dir = temp_dir)
+    download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
   }
 
-  # start R5 JAR
-  r5r_jar <- file.path(.libPaths()[1], "r5r", "jar", "r5r_0_6_0.jar")
+  # start r5r and R5 JAR
+
+  existing_files <- list.files(system.file("jar", package = "r5r"))
+  r5r_jar <- file.path(
+    system.file("jar", package = "r5r"),
+    existing_files[grepl("r5r", existing_files)]
+  )
 
   rJava::.jaddClassPath(path = r5r_jar)
   rJava::.jaddClassPath(path = jar_file)
@@ -116,7 +119,7 @@ setup_r5 <- function(data_path,
   } else {
 
     # clean up any files that might have been created by previous r5r usage
-    # if the files do not exist 'file.remove()' will raise an error, which is
+    # if the files do not exist 'file.remove()' will raise a warning, which is
     # suppressed here
     mapdb_files <- list.files(data_path)
     mapdb_files <- mapdb_files[grepl("\\.mapdb", mapdb_files)]
@@ -138,14 +141,26 @@ setup_r5 <- function(data_path,
   }
 
   # elevation
+
   if (use_elevation) {
     # check for any elevation files in data_path (*.tif)
-    tif_files <- list.files(path = data_path, pattern = "*.tif$", full.names = TRUE)
+    tif_files <- list.files(
+      path = data_path,
+      pattern = "*.tif$",
+      full.names = TRUE
+    )
 
     # if there are any .tif files in the data_path folder, apply elevation to street network
     if (length(tif_files) > 0) {
-      message(sprintf("%s TIFF file(s) found in data path. Loading elevation into street edges.\n", length(tif_files)),
-              "DISCLAIMER: this is an r5r specific feature, and it will be deprecated once native support\nfor elevation data is added to R5.")
+      if (verbose)
+        message(
+          length(tif_files), " TIFF file(s) found in data path. ",
+          "Loading elevation into street edges.\n",
+          "DISCLAIMER: this is an r5r specific feature, and it will be ",
+          "deprecated once native support\n",
+          "for elevation data is added to R5."
+        )
+
       apply_elevation(r5r_core, tif_files)
     }
   }
@@ -154,6 +169,5 @@ setup_r5 <- function(data_path,
   r5r_core$buildDistanceTables()
 
   return(r5r_core)
-
 
 }

@@ -30,7 +30,7 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 
 # extract transit network from r5r_core
 transit_net <- transit_network_to_sf(r5r_core)
@@ -40,10 +40,11 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_breakdown_stat}()},
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
-\code{\link{download_metadata}()},
+\code{\link{filename_from_metadata}()},
 \code{\link{find_snap}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},

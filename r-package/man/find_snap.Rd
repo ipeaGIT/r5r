@@ -35,7 +35,7 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 
 # load origin/destination points
 points <- read.csv(file.path(path, "spo_hexgrid.csv"))
@@ -50,10 +50,11 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other support functions: 
+\code{\link{assert_breakdown_stat}()},
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
-\code{\link{download_metadata}()},
+\code{\link{filename_from_metadata}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_lts}()},

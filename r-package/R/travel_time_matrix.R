@@ -4,8 +4,9 @@
 #'              multiple origin destination pairs.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object, or a data.frame
-#'                containing the columns 'id', 'lon', 'lat'
+#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
+#'                             data.frame containing the columns 'id', 'lon',
+#'                             'lat'.
 #' @param mode string. Transport modes allowed for the trips. Defaults to
 #'             "WALK". See details for other options.
 #' @param mode_egress string. Transport mode used after egress from public
@@ -32,6 +33,19 @@
 #'                    than 15 minutes. Only the first 5 cut points of the percentiles
 #'                    are considered. For more details, see R5 documentation at
 #'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
+#' @param breakdown logic. If `FALSE` (default), the function returns a simple
+#'                  output with columns origin, destination and travel time
+#'                  percentiles. If `TRUE`, r5r breaks down the trip information
+#'                  and returns more columns with estimates of `access_time`,
+#'                  `waiting_time`, `ride_time`, `transfer_time`, `total_time` , `n_rides`
+#'                  and `route`. Warning: Setting `TRUE` makes the function
+#'                  significantly slower.
+#'
+#' @param breakdown_stat string. If `min`, all the brokendown trip informantion
+#'        is based on the trip itinerary with the smallest waiting time in the
+#'        time window. If `breakdown_stat = mean`, the information is based on
+#'        the trip itinerary whose waiting time is the closest to the average
+#'        waiting time in the time window.
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
 #'                      and egress the transit network, or to make transfers
 #'                      within the network. Defaults to no restrictions as long
@@ -102,8 +116,9 @@
 #' or 3.
 #'
 #' The default methodology for assigning LTS values to network edges is based on
-#' commonly tagged attributes of OSM ways. See more info about LTS at
-#' \url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+#' commonly tagged attributes of OSM ways. See more info about LTS in the original
+#' documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+#' In summary:
 #'
 #'- **LTS 1**: Tolerable for children. This includes low-speed, low-volume streets,
 #'  as well as those with separated bicycle facilities (such as parking-protected
@@ -150,7 +165,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/spo", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
@@ -179,6 +194,8 @@ travel_time_matrix <- function(r5r_core,
                                departure_datetime = Sys.time(),
                                time_window = 1L,
                                percentiles = 50L,
+                               breakdown = FALSE,
+                               breakdown_stat = "MEAN",
                                max_walk_dist = Inf,
                                max_bike_dist = Inf,
                                max_trip_duration = 120L,
@@ -246,6 +263,10 @@ travel_time_matrix <- function(r5r_core,
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)
 
+  # travel times breakdown
+  checkmate::assert_logical(breakdown)
+  breakdown_stat <- assert_breakdown_stat(breakdown_stat)
+
 
   # set r5r_core options ----------------------------------------------------
 
@@ -253,6 +274,10 @@ travel_time_matrix <- function(r5r_core,
   r5r_core$setTimeWindowSize(time_window)
   r5r_core$setPercentiles(percentiles)
   r5r_core$setNumberOfMonteCarloDraws(draws)
+
+  # travel times breakdown
+  r5r_core$setTravelTimesBreakdown(breakdown)
+  r5r_core$setTravelTimesBreakdownStat(breakdown_stat)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
@@ -301,15 +326,12 @@ travel_time_matrix <- function(r5r_core,
 
   # only perform following operations when result is not empty
   if (nrow(travel_times) > 0) {
-    # convert eventual list columns to integer
-    for(j1 in seq_along(travel_times)) {
-      cl1 <- class(travel_times[[j1]])
-      if(cl1 == 'list') {
-        data.table::set(travel_times, i = NULL, j = j1, value = unlist(travel_times[[j1]]))}
-    }
-
-    # replace travel-times of inviable trips with NAs
-    for(j in seq(from = 3, to = length(travel_times))){
+    # replace travel-times of nonviable trips with NAs
+    #   the first column with travel time information is column 3, because
+    #     columns 1 and 2 contain the id's of OD point (hence from = 3)
+    #   the percentiles parameter indicates how many travel times columns we'll,
+    #     have, with a minimum of 1 (in which case, to = 3).
+    for(j in seq(from = 3, to = (length(percentiles) + 2))){
       data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
     }
   }

@@ -6,7 +6,7 @@ testthat::skip_on_cran()
 # load required data and setup r5r_core
 
 data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))
 
 # create testing function
@@ -19,6 +19,8 @@ default_tester <- function(r5r_core,
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            time_window = 1L,
                            percentiles = 50L,
+                           breakdown = FALSE,
+                           breakdown_stat = "MEAN",
                            max_walk_dist = Inf,
                            max_bike_dist = Inf,
                            max_trip_duration = 120L,
@@ -36,6 +38,8 @@ default_tester <- function(r5r_core,
     departure_datetime = departure_datetime,
     time_window = time_window,
     percentiles = percentiles,
+    breakdown = breakdown,
+    breakdown_stat = breakdown_stat,
     max_walk_dist = max_walk_dist,
     max_bike_dist = max_bike_dist,
     max_trip_duration = max_trip_duration,
@@ -94,6 +98,10 @@ test_that("adequately raises errors", {
   expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
 
+  # error with breakdown
+  expect_error(default_tester(r5r_core, breakdown ='test'))
+  expect_error(default_tester(r5r_core, breakdown =TRUE, breakdown_stat = "test"))
+
   # errors related to max_walk_dist
   expect_error(default_tester(r5r_core, max_walk_dist = "1000"))
   expect_error(default_tester(r5r_core, max_walk_dist = NULL))
@@ -150,7 +158,11 @@ test_that("output is correct", {
   # expect results to be of class 'data.table', independently of the class of
   # 'origins'/'destinations'
 
-  origins_sf <- destinations_sf <-  sf::st_as_sf(points[1:10,], coords = c("lon", "lat"))
+  origins_sf <- destinations_sf <- sf::st_as_sf(
+    points[1:10, ],
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)
@@ -163,6 +175,10 @@ test_that("output is correct", {
   expect_true(typeof(result_df_input$fromId) == "character")
   expect_true(typeof(result_df_input$toId) == "character")
   expect_true(typeof(result_df_input$travel_time) == "integer")
+
+  # expect more info with breakdown
+  df <- default_tester(r5r_core, breakdown=TRUE)
+  expect_equal(ncol(df), 11)
 
 
   #  * r5r options ----------------------------------------------------------
