@@ -21,6 +21,8 @@ indicator. Closes [#186](https://github.com/ipeaGIT/r5r/issues/186)
 
 - Reduced r5r's internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn't been downloaded before. Closes [#197](https://github.com/ipeaGIT/r5r/issues/197).
 
+- Added two new parameters `breakdown` and `breakdown_stat` to the `travel_time_matrix()`. This allows users to breakdown the travel time information by trip subcomponents (access time, waiting time, traveling time etc). It allows one to extract more information but it makes computation time slower. Closes [#194](https://github.com/ipeaGIT/r5r/issues/194)
+
 **Minor changes**
 
 - New `setup_r5()` parameter, `overwrite`, that forces the building of a new `network.dat`, even if one already exists.
