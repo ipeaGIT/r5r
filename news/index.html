@@ -152,6 +152,7 @@
 <li><p>New <code>progress</code> parameter in the <code><a href="../reference/accessibility.html">accessibility()</a></code>, <code>travel_time_matrix</code>, and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions, to show or hide the progress counter indicator. Closes <a href="https://github.com/ipeaGIT/r5r/issues/186">#186</a></p></li>
 <li><p>Created new support function <code><a href="../reference/java_to_dt.html">java_to_dt()</a></code> and removed dependency on the <code>jdx</code> package. Closes <a href="https://github.com/ipeaGIT/r5r/issues/206">#206</a></p></li>
 <li><p>Reduced r5r’s internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn’t been downloaded before. Closes <a href="https://github.com/ipeaGIT/r5r/issues/197">#197</a>.</p></li>
+<li><p>Added two new parameters <code>breakdown</code> and <code>breakdown_stat</code> to the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. This allows users to breakdown the travel time information by trip subcomponents (access time, waiting time, traveling time etc). It allows one to extract more information but it makes computation time slower. Closes <a href="https://github.com/ipeaGIT/r5r/issues/194">#194</a></p></li>
 </ul>
 <p><strong>Minor changes</strong></p>
 <ul>
