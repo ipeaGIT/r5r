@@ -80,8 +80,8 @@ public abstract class R5Process {
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
         List<RDataFrame> processResults = r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel()
-                        .mapToObj(index -> tryRunProcess(totalProcessed, index)).
+                Arrays.stream(requestIndices).parallel().
+                        mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
         System.out.print(".. DONE!\n");

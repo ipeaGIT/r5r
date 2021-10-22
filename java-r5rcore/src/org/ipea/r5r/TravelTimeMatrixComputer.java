@@ -112,7 +112,13 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
         String[] b = a.split("\\|");
 
-        return Arrays.stream(b).sequential().mapToDouble(Double::parseDouble).sum();
+        return Arrays.stream(b).sequential().mapToDouble(s -> {
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }).sum();
     }
 
     @Override

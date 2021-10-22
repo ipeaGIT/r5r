@@ -21,7 +21,7 @@ public class RDataFrame {
         }
     }
 
-    private int capacity = 10;
+    private final int capacity;
 
     private final LinkedHashMap<String, ArrayList<Object>> dataFrame;
     private final LinkedHashMap<String, Object> defaultValues;
