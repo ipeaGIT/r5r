@@ -35,7 +35,7 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 
 # load origin/destination points
 points <- read.csv(file.path(path, "spo_hexgrid.csv"))

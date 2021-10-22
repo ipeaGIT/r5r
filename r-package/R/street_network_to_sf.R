@@ -14,7 +14,7 @@
 #'
 #' # build transport network
 #' path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = path)
+#' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 #'
 #' # extract street network from r5r_core
 #' street_net <- street_network_to_sf(r5r_core)
