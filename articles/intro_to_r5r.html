@@ -114,7 +114,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r">R package for rapid realistic routing on multimodal transport networks</a> (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source routing engine based in <code>Java</code> developed by <a href="https://www.conveyal.com/">Conveyal</a>. R<sup>5</sup> stands for <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks</a>.</p>
+<p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r">R package for rapid realistic routing on multimodal transport networks</a> (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by <a href="https://www.conveyal.com/">Conveyal</a>. R<sup>5</sup> stands for <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks</a>.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -190,12 +190,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools</span>
-<span class="co">#&gt; 1: 89a9012ae2fffff -51.24437 -30.07701         31       0</span>
-<span class="co">#&gt; 2: 89a90128037ffff -51.20435 -30.06518        420       0</span>
-<span class="co">#&gt; 3: 89a90129027ffff -51.14016 -30.05815        836       0</span>
-<span class="co">#&gt; 4: 89a90129cc7ffff -51.17015 -30.04728        972       1</span>
-<span class="co">#&gt; 5: 89a901290b7ffff -51.14359 -30.06757        807       0</span>
-<span class="co">#&gt; 6: 89a90129813ffff -51.17234 -30.02629        234       0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a90129dbbffff -51.20002 -30.03364       1135       0</span>
+<span class="co">#&gt; 2: 89a90128a4fffff -51.20542 -30.01653        768       0</span>
+<span class="co">#&gt; 3: 89a90129a07ffff -51.15359 -30.01400        686       0</span>
+<span class="co">#&gt; 4: 89a90129a83ffff -51.15393 -30.02230       1270       1</span>
+<span class="co">#&gt; 5: 89a90128e9bffff -51.21580 -30.04756        884       3</span>
+<span class="co">#&gt; 6: 89a90129887ffff -51.17852 -30.02854        311       0</span></code></pre></div>
 </div>
 <div id="build-routable-transport-network-with-setup_r5" class="section level2">
 <h2 class="hasAnchor">
