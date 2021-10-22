@@ -4,8 +4,12 @@ import com.amazonaws.util.StringUtils;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
+import com.conveyal.r5.analyst.cluster.PathWriter;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.esotericsoftware.minlog.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.*;
@@ -20,6 +24,8 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     private static final int TRANSFER_TIME_INDEX = 6;
     private static final int EGRESS_TIME_INDEX = 5;
     private static final int TOTAL_TIME_INDEX = 8;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
     public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
@@ -112,13 +118,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
         String[] b = a.split("\\|");
 
-        return Arrays.stream(b).sequential().mapToDouble(s -> {
-            try {
-                return Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                return 0.0;
-            }
-        }).sum();
+        return Arrays.stream(b).sequential().mapToDouble(s -> Double.parseDouble(s.replaceAll(",","."))).sum();
     }
 
     @Override
