@@ -147,7 +147,8 @@ Fast computation of access to opportunities given a selected
 decay function. See \code{details} for the available decay functions.
 }
 \section{Decay functions:}{
-R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions}
+R5 allows for multiple decay functions. More info in the original R5
+documentation from Conveyal, at \url{https://docs.conveyal.com/learn-more/decay-functions}
 The options include:
 \subsection{Step \code{step} (cumulative opportunities)}{
 
@@ -230,8 +231,9 @@ exceeding 1. Setting \code{max_lts} to 3 will allow cycling on links with LTS 1,
 or 3.
 
 The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS at
-\url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+commonly tagged attributes of OSM ways. See more info about LTS in the original
+documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+In summary:
 \itemize{
 \item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume streets,
 as well as those with separated bicycle facilities (such as parking-protected

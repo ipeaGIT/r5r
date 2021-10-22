@@ -87,8 +87,9 @@
 #' or 3.
 #'
 #' The default methodology for assigning LTS values to network edges is based on
-#' commonly tagged attributes of OSM ways. See more info about LTS at
-#' \url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+#' commonly tagged attributes of OSM ways. See more info about LTS in the original
+#' documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+#' In summary:
 #'
 #'- **LTS 1**: Tolerable for children. This includes low-speed, low-volume streets,
 #'  as well as those with separated bicycle facilities (such as parking-protected
@@ -364,7 +365,7 @@ detailed_itineraries <- function(r5r_core,
   # options
   path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
 
-  # if results includes the geometry, convert path_options from data.frame to
+  # if results include the geometry, convert path_options from data.frame to
   # data.table with sfc column
   if (!drop_geometry) {
 

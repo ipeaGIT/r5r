@@ -166,8 +166,9 @@ exceeding 1. Setting \code{max_lts} to 3 will allow cycling on links with LTS 1,
 or 3.
 
 The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS at
-\url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+commonly tagged attributes of OSM ways. See more info about LTS in the original
+documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+In summary:
 \itemize{
 \item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume streets,
 as well as those with separated bicycle facilities (such as parking-protected

@@ -96,7 +96,8 @@
 #'
 #' @details
 #'  # Decay functions:
-#'  R5 allows for multiple decay functions. More info at \url{https://docs.conveyal.com/learn-more/decay-functions}
+#'  R5 allows for multiple decay functions. More info in the original R5
+#'  documentation from Conveyal, at \url{https://docs.conveyal.com/learn-more/decay-functions}
 #'  The options include:
 #'
 #'  ## Step `step` (cumulative opportunities)
@@ -159,8 +160,9 @@
 #' or 3.
 #'
 #' The default methodology for assigning LTS values to network edges is based on
-#' commonly tagged attributes of OSM ways. See more info about LTS at
-#' \url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
+#' commonly tagged attributes of OSM ways. See more info about LTS in the original
+#' documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
+#' In summary:
 #'
 #'- **LTS 1**: Tolerable for children. This includes low-speed, low-volume streets,
 #'  as well as those with separated bicycle facilities (such as parking-protected
