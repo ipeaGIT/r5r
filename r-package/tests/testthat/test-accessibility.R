@@ -6,7 +6,7 @@ testthat::skip_on_cran()
 # load required data and setup r5r_core
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
 # create testing function
