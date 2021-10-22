@@ -185,10 +185,11 @@ that could not be snapped show <code>NA</code> coordinates and <code>found = FAL
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other support functions: 
+<code><a href='assert_breakdown_stat.html'>assert_breakdown_stat</a>()</code>,
 <code><a href='assert_decay_function.html'>assert_decay_function</a>()</code>,
 <code><a href='assert_points_input.html'>assert_points_input</a>()</code>,
 <code><a href='check_connection.html'>check_connection</a>()</code>,
-<code><a href='download_metadata.html'>download_metadata</a>()</code>,
+<code><a href='filename_from_metadata.html'>filename_from_metadata</a>()</code>,
 <code><a href='posix_to_string.html'>posix_to_string</a>()</code>,
 <code><a href='select_mode.html'>select_mode</a>()</code>,
 <code><a href='set_max_lts.html'>set_max_lts</a>()</code>,
@@ -210,7 +211,7 @@ that could not be snapped show <code>NA</code> coordinates and <code>found = FAL
 
 <span class='co'># build transport network</span>
 <span class='va'>path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/spo"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
-<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>path</span><span class='op'>)</span>
+<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>path</span>, temp_dir <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># load origin/destination points</span>
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>path</span>, <span class='st'>"spo_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span>

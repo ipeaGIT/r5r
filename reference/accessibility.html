@@ -182,8 +182,9 @@ decay function. See <code>details</code> for the available decay functions.</p>
     </tr>
     <tr>
       <th>origins, destinations</th>
-      <td><p>a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'</p></td>
+      <td><p>a spatial sf POINT object with WGS84 CRS, or a
+data.frame containing the columns 'id', 'lon',
+'lat'.</p></td>
     </tr>
     <tr>
       <th>opportunities_colname</th>
@@ -333,7 +334,8 @@ threads.</p></td>
 a given transport mode, and per travel time cutoff and percentile.</p>
     <h2 class="hasAnchor" id="decay-functions-"><a class="anchor" href="#decay-functions-"></a>Decay functions:</h2>
 
-    <p>R5 allows for multiple decay functions. More info at <a href='https://docs.conveyal.com/learn-more/decay-functions'>https://docs.conveyal.com/learn-more/decay-functions</a>
+    <p>R5 allows for multiple decay functions. More info in the original R5
+documentation from Conveyal, at <a href='https://docs.conveyal.com/learn-more/decay-functions'>https://docs.conveyal.com/learn-more/decay-functions</a>
 The options include:</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Step <code>step</code> (cumulative opportunities)</h3>
 
 
@@ -413,8 +415,9 @@ streets; routing will revert to walking when traversing any links with LTS
 exceeding 1. Setting <code>max_lts</code> to 3 will allow cycling on links with LTS 1, 2,
 or 3.</p>
 <p>The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS at
-<a href='https://docs.conveyal.com/learn-more/traffic-stress'>https://docs.conveyal.com/learn-more/traffic-stress</a>. In summary:</p><ul>
+commonly tagged attributes of OSM ways. See more info about LTS in the original
+documentation of R5 from Conveyal at <a href='https://docs.conveyal.com/learn-more/traffic-stress'>https://docs.conveyal.com/learn-more/traffic-stress</a>.
+In summary:</p><ul>
 <li><p><strong>LTS 1</strong>: Tolerable for children. This includes low-speed, low-volume streets,
 as well as those with separated bicycle facilities (such as parking-protected
 lanes or cycle tracks).</p></li>
@@ -465,7 +468,7 @@ ignoring the timezone attribute.</p>
 
 <span class='co'># build transport network</span>
 <span class='va'>data_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa"</span>, package <span class='op'>=</span> <span class='st'>"r5r"</span><span class='op'>)</span>
-<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>data_path</span><span class='op'>)</span>
+<span class='va'>r5r_core</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setup_r5.html'>setup_r5</a></span><span class='op'>(</span>data_path <span class='op'>=</span> <span class='va'>data_path</span>, temp_dir <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># load origin/destination points</span>
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>data_path</span>, <span class='st'>"poa_hexgrid.csv"</span><span class='op'>)</span><span class='op'>)</span>

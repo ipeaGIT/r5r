@@ -151,6 +151,7 @@
 <li><p>New function <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code>, to extract the public transport network from R5 as simple features. Closes <a href="https://github.com/ipeaGIT/r5r/issues/179">#179</a></p></li>
 <li><p>New <code>progress</code> parameter in the <code><a href="../reference/accessibility.html">accessibility()</a></code>, <code>travel_time_matrix</code>, and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions, to show or hide the progress counter indicator. Closes <a href="https://github.com/ipeaGIT/r5r/issues/186">#186</a></p></li>
 <li><p>Created new support function <code><a href="../reference/java_to_dt.html">java_to_dt()</a></code> and removed dependency on the <code>jdx</code> package. Closes <a href="https://github.com/ipeaGIT/r5r/issues/206">#206</a></p></li>
+<li><p>Reduced r5r’s internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn’t been downloaded before. Closes <a href="https://github.com/ipeaGIT/r5r/issues/197">#197</a>.</p></li>
 </ul>
 <p><strong>Minor changes</strong></p>
 <ul>
@@ -160,6 +161,7 @@
 <li>Improved documentation regarding personalized LTS values. <a href="https://github.com/ipeaGIT/r5r/issues/190">Closes #190</a>.</li>
 <li>Improved documentation of <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> regarding stops that are not snapped to road network. <a href="https://github.com/ipeaGIT/r5r/issues/192">Closes #192</a>.</li>
 <li>Improved documentation of <code>max_walking_dist</code> and <code>max_cycling_dist</code> parameters. <a href="https://github.com/ipeaGIT/r5r/issues/193">Closes #193</a>.</li>
+<li>Started raising an error if the CRS of origins/destinations is not WGS 84. Closes <a href="https://github.com/ipeaGIT/r5r/issues/201">#201</a>.</li>
 </ul>
 <hr>
 </div>
