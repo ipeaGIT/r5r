@@ -30,29 +30,34 @@ r5r_core$setBenchmark(TRUE)
 #                      verbose = FALSE)
 # )
 
+# r5r_core$setCsvOutput(here::here("tests_marcus/data2"))
+# r5r_core$setCsvOutput("")
+
+r5r_core$getOutputCsvFolder()
+
 # r5r_core$setTravelTimesBreakdown(FALSE)
-t_ttm_normal <- system.time(
-  ttm_n <- travel_time_matrix(r5r_core,
-                            origins = points[1:100, ],
-                            destinations = points,
-                            departure_datetime = departure_datetime,
-                            breakdown = FALSE,
-                            mode = c("WALK", "TRANSIT"),
-                            max_trip_duration = 60,
-                            max_walk_dist = 800,
-                            time_window = 30,
-                            # percentiles = c(25),
-                            percentiles = c(25, 50, 75),
-                            verbose = FALSE)
-)
+# t_ttm_normal <- system.time(
+#   ttm_n <- travel_time_matrix(r5r_core,
+#                             origins = points[1:100, ],
+#                             destinations = points,
+#                             departure_datetime = departure_datetime,
+#                             breakdown = FALSE,
+#                             mode = c("WALK", "TRANSIT"),
+#                             max_trip_duration = 60,
+#                             max_walk_dist = 800,
+#                             time_window = 30,
+#                             # percentiles = c(25),
+#                             percentiles = c(25, 50, 75),
+#                             verbose = FALSE)
+# )
 
 # r5r_core$setTravelTimesBreakdown(TRUE)
 t_ttm_breakdown <- system.time(
   ttm_b_mean <- travel_time_matrix(r5r_core,
-                            origins = points[1:100, ],
+                            origins = points,
                             destinations = points,
                             departure_datetime = departure_datetime,
-                            breakdown = TRUE,
+                            breakdown = FALSE,
                             breakdown_stat = "mean",
                             mode = c("WALK", "TRANSIT"),
                             max_trip_duration = 60,
@@ -63,21 +68,21 @@ t_ttm_breakdown <- system.time(
                             verbose = FALSE)
 )
 
-t_ttm_breakdown <- system.time(
-  ttm_b_min <- travel_time_matrix(r5r_core,
-                              origins = points[1:100, ],
-                              destinations = points,
-                              departure_datetime = departure_datetime,
-                              breakdown = TRUE,
-                              breakdown_stat = "minimum",
-                              mode = c("WALK", "TRANSIT"),
-                              max_trip_duration = 60,
-                              max_walk_dist = 800,
-                              time_window = 30,
-                              # percentiles = c(25),
-                              percentiles = c(25, 50, 75),
-                              verbose = FALSE)
-)
+# t_ttm_breakdown <- system.time(
+#   ttm_b_min <- travel_time_matrix(r5r_core,
+#                               origins = points[1:100, ],
+#                               destinations = points,
+#                               departure_datetime = departure_datetime,
+#                               breakdown = TRUE,
+#                               breakdown_stat = "minimum",
+#                               mode = c("WALK", "TRANSIT"),
+#                               max_trip_duration = 60,
+#                               max_walk_dist = 800,
+#                               time_window = 30,
+#                               # percentiles = c(25),
+#                               percentiles = c(25, 50, 75),
+#                               verbose = FALSE)
+# )
 
 View(ttm_b_mean)
 
@@ -86,12 +91,12 @@ View(ttm_b_mean)
 # t_ttm_normal
 # t_ttm_breakdown
 
-rbind(
-  ttm_n %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "normal"),
-  ttm_b_mean %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "breakdown")
-) %>%
-  ggplot(aes(execution_time)) + geom_histogram() + facet_wrap(~method, scales = "free")
-
+# rbind(
+#   ttm_n %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "normal"),
+#   ttm_b_mean %>% select(fromId, execution_time) %>% distinct() %>% mutate(method = "breakdown")
+# ) %>%
+#   ggplot(aes(execution_time)) + geom_histogram() + facet_wrap(~method, scales = "free")
+#
 
 
 # max_trip_duration = 60
@@ -108,3 +113,11 @@ rbind(
 # }
 #
 # length(c(25, 50, 75))
+
+#
+# ttm_n$saveToCsv("teste_ttm.csv")
+#
+# s_ttm <- read_csv("teste_ttm.csv")
+#
+#
+# ttm_n2 <- java_to_dt(ttm_n)

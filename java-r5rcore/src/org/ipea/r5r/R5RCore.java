@@ -155,6 +155,20 @@ public class R5RCore {
         Utils.benchmark = benchmark;
     }
 
+    public void setCsvOutput(String csvFolder) {
+        if (!csvFolder.equals("")) {
+            Utils.saveOutputToCsv = true;
+            Utils.outputCsvFolder = csvFolder;
+        } else {
+            Utils.saveOutputToCsv = false;
+            Utils.outputCsvFolder = "";
+        }
+    }
+
+    public String getOutputCsvFolder () {
+        return Utils.outputCsvFolder;
+    }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);

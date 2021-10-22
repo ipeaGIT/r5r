@@ -1,9 +1,9 @@
 package org.ipea.r5r;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class RDataFrame {
     private int rowCount = 0;
@@ -15,6 +15,12 @@ public class RDataFrame {
     public int nRow() {
         return rowCount;
     }
+    public void updateRowCount() {
+        if (columnNames.size() > 0) {
+            rowCount = dataFrame.get(columnNames.get(0)).size();
+        }
+    }
+
     private int capacity = 10;
 
     private final LinkedHashMap<String, ArrayList<Object>> dataFrame;
@@ -157,6 +163,36 @@ public class RDataFrame {
             v[i] = (boolean) columnContents.get(i);
         }
         return v;
+    }
+
+    public void clear() {
+        columnNames.forEach(key -> {
+            ArrayList<Object> column = dataFrame.get(key);
+            column.clear();
+        });
+        rowCount = 0;
+    }
+
+    public void saveToCsv(String filename) throws FileNotFoundException {
+        File csvOutputFile = new File(filename);
+
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            // save column titles
+            StringJoiner row = new StringJoiner(",");
+            columnNames.forEach(row::add);
+
+            pw.println(row);
+
+            // save data
+            for (int i = 0; i < nRow(); i++) {
+                row = new StringJoiner(",");
+
+                for (String c:columnNames) {
+                    row.add(String.valueOf(dataFrame.get(c).get(i)));
+                }
+                pw.println(row);
+            }
+        }
     }
 }
 
