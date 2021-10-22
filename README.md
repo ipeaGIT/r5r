@@ -13,7 +13,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
 networks (walk, bike, public transport and car). It provides a simple and 
-friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
+friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5), the routing engine developed independently by [Conveyal](http://conveyal.com).
 
 
 **r5r** is a simple way to run R<sup>5</sup> locally, what allows users to

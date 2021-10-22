@@ -18,7 +18,14 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              using seamless parallel computing on top of the R5 Java machine.
              While R5 is developed by Conveyal, the package r5r is independently 
              developed by a team at the Institue for Applied Economic Research
-             (Ipea) with contributions from collaborators.
+             (Ipea) with contributions from collaborators. Apart from the 
+             documentation in this pacakge, users will find additional information
+             on R5 documentation at <https://docs.conveyal.com/>. Although we try
+             to keep new releases of r5r in synch with R5, the development of R5
+             follows Conveyal's independent update process. Hence, users should
+             confirm the R5 version implied by the Conveyal user manual (see
+             <https://docs.conveyal.com/changelog>) corresponds with the R5 version
+             that r5r depends on.
 Date: 2021-10-22
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
