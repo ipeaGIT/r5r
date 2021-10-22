@@ -1,4 +1,4 @@
-options(java.parameters = '-Xmx2G')
+# options(java.parameters = '-Xmx2G')
 
 # library(r5r)
 devtools::load_all(".")
@@ -7,7 +7,8 @@ library(tidyverse)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = FALSE)
+r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = FALSE,
+                     temp_dir = TRUE)
 
 # load origin/destination points
 
@@ -54,18 +55,18 @@ r5r_core$getOutputCsvFolder()
 # r5r_core$setTravelTimesBreakdown(TRUE)
 t_ttm_breakdown <- system.time(
   ttm_b_mean <- travel_time_matrix(r5r_core,
-                            origins = points,
-                            destinations = points,
-                            departure_datetime = departure_datetime,
-                            breakdown = FALSE,
-                            breakdown_stat = "mean",
-                            mode = c("WALK", "TRANSIT"),
-                            max_trip_duration = 60,
-                            max_walk_dist = 800,
-                            time_window = 30,
-                            # percentiles = c(25),
-                            percentiles = c(25, 50, 75),
-                            verbose = FALSE)
+                                   origins = points,
+                                   destinations = points,
+                                   departure_datetime = departure_datetime,
+                                   breakdown = TRUE,
+                                   breakdown_stat = "mean",
+                                   mode = c("WALK", "TRANSIT"),
+                                   max_trip_duration = 60,
+                                   max_walk_dist = 800,
+                                   time_window = 30,
+                                   # percentiles = c(25),
+                                   percentiles = c(25, 50, 75),
+                                   verbose = FALSE)
 )
 
 # t_ttm_breakdown <- system.time(
@@ -120,4 +121,9 @@ View(ttm_b_mean)
 # s_ttm <- read_csv("teste_ttm.csv")
 #
 #
-# ttm_n2 <- java_to_dt(ttm_n)
+
+ttm_b_mean %>%
+  select(fromId, execution_time) %>%
+  distinct() %>%
+  summarise(t = sum(execution_time) / 1000 / 12)
+t_ttm_breakdown
