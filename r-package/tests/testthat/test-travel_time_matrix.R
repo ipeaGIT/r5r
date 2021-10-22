@@ -19,6 +19,8 @@ default_tester <- function(r5r_core,
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            time_window = 1L,
                            percentiles = 50L,
+                           breakdown = FALSE,
+                           breakdown_stat = "MEAN",
                            max_walk_dist = Inf,
                            max_bike_dist = Inf,
                            max_trip_duration = 120L,
@@ -36,6 +38,8 @@ default_tester <- function(r5r_core,
     departure_datetime = departure_datetime,
     time_window = time_window,
     percentiles = percentiles,
+    breakdown = breakdown,
+    breakdown_stat = breakdown_stat,
     max_walk_dist = max_walk_dist,
     max_bike_dist = max_bike_dist,
     max_trip_duration = max_trip_duration,
@@ -93,6 +97,10 @@ test_that("adequately raises errors", {
 
   expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
+
+  # error with breakdown
+  expect_error(default_tester(r5r_core, breakdown ='test'))
+  expect_error(default_tester(r5r_core, breakdown =TRUE, breakdown_stat = "test"))
 
   # errors related to max_walk_dist
   expect_error(default_tester(r5r_core, max_walk_dist = "1000"))
@@ -167,6 +175,10 @@ test_that("output is correct", {
   expect_true(typeof(result_df_input$fromId) == "character")
   expect_true(typeof(result_df_input$toId) == "character")
   expect_true(typeof(result_df_input$travel_time) == "integer")
+
+  # expect more info with breakdown
+  df <- default_tester(r5r_core, breakdown=TRUE)
+  expect_equal(ncol(df), 11)
 
 
   #  * r5r options ----------------------------------------------------------

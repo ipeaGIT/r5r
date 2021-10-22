@@ -20,6 +20,17 @@ test_that("set_verbose adequately raises warnings and errors", {
 })
 
 
+# set_progress -------------------------------------------------------------
+
+
+test_that("set_progress adequately raises warnings and errors", {
+
+  expect_error(set_progress("r5r_obj", TRUE))
+  expect_error(set_progress(r5r_obj, "TRUE"))
+  expect_error(set_progress(r5r_obj, 1))
+
+})
+
 # set_max_street_time -----------------------------------------------------
 
 
@@ -143,6 +154,38 @@ test_that("assert_points_input output is coherent", {
 
 })
 
+
+
+# assert_decay_function -----------------------------------------------------
+
+test_that("assert_decay_function adequately raises warnings and errors", {
+
+  expect_error(assert_decay_function(decay_function='STEP', decay_value=NULL))
+  expect_error(assert_decay_function(decay_function='STEP', decay_value='bananas'))
+  expect_error(assert_decay_function(decay_function='bananas', decay_value=4))
+  expect_error(assert_decay_function(decay_function= 444, decay_value=4))
+  expect_error(assert_decay_function(decay_function= 'LOGISTIC', decay_value=0.4))
+})
+
+test_that("assert_decay_function expected behavior", {
+  expect_equal(class(assert_decay_function(decay_function='STEP', decay_value=4)), 'list')
+})
+
+
+
+
+# assert_breakdown_stat -----------------------------------------------------
+
+test_that("assert_breakdown_stat adequately raises warnings and errors", {
+
+  expect_error(assert_breakdown_stat(breakdown_stat='bananas'))
+  expect_error(assert_breakdown_stat(breakdown_stat=111))
+  expect_error(assert_breakdown_stat(breakdown_stat=NULL))
+})
+
+test_that("assert_breakdown_stat expected behavior", {
+  expect_equal(class(assert_breakdown_stat(breakdown_stat='min')), 'character')
+})
 
 # set_n_threads -----------------------------------------------------------
 
