@@ -26,7 +26,7 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              confirm the R5 version implied by the Conveyal user manual (see
              <https://docs.conveyal.com/changelog>) corresponds with the R5 version
              that r5r depends on.
-Date: 2021-10-22
+Date: 2021-10-25
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
 License: MIT + file LICENSE
