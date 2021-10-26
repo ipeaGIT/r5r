@@ -1,13 +1,10 @@
 package org.ipea.r5r;
 
-import com.amazonaws.util.StringUtils;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
-import com.conveyal.r5.analyst.cluster.PathWriter;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
-import com.esotericsoftware.minlog.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +20,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     private static final int RIDE_TIME_INDEX = 3;
     private static final int TRANSFER_TIME_INDEX = 6;
     private static final int EGRESS_TIME_INDEX = 5;
-    private static final int TOTAL_TIME_INDEX = 8;
+    private static final int COMBINED_TIME_INDEX = 8;
 
     private static final Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
@@ -107,7 +104,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
                 travelTimesTable.set("ride_time", parseAndSumTravelTimes(a[RIDE_TIME_INDEX]));
                 travelTimesTable.set("transfer_time", parseAndSumTravelTimes(a[TRANSFER_TIME_INDEX]));
                 travelTimesTable.set("egress_time", parseAndSumTravelTimes(a[EGRESS_TIME_INDEX]));
-                travelTimesTable.set("total_time", parseAndSumTravelTimes(a[TOTAL_TIME_INDEX]));
+                travelTimesTable.set("combined_time", parseAndSumTravelTimes(a[COMBINED_TIME_INDEX]));
             }
         }
     }
@@ -118,7 +115,10 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
         String[] b = a.split("\\|");
 
-        return Arrays.stream(b).sequential().mapToDouble(s -> Double.parseDouble(s.replaceAll(",","."))).sum();
+        return Arrays.stream(b).
+                mapToDouble(
+                        s -> Double.parseDouble(s.replaceAll(",","."))
+                ).sum();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
             travelTimesTable.addDoubleColumn("ride_time", 0.0);
             travelTimesTable.addDoubleColumn("transfer_time", 0.0);
             travelTimesTable.addDoubleColumn("egress_time", 0.0);
-            travelTimesTable.addDoubleColumn("total_time", 0.0);
+            travelTimesTable.addDoubleColumn("combined_time", 0.0);
 
             travelTimesTable.addStringColumn("routes", "");
             travelTimesTable.addIntegerColumn("n_rides", 0);
