@@ -1,7 +1,16 @@
 # log history of r5r package development
 
+
 -------------------------------------------------------
-# r5r v0.6.0 (dev)
+# r5r v0.6.1 (dev)
+
+**Minor changes**
+
+- Changed `total_time` column name to `combined_time` in `travel_time_matrix()` 
+output, to avoid confusion with `travel_time` column.
+
+-------------------------------------------------------
+# r5r v0.6.0 
 
 **Major changes**
 
