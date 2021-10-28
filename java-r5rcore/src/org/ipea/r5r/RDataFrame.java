@@ -52,6 +52,14 @@ public class RDataFrame {
         rowCount++;
     }
 
+    public void appendRepeat() {
+        dataFrame.forEach((columnName, columnContents) -> {
+            Object lastValue = columnContents.get(columnContents.size() - 1);
+            columnContents.add(lastValue);
+        });
+        rowCount++;
+    }
+
     public void set(String columnName, String value) {
         List<Object> column = dataFrame.get(columnName);
         column.set(column.size() - 1, value);

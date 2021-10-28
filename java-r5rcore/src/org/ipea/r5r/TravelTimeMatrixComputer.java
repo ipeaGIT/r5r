@@ -90,21 +90,27 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     private void populateTravelTimesBreakdown(RDataFrame travelTimesTable, ArrayList<String[]>[] pathResults, int destination) {
         if (this.routingProperties.travelTimesBreakdown & pathResults != null) {
             if (!pathResults[destination].isEmpty()) {
-                // get only first recorded path
-                String[] a = pathResults[destination].get(0);
+                for (int i = 0; i < pathResults[destination].size(); i++) {
+                    // add new row, populated by previous values
+                    // used to repeat values added by populateTravelTimes()
+                    if (i > 0) travelTimesTable.appendRepeat();
 
-                String routes = a[ROUTES_INDEX];
-                travelTimesTable.set("routes", routes);
+                    // get only first recorded path
+                    String[] a = pathResults[destination].get(i);
 
-                if (!routes.equals(""))
-                    travelTimesTable.set("n_rides", routes.split("\\|").length);
+                    String routes = a[ROUTES_INDEX];
+                    travelTimesTable.set("routes", routes);
 
-                travelTimesTable.set("access_time", parseAndSumTravelTimes(a[ACCESS_TIME_INDEX]));
-                travelTimesTable.set("wait_time", parseAndSumTravelTimes(a[WAIT_TIME_INDEX]));
-                travelTimesTable.set("ride_time", parseAndSumTravelTimes(a[RIDE_TIME_INDEX]));
-                travelTimesTable.set("transfer_time", parseAndSumTravelTimes(a[TRANSFER_TIME_INDEX]));
-                travelTimesTable.set("egress_time", parseAndSumTravelTimes(a[EGRESS_TIME_INDEX]));
-                travelTimesTable.set("combined_time", parseAndSumTravelTimes(a[COMBINED_TIME_INDEX]));
+                    if (!routes.equals(""))
+                        travelTimesTable.set("n_rides", routes.split("\\|").length);
+
+                    travelTimesTable.set("access_time", parseAndSumTravelTimes(a[ACCESS_TIME_INDEX]));
+                    travelTimesTable.set("wait_time", parseAndSumTravelTimes(a[WAIT_TIME_INDEX]));
+                    travelTimesTable.set("ride_time", parseAndSumTravelTimes(a[RIDE_TIME_INDEX]));
+                    travelTimesTable.set("transfer_time", parseAndSumTravelTimes(a[TRANSFER_TIME_INDEX]));
+                    travelTimesTable.set("egress_time", parseAndSumTravelTimes(a[EGRESS_TIME_INDEX]));
+                    travelTimesTable.set("combined_time", parseAndSumTravelTimes(a[COMBINED_TIME_INDEX]));
+                }
             }
         }
     }

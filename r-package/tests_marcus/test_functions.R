@@ -1,7 +1,8 @@
-options(java.parameters = '-Xmx16384m')
-options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
+# options(java.parameters = '-Xmx16384m')
+# options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
 
-library(r5r)
+# library(r5r)
+devtools::load_all(".")
 library(ggplot2)
 library(data.table)
 library(tidyverse)
@@ -15,6 +16,8 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M
 
 # poi <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 # points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+dest <- points
 
 # points <- points %>%
 #   st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
@@ -22,11 +25,11 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M
 
 # dest <- points
 
-points <- r5r_core$getGrid(11L)
-points <- jdx::convertToR(points$getDataFrame())
-points$schools <- 1
-
-dest <- points
+# points <- r5r_core$getGrid(11L)
+# points <- jdx::convertToR(points$getDataFrame())
+# points$schools <- 1
+#
+# dest <- points
 # dest <- dplyr::sample_n(points, 5000)
 
 ## params
@@ -56,28 +59,31 @@ dest <- points
 
 ## params
 
-r5r_core$setBenchmark(TRUE)
-system.time(
-  access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = dest,
-                        opportunities_colname = "schools",
-                        mode = "WALK",
-                        cutoffs = c(25, 30),
-                        max_trip_duration = 30,
-                        verbose = FALSE)
-)
+r5r_core$setBenchmark(FALSE)
+# system.time(
+#   access <- accessibility(r5r_core,
+#                         origins = points,
+#                         destinations = dest,
+#                         opportunities_colname = "schools",
+#                         mode = "WALK",
+#                         cutoffs = c(25, 30),
+#                         max_trip_duration = 30,
+#                         verbose = FALSE)
+# )
 
 system.time(
   ttm <- travel_time_matrix(r5r_core, origins = points,
                             destinations = dest,
                             mode = c("WALK", "TRANSIT"),
+                            breakdown = TRUE,
+                            departure_datetime = departure_datetime,
                             max_trip_duration = 60,
                             max_walk_dist = 800,
                             time_window = 30,
                             percentiles = c(25, 50, 75),
                             verbose = FALSE)
 )
+View(ttm)
 #
 # system.time(
 #   dit <- detailed_itineraries(r5r_core,
