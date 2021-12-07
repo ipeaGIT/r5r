@@ -21,6 +21,8 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     private static final int TRANSFER_TIME_INDEX = 6;
     private static final int EGRESS_TIME_INDEX = 5;
     private static final int COMBINED_TIME_INDEX = 8;
+    private static final int N_ITERATIONS_INDEX = 9;
+
 
     private static final Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
@@ -110,6 +112,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
                     travelTimesTable.set("transfer_time", parseAndSumTravelTimes(a[TRANSFER_TIME_INDEX]));
                     travelTimesTable.set("egress_time", parseAndSumTravelTimes(a[EGRESS_TIME_INDEX]));
                     travelTimesTable.set("combined_time", parseAndSumTravelTimes(a[COMBINED_TIME_INDEX]));
+                    travelTimesTable.set("n_iterations", (int) parseAndSumTravelTimes(a[N_ITERATIONS_INDEX]));
                 }
             }
         }
@@ -153,6 +156,7 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
 
             travelTimesTable.addStringColumn("routes", "");
             travelTimesTable.addIntegerColumn("n_rides", 0);
+            travelTimesTable.addIntegerColumn("n_iterations", 0);
         }
         return travelTimesTable;
     }
