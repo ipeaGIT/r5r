@@ -303,10 +303,12 @@ public class PathOptionsTable {
     }
 
     private int calculateSegmentLength(StreetSegment segment) {
-        int sum = 0;
-        for (StreetEdgeInfo streetEdgeInfo : segment.streetEdges) {
-            sum += streetEdgeInfo.distance;
-        }
-        return sum;
+        return segment.distance;
+
+//        int sum = 0;
+//        for (StreetEdgeInfo streetEdgeInfo : segment.streetEdges) {
+//            sum += streetEdgeInfo.distance;
+//        }
+//        return sum;
     }
 }
