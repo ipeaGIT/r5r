@@ -110,7 +110,7 @@ public abstract class R5Process {
             }
 
             if (!Utils.verbose & Utils.progress) {
-                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed. Last origin id: " + fromIds[index]);
             }
         } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
