@@ -201,6 +201,9 @@ public abstract class R5Process {
         if (routingProperties.maxFare >= 0) {
             request.maxFare = routingProperties.maxFare;
             request.inRoutingFareCalculator = routingProperties.fareCalculator;
+        } else {
+            request.maxFare = -1;
+            request.inRoutingFareCalculator = null;
         }
 
         return request;
