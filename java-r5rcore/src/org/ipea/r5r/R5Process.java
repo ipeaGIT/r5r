@@ -198,6 +198,11 @@ public abstract class R5Process {
 
         request.percentiles = routingProperties.percentiles;
 
+        if (routingProperties.maxFare >= 0) {
+            request.maxFare = routingProperties.maxFare;
+            request.inRoutingFareCalculator = routingProperties.fareCalculator;
+        }
+
         return request;
     }
 }

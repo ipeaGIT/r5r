@@ -121,6 +121,11 @@ public class R5RCore {
         }
     }
 
+    public void setMaxFare(int maxFare, String fareCalculatorName) {
+        this.routingProperties.maxFare = maxFare;
+        this.routingProperties.setFareCalculator(fareCalculatorName);
+    }
+
     public String getTravelTimesBreakdownStat() {
         return this.routingProperties.travelTimesBreakdownStat.toString();
     }
