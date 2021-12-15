@@ -33,7 +33,7 @@ calculate_access <- function(fares) {
                             mode = c("WALK", "TRANSIT"),
                             cutoffs = c(30, 60),
                             max_trip_duration = 60,
-                            time_window = 15,
+                            time_window = 1,
                             percentiles = c(5, 50, 95),
                             verbose = FALSE)
 
@@ -147,7 +147,7 @@ pareto_df <- pareto_frontier(r5r_core,
                              destinations = poi[3:4,],
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(0, 1000, 100), # c(240, 480, 720, 960),
+                             monetary_cost_cutoffs = seq(0, 1000, 100),
                              fare_calculator = "porto-alegre",
                              max_trip_duration = 60,
                              max_walk_dist = 8000,
@@ -165,7 +165,8 @@ pareto_df %>%
   mutate(percentile = factor(percentile)) %>%
   pivot_longer(cols=starts_with("monetary"), names_to = "mon", values_to="cost") %>%
   ggplot(aes(x=cost, y=travel_time, color=percentile, group=percentile)) +
-  geom_path() +
+  geom_step() +
+  # geom_path() +
   scale_color_brewer(palette = "Set1") +
   scale_x_continuous(breaks = 1:10) +
   facet_grid(from_id~to_id)
