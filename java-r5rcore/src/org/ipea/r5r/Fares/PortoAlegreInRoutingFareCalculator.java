@@ -1,6 +1,5 @@
 package org.ipea.r5r.Fares;
 
-import com.conveyal.r5.analyst.fare.BogotaInRoutingFareCalculator;
 import com.conveyal.r5.analyst.fare.FareBounds;
 import com.conveyal.r5.analyst.fare.InRoutingFareCalculator;
 import com.conveyal.r5.analyst.fare.TransferAllowance;

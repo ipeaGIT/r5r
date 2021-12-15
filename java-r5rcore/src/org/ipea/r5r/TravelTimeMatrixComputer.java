@@ -34,10 +34,6 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        request.percentiles = this.routingProperties.percentiles;
-        request.includePathResults = this.routingProperties.travelTimesBreakdown;
-        request.nPathsPerTarget = 1;
-
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
@@ -164,6 +160,10 @@ public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
     @Override
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = super.buildRequest(index);
+
+        request.percentiles = this.routingProperties.percentiles;
+        request.includePathResults = this.routingProperties.travelTimesBreakdown;
+        request.nPathsPerTarget = 1;
 
         request.destinationPointSets = new PointSet[1];
         request.destinationPointSets[0] = destinationPoints;

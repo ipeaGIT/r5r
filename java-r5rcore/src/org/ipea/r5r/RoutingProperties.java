@@ -3,7 +3,6 @@ package org.ipea.r5r;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
 import com.conveyal.r5.analyst.fare.nyc.NYCInRoutingFareCalculator;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.ipea.r5r.Fares.PortoAlegreInRoutingFareCalculator;
 
 public class RoutingProperties {
@@ -21,6 +20,7 @@ public class RoutingProperties {
     public PathResult.Stat travelTimesBreakdownStat;
 
     public int maxFare;
+    public int[] fareCutoffs = {-1};
     public InRoutingFareCalculator fareCalculator;
 
     public void setFareCalculator(String fareCalculatorName) {

@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -123,6 +124,18 @@ public class R5RCore {
 
     public void setMaxFare(int maxFare, String fareCalculatorName) {
         this.routingProperties.maxFare = maxFare;
+        this.routingProperties.setFareCalculator(fareCalculatorName);
+    }
+
+    public void setFareCutoffs(int maxFare, String fareCalculatorName) {
+        this.routingProperties.maxFare = maxFare;
+        this.routingProperties.fareCutoffs = new int[]{maxFare};
+        this.routingProperties.setFareCalculator(fareCalculatorName);
+    }
+
+    public void setFareCutoffs(int[] maxFare, String fareCalculatorName) {
+        this.routingProperties.maxFare = maxFare[0];
+        this.routingProperties.fareCutoffs = maxFare;
         this.routingProperties.setFareCalculator(fareCalculatorName);
     }
 
@@ -310,6 +323,73 @@ public class R5RCore {
         travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
 
         return travelTimeMatrixComputer.run();
+    }
+
+    // ----------------------------------  PARETO FRONTIERS  -----------------------------------------
+
+    public RDataFrame paretoFrontier(String fromId, double fromLat, double fromLon,
+                                       String[] toIds, double[] toLats, double[] toLons,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String[] fromIds, double[] fromLats, double[] fromLons,
+                                       String toId, double toLat, double toLon,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String fromId, double fromLat, double fromLon,
+                                       String toId, double toLat, double toLon,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String[] fromIds, double[] fromLats, double[] fromLons,
+                                       String[] toIds, double[] toLats, double[] toLons,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        ParetoFrontierCalculator paretoFrontierCalculator = new ParetoFrontierCalculator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        paretoFrontierCalculator.setOrigins(fromIds, fromLats, fromLons);
+        paretoFrontierCalculator.setDestinations(toIds, toLats, toLons);
+        paretoFrontierCalculator.setModes(directModes, accessModes, transitModes, egressModes);
+        paretoFrontierCalculator.setDepartureDateTime(date, departureTime);
+        paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+
+        return paretoFrontierCalculator.run();
     }
 
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
