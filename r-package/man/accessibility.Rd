@@ -304,6 +304,7 @@ stop_r5(r5r_core)
 \seealso{
 Other routing: 
 \code{\link{detailed_itineraries}()},
+\code{\link{pareto_frontier}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}

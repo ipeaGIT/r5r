@@ -14,7 +14,7 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = FALSE)
 
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-# poi <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+poi <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 dest <- points
 
@@ -31,9 +31,10 @@ calculate_access <- function(fares) {
                             departure_datetime = departure_datetime,
                             opportunities_colname = "schools",
                             mode = c("WALK", "TRANSIT"),
-                            cutoffs = c(60),
+                            cutoffs = c(30, 60),
                             max_trip_duration = 60,
-                            max_rides = 5,
+                            time_window = 15,
+                            percentiles = c(5, 50, 95),
                             verbose = FALSE)
 
     access$max_fare <- f
@@ -44,7 +45,8 @@ calculate_access <- function(fares) {
   return(access_df)
 }
 
-access_df <- calculate_access(c(240, 480, 720, 960, -1)) %>%
+access_df <- calculate_access(c(480, 720)) %>%
+  # access_df <- calculate_access(c(240, 480, 720, 960, -1)) %>%
   left_join(points, by = c("from_id" = "id"))
 
 access_df %>%
@@ -135,3 +137,24 @@ access_df %>%
   coord_map() +
   scale_color_distiller(palette = "Spectral") +
   facet_wrap(~max_fare)
+
+
+
+# Pareto ------------------------------------------------------------------
+
+pareto_df <- pareto_frontier(r5r_core,
+                             origins = poi,
+                             destinations = poi,
+                             mode = c("WALK", "TRANSIT"),
+                             departure_datetime = departure_datetime,
+                             monetary_cost_cutoffs = c(240, 480, 720, 960),
+                             fare_calculator = "porto-alegre",
+                             max_trip_duration = 60,
+                             max_walk_dist = 800,
+                             time_window = 30,
+                             percentiles = c(5, 50, 95),
+                             verbose = FALSE,
+                             progress = TRUE)
+
+
+

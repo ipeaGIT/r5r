@@ -241,6 +241,7 @@ stop_r5(r5r_core)
 \seealso{
 Other routing: 
 \code{\link{accessibility}()},
-\code{\link{detailed_itineraries}()}
+\code{\link{detailed_itineraries}()},
+\code{\link{pareto_frontier}()}
 }
 \concept{routing}
