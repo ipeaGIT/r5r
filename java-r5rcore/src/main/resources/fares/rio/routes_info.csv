@@ -1,0 +1,454 @@
+route_id,route_short_name,route_long_name,fare_id,price,type,price_bu
+12862263,436,Grajaú - Leblon (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+37308999,553,Integrada 08 - Rio Sul - Recreio (via Av. Atlântica/Lagoa Barra/Av. das Américas),32069624,4.05,onibus_municipal,4.05
+12861282,696,Praia do Dendê - Méier,32069624,4.05,onibus_municipal,4.05
+12864875,277,Rocha Miranda - Candelária (via São Cristóvão),32069624,4.05,onibus_municipal,4.05
+33083160,BRT 22,Alvorada - Jardim Oceânico,34127393,4.05,brt,4.05
+12862094,334,Cordovil - INTO (via Praça das Nações) (Circular),32069624,4.05,onibus_municipal,4.05
+12862106,351,Irajá - Candelária (Rápido),32069624,4.05,onibus_municipal,4.05
+48640656,LECD 23,Freguesia - Madureira (via Cascadura) (Circular),32069624,4.05,onibus_municipal,4.05
+41851267,789,Campo Grande - Cascadura,32069624,4.05,onibus_municipal,4.05
+12860095,920,Pavuna - Bonsucesso (via Fazenda Botafogo),32069624,4.05,onibus_municipal,4.05
+12864879,329,Bancários - Candelária (via Praia da Rosa),32069624,4.05,onibus_municipal,4.05
+12863192,669,Pavuna - Méier,32069624,4.05,onibus_municipal,4.05
+31151412,810,Pontal - Taquara,34127545,4.05,onibus_municipal,4.05
+12865852,847,Rio da Prata - Campo Grande (via Estrada do Lameirão),32069624,4.05,onibus_municipal,4.05
+33643366,817A,Terminal Recreio - Vargem Grande (via Alceu de Carvalho/Av. Gláucio Gil),34127545,4.05,onibus_municipal,4.05
+12864160,830,Campo Grande - Distrito Industrial (Circular),32069624,4.05,onibus_municipal,4.05
+31180065,963A,Santa Maria - Taquara,34127545,4.05,onibus_municipal,4.05
+31168297,800A,Terminal Centro Olímpico - Taquara (via Estr. do Guerenguê / Av. Olof Palme),34127545,4.05,onibus_municipal,4.05
+12861152,463,São Cristóvão - Copacabana (via Túnel Rebouças/Túnel Velho) (Circular),32069624,4.05,onibus_municipal,4.05
+12866621,743,Barata - Bangu (via Estrada da Água Branca) (Circular),32069624,4.05,onibus_municipal,4.05
+12863136,455,Méier - Copacabana (via Parque do Flamengo),32069624,4.05,onibus_municipal,4.05
+12863277,498,Circular da Penha - Largo do Machado (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12865027,950,Vicente Carvalho - Vista Alegre (via Av. Meriti),32069624,4.05,onibus_municipal,4.05
+12865722,550,Cidade de Deus - Gávea,32069624,4.05,onibus_municipal,4.05
+12863318,814,Rio da Prata - Bangu (Circular),32069624,4.05,onibus_municipal,4.05
+12860378,846,Rio da Prata - Campo Grande (via Estrada do Cabuçu),32069624,4.05,onibus_municipal,4.05
+31695165,870A,Sepetiba - Santa Cruz,34127545,4.05,onibus_municipal,4.05
+39459507,603,Águas Lindas - Terminal Corrêas,50226559,4.05,onibus_metro,4.05
+12867380,471,Triagem - Siqueira Campos (via Túnel Velho),32069624,4.05,onibus_municipal,4.05
+12866547,472,Triagem - Leme (via Rodoviária / Praia do Flamengo),32069624,4.05,onibus_municipal,4.05
+49746078,BRT 35,Madureira - Alvorada,34127393,4.05,brt,4.05
+12864839,399,Pavuna - Passeio (via Av. Pres. Vargas/Rua Alcobaça),32069624,4.05,onibus_municipal,4.05
+12865894,416,Saens Peña - Jardim Botânico (Horto) (via Túnel Rebouças),32069624,4.05,onibus_municipal,4.05
+38444184,108,Troncal 06 - Jardim de Alah - Rodoviária (via Túnel Velho/Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12864200,906,Jardim América - Caju,32069624,4.05,onibus_municipal,4.05
+39620065,101,Troncal 10 - Jardim de Alah - Cruz Vermelha (via Jardim Botânico/Lapa),32069624,4.05,onibus_municipal,4.05
+12860099,608,Grajaú - Praça Saens Peña,32069624,4.05,onibus_metro,4.05
+26979915,538,Rocinha - Leme (via Estrada da Gávea/Jóquei) (Circular),32069624,4.05,onibus_municipal,4.05
+12863997,621,Penha - Saens Peña (via Mangueira) (Circular),32069624,4.05,onibus_municipal,4.05
+41834767,755,Realengo - Coelho Neto (Circular),32069624,4.05,onibus_municipal,4.05
+50366545,BRT 38,Fundão - Alvorada,34127393,4.05,brt,4.05
+39459395,209,Valparaíso - Centro,50226559,4.05,onibus_metro,4.05
+33084158,BRT 42,Fundão - Divina Providência,34127393,4.05,brt,4.05
+12862174,709,Cascadura - Amarelinho (Circular),32069624,4.05,onibus_municipal,4.05
+12865601,711,Rocha Miranda - Rio Comprido,32069624,4.05,onibus_municipal,4.05
+12863292,859,Covanca - Largo do Tanque (Circular),32069624,4.05,onibus_municipal,4.05
+12863100,383,Realengo - Praça da República (via Sulacap),32069624,4.05,onibus_municipal,4.05
+31861246,BRT 30,Alvorada - Galeão,34127393,4.05,brt,4.05
+12864922,829,Gardênia Azul - Freguesia (Circular),32069624,4.05,onibus_municipal,4.05
+12864906,368,Riocentro - Candelária,32069624,4.05,onibus_municipal,4.05
+12861311,323,Bananal - Castelo (via Cacuia) (Circular),32069624,4.05,onibus_municipal,4.05
+12860406,326,Bancários - Candelária,32069624,4.05,onibus_municipal,4.05
+12864899,209,Estácio - Caju (via São Cristóvão) (Circular),32069624,4.05,onibus_metro,4.05
+12866501,725,Ricardo de Albuquerque - Cascadura (Circular),32069624,4.05,onibus_municipal,4.05
+12861286,395,Coqueiros - Tiradentes,32069624,4.05,onibus_municipal,4.05
+12861412,867,Barra de Guaratiba - Campo Grande,32069624,4.05,onibus_municipal,4.05
+12860382,394,Vila Kennedy - Tiradentes,32069624,4.05,onibus_municipal,4.05
+31185687,346,Madureira - Candelária,32069624,4.05,onibus_municipal,4.05
+39459516,611,Bonfim - Terminal Corrêas,50226559,4.05,onibus_metro,4.05
+31117494,832,Taquara - Alvorada (via Curicica / Península),34127545,4.05,onibus_municipal,4.05
+12867258,473,São Januário - Lido (via Túnel Rebouças),32069624,4.05,onibus_municipal,4.05
+12862162,667,Madureira - Méier (Circular),32069624,4.05,onibus_municipal,4.05
+12861236,779,Pavuna - Madureira (via Rua João Vicente),32069624,4.05,onibus_municipal,4.05
+12866669,391,Padre Miguel - Praça Tiradentes,32069624,4.05,onibus_municipal,4.05
+12860402,384,Pavuna - Passeio,32069624,4.05,onibus_municipal,4.05
+48627939,BRT 21A,Recreio Shopping - Jardim Oceânico (via Alvorada),34127393,4.05,brt,4.05
+12865782,338,Taquara - Candelária (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12866581,601,Praça Saens Peña - Santa Maria (via Av. Menezes Cortes),32069624,4.05,onibus_municipal,4.05
+26977125,537,Gávea (PUC) - Rocinha (Via Estr. da Gávea) (Circular),32069624,4.05,onibus_municipal,4.05
+12862210,133,Rodoviária - Largo do Machado (via Estácio),32069624,4.05,onibus_municipal,4.05
+12860141,370,Padre Miguel - Candelária,32069624,4.05,onibus_municipal,4.05
+12861080,315,Recreio dos Bandeirantes - Central (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+13386970,BRT 10,Santa Cruz - Alvorada,34127393,4.05,brt,4.05
+12863362,884,Sepetiba - Campo Grande (via Estrada do Magarça),32069624,4.05,onibus_municipal,4.05
+12862289,331,Praça Seca - Castelo (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+48940358,881,Jardim Oceânico - Curicica (via Barra da Tijuca/ Av. Lúcio Costa),32069624,4.05,onibus_municipal,4.05
+12863037,850,Mendanha - Campo Grande,32069624,4.05,onibus_municipal,4.05
+12863348,741,Barata - Bangu (via Murundu) (Circular),32069624,4.05,onibus_municipal,4.05
+12862222,835,Largo do Correia - Campo Grande (via Estrada da Cachamorra),32069624,4.05,onibus_municipal,4.05
+12861331,605,Vila Isabel - São Francisco Xavier,32069624,4.05,onibus_metro,4.05
+12863372,848,Campo Grande - Bairro Monte Santo (Circular),32069624,4.05,onibus_municipal,4.05
+12863176,311,Engenheiro Leal - Candelária (via Cavalcanti),32069624,4.05,onibus_municipal,4.05
+31125278,882A,Tanque - Terminal Alvorada (via Ayrton Senna),34127545,4.05,onibus_municipal,4.05
+12861348,328,Bananal - Candelária,32069624,4.05,onibus_municipal,4.05
+12861076,557,Rio das Pedras - Copacabana (Circular),32069624,4.05,onibus_municipal,4.05
+22820761,BRT 12,Pingo D'água - Alvorada,34127393,4.05,brt,4.05
+12862275,839,Campo Grande - Cesarão (via Estrada Urucânia) (Circular),32069624,4.05,onibus_municipal,4.05
+12863211,915,Bonsucesso - Aeroporto Internacional do RJ (AIRJ) (Circular),32069624,4.05,onibus_municipal,4.05
+12866441,232,Lins - Castelo (via Rua Aquidabã),32069624,4.05,onibus_municipal,4.05
+39459509,605,Vale das Videiras - Terminal Itaipava,50226559,4.05,onibus_metro,4.05
+12861274,389,Vila Aliança - Candelária (via Senador Camará) (Expresso),32069624,4.05,onibus_municipal,4.05
+12862218,721,Vila Cruzeiro - Cascadura,32069624,4.05,onibus_municipal,4.05
+12863033,345,Jardim Oceânico - Candelária (via Furnas),32069624,4.05,onibus_municipal,4.05
+37263375,554,Integrada 09 - Rio Sul - Piabas (via Av. Atlântica/Av. Niemeyer/Estrada Benvindo de Novaes),32069624,4.05,onibus_municipal,4.05
+12868547,793,Pavuna - Sulacap,32069624,4.05,onibus_municipal,4.05
+31119868,880,Rio das Pedras - Terminal Alvorada (via Av. Ayrton Senna),32069624,4.05,onibus_municipal,4.05
+39459513,608,Calembe - Terminal Corrêas,50226559,4.05,onibus_metro,4.05
+48624849,BRT 53,Sulacap - Jardim Oceânico (via Alvorada),34127393,4.05,brt,4.05
+12860043,852,Campo Grande - Pedra de Guaratiba (via Estrada do Mato Alto) (Circular),32069624,4.05,onibus_municipal,4.05
+12860267,456,Norte Shopping - Copacabana (via Túnel Santa Bárbara) (Circular),32069624,4.05,onibus_municipal,4.05
+12860223,794,Cascadura - Bangu (via Barata),32069624,4.05,onibus_municipal,4.05
+12865824,614,Del Castilho - Alvorada,32069624,4.05,onibus_metro,4.05
+31108376,991A,Taquara - Terminal Alvorada (via Cidade de Deus),34127545,4.05,onibus_municipal,4.05
+12867310,635,Bananal - Saens Peña (via Linha Vermelha/Cidade Universitária),32069624,4.05,onibus_municipal,4.05
+12862415,404,Cordovil - Leblon (via Av. Brasil) (Circular),32069624,4.05,onibus_municipal,4.05
+13387026,"",Barca Praça XV - Paquetá,13794408,6.5,barca,6.3
+12866493,341,Taquara - Candelária,32069624,4.05,onibus_municipal,4.05
+12864934,782,Cascadura - Marechal Hermes (via Rocha Miranda) (Circular),32069624,4.05,onibus_municipal,4.05
+12860390,349,Rocha Miranda - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+12862090,687,Pavuna - Méier,32069624,4.05,onibus_municipal,4.05
+39459475,513,Comunidade do Alemão - Terminal Centro,50226559,4.05,onibus_metro,4.05
+12863126,790,Campo Grande - Cascadura,32069624,4.05,onibus_municipal,4.05
+12864023,723,Cascadura - Mariópolis,32069624,4.05,onibus_municipal,4.05
+12863172,623,Penha - Saens Peña (via Túnel Noel Rosa) (Circular),32069624,4.05,onibus_municipal,4.05
+12861428,840,São Fernando - Campo Grande (via Av. João XXIII),32069624,4.05,onibus_municipal,4.05
+12869782,525,General Osório - Alvorada,32069624,4.05,onibus_municipal,4.05
+12861270,663,Méier - Fundão (Circular),32069624,4.05,onibus_municipal,4.05
+12861319,369,Bangu - Candelária,32069624,4.05,onibus_municipal,4.05
+38049426,"",Curicica (Projac) - Rio Sul (via B. da Tijuca) (Circular),32069624,4.05,onibus_municipal,4.05
+12860201,786,Campo Grande - Marechal Hermes,32069624,4.05,onibus_municipal,4.05
+13439213,665,Pavuna - Saens Peña (via Av. Pastor Martin Luther King),32069624,4.05,onibus_municipal,4.05
+12864815,639,Jardim América - Saens Peña (via Rocha Miranda),32069624,4.05,onibus_municipal,4.05
+12864891,864,Bangu - Campo Grande,32069624,4.05,onibus_municipal,4.05
+13387030,"",Barca Praça XV - Araribóia,13794408,6.5,barca,6.3
+13387065,L2,Linha 2 (Verde),13966833,5,metro,5
+12861377,380,Curicica - Candelária (via Linha Amarela/Estrada do Pau Ferro),32069624,4.05,onibus_municipal,4.05
+12861315,301,Rodoviária - Barra da Tijuca (via Av. das Américas),32069624,4.05,onibus_municipal,4.05
+12860091,887,Pechincha - Barra da Tijuca (Circular),32069624,4.05,onibus_municipal,4.05
+12860235,804,Largo do Aarão - Campo Grande (via Rua Felipe Cardoso),32069624,4.05,onibus_municipal,4.05
+12860034,457,Abolição - Copacabana (via Túnel Santa Bárbara) (Circular),32069624,4.05,onibus_municipal,4.05
+12869808,860,Rio das Pedras - Freguesia (Circular),32069624,4.05,onibus_municipal,4.05
+12865620,731,Campo Grande - Marechal Hermes (via Estrada da Posse),32069624,4.05,onibus_municipal,4.05
+12864845,239,Água Santa - Castelo (via Rua Vinte e Quatro de Maio) (Circular),32069624,4.05,onibus_municipal,4.05
+12862154,771,Campo Grande - Coelho Neto (via Estrada da Posse),32069624,4.05,onibus_municipal,4.05
+12860322,843,Campo Grande - Boa Esperança (Circular),32069624,4.05,onibus_municipal,4.05
+12860251,693,Méier - Alvorada (via Rua Dias da Cruz/Linha Amarela),32069624,4.05,onibus_municipal,4.05
+39459514,609,Castelo São Manoel - Terminal Corrêas,50226559,4.05,onibus_metro,4.05
+12862255,863,Rio das Pedras - Barra da Tijuca (via Av. Ayrton Senna) (Circular),32069624,4.05,onibus_municipal,4.05
+49191520,897,Paciência - Pingo D'agua (Via Est. 31 de Outubro) (Circular),32069624,4.05,onibus_municipal,4.05
+12868694,891A,Sepetiba - Mato Alto,34127545,4.05,onibus_municipal,4.05
+12866661,784,Vila Kennedy - Marechal Hermes,32069624,4.05,onibus_municipal,4.05
+33083413,BRT 40,Madureira - Jardim Oceânico (via Alvorada),34127393,4.05,brt,4.05
+12866585,111,Central - Jardim de Alah (via Elevado/Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12863184,388,Santa Cruz - Candelária (via Av. Brasil) (Expresso),32069624,4.05,onibus_municipal,4.05
+12864228,392,Bangu - Candelária (via Padre Miguel),32069624,4.05,onibus_municipal,4.05
+12865649,580,Largo do Machado - Cosme Velho,32069624,4.05,onibus_municipal,4.05
+42619650,218,Vila Isabel - Candelária (Circular),32069624,4.05,onibus_municipal,4.05
+12860197,584,Cosme Velho - Leblon (via Copacabana) (Circular),32069624,4.05,onibus_municipal,4.05
+12862206,849,Base Aérea de Santa Cruz - Campo Grande,32069624,4.05,onibus_municipal,4.05
+12861256,313,Penha (Grotão) - Praça Tiradentes (via Vila Cruzeiro) (Circular),32069624,4.05,onibus_municipal,4.05
+12868117,936,Campo Grande - Cidade Universitária (via Av. Brasil),32069624,4.05,onibus_municipal,4.05
+12860185,110,Rodoviária - Jardim de Alah (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12864122,292,Engenho da Rainha - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+12861373,497,Penha - Cosme Velho (Circular),32069624,4.05,onibus_municipal,4.05
+12862202,625,Olaria - Saens Peña (Circular),32069624,4.05,onibus_municipal,4.05
+12861114,638,Saens Peña - Marechal Hermes (Circular),32069624,4.05,onibus_municipal,4.05
+12861244,483,Penha - Siqueira Campos (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12861420,422,Grajaú - Cosme Velho,32069624,4.05,onibus_municipal,4.05
+27566110,628,Penha - Nova América (Circular),32069624,4.05,onibus_municipal,4.05
+12865900,739,Sulacap - Bangu (Circular),32069624,4.05,onibus_municipal,4.05
+12867241,773,Pavuna - Cascadura (via Estrada do Camboatá) (Circular),32069624,4.05,onibus_municipal,4.05
+37263661,582,Circular 2 - Leblon - Urca (via Jardim Botânico/Túnel Rebouças/Laranjeiras) (Circular),32069624,4.05,onibus_municipal,4.05
+12865017,365,Mendanha - Tiradentes (Expresso),32069624,4.05,onibus_municipal,4.05
+39247868,581,Circular 1 - Leblon - Cosme Velho (via Copacabana/Urca/Largo do Machado) (Circular),32069624,4.05,onibus_municipal,4.05
+37860538,104,Troncal 04 - São Conrado - Rodoviária (via Av. N. S. de Copacabana/Catete/Av. Francisco Bicalho),32069624,4.05,onibus_municipal,4.05
+12863322,837,Campo Grande - Conjunto da Marinha (Circular),32069624,4.05,onibus_municipal,4.05
+33650988,827A,Terminal Recreio - Vargem Grande (via Av. Benvindo de Novaes/Gláucio Gil),34127545,4.05,onibus_municipal,4.05
+32627014,910A,Bananal - Irajá,34127545,4.05,onibus_municipal,4.05
+12863261,802,Bangu - Campo Grande (via Rio da Prata),32069624,4.05,onibus_municipal,4.05
+45561324,VLT-01,Linha 1 (Azul),52433953,3.8,vlt,3.8
+12867411,629,Irajá - Saens Peña,32069624,4.05,onibus_municipal,4.05
+12861365,440,Caju - Copacabana (via Túnel Rebouças/Túnel Velho) (Circular),32069624,4.05,onibus_municipal,4.05
+12867190,444,Maré - Copacabana (via Túnel Santa Bárbara) (Circular),32069624,4.05,onibus_municipal,4.05
+48625201,BRT 51,Recreio - Vila Militar,34127393,4.05,brt,4.05
+12865078,925,Aeroporto Internacional do RJ (AIRJ) - Bancários (Circular),32069624,4.05,onibus_municipal,4.05
+12862432,626,Muda - Praça Saens Peña,32069624,4.05,onibus_municipal,4.05
+12861240,944,Pavuna - Conjunto Engenheiro Rubens Paiva (Circular),32069624,4.05,onibus_municipal,4.05
+12861068,432,Vila Isabel - Leblon (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12860398,393,Bangu - Candelária,32069624,4.05,onibus_municipal,4.05
+12862380,940,Ramos (Praia) - Madureira,32069624,4.05,onibus_municipal,4.05
+12867300,616,Del Castilho - Fundão (via Cidade Universitária),32069624,4.05,onibus_metro,4.05
+40863114,275,Méier - Candelária (Circular),32069624,4.05,onibus_municipal,4.05
+12861385,627,Inhaúma - Saens Peña,32069624,4.05,onibus_municipal,4.05
+12866692,379,Catiri - Tiradentes,32069624,4.05,onibus_municipal,4.05
+12865059,822,Campo Grande - Corcundinha (via Vila Nova) (Circular),32069624,4.05,onibus_municipal,4.05
+37263366,517,Gávea (PUC) - Glória (via Fonte da Saudade) (Circular),32069624,4.05,onibus_municipal,4.05
+12864067,445,Morro do Alemão - Copacabana (via Túnel Santa Bárbara) (Circular),32069624,4.05,onibus_municipal,4.05
+12866445,461,São Cristóvão - Ipanema (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12862198,624,Mariópolis - Praça da Bandeira,32069624,4.05,onibus_municipal,4.05
+12862336,006,Silvestre - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+12863052,775,Vigário Geral - Madureira (Circular),32069624,4.05,onibus_municipal,4.05
+12867390,249,Água Santa - Carioca (Circular),32069624,4.05,onibus_municipal,4.05
+12862436,398,Campo Grande - Tiradentes (via Av. Brasil),32069624,4.05,onibus_municipal,4.05
+12863273,926,Senador Camará - Penha,32069624,4.05,onibus_municipal,4.05
+12860358,220,Usina - Candelária (via Rua Haddock Lobo) (Circular),32069624,4.05,onibus_municipal,4.05
+48627770,BRT 20,Santa Cruz - Salvador Allende,34127393,4.05,brt,4.05
+12864871,210,Caju - Candelária (Circular),32069624,4.05,onibus_municipal,4.05
+42891683,939A,Gardênia Azul - Tanque (via Lgo. Freguesia/Taquara) (Circular),34127545,4.05,onibus_municipal,4.05
+12868662,951,Vicente Carvalho - Vista Alegre (via Estrada Padre Roser/Shopping Via Brasil),32069624,4.05,onibus_municipal,4.05
+12866435,868,Urucânia - Campo Grande (via Aterrado do Leme),32069624,4.05,onibus_municipal,4.05
+12864218,679,Grotão - Méier (Circular),32069624,4.05,onibus_municipal,4.05
+49682466,L1/L4,Linha 1/Linha 4 (Laranja/Amarela),13966833,5,metro,5
+12861278,913,Del Castilho - Fundão (via Cidade Universitária),32069624,4.05,onibus_metro,4.05
+12864938,934,Ribeira - Portuguesa (via Cocotá) (Circular),32069624,4.05,onibus_municipal,4.05
+31182772,966A,Tanque - Hosp. Cardoso Fontes (Circular),34127545,4.05,onibus_municipal,4.05
+12860165,869,Santa Margarida - Campo Grande (Circular),32069624,4.05,onibus_municipal,4.05
+12864254,434,Grajaú - Siqueira Campos (via Lapa/Túnel Velho) (Circular),32069624,4.05,onibus_municipal,4.05
+12861136,371,Praça Seca - Praça Tiradentes,32069624,4.05,onibus_municipal,4.05
+39459520,616,Vale das Flores - Terminal Corrêas,50226559,4.05,onibus_metro,4.05
+12862188,678,Méier - Vila Valqueire,32069624,4.05,onibus_municipal,4.05
+33655604,823A,Vargem Grande - Recreio (via Estr. do Pontal) (Circular),34127545,4.05,onibus_municipal,4.05
+50369668,BRT 25,Mato Alto - Jardim Oceânico (via Alvorada),34127393,4.05,brt,4.05
+12866696,892,São Benedito - Santa Cruz (via Matadouro) (Circular),32069624,4.05,onibus_municipal,4.05
+12860205,300,Sulacap - Candelária,32069624,4.05,onibus_municipal,4.05
+12860300,306,Praça Seca - Castelo (via Av. Menezes Côrtes),32069624,4.05,onibus_municipal,4.05
+31975223,691,Méier - Cidade de Deus (via Taquara/Linha Amarela),32069624,4.05,onibus_municipal,4.05
+13386993,"",Barca Praça XV - Cocotá,13794408,6.5,barca,6.3
+12860111,825,Jesuítas - Campo Grande (via Santa Cruz),32069624,4.05,onibus_municipal,4.05
+42409102,117,Troncal 07 - Central - Cosme Velho (Via Túnel Sta. Bárbara),32069624,4.05,onibus_municipal,4.05
+12861099,917,Realengo - Bonsucesso,32069624,4.05,onibus_municipal,4.05
+31117006,865A,Pau da Fome - Taquara (via Rodrigues Caldas) (Circular),34127545,4.05,onibus_municipal,4.05
+12865043,442,Maré - Copacabana (via Praça Mauá) (Circular),32069624,4.05,onibus_municipal,4.05
+12867268,946,Pavuna - Engenho da Rainha (via Av. Dom Helder Câmara),32069624,4.05,onibus_municipal,4.05
+12861299,366,Campo Grande - Tiradentes,32069624,4.05,onibus_municipal,4.05
+31992559,BRT 13,Mato Alto - Alvorada,34127393,4.05,brt,4.05
+31143681,877A,Tanque - Rio das Pedras (Circular),34127545,4.05,onibus_municipal,4.05
+30627429,803,Senador Camará - Taquara (via Catonho),32069624,4.05,onibus_municipal,4.05
+12862407,309,Central - Alvorada (via Av. Lúcio Costa / Botafogo / Praia do Flamengo),32069624,4.05,onibus_municipal,4.05
+26985085,539,Rocinha - Leme (via Estrada da Gávea/Copacabana) (Circular),32069624,4.05,onibus_municipal,4.05
+12861295,908,Bonsucesso - Guadalupe (via Metrô Inhaúma),32069624,4.05,onibus_municipal,4.05
+38170098,513,Nova Iguaçu - Austin (via Comendador Soares/Rodilândia),30176011,4.05,onibus_metro,4.05
+21025828,874A,Marambaia - Estação Ilha de Guaratiba,34127545,4.05,onibus_municipal,4.05
+12860209,841,Vilar Carioca - Campo Grande,32069624,4.05,onibus_municipal,4.05
+13994710,"",(Metrô na Superfície) Botafogo - Gávea,13966833,5,metro,5
+12860063,777,Padre Miguel - Madureira,32069624,4.05,onibus_municipal,4.05
+12865848,415,Usina - Leblon (Circular),32069624,4.05,onibus_municipal,4.05
+12861400,350,Irajá - Passeio,32069624,4.05,onibus_municipal,4.05
+12865031,652,Méier - Cascadura (via Lins) (Circular),32069624,4.05,onibus_municipal,4.05
+12867184,928,Marechal Hermes - Ramos (Circular),32069624,4.05,onibus_municipal,4.05
+21038454,883A,Bangu - Est. Mato Alto (via Estrada do Pré) (Circular),34127545,4.05,onibus_municipal,4.05
+12866651,555,Rio das Pedras - Gávea,32069624,4.05,onibus_municipal,4.05
+12862247,322,Ribeira - Candelária (via Cocotá),32069624,4.05,onibus_municipal,4.05
+12860231,607,Cascadura - Rio Comprido (via Estácio) (Circular),32069624,4.05,onibus_municipal,4.05
+12863265,778,Pavuna - Cascadura (via Estrada de Botafogo) (Circular),32069624,4.05,onibus_municipal,4.05
+12860394,339,Rodoviária - Cidade de Deus (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+31695597,872A,Sepetiba - Cesarão (via Sepetiba),34127545,4.05,onibus_municipal,4.05
+12860350,651,Méier - Cascadura (via Rua Arquias Cordeiro) (Circular),32069624,4.05,onibus_municipal,4.05
+12862170,744,Realengo - Cascadura (via Jardim Novo) (Circular),32069624,4.05,onibus_municipal,4.05
+12862271,862,Rio das Pedras - Barra da Tijuca (via Estrada de Jacarepaguá) (Circular),32069624,4.05,onibus_municipal,4.05
+12864235,376,Pavuna - Candelária (via Rua Mercúrio),32069624,4.05,onibus_municipal,4.05
+29043785,296,Irajá - Castelo,32069624,4.05,onibus_municipal,4.05
+12861307,238,Água Santa - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+26743079,955,Maré - Alvorada (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12861118,600,Taquara - Pça. Saens Peña (via Cidade de Deus / Av. Menezes Cortes / Boiuna),32069624,4.05,onibus_municipal,4.05
+12862387,680,Penha (Iapi) - Méier (Circular),32069624,4.05,onibus_municipal,4.05
+37873368,011,Rodoviária - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+32380161,875A,Tanque - Chácara (Circular),34127545,4.05,onibus_municipal,4.05
+12860181,485,Penha - Siqueira Campos (via Linha Vermelha/Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+31110076,806A,Boiuna - Taquara (via Rio Grande),34127545,4.05,onibus_municipal,4.05
+38448391,558,Integrada 06 - General Osório - Cidade de Deus (via Itanhangá),32069624,4.05,onibus_municipal,4.05
+12860370,751,Jardim Novo (Realengo) - Cascadura,32069624,4.05,onibus_municipal,4.05
+31233230,918,Bangu - Irajá (via Jardim Violeta) (Circular),32069624,4.05,onibus_municipal,4.05
+12865790,845,Campo Grande - Cantagalo (Circular),32069624,4.05,onibus_municipal,4.05
+13409309,303,Rodoviária - Barra da Tijuca (via Linha Amarela) (Circular),32069624,4.05,onibus_municipal,4.05
+12862368,217,Andaraí - Carioca (Circular),32069624,4.05,onibus_municipal,4.05
+37860183,106,Troncal 03 - Central - Leblon (via Aterro/Av. Nossa Senhora de Copacabana) (Circular),32069624,4.05,onibus_municipal,4.05
+12862328,486,Fundão - Siqueira Campos (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12868712,202,Rio Comprido - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+12861196,752,Conjunto dos Palmares - Coelho Neto,32069624,4.05,onibus_municipal,4.05
+12863088,410,Saens Peña - Gávea (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12862118,603,Usina - Praça Saens Peña (via São Miguel),19828276,4.05,onibus_metro,4.05
+12861072,390,Curicica - Candelária (via Estrada do Guerenguê),32069624,4.05,onibus_municipal,4.05
+12860121,402,Engenho da Rainha - Gávea,32069624,4.05,onibus_municipal,4.05
+12866526,861,Rio das Pedras - Curicica (via Cidade de Deus),32069624,4.05,onibus_municipal,4.05
+12862180,363,Vila Valqueire - Candelária,32069624,4.05,onibus_municipal,4.05
+31192624,953A,Taquara - Cidade de Deus (via Ret. dos Artistas),34127545,4.05,onibus_municipal,4.05
+52404235,BRT 46,Penha - Alvorada,34127393,4.05,brt,4.05
+12861369,397,Campo Grande - Candelária,32069624,4.05,onibus_municipal,4.05
+31695385,871A,Sepetiba - Cesarão III (via Croácia) (circular),34127545,4.05,onibus_municipal,4.05
+50369274,BRT 11,Santa Cruz - Alvorada,34127393,4.05,brt,4.05
+21028843,879A,Campo Grande - Magarça,34127545,4.05,onibus_municipal,4.05
+33491565,BRT 19,Pingo D´água - Salvador Allende,34127393,4.05,brt,4.05
+48666391,203,Rio Comprido - Candelária (via Av. Presidente Vargas / Central) (Circular),32069624,4.05,onibus_municipal,4.05
+12861381,321,Bancários - Castelo (via Linha Vermelha) (Circular),32069624,4.05,onibus_municipal,4.05
+12864101,838,Jardim Maravilha - Campo Grande,32069624,4.05,onibus_municipal,4.05
+12864867,767,Campo Grande - Guadalupe (via Vila Kennedy),32069624,4.05,onibus_municipal,4.05
+31696017,828A,São Jorge - Campo Grande (via Estação Campo Grande),34127545,4.05,onibus_municipal,4.05
+12863979,819,Jardim Bangu - Bangu (Circular),32069624,4.05,onibus_municipal,4.05
+12863242,692,Méier - Alvorada (via Av. Dom Helder Câmara/Linha Amarela),32069624,4.05,onibus_municipal,4.05
+32386294,702A,Praça Seca - Madureira,34127545,4.05,onibus_municipal,4.05
+12867907,650,Marechal Hermes - Engenho Novo (Circular),32069624,4.05,onibus_municipal,4.05
+37262794,105,Troncal 05 - Alto Gávea - Central (via Praia de Botafogo/Praia do Flamengo/Rua Primeiro de Março),32069624,4.05,onibus_municipal,4.05
+12862423,435,Grajaú - Gávea (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12865774,781,Cascadura - Marechal Hermes (via Praça Seca) (Circular),32069624,4.05,onibus_municipal,4.05
+49177221,VLT-02,Linha 2 (Verde),52433953,3.8,vlt,3.8
+12863064,503,Alto Leblon - Gávea (Circular),32069624,4.05,onibus_municipal,4.05
+12867264,783,Marechal Hermes - Praça Seca (Circular),32069624,4.05,onibus_municipal,4.05
+12865828,181,Rodoviária - São Conrado (via Linha Amarela) (Circular),32069624,4.05,onibus_municipal,4.05
+12864930,330,Parque União - Candelária,32069624,4.05,onibus_municipal,4.05
+12866566,226,Grajaú - Carioca (Circular),32069624,4.05,onibus_municipal,4.05
+13387096,BRT 15,Paciência - Salvador Allende,34127393,4.05,brt,4.05
+40859680,213,Muda - Candelária (Circular),32069624,4.05,onibus_municipal,4.05
+12860169,745,Bangu - Cascadura,32069624,4.05,onibus_municipal,4.05
+37261939,552,Integrada 02 - Rio Sul - Alvorada (via Av. Atlântica/Av. Niemeyer/Av. Lúcio Costa),32069624,4.05,onibus_municipal,4.05
+12866675,583,Cosme Velho - Leblon (via Jóquei) (Circular),32069624,4.05,onibus_municipal,4.05
+32583952,856A,Terminal Centro Olímpico - Terminal Taquara (via André Rocha),34127545,4.05,onibus_municipal,4.05
+12865786,254,Madureira - Candelária,32069624,4.05,onibus_municipal,4.05
+12865049,634,Bananal - Saens Peña,32069624,4.05,onibus_municipal,4.05
+12867330,378,Marechal Hermes - Castelo,32069624,4.05,onibus_municipal,4.05
+12862322,873A,Paciência - Campo Grande (via Jardim Sete de Abril/Estrada dos Gouveia) (Circular),34127545,4.05,onibus_municipal,4.05
+12863162,836,Caboclos - Campo Grande (via Rua Olinda Ellis) (Circular),32069624,4.05,onibus_municipal,4.05
+12861340,942,Penha - Pavuna,32069624,4.05,onibus_municipal,4.05
+12865659,756,Santa Cruz - Coelho Neto,32069624,4.05,onibus_municipal,4.05
+12862332,513,Urca - Fonte da Saudade (via Mena Barreto) (Circular),32069624,4.05,onibus_metro,4.05
+13453901,885,Piraquê - Santa Cruz (via Pedra de Guaratiba),32069624,4.05,onibus_municipal,4.05
+12864819,807,Jesuítas - Santa Cruz (Circular),32069624,4.05,onibus_municipal,4.05
+12865860,851,Campo Grande  - Escola Amazonas (via Augusto Vasconcelos) (Circular),32069624,4.05,onibus_municipal,4.05
+12860293,327,Ribeira - Castelo (via Linha Vermelha) (Circular),32069624,4.05,onibus_municipal,4.05
+12867934,448,Maracaí - São Conrado (Circular),32069624,4.05,onibus_municipal,4.05
+38944777,772,Bangu - Coelho Neto  (Circular),32069624,4.05,onibus_municipal,4.05
+49190953,809,Sagrado Coração - Santa Cruz (Circular),32069624,4.05,onibus_municipal,4.05
+12865695,833,Conjunto Manguariba - Campo Grande,32069624,4.05,onibus_municipal,4.05
+33251844,BRT 17,Santa Cruz - Campo Grande,34127393,4.05,brt,4.05
+12860374,737,Santíssimo - Marechal Hermes (Circular),32069624,4.05,onibus_municipal,4.05
+12860107,746,Jabour - Cascadura (Circular),32069624,4.05,onibus_municipal,4.05
+50373368,BRT 18,Recreio Shopping - Jardim Oceânico (via Barra Shop.),34127393,4.05,brt,4.05
+12865667,738,Urucânia - Marechal Hermes,32069624,4.05,onibus_municipal,4.05
+31789151,265,Marechal Hermes - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+20920163,854A,Campo Grande - Mato Alto,34127545,4.05,onibus_municipal,4.05
+37263947,551,Integrada 01 - Rio Sul - Alvorada (via Av. Atlântica/Lagoa-Barra/Av. das Américas),32069624,4.05,onibus_municipal,4.05
+12860075,824,Campo Grande - Santa Maria (Vila Nova)  (Circular),32069624,4.05,onibus_municipal,4.05
+31189908,353,Praça Seca - Rodoviária,32069624,4.05,onibus_municipal,4.05
+31130564,610A,Del Castilho - Tanque (via Linha Amarela),34127545,4.05,onibus_municipal,4.05
+12864147,712,Cascadura - Irajá (Circular),32069624,4.05,onibus_municipal,4.05
+12863041,409,Saens Peña - Horto (via Lapa),32069624,4.05,onibus_municipal,4.05
+36540635,770,Campo Grande - Coelho Neto (Metrô) (Circular),32069624,4.05,onibus_municipal,4.05
+12868634,396,Bairro Jabour - Candelária (via Av. Brasil),32069624,4.05,onibus_municipal,4.05
+12861396,362,Honório Gurgel - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+31131205,636,Praça Seca - Saens Peña (via Madureira),34127545,4.05,onibus_municipal,4.05
+12860289,653,Marechal Hermes - Méier (Circular),32069624,4.05,onibus_municipal,4.05
+12861352,335,Cordovil - Tiradentes (Rápido) (Circular),32069624,4.05,onibus_municipal,4.05
+13399815,302,Rodoviária - Alvorada (via Av. Lúcio Costa),32069624,4.05,onibus_municipal,4.05
+12864027,443,Maré - Leblon (via Central) (Circular),32069624,4.05,onibus_municipal,4.05
+37263371,102,Troncal 02 - Jardim de Alah - Rodoviária (via Lapa),32069624,4.05,onibus_municipal,4.05
+31164527,954,Taquara - Recreio (via Benvindo Novaes),34127545,4.05,onibus_municipal,4.05
+12864035,507,Largo do Machado - Silvestre,32069624,4.05,onibus_municipal,4.05
+12866612,759,Cesarão - Coelho Neto,32069624,4.05,onibus_municipal,4.05
+12861416,801,Bangu - Taquara,32069624,4.05,onibus_municipal,4.05
+12861164,355,Madureira - Praça Tiradentes,32069624,4.05,onibus_municipal,4.05
+48629961,BRT 31,Alvorada - Vicente de Carvalho,34127393,4.05,brt,4.05
+12864977,352,Riocentro - Candelária (via Autódromo/Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12862124,606,Engenho de Dentro - Rodoviária,32069624,4.05,onibus_municipal,4.05
+12865663,834,Largo do Correia - Campo Grande (via Estrada do Monteiro),32069624,4.05,onibus_municipal,4.05
+12864222,895,Serrinha - Campo Grande (Circular),32069624,4.05,onibus_municipal,4.05
+12866543,935,Ribeira - Portuguesa (Circular),32069624,4.05,onibus_municipal,4.05
+20892056,853A,Vila Kennedy - Mato Alto (via Posse),34127545,4.05,onibus_municipal,4.05
+12862128,685,Irajá - Méier,32069624,4.05,onibus_municipal,4.05
+31127957,565,Tanque - Gávea (via Freguesia),32069624,4.05,onibus_municipal,4.05
+12861424,769,Jardim Violeta - Madureira (via Bangu) (Circular),32069624,4.05,onibus_municipal,4.05
+31591440,548,Integrada 03 - Alvorada - Metrô Botafogo (via Av. das Américas/Jardim Botânico) (Circular),32069624,4.05,onibus_municipal,4.05
+12860219,324,Ribeira - Candelária,32069624,4.05,onibus_municipal,4.05
+12862340,893,Jardim Palmares - Campo Grande (via 29 de Março),32069624,4.05,onibus_municipal,4.05
+12865794,924,Aeroporto Internacional do RJ (AIRJ) - Bananal,32069624,4.05,onibus_municipal,4.05
+12861160,325,Ribeira - Castelo (via Linha Vermelha) (Circular),32069624,4.05,onibus_municipal,4.05
+12861252,898,Sepetiba - Campo Grande (via Estrada do Campinho),32069624,4.05,onibus_municipal,4.05
+37836430,854AA,Campo Grande - Ilha de Guaratiba,34127545,4.05,onibus_municipal,4.05
+12861192,742,Barata - Cascadura,32069624,4.05,onibus_municipal,4.05
+13994715,"",(Metrô na Superfície) Ipanema - Gávea,13966833,5,metro,5
+12865001,611,Camorim - Del Castilho (via Curicica/Linha Amarela),32069624,4.05,onibus_metro,4.05
+12861208,298,Acari - Castelo,32069624,4.05,onibus_municipal,4.05
+12863309,201,Santa Alexandrina - Castelo (via Cruz Vermelha) (Circular),32069624,4.05,onibus_municipal,4.05
+12864823,821,Campo Grande - Corcundinha (via Estrada das Capoeiras) (Circular),32069624,4.05,onibus_municipal,4.05
+12860129,615,Del Castilho - Pavuna (via Norte Shopping) (Circular),32069624,4.05,onibus_municipal,4.05
+12862350,805,Alvorada - Jardim Oceânico,32069624,4.05,onibus_municipal,4.05
+12862358,247,Camarista Méier - Passeio (Circular),32069624,4.05,onibus_municipal,4.05
+12862304,441,Caju - Siqueira Campos (via São Cristóvão/Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12864851,688,Pavuna - Méier (via Rua José dos Reis),32069624,4.05,onibus_municipal,4.05
+47987891,L4,Linha 4 (Amarela),39715933,5,metro,5
+12862158,460,São Cristóvão - Leblon (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12862300,774,Madureira - Jardim América (Circular),32069624,4.05,onibus_municipal,4.05
+12866457,923,Jardim Violeta - Iapi da Penha (via Bangu),32069624,4.05,onibus_municipal,4.05
+12862136,361,Recreio dos Bandeirantes - Castelo (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12861122,358,Cosmos - Candelária,32069624,4.05,onibus_municipal,4.05
+12868616,622,Penha - Saens Peña (via Grajaú) (Circular),32069624,4.05,onibus_municipal,4.05
+12864183,609,São Francisco Xavier - Méier,32069624,4.05,onibus_metro,4.05
+31140844,932A,Gardênia Azul - Tanque (via Estrada Pau Ferro),34127545,4.05,onibus_municipal,4.05
+52403078,BRT 43,Fundão - Santa Efigênia,34127393,4.05,brt,4.05
+37263080,118,Troncal 08 - Cosme Velho - Rodoviária (via Praça Mauá),32069624,4.05,onibus_municipal,4.05
+12860326,905,Bonsucesso - Irajá,32069624,4.05,onibus_municipal,4.05
+31153811,878,Tanque - Barra da Tijuca (via Av. Eng. Souza Filho),32069624,4.05,onibus_municipal,4.05
+12865880,426,Usina - Jardim de Alah (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12863104,886,Freguesia - Barra da Tijuca (Circular),32069624,4.05,onibus_municipal,4.05
+12861084,613,Vargem Grande - Del Castilho (via Abelardo Bueno/Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12868020,010,Fátima - Central (Circular),32069624,4.05,onibus_municipal,4.05
+31138666,890A,Tanque - Terminal Alvorada (via Cidade de Deus),34127545,4.05,onibus_municipal,4.05
+12861095,474,Jacaré - Copacabana (via Túnel Santa Bárbara) (Circular),32069624,4.05,onibus_municipal,4.05
+21171959,896A,Pedra de Guaratiba - Pingo D'Água,34127545,4.05,onibus_municipal,4.05
+12866665,933,Catiri - Cidade Universitária (via Bangu/Av. Brasil),32069624,4.05,onibus_municipal,4.05
+12867964,348,Riocentro - Candelária (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12865068,686,Fazenda da Bica - Madureira (Circular),32069624,4.05,onibus_municipal,4.05
+12862279,462,São Cristóvão - Copacabana (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+48925678,818,Terminal Recreio - Recreio Shopping (via Genaro de Carvalho / Silvia Pozzano) (Circular),32069624,4.05,onibus_municipal,4.05
+31175985,831A,Colônia - Taquara,34127545,4.05,onibus_municipal,4.05
+12861128,901,Bonsucesso - Bananal (via Jardim Guanabara),32069624,4.05,onibus_municipal,4.05
+39624538,112,Rodoviária - Alto da Gávea (via Túnel Rebouças/Rio Comprido) (Circular),32069624,4.05,onibus_municipal,4.05
+12864239,866,Campo Grande - Pedra de Guaratiba (via Estrada do Magarça) (Circular),32069624,4.05,onibus_municipal,4.05
+12862395,476,Méier - Leblon (via Túnel Rebouças) (Circular),32069624,4.05,onibus_municipal,4.05
+12861432,919,Pavuna - Bonsucesso (Parque União),32069624,4.05,onibus_municipal,4.05
+39608713,109,Troncal 09 - São Conrado - Central (via Jardim Botânico/Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+12860279,439,Vila Isabel - Leblon (via Túnel Rebouças/Jóquei) (Circular),32069624,4.05,onibus_municipal,4.05
+12861168,842,Paciência - Campo Grande (via Santa Margarida),32069624,4.05,onibus_municipal,4.05
+12864166,464,Maracanã - Siqueira Campos (Circular),32069624,4.05,onibus_municipal,4.05
+12863255,107,Central - Urca (Circular),32069624,4.05,onibus_municipal,4.05
+37262221,100,Troncal 01 - General Osório - Central (via Av. Nossa Senhora de Copacabana/Aterro do Flamengo),32069624,4.05,onibus_municipal,4.05
+12860308,433,Vila Isabel - Prado Júnior (via Lapa) (Circular),32069624,4.05,onibus_municipal,4.05
+12863080,007,Silvestre - Central (Circular),32069624,4.05,onibus_municipal,4.05
+12862144,795,Pavuna - Sulacap (via Mariópolis),32069624,4.05,onibus_municipal,4.05
+12860115,484,Olaria - Gal. Osório (via Aterro do Flamengo) (Circular),32069624,4.05,onibus_municipal,4.05
+12860255,385,Village Pavuna - Passeio (via Estrada do Camboatá),32069624,4.05,onibus_municipal,4.05
+12867928,914,Jardim América - Fundão (Circular),32069624,4.05,onibus_municipal,4.05
+31116320,816A,Taquara - Estação Outeiro Santo (via Guerenguê e Mapuá) (Circular),34127545,4.05,onibus_municipal,4.05
+13419130,343,Jardim Oceânico - Candelária (via Linha Amarela),32069624,4.05,onibus_municipal,4.05
+12861248,222,Vila Isabel - Praça Mauá (via Hosp. dos Servidores) (Circular),32069624,4.05,onibus_municipal,4.05
+31694628,858A,São Fernando - Paciência,34127545,4.05,onibus_municipal,4.05
+41177762,474,Jacaré - Jardim de Alah (via Túnel Santa Bárbara),32069624,4.05,onibus_municipal,4.05
+43425849,900,Merck - Downtown (Circular),32069624,4.05,onibus_municipal,4.05
+12862233,312,Olaria - Candelária (via São Cristóvão) (Circular),32069624,4.05,onibus_municipal,4.05
+12861212,014,Paula Matos - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+39712041,BRT 41,Madureira - Terminal Recreio (via Curicica),34127393,4.05,brt,4.05
+12863993,813,Manguariba - Santa Cruz (Circular),32069624,4.05,onibus_municipal,4.05
+12866497,229,Usina - Castelo (Circular),32069624,4.05,onibus_municipal,4.05
+12862411,945,Pavuna - Cidade Universitária,32069624,4.05,onibus_municipal,4.05
+12861232,630,Penha (Iapi) - Saens Peña,32069624,4.05,onibus_municipal,4.05
+42630377,826,Carobinha - Campo Grande (via Estr. do Lameirão) (Circular),32069624,4.05,onibus_municipal,4.05
+21006459,855A,Bangu - Magarça (via Av. Santa Cruz) (Circular),34127545,4.05,onibus_municipal,4.05
+12863168,812,Carobinha - Bangu,32069624,4.05,onibus_municipal,4.05
+12349195,10L2,Ceasa - Ceasa (via Amaral Peixoto),30175983,5,metro,5
+12860067,844,Barra Shopping - Barrinha (Circular),32069624,4.05,onibus_municipal,4.05
+12860083,386,Anchieta - Passeio (via Mariópolis),32069624,4.05,onibus_municipal,4.05
+12867245,364,Jardim Bangu - Tiradentes,32069624,4.05,onibus_municipal,4.05
+12869272,367,Realengo - Praça XV (via Av. Brasil),32069624,4.05,onibus_municipal,4.05
+12865806,922,Tubiacanga - Aeroporto Internacional do RJ (AIRJ) (via Via Ligth) (Circular),32069624,4.05,onibus_municipal,4.05
+48814640,916A,Bonsucesso - Vaz Lobo (Circular),34127545,4.05,onibus_municipal,4.05
+12862098,342,Jardim América - Castelo,32069624,4.05,onibus_municipal,4.05
+240,"",Ramal Deodoro,125,4.7,trem,4.7
+241,"",Ramal Santa Cruz,125,4.7,trem,4.7
+242,"",Ramal Japeri,125,4.7,trem,4.7
+243,"",Ramal Belford Roxo,125,4.7,trem,4.7
+244,"",Ramal Saracuruna,125,4.7,trem,4.7
+245,"",Ramal Vila Inhomirim,125,4.7,trem,4.7
+246,"",Ramal Guapimirim,125,4.7,trem,4.7
+248,"",Ramal Paracambi,125,4.7,trem,4.7
+0,caminhada,caminhada,0,0,caminhada,0
