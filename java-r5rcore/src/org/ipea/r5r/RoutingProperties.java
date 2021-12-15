@@ -4,6 +4,7 @@ import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
 import com.conveyal.r5.analyst.fare.nyc.NYCInRoutingFareCalculator;
 import org.ipea.r5r.Fares.PortoAlegreInRoutingFareCalculator;
+import org.ipea.r5r.Fares.RioDeJaneiroInRoutingFareCalculator;
 
 public class RoutingProperties {
 
@@ -46,6 +47,9 @@ public class RoutingProperties {
                 break;
             case "porto-alegre":
                 this.fareCalculator = new PortoAlegreInRoutingFareCalculator();
+                break;
+            case "rio-de-janeiro":
+                this.fareCalculator = new RioDeJaneiroInRoutingFareCalculator();
                 break;
             default: this.fareCalculator = null;
         }
