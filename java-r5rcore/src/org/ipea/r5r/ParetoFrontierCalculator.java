@@ -38,7 +38,8 @@ public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
             return travelTimesTable;
         } else {
             return null;
-        }    }
+        }
+    }
 
     @Override
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
@@ -49,34 +50,40 @@ public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("travel_time", 0);
         travelTimesTable.addIntegerColumn("monetary_cost", 0);
+        travelTimesTable.addIntegerColumn("monetary_cost_upper", 0);
 
         return travelTimesTable;
     }
 
     private void populateDataFrame(Map<Integer, OneOriginResult> travelTimeResults, RDataFrame travelTimesTable) {
         for (int destination = 0; destination < destinationPoints.featureCount(); destination++) {
-            // add new row to data frame
-            travelTimesTable.append();
-
-            // set destination id
-            travelTimesTable.set("to_id", toIds[destination]);
-
             for (int percentileIndex = 0; percentileIndex < this.routingProperties.percentiles.length; percentileIndex++) {
+                // add new row to data frame
+                travelTimesTable.append();
+
+                // set destination id
+                travelTimesTable.set("to_id", toIds[destination]);
                 travelTimesTable.set("percentile", this.routingProperties.percentiles[percentileIndex]);
 
                 boolean first = true;
+                int previousTT = -1;
                 for (int fare : this.routingProperties.fareCutoffs) {
-                    if (!first) travelTimesTable.appendRepeat();
-                    travelTimesTable.set("monetary_cost", fare);
-
                     OneOriginResult travelTimesByFare = travelTimeResults.get(fare);
                     int tt = travelTimesByFare.travelTimes.getValues()[percentileIndex][destination];
-                    travelTimesTable.set("travel_time", tt);
 
-                    first = false;
+                    if (tt != previousTT) {
+                        if (!first) travelTimesTable.appendRepeat();
+                        travelTimesTable.set("monetary_cost", fare);
+                        travelTimesTable.set("monetary_cost_upper", fare);
+                        travelTimesTable.set("travel_time", tt);
+
+                        previousTT = tt;
+                        first = false;
+                    } else {
+                        travelTimesTable.set("monetary_cost_upper", fare);
+                    }
                 }
             }
-
         }
 
     }
