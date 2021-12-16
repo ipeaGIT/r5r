@@ -3,8 +3,8 @@
 
 # library(r5r)
 devtools::load_all(".")
-library(ggplot2)
-library(data.table)
+# library(ggplot2)
+# library(data.table)
 library(tidyverse)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -139,6 +139,33 @@ access_df %>%
   facet_wrap(~max_fare)
 
 
+# Detailed Itineraries ----------------------------------------------------
+
+r5r_core$setMaxFare(240L, "porto-alegre")
+r5r_core$setMaxFare(480L, "porto-alegre")
+r5r_core$setMaxFare(720L, "porto-alegre")
+
+origins <- poi
+destinations <- poi
+
+mode = c("WALK", "BUS")
+max_walk_dist <- 10000
+
+
+system.time(
+  df <- detailed_itineraries(r5r_core,
+                             origins = origins[2,],
+                             destinations = destinations[3,],
+                             departure_datetime = departure_datetime,
+                             max_walk_dist = max_walk_dist,
+                             mode = mode,
+                             shortest_path = F,
+                             n_threads= Inf,
+                             verbose = F,
+                             progress=T)
+)
+
+
 
 # Pareto ------------------------------------------------------------------
 
@@ -170,3 +197,6 @@ pareto_df %>%
   scale_color_brewer(palette = "Set1") +
   scale_x_continuous(breaks = 1:10) +
   facet_grid(from_id~to_id)
+
+r5r_core$setMaxFare(10L, "rio-de-janeiro")
+r5r_core$verboseMode()

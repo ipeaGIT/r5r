@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/../r-package/inst/jar</output-path>
     <root id="archive" name="r5r_0_6_0.jar">
       <element id="module-output" name="r5r" />
+      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
     </root>
   </artifact>
 </component>
