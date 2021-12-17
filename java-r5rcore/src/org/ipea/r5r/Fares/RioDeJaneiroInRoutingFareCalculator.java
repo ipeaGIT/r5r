@@ -106,10 +106,19 @@ public class RioDeJaneiroInRoutingFareCalculator extends InRoutingFareCalculator
         RouteInfo previousRoute = null;
         boolean discountAlreadyApplied = false;
 
+        StringBuilder debugger = new StringBuilder();
+
         for (TIntIterator patternIt = patterns.iterator(); patternIt.hasNext();) {
             int pattern = patternIt.next();
 
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(pattern).routeIndex);
+
+            if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
+                debugger.append(ri.route_short_name).append(" -> ");
+            } else {
+                debugger.append(ri.route_id).append(" -> ");
+            }
+
 
             if (previousRoute == null || discountAlreadyApplied) {
                 // first public transport leg or discount already applied... full ticket price
@@ -124,6 +133,9 @@ public class RioDeJaneiroInRoutingFareCalculator extends InRoutingFareCalculator
 
             previousRoute = ri;
         }
+
+        debugger.append(fareForState);
+        System.out.println(debugger);
 
         return new FareBounds(fareForState, new TransferAllowance());
     }
