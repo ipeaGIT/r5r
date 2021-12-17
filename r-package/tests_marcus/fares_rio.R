@@ -12,15 +12,18 @@ library(data.table)
 data_path <- "~/Repos/r5r_fares/rio"
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
-
 # load origin/destination points
 
 poi <- tribble(
   ~id, ~lat, ~lon,
   "centro", -22.9064720147941, -43.177139635807734,
   "catete", -22.930673881789726, -43.17764097392119,
-  "copacabana", -22.96915219120712, -43.18463648168664
-  )
+  "copacabana", -22.96915219120712, -43.18463648168664,
+  "pavuna", -22.814726, -43.362337,
+  "jardim_oceanico", -23.009335, -43.312220,
+  "santa_cruz", -22.914807, -43.688556,
+  "madureira", -22.875438, -43.339674
+)
 
 points <- read_csv("~/Repos/r5r_fares/rio/points_rio_09_2019.csv") %>%
   rename(id = id_hex, lon=X, lat=Y) %>%
@@ -57,16 +60,17 @@ calculate_access <- function(fares) {
   return(access_df)
 }
 
-access_df <- calculate_access(c(450, 480, 720)) %>%
+access_df <- calculate_access(c(405, 500, 700)) %>%
   # access_df <- calculate_access(c(240, 480, 720, 960, -1)) %>%
   left_join(points, by = c("from_id" = "id"))
 
 access_df %>%
-  filter(cutoff == 30) %>%
+  filter(cutoff == 45) %>%
   drop_na() %>%
+  arrange(accessibility) %>%
   ggplot(aes(x=lon, y=lat)) +
   geom_point(size=1, aes(color=accessibility)) +
-  facet_grid(cutoff~max_fare) +
+  facet_wrap(~max_fare, ncol = 2) +
   scale_color_distiller(palette = "Spectral") +
   coord_map()
 
@@ -74,15 +78,16 @@ access_df %>%
 
 # Travel Times ------------------------------------------------------------
 
-r5r_core$setMaxFare(-1L, "rio-de-janeiro")
-r5r_core$setMaxFare(80L, "rio-de-janeiro")
+r5r_core$setMaxFare(-1L, "rio-de-janeiro") # infinito
+r5r_core$setMaxFare(405L, "rio-de-janeiro") # R$ 4,05
+r5r_core$setMaxFare(500L, "rio-de-janeiro")
+r5r_core$setMaxFare(700L, "rio-de-janeiro")
 
 ttm <- travel_time_matrix(r5r_core,
                         origins = poi[1,],
                         destinations = poi[2,],
                         departure_datetime = departure_datetime,
                         mode = c("WALK", "TRANSIT"),
-                        breakdown = T,
                         max_trip_duration = 60,
                         max_walk_dist = 800,
                         time_window = 1,
@@ -93,13 +98,13 @@ ttm <- travel_time_matrix(r5r_core,
 # Pareto ------------------------------------------------------------------
 
 pareto_df <- pareto_frontier(r5r_core,
-                             origins = poi[2,],
-                             destinations = poi[1,],
+                             origins = poi[4,],
+                             destinations = poi[5,],
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(0, 10, 1),
+                             monetary_cost_cutoffs = seq(0, 1000, 50),
                              fare_calculator = "rio-de-janeiro",
-                             max_trip_duration = 60,
+                             max_trip_duration = 180,
                              max_walk_dist = 8000,
                              time_window = 1, #30,
                              percentiles = 50, # c(5, 50, 95),
@@ -119,7 +124,7 @@ pareto_df %>%
   # geom_path() +
   scale_color_brewer(palette = "Set1") +
   scale_x_continuous(breaks = 1:10) +
-  scale_y_continuous(breaks = seq(0, 50, 10), limits = c(0, 50)) +
+  scale_y_continuous(breaks = seq(0, 130, 10), limits = c(0, 130)) +
   facet_grid(from_id~to_id)
 
 
@@ -132,3 +137,5 @@ r5r_core$verboseMode()
 
 tn = transit_network_to_sf(r5r_core)
 tn$routes %>% View()
+
+tn$routes %>% filter(route_id == 18895165)
