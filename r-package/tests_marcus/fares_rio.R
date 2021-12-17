@@ -9,17 +9,22 @@ library(h3jsr)
 library(data.table)
 
 # build transport network
-data_path <- "~/Repos/r5r_fares/poa"
+data_path <- "~/Repos/r5r_fares/rio"
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
 
 # load origin/destination points
 
-poi <- read.csv(system.file("extdata/poa/poa_points_of_interest.csv", package = "r5r"))
-points_small <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
-points_small$unit <- 1
-points <- read_csv("~/Repos/r5r_fares/poa/poa_points.csv") %>%
-  rename(id = id_hex)
+poi <- tribble(
+  ~id, ~lat, ~lon,
+  "centro", -22.9064720147941, -43.177139635807734,
+  "catete", -22.930673881789726, -43.17764097392119,
+  "copacabana", -22.96915219120712, -43.18463648168664
+  )
+
+points <- read_csv("~/Repos/r5r_fares/rio/points_rio_09_2019.csv") %>%
+  rename(id = id_hex, lon=X, lat=Y) %>%
+  mutate(unit = 1)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
 # Accessibility -----------------------------------------------------------
@@ -29,11 +34,11 @@ calculate_access <- function(fares) {
   access_df <- map_df(fares, function(f) {
     f <- as.integer(f)
 
-    r5r_core$setMaxFare(f, "porto-alegre")
+    r5r_core$setMaxFare(f, "rio-de-janeiro")
 
     access <- accessibility(r5r_core,
-                            origins = points_small,
-                            destinations = points_small,
+                            origins = points,
+                            destinations = points,
                             departure_datetime = departure_datetime,
                             opportunities_colname = "unit",
                             mode = c("WALK", "TRANSIT"),
@@ -61,7 +66,6 @@ access_df %>%
   drop_na() %>%
   ggplot(aes(x=lon, y=lat)) +
   geom_point(size=1, aes(color=accessibility)) +
-  geom_point(data=poi[c(1, 10),], color = "blue") +
   facet_grid(cutoff~max_fare) +
   scale_color_distiller(palette = "Spectral") +
   coord_map()
@@ -70,16 +74,16 @@ access_df %>%
 
 # Travel Times ------------------------------------------------------------
 
-r5r_core$setMaxFare(-1L, "porto-alegre")
-r5r_core$setMaxFare(80L, "porto-alegre")
+r5r_core$setMaxFare(-1L, "rio-de-janeiro")
+r5r_core$setMaxFare(80L, "rio-de-janeiro")
 
 ttm <- travel_time_matrix(r5r_core,
                         origins = poi[1,],
-                        destinations = poi[10,],
+                        destinations = poi[2,],
                         departure_datetime = departure_datetime,
                         mode = c("WALK", "TRANSIT"),
                         breakdown = T,
-                        max_trip_duration = 45,
+                        max_trip_duration = 60,
                         max_walk_dist = 800,
                         time_window = 1,
                         percentiles = 50,
@@ -90,11 +94,11 @@ ttm <- travel_time_matrix(r5r_core,
 
 pareto_df <- pareto_frontier(r5r_core,
                              origins = poi[2,],
-                             destinations = poi[3,],
+                             destinations = poi[1,],
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(0, 1000, 50),
-                             fare_calculator = "porto-alegre",
+                             monetary_cost_cutoffs = seq(0, 10, 1),
+                             fare_calculator = "rio-de-janeiro",
                              max_trip_duration = 60,
                              max_walk_dist = 8000,
                              time_window = 1, #30,
