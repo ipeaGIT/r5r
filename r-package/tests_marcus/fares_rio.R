@@ -7,6 +7,8 @@ library(tidyverse)
 library(sf)
 library(h3jsr)
 library(data.table)
+library(viridis)
+library(patchwork)
 
 # build transport network
 data_path <- "~/Repos/r5r_fares/rio"
@@ -29,6 +31,9 @@ points <- read_csv("~/Repos/r5r_fares/rio/points_rio_09_2019.csv") %>%
   rename(id = id_hex, lon=X, lat=Y) %>%
   mutate(unit = 1)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+
+area_sf <- h3jsr::h3_to_polygon(points$id, simple = FALSE) %>%
+  summarise()
 
 # Accessibility -----------------------------------------------------------
 
@@ -131,6 +136,55 @@ pareto_df %>%
 r5r_core$setMaxFare(10L, "rio-de-janeiro")
 r5r_core$verboseMode()
 
+
+# Pareto Accessibility ----------------------------------------------------
+# data <- pareto_df
+# cost_threshold <- 1000
+access_pareto_map <- function(data, cost_threshold) {
+  data_filtered <- data %>%
+    drop_na() %>%
+    filter(monetary_cost <= cost_threshold)
+
+  if (nrow(data_filtered) == 0) { return(NULL) }
+  data_filtered$geometry <- h3jsr::h3_to_polygon(data_filtered$to_id)
+
+  data_sf <- st_as_sf(data_filtered, crs = 4326)
+
+  p <- data_sf %>%
+    mutate(cost = cost_threshold/100) %>%
+    ggplot() +
+    geom_sf(data = area_sf, fill = "grey80", color = NA) +
+    geom_sf(aes(fill=travel_time), color = NA) +
+    coord_sf(datum = NA) +
+    scale_fill_viridis() +
+    facet_wrap(~cost) +
+    theme(legend.position = "none")
+
+  return(p)
+}
+
+pareto_df <- pareto_frontier(r5r_core,
+                             origins = poi[7,],
+                             destinations = points,
+                             mode = c("WALK", "TRANSIT"),
+                             departure_datetime = departure_datetime,
+                             monetary_cost_cutoffs = seq(300, 900, 100),
+                             fare_calculator = "rio-de-janeiro",
+                             max_trip_duration = 90,
+                             max_walk_dist = 4000,
+                             time_window = 1, #30,
+                             percentiles = 50, # c(5, 50, 95),
+                             max_rides = 5,
+                             verbose = FALSE,
+                             progress = TRUE)
+
+
+
+
+plots <- map(seq(400, 900, 100), access_pareto_map, data = pareto_df)
+plots[sapply(plots, is.null)] <- NULL
+
+wrap_plots(plots, ncol = 3) + plot_annotation(title = "Madureira")
 
 
 # Transit Network ---------------------------------------------------------
