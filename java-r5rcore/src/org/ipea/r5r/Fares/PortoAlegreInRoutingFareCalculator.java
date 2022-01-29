@@ -12,7 +12,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class PortoAlegreInRoutingFareCalculator extends InRoutingFareCalculator {
 
     public static int fareEptcFull = 480;
-    public static int getFareEptcDiscount = 240;
+    public static int fareEptcDiscount = 240;
     public static int fareTrensurb = 450;
     public static int fareTrainAfterBus = 837 - fareEptcFull;
     public static int fareBusAfterTrain = 837 - fareTrensurb;
@@ -88,7 +88,7 @@ public class PortoAlegreInRoutingFareCalculator extends InRoutingFareCalculator 
             return new IntegratedFare(fareEptcFull, false);
         } else {
             // transfers between buses in different routes have a 50% discount
-            return new IntegratedFare(getFareEptcDiscount, true);
+            return new IntegratedFare(fareEptcDiscount, true);
         }
     }
 

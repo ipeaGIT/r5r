@@ -156,19 +156,21 @@ access_pareto_map <- function(data, cost_threshold) {
     geom_sf(data = area_sf, fill = "grey80", color = NA) +
     geom_sf(aes(fill=travel_time), color = NA) +
     coord_sf(datum = NA) +
-    scale_fill_viridis() +
+    scale_fill_viridis(direction = -1) +
     facet_wrap(~cost) +
     theme(legend.position = "none")
 
   return(p)
 }
 
+pareto_cutoffs <- c(0, 380,  405,  470,  500,  605,  650,  710,  760,  810,  855,  940,  1000)
+
 pareto_df <- pareto_frontier(r5r_core,
-                             origins = poi[7,],
+                             origins = poi[1,],
                              destinations = points,
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(300, 900, 100),
+                             monetary_cost_cutoffs = pareto_cutoffs, #seq(300, 900, 100),
                              fare_calculator = "rio-de-janeiro",
                              max_trip_duration = 90,
                              max_walk_dist = 4000,
@@ -179,12 +181,13 @@ pareto_df <- pareto_frontier(r5r_core,
                              progress = TRUE)
 
 
+unique(pareto_df$monetary_cost)
 
-
-plots <- map(seq(400, 900, 100), access_pareto_map, data = pareto_df)
+plots <- map(sort(unique(pareto_df$monetary_cost)), access_pareto_map, data = pareto_df)
+# plots <- map(seq(400, 900, 100), access_pareto_map, data = pareto_df)
 plots[sapply(plots, is.null)] <- NULL
 
-wrap_plots(plots, ncol = 3) + plot_annotation(title = "Madureira")
+wrap_plots(plots, ncol = 4) + plot_annotation(title = "Centro")
 
 
 # Transit Network ---------------------------------------------------------

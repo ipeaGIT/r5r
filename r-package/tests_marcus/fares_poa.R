@@ -128,3 +128,6 @@ r5r_core$verboseMode()
 
 tn = transit_network_to_sf(r5r_core)
 tn$routes %>% View()
+
+mapview::mapview(tn$routes)
+
