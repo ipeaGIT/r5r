@@ -5,11 +5,11 @@ import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -31,7 +31,25 @@ public abstract class R5MultiDestinationProcess extends R5Process {
     @Override
     public RDataFrame run() throws ExecutionException, InterruptedException {
         buildDestinationPointSet();
-        return super.run();
+        RDataFrame results = super.run();
+
+        if (this.routingProperties.fareCalculator != null && this.routingProperties.fareCalculator instanceof RuleBasedInRoutingFareCalculator) {
+            if (RuleBasedInRoutingFareCalculator.debugActive) {
+                Set<String> debugOutput = ((RuleBasedInRoutingFareCalculator) this.routingProperties.fareCalculator).getDebugOutput();
+
+                File debugOutputFile = new File(RuleBasedInRoutingFareCalculator.debugFileName);
+                try (PrintWriter pw = new PrintWriter(debugOutputFile)) {
+
+                    pw.println("pattern,fare");
+                    debugOutput.forEach(pw::println);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return results;
     }
 
     protected void buildDestinationPointSet() {

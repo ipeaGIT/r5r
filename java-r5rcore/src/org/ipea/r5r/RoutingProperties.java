@@ -5,6 +5,7 @@ import com.conveyal.r5.analyst.fare.*;
 import com.conveyal.r5.analyst.fare.nyc.NYCInRoutingFareCalculator;
 import org.ipea.r5r.Fares.PortoAlegreInRoutingFareCalculator;
 import org.ipea.r5r.Fares.RioDeJaneiroInRoutingFareCalculator;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 
 public class RoutingProperties {
 
@@ -53,6 +54,10 @@ public class RoutingProperties {
                 break;
             default: this.fareCalculator = null;
         }
+    }
+
+    public void setFareCalculatorJson(String fareCalculatorJson) {
+        this.fareCalculator = new RuleBasedInRoutingFareCalculator(fareCalculatorJson);
     }
 
     public RoutingProperties() {

@@ -5,8 +5,6 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../conveyal/r5/r5/src/main/java" />
-      <root url="file://$PROJECT_DIR$/../../conveyal/r5/r5/src/test/java" />
       <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/main/java" />
       <root url="file://$PROJECT_DIR$/../../conveyal/r5/src/test/java" />
     </SOURCES>

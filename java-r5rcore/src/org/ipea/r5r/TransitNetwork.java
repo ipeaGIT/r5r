@@ -4,6 +4,7 @@ import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.json.simple.JSONObject;
 import org.locationtech.jts.geom.Coordinate;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;

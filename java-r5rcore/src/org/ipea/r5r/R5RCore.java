@@ -9,6 +9,9 @@ import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.Fares.FareStructure;
+import org.ipea.r5r.Fares.FareStructureBuilder;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
@@ -44,7 +47,6 @@ public class R5RCore {
     public void setBikeSpeed(double bikeSpeed) {
         this.routingProperties.bikeSpeed = bikeSpeed;
     }
-
 
     public int getMaxLevelTrafficStress() {
         return this.routingProperties.maxLevelTrafficStress;
@@ -137,6 +139,29 @@ public class R5RCore {
         this.routingProperties.maxFare = maxFare[0];
         this.routingProperties.fareCutoffs = maxFare;
         this.routingProperties.setFareCalculator(fareCalculatorName);
+    }
+
+    public void setMaxFare(int maxFare) {
+        this.routingProperties.maxFare = maxFare;
+    }
+
+    public void setFareCutoffs(int maxFare) {
+        this.routingProperties.maxFare = maxFare;
+        this.routingProperties.fareCutoffs = new int[]{maxFare};
+    }
+
+    public void setFareCutoffs(int[] maxFare) {
+        this.routingProperties.maxFare = maxFare[0];
+        this.routingProperties.fareCutoffs = maxFare;
+    }
+
+    public void setFareCalculator(String fareCalculatorSettingsJson) {
+        this.routingProperties.setFareCalculatorJson(fareCalculatorSettingsJson);
+    }
+
+    public void setFareCalculatorDebugOutput(String fileName) {
+        RuleBasedInRoutingFareCalculator.debugFileName = fileName;
+        RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");
     }
 
     public String getTravelTimesBreakdownStat() {
@@ -467,6 +492,40 @@ public class R5RCore {
         return accessibilityEstimator.run();
     }
 
+    // Test decay functions used to calculate accessibility
+    public double[] testDecay(String decayFunctionName, double decayValue) {
+        DecayFunction decayFunction = null;
+        decayFunctionName = decayFunctionName.toUpperCase();
+        if (decayFunctionName.equals("STEP")) { decayFunction = new StepDecayFunction(); }
+        if (decayFunctionName.equals("EXPONENTIAL")) { decayFunction = new ExponentialDecayFunction(); }
+
+        if (decayFunctionName.equals("FIXED_EXPONENTIAL")) {
+            decayFunction = new FixedExponentialDecayFunction();
+            ((FixedExponentialDecayFunction) decayFunction).decayConstant = decayValue;
+        }
+        if (decayFunctionName.equals("LINEAR")) {
+            decayFunction = new LinearDecayFunction();
+            ((LinearDecayFunction) decayFunction).widthMinutes = (int) decayValue;
+        }
+        if (decayFunctionName.equals("LOGISTIC")) {
+            decayFunction = new LogisticDecayFunction();
+            ((LogisticDecayFunction) decayFunction).standardDeviationMinutes = decayValue;
+        }
+
+        if (decayFunction != null) {
+            decayFunction.prepare();
+            double[] decay = new double [3600];
+            for (int i = 0; i < 3600; i++) {
+                decay[i] = decayFunction.computeWeight(1800, i+1);
+            }
+            return decay;
+
+        } else {
+            return null;
+        }
+
+    }
+
     // ----------------------------------  ISOCHRONES  -----------------------------------------
 
     public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
@@ -568,12 +627,7 @@ public class R5RCore {
         return gridTable;
     }
 
-
-
-    // ---------------------------------------------------------------------------------------------------
-    //                                    UTILITY FUNCTIONS
-    // ---------------------------------------------------------------------------------------------------
-
+    // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
 
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
@@ -598,6 +652,17 @@ public class R5RCore {
 
         return transportNetworkList;
     }
+
+
+    // ------------------------------- FARE CALCULATOR ----------------------------------------
+
+    public FareStructure buildFareStructure(int baseFare, String type) {
+        FareStructureBuilder builder = new FareStructureBuilder(this.transportNetwork);
+
+        type = type.toUpperCase();
+        return builder.build(baseFare, type);
+    }
+
 
     // ----------------------------------  ELEVATION  -----------------------------------------
 
@@ -688,6 +753,9 @@ public class R5RCore {
         return ElevationUtils.bikeSpeedCoefficientOTP(slope, altitude);
     }
 
+    // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------
+
+
     // Returns list of public transport services active on a given date
     public RDataFrame getTransitServicesByDate(String date) {
         RDataFrame servicesTable = new RDataFrame();
@@ -711,38 +779,7 @@ public class R5RCore {
         return servicesTable;
     }
 
-    public double[] testDecay(String decayFunctionName, double decayValue) {
-        DecayFunction decayFunction = null;
-        decayFunctionName = decayFunctionName.toUpperCase();
-        if (decayFunctionName.equals("STEP")) { decayFunction = new StepDecayFunction(); }
-        if (decayFunctionName.equals("EXPONENTIAL")) { decayFunction = new ExponentialDecayFunction(); }
 
-        if (decayFunctionName.equals("FIXED_EXPONENTIAL")) {
-            decayFunction = new FixedExponentialDecayFunction();
-            ((FixedExponentialDecayFunction) decayFunction).decayConstant = decayValue;
-        }
-        if (decayFunctionName.equals("LINEAR")) {
-            decayFunction = new LinearDecayFunction();
-            ((LinearDecayFunction) decayFunction).widthMinutes = (int) decayValue;
-        }
-        if (decayFunctionName.equals("LOGISTIC")) {
-            decayFunction = new LogisticDecayFunction();
-            ((LogisticDecayFunction) decayFunction).standardDeviationMinutes = decayValue;
-        }
-
-        if (decayFunction != null) {
-            decayFunction.prepare();
-            double[] decay = new double [3600];
-            for (int i = 0; i < 3600; i++) {
-                decay[i] = decayFunction.computeWeight(1800, i+1);
-            }
-            return decay;
-            
-        } else {
-            return null;
-        }
-
-    }
 
     public String defaultBuildConfig() {
         TNBuilderConfig builderConfig = TNBuilderConfig.defaultConfig();

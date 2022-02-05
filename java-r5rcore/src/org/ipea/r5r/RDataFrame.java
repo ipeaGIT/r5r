@@ -7,6 +7,7 @@ import java.util.*;
 
 public class RDataFrame {
     private int rowCount = 0;
+    private int currentRow = -1;
 
     public LinkedHashMap<String, ArrayList<Object>> getDataFrame() {
         return dataFrame;
@@ -18,6 +19,12 @@ public class RDataFrame {
     public void updateRowCount() {
         if (columnNames.size() > 0) {
             rowCount = dataFrame.get(columnNames.get(0)).size();
+        }
+    }
+
+    public void seek(int index) {
+        if (index < rowCount) {
+            this.currentRow = index;
         }
     }
 
@@ -171,6 +178,26 @@ public class RDataFrame {
             v[i] = (boolean) columnContents.get(i);
         }
         return v;
+    }
+
+    public String getStringValue(String columnName) {
+        ArrayList<Object> data = dataFrame.get(columnName);
+        return data.get(currentRow).toString();
+    }
+
+    public long getLongValue(String columnName) {
+        ArrayList<Object> data = dataFrame.get(columnName);
+        return (Long) data.get(currentRow);
+    }
+
+    public int getIntValue(String columnName) {
+        ArrayList<Object> data = dataFrame.get(columnName);
+        return (Integer) data.get(currentRow);
+    }
+
+    public boolean getBooleanValue(String columnName) {
+        ArrayList<Object> data = dataFrame.get(columnName);
+        return (Boolean) data.get(currentRow);
     }
 
     public void clear() {
