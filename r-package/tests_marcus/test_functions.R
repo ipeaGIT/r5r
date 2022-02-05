@@ -1,7 +1,8 @@
 options(java.parameters = '-Xmx16384m')
 options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx16384m"))
 
-library(r5r)
+# library(r5r)
+devtools::load_all(".")
 library(ggplot2)
 library(data.table)
 library(tidyverse)
@@ -65,7 +66,8 @@ system.time(
                         mode = "WALK",
                         cutoffs = c(25, 30),
                         max_trip_duration = 30,
-                        verbose = FALSE)
+                        verbose = FALSE,
+                        progress = FALSE)
 )
 
 system.time(
