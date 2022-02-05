@@ -1,7 +1,20 @@
 # log history of r5r package development
 
+
 -------------------------------------------------------
-# r5r v0.6.0 (dev)
+# r5r v0.6.1 (dev)
+
+**Major changes**
+
+- The number of Monte Carlo draws to perform per time window minute when calculating travel time matrices and when estimating accessibility is now set via the `r5r.montecarlo_draws` option. Defaults to 5 - i.e. 300 draws in a 60 minutes time window, for example. Set a custom value using `options(r5r.montecarlo_draws = 10L)` (in which you substitute 10L by the value you want to set).
+
+**Minor changes**
+
+- Changed `total_time` column name to `combined_time` in `travel_time_matrix()` 
+output, to avoid confusion with `travel_time` column.
+
+-------------------------------------------------------
+# r5r v0.6.0 
 
 **Major changes**
 

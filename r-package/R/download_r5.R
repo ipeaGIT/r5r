@@ -83,6 +83,8 @@ download_r5 <- function(version = "6.4.0",
     url = download_url,
     destfile = destfile,
     mode = "wb",
+    method = "curl",
+    extra = "--insecure",
     quiet = quiet
   )
 

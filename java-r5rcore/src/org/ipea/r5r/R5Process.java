@@ -84,7 +84,7 @@ public abstract class R5Process {
                         mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
-        System.out.print(".. DONE!\n");
+
         if (!Utils.verbose & Utils.progress) {
             System.out.print(".. DONE!\n");
         }

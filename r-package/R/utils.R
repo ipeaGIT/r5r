@@ -487,7 +487,7 @@ check_connection <- function(file_url = 'https://www.ipea.gov.br/geobr/metadata/
 
   # test server connection
   # crul::ok(file_url)
-  if (httr::http_error(httr::GET(file_url))) {
+  if (httr::http_error(httr::GET(file_url, config = httr::config(ssl_verifypeer = FALSE)))) {
     message("Problem connecting to data server.")
     return(FALSE)
   }

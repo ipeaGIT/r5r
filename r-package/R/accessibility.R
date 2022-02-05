@@ -304,7 +304,9 @@ accessibility <- function(r5r_core,
   # time window
   checkmate::assert_numeric(time_window)
   time_window <- as.integer(time_window)
-  draws <- time_window *5
+
+  draws_per_minute <- getOption("r5r.montecarlo_draws", default = 5L)
+  draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
 
   # percentiles
