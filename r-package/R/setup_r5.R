@@ -93,7 +93,8 @@ setup_r5 <- function(data_path,
   if (checkmate::test_file_exists(jar_file)) {
     if (!verbose) message("Using cached version from ", jar_file)
   } else {
-    download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
+  check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
+  if (is.null(check)) {  return(invisible(NULL)) }
   }
 
   # start r5r and R5 JAR

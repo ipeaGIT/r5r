@@ -66,12 +66,12 @@ download_r5 <- function(version = "6.4.0",
     return(destfile)
   }
 
-  if (!check_connection(download_url)) {
-    if (!quiet)
-      message(
-        "Problem connecting to the data server. ",
-        "Please try again in a few minutes."
-      )
+  if (isFALSE(check_connection(download_url))) {
+    # if (!quiet)
+    #   message(
+    #     "Problem connecting to the data server. ",
+    #     "Please try again in a few minutes."
+    #   )
     return(invisible(NULL))
   }
 
