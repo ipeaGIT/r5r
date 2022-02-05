@@ -35,6 +35,51 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M
 area_sf <- h3jsr::h3_to_polygon(points$id, simple = FALSE) %>%
   summarise()
 
+
+# Setup fare calculator ---------------------------------------------------
+
+fare_settings <- setup_fare_calculator(r5r_core,
+                                       base_fare = 405,
+                                       by = "MODE")
+
+write_fare_calculator(fare_settings, file_path = here::here("tests_marcus", "fares_rio_base.zip"))
+
+fare_settings$base_fare
+fare_settings$max_discounted_transfers
+fare_settings$transfer_time_allowance
+fare_settings$fare_per_mode %>% View()
+fare_settings$fare_per_transfer %>% View()
+fare_settings$routes_info %>% View()
+
+### Fares per mode --------------------------------------------------------
+
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v1.zip"))
+
+json <- jsonlite::toJSON(fare_settings)
+json <- as.character(json)
+r5r_core$setFareCalculator(json[1])
+
+r5r_core$setFareCalculatorDebugOutput(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+
+access <- accessibility(r5r_core,
+                        origins = poi,
+                        destinations = points,
+                        departure_datetime = departure_datetime,
+                        opportunities_colname = "unit",
+                        mode = c("WALK", "TRANSIT"),
+                        cutoffs = c(30, 45),
+                        fare_calculator_settings = fare_settings,
+                        max_fare = 710,
+                        max_trip_duration = 45,
+                        max_walk_dist = 800,
+                        time_window = 1,
+                        percentiles = 50,
+                        verbose = FALSE,
+                        progress = FALSE)
+
+
+rio_debug <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+
 # Accessibility -----------------------------------------------------------
 
 calculate_access <- function(fares) {

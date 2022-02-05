@@ -17,6 +17,8 @@ accessibility(
   decay_function = "step",
   cutoffs = 30L,
   decay_value = 1,
+  fare_calculator_settings = NULL,
+  max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,

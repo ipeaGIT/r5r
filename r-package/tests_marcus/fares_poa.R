@@ -131,3 +131,13 @@ tn$routes %>% View()
 
 mapview::mapview(tn$routes)
 
+
+## Fare structure -------
+
+f_struct <- fare_calculator_settings(r5r_core, 470, "MODE")
+f_struct$base_fare
+f_struct$max_discounted_transfers
+
+f_struct$fare_per_mode
+f_struct$fare_per_transfer
+f_struct$routes_info

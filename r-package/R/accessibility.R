@@ -241,6 +241,8 @@ accessibility <- function(r5r_core,
                           decay_function = "step",
                           cutoffs = 30L,
                           decay_value = 1.0,
+                          fare_calculator_settings = NULL,
+                          max_fare = Inf,
                           max_walk_dist = Inf,
                           max_bike_dist = Inf,
                           max_trip_duration = 120L,
@@ -322,6 +324,10 @@ accessibility <- function(r5r_core,
   # decay
   decay_list <- assert_decay_function(decay_function, decay_value)
 
+  # max fare
+  checkmate::assert_numeric(max_fare)
+  max_fare <- as.integer(max_fare)
+
   # set r5r_core options ----------------------------------------------------
 
   # time window
@@ -349,6 +355,13 @@ accessibility <- function(r5r_core,
 
   # set progress
   set_progress(r5r_core, progress)
+
+  if (!is.null(fare_calculator_settings)) {
+    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings)
+    json_string <- as.character(fare_settings_json)
+    r5r_core$setFareCalculator(json_string)
+    r5r_core$setMaxFare(max_fare)
+  }
 
 
   # call r5r_core method ----------------------------------------------------

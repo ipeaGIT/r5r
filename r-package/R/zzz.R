@@ -7,6 +7,7 @@ utils::globalVariables(c(".", "%>%", ":=", "%like%", "%chin%", "set"))
   requireNamespace("sf")
   requireNamespace("rJava")
   requireNamespace("data.table")
+  requireNamespace("jsonlite")
 }
 
 .onAttach <- function(lib, pkg) {
