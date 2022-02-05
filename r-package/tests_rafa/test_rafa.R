@@ -219,6 +219,17 @@ ttm <- travel_time_matrix(r5r_core,
  mode_list <- select_mode(mode)
 
 
+##### downloads ------------------------
+library("ggplot2")
+library("dlstats")
+
+x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter'))
+
+ if (!is.null(x)) {
+         head(x)
+         ggplot(x, aes(end, downloads, group=package, color=package)) +
+                 geom_line() + geom_point(aes(shape=package))
+ }
 
 
 

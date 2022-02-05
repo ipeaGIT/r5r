@@ -1,6 +1,7 @@
 context("setup_r5")
 
-# testthat::skip_on_cran()
+# skips tests on CRAN since they require a specific version of java
+testthat::skip_on_cran()
 
 path <- system.file("extdata/poa", package = "r5r")
 
