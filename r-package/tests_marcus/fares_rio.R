@@ -9,6 +9,7 @@ library(h3jsr)
 library(data.table)
 library(viridis)
 library(patchwork)
+library(googlesheets4)
 
 # build transport network
 data_path <- "~/Repos/r5r_fares/rio"
@@ -32,8 +33,13 @@ points <- read_csv("~/Repos/r5r_fares/rio/points_rio_09_2019.csv") %>%
   mutate(unit = 1)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-area_sf <- h3jsr::h3_to_polygon(points$id, simple = FALSE) %>%
-  summarise()
+points_r8 <- h3jsr::get_parent(points$id, res = 8, simple = TRUE)
+points_r8 <- unique(points_r8)
+points_r8 <- h3jsr::h3_to_point(points_r8, simple = FALSE)
+points_r8$id <- points_r8$h3_address
+points_r8$unit <- 1
+# area_sf <- h3jsr::h3_to_polygon(points$id, simple = FALSE) %>%
+#   summarise()
 
 
 # Setup fare calculator ---------------------------------------------------
@@ -42,35 +48,45 @@ fare_settings <- setup_fare_calculator(r5r_core,
                                        base_fare = 405,
                                        by = "MODE")
 
-write_fare_calculator(fare_settings, file_path = here::here("tests_marcus", "fares_rio_base.zip"))
+
+write_fare_calculator(fare_settings, file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+
+
 
 fare_settings$base_fare
 fare_settings$max_discounted_transfers
 fare_settings$transfer_time_allowance
+fare_settings$fare_cap
 fare_settings$fare_per_mode %>% View()
 fare_settings$fare_per_transfer %>% View()
 fare_settings$routes_info %>% View()
+fare_settings$debug_settings
 
-### Fares per mode --------------------------------------------------------
 
-fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v1.zip"))
+clipr::write_clip()
+clipr::write_clip(fare_settings$fare_per_mode)
+clipr::write_clip(fare_settings$fare_per_transfer)
+clipr::write_clip(fare_settings$routes_info)
 
-json <- jsonlite::toJSON(fare_settings)
-json <- as.character(json)
-r5r_core$setFareCalculator(json[1])
+### Test --------------------------------------------------------
 
-r5r_core$setFareCalculatorDebugOutput(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+
+fare_settings$debug_settings$output_file <- here::here("tests_marcus", "rio_fare_calculator_output_v6.csv")
+
+# r5r_core$setFareCalculatorDebugOutput(here::here("tests_marcus", "rio_fare_calculator_output_v4.csv"))
 
 access <- accessibility(r5r_core,
-                        origins = poi,
-                        destinations = points,
+                        origins = points_r8,
+                        destinations = points_r8,
                         departure_datetime = departure_datetime,
                         opportunities_colname = "unit",
                         mode = c("WALK", "TRANSIT"),
                         cutoffs = c(30, 45),
                         fare_calculator_settings = fare_settings,
-                        max_fare = 710,
-                        max_trip_duration = 45,
+                        max_fare = 1500,
+                        max_trip_duration = 90,
                         max_walk_dist = 800,
                         time_window = 1,
                         percentiles = 50,
@@ -78,8 +94,20 @@ access <- accessibility(r5r_core,
                         progress = FALSE)
 
 
-rio_debug <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+rio_debug_v1 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+rio_debug_v4 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v4.csv"))
+rio_debug_v5 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v5.csv"))
+rio_debug_v6 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v6.csv"))
 
+tn <- transit_network_to_sf(r5r_core)
+
+mapview::mapview(points_r8, crs = 4326)
+mapview::mapview(tn$routes)
+rio_debug <- left_join(rio_debug_v1, rio_debug_v4, by = "pattern")
+
+rio_debug %>%
+  filter(fare.x != fare.y) %>%
+  View()
 # Accessibility -----------------------------------------------------------
 
 calculate_access <- function(fares) {

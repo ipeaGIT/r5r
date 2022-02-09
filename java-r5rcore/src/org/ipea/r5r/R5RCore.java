@@ -159,6 +159,10 @@ public class R5RCore {
         this.routingProperties.setFareCalculatorJson(fareCalculatorSettingsJson);
     }
 
+    public void dropFareCalculator() {
+        this.routingProperties.setFareCalculator("");
+    }
+
     public void setFareCalculatorDebugOutput(String fileName) {
         RuleBasedInRoutingFareCalculator.debugFileName = fileName;
         RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");

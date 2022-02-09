@@ -357,10 +357,13 @@ accessibility <- function(r5r_core,
   set_progress(r5r_core, progress)
 
   if (!is.null(fare_calculator_settings)) {
-    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings)
+    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
     json_string <- as.character(fare_settings_json)
     r5r_core$setFareCalculator(json_string)
     r5r_core$setMaxFare(max_fare)
+  } else {
+    r5r_core$dropFareCalculator()
+    r5r_core$setMaxFare(0L)
   }
 
 
