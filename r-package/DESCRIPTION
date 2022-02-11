@@ -1,7 +1,7 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 0.6.0
+Version: 0.6.09
 Authors@R: c(
             person(given="Marcus", family="Saraiva", email="marcus.saraiva@gmail.com", role="aut", comment = c(ORCID = "0000-0001-6218-2338")),
             person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="cre", comment = c(ORCID = "0000-0003-2125-7465")),

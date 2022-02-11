@@ -22,7 +22,7 @@ Other support functions:
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
-\code{\link{filename_from_metadata}()},
+\code{\link{fileurl_from_metadata}()},
 \code{\link{find_snap}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_lts}()},

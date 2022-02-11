@@ -99,7 +99,6 @@ setup_r5 <- function(data_path,
   }
 
   # start r5r and R5 JAR
-
   existing_files <- list.files(system.file("jar", package = "r5r"))
   r5r_jar <- file.path(
     system.file("jar", package = "r5r"),
@@ -109,7 +108,7 @@ setup_r5 <- function(data_path,
   # r5r jar
   rJava::.jaddClassPath(path = r5r_jar)
   # R5 jar
-  rJava::.jaddClassPath(path = jar_file) ##### 66666 ler do temp ou disco local
+  rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")
