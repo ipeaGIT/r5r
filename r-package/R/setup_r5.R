@@ -82,7 +82,8 @@ setup_r5 <- function(data_path,
   # check if the most recent JAR release is stored already. If it's not
   # download it
 
-  filename <- filename_from_metadata(version)
+  fileurl <- fileurl_from_metadata(version)
+  filename <- basename(fileurl)
 
   jar_file <- data.table::fifelse(
     temp_dir,
@@ -105,8 +106,10 @@ setup_r5 <- function(data_path,
     existing_files[grepl("r5r", existing_files)]
   )
 
+  # r5r jar
   rJava::.jaddClassPath(path = r5r_jar)
-  rJava::.jaddClassPath(path = jar_file)
+  # R5 jar
+  rJava::.jaddClassPath(path = jar_file) ##### 66666 ler do temp ou disco local
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")

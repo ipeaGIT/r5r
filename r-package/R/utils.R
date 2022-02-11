@@ -426,16 +426,16 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 
 
-#' Get most recent JAR filename from metadata
+#' Get most recent JAR file url from metadata
 #'
-#' Returns the most recent JAR filename from metadata, depending on the version.
+#' Returns the most recent JAR file url from metadata, depending on the version.
 #'
 #' @param version A string, the version of R5's to get the filename of.
 #'
-#' @return The filename as a string.
+#' @return The a url a string.
 #'
 #' @family support functions
-filename_from_metadata <- function(version) {
+fileurl_from_metadata <- function(version) {
 
   checkmate::assert_string(version)
 
@@ -458,10 +458,7 @@ filename_from_metadata <- function(version) {
   metadata <- metadata[version == get("version", envir = env)]
   metadata <- metadata[release_date == max(release_date)]
   url <- metadata$download_path
-
-  filename <- basename(url)
-
-  return(filename)
+  return(url)
 
 }
 
