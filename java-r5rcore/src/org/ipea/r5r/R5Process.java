@@ -84,7 +84,7 @@ public abstract class R5Process {
                         mapToObj(index -> tryRunProcess(totalProcessed, index)).
                         filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
-//        System.out.print(".. DONE!\n");
+
         if (!Utils.verbose & Utils.progress) {
             System.out.print(".. DONE!\n");
         }
@@ -110,7 +110,7 @@ public abstract class R5Process {
             }
 
             if (!Utils.verbose & Utils.progress) {
-                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed. Last origin id: " + fromIds[index]);
+                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
             }
         } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
@@ -197,14 +197,6 @@ public abstract class R5Process {
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
 
         request.percentiles = routingProperties.percentiles;
-
-        if (routingProperties.maxFare >= 0) {
-            request.maxFare = routingProperties.maxFare;
-            request.inRoutingFareCalculator = routingProperties.fareCalculator;
-        } else {
-            request.maxFare = -1;
-            request.inRoutingFareCalculator = null;
-        }
 
         return request;
     }

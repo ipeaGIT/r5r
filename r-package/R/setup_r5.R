@@ -82,7 +82,8 @@ setup_r5 <- function(data_path,
   # check if the most recent JAR release is stored already. If it's not
   # download it
 
-  filename <- filename_from_metadata(version)
+  fileurl <- fileurl_from_metadata(version)
+  filename <- basename(fileurl)
 
   jar_file <- data.table::fifelse(
     temp_dir,
@@ -93,18 +94,20 @@ setup_r5 <- function(data_path,
   if (checkmate::test_file_exists(jar_file)) {
     if (!verbose) message("Using cached version from ", jar_file)
   } else {
-    download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
+  check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
+  if (is.null(check)) {  return(invisible(NULL)) }
   }
 
   # start r5r and R5 JAR
-
   existing_files <- list.files(system.file("jar", package = "r5r"))
   r5r_jar <- file.path(
     system.file("jar", package = "r5r"),
     existing_files[grepl("r5r", existing_files)]
   )
 
+  # r5r jar
   rJava::.jaddClassPath(path = r5r_jar)
+  # R5 jar
   rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file

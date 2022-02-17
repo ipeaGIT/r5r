@@ -1,14 +1,15 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 0.6.0
+Version: 0.7.0
 Authors@R: c(
             person(given="Marcus", family="Saraiva", email="marcus.saraiva@gmail.com", role="aut", comment = c(ORCID = "0000-0001-6218-2338")),
-            person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0003-2125-7465")),
+            person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="cre", comment = c(ORCID = "0000-0003-2125-7465")),
+            person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="aut", comment = c(ORCID = "0000-0003-2125-7465")),
             person(given="Daniel", family="Herszenhut", email="dhersz@gmail.com", role="aut", comment = c(ORCID = "0000-0001-8066-1105")),
             person(given="Carlos Kaue Vieira", family="Braga", email="kaue@kauebraga.dev", role="aut", comment = c(ORCID = "0000-0002-6104-7297")),
             person(given="Matthew Wigginton", family="Conway", email="mwconway@asu.edu", role="aut", comment = c(ORCID = "0000-0002-1210-2982")),
-            person("Ipea - Institue for Applied Economic Research", role = c("cph", "fnd"))
+            person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd"))
             )
 Description: Rapid realistic routing on multimodal transport networks (walk, 
              bike, public transport and car) using 'R5', the Rapid Realistic 
@@ -17,16 +18,16 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              generate detailed routing analysis or calculate travel time matrices
              using seamless parallel computing on top of the R5 Java machine.
              While R5 is developed by Conveyal, the package r5r is independently 
-             developed by a team at the Institue for Applied Economic Research
+             developed by a team at the Institute for Applied Economic Research
              (Ipea) with contributions from collaborators. Apart from the 
-             documentation in this pacakge, users will find additional information
+             documentation in this package, users will find additional information
              on R5 documentation at <https://docs.conveyal.com/>. Although we try
-             to keep new releases of r5r in synch with R5, the development of R5
+             to keep new releases of r5r in synchrony with R5, the development of R5
              follows Conveyal's independent update process. Hence, users should
              confirm the R5 version implied by the Conveyal user manual (see
              <https://docs.conveyal.com/changelog>) corresponds with the R5 version
              that r5r depends on.
-Date: 2021-10-25
+Date: 2022-02-11
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
 License: MIT + file LICENSE
@@ -56,5 +57,5 @@ Imports:
     utils
 SystemRequirements: Java JDK (>= 11.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

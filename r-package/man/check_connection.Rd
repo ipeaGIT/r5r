@@ -12,17 +12,17 @@ check_connection(
 \item{file_url}{A string with the file_url address of an geobr dataset}
 }
 \value{
-No return value, called for side effects.
+Logical. \code{TRUE} if url is working, \code{FALSE} if not.
 }
 \description{
-Checks if there is internet connection to Ipea server to download geobr data.
+Checks if there is internet connection to Ipea server to download r5r data.
 }
 \seealso{
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
 \code{\link{assert_decay_function}()},
 \code{\link{assert_points_input}()},
-\code{\link{filename_from_metadata}()},
+\code{\link{fileurl_from_metadata}()},
 \code{\link{find_snap}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},

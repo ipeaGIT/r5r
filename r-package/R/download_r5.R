@@ -45,11 +45,8 @@ download_r5 <- function(version = "6.4.0",
 
   # download R5's jar -----------------------------------------------------
 
-  filename <- filename_from_metadata(version)
-  download_url <- file.path(
-    "https://www.ipea.gov.br/geobr/r5r/jar_repo",
-    filename
-  )
+  file_url <- fileurl_from_metadata(version)
+  filename <- basename(file_url)
 
   destfile <- data.table::fifelse(
     temp_dir,
@@ -66,23 +63,27 @@ download_r5 <- function(version = "6.4.0",
     return(destfile)
   }
 
-  if (!check_connection(download_url)) {
-    if (!quiet)
-      message(
-        "Problem connecting to the data server. ",
-        "Please try again in a few minutes."
-      )
+  if (isFALSE(check_connection(file_url))) {
+    # if (!quiet)
+    #   message(
+    #     "Problem connecting to the data server. ",
+    #     "Please try again in a few minutes."
+    #   )
     return(invisible(NULL))
   }
 
+  # create dir
   jar_dir <- system.file("jar", package = "r5r")
   if (!dir.exists(jar_dir)) dir.create(jar_dir)
 
+  # download JAR
   if (!quiet) message("R5 will be saved to ", destfile)
   utils::download.file(
-    url = download_url,
+    url = file_url,
     destfile = destfile,
     mode = "wb",
+    # method = "curl",
+    # extra = "--insecure",
     quiet = quiet
   )
 

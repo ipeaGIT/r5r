@@ -13,7 +13,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
 networks (walk, bike, public transport and car). It provides a simple and 
-friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
+friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5), the routing engine developed independently by [Conveyal](http://conveyal.com).
 
 
 **r5r** is a simple way to run R<sup>5</sup> locally, what allows users to
@@ -150,7 +150,7 @@ The [R<sup>5</sup> routing engine](https://github.com/conveyal/r5) is developed
 at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
 
-# Citation <img align="right" src="r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
+# Citation <img align="right" src="man/figures/ipea_logo.png" alt="ipea" width="300">
 
  The R package **r5r** is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:
 
