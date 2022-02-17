@@ -197,8 +197,8 @@ pareto_frontier <- function(r5r_core,
                             max_walk_dist = Inf,
                             max_bike_dist = Inf,
                             max_trip_duration = 120L,
+                            fare_calculator_settings = NULL,
                             monetary_cost_cutoffs = -1L,
-                            fare_calculator = "simple",
                             walk_speed = 3.6,
                             bike_speed = 12,
                             max_rides = 3,
@@ -276,9 +276,6 @@ pareto_frontier <- function(r5r_core,
   r5r_core$setPercentiles(percentiles)
   r5r_core$setNumberOfMonteCarloDraws(draws)
 
-  # monetary costs
-  r5r_core$setFareCutoffs(monetary_cost_cutoffs, fare_calculator)
-
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
@@ -297,6 +294,17 @@ pareto_frontier <- function(r5r_core,
 
   # set progress
   set_progress(r5r_core, progress)
+
+  # fare calculator settings
+  if (!is.null(fare_calculator_settings)) {
+    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
+    json_string <- as.character(fare_settings_json)
+    r5r_core$setFareCalculator(json_string)
+    r5r_core$setFareCutoffs(monetary_cost_cutoffs)
+  } else {
+    r5r_core$dropFareCalculator()
+    r5r_core$setFareCutoffs(0L)
+  }
 
   # call r5r_core method ----------------------------------------------------
 

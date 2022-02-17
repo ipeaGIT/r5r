@@ -175,13 +175,15 @@ ttm <- travel_time_matrix(r5r_core,
 
 # Pareto ------------------------------------------------------------------
 
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+
 pareto_df <- pareto_frontier(r5r_core,
                              origins = poi[4,],
                              destinations = poi[5,],
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(0, 1000, 50),
-                             fare_calculator = "rio-de-janeiro",
+                             monetary_cost_cutoffs = seq(0, 1000, 100),
+                             fare_calculator_settings = fare_settings,
                              max_trip_duration = 180,
                              max_walk_dist = 8000,
                              time_window = 1, #30,
