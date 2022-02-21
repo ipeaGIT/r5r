@@ -5,7 +5,7 @@
 \title{Download R5 Jar file}
 \usage{
 download_r5(
-  version = "6.4.0",
+  version = "6.6.0",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
@@ -37,7 +37,7 @@ if (interactive()) {
 
 library(r5r)
 
-download_r5(version = "6.4.0", temp_dir = TRUE)
+download_r5(version = "6.6.0", temp_dir = TRUE)
 }
 }
 \seealso{

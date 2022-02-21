@@ -6,7 +6,7 @@
 \usage{
 setup_r5(
   data_path,
-  version = "6.4.0",
+  version = "6.6.0",
   verbose = TRUE,
   temp_dir = FALSE,
   use_elevation = FALSE,
