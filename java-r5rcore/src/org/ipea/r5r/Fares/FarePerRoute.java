@@ -1,6 +1,8 @@
 package org.ipea.r5r.Fares;
 
-public class RouteInfo {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class FarePerRoute {
 
     private String agencyId;
     private String agencyName;
@@ -10,9 +12,11 @@ public class RouteInfo {
     private String mode;
     private float routeFare;
     private String fareType;
+    @JsonIgnore
+    private int integerFare;
 
-    public RouteInfo(String agencyId, String agencyName, String routeId, String routeShortName, String routeLongName,
-                     String mode, float routeFare, String fareType) {
+    public FarePerRoute(String agencyId, String agencyName, String routeId, String routeShortName, String routeLongName,
+                        String mode, float routeFare, String fareType) {
         this.agencyId = agencyId;
         this.agencyName = agencyName;
         this.routeId = routeId;
@@ -20,10 +24,12 @@ public class RouteInfo {
         this.routeLongName = routeLongName;
         this.mode = mode;
         this.routeFare = routeFare;
+        this.integerFare = Math.round(routeFare * 100.0f);
         this.fareType = fareType;
     }
 
-    public RouteInfo() {
+    public FarePerRoute() {
+        this("", "", "", "", "", "", 0.0f, "GENERIC");
     }
 
     public String getAgencyId() {
@@ -78,8 +84,13 @@ public class RouteInfo {
         return routeFare;
     }
 
+    public int getIntegerFare() {
+        return this.integerFare;
+    }
+
     public void setRouteFare(float routeFare) {
         this.routeFare = routeFare;
+        this.integerFare = Math.round(routeFare * 100.0f);
     }
 
     public String getFareType() {
@@ -92,7 +103,7 @@ public class RouteInfo {
 
     @Override
     public String toString() {
-        return "RouteInfo{" +
+        return "FarePerRoute{" +
                 "agencyId='" + agencyId + '\'' +
                 ", agencyName='" + agencyName + '\'' +
                 ", routeId='" + routeId + '\'' +

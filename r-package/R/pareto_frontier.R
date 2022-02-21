@@ -265,10 +265,6 @@ pareto_frontier <- function(r5r_core,
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)
 
-  # monetary costs
-  checkmate::assert_numeric(monetary_cost_cutoffs)
-  monetary_cost_cutoffs <- as.integer(monetary_cost_cutoffs)
-
   # set r5r_core options ----------------------------------------------------
 
   # time window
@@ -296,15 +292,7 @@ pareto_frontier <- function(r5r_core,
   set_progress(r5r_core, progress)
 
   # fare calculator settings
-  if (!is.null(fare_calculator_settings)) {
-    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
-    json_string <- as.character(fare_settings_json)
-    r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCutoffs(monetary_cost_cutoffs)
-  } else {
-    r5r_core$dropFareCalculator()
-    r5r_core$setFareCutoffs(0L)
-  }
+  set_fare_calculator(r5r_core, fare_calculator_settings, fare_cutoffs = monetary_cost_cutoffs)
 
   # call r5r_core method ----------------------------------------------------
 

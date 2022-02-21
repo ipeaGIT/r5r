@@ -3,9 +3,9 @@ package org.ipea.r5r.Fares;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.RDataFrame;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FareStructureBuilder {
@@ -21,7 +21,7 @@ public class FareStructureBuilder {
         this.transportNetwork = transportNetwork;
     }
 
-    public FareStructure build(int baseFare, String routeType) {
+    public FareStructure build(float baseFare, String routeType) {
         this.fareStructure = new FareStructure(baseFare);
 
         populateFareStructure(routeType);
@@ -33,36 +33,40 @@ public class FareStructureBuilder {
         Set<String> modes = new HashSet<>();
         Set<String> transfers = new HashSet<>();
 
-        RDataFrame routes = this.fareStructure.getRoutesInfoTable();
+        List<FarePerRoute> routes = this.fareStructure.getFaresPerRoute();
         for (RouteInfo route : transportNetwork.transitLayer.routes) {
 
-            routes.append();
-            routes.set("agency_id", route.agency_id);
-            routes.set("agency_name", route.agency_name);
-            routes.set("route_id", route.route_id);
-            routes.set("route_short_name", route.route_short_name);
-            routes.set("route_long_name", route.route_long_name);
-            routes.set("mode", TransitLayer.getTransitModes(route.route_type).toString());
+            FarePerRoute newRoute = new FarePerRoute();
+
+            newRoute.setAgencyId(route.agency_id);
+            newRoute.setAgencyName(route.agency_name);
+            newRoute.setRouteId(route.route_id);
+            newRoute.setRouteShortName(route.route_short_name);
+            newRoute.setRouteLongName(route.route_long_name);
+            newRoute.setMode(TransitLayer.getTransitModes(route.route_type).toString());
+            newRoute.setRouteFare(this.fareStructure.getBaseFare());
 
             switch (type) {
                 case "MODE":
-                    routes.set("fare_type", TransitLayer.getTransitModes(route.route_type).toString());
+                    newRoute.setFareType(TransitLayer.getTransitModes(route.route_type).toString());
                     modes.add(TransitLayer.getTransitModes(route.route_type).toString());
                     break;
                 case "AGENCY":
                 case "AGENCY_ID":
-                    routes.set("fare_type", route.agency_id);
+                    newRoute.setFareType(route.agency_id);
                     modes.add(route.agency_id);
                     break;
                 case "AGENCY_NAME":
-                    routes.set("fare_type", route.agency_name);
+                    newRoute.setFareType(route.agency_name);
                     modes.add(route.agency_name);
                     break;
                 default:
-                    routes.set("fare_type", "GENERIC");
+                    newRoute.setFareType("GENERIC");
                     modes.add("GENERIC");
                     break;
             }
+
+            routes.add(newRoute);
         }
 
         for (String modeLeg1 : modes) {
@@ -72,20 +76,26 @@ public class FareStructureBuilder {
             }
         }
 
-        RDataFrame farePerModeTable = this.fareStructure.getFarePerModeTable();
+        List<FarePerMode> faresPerMode = this.fareStructure.getFaresPerMode();
         for (String mode : modes) {
-            farePerModeTable.append();
-            farePerModeTable.set("mode", mode);
+            FarePerMode newMode = new FarePerMode();
+            newMode.setMode(mode);
+            newMode.setFare(this.fareStructure.getBaseFare());
+
+            faresPerMode.add(newMode);
         }
 
-        RDataFrame farePerTransferTable = this.fareStructure.getFarePerTransferTable();
+        List<FarePerTransfer> faresPerTransfer = this.fareStructure.getFaresPerTransfer();
         for (String transfer : transfers) {
             String[] legs = transfer.split("&");
-            farePerTransferTable.append();
-            farePerTransferTable.set("leg1", legs[0]);
-            farePerTransferTable.set("leg2", legs[1]);
-        }
 
+            FarePerTransfer newTransfer = new FarePerTransfer();
+            newTransfer.setFirstLeg(legs[0]);
+            newTransfer.setSecondLeg(legs[1]);
+            newTransfer.setFare(this.fareStructure.getBaseFare());
+
+            faresPerTransfer.add(newTransfer);
+        }
     }
 
 }

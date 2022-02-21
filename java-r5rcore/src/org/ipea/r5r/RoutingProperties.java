@@ -2,9 +2,6 @@ package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
-import com.conveyal.r5.analyst.fare.nyc.NYCInRoutingFareCalculator;
-import org.ipea.r5r.Fares.PortoAlegreInRoutingFareCalculator;
-import org.ipea.r5r.Fares.RioDeJaneiroInRoutingFareCalculator;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 
 public class RoutingProperties {
@@ -21,40 +18,9 @@ public class RoutingProperties {
     public boolean travelTimesBreakdown;
     public PathResult.Stat travelTimesBreakdownStat;
 
-    public int maxFare;
-    public int[] fareCutoffs = {-1};
+    public float maxFare;
+    public float[] fareCutoffs = {-1.0f};
     public InRoutingFareCalculator fareCalculator;
-
-    public void setFareCalculator(String fareCalculatorName) {
-
-        switch (fareCalculatorName) {
-            case "boston":
-                this.fareCalculator = new BostonInRoutingFareCalculator();
-                break;
-            case "bogota":
-                this.fareCalculator = new BogotaInRoutingFareCalculator();
-                break;
-            case "chicago":
-                this.fareCalculator = new ChicagoInRoutingFareCalculator();
-                break;
-            case "simple":
-                this.fareCalculator = new SimpleInRoutingFareCalculator();
-                break;
-            case "bogota-mixed":
-                this.fareCalculator = new BogotaMixedInRoutingFareCalculator();
-                break;
-            case "nyc":
-                this.fareCalculator = new NYCInRoutingFareCalculator();
-                break;
-            case "porto-alegre":
-                this.fareCalculator = new PortoAlegreInRoutingFareCalculator();
-                break;
-            case "rio-de-janeiro":
-                this.fareCalculator = new RioDeJaneiroInRoutingFareCalculator();
-                break;
-            default: this.fareCalculator = null;
-        }
-    }
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
         this.fareCalculator = new RuleBasedInRoutingFareCalculator(fareCalculatorJson);
@@ -72,7 +38,7 @@ public class RoutingProperties {
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;
 
-        maxFare = -1;
+        maxFare = -1.0f;
         fareCalculator = null;
     }
 }

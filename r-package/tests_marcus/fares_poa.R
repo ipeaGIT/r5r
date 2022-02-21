@@ -134,10 +134,42 @@ mapview::mapview(tn$routes)
 
 ## Fare structure -------
 
-f_struct <- fare_calculator_settings(r5r_core, 470, "MODE")
+
+
+f_struct <- setup_fare_calculator(r5r_core, 4.7, "MODE")
+
+View(f_struct$fares_per_mode)
+
 f_struct$base_fare
 f_struct$max_discounted_transfers
 
 f_struct$fare_per_mode
 f_struct$fare_per_transfer
 f_struct$routes_info
+
+access <- accessibility(r5r_core,
+                        origins = points_small,
+                        destinations = points_small,
+                        departure_datetime = departure_datetime,
+                        opportunities_colname = "unit",
+                        mode = c("WALK", "TRANSIT"),
+                        cutoffs = c(30, 45),
+                        fare_calculator_settings = f_struct,
+                        max_fare = 10,
+                        max_trip_duration = 45,
+                        max_walk_dist = 800,
+                        time_window = 1,
+                        percentiles = 50,
+                        verbose = FALSE) %>%
+  left_join(points, by = c("from_id" = "id"))
+
+
+access %>%
+  filter(cutoff == 30) %>%
+  drop_na() %>%
+  ggplot(aes(x=lon, y=lat)) +
+  geom_point(size=1, aes(color=accessibility)) +
+  geom_point(data=poi[c(1, 10),], color = "blue") +
+  facet_grid(~cutoff) +
+  scale_color_distiller(palette = "Spectral") +
+  coord_map()

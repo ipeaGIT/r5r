@@ -15,74 +15,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-/*
- * support data classes
- */
-
-class ModeData {
-    String mode;
-    boolean unlimitedTransfers;
-    boolean allowTransferToSameRoute;
-    boolean useRouteFare;
-    int fare;
-
-    @Override
-    public String toString() {
-        return "ModeData{" +
-                "mode='" + mode + '\'' +
-                ", unlimitedTransfers=" + unlimitedTransfers +
-                ", allowTransferTooSameRoute=" + allowTransferToSameRoute +
-                ", useRouteFare=" + useRouteFare +
-                ", fare=" + fare +
-                '}';
-    }
-}
-
-class TransferData {
-    String leg1;
-    String leg2;
-    int fare;
-
-    @Override
-    public String toString() {
-        return "TransferData{" +
-                "leg1='" + leg1 + '\'' +
-                ", leg2='" + leg2 + '\'' +
-                ", fare=" + fare +
-                '}';
-    }
-}
-
-class RouteInfoData {
-    String routeId;
-    String mode;
-    int fare;
-
-    @Override
-    public String toString() {
-        return "RouteInfoData{" +
-                "routeId='" + routeId + '\'' +
-                ", mode='" + mode + '\'' +
-                ", fare=" + fare +
-                '}';
-    }
-}
-
 public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RuleBasedInRoutingFareCalculator.class);
 
     public static String debugFileName = "";
-    public static String debugTripInfo = "";
+    public static String debugTripInfo = "MODE";
     public static boolean debugActive = false;
+
+    public FareStructure getFareStructure() {
+        return fareStructure;
+    }
 
     private final FareStructure fareStructure;
 
-    private Map<String, RouteInfoData> routeInfo;
-    private Map<String, ModeData> farePerMode;
-    private Map<String, TransferData> farePerTransfer;
+    private Map<String, FarePerRoute> routeInfo;
+    private Map<String, FarePerMode> farePerMode;
+    private Map<String, FarePerTransfer> farePerTransfer;
 
-    private Set<String> debugOutput;
+    private final Set<String> debugOutput;
 
     public Set<String> getDebugOutput() {
         return debugOutput;
@@ -91,9 +42,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     public RuleBasedInRoutingFareCalculator(String jsonData) {
         this.fareStructure = FareStructure.fromJson(jsonData);
 
-        if (debugActive) {
+//        if (debugActive) {
             this.debugOutput = new ConcurrentSkipListSet<>();
-        }
+//        }
 
         // fill fare information lookup tables
         loadFarePerMode();
@@ -104,54 +55,26 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     private void loadFarePerMode() {
         this.farePerMode = new HashMap<>();
 
-        for (int i = 0; i < fareStructure.getFarePerModeTable().nRow(); i++) {
-            fareStructure.getFarePerModeTable().seek(i);
-
-            ModeData data = new ModeData();
-            data.mode = fareStructure.getFarePerModeTable().getStringValue("mode");
-            data.unlimitedTransfers = fareStructure.getFarePerModeTable().getBooleanValue("unlimited_transfers");
-            data.allowTransferToSameRoute = fareStructure.getFarePerModeTable().getBooleanValue("allow_same_route_transfer");
-            data.useRouteFare = fareStructure.getFarePerModeTable().getBooleanValue("use_route_fare");
-            data.fare = fareStructure.getFarePerModeTable().getIntValue("fare");
-
-            farePerMode.put(data.mode, data);
-
-//            LOG.error(data.toString());
+        for (FarePerMode mode : fareStructure.getFaresPerMode()) {
+            farePerMode.put(mode.getMode(), mode);
         }
     }
 
     private void loadFarePerTransfer() {
         this.farePerTransfer = new HashMap<>();
 
-        for (int i = 0; i < fareStructure.getFarePerTransferTable().nRow(); i++) {
-            fareStructure.getFarePerTransferTable().seek(i);
+        for (FarePerTransfer transfer : fareStructure.getFaresPerTransfer()) {
+            String key = transfer.getFirstLeg() + "&" + transfer.getSecondLeg();
 
-            String key = fareStructure.getFarePerTransferTable().getStringValue("leg1") + "&" +
-                    fareStructure.getFarePerTransferTable().getStringValue("leg2");
-
-            TransferData data = new TransferData();
-            data.leg1 = fareStructure.getFarePerTransferTable().getStringValue("leg1");
-            data.leg2 = fareStructure.getFarePerTransferTable().getStringValue("leg2");
-            data.fare = fareStructure.getFarePerTransferTable().getIntValue("fare");
-
-            farePerTransfer.put(key, data);
-
-//            LOG.error(data.toString());
+            farePerTransfer.put(key, transfer);
         }
     }
 
     private void loadModeOfRoute() {
         this.routeInfo = new HashMap<>();
 
-        for (int i = 0; i < fareStructure.getRoutesInfoTable().nRow(); i++) {
-            fareStructure.getRoutesInfoTable().seek(i);
-
-            RouteInfoData data = new RouteInfoData();
-            data.routeId = fareStructure.getRoutesInfoTable().getStringValue("route_id");
-            data.mode = fareStructure.getRoutesInfoTable().getStringValue("fare_type");
-            data.fare = fareStructure.getRoutesInfoTable().getIntValue("route_fare");
-
-            routeInfo.put(data.routeId, data);
+        for (FarePerRoute route : fareStructure.getFaresPerRoute()) {
+            routeInfo.put(route.getRouteId(), route);
         }
     }
 
@@ -179,11 +102,11 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             int pattern = patternIt.next();
 
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(pattern).routeIndex);
-            RouteInfoData rInfo = routeInfo.get(ri.route_id);
+            FarePerRoute rInfo = routeInfo.get(ri.route_id);
 
             switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
                 case "MODE":
-                    debugger.append(delimiter).append(rInfo.mode);
+                    debugger.append(delimiter).append(rInfo.getMode());
                     break;
                 case "ROUTE":
                     if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
@@ -194,9 +117,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                     break;
                 case "MODE_ROUTE":
                     if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-                        debugger.append(delimiter).append(rInfo.mode).append(" ").append(ri.route_short_name);
+                        debugger.append(delimiter).append(rInfo.getMode()).append(" ").append(ri.route_short_name);
                     } else {
-                        debugger.append(delimiter).append(rInfo.mode).append(" ").append(ri.route_id);
+                        debugger.append(delimiter).append(rInfo.getMode()).append(" ").append(ri.route_id);
                     }
                     break;
             }
@@ -209,15 +132,15 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                 fareForState += getFullFareForRoute(ri);
             } else {
                 // get info on each leg
-                RouteInfoData firstLegMode = routeInfo.get(previousRoute.route_id);
-                RouteInfoData secondLegMode = routeInfo.get(ri.route_id);
+                FarePerRoute firstLegMode = routeInfo.get(previousRoute.route_id);
+                FarePerRoute secondLegMode = routeInfo.get(ri.route_id);
 
                 // check if transfer is in same mode with unlimited transfers
-                if (firstLegMode.mode.equals(secondLegMode.mode)) {
-                    ModeData modeData = farePerMode.get(firstLegMode.mode);
+                if (firstLegMode.getMode().equals(secondLegMode.getMode())) {
+                    FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
 
                     // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
-                    if (modeData.unlimitedTransfers) {
+                    if (modeData.isUnlimitedTransfers()) {
                         previousRoute = ri;
                         continue;
                     }
@@ -240,7 +163,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             previousRoute = ri;
         }
 
-        debugger.append(",").append(fareForState);
+        float debugFare = fareForState / 100.0f;
+        debugger.append(",").append(debugFare);
 
         if (debugActive) {
             debugOutput.add(debugger.toString());
@@ -251,39 +175,39 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private int getFullFareForRoute(RouteInfo ri) {
-        RouteInfoData routeInfoData = routeInfo.get(ri.route_id);
+        FarePerRoute routeInfoData = routeInfo.get(ri.route_id);
 
         if (routeInfoData != null) {
-            ModeData farePerModeData = farePerMode.get(routeInfoData.mode);
+            FarePerMode farePerModeData = farePerMode.get(routeInfoData.getMode());
             if (farePerModeData != null) {
 
-                if (farePerModeData.useRouteFare) {
-                    return routeInfoData.fare;
+                if (farePerModeData.isUseRouteFare()) {
+                    return routeInfoData.getIntegerFare();
                 } else {
-                    return farePerModeData.fare;
+                    return farePerModeData.getIntegerFare();
                 }
             } else {
-                return this.fareStructure.getBaseFare();
+                return this.fareStructure.getIntegerBaseFare();
             }
         } else {
-            return this.fareStructure.getBaseFare();
+            return this.fareStructure.getIntegerBaseFare();
         }
     }
 
     private IntegratedFare getIntegrationFare(RouteInfo firstRoute, RouteInfo secondRoute) {
-        RouteInfoData firstLegMode = routeInfo.get(firstRoute.route_id);
-        RouteInfoData secondLegMode = routeInfo.get(secondRoute.route_id);
+        FarePerRoute firstLegMode = routeInfo.get(firstRoute.route_id);
+        FarePerRoute secondLegMode = routeInfo.get(secondRoute.route_id);
 
         if (firstLegMode != null && secondLegMode != null) {
             // same mode, check if transfers between them are allowed
-            if (firstLegMode.mode.equals(secondLegMode.mode)) {
-                ModeData modeData = farePerMode.get(firstLegMode.mode);
+            if (firstLegMode.getMode().equals(secondLegMode.getMode())) {
+                FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
 
                 // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
-                if (modeData.unlimitedTransfers) return new IntegratedFare(0, false);
+                if (modeData.isUnlimitedTransfers()) return new IntegratedFare(0, false);
             }
 
-            TransferData transferFare = farePerTransfer.get(firstLegMode.mode + "&" + secondLegMode.mode);
+            FarePerTransfer transferFare = farePerTransfer.get(firstLegMode.getMode() + "&" + secondLegMode.getMode());
             if (transferFare == null) {
                 // there is no record in transfers table, return full fare of second route
                 int fareSecondLeg = getFullFareForRoute(secondRoute);
@@ -293,17 +217,17 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                 // discounted transfer found
 
                 // check if transferring between same route ids, and if that is allowed
-                ModeData modeData = farePerMode.get(firstLegMode.mode);
-                if (firstLegMode.routeId.equals(secondLegMode.routeId) && modeData.allowTransferToSameRoute ) {
+                FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
+                if (firstLegMode.getRouteId().equals(secondLegMode.getRouteId()) && modeData.isAllowSameRouteTransfer() ) {
                     int fareSecondLeg = getFullFareForRoute(secondRoute);
                     return new IntegratedFare(fareSecondLeg, false);
                 } else {
                     int fareFirstLeg = getFullFareForRoute(firstRoute);
-                    return new IntegratedFare(transferFare.fare - fareFirstLeg, true);
+                    return new IntegratedFare(transferFare.getIntegerFare() - fareFirstLeg, true);
                 }
             }
         } else {
-            return new IntegratedFare(this.fareStructure.getBaseFare(), false);
+            return new IntegratedFare(this.fareStructure.getIntegerBaseFare(), false);
         }
     }
 

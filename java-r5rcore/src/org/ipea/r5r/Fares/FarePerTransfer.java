@@ -1,14 +1,19 @@
 package org.ipea.r5r.Fares;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class FarePerTransfer {
     private String firstLeg;
     private String secondLeg;
     private float fare;
+    @JsonIgnore
+    private int integerFare;
 
     public FarePerTransfer(String firstLeg, String secondLeg, float fare) {
         this.firstLeg = firstLeg;
         this.secondLeg = secondLeg;
         this.fare = fare;
+        this.integerFare = Math.round(fare * 100.0f);
     }
 
     public FarePerTransfer() {
@@ -35,8 +40,13 @@ public class FarePerTransfer {
         return fare;
     }
 
+    public int getIntegerFare() {
+        return this.integerFare;
+    }
+
     public void setFare(float fare) {
         this.fare = fare;
+        this.integerFare = Math.round(fare * 100.0f);
     }
 
     @Override

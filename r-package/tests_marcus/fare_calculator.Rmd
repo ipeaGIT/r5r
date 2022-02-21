@@ -73,7 +73,7 @@ In the example below, the `base_fare` is the standard bus ticket price of R\$ 4.
 
 ```{r}
 fare_settings <- setup_fare_calculator(r5r_core, 
-                                       base_fare = 480,
+                                       base_fare = 4.8,
                                        by = "MODE")
 ```
 
@@ -104,21 +104,21 @@ To configure mode-, transfer-, and route-specific properties, we can use the thr
 -   fare: the full price fare of this mode.
 
 ```{r}
-fare_settings$fare_per_mode
+fare_settings$fares_per_mode
 ```
 
 We need to do two small changes in the `fare_per_mode` table, specifically in the `"RAIL"` mode: setting `unlimited_transfers` to `TRUE`, and updating fare to 450. We also need to change one setting in the `"BUS"` mode. There is a discount for transfer between buses (which is set in the following section), but that discount is not valid when transferring between buses within the same route (for example, from bus T1 to another T1). We can use the `allow_same_route_transfer` parameter of the `"BUS"` mode for that. We'll do those changes below, using data.table notation.
 
 ```{r}
-fare_settings$fare_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
-fare_settings$fare_per_mode[mode == "RAIL", fare := 450]
-fare_settings$fare_per_mode[mode == "BUS", allow_same_route_transfer := FALSE]
+fare_settings$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
+fare_settings$fares_per_mode[mode == "RAIL", fare := 4.5]
+fare_settings$fares_per_mode[mode == "BUS", allow_same_route_transfer := FALSE]
 ```
 
 Checking the results below, everything looks OK:
 
 ```{r}
-fare_settings$fare_per_mode
+fare_settings$fares_per_mode
 ```
 
 ### Transfer fares configuration
@@ -126,7 +126,7 @@ fare_settings$fare_per_mode
 Transfer fares settings are stored in the `fare_per_transfer` data.frame, which is shown below. Each row contains information on how integration between the modes specified in `leg1` and `leg2` work.
 
 ```{r}
-fare_settings$fare_per_transfer
+fare_settings$fares_per_transfer
 ```
 
 Let's update `fare_per_transfer` to account for the actual integration rules in Porto Alegre.
@@ -134,27 +134,27 @@ Let's update `fare_per_transfer` to account for the actual integration rules in 
 -   The fare for "BUS" to "BUS" integration is composed of 480 for the first leg plus 240 for the second leg, which equals to a total fare of 720.
 
 ```{r}
-fare_settings$fare_per_transfer[leg1 == "BUS" & leg2 == "BUS", 
-                                fare := 720]
+fare_settings$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", 
+                                fare := 7.2]
 ```
 
 -   Transfers between "RAIL" and "RAIL" are free and unlimited, which is already accounted for in the field `unlimited_transfers` of the `fare_per_mode` table. Thus, the equivalent row of the `fare_per_transfer` data.frame needs to be removed. If we leave the that row in `fare_per_transfer`, transfers between "RAIL" and "RAIL" will count to the global `max_discounted_transfers` allowance.
 
 ```{r}
-fare_settings$fare_per_transfer <- 
-  fare_settings$fare_per_transfer[!(leg1 == "RAIL" & leg2 == "RAIL")]
+fare_settings$fares_per_transfer <- 
+  fare_settings$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
 ```
 
 - Transfers between "BUS" and "RAIL" (in any direction) cost 837, once the 10% discount is applied. Also, `allow_same_route` is irrelevant here, because those transfers are necessarily between different routes. Let's make a final update in the data.frame to account for that.
 
 ```{r}
-fare_settings$fare_per_transfer[leg1 != leg2, fare := 837]
+fare_settings$fares_per_transfer[first_leg != second_leg, fare := 8.37]
 ```
 
 Once all changes are applied, the `fare_per_transfer` data.frame should look like this:
 
 ```{r}
-fare_settings$fare_per_transfer
+fare_settings$fares_per_transfer
 ```
 
 ### Routes configuration
@@ -162,7 +162,7 @@ fare_settings$fare_per_transfer
 Information on specific routes is stored in the `routes_info` data.frame. Below, we can see a sample of the bus and train routes in Porto Alegre.
 
 ```{r}
-tail(fare_settings$routes_info)
+tail(fare_settings$fares_per_route)
 ```
 
 Basic route information is taken directly from the GTFS data (agency, route id and names, mode, etc), but `route_fare` and `fare_type` columns were added specifically for the fare calculator.
@@ -191,13 +191,20 @@ points_small$unit <- 1
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
                                  format = "%d-%m-%Y %H:%M:%S")
 
+
 # helper function to calculate accessibility with common settings
 calculate_accessibility <- function(settings, fare) {
+  
   if (!is.null(settings)) {
-    debug_file <- here::here("tests_marcus/debug_poa", 
-                             paste0("debug_fare_", fare, ".csv" ))
-    settings$debug_settings$output_file = debug_file
+    settings$debug_settings$output_file = 
+      here::here("tests_marcus", paste0("debug_fare_", fare, ".csv" ))
   }
+
+  # if (!is.null(settings)) {
+  #   debug_file <- here::here("tests_marcus/debug_poa", 
+  #                            )
+  #   settings$debug_settings$output_file = debug_file
+  # }
   
   access_df <- accessibility(r5r_core,
                         origins = points_small,
@@ -218,10 +225,18 @@ calculate_accessibility <- function(settings, fare) {
 
 ```{r}
 access_unl <- calculate_accessibility(NULL, 0)
-access_300 <- calculate_accessibility(fare_settings, 300)
-access_500 <- calculate_accessibility(fare_settings, 500)
-access_900 <- calculate_accessibility(fare_settings, 900)
+access_300 <- calculate_accessibility(fare_settings, 3.00)
+access_500 <- calculate_accessibility(fare_settings, 5.00)
+access_900 <- calculate_accessibility(fare_settings, 9.00)
 ```
+
+```{r}
+clipr::write_clip(r5r_core$getFareStructure())
+clipr::write_clip(r5r_core$getFareCalculatorDebugOutputSettings())
+r5r_core$setFareCalculatorDebugOutputSettings(here::here("tests_marcus", "dbg2.csv"),
+                                              "MODE")
+```
+
 
 ```{r}
 access_unl$max_fare <- "unl"

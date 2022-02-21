@@ -324,10 +324,6 @@ accessibility <- function(r5r_core,
   # decay
   decay_list <- assert_decay_function(decay_function, decay_value)
 
-  # max fare
-  checkmate::assert_numeric(max_fare)
-  max_fare <- as.integer(max_fare)
-
   # set r5r_core options ----------------------------------------------------
 
   # time window
@@ -356,16 +352,8 @@ accessibility <- function(r5r_core,
   # set progress
   set_progress(r5r_core, progress)
 
-  if (!is.null(fare_calculator_settings)) {
-    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
-    json_string <- as.character(fare_settings_json)
-    r5r_core$setFareCalculator(json_string)
-    r5r_core$setMaxFare(max_fare)
-  } else {
-    r5r_core$dropFareCalculator()
-    r5r_core$setMaxFare(0L)
-  }
-
+  # configure fare calculator
+  set_fare_calculator(r5r_core, fare_calculator_settings, max_fare = max_fare)
 
   # call r5r_core method ----------------------------------------------------
 

@@ -22,10 +22,10 @@ public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
         RegionalTask request = buildRequest(index);
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
 
-        Map<Integer, OneOriginResult> travelTimeResults = new HashMap<>();
+        Map<Float, OneOriginResult> travelTimeResults = new HashMap<>();
 
-        for (int fareCutoff : this.routingProperties.fareCutoffs) {
-            request.maxFare = fareCutoff;
+        for (float fareCutoff : this.routingProperties.fareCutoffs) {
+            request.maxFare = Math.round(fareCutoff * 100.0f);
             OneOriginResult results = computer.computeTravelTimes();
 
             travelTimeResults.put(fareCutoff, results);
@@ -49,13 +49,13 @@ public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
         travelTimesTable.addStringColumn("to_id", "");
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("travel_time", 0);
-        travelTimesTable.addIntegerColumn("monetary_cost", 0);
-        travelTimesTable.addIntegerColumn("monetary_cost_upper", 0);
+        travelTimesTable.addDoubleColumn("monetary_cost", 0.0);
+        travelTimesTable.addDoubleColumn("monetary_cost_upper", 0.0);
 
         return travelTimesTable;
     }
 
-    private void populateDataFrame(Map<Integer, OneOriginResult> travelTimeResults, RDataFrame travelTimesTable) {
+    private void populateDataFrame(Map<Float, OneOriginResult> travelTimeResults, RDataFrame travelTimesTable) {
         for (int destination = 0; destination < destinationPoints.featureCount(); destination++) {
             for (int percentileIndex = 0; percentileIndex < this.routingProperties.percentiles.length; percentileIndex++) {
                 // add new row to data frame
@@ -67,20 +67,20 @@ public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
 
                 boolean first = true;
                 int previousTT = -1;
-                for (int fare : this.routingProperties.fareCutoffs) {
+                for (float fare : this.routingProperties.fareCutoffs) {
                     OneOriginResult travelTimesByFare = travelTimeResults.get(fare);
                     int tt = travelTimesByFare.travelTimes.getValues()[percentileIndex][destination];
 
                     if (tt != previousTT) {
                         if (!first) travelTimesTable.appendRepeat();
-                        travelTimesTable.set("monetary_cost", fare);
-                        travelTimesTable.set("monetary_cost_upper", fare);
+                        travelTimesTable.set("monetary_cost", (double) fare);
+                        travelTimesTable.set("monetary_cost_upper", (double) fare);
                         travelTimesTable.set("travel_time", tt);
 
                         previousTT = tt;
                         first = false;
                     } else {
-                        travelTimesTable.set("monetary_cost_upper", fare);
+                        travelTimesTable.set("monetary_cost_upper", (double) fare);
                     }
                 }
             }

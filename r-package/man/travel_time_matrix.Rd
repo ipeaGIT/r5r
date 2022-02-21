@@ -15,6 +15,8 @@ travel_time_matrix(
   percentiles = 50L,
   breakdown = FALSE,
   breakdown_stat = "MEAN",
+  fare_calculator_settings = NULL,
+  max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,

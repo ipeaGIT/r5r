@@ -9,6 +9,8 @@ import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
@@ -18,10 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -124,33 +123,16 @@ public class R5RCore {
         }
     }
 
-    public void setMaxFare(int maxFare, String fareCalculatorName) {
-        this.routingProperties.maxFare = maxFare;
-        this.routingProperties.setFareCalculator(fareCalculatorName);
-    }
-
-    public void setFareCutoffs(int maxFare, String fareCalculatorName) {
-        this.routingProperties.maxFare = maxFare;
-        this.routingProperties.fareCutoffs = new int[]{maxFare};
-        this.routingProperties.setFareCalculator(fareCalculatorName);
-    }
-
-    public void setFareCutoffs(int[] maxFare, String fareCalculatorName) {
-        this.routingProperties.maxFare = maxFare[0];
-        this.routingProperties.fareCutoffs = maxFare;
-        this.routingProperties.setFareCalculator(fareCalculatorName);
-    }
-
-    public void setMaxFare(int maxFare) {
+    public void setMaxFare(float maxFare) {
         this.routingProperties.maxFare = maxFare;
     }
 
-    public void setFareCutoffs(int maxFare) {
+    public void setFareCutoffs(float maxFare) {
         this.routingProperties.maxFare = maxFare;
-        this.routingProperties.fareCutoffs = new int[]{maxFare};
+        this.routingProperties.fareCutoffs = new float[]{maxFare};
     }
 
-    public void setFareCutoffs(int[] maxFare) {
+    public void setFareCutoffs(float[] maxFare) {
         this.routingProperties.maxFare = maxFare[0];
         this.routingProperties.fareCutoffs = maxFare;
     }
@@ -160,12 +142,32 @@ public class R5RCore {
     }
 
     public void dropFareCalculator() {
-        this.routingProperties.setFareCalculator("");
+        this.routingProperties.fareCalculator = null;
+        this.routingProperties.maxFare = -1.0f;
+        this.routingProperties.fareCutoffs = new float[]{-1.0f};
     }
 
-    public void setFareCalculatorDebugOutput(String fileName) {
+    public void setFareCalculatorDebugOutputSettings(String fileName, String tripInfo) {
         RuleBasedInRoutingFareCalculator.debugFileName = fileName;
+        RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo;
         RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");
+    }
+
+    public String getFareCalculatorDebugOutputSettings() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
+        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return json;
     }
 
     public String getTravelTimesBreakdownStat() {
@@ -660,13 +662,22 @@ public class R5RCore {
 
     // ------------------------------- FARE CALCULATOR ----------------------------------------
 
-    public FareStructure buildFareStructure(int baseFare, String type) {
+    public FareStructure buildFareStructure(float baseFare, String type) {
         FareStructureBuilder builder = new FareStructureBuilder(this.transportNetwork);
 
         type = type.toUpperCase();
         return builder.build(baseFare, type);
     }
 
+    public String getFareStructure() {
+        String json = "";
+
+        if (this.routingProperties.fareCalculator != null) {
+            json = ((RuleBasedInRoutingFareCalculator) this.routingProperties.fareCalculator).getFareStructure().toJson();
+        }
+
+        return json;
+    }
 
     // ----------------------------------  ELEVATION  -----------------------------------------
 

@@ -1,17 +1,24 @@
 package org.ipea.r5r.Fares;
 
-import org.ipea.r5r.RDataFrame;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FareStructure {
 
     /**
      * When fares are not found in farePerMode or farePerTransfer, the value of baseFare is used.
      */
-    private int baseFare;
+    private float baseFare;
+    @JsonIgnore
+    private int integerBaseFare;
 
     /**
      * Maximum number of transfers that can have a discount. The transfer fare is obtained from the farePerTransfer
@@ -30,17 +37,22 @@ public class FareStructure {
      */
     private int fareCap;
 
-    private final RDataFrame farePerModeTable;
-    private final RDataFrame farePerTransferTable;
-    private final RDataFrame routesInfoTable;
+    private final List<FarePerMode> faresPerMode;
+    private final List<FarePerTransfer> faresPerTransfer;
+    private final List <FarePerRoute> faresPerRoute;
 
     // Getters and Setters
-    public int getBaseFare() {
+    public float getBaseFare() {
         return baseFare;
     }
 
-    public void setBaseFare(int baseFare) {
+    public int getIntegerBaseFare() {
+        return integerBaseFare;
+    }
+
+    public void setBaseFare(float baseFare) {
         this.baseFare = baseFare;
+        this.integerBaseFare = Math.round(baseFare * 100.0f);
     }
 
     public int getMaxDiscountedTransfers() {
@@ -67,50 +79,62 @@ public class FareStructure {
         this.fareCap = fareCap;
     }
 
-    public RDataFrame getFarePerModeTable() {
-        return farePerModeTable;
+    public List<FarePerMode> getFaresPerMode() {
+        return faresPerMode;
     }
-    public RDataFrame getFarePerTransferTable() {
-        return farePerTransferTable;
+
+    public List<FarePerTransfer> getFaresPerTransfer() {
+        return faresPerTransfer;
     }
-    public RDataFrame getRoutesInfoTable() {
-        return routesInfoTable;
+
+    public List<FarePerRoute> getFaresPerRoute() {
+        return faresPerRoute;
     }
+
+//    public Map<String, String> getDebugSettings() {
+//        Map<String, String> map = new HashMap<>();
+//
+//        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
+//        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
+//
+//        return map;
+//    }
 
     public FareStructure() {
         this(100);
     }
 
-    public FareStructure(int fare) {
+    public FareStructure(float fare) {
         this.baseFare = fare;
+        this.integerBaseFare = Math.round(fare * 100.0f);
+
         this.maxDiscountedTransfers = 1;
         this.transferTimeAllowance = 120;
         this.fareCap = -1;
 
-        this.farePerModeTable = new RDataFrame();
-        this.farePerModeTable.addStringColumn("mode", "BUS");
-        this.farePerModeTable.addBooleanColumn("unlimited_transfers", false);
-        this.farePerModeTable.addBooleanColumn("allow_same_route_transfer", true);
-        this.farePerModeTable.addBooleanColumn("use_route_fare", false);
-        this.farePerModeTable.addIntegerColumn("fare", this.baseFare);
-
-        this.farePerTransferTable = new RDataFrame();
-        this.farePerTransferTable.addStringColumn("leg1", "BUS");
-        this.farePerTransferTable.addStringColumn("leg2", "BUS");
-        this.farePerTransferTable.addIntegerColumn("fare", this.baseFare);
-
-        this.routesInfoTable = new RDataFrame();
-        this.routesInfoTable.addStringColumn("agency_id", "");
-        this.routesInfoTable.addStringColumn("agency_name", "");
-        this.routesInfoTable.addStringColumn("route_id", "");
-        this.routesInfoTable.addStringColumn("route_short_name", "");
-        this.routesInfoTable.addStringColumn("route_long_name", "");
-        this.routesInfoTable.addStringColumn("mode", "");
-        this.routesInfoTable.addIntegerColumn("route_fare", this.baseFare);
-        this.routesInfoTable.addStringColumn("fare_type", "");
+        this.faresPerMode = new ArrayList<>();
+        this.faresPerTransfer = new ArrayList<>();
+        this.faresPerRoute = new ArrayList<>();
     }
 
     public static FareStructure fromJson(String data) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+            FareStructure fareStructure = objectMapper.readValue(data, FareStructure.class);
+
+//            Map<String, String> debugMap = fareStructure.getDebugSettings();
+//            RuleBasedInRoutingFareCalculator.debugFileName = debugMap.get("output_file");
+//            RuleBasedInRoutingFareCalculator.debugTripInfo = debugMap.get("trip_info");
+//            RuleBasedInRoutingFareCalculator.debugActive = !debugMap.get("output_file").equals("");
+
+            return fareStructure;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        /*
         FareStructure fareStructure = new FareStructure();
 
         JSONParser parser = new JSONParser();
@@ -132,35 +156,35 @@ public class FareStructure {
             JSONArray farePerMode = (JSONArray) json.get("fare_per_mode");
             for (JSONObject item : (Iterable<JSONObject>) farePerMode) {
 
-                fareStructure.farePerModeTable.append();
-                fareStructure.farePerModeTable.set("mode", (String) item.get("mode"));
-                fareStructure.farePerModeTable.set("unlimited_transfers", (Boolean) item.get("unlimited_transfers"));
-                fareStructure.farePerModeTable.set("allow_same_route_transfer", (Boolean) item.get("allow_same_route_transfer"));
-                fareStructure.farePerModeTable.set("use_route_fare", (Boolean) item.get("use_route_fare"));
-                fareStructure.farePerModeTable.set("fare", ((Long) item.get("fare")).intValue());
+//                fareStructure.farePerModeTable.append();
+//                fareStructure.farePerModeTable.set("mode", (String) item.get("mode"));
+//                fareStructure.farePerModeTable.set("unlimited_transfers", (Boolean) item.get("unlimited_transfers"));
+//                fareStructure.farePerModeTable.set("allow_same_route_transfer", (Boolean) item.get("allow_same_route_transfer"));
+//                fareStructure.farePerModeTable.set("use_route_fare", (Boolean) item.get("use_route_fare"));
+//                fareStructure.farePerModeTable.set("fare", ((Long) item.get("fare")).intValue());
             }
 
             JSONArray farePerTransfer = (JSONArray) json.get("fare_per_transfer");
             for (JSONObject item : (Iterable<JSONObject>) farePerTransfer) {
 
-                fareStructure.farePerTransferTable.append();
-                fareStructure.farePerTransferTable.set("leg1", (String) item.get("leg1"));
-                fareStructure.farePerTransferTable.set("leg2", (String) item.get("leg2"));
-                fareStructure.farePerTransferTable.set("fare", ((Long) item.get("fare")).intValue());
+//                fareStructure.farePerTransferTable.append();
+//                fareStructure.farePerTransferTable.set("leg1", (String) item.get("leg1"));
+//                fareStructure.farePerTransferTable.set("leg2", (String) item.get("leg2"));
+//                fareStructure.farePerTransferTable.set("fare", ((Long) item.get("fare")).intValue());
             }
 
             JSONArray routesInfo = (JSONArray) json.get("routes_info");
             for (JSONObject item : (Iterable<JSONObject>) routesInfo) {
 
-                fareStructure.routesInfoTable.append();
-                fareStructure.routesInfoTable.set("agency_id", (String) item.get("agency_id"));
-                fareStructure.routesInfoTable.set("agency_name", (String) item.get("agency_name"));
-                fareStructure.routesInfoTable.set("route_id", (String) item.get("route_id"));
-                fareStructure.routesInfoTable.set("route_short_name", (String) item.get("route_short_name"));
-                fareStructure.routesInfoTable.set("route_long_name", (String) item.get("route_long_name"));
-                fareStructure.routesInfoTable.set("mode", (String) item.get("mode"));
-                fareStructure.routesInfoTable.set("route_fare", ((Long) item.get("route_fare")).intValue());
-                fareStructure.routesInfoTable.set("fare_type", (String) item.get("fare_type"));
+//                fareStructure.routesInfoTable.append();
+//                fareStructure.routesInfoTable.set("agency_id", (String) item.get("agency_id"));
+//                fareStructure.routesInfoTable.set("agency_name", (String) item.get("agency_name"));
+//                fareStructure.routesInfoTable.set("route_id", (String) item.get("route_id"));
+//                fareStructure.routesInfoTable.set("route_short_name", (String) item.get("route_short_name"));
+//                fareStructure.routesInfoTable.set("route_long_name", (String) item.get("route_long_name"));
+//                fareStructure.routesInfoTable.set("mode", (String) item.get("mode"));
+//                fareStructure.routesInfoTable.set("route_fare", ((Long) item.get("route_fare")).intValue());
+//                fareStructure.routesInfoTable.set("fare_type", (String) item.get("fare_type"));
             }
 
             JSONObject debugSettings = (JSONObject) json.get("debug_settings");
@@ -171,12 +195,25 @@ public class FareStructure {
             RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo.toUpperCase();
             RuleBasedInRoutingFareCalculator.debugActive = !debugOutputFile.equals("");
 
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         return fareStructure;
+
+ */
+    }
+
+    public String toJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
 }

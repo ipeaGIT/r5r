@@ -196,6 +196,8 @@ travel_time_matrix <- function(r5r_core,
                                percentiles = 50L,
                                breakdown = FALSE,
                                breakdown_stat = "MEAN",
+                               fare_calculator_settings = NULL,
+                               max_fare = Inf,
                                max_walk_dist = Inf,
                                max_bike_dist = Inf,
                                max_trip_duration = 120L,
@@ -299,6 +301,9 @@ travel_time_matrix <- function(r5r_core,
 
   # set progress
   set_progress(r5r_core, progress)
+
+  # configure fare calculator
+  set_fare_calculator(r5r_core, fare_calculator_settings, max_fare = max_fare)
 
   # call r5r_core method ----------------------------------------------------
 
