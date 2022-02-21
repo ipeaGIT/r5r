@@ -617,16 +617,16 @@ public class R5RCore {
         if (!dropGeometry) { gridTable.addStringColumn("geometry", ""); }
 
         for (int index = 0; index < gridPointSet.featureCount(); index++) {
-            int x = index % gridPointSet.width;
-            int y = index / gridPointSet.width;
+            int x = index % gridPointSet.extents.width;
+            int y = index / gridPointSet.extents.width;
 
             gridTable.append();
             gridTable.set("id", String.valueOf(index));
-            gridTable.set("lat", Grid.pixelToCenterLat(y + gridPointSet.north, resolution));
-            gridTable.set("lon", Grid.pixelToCenterLon(x + gridPointSet.west, resolution));
+            gridTable.set("lat", Grid.pixelToCenterLat(y + gridPointSet.extents.north, resolution));
+            gridTable.set("lon", Grid.pixelToCenterLon(x + gridPointSet.extents.west, resolution));
 
             if (!dropGeometry) {
-                gridTable.set("geometry", Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution).toString());
+                gridTable.set("geometry", Grid.getPixelGeometry(x + gridPointSet.extents.west, y + gridPointSet.extents.north, gridPointSet.extents).toString());
             }
         }
 

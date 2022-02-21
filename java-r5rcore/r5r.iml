@@ -8,6 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="r5-v6.4-all" level="project" />
+    <orderEntry type="library" name="r5-v6.6-all" level="project" />
   </component>
 </module>
