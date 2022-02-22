@@ -224,7 +224,6 @@ set_fare_calculator <- function(r5r_core,
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setMaxFare(rJava::.jfloat(max_fare))
     r5r_core$setFareCalculatorDebugOutputSettings(fare_calculator_settings$debug_settings$output_file,
                                                   fare_calculator_settings$debug_settings$trip_info)
   } else {
