@@ -80,23 +80,12 @@ public class FareStructure {
     public List<FarePerMode> getFaresPerMode() {
         return faresPerMode;
     }
-
     public List<FarePerTransfer> getFaresPerTransfer() {
         return faresPerTransfer;
     }
-
     public List<FarePerRoute> getFaresPerRoute() {
         return faresPerRoute;
     }
-
-//    public Map<String, String> getDebugSettings() {
-//        Map<String, String> map = new HashMap<>();
-//
-//        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
-//        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
-//
-//        return map;
-//    }
 
     public FareStructure() {
         this(100);
@@ -119,87 +108,11 @@ public class FareStructure {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            FareStructure fareStructure = objectMapper.readValue(data, FareStructure.class);
-
-//            Map<String, String> debugMap = fareStructure.getDebugSettings();
-//            RuleBasedInRoutingFareCalculator.debugFileName = debugMap.get("output_file");
-//            RuleBasedInRoutingFareCalculator.debugTripInfo = debugMap.get("trip_info");
-//            RuleBasedInRoutingFareCalculator.debugActive = !debugMap.get("output_file").equals("");
-
-            return fareStructure;
+            return objectMapper.readValue(data, FareStructure.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
         }
-
-        /*
-        FareStructure fareStructure = new FareStructure();
-
-        JSONParser parser = new JSONParser();
-        try {
-            JSONObject json = (JSONObject) parser.parse(data);
-
-            // setting global properties
-            fareStructure.setBaseFare(((Long) json.get("base_fare")).intValue());
-            fareStructure.setMaxDiscountedTransfers(((Long) json.get("max_discounted_transfers")).intValue());
-            fareStructure.setTransferTimeAllowance(((Long) json.get("transfer_time_allowance")).intValue());
-
-            String fareCap = (String) json.get("fare_cap");
-            if (fareCap.equals("Inf")) {
-                fareStructure.setFareCap(Integer.MAX_VALUE);
-            } else {
-                fareStructure.setFareCap(Integer.parseInt(fareCap));
-            }
-
-            JSONArray farePerMode = (JSONArray) json.get("fare_per_mode");
-            for (JSONObject item : (Iterable<JSONObject>) farePerMode) {
-
-//                fareStructure.farePerModeTable.append();
-//                fareStructure.farePerModeTable.set("mode", (String) item.get("mode"));
-//                fareStructure.farePerModeTable.set("unlimited_transfers", (Boolean) item.get("unlimited_transfers"));
-//                fareStructure.farePerModeTable.set("allow_same_route_transfer", (Boolean) item.get("allow_same_route_transfer"));
-//                fareStructure.farePerModeTable.set("use_route_fare", (Boolean) item.get("use_route_fare"));
-//                fareStructure.farePerModeTable.set("fare", ((Long) item.get("fare")).intValue());
-            }
-
-            JSONArray farePerTransfer = (JSONArray) json.get("fare_per_transfer");
-            for (JSONObject item : (Iterable<JSONObject>) farePerTransfer) {
-
-//                fareStructure.farePerTransferTable.append();
-//                fareStructure.farePerTransferTable.set("leg1", (String) item.get("leg1"));
-//                fareStructure.farePerTransferTable.set("leg2", (String) item.get("leg2"));
-//                fareStructure.farePerTransferTable.set("fare", ((Long) item.get("fare")).intValue());
-            }
-
-            JSONArray routesInfo = (JSONArray) json.get("routes_info");
-            for (JSONObject item : (Iterable<JSONObject>) routesInfo) {
-
-//                fareStructure.routesInfoTable.append();
-//                fareStructure.routesInfoTable.set("agency_id", (String) item.get("agency_id"));
-//                fareStructure.routesInfoTable.set("agency_name", (String) item.get("agency_name"));
-//                fareStructure.routesInfoTable.set("route_id", (String) item.get("route_id"));
-//                fareStructure.routesInfoTable.set("route_short_name", (String) item.get("route_short_name"));
-//                fareStructure.routesInfoTable.set("route_long_name", (String) item.get("route_long_name"));
-//                fareStructure.routesInfoTable.set("mode", (String) item.get("mode"));
-//                fareStructure.routesInfoTable.set("route_fare", ((Long) item.get("route_fare")).intValue());
-//                fareStructure.routesInfoTable.set("fare_type", (String) item.get("fare_type"));
-            }
-
-            JSONObject debugSettings = (JSONObject) json.get("debug_settings");
-            String debugOutputFile = (String) debugSettings.get("output_file");
-            String tripInfo = (String) debugSettings.get("trip_info");
-
-            RuleBasedInRoutingFareCalculator.debugFileName = debugOutputFile;
-            RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo.toUpperCase();
-            RuleBasedInRoutingFareCalculator.debugActive = !debugOutputFile.equals("");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return fareStructure;
-
- */
     }
 
     public String toJson() {
