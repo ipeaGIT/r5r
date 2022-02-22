@@ -353,7 +353,17 @@ accessibility <- function(r5r_core,
   set_progress(r5r_core, progress)
 
   # configure fare calculator
-  set_fare_calculator(r5r_core, fare_calculator_settings, max_fare = max_fare)
+  set_fare_calculator(r5r_core, fare_calculator_settings)
+
+  # set max fare
+  # Inf and NULL values are not allowed in Java,
+  # so -1 is used to indicate max_fare is unconstrained
+  if (max_fare != Inf) {
+    r5r_core$setMaxFare(rJava::.jfloat(max_fare))
+  } else {
+    r5r_core$setMaxFare(rJava::.jfloat(-1.0))
+  }
+
 
   # call r5r_core method ----------------------------------------------------
 

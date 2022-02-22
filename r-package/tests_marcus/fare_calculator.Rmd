@@ -224,6 +224,12 @@ calculate_accessibility <- function(settings, fare) {
 ```
 
 ```{r}
+fare_settings2 <- fare_settings
+fare_settings2$fares_per_transfer <- data.table::data.table()
+```
+
+
+```{r}
 access_unl <- calculate_accessibility(NULL, 0)
 access_300 <- calculate_accessibility(fare_settings, 3.00)
 access_500 <- calculate_accessibility(fare_settings, 5.00)

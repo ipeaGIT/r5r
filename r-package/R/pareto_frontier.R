@@ -292,7 +292,10 @@ pareto_frontier <- function(r5r_core,
   set_progress(r5r_core, progress)
 
   # fare calculator settings
-  set_fare_calculator(r5r_core, fare_calculator_settings, fare_cutoffs = monetary_cost_cutoffs)
+  set_fare_calculator(r5r_core, fare_calculator_settings)
+
+  # set fare cutoffs
+  r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cost_cutoffs))
 
   # call r5r_core method ----------------------------------------------------
 

@@ -106,7 +106,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
             switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
                 case "MODE":
-                    debugger.append(delimiter).append(rInfo.getMode());
+                    debugger.append(delimiter).append(rInfo.getFareType());
                     break;
                 case "ROUTE":
                     if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
@@ -117,9 +117,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                     break;
                 case "MODE_ROUTE":
                     if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-                        debugger.append(delimiter).append(rInfo.getMode()).append(" ").append(ri.route_short_name);
+                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_short_name);
                     } else {
-                        debugger.append(delimiter).append(rInfo.getMode()).append(" ").append(ri.route_id);
+                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_id);
                     }
                     break;
             }
@@ -136,8 +136,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                 FarePerRoute secondLegMode = routeInfo.get(ri.route_id);
 
                 // check if transfer is in same mode with unlimited transfers
-                if (firstLegMode.getMode().equals(secondLegMode.getMode())) {
-                    FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
+                if (firstLegMode.getFareType().equals(secondLegMode.getFareType())) {
+                    FarePerMode modeData = farePerMode.get(firstLegMode.getFareType());
 
                     // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
                     if (modeData.isUnlimitedTransfers()) {
@@ -178,7 +178,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         FarePerRoute routeInfoData = routeInfo.get(ri.route_id);
 
         if (routeInfoData != null) {
-            FarePerMode farePerModeData = farePerMode.get(routeInfoData.getMode());
+            FarePerMode farePerModeData = farePerMode.get(routeInfoData.getFareType());
             if (farePerModeData != null) {
 
                 if (farePerModeData.isUseRouteFare()) {
@@ -200,14 +200,14 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
         if (firstLegMode != null && secondLegMode != null) {
             // same mode, check if transfers between them are allowed
-            if (firstLegMode.getMode().equals(secondLegMode.getMode())) {
-                FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
+            if (firstLegMode.getFareType().equals(secondLegMode.getFareType())) {
+                FarePerMode modeData = farePerMode.get(firstLegMode.getFareType());
 
                 // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
                 if (modeData.isUnlimitedTransfers()) return new IntegratedFare(0, false);
             }
 
-            FarePerTransfer transferFare = farePerTransfer.get(firstLegMode.getMode() + "&" + secondLegMode.getMode());
+            FarePerTransfer transferFare = farePerTransfer.get(firstLegMode.getFareType() + "&" + secondLegMode.getFareType());
             if (transferFare == null) {
                 // there is no record in transfers table, return full fare of second route
                 int fareSecondLeg = getFullFareForRoute(secondRoute);
@@ -217,7 +217,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                 // discounted transfer found
 
                 // check if transferring between same route ids, and if that is allowed
-                FarePerMode modeData = farePerMode.get(firstLegMode.getMode());
+                FarePerMode modeData = farePerMode.get(firstLegMode.getFareType());
                 if (firstLegMode.getRouteId().equals(secondLegMode.getRouteId()) && modeData.isAllowSameRouteTransfer() ) {
                     int fareSecondLeg = getFullFareForRoute(secondRoute);
                     return new IntegratedFare(fareSecondLeg, false);

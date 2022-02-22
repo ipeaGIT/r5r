@@ -181,43 +181,17 @@ read_fare_calculator <- function(file_path) {
 #'
 #' @param r5r_core
 #' @param fare_calculator_settings
-#' @param max_fare
-#' @param fare_cutoffs
 #'
 #' @return
 #' @export
 #'
 #' @examples
 set_fare_calculator <- function(r5r_core,
-                                fare_calculator_settings = NULL,
-                                max_fare = Inf,
-                                fare_cutoffs = Inf) {
-
-  # max fare
-  checkmate::assert_numeric(max_fare)
-
-  # monetary costs
-  checkmate::assert_numeric(fare_cutoffs)
+                                fare_calculator_settings = NULL) {
 
   if (!is.null(fare_calculator_settings)) {
     if (fare_calculator_settings$fare_cap == Inf) {
       fare_calculator_settings$fare_cap = -1
-    }
-
-    # Inf and NULL values are not allowed in Java,
-    # so -1 is used to indicate max_fare is unconstrained
-    if (max_fare != Inf) {
-      r5r_core$setMaxFare(rJava::.jfloat(max_fare))
-    } else {
-      r5r_core$setMaxFare(rJava::.jfloat(-1.0))
-    }
-
-    # Inf and NULL values are not allowed in Java,
-    # so -1 is used to indicate fare_cutoffs is unconstrained
-    if (fare_cutoffs != Inf) {
-      r5r_core$setFareCutoffs(rJava::.jfloat(fare_cutoffs))
-    } else {
-      r5r_core$setFareCutoffs(rJava::.jfloat(-1.0))
     }
 
     fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
