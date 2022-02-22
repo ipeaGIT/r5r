@@ -532,61 +532,6 @@ public class R5RCore {
 
     }
 
-    // ----------------------------------  ISOCHRONES  -----------------------------------------
-
-    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-        int[] cutoffTimes = {cutoffs};
-
-        return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime,maxBikeTime, maxTripDuration);
-    }
-
-    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-        int[] cutoffTimes = {cutoffs};
-
-        return isochrones(fromIds, fromLats, fromLons, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        return isochrones(fromIds, fromLats, fromLons, cutoffs, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-
-        // Instantiate IsochroneBuilder object and set properties
-        IsochroneBuilder isochroneBuilder = new IsochroneBuilder(r5rThreadPool, this.transportNetwork, this.routingProperties);
-        isochroneBuilder.setOrigins(fromId, fromLat, fromLon);
-        isochroneBuilder.setModes(directModes, accessModes, transitModes, egressModes);
-        isochroneBuilder.setDepartureDateTime(date, departureTime);
-        isochroneBuilder.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
-        isochroneBuilder.setCutoffs(cutoffs);
-        isochroneBuilder.setResolution(zoom);
-
-        // Build isochrones and return data to R as a list of data.frames
-        return isochroneBuilder.run();
-    }
-
     // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
     public RDataFrame findSnapPoints(String fromId, double fromLat, double fromLon, String mode) throws ExecutionException, InterruptedException {
         String[] fromIds = {fromId};
