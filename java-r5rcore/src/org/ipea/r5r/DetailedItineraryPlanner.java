@@ -7,11 +7,9 @@ import com.conveyal.r5.transit.TransportNetwork;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
-public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
+public class DetailedItineraryPlanner extends R5Process {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DetailedItineraryPlanner.class);
 
@@ -27,7 +25,7 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
 
     @Override
     protected void buildDestinationPointSet() {
-        // not required in this class
+        // not needed in this class
     }
 
     @Override

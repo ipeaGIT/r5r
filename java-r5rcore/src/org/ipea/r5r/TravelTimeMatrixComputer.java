@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-public class TravelTimeMatrixComputer extends R5MultiDestinationProcess {
+public class TravelTimeMatrixComputer extends R5Process {
 
     private static final int ROUTES_INDEX = 0;
     private static final int ACCESS_TIME_INDEX = 4;

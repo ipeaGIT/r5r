@@ -8,11 +8,9 @@ import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
-public class AccessibilityEstimator extends R5MultiDestinationProcess {
+public class AccessibilityEstimator extends R5Process {
 
     private DecayFunction decayFunction;
 

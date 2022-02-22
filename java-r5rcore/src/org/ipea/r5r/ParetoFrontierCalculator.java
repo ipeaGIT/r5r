@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-public class ParetoFrontierCalculator  extends R5MultiDestinationProcess {
+public class ParetoFrontierCalculator  extends R5Process {
 
     public ParetoFrontierCalculator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
