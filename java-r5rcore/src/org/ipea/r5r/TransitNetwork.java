@@ -102,6 +102,8 @@ public class TransitNetwork {
                 }
                 if (!geometry.toString().equals("")) {
                     geometry.append(")");
+                } else {
+                    geometry.append("LINESTRING EMPTY");
                 }
                 routesTable.set("geometry", geometry.toString());
             }
