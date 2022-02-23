@@ -178,7 +178,7 @@ test_that("detailed_itineraries output is correct", {
     points[2:1,],
     coords = c("lon", "lat"),
     crs = 4326
-  ) 
+  )
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)
@@ -201,12 +201,12 @@ test_that("detailed_itineraries output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$fromLat) == "double")
-  expect_true(typeof(result_df_input$fromLon) == "double")
-  expect_true(typeof(result_df_input$toId) == "character")
-  expect_true(typeof(result_df_input$toLat) == "double")
-  expect_true(typeof(result_df_input$toLon) == "double")
+  expect_true(typeof(result_df_input$from_id) == "character")
+  expect_true(typeof(result_df_input$from_lat) == "double")
+  expect_true(typeof(result_df_input$from_lon) == "double")
+  expect_true(typeof(result_df_input$to_id) == "character")
+  expect_true(typeof(result_df_input$to_lat) == "double")
+  expect_true(typeof(result_df_input$to_lon) == "double")
   expect_true(typeof(result_df_input$option) == "integer")
   expect_true(typeof(result_df_input$segment) == "integer")
   expect_true(typeof(result_df_input$mode) == "character")
@@ -255,14 +255,14 @@ test_that("detailed_itineraries output is correct", {
   # expect each OD pair to have only option when shortest_path == TRUE
 
   df <- default_tester(r5r_core, shortest_path = TRUE)
-  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(from_id, to_id)][, max(V1)]
 
   expect_true(max_n_options == 1)
 
   # # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
   #
   # df <- default_tester(r5r_core, shortest_path = FALSE)
-  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(from_id, to_id)][, max(V1)]
   #
   # expect_true(max_n_options > 1)
 
@@ -275,7 +275,7 @@ test_that("detailed_itineraries output is correct", {
   df <- default_tester(r5r_core, origins, destinations,
                        max_trip_duration = max_trip_duration, shortest_path = FALSE)
 
-  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(fromId, toId, option)][, max(V1)]
+  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(from_id, to_id, option)][, max(V1)]
 
   expect_true(max_duration < max_trip_duration)
 

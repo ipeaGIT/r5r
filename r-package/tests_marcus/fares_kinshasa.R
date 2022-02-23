@@ -132,7 +132,7 @@ fare_json <- r5r_core$getFareStructure()
 clipr::write_clip(fare_json)
 
 
-ttm_c <- full_join(ttm1, ttm2, by = c("fromId", "toId")) %>%
+ttm_c <- full_join(ttm1, ttm2, by = c("from_id", "to_id")) %>%
   mutate(diff = travel_time.x - travel_time.y)
 
 dbg <- read_csv(here::here("tests_marcus/kinshasa/kins_debug.csv"))

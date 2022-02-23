@@ -335,12 +335,12 @@ detailed_itineraries <- function(r5r_core,
   # return either the fastest or multiple itineraries between an o-d pair (untie
   # it by the option number, if necessary)
 
-  path_options[, total_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
+  path_options[, total_duration := sum(segment_duration, wait), by = .(from_id, to_id, option)]
 
   if (shortest_path) {
 
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(fromId, toId)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(from_id, to_id)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id)]$V1]
 
   } else {
 
@@ -351,10 +351,10 @@ detailed_itineraries <- function(r5r_core,
     # keep the one with the shortest duration
 
     path_options[, temp_route := fifelse(route == "", mode, route)]
-    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
+    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(from_id, to_id, option)]
 
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(from_id, to_id, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id, temp_sign)]$V1]
 
     # remove temporary columns
     path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
@@ -363,7 +363,7 @@ detailed_itineraries <- function(r5r_core,
 
   # substitute 'option' id assigned by r5 to a run-length id from 1 to number of
   # options
-  path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
+  path_options[, option := data.table::rleid(option), by = .(from_id, to_id)]
 
   # if results include the geometry, convert path_options from data.frame to
   # data.table with sfc column

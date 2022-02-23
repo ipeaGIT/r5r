@@ -31,12 +31,12 @@ public class DetailedItineraryPlanner extends R5Process {
     @Override
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         RDataFrame itinerariesDataFrame = new RDataFrame(nRows);
-        itinerariesDataFrame.addStringColumn("fromId", fromId);
-        itinerariesDataFrame.addDoubleColumn("fromLat", 0.0);
-        itinerariesDataFrame.addDoubleColumn("fromLon", 0.0);
-        itinerariesDataFrame.addStringColumn("toId", "");
-        itinerariesDataFrame.addDoubleColumn("toLat", 0.0);
-        itinerariesDataFrame.addDoubleColumn("toLon", 0.0);
+        itinerariesDataFrame.addStringColumn("from_id", fromId);
+        itinerariesDataFrame.addDoubleColumn("from_lat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("from_lon", 0.0);
+        itinerariesDataFrame.addStringColumn("to_id", "");
+        itinerariesDataFrame.addDoubleColumn("to_lat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("to_lon", 0.0);
         itinerariesDataFrame.addIntegerColumn("option", 0);
         itinerariesDataFrame.addIntegerColumn("segment", 0);
         itinerariesDataFrame.addStringColumn("mode", "");

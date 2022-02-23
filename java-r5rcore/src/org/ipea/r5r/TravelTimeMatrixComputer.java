@@ -60,7 +60,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                 travelTimesTable.append();
 
                 // set destination id
-                travelTimesTable.set("toId", toIds[destination]);
+                travelTimesTable.set("to_id", toIds[destination]);
 
                 // fill travel times for destination
                 populateTravelTimes(travelTimeResults, travelTimesTable, destination);
@@ -130,8 +130,8 @@ public class TravelTimeMatrixComputer extends R5Process {
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame(nRows);
-        travelTimesTable.addStringColumn("fromId", fromId);
-        travelTimesTable.addStringColumn("toId", "");
+        travelTimesTable.addStringColumn("from_id", fromId);
+        travelTimesTable.addStringColumn("to_id", "");
 
         if (this.routingProperties.percentiles.length == 1) {
             travelTimesTable.addIntegerColumn("travel_time", Integer.MAX_VALUE);
@@ -170,6 +170,5 @@ public class TravelTimeMatrixComputer extends R5Process {
 
         return request;
     }
-
 
 }

@@ -4,15 +4,10 @@
 \alias{set_fare_calculator}
 \title{Title}
 \usage{
-set_fare_calculator(
-  r5r_core,
-  fare_calculator_settings = NULL,
-  max_fare = Inf,
-  fare_cutoffs = Inf
-)
+set_fare_calculator(r5r_core, fare_calculator_settings = NULL)
 }
 \arguments{
-\item{fare_cutoffs}{}
+\item{fare_calculator_settings}{}
 }
 \value{
 

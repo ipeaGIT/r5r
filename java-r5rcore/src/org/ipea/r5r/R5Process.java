@@ -28,23 +28,28 @@ public abstract class R5Process {
     protected final ForkJoinPool r5rThreadPool;
     protected final TransportNetwork transportNetwork;
     protected final RoutingProperties routingProperties;
-    protected String[] toIds;
-    protected double[] toLats;
-    protected double[] toLons;
-    protected int[] opportunities;
 
-    protected int nDestinations;
-    protected FreeFormPointSet destinationPoints;
     protected String[] fromIds;
     protected double[] fromLats;
     protected double[] fromLons;
     protected int nOrigins;
+
+    protected String[] toIds;
+    protected double[] toLats;
+    protected double[] toLons;
+    protected int[] opportunities;
+    protected int nDestinations;
+
+    protected FreeFormPointSet destinationPoints;
+
     protected EnumSet<LegMode> directModes;
     protected EnumSet<TransitModes> transitModes;
     protected EnumSet<LegMode> accessModes;
     protected EnumSet<LegMode> egressModes;
+
     protected String departureDate;
     protected String departureTime;
+
     protected int maxWalkTime;
     protected int maxBikeTime;
     protected int maxTripDuration;
@@ -53,6 +58,7 @@ public abstract class R5Process {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = transportNetwork;
         this.routingProperties = routingProperties;
+
         destinationPoints = null;
     }
 

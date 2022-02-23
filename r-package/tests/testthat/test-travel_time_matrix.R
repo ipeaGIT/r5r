@@ -172,13 +172,13 @@ test_that("output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$toId) == "character")
+  expect_true(typeof(result_df_input$from_id) == "character")
+  expect_true(typeof(result_df_input$to_id) == "character")
   expect_true(typeof(result_df_input$travel_time) == "integer")
 
   # expect more info with breakdown
   df <- default_tester(r5r_core, breakdown=TRUE)
-  expect_equal(ncol(df), 11)
+  expect_equal(ncol(df), 12)
 
 
   #  * r5r options ----------------------------------------------------------
