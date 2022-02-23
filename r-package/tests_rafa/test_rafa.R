@@ -222,10 +222,10 @@ ttm <- travel_time_matrix(r5r_core,
 
 
 ##### downloads ------------------------
-library("ggplot2")
-library("dlstats")
+library(ggplot2)
+library(dlstats)
 
-x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter'))
+x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter', 'flightsbr'))
 
  if (!is.null(x)) {
          head(x)
@@ -233,7 +233,14 @@ x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter'))
                  geom_line() + geom_point(aes(shape=package))
  }
 
+library(data.table)
+setDT(x)
 
+x[, .(total = sum(downloads)) , by=package][order(total)]
+
+x[ start > as.Date('2021-01-01'), .(total = sum(downloads)) , by=package][order(total)]
+
+x[package=='flightsbr',]
 
 ##### HEX sticker ------------------------
 
