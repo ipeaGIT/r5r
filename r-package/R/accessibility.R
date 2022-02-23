@@ -81,6 +81,11 @@
 #'                 only travel through the quietest streets, while a value of 4
 #'                 indicates cyclists can travel through any road. Defaults to 2.
 #'                 See details for more information.
+#' @param draws_per_minute numeric. number of Monte Carlo draws to perform per
+#'                         time window minute when calculating travel time
+#'                         matrices and when estimating accessibility. Defaults
+#'                         to 5. This would mean 300 draws in a 60 minutes time
+#'                         window, for example.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. `TRUE` to show detailed output messages (the default).
@@ -250,6 +255,7 @@ accessibility <- function(r5r_core,
                           bike_speed = 12,
                           max_rides = 3,
                           max_lts = 2,
+                          draws_per_minute = 5L,
                           n_threads = Inf,
                           verbose = TRUE,
                           progress = TRUE) {
@@ -307,7 +313,7 @@ accessibility <- function(r5r_core,
   checkmate::assert_numeric(time_window)
   time_window <- as.integer(time_window)
 
-  draws_per_minute <- getOption("r5r.montecarlo_draws", default = 5L)
+  # montecarlo draws per minute
   draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
 

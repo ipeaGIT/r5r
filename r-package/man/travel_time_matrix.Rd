@@ -24,6 +24,7 @@ travel_time_matrix(
   bike_speed = 12,
   max_rides = 3,
   max_lts = 2,
+  draws_per_minute = 5L,
   n_threads = Inf,
   verbose = TRUE,
   progress = TRUE
@@ -122,6 +123,12 @@ that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4
 indicates cyclists can travel through any road. Defaults to 2.
 See details for more information.}
+
+\item{draws_per_minute}{numeric. number of Monte Carlo draws to perform per
+time window minute when calculating travel time
+matrices and when estimating accessibility. Defaults
+to 5. This would mean 300 draws in a 60 minutes time
+window, for example.}
 
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
