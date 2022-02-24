@@ -102,7 +102,13 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             int pattern = patternIt.next();
 
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(pattern).routeIndex);
+            if (ri == null) {
+                LOG.error("route info is null");
+            }
             FarePerRoute rInfo = routeInfo.get(ri.route_id);
+            if (rInfo == null) {
+                LOG.error("rInfo is null. ri = {}", ri.route_id);
+            }
 
             switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
                 case "MODE":

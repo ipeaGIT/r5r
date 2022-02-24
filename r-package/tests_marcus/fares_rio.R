@@ -49,8 +49,8 @@ fare_settings <- setup_fare_calculator(r5r_core,
                                        by = "MODE")
 
 
-write_fare_calculator(fare_settings, file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
-fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+write_fare_calculator(fare_settings, file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
 
 
 
@@ -64,40 +64,43 @@ fare_settings$routes_info %>% View()
 fare_settings$debug_settings
 
 
+unique(fare_settings$fares_per_route$route_id)
+
 clipr::write_clip()
-clipr::write_clip(fare_settings$fare_per_mode)
-clipr::write_clip(fare_settings$fare_per_transfer)
-clipr::write_clip(fare_settings$routes_info)
+clipr::write_clip(fare_settings$fares_per_mode)
+clipr::write_clip(fare_settings$fares_per_transfer)
+clipr::write_clip(fare_settings$fares_per_route)
 
 ### Test --------------------------------------------------------
 
-fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
 
-fare_settings$debug_settings$output_file <- here::here("tests_marcus", "rio_fare_calculator_output_v6.csv")
+fare_settings$debug_settings$output_file <- here::here("tests_marcus", "rio_fare_calculator_output_v7.csv")
 
 # r5r_core$setFareCalculatorDebugOutput(here::here("tests_marcus", "rio_fare_calculator_output_v4.csv"))
 
 access <- accessibility(r5r_core,
-                        origins = points_r8,
+                        origins = poi,
                         destinations = points_r8,
                         departure_datetime = departure_datetime,
                         opportunities_colname = "unit",
                         mode = c("WALK", "TRANSIT"),
                         cutoffs = c(30, 45),
                         fare_calculator_settings = fare_settings,
-                        max_fare = 1500,
+                        max_fare = 10,
                         max_trip_duration = 90,
                         max_walk_dist = 800,
                         time_window = 1,
                         percentiles = 50,
                         verbose = FALSE,
-                        progress = FALSE)
+                        progress = TRUE)
 
 
 rio_debug_v1 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
 rio_debug_v4 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v4.csv"))
 rio_debug_v5 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v5.csv"))
 rio_debug_v6 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v6.csv"))
+rio_debug_v7 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output_v7.csv"))
 
 tn <- transit_network_to_sf(r5r_core)
 
@@ -175,14 +178,16 @@ ttm <- travel_time_matrix(r5r_core,
 
 # Pareto ------------------------------------------------------------------
 
-fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v2.zip"))
+fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
+
+pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8.10,  8.55,  9.40,  10.00)
 
 pareto_df <- pareto_frontier(r5r_core,
-                             origins = poi[4,],
-                             destinations = poi[5,],
+                             origins = poi,
+                             destinations = poi,
                              mode = c("WALK", "TRANSIT"),
                              departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = seq(0, 1000, 100),
+                             monetary_cost_cutoffs = pareto_cutoffs,
                              fare_calculator_settings = fare_settings,
                              max_trip_duration = 180,
                              max_walk_dist = 8000,
@@ -192,20 +197,20 @@ pareto_df <- pareto_frontier(r5r_core,
                              verbose = FALSE,
                              progress = TRUE)
 
-pareto_df$monetary_cost <- pareto_df$monetary_cost / 100
-pareto_df$monetary_cost_upper <- pareto_df$monetary_cost_upper / 100
-View(pareto_df)
 
 pareto_df %>%
-  mutate(percentile = factor(percentile)) %>%
+  mutate(percentile = factor(percentile),
+         pair = paste(from_id, to_id)) %>%
   pivot_longer(cols=starts_with("monetary"), names_to = "mon", values_to="cost") %>%
-  ggplot(aes(x=cost, y=travel_time, color=percentile, group=percentile)) +
+  ggplot(aes(x=cost, y=travel_time, color=pair)) +
   geom_step() +
+  geom_point() +
   # geom_path() +
-  scale_color_brewer(palette = "Set1") +
-  scale_x_continuous(breaks = 1:10) +
-  scale_y_continuous(breaks = seq(0, 130, 10), limits = c(0, 130)) +
-  facet_grid(from_id~to_id)
+  # scale_color_brewer(palette = "Set1") +
+  # scale_x_continuous(breaks = 0:10, limits = c(0, 10)) +
+  # scale_y_continuous(breaks = seq(0, 180, 30), limits = c(0, 180)) +
+  theme(legend.position = "none") +
+  facet_wrap(~pair)
 
 
 r5r_core$setMaxFare(10L, "rio-de-janeiro")
