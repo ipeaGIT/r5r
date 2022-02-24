@@ -13,11 +13,16 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RuleBasedInRoutingFareCalculator.class);
+
+    public static AtomicInteger cacheCalls = new AtomicInteger();
+    public static AtomicInteger fullFunctionCalls = new AtomicInteger();
 
     public static String debugFileName = "";
     public static String debugTripInfo = "MODE";
@@ -32,6 +37,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     private Map<String, FarePerRoute> routeInfo;
     private Map<String, FarePerMode> farePerMode;
     private Map<String, FarePerTransfer> farePerTransfer;
+    private Map<String, Integer> fareCache;
 
     private final Set<String> debugOutput;
 
@@ -50,6 +56,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         loadFarePerMode();
         loadModeOfRoute();
         loadFarePerTransfer();
+
+        // build cache map
+        fareCache = new ConcurrentHashMap<>();
     }
 
     private void loadFarePerMode() {
@@ -80,16 +89,27 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     @Override
     public FareBounds calculateFare(McRaptorSuboptimalPathProfileRouter.McRaptorState state, int maxClockTime) {
-        int fareForState = 0;
-
         // extract the relevant rides
         TIntList patterns = new TIntArrayList();
+        StringBuilder cacheIndex = new StringBuilder();
 
         while (state != null) {
-            if (state.pattern > -1) patterns.add(state.pattern);
+            if (state.pattern > -1) {
+                patterns.add(state.pattern);
+                cacheIndex.append(state.pattern).append("|");
+            }
             state = state.back;
         }
 
+        Integer cachedFare = fareCache.get(cacheIndex.toString());
+        if (cachedFare != null) {
+//            cacheCalls.getAndIncrement();
+            return new FareBounds(cachedFare, new TransferAllowance());
+        }
+
+//        fullFunctionCalls.getAndIncrement();
+        // calculate fare
+        int fareForState = 0;
         patterns.reverse();
 
         RouteInfo previousRoute = null;
@@ -171,6 +191,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 //        }
         //System.out.println(debugger);
 
+        fareCache.put(cacheIndex.toString(), fareForState);
         return new FareBounds(fareForState, new TransferAllowance());
     }
 

@@ -29,6 +29,14 @@ public class R5RCore {
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
 
+    public int getFareCalculatorCacheCalls() {
+        return RuleBasedInRoutingFareCalculator.cacheCalls.get();
+    }
+
+    public int getFareCalculatorFullCalls() {
+        return RuleBasedInRoutingFareCalculator.fullFunctionCalls.get();
+    }
+
     private final RoutingProperties routingProperties = new RoutingProperties();
 
     public double getWalkSpeed() {

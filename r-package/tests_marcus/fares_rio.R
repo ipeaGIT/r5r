@@ -182,21 +182,27 @@ fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "ri
 
 pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8.10,  8.55,  9.40,  10.00)
 
-pareto_df <- pareto_frontier(r5r_core,
-                             origins = poi,
-                             destinations = poi,
-                             mode = c("WALK", "TRANSIT"),
-                             departure_datetime = departure_datetime,
-                             monetary_cost_cutoffs = pareto_cutoffs,
-                             fare_calculator_settings = fare_settings,
-                             max_trip_duration = 180,
-                             max_walk_dist = 8000,
-                             time_window = 1, #30,
-                             percentiles = 50, # c(5, 50, 95),
-                             max_rides = 5,
-                             verbose = FALSE,
-                             progress = TRUE)
+system.time(
+  pareto_df <- pareto_frontier(r5r_core,
+                               origins = poi,
+                               destinations = poi,
+                               mode = c("WALK", "TRANSIT"),
+                               departure_datetime = departure_datetime,
+                               monetary_cost_cutoffs = pareto_cutoffs,
+                               fare_calculator_settings = fare_settings,
+                               max_trip_duration = 180,
+                               max_walk_dist = 8000,
+                               time_window = 1, #30,
+                               percentiles = 50, # c(5, 50, 95),
+                               max_rides = 5,
+                               verbose = FALSE,
+                               progress = TRUE)
+  )
 
+r5r_core$getFareCalculatorCacheCalls()
+r5r_core$getFareCalculatorFullCalls()
+
+# [1] 570.551.246
 
 pareto_df %>%
   mutate(percentile = factor(percentile),
