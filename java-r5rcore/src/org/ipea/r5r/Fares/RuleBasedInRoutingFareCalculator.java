@@ -95,42 +95,36 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         RouteInfo previousRoute = null;
         int discountsApplied = 0;
 
-        StringBuilder debugger = new StringBuilder();
+//        StringBuilder debugger = new StringBuilder();
 
-        String delimiter = "";
+//        String delimiter = "";
         for (TIntIterator patternIt = patterns.iterator(); patternIt.hasNext();) {
             int pattern = patternIt.next();
 
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(pattern).routeIndex);
-            if (ri == null) {
-                LOG.error("route info is null");
-            }
-            FarePerRoute rInfo = routeInfo.get(ri.route_id);
-            if (rInfo == null) {
-                LOG.error("rInfo is null. ri = {}", ri.route_id);
-            }
+//            FarePerRoute rInfo = routeInfo.get(ri.route_id);
 
-            switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
-                case "MODE":
-                    debugger.append(delimiter).append(rInfo.getFareType());
-                    break;
-                case "ROUTE":
-                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-                        debugger.append(delimiter).append(ri.route_short_name);
-                    } else {
-                        debugger.append(delimiter).append(ri.route_id);
-                    }
-                    break;
-                case "MODE_ROUTE":
-                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_short_name);
-                    } else {
-                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_id);
-                    }
-                    break;
-            }
-
-            delimiter = "|";
+//            switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
+//                case "MODE":
+//                    debugger.append(delimiter).append(rInfo.getFareType());
+//                    break;
+//                case "ROUTE":
+//                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
+//                        debugger.append(delimiter).append(ri.route_short_name);
+//                    } else {
+//                        debugger.append(delimiter).append(ri.route_id);
+//                    }
+//                    break;
+//                case "MODE_ROUTE":
+//                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
+//                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_short_name);
+//                    } else {
+//                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_id);
+//                    }
+//                    break;
+//            }
+//
+//            delimiter = "|";
 
 
             // first public transport leg, full ticket price
@@ -169,12 +163,12 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             previousRoute = ri;
         }
 
-        float debugFare = fareForState / 100.0f;
-        debugger.append(",").append(debugFare);
+//        float debugFare = fareForState / 100.0f;
+//        debugger.append(",").append(debugFare);
 
-        if (debugActive) {
-            debugOutput.add(debugger.toString());
-        }
+//        if (debugActive) {
+//            debugOutput.add(debugger.toString());
+//        }
         //System.out.println(debugger);
 
         return new FareBounds(fareForState, new TransferAllowance());
