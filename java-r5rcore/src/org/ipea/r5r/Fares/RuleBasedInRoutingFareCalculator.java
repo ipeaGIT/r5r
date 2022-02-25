@@ -10,9 +10,7 @@ import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,7 +35,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     private Map<String, FarePerRoute> routeInfo;
     private Map<String, FarePerMode> farePerMode;
     private Map<String, FarePerTransfer> farePerTransfer;
-    private Map<String, Integer> fareCache;
+    private final Map<String, Integer> fareCache;
 
     private final Set<String> debugOutput;
 
@@ -89,9 +87,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     @Override
     public FareBounds calculateFare(McRaptorSuboptimalPathProfileRouter.McRaptorState state, int maxClockTime) {
-        // extract the relevant rides
+        // extract and order relevant rides
         TIntList patterns = new TIntArrayList();
-        StringBuilder cacheIndex = new StringBuilder();
+        StringBuilder cacheIndex = new StringBuilder(32);
 
         while (state != null) {
             if (state.pattern > -1) {
@@ -101,16 +99,18 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             state = state.back;
         }
 
+        patterns.reverse();
+
+        // look for pattern in the cache
         Integer cachedFare = fareCache.get(cacheIndex.toString());
         if (cachedFare != null) {
-//            cacheCalls.getAndIncrement();
             return new FareBounds(cachedFare, new TransferAllowance());
         }
 
+        // pattern not in cache... calculate
+
 //        fullFunctionCalls.getAndIncrement();
-        // calculate fare
         int fareForState = 0;
-        patterns.reverse();
 
         RouteInfo previousRoute = null;
         int discountsApplied = 0;

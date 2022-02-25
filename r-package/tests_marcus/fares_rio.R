@@ -202,7 +202,7 @@ system.time(
 r5r_core$getFareCalculatorCacheCalls()
 r5r_core$getFareCalculatorFullCalls()
 
-# [1] 570.551.246
+# [1] 570551246
 
 pareto_df %>%
   mutate(percentile = factor(percentile),
