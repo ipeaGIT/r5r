@@ -7,6 +7,7 @@ import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.transit.RouteInfo;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TCharArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private void loadFarePerMode() {
-        this.farePerMode = new HashMap<>();
+        this.farePerMode = new ConcurrentHashMap<>();
 
         for (FarePerMode mode : fareStructure.getFaresPerMode()) {
             farePerMode.put(mode.getMode(), mode);
@@ -68,7 +69,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private void loadFarePerTransfer() {
-        this.farePerTransfer = new HashMap<>();
+        this.farePerTransfer = new ConcurrentHashMap<>();
 
         for (FarePerTransfer transfer : fareStructure.getFaresPerTransfer()) {
             String key = transfer.getFirstLeg() + "&" + transfer.getSecondLeg();
@@ -78,7 +79,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private void loadModeOfRoute() {
-        this.routeInfo = new HashMap<>();
+        this.routeInfo = new ConcurrentHashMap<>();
 
         for (FarePerRoute route : fareStructure.getFaresPerRoute()) {
             routeInfo.put(route.getRouteId(), route);

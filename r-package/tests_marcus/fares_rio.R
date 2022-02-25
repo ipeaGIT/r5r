@@ -195,6 +195,7 @@ system.time(
                                time_window = 1, #30,
                                percentiles = 50, # c(5, 50, 95),
                                max_rides = 5,
+                               draws_per_minute = 5L,
                                verbose = FALSE,
                                progress = TRUE)
   )
