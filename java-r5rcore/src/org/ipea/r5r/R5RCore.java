@@ -37,7 +37,7 @@ public class R5RCore {
         return RuleBasedInRoutingFareCalculator.fullFunctionCalls.get();
     }
 
-    private final RoutingProperties routingProperties = new RoutingProperties();
+    private final RoutingProperties routingProperties;
 
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
@@ -244,6 +244,9 @@ public class R5RCore {
         setNumberOfThreadsToMax();
 
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
+
+        this.routingProperties = new RoutingProperties();
+        this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
     }
 
 

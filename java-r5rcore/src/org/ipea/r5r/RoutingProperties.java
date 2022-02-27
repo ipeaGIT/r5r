@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
+import com.conveyal.r5.transit.TransitLayer;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 
 public class RoutingProperties {
@@ -21,9 +22,10 @@ public class RoutingProperties {
     public float maxFare;
     public float[] fareCutoffs = {-1.0f};
     public InRoutingFareCalculator fareCalculator;
+    public TransitLayer transitLayer;
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
-        this.fareCalculator = new RuleBasedInRoutingFareCalculator(fareCalculatorJson);
+        this.fareCalculator = new RuleBasedInRoutingFareCalculator(transitLayer, fareCalculatorJson);
     }
 
     public RoutingProperties() {
@@ -40,5 +42,6 @@ public class RoutingProperties {
 
         maxFare = -1.0f;
         fareCalculator = null;
+        transitLayer = null;
     }
 }
