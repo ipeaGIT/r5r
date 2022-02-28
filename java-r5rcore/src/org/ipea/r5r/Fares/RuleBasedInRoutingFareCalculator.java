@@ -24,8 +24,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     private final FareStructure fareStructure;
 
-    private FarePerRoute[] routeInfo;
-    private FarePerTransfer[][] farePerTransfer;
+    private FarePerRoute[] faresPerRoute;
+    private FarePerTransfer[][] faresPerTransfer;
 
     private final Set<String> debugOutput;
 
@@ -41,9 +41,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         this.transitLayer = transitLayer;
         this.fareStructure = FareStructure.fromJson(jsonData);
 
-//        if (debugActive) {
-            this.debugOutput = new ConcurrentSkipListSet<>();
-//        }
+        this.debugOutput = new ConcurrentSkipListSet<>();
 
         // fill fare information lookup tables
         loadFareInformation();
@@ -62,28 +60,28 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         }
 
         // load route info (fare per route)
-        this.routeInfo = new FarePerRoute[transitLayer.tripPatterns.size()];
+        this.faresPerRoute = new FarePerRoute[transitLayer.tripPatterns.size()];
         for (int i = 0; i < transitLayer.tripPatterns.size(); i++) {
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(i).routeIndex);
 
-            this.routeInfo[i] = indexRouteInfo.get(ri.route_id);
-            int modeIndex = indexTransportMode.get(routeInfo[i].getFareType());
-            routeInfo[i].setModeIndex(modeIndex);
+            this.faresPerRoute[i] = indexRouteInfo.get(ri.route_id);
+            int modeIndex = indexTransportMode.get(faresPerRoute[i].getFareType());
+            faresPerRoute[i].setModeIndex(modeIndex);
 
             FarePerMode modeOfRoute = fareStructure.getFaresPerMode().get(modeIndex);
             if (!modeOfRoute.isUseRouteFare())
-                routeInfo[i].setRouteFare(modeOfRoute.getFare());
+                faresPerRoute[i].setRouteFare(modeOfRoute.getFare());
         }
 
         // load fare per transfer as a two-dimensional array
         int nModes = fareStructure.getFaresPerMode().size();
-        this.farePerTransfer = new FarePerTransfer[nModes][nModes];
+        this.faresPerTransfer = new FarePerTransfer[nModes][nModes];
 
         for (FarePerTransfer transfer : fareStructure.getFaresPerTransfer()) {
             int firstModeIndex = indexTransportMode.get(transfer.getFirstLeg());
             int secondModeIndex = indexTransportMode.get(transfer.getSecondLeg());
 
-            farePerTransfer[firstModeIndex][secondModeIndex] = transfer;
+            faresPerTransfer[firstModeIndex][secondModeIndex] = transfer;
         }
 
     }
@@ -93,7 +91,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private FarePerTransfer getTransferByIndex(int firstModeIndex, int secondModeIndex) {
-        return farePerTransfer[firstModeIndex][secondModeIndex];
+        return faresPerTransfer[firstModeIndex][secondModeIndex];
     }
 
     @Override
@@ -131,8 +129,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             currentPatternIndex = patternIt.next();
 
             // get info on each leg
-            FarePerRoute firstLegMode = routeInfo[previousPatternIndex];
-            FarePerRoute secondLegMode = routeInfo[currentPatternIndex];
+            FarePerRoute firstLegMode = faresPerRoute[previousPatternIndex];
+            FarePerRoute secondLegMode = faresPerRoute[currentPatternIndex];
 
             // check if transfer is in same mode with unlimited transfers
             if (firstLegMode.getModeIndex() == secondLegMode.getModeIndex()) {
@@ -161,11 +159,15 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             previousPatternIndex = currentPatternIndex;
         }
 
+
+
+        if (debugActive) buildDebugInformation(patterns, fareForState);
+
         return new FareBounds(fareForState, new TransferAllowance());
     }
 
     private int getFullFareForRoute(int patternIndex) {
-        FarePerRoute routeInfoData = routeInfo[patternIndex];
+        FarePerRoute routeInfoData = faresPerRoute[patternIndex];
 
         if (routeInfoData != null) {
             return routeInfoData.getIntegerFare();
@@ -175,8 +177,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern) {
-        FarePerRoute firstLegMode = routeInfo[firstPattern];
-        FarePerRoute secondLegMode = routeInfo[secondPattern];
+        FarePerRoute firstLegMode = faresPerRoute[firstPattern];
+        FarePerRoute secondLegMode = faresPerRoute[secondPattern];
 
         FarePerTransfer transferFare = getTransferByIndex(firstLegMode.getModeIndex(), secondLegMode.getModeIndex());
         if (transferFare == null) {
@@ -213,6 +215,44 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         }
     }
 
+    private void buildDebugInformation(TIntList patterns, int fare) {
+        StringBuilder debugger = new StringBuilder();
+        String delimiter = "";
+
+        TIntIterator patternIt = patterns.iterator();
+        while (patternIt.hasNext()) {
+            int currentPatternIndex = patternIt.next();
+            FarePerRoute secondLegMode = faresPerRoute[currentPatternIndex];
+
+            switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
+                case "MODE":
+                    debugger.append(delimiter).append(secondLegMode.getFareType());
+                    break;
+                case "ROUTE":
+                    if (secondLegMode.getRouteShortName() != null && !secondLegMode.getRouteShortName().equals("null")) {
+                        debugger.append(delimiter).append(secondLegMode.getRouteShortName());
+                    } else {
+                        debugger.append(delimiter).append(secondLegMode.getRouteId());
+                    }
+                    break;
+                case "MODE_ROUTE":
+                    if (secondLegMode.getRouteShortName() != null && !secondLegMode.getRouteShortName().equals("null")) {
+                        debugger.append(delimiter).append(secondLegMode.getFareType()).append(" ").append(secondLegMode.getRouteShortName());
+                    } else {
+                        debugger.append(delimiter).append(secondLegMode.getFareType()).append(" ").append(secondLegMode.getRouteId());
+                    }
+                    break;
+            }
+
+            delimiter = "|";
+        }
+
+        float debugFare = fare / 100.0f;
+        debugger.append(",").append(debugFare);
+
+        debugOutput.add(debugger.toString());
+    }
+
     @Override
     public String getType() {
         return "rule-based";
@@ -220,35 +260,3 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
 }
 
-//            RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(pattern).routeIndex);
-//            FarePerRoute rInfo = routeInfo.get(ri.route_id);
-
-//            switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
-//                case "MODE":
-//                    debugger.append(delimiter).append(rInfo.getFareType());
-//                    break;
-//                case "ROUTE":
-//                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-//                        debugger.append(delimiter).append(ri.route_short_name);
-//                    } else {
-//                        debugger.append(delimiter).append(ri.route_id);
-//                    }
-//                    break;
-//                case "MODE_ROUTE":
-//                    if (ri.route_short_name != null && !ri.route_short_name.equals("null")) {
-//                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_short_name);
-//                    } else {
-//                        debugger.append(delimiter).append(rInfo.getFareType()).append(" ").append(ri.route_id);
-//                    }
-//                    break;
-//            }
-//
-//            delimiter = "|";
-
-//        float debugFare = fareForState / 100.0f;
-//        debugger.append(",").append(debugFare);
-
-//        if (debugActive) {
-//            debugOutput.add(debugger.toString());
-//        }
-//System.out.println(debugger);
