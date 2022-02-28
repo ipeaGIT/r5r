@@ -49,8 +49,8 @@ pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8
 
 system.time(
   pareto_df <- pareto_frontier(r5r_core,
-                               origins = points_r8[1:150,],
-                               destinations = points_r8,
+                               origins = poi,
+                               destinations = poi,
                                mode = c("WALK", "TRANSIT"),
                                departure_datetime = departure_datetime,
                                monetary_cost_cutoffs = pareto_cutoffs,
@@ -64,3 +64,19 @@ system.time(
                                verbose = FALSE,
                                progress = TRUE)
 )
+
+
+pareto_df %>%
+  mutate(percentile = factor(percentile),
+         pair = paste(from_id, to_id)) %>%
+  pivot_longer(cols=starts_with("monetary"), names_to = "mon", values_to="cost") %>%
+  ggplot(aes(x=cost, y=travel_time, color=pair)) +
+  geom_step() +
+  geom_point() +
+  # geom_path() +
+  # scale_color_brewer(palette = "Set1") +
+  # scale_x_continuous(breaks = 0:10, limits = c(0, 10)) +
+  # scale_y_continuous(breaks = seq(0, 180, 30), limits = c(0, 180)) +
+  theme(legend.position = "none") +
+  facet_wrap(~pair)
+
