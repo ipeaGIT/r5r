@@ -159,9 +159,11 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             previousPatternIndex = currentPatternIndex;
         }
 
-
-
-        if (debugActive) buildDebugInformation(patterns, fareForState);
+        if (debugActive) {
+            String tripPattern = buildDebugInformation(patterns);
+            float debugFare = fareForState / 100.0f;
+            debugOutput.add(tripPattern + "," + debugFare);
+        }
 
         return new FareBounds(fareForState, new TransferAllowance());
     }
@@ -215,7 +217,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         }
     }
 
-    private void buildDebugInformation(TIntList patterns, int fare) {
+    private String buildDebugInformation(TIntList patterns) {
         StringBuilder debugger = new StringBuilder();
         String delimiter = "";
 
@@ -247,10 +249,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             delimiter = "|";
         }
 
-        float debugFare = fare / 100.0f;
-        debugger.append(",").append(debugFare);
-
-        debugOutput.add(debugger.toString());
+        return debugger.toString();
     }
 
     @Override

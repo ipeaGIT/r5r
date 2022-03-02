@@ -33,26 +33,31 @@ points <- read_csv("~/Repos/r5r_fares/rio/points_rio_09_2019.csv") %>%
   mutate(unit = 1)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-# points_r8 <- h3jsr::get_parent(points$id, res = 8, simple = TRUE)
-# points_r8 <- unique(points_r8)
-# points_r8 <- h3jsr::h3_to_point(points_r8, simple = FALSE)
-# points_r8$id <- points_r8$h3_address
-# points_r8$unit <- 1
+points_r8 <- h3jsr::get_parent(points$id, res = 8, simple = TRUE)
+points_r8 <- unique(points_r8)
+points_r8 <- h3jsr::h3_to_point(points_r8, simple = FALSE)
+points_r8$id <- points_r8$h3_address
+points_r8$unit <- 1
 # area_sf <- h3jsr::h3_to_polygon(points$id, simple = FALSE) %>%
 #   summarise()
 
 # Pareto ------------------------------------------------------------------
 
 fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
+fare_settings <- setup_fare_calculator(r5r_core, base_fare = 1, by = "GENERIC")
 
+fare_settings$fares_per_mode$allow_same_route_transfer <- TRUE
+fare_settings$fares_per_mode$unlimited_transfers <- TRUE
 pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8.10,  8.55,  9.40,  10.00)
 
 fare_settings$debug_settings$output_file <- here::here("tests_marcus", "rio_fare_calculator_output.csv")
 
+points_sample <- sample_n(points_r8, 50)
+
 system.time(
   pareto_df <- pareto_frontier(r5r_core,
-                               origins = poi,
-                               destinations = poi,
+                               origins = points_sample,
+                               destinations = points_sample,
                                mode = c("WALK", "TRANSIT"),
                                departure_datetime = departure_datetime,
                                monetary_cost_cutoffs = pareto_cutoffs,
@@ -66,7 +71,18 @@ system.time(
                                verbose = FALSE,
                                progress = TRUE)
 )
-rio_debug_v7 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+
+rio_debug_1 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_debug_anterior.csv"))
+rio_debug_2 <- read_csv(here::here("tests_marcus", "rio_fare_calculator_output.csv"))
+
+rio_debug_df <-full_join(rio_debug_1, rio_debug_2, by="pattern") %>%
+  mutate(fare.x = fare.x / 100)
+View(rio_debug_df)
+
+pareto_cutoffs <- c(rio_debug_df$fare.x, unique(rio_debug_df$fare.y))
+pareto_cutoffs <- unique(pareto_cutoffs)
+pareto_cutoffs <- pareto_cutoffs[!is.na(pareto_cutoffs)]
+pareto_cutoffs <- sort(pareto_cutoffs)
 
 
 pareto_df %>%

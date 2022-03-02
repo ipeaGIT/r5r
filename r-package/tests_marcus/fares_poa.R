@@ -13,6 +13,7 @@ data_path <- "~/Repos/r5r_fares/poa"
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 
 
+
 # load origin/destination points
 
 poi <- read.csv(system.file("extdata/poa/poa_points_of_interest.csv", package = "r5r"))
