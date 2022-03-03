@@ -44,11 +44,11 @@ points_r8$unit <- 1
 # Pareto ------------------------------------------------------------------
 
 fare_settings <- read_fare_calculator(file_path = here::here("tests_marcus", "rio_fares_v3.zip"))
-fare_settings <- setup_fare_calculator(r5r_core, base_fare = 1, by = "GENERIC")
+pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8.10,  8.55,  9.40,  10.00)
 
+fare_settings <- setup_fare_calculator(r5r_core, base_fare = 0, by = "GENERIC")
 fare_settings$fares_per_mode$allow_same_route_transfer <- TRUE
 fare_settings$fares_per_mode$unlimited_transfers <- TRUE
-pareto_cutoffs <- c(0, 3.80,  4.05,  4.70,  5.00,  6.05,  6.50,  7.10,  7.60,  8.10,  8.55,  9.40,  10.00)
 
 fare_settings$debug_settings$output_file <- here::here("tests_marcus", "rio_fare_calculator_output.csv")
 
@@ -56,8 +56,8 @@ points_sample <- sample_n(points_r8, 50)
 
 system.time(
   pareto_df <- pareto_frontier(r5r_core,
-                               origins = points_sample,
-                               destinations = points_sample,
+                               origins = poi,
+                               destinations = poi,
                                mode = c("WALK", "TRANSIT"),
                                departure_datetime = departure_datetime,
                                monetary_cost_cutoffs = pareto_cutoffs,
@@ -86,16 +86,125 @@ pareto_cutoffs <- sort(pareto_cutoffs)
 
 
 pareto_df %>%
+  # filter(from_id == "catete") %>%
   mutate(percentile = factor(percentile),
          pair = paste(from_id, to_id)) %>%
   pivot_longer(cols=starts_with("monetary"), names_to = "mon", values_to="cost") %>%
   ggplot(aes(x=cost, y=travel_time, color=pair)) +
   geom_step() +
   geom_point() +
+  # geom_text(aes(label = paste0("(", monetary_cost, ",", travel_time, ")"))) +
   # geom_path() +
   # scale_color_brewer(palette = "Set1") +
-  # scale_x_continuous(breaks = 0:10, limits = c(0, 10)) +
-  # scale_y_continuous(breaks = seq(0, 180, 30), limits = c(0, 180)) +
+  scale_x_continuous(breaks = 0:10, limits = c(0, 10)) +
+  scale_y_continuous(breaks = seq(0, 180, 30), limits = c(0, 180)) +
   theme(legend.position = "none") +
   facet_wrap(~pair)
+
+write_csv(rio_debug_df, "rio_debug_novo.csv")
+
+
+##########
+density_test <- function(t) {
+  ttm_1 <- travel_time_matrix(r5r_core,
+                              origins = points_r8,
+                              destinations = points_r8,
+                              mode = c("WALK", "TRANSIT"),
+                              departure_datetime = departure_datetime,
+                              fare_calculator_settings = NULL,
+                              max_trip_duration = 180,
+                              max_walk_dist = t,
+                              time_window = 1, #30,
+                              percentiles = 50, # c(5, 50, 95),
+                              max_rides = 3,
+                              draws_per_minute = 1L,
+                              verbose = FALSE,
+                              progress = TRUE)
+
+  ttm_2 <- travel_time_matrix(r5r_core,
+                              origins = points_r8,
+                              destinations = points_r8,
+                              mode = c("WALK", "TRANSIT"),
+                              departure_datetime = departure_datetime,
+                              max_fare = 50,
+                              fare_calculator_settings = fare_settings,
+                              max_trip_duration = 180,
+                              max_walk_dist = t,
+                              time_window = 1, #30,
+                              percentiles = 50, # c(5, 50, 95),
+                              max_rides = 3,
+                              draws_per_minute = 1L,
+                              verbose = FALSE,
+                              progress = TRUE)
+
+
+  ttm_c <-
+    rbind(mutate(ttm_1, method = "null"),
+          mutate(ttm_2, method = "normal")
+    )
+
+
+  unit_access <- ttm_c %>%
+    filter(travel_time <= 120) %>%
+    count(from_id, method)
+  # pivot_wider(names_from = method, values_from = n)
+
+  p <- unit_access %>%
+    ggplot(aes(x=n, fill = method)) +
+    geom_density(alpha = 0.5) +
+    labs(title = paste0("max_walk_dist = ", t))
+
+  return(p)
+
+}
+
+plots <- map(c(500, 1000, 1500, 2000, 3000, 5000),
+    density_test)
+
+library(patchwork)
+
+wrap_plots(plots, ncol = 2) +
+  patchwork::plot_annotation(title = "Before Fix",
+                             subtitle = "Density plots of unitary accessibility")
+
+density_test(500)
+density_test(1000)
+density_test(1500)
+density_test(2000)
+density_test(3000)
+density_test(5000)
+
+
+unit_access
+
+unit_access_b %>%
+  ggplot(aes(x=n, fill = method)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "max_walk_dist = 2500")
+facet_wrap(~method)
+
+
+ttm_b <- full_join(ttm_1, ttm_2, by=c("from_id", "to_id")) %>%
+  full_join(ttm_3, by=c("from_id", "to_id")) %>%
+  mutate(diff_1 = travel_time.x - travel_time.y,
+         diff_2 = travel_time.x - travel_time)
+
+ttm_b %>%
+  filter(is.na(travel_time.y)) %>% View()
+
+pt <- ttm_b %>%
+  filter(is.na(travel_time.y)) %>%
+  count(from_id) %>%
+  filter(n > 50)
+
+View(ttm_b)
+
+ttm_b %>%
+  pivot_longer(cols = starts_with("travel_time"))
+
+points_r8 %>%
+  # filter(h3_address == "88a8a062b3fffff") %>%
+  filter(h3_address %in% pt$from_id) %>%
+  mapview::mapview(crs = 4326)
+
 

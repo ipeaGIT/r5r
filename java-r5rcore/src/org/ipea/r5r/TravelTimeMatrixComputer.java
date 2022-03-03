@@ -5,6 +5,7 @@ import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.R5.R5TravelTimeComputer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class TravelTimeMatrixComputer extends R5Process {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
+        TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
