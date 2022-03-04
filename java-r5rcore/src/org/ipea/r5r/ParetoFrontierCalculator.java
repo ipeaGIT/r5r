@@ -26,9 +26,8 @@ public class ParetoFrontierCalculator  extends R5Process {
         Map<Float, OneOriginResult> travelTimeResults = new HashMap<>();
 
         for (float fareCutoff : this.routingProperties.fareCutoffs) {
-            request.maxFare = Math.round(fareCutoff * 100.0f);
+            request.maxFare = (fareCutoff >= 0) ? Math.round(fareCutoff * 100.0f) : Integer.MAX_VALUE;
             OneOriginResult results = computer.computeTravelTimes();
-
             travelTimeResults.put(fareCutoff, results);
         }
 

@@ -124,7 +124,7 @@ public class R5RCore {
     }
 
     public void setMaxFare(float maxFare) {
-        this.routingProperties.maxFare = maxFare;
+        this.routingProperties.maxFare = (maxFare >= 0) ? maxFare : Integer.MAX_VALUE;
     }
 
     public void setFareCutoffs(float maxFare) {

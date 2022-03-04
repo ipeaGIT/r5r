@@ -164,7 +164,7 @@ plots <- map(c(500, 1000, 1500, 2000, 3000, 5000),
 library(patchwork)
 
 wrap_plots(plots, ncol = 2) +
-  patchwork::plot_annotation(title = "Before Fix",
+  patchwork::plot_annotation(title = "After Fix",
                              subtitle = "Density plots of unitary accessibility")
 
 density_test(500)
