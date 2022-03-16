@@ -7,7 +7,7 @@
 #' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
 #'                             data.frame containing the columns 'id', 'lon',
 #'                             'lat'.
-#' @param opportunities_colname string. The column name in the `destinations`
+#' @param opportunities_colnames string. The column names in the `destinations`
 #'        input that tells the number of opportunities in each location.
 #'        Defaults to "opportunities".
 #' @param mode string. Transport modes allowed for the trips. Defaults to
@@ -223,7 +223,7 @@
 #'   access <- accessibility(r5r_core,
 #'                           origins = points,
 #'                           destinations = points,
-#'                           opportunities_colname = "schools",
+#'                           opportunities_colnames = "schools",
 #'                           mode = "WALK",
 #'                           cutoffs = c(25, 30),
 #'                           max_trip_duration = 30,
@@ -237,7 +237,7 @@
 accessibility <- function(r5r_core,
                           origins,
                           destinations,
-                          opportunities_colname = "opportunities",
+                          opportunities_colnames = "opportunities",
                           mode = "WALK",
                           mode_egress = "WALK",
                           departure_datetime = Sys.time(),
@@ -303,11 +303,11 @@ accessibility <- function(r5r_core,
   destinations <- assert_points_input(destinations, "destinations")
 
   # opportunities
-  checkmate::assert_character(opportunities_colname)
-  checkmate::assert_names(names(destinations), must.include = opportunities_colname,
+  checkmate::assert_character(opportunities_colnames)
+  checkmate::assert_names(names(destinations), must.include = opportunities_colnames,
                           .var.name = "destinations")
 
-  opportunities_data <- lapply(opportunities_colname, function(colname) {
+  opportunities_data <- lapply(opportunities_colnames, function(colname) {
     ## check if provided column contains numeric values only
     checkmate::assert_numeric(destinations[[colname]])
 
@@ -393,7 +393,7 @@ accessibility <- function(r5r_core,
   to_lon_arr <- rJava::.jarray(destinations$lon)
 
 
-  opportunities_names <- rJava::.jarray(opportunities_colname)
+  opportunities_names <- rJava::.jarray(opportunities_colnames)
   opportunities_values <- rJava::.jarray(opportunities_data, "[I")
 
   accessibility <- r5r_core$accessibility(from_id_arr,

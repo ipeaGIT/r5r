@@ -79,7 +79,7 @@ public class AccessibilityEstimator extends R5Process {
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame(nRows);
-        travelTimesTable.addStringColumn("from_id", fromId);
+        travelTimesTable.addStringColumn("id", fromId);
         travelTimesTable.addStringColumn("opportunity", "");
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("cutoff", 0);

@@ -8,7 +8,7 @@ accessibility(
   r5r_core,
   origins,
   destinations,
-  opportunities_colname = "opportunities",
+  opportunities_colnames = "opportunities",
   mode = "WALK",
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
@@ -39,7 +39,7 @@ accessibility(
 data.frame containing the columns 'id', 'lon',
 'lat'.}
 
-\item{opportunities_colname}{string. The column name in the \code{destinations}
+\item{opportunities_colnames}{string. The column names in the \code{destinations}
 input that tells the number of opportunities in each location.
 Defaults to "opportunities".}
 
@@ -300,7 +300,7 @@ points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
   access <- accessibility(r5r_core,
                           origins = points,
                           destinations = points,
-                          opportunities_colname = "schools",
+                          opportunities_colnames = "schools",
                           mode = "WALK",
                           cutoffs = c(25, 30),
                           max_trip_duration = 30,
