@@ -164,10 +164,9 @@ public class TravelTimeMatrixComputer extends R5Process {
 
         request.percentiles = this.routingProperties.percentiles;
         request.includePathResults = this.routingProperties.travelTimesBreakdown;
-        request.nPathsPerTarget = 1;
 
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = destinationPoints;
+        request.destinationPointSetKeys = this.opportunities;
+        request.destinationPointSets = this.destinationPoints;
 
         return request;
     }

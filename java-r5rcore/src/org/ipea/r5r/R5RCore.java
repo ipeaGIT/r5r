@@ -428,71 +428,18 @@ public class R5RCore {
 
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
 
-    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
-                                                                           String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
-                                                                           String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
     public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                           String toId, double toLat, double toLon,  int opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] toIds = {toId};
-        double[] toLats = {toLat};
-        double[] toLons = {toLon};
-        int[] opportunitiesVector = {opportunities};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
-                                                                           String toId, double toLat, double toLon, int opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        String[] toIds = {toId};
-        double[] toLats = {toLat};
-        double[] toLons = {toLon};
-        int[] opportunitiesVector = {opportunities};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime,  maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                        String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                        String directModes, String transitModes, String accessModes, String egressModes,
-                                                                        String date, String departureTime,
-                                                                        int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
+                                    String[] toIds, double[] toLats, double[] toLons,
+                                    String[] opportunities, int[][] opportunityCounts,
+                                    String decayFunction, double decayValue,
+                                    String directModes, String transitModes, String accessModes, String egressModes,
+                                    String date, String departureTime,
+                                    int maxWalkTime, int maxBikeTime, int maxTripDuration)
+            throws ExecutionException, InterruptedException {
 
         AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         accessibilityEstimator.setOrigins(fromIds, fromLats, fromLons);
-        accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities);
+        accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
         accessibilityEstimator.setDecayFunction(decayFunction, decayValue);
         accessibilityEstimator.setModes(directModes, accessModes, transitModes, egressModes);
         accessibilityEstimator.setDepartureDateTime(date, departureTime);

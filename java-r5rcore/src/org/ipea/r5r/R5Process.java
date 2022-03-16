@@ -37,10 +37,11 @@ public abstract class R5Process {
     protected String[] toIds;
     protected double[] toLats;
     protected double[] toLons;
-    protected int[] opportunities;
+    protected String[] opportunities;
+    protected int[][] opportunityCounts;
     protected int nDestinations;
 
-    protected FreeFormPointSet destinationPoints;
+    protected FreeFormPointSet[] destinationPoints;
 
     protected EnumSet<LegMode> directModes;
     protected EnumSet<TransitModes> transitModes;
@@ -99,54 +100,61 @@ public abstract class R5Process {
     }
 
     protected void buildDestinationPointSet() {
-        ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-        DataOutputStream pointStream = new DataOutputStream(dataStream);
+        destinationPoints = new FreeFormPointSet[this.opportunities.length];
 
-        try {
-            pointStream.writeInt(toIds.length);
-            for (String toId : toIds) {
-                pointStream.writeUTF(toId);
-            }
-            for (double toLat : toLats) {
-                pointStream.writeDouble(toLat);
-            }
-            for (double toLon : toLons) {
-                pointStream.writeDouble(toLon);
-            }
-            for (int opportunity : opportunities) {
-                pointStream.writeDouble(opportunity);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        for (int i = 0; i < this.opportunities.length; i++) {
+            ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            DataOutputStream pointStream = new DataOutputStream(dataStream);
 
-        ByteArrayInputStream pointsInput = new ByteArrayInputStream(dataStream.toByteArray());
+            try {
+                pointStream.writeInt(toIds.length);
+                for (String toId : toIds) {
+                    pointStream.writeUTF(toId);
+                }
+                for (double toLat : toLats) {
+                    pointStream.writeDouble(toLat);
+                }
+                for (double toLon : toLons) {
+                    pointStream.writeDouble(toLon);
+                }
+                for (int opportunity : opportunityCounts[i]) {
+                    pointStream.writeDouble(opportunity);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            destinationPoints = new FreeFormPointSet(pointsInput);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            ByteArrayInputStream pointsInput = new ByteArrayInputStream(dataStream.toByteArray());
 
-        if (!this.directModes.isEmpty()) {
-            for (LegMode mode : this.directModes) {
-                transportNetwork.linkageCache.getLinkage(destinationPoints, transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
+            try {
+                destinationPoints[i] = new FreeFormPointSet(pointsInput);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!this.directModes.isEmpty()) {
+                for (LegMode mode : this.directModes) {
+                    transportNetwork.linkageCache.getLinkage(destinationPoints[i], transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
+                }
             }
         }
     }
 
     public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
-        int[] opportunities = new int[toIds.length];
-        for (int i = 0; i < toIds.length; i++) opportunities[i] = 0;
+        int[][] opportunityCounts = new int[1][toIds.length];
+        for (int i = 0; i < toIds.length; i++) opportunityCounts[0][i] = 0;
 
-        setDestinations(toIds, toLats, toLons, opportunities);
+        String[] opportunities = new String[]{"all"};
+
+        setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
     }
 
-    public void setDestinations(String[] toIds, double[] toLats, double[] toLons, int[] opportunities) {
+    public void setDestinations(String[] toIds, double[] toLats, double[] toLons, String[] opportunities, int[][] opportunityCounts) {
         this.toIds = toIds;
         this.toLats = toLats;
         this.toLons = toLons;
         this.opportunities = opportunities;
+        this.opportunityCounts = opportunityCounts;
 
         this.nDestinations = toIds.length;
 

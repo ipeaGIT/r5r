@@ -55,7 +55,7 @@ public class ParetoFrontierCalculator  extends R5Process {
     }
 
     private void populateDataFrame(Map<Float, OneOriginResult> travelTimeResults, RDataFrame travelTimesTable) {
-        for (int destination = 0; destination < destinationPoints.featureCount(); destination++) {
+        for (int destination = 0; destination < this.nDestinations; destination++) {
             for (int percentileIndex = 0; percentileIndex < this.routingProperties.percentiles.length; percentileIndex++) {
 
                 boolean first = true;
@@ -92,8 +92,8 @@ public class ParetoFrontierCalculator  extends R5Process {
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = super.buildRequest(index);
 
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = destinationPoints;
+        request.destinationPointSetKeys = this.opportunities;
+        request.destinationPointSets = destinationPoints;
 
         return request;
     }

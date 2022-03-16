@@ -58,16 +58,19 @@ public class AccessibilityEstimator extends R5Process {
     private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
         int[][][] accessibility = travelTimeResults.accessibility.getIntValues();
 
+        int nOpportunities = this.opportunities.length;
         int nPercentiles = routingProperties.percentiles.length;
         int nCutoffs = routingProperties.cutoffs.length;
 
-
-        for (int p = 0; p < nPercentiles; p++) {
-            for (int c = 0; c < nCutoffs; c++) {
-                travelTimesTable.append();
-                travelTimesTable.set("percentile", routingProperties.percentiles[p]);
-                travelTimesTable.set("cutoff", routingProperties.cutoffs[c]);
-                travelTimesTable.set("accessibility", accessibility[0][p][c]);
+        for (int o = 0; o < nOpportunities; o++) {
+            for (int p = 0; p < nPercentiles; p++) {
+                for (int c = 0; c < nCutoffs; c++) {
+                    travelTimesTable.append();
+                    travelTimesTable.set("opportunity", this.opportunities[o]);
+                    travelTimesTable.set("percentile", routingProperties.percentiles[p]);
+                    travelTimesTable.set("cutoff", routingProperties.cutoffs[c]);
+                    travelTimesTable.set("accessibility", accessibility[o][p][c]);
+                }
             }
         }
     }
@@ -77,6 +80,7 @@ public class AccessibilityEstimator extends R5Process {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame(nRows);
         travelTimesTable.addStringColumn("from_id", fromId);
+        travelTimesTable.addStringColumn("opportunity", "");
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("cutoff", 0);
         travelTimesTable.addIntegerColumn("accessibility", 0);
@@ -88,10 +92,8 @@ public class AccessibilityEstimator extends R5Process {
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = super.buildRequest(index);
 
-        request.destinationPointSetKeys = new String[1];
-        request.destinationPointSetKeys[0] = "opportunities";
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = destinationPoints;
+        request.destinationPointSetKeys = this.opportunities;
+        request.destinationPointSets = this.destinationPoints;
 
         request.percentiles = this.routingProperties.percentiles;
         request.recordAccessibility = true;

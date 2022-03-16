@@ -306,8 +306,17 @@ accessibility <- function(r5r_core,
   checkmate::assert_character(opportunities_colname)
   checkmate::assert_names(names(destinations), must.include = opportunities_colname,
                           .var.name = "destinations")
-  checkmate::assert_numeric(destinations[[opportunities_colname]])
-  opportunities_data <- as.integer(destinations[[opportunities_colname]])
+
+  opportunities_data <- lapply(opportunities_colname, function(colname) {
+    ## check if provided column contains numeric values only
+    checkmate::assert_numeric(destinations[[colname]])
+
+    ## convert to Java compatible array
+    opp_array <- as.integer(destinations[[colname]])
+    opp_array <- rJava::.jarray(opp_array)
+
+    return(opp_array)
+  })
 
   # time window
   checkmate::assert_numeric(time_window)
@@ -373,13 +382,28 @@ accessibility <- function(r5r_core,
 
   # call r5r_core method ----------------------------------------------------
 
-  accessibility <- r5r_core$accessibility(origins$id,
-                                          origins$lat,
-                                          origins$lon,
-                                          destinations$id,
-                                          destinations$lat,
-                                          destinations$lon,
-                                          opportunities_data,
+  ## wrap r5r_core inputs in arrays
+  ## this helps to simplify the Java code
+  from_id_arr <- rJava::.jarray(origins$id)
+  from_lat_arr <- rJava::.jarray(origins$lat)
+  from_lon_arr <- rJava::.jarray(origins$lon)
+
+  to_id_arr <- rJava::.jarray(destinations$id)
+  to_lat_arr <- rJava::.jarray(destinations$lat)
+  to_lon_arr <- rJava::.jarray(destinations$lon)
+
+
+  opportunities_names <- rJava::.jarray(opportunities_colname)
+  opportunities_values <- rJava::.jarray(opportunities_data, "[I")
+
+  accessibility <- r5r_core$accessibility(from_id_arr,
+                                          from_lat_arr,
+                                          from_lon_arr,
+                                          to_id_arr,
+                                          to_lat_arr,
+                                          to_lon_arr,
+                                          opportunities_names,
+                                          opportunities_values,
                                           decay_list$fun,
                                           decay_list$value,
                                           mode_list$direct_modes,
