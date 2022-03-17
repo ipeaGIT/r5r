@@ -190,7 +190,7 @@ test_that("output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$from_id ) == "character")
+  expect_true(typeof(result_df_input$id ) == "character")
   expect_true(typeof(result_df_input$accessibility) == "integer")
 
 
