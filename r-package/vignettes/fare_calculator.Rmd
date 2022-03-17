@@ -1,18 +1,27 @@
 ---
-title: "Fare Calculator"
-author: "MS"
-date: "2/3/2022"
-output: html_document
+title: 'Configuring and Using Fare Calculators'
+author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+abstract: "This vignette shows how to configure and use custom fare calculators in travel times and accessibility estimations in the `r5r` package."
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{Configuring and Using Fare Calculators} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
 
 ```{r message=FALSE, include=FALSE}
 options(java.parameters = "-Xmx2G")
 
-devtools::load_all(".")
+library(r5r)
 library(tidyverse)
 library(sf)
 library(data.table)
