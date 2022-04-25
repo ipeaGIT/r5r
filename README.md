@@ -30,10 +30,7 @@ could also become a `python` library.
 
 ## Installation
 
-To use `r5r`, you need to have *Java SE Development Kit 11* installed on your computer. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
-- [OpenJDK](http://jdk.java.net/java-se-ri/11)
-- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-
+You can install `r5r`:
 ```R
 # From CRAN
   install.packages("r5r")
@@ -43,6 +40,17 @@ To use `r5r`, you need to have *Java SE Development Kit 11* installed on your co
   utils::remove.packages('r5r')
   devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
   library(r5r)
+
+```
+
+Please bear in mind that you need to have *Java SE Development Kit 11* installed on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
+- [OpenJDK](http://jdk.java.net/java-se-ri/11)
+- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+
+If you don't know what version of Java you have installed on your computer, you can check it by running this on R console.
+```
+  rJava::.jinit()
+  rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 ```
 
