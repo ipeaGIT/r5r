@@ -55,6 +55,12 @@
 #' @param shortest_path logical. Whether the function should only return the
 #'                      fastest route alternative (the default) or multiple
 #'                      alternatives.
+#' @param all_to_all logical. By default (`FALSE`), the functions queries routes
+#'                   between the the 1st row of origins to the 1st row of
+#'                   destinations, then the 2nd row of origins to the 2nd row of
+#'                   destinations, and so on. If `all_to_all` is set to `TRUE`,
+#'                   the function will query routes between all possible
+#'                   combinations of origin-destination pairs.
 #' @param n_threads numeric. The number of threads to use in parallel computing.
 #'                  Defaults to use all available threads (Inf).
 #' @param verbose logical. `TRUE` to show detailed output messages (the default).
@@ -172,6 +178,7 @@ detailed_itineraries <- function(r5r_core,
                                  max_rides = 3,
                                  max_lts = 2,
                                  shortest_path = TRUE,
+                                 all_to_all = FALSE,
                                  n_threads = Inf,
                                  verbose = TRUE,
                                  progress = TRUE,
@@ -225,6 +232,14 @@ detailed_itineraries <- function(r5r_core,
   # in which case the smaller dataframe is expanded
   origins      <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
+
+
+  # check if user wants to route all possible combinations of origin-destination pairs
+  if( all_to_all == TRUE){
+    df <- get_all_od_combinations(origins, destinations)
+         origins <- df[, .('id'=id_orig, 'lon'=lon_orig,'lat'=lat_orig)]
+    destinations <- df[, .('id'=id_dest, 'lon'=lon_dest,'lat'=lat_dest)]
+    }
 
   n_origs <- nrow(origins)
   n_dests <- nrow(destinations)

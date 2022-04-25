@@ -53,25 +53,28 @@ points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 
 # list.files(file.path(.libPaths()[1], "r5r", "jar"))
 
 
+############## get_all_od_combinations ------------------------------
 
 library(r5r)
 library(data.table)
 
+points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
+
+origins = destinations = points
 
 # function
 get_all_od_combinations <- function(origins, destinations){
 
-        # all possible id combinations
-        base <- expand.grid(origins$id, destinations$id)
+        # cross join to get all possible id combinations
+        base <- CJ(origins$id, destinations$id, unique = TRUE)
 
         # rename df
-        setDT(base)
-        setnames(base, 'Var1', 'idorig')
-        setnames(base, 'Var2', 'iddest')
+        setnames(base, 'V1', 'id_orig')
+        setnames(base, 'V2', 'id_dest')
 
         # bring spatial coordinates from origin and destination
-        base[origins, on=c('idorig'='id'), c('lon_orig', 'lat_orig') := list(i.lon, i.lat)]
-        base[destinations, on=c('iddest'='id'), c('lon_dest', 'lat_dest') := list(i.lon, i.lat)]
+        base[origins, on=c('id_orig'='id'), c('lon_orig', 'lat_orig') := list(i.lon, i.lat)]
+        base[destinations, on=c('id_dest'='id'), c('lon_dest', 'lat_dest') := list(i.lon, i.lat)]
 
         return(base)
         }

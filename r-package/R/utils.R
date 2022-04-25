@@ -426,6 +426,36 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
 
 
+
+
+
+
+#' Get all possible combinations of origin-destination pairs
+#'
+#' @param origins A data.frame with columns `id`, `lon`, `lat`
+#' @param destinations A data.frame with columns `id`, `lon`, `lat`
+#'
+#' @return A data.frame with all possible combinations of origins and destinations.
+#'
+#' @family support functions
+get_all_od_combinations <- function(origins, destinations){
+
+  # cross join to get all possible id combinations
+  df <- data.table::CJ(origins$id, destinations$id, unique = TRUE)
+
+  # rename df
+  data.table::setnames(df, 'V1', 'id_orig')
+  data.table::setnames(df, 'V2', 'id_dest')
+
+  # bring spatial coordinates from origin and destination
+  df[origins, on=c('id_orig'='id'), c('lon_orig', 'lat_orig') := list(i.lon, i.lat)]
+  df[destinations, on=c('id_dest'='id'), c('lon_dest', 'lat_dest') := list(i.lon, i.lat)]
+
+  return(df)
+}
+
+
+
 #' Get most recent JAR file url from metadata
 #'
 #' Returns the most recent JAR file url from metadata, depending on the version.

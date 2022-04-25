@@ -1,6 +1,16 @@
 # log history of r5r package development
 
 
+
+-------------------------------------------------------
+# r5r v0.7.09 dev
+
+
+* Minor changes
+
+  - The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query. By default (`FALSE`), the functions queries routes between the the 1st row of origins to the 1st row of destinations, then the 2nd row of origins to the 2nd row of destinations, and so on. Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
+
+
 -------------------------------------------------------
 # r5r v0.7.0
 

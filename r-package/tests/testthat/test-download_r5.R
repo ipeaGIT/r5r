@@ -17,7 +17,6 @@ test_that("download_r5 - expected behavior", {
 
 })
 
-
 # Expected errors
 test_that("download_r5 - expected errors", {
 

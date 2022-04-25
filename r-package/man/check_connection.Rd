@@ -24,6 +24,7 @@ Other support functions:
 \code{\link{assert_points_input}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{find_snap}()},
+\code{\link{get_all_od_combinations}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
 \code{\link{set_max_lts}()},

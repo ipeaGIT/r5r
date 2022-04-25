@@ -1,7 +1,7 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 0.7.0
+Version: 0.7.09
 Authors@R: c(
             person(given="Marcus", family="Saraiva", email="marcus.saraiva@gmail.com", role="aut", comment = c(ORCID = "0000-0001-6218-2338")),
             person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="cre", comment = c(ORCID = "0000-0003-2125-7465")),
@@ -27,7 +27,7 @@ Description: Rapid realistic routing on multimodal transport networks (walk,
              confirm the R5 version implied by the Conveyal user manual (see
              <https://docs.conveyal.com/changelog>) corresponds with the R5 version
              that r5r depends on.
-Date: 2022-02-11
+Date: 2022-04-25
 URL: https://github.com/ipeaGIT/r5r
 BugReports: https://github.com/ipeaGIT/r5r/issues
 License: MIT + file LICENSE

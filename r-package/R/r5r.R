@@ -34,7 +34,11 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'segment_duration', 'total_duration', 'wait', 'release_date', 'con',
     "start_lon", "start_lat", "end_lon", "end_lat", "slope", "lat", "lon",
     "walk_multiplier", "bike_multiplier", "found", ".", "%>%", ":=", "%like%",
-    "%chin%", "set"))
+    "%chin%", "set", 'i.lat', 'i.lon', 'id_dest', 'id_orig',
+    'lat_dest', 'lat_orig',
+    'lon_dest', 'lon_orig'))
+
+
 
 
 .onLoad = function(lib, pkg) {

@@ -19,6 +19,7 @@ detailed_itineraries(
   max_rides = 3,
   max_lts = 2,
   shortest_path = TRUE,
+  all_to_all = FALSE,
   n_threads = Inf,
   verbose = TRUE,
   progress = TRUE,
@@ -90,6 +91,13 @@ See details for more information.}
 \item{shortest_path}{logical. Whether the function should only return the
 fastest route alternative (the default) or multiple
 alternatives.}
+
+\item{all_to_all}{logical. By default (\code{FALSE}), the functions queries routes
+between the the 1st row of origins to the 1st row of
+destinations, then the 2nd row of origins to the 2nd row of
+destinations, and so on. If \code{all_to_all} is set to \code{TRUE},
+the function will query routes between all possible
+combinations of origin-destination pairs.}
 
 \item{n_threads}{numeric. The number of threads to use in parallel computing.
 Defaults to use all available threads (Inf).}
