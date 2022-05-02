@@ -1,5 +1,5 @@
 
-set_road_speed <- function(path,
+set_road_speed <- function(data_path,
                            motorway = NULL
                          , motorway_link = NULL
                          , trunk = NULL
@@ -73,7 +73,7 @@ points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))[
 path <- system.file("extdata/poa", package = "r5r")
 
 # set road speeds
-set_road_speed(path = path,
+set_road_speed(data_path = path,
                primary = 666,
                secondary = 666,
                trunk = 666,
