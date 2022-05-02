@@ -1,17 +1,21 @@
-#' Calculate pareto time matrix between origin destination pairs
+#' Calculate Pareto frontier of the travel matrix between origin destination pairs
+#' considering combinations travel time and monetary cost.
 #'
-#' @description Fast computation of travel time estimates between one or
-#'              multiple origin destination pairs.
+#' @description Fast computation of the Pareto frontier of the travel matrix
+#'              between origin destination pairs'considering combinations travel
+#'              time and monetary cost. It can be used to analyze the Pareto frontier
+#'              between one or multiple origin destination pairs.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
 #'                             data.frame containing the columns 'id', 'lon',
 #'                             'lat'.
 #' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             "WALK". See details for other options.
+#'             `c("WALK", "TRANSIT")`. See details for other options.
 #' @param mode_egress string. Transport mode used after egress from public
 #'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK".
+#'                    Defaults to "WALK". The function does not consider the
+#'                    monetary cost of 'CAR' as egress mode.
 #' @param departure_datetime POSIXct object. If working with public transport
 #'                           networks, please check \code{calendar.txt} within
 #'                           the GTFS file for valid dates. See details for
@@ -100,7 +104,13 @@
 #' destination pairs by a given transport mode. Note that origins/destinations
 #' that were beyond the maximum travel time, and/or origins that were far from
 #' the street network are not returned in the data.table.
-#'
+
+
+#' Calculate Pareto frontier of the travel matrix between origin destination pairs
+#' considering combinations travel time and monetary cost.
+
+
+
 #' @details
 #'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:
@@ -178,23 +188,20 @@
 #' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 #'
 #' # estimate travel time matrix
-#' ttm <- travel_time_matrix(r5r_core,
+#' pf <- pareto_frontier(r5r_core,
 #'                           origins = points,
 #'                           destinations = points,
 #'                           mode = c("WALK", "TRANSIT"),
-#'                           departure_datetime = departure_datetime,
-#'                           max_walk_dist = Inf,
-#'                           max_trip_duration = 120L)
+#'                           departure_datetime = departure_datetime)
 #'
 #' stop_r5(r5r_core)
 #'
 #' }
 #' @export
-
 pareto_frontier <- function(r5r_core,
                             origins,
                             destinations,
-                            mode = "WALK",
+                            mode = c("WALK", "TRANSIT"),
                             mode_egress = "WALK",
                             departure_datetime = Sys.time(),
                             time_window = 1L,
