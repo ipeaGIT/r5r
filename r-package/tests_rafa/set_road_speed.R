@@ -1,4 +1,55 @@
-
+#' Set custom road speed for vehicles
+#'
+#' @description
+#' By default, R5 considers that vehicles travel at the speed limit allowed on
+#' each type of road, as informed on OpenStreetMap.pbf data. This `set_road_speed()`
+#' function allows users to set a custom speed for different types of roads. The
+#' user needs to run this function before building the network with `setup_r5()`,
+#' and then `set_road_speed()` will save a `build-config.json` file to the data
+#' path, which will be picked up by R5 when building the network.
+#'
+#' @param data_path character string, the directory where data inputs are stored
+#'                  and where the built `network.dat` will be saved.
+#' @param motorway numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param motorway_link numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param trunk numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param trunk_link numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param primary numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param primary_link numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param secondary numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param secondary_link numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param tertiary numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param tertiary_link numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param living_street numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param pedestrian numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param residential numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param unclassified numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param service numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param track numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param road numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#' @param defaultSpeed numeric. Speed in Km/h. Defaults to (`NULL`) use the speed recorded on OpenStreetMap.pdf data.
+#'
+#' @return The functions saves a `build-config.json` file to the data path.
+#'
+#' @family support functions
+#' @examples if (interactive()) {
+#' library(r5r)
+#'
+#'# Get data path
+#'path <- system.file("extdata/spo", package = "r5r")
+#'
+#'# set road speeds
+#'set_road_speed(data_path = path,
+#'                primary = 30,
+#'                secondary = 20,
+#'                trunk = 60,
+#'                defaultSpeed = 50)
+#'
+#' # build transport network
+#' r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
+#'
+#' }
+#' @export
 set_road_speed <- function(data_path,
                            motorway = NULL
                          , motorway_link = NULL
