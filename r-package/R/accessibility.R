@@ -33,55 +33,6 @@
 #'                when using the 'fixed exponential' function.
 #' @param decay_value numeric. Extra parameter to be passed to the selected
 #'                `decay_function`.
-#' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
-#'                      and egress the transit network, or to make transfers
-#'                      within the network. Defaults to no restrictions as long
-#'                      as `max_trip_duration` is respected. The max distance is
-#'                      considered separately for each leg (e.g. if you set
-#'                      `max_walk_dist` to 1000, you could potentially walk up
-#'                      to 1 km to reach transit, and up to _another_  1 km to
-#'                      reach the destination after leaving transit). Obs: if you
-#'                      want to set the maximum walking distance considering
-#'                      walking-only trips you have to set the `max_trip_duration`
-#'                      accordingly (e.g. to set a distance of 1 km assuming a
-#'                      walking speed of 3.6 km/h you have to set `max_trip_duration = 1 / 3.6 * 60`).
-#' @param max_bike_dist numeric. Maximum cycling distance (in meters) to access
-#'                      and egress the transit network. Defaults to no
-#'                      restrictions as long as `max_trip_duration` is respected.
-#'                      The max distance is considered separately for each leg
-#'                      (e.g. if you set `max_bike_dist` to 1000, you could
-#'                      potentially cycle up to 1 km to reach transit, and up
-#'                      to _another_ 1 km to reach the destination after leaving
-#'                      transit). Obs: if you want to set the maximum cycling
-#'                      distance considering cycling-only trips you have to set
-#'                      the `max_trip_duration` accordingly (e.g. to set a
-#'                      distance of 5 km assuming a cycling speed of 12 km/h you
-#'                      have to set `max_trip_duration = 5 / 12 * 60`).
-#' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
-#'                          to 120 minutes (2 hours).
-#' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
-#' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
-#' @param max_rides numeric. The max number of public transport rides allowed in
-#'                  the same trip. Defaults to 3.
-#' @param max_lts  numeric (between 1 and 4). The maximum level of traffic stress
-#'                 that cyclists will tolerate. A value of 1 means cyclists will
-#'                 only travel through the quietest streets, while a value of 4
-#'                 indicates cyclists can travel through any road. Defaults to 2.
-#'                 See details for more information.
-#' @param draws_per_minute numeric. number of Monte Carlo draws to perform per
-#'                         time window minute when calculating travel time
-#'                         matrices and when estimating accessibility. Defaults
-#'                         to 5. This would mean 300 draws in a 60 minutes time
-#'                         window, for example.
-#' @param n_threads numeric. The number of threads to use in parallel computing.
-#'                  Defaults to use all available threads (Inf).
-#' @param verbose logical. `TRUE` to show detailed output messages (the default).
-#' @param progress logical. `TRUE` to show a progress counter. Only works when
-#'                `verbose` is set to `FALSE`, so the progress counter does not
-#'                interfere with R5's output messages. Setting `progress` to `TRUE`
-#'                may impose a small penalty for computation efficiency, because
-#'                the progress counter must be synchronized among all active
-#'                threads.
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.
