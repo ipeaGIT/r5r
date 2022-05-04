@@ -26,24 +26,24 @@ detailed_itineraries(
 )
 }
 \arguments{
-\item{r5r_core}{rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\link{setup_r5}.}
 
-\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
-data.frame containing the columns 'id', 'lon',
-'lat'.}
+\item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
+\code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
-\item{mode}{string. Transport modes allowed for the trips. Defaults to
-"WALK". See details for other options.}
+\item{mode}{A character vector. The transport modes allowed for access,
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+details for other options.}
 
-\item{mode_egress}{string. Transport mode used after egress from public
-transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-Defaults to "WALK". Ignored when public transport is not
-used.}
+\item{mode_egress}{A character vector. The transport mode used after egress
+from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or \code{CAR}.
+Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{POSIXct object. If working with public transport
-networks, please check \code{calendar.txt} within
-the GTFS file for valid dates. See details for
-further information on how datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check the \code{calendar.txt} within your GTFS feeds for valid
+dates. Please see details for further information on how datetimes are
+parsed.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
 and egress the transit network, or to make transfers
@@ -112,8 +112,8 @@ between specified origins and destinations. Distances are in meters
 and travel times are in minutes.
 }
 \description{
-Fast computation of (multiple) detailed itineraries between one
-or many origin destination pairs.
+Fast computation of (multiple) detailed itineraries between one or many
+origin destination pairs.
 }
 \section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:

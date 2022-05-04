@@ -1,38 +1,21 @@
 #' Calculate travel time matrix between origin destination pairs
 #'
-#' @description Fast computation of travel time estimates between one or
-#'              multiple origin destination pairs.
+#' Fast computation of travel time estimates between one or multiple origin
+#' destination pairs.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
-#'                             data.frame containing the columns 'id', 'lon',
-#'                             'lat'.
-#' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             "WALK". See details for other options.
-#' @param mode_egress string. Transport mode used after egress from public
-#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK".
-#' @param departure_datetime POSIXct object. If working with public transport
-#'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates. See details for
-#'                           further information on how datetimes are parsed.
-#' @param time_window numeric. Time window in minutes for which r5r will
-#'                    calculate multiple travel time matrices departing each
-#'                    minute. By default, the number of simulations is 5 times
-#'                    the size of 'time_window' set by the user. Defaults window
-#'                    size to '1', the function only considers 5 departure
-#'                    times. This parameter is only used with frequency-based
-#'                    GTFS files. See details for further information.
-#' @param percentiles numeric vector. Defaults to '50', returning the median
-#'                    travel time for a given time_window. If a numeric vector is passed,
-#'                    for example c(25, 50, 75), the function will return
-#'                    additional columns with the travel times within percentiles
-#'                    of trips. For example, if the 25 percentile of trips between
-#'                    A and B is 15 minutes, this means that 25% of all trips
-#'                    taken between A and B within the set time window are shorter
-#'                    than 15 minutes. Only the first 5 cut points of the percentiles
-#'                    are considered. For more details, see R5 documentation at
-#'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
+#' @template common_arguments
+#' @template time_window_related_args
+#' @param percentiles An integer vector with length smaller than or equal to 5.
+#' Specifies the percentile to use when returning travel time estimates within
+#' the given time window. For example, if the 25th travel time percentile
+#' between A and B is 15 minutes, 25% of all trips taken between these points
+#' within the specified time window are shorter than 15 minutes. Defaults to
+#' 50, returning the median travel time. If a vector with length bigger than 1
+#' is passed, the output contains an additional column for each percentile
+#' specifying the percentile travel time estimate. each estimate. Due to
+#' upstream restrictions, only 5 percentiles can be specified at a time. For
+#' more details, please see R5 documentation at
+#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param breakdown logic. If `FALSE` (default), the function returns a simple
 #'                  output with columns origin, destination and travel time
 #'                  percentiles. If `TRUE`, r5r breaks down the trip information

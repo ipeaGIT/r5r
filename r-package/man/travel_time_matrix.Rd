@@ -31,42 +31,41 @@ travel_time_matrix(
 )
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\link{setup_r5}.}
 
-\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
-data.frame containing the columns 'id', 'lon',
-'lat'.}
+\item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
+\code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
-\item{mode}{string. Transport modes allowed for the trips. Defaults to
-"WALK". See details for other options.}
+\item{mode}{A character vector. The transport modes allowed for access,
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+details for other options.}
 
-\item{mode_egress}{string. Transport mode used after egress from public
-transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-Defaults to "WALK".}
+\item{mode_egress}{A character vector. The transport mode used after egress
+from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or \code{CAR}.
+Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{POSIXct object. If working with public transport
-networks, please check \code{calendar.txt} within
-the GTFS file for valid dates. See details for
-further information on how datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check the \code{calendar.txt} within your GTFS feeds for valid
+dates. Please see details for further information on how datetimes are
+parsed.}
 
-\item{time_window}{numeric. Time window in minutes for which r5r will
-calculate multiple travel time matrices departing each
-minute. By default, the number of simulations is 5 times
-the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure
-times. This parameter is only used with frequency-based
-GTFS files. See details for further information.}
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple travel time matrices departing each minute. Defaults
+to 1 minute. This parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table.}
 
-\item{percentiles}{numeric vector. Defaults to '50', returning the median
-travel time for a given time_window. If a numeric vector is passed,
-for example c(25, 50, 75), the function will return
-additional columns with the travel times within percentiles
-of trips. For example, if the 25 percentile of trips between
-A and B is 15 minutes, this means that 25\% of all trips
-taken between A and B within the set time window are shorter
-than 15 minutes. Only the first 5 cut points of the percentiles
-are considered. For more details, see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+\item{percentiles}{An integer vector with length smaller than or equal to 5.
+Specifies the percentile to use when returning travel time estimates within
+the given time window. For example, if the 25th travel time percentile
+between A and B is 15 minutes, 25\% of all trips taken between these points
+within the specified time window are shorter than 15 minutes. Defaults to
+50, returning the median travel time. If a vector with length bigger than 1
+is passed, the output contains an additional column for each percentile
+specifying the percentile travel time estimate. each estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see R5 documentation at
+'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{breakdown}{logic. If \code{FALSE} (default), the function returns a simple
 output with columns origin, destination and travel time
@@ -149,8 +148,8 @@ that were beyond the maximum travel time, and/or origins that were far from
 the street network are not returned in the data.table.
 }
 \description{
-Fast computation of travel time estimates between one or
-multiple origin destination pairs.
+Fast computation of travel time estimates between one or multiple origin
+destination pairs.
 }
 \section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:

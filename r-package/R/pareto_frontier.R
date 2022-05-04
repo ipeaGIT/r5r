@@ -1,55 +1,25 @@
-#' Calculate Pareto frontier of the travel matrix between origin destination pairs
-#' considering combinations travel time and monetary cost.
+#' Calculate Pareto frontier of the travel matrix between origin destination
+#' pairs considering combinations travel time and monetary cost.
 #'
-#' @description Fast computation of the Pareto frontier of the travel matrix
-#'              between origin destination pairs'considering combinations travel
-#'              time and monetary cost. It can be used to analyze the Pareto frontier
-#'              between one or multiple origin destination pairs.
+#' Fast computation of the Pareto frontier of the travel matrix between origin
+#' destination pairs'considering combinations travel time and monetary cost. It
+#' can be used to analyze the Pareto frontier between one or multiple origin
+#' destination pairs.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
-#'                             data.frame containing the columns 'id', 'lon',
-#'                             'lat'.
-#' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             `c("WALK", "TRANSIT")`. See details for other options.
-#' @param mode_egress string. Transport mode used after egress from public
-#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK". The function does not consider the
-#'                    monetary cost of 'CAR' as egress mode.
-#' @param departure_datetime POSIXct object. If working with public transport
-#'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates. See details for
-#'                           further information on how datetimes are parsed.
-#' @param time_window numeric. Time window in minutes for which r5r will
-#'                    calculate multiple travel time matrices departing each
-#'                    minute. By default, the number of simulations is 5 times
-#'                    the size of 'time_window' set by the user. Defaults window
-#'                    size to '1', the function only considers 5 departure
-#'                    times. This parameter is only used with frequency-based
-#'                    GTFS files. See details for further information.
-#' @param percentiles numeric vector. Defaults to '50', returning the median
-#'                    travel time for a given time_window. If a numeric vector is passed,
-#'                    for example c(25, 50, 75), the function will return
-#'                    additional columns with the travel times within percentiles
-#'                    of trips. For example, if the 25 percentile of trips between
-#'                    A and B is 15 minutes, this means that 25% of all trips
-#'                    taken between A and B within the set time window are shorter
-#'                    than 15 minutes. Only the first 5 cut points of the percentiles
-#'                    are considered. For more details, see R5 documentation at
-#'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
-#' @param breakdown logic. If `FALSE` (default), the function returns a simple
-#'                  output with columns origin, destination and travel time
-#'                  percentiles. If `TRUE`, r5r breaks down the trip information
-#'                  and returns more columns with estimates of `access_time`,
-#'                  `waiting_time`, `ride_time`, `transfer_time`, `total_time` , `n_rides`
-#'                  and `route`. Warning: Setting `TRUE` makes the function
-#'                  significantly slower.
-#'
-#' @param breakdown_stat string. If `min`, all the brokendown trip informantion
-#'        is based on the trip itinerary with the smallest waiting time in the
-#'        time window. If `breakdown_stat = mean`, the information is based on
-#'        the trip itinerary whose waiting time is the closest to the average
-#'        waiting time in the time window.
+#' @template common_arguments
+#' @template time_window_related_args
+#' @param percentiles An integer vector with length smaller than or equal to 5.
+#' Specifies the percentile to use when returning travel time estimates within
+#' the given time window. Please note that this parameter is applied to the
+#' travel time estimates only (e.g. if the 25th percentile is specified, and
+#' the output between A and B is 15 minutes and 10 dollars, 25% of all trips
+#' cheaper than 10 dollars taken between these points are shorter than 15
+#' minutes). Defaults to 50, returning the median travel time. If a vector with
+#' length bigger than 1 is passed, the output contains an additional column
+#' that specifies the percentile of each travel time and monetary cost
+#' combination. Due to upstream restrictions, only 5 percentiles can be
+#' specified at a time. For more details, please see R5 documentation at
+#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
 #'                      and egress the transit network, or to make transfers
 #'                      within the network. Defaults to no restrictions as long
@@ -104,13 +74,7 @@
 #' destination pairs by a given transport mode. Note that origins/destinations
 #' that were beyond the maximum travel time, and/or origins that were far from
 #' the street network are not returned in the data.table.
-
-
-#' Calculate Pareto frontier of the travel matrix between origin destination pairs
-#' considering combinations travel time and monetary cost.
-
-
-
+#'
 #' @details
 #'  # Transport modes:
 #'  R5 allows for multiple combinations of transport modes. The options include:

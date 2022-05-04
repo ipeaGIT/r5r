@@ -1,37 +1,24 @@
 #' Calculate access to opportunities
 #'
-#' @description Fast computation of access to opportunities given a selected
-#'              decay function. See `details` for the available decay functions.
+#' Fast computation of access to opportunities given a selected decay function.
+#' See `details` for the available decay functions.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
-#'                             data.frame containing the columns 'id', 'lon',
-#'                             'lat'.
-#' @param opportunities_colnames string. The column names in the `destinations`
-#'        input that tells the number of opportunities in each location.
-#'        Defaults to "opportunities".
-#' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             "WALK". See details for other options.
-#' @param mode_egress string. Transport mode used after egress from public
-#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK".
-#' @param departure_datetime POSIXct object. If working with public transport
-#'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates. See details for
-#'                           further information on how datetimes are parsed.
-#' @param time_window numeric. Time window in minutes for which r5r will
-#'                    calculate travel times departing each minute. When using
-#'                    frequency-based GTFS files, 5 Monte Carlo simulations will
-#'                    be run for each minute in the time window. See details for
-#'                    further information.
-#' @param percentiles numeric vector. Defaults to '50', returning the accessibility
-#'                    value for the median travel time computed for a given
-#'                    time_window. If a numeric vector is passed, for example
-#'                    c(25, 50, 75), the function will return accessibility
-#'                    estimates for each percentile, by travel time cutoff. Only
-#'                    the first 5 cut points of the percentiles are considered.
-#'                    For more details, see R5 documentation at
-#'                    'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'
+#' @template common_arguments
+#' @template time_window_related_args
+#' @param percentiles An integer vector with length smaller than or equal to 5.
+#' Specifies the percentile to use when returning accessibility estimates
+#' within the given time window. Please note that this parameter is applied to
+#' the travel time estimates that generate the accessibility results, and not
+#' to the accessibility distribution itself (i.e. if the 25th percentile is
+#' specified, the accessibility is calculated from the 25th percentile travel
+#' time, which may or may not be equal to the 25th percentile of the
+#' accessibility distribution itself). Defaults to 50, returning the
+#' accessibility calculated from the median travel time. If a vector with
+#' length bigger than 1 is passed, the output contains an additional column
+#' that specifies the percentile of each accessibility estimate. Due to
+#' upstream restrictions, only 5 percentiles can be specified at a time. For
+#' more details, please see R5 documentation at
+#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param decay_function string. Choice of one of the following decay functions:
 #'                       'step', 'exponential', 'fixed_exponential', 'linear',
 #'                       and 'logistic'. Defaults to 'step', which yields

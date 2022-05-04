@@ -33,42 +33,44 @@ accessibility(
 )
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\link{setup_r5}.}
 
-\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
-data.frame containing the columns 'id', 'lon',
-'lat'.}
+\item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
+\code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
-\item{opportunities_colnames}{string. The column names in the \code{destinations}
-input that tells the number of opportunities in each location.
-Defaults to "opportunities".}
+\item{mode}{A character vector. The transport modes allowed for access,
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+details for other options.}
 
-\item{mode}{string. Transport modes allowed for the trips. Defaults to
-"WALK". See details for other options.}
+\item{mode_egress}{A character vector. The transport mode used after egress
+from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or \code{CAR}.
+Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{mode_egress}{string. Transport mode used after egress from public
-transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-Defaults to "WALK".}
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check the \code{calendar.txt} within your GTFS feeds for valid
+dates. Please see details for further information on how datetimes are
+parsed.}
 
-\item{departure_datetime}{POSIXct object. If working with public transport
-networks, please check \code{calendar.txt} within
-the GTFS file for valid dates. See details for
-further information on how datetimes are parsed.}
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple travel time matrices departing each minute. Defaults
+to 1 minute. This parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table.}
 
-\item{time_window}{numeric. Time window in minutes for which r5r will
-calculate travel times departing each minute. When using
-frequency-based GTFS files, 5 Monte Carlo simulations will
-be run for each minute in the time window. See details for
-further information.}
-
-\item{percentiles}{numeric vector. Defaults to '50', returning the accessibility
-value for the median travel time computed for a given
-time_window. If a numeric vector is passed, for example
-c(25, 50, 75), the function will return accessibility
-estimates for each percentile, by travel time cutoff. Only
-the first 5 cut points of the percentiles are considered.
-For more details, see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+\item{percentiles}{An integer vector with length smaller than or equal to 5.
+Specifies the percentile to use when returning accessibility estimates
+within the given time window. Please note that this parameter is applied to
+the travel time estimates that generate the accessibility results, and not
+to the accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see R5 documentation at
+'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{decay_function}{string. Choice of one of the following decay functions:
 'step', 'exponential', 'fixed_exponential', 'linear',
@@ -152,8 +154,8 @@ A data.table with accessibility estimates for all origin points, by
 a given transport mode, and per travel time cutoff and percentile.
 }
 \description{
-Fast computation of access to opportunities given a selected
-decay function. See \code{details} for the available decay functions.
+Fast computation of access to opportunities given a selected decay function.
+See \code{details} for the available decay functions.
 }
 \section{Decay functions:}{
 R5 allows for multiple decay functions. More info in the original R5

@@ -1,22 +1,9 @@
 #' Calculate detailed itineraries between origin destination pairs
 #'
-#' @description Fast computation of (multiple) detailed itineraries between one
-#'              or many origin destination pairs.
+#' Fast computation of (multiple) detailed itineraries between one or many
+#' origin destination pairs.
 #'
-#' @param r5r_core rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
-#'                             data.frame containing the columns 'id', 'lon',
-#'                             'lat'.
-#' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             "WALK". See details for other options.
-#' @param mode_egress string. Transport mode used after egress from public
-#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK". Ignored when public transport is not
-#'                    used.
-#' @param departure_datetime POSIXct object. If working with public transport
-#'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates. See details for
-#'                           further information on how datetimes are parsed.
+#' @template common_arguments
 #' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
 #'                      and egress the transit network, or to make transfers
 #'                      within the network. Defaults to no restrictions as long

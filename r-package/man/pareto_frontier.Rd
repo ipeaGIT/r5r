@@ -2,8 +2,8 @@
 % Please edit documentation in R/pareto_frontier.R
 \name{pareto_frontier}
 \alias{pareto_frontier}
-\title{Calculate Pareto frontier of the travel matrix between origin destination pairs
-considering combinations travel time and monetary cost.}
+\title{Calculate Pareto frontier of the travel matrix between origin destination
+pairs considering combinations travel time and monetary cost.}
 \usage{
 pareto_frontier(
   r5r_core,
@@ -30,43 +30,42 @@ pareto_frontier(
 )
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\link{setup_r5}.}
 
-\item{origins, destinations}{a spatial sf POINT object with WGS84 CRS, or a
-data.frame containing the columns 'id', 'lon',
-'lat'.}
+\item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
+\code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
-\item{mode}{string. Transport modes allowed for the trips. Defaults to
-\code{c("WALK", "TRANSIT")}. See details for other options.}
+\item{mode}{A character vector. The transport modes allowed for access,
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+details for other options.}
 
-\item{mode_egress}{string. Transport mode used after egress from public
-transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-Defaults to "WALK". The function does not consider the
-monetary cost of 'CAR' as egress mode.}
+\item{mode_egress}{A character vector. The transport mode used after egress
+from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or \code{CAR}.
+Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{POSIXct object. If working with public transport
-networks, please check \code{calendar.txt} within
-the GTFS file for valid dates. See details for
-further information on how datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. If working with public transport
+networks, please check the \code{calendar.txt} within your GTFS feeds for valid
+dates. Please see details for further information on how datetimes are
+parsed.}
 
-\item{time_window}{numeric. Time window in minutes for which r5r will
-calculate multiple travel time matrices departing each
-minute. By default, the number of simulations is 5 times
-the size of 'time_window' set by the user. Defaults window
-size to '1', the function only considers 5 departure
-times. This parameter is only used with frequency-based
-GTFS files. See details for further information.}
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple travel time matrices departing each minute. Defaults
+to 1 minute. This parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table.}
 
-\item{percentiles}{numeric vector. Defaults to '50', returning the median
-travel time for a given time_window. If a numeric vector is passed,
-for example c(25, 50, 75), the function will return
-additional columns with the travel times within percentiles
-of trips. For example, if the 25 percentile of trips between
-A and B is 15 minutes, this means that 25\% of all trips
-taken between A and B within the set time window are shorter
-than 15 minutes. Only the first 5 cut points of the percentiles
-are considered. For more details, see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'}
+\item{percentiles}{An integer vector with length smaller than or equal to 5.
+Specifies the percentile to use when returning travel time estimates within
+the given time window. Please note that this parameter is applied to the
+travel time estimates only (e.g. if the 25th percentile is specified, and
+the output between A and B is 15 minutes and 10 dollars, 25\% of all trips
+cheaper than 10 dollars taken between these points are shorter than 15
+minutes). Defaults to 50, returning the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each travel time and monetary cost
+combination. Due to upstream restrictions, only 5 percentiles can be
+specified at a time. For more details, please see R5 documentation at
+'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
 and egress the transit network, or to make transfers
@@ -127,34 +126,18 @@ interfere with R5's output messages. Setting \code{progress} to \code{TRUE}
 may impose a small penalty for computation efficiency, because
 the progress counter must be synchronized among all active
 threads.}
-
-\item{breakdown}{logic. If \code{FALSE} (default), the function returns a simple
-output with columns origin, destination and travel time
-percentiles. If \code{TRUE}, r5r breaks down the trip information
-and returns more columns with estimates of \code{access_time},
-\code{waiting_time}, \code{ride_time}, \code{transfer_time}, \code{total_time} , \code{n_rides}
-and \code{route}. Warning: Setting \code{TRUE} makes the function
-significantly slower.}
-
-\item{breakdown_stat}{string. If \code{min}, all the brokendown trip informantion
-is based on the trip itinerary with the smallest waiting time in the
-time window. If \code{breakdown_stat = mean}, the information is based on
-the trip itinerary whose waiting time is the closest to the average
-waiting time in the time window.}
 }
 \value{
 A data.table with travel time estimates (in minutes) between origin
 destination pairs by a given transport mode. Note that origins/destinations
 that were beyond the maximum travel time, and/or origins that were far from
 the street network are not returned in the data.table.
-Calculate Pareto frontier of the travel matrix between origin destination pairs
-considering combinations travel time and monetary cost.
 }
 \description{
-Fast computation of the Pareto frontier of the travel matrix
-between origin destination pairs'considering combinations travel
-time and monetary cost. It can be used to analyze the Pareto frontier
-between one or multiple origin destination pairs.
+Fast computation of the Pareto frontier of the travel matrix between origin
+destination pairs'considering combinations travel time and monetary cost. It
+can be used to analyze the Pareto frontier between one or multiple origin
+destination pairs.
 }
 \section{Transport modes:}{
 R5 allows for multiple combinations of transport modes. The options include:
