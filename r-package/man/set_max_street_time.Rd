@@ -44,3 +44,4 @@ Other support functions:
 \code{\link{transit_network_to_sf}()}
 }
 \concept{support functions}
+\keyword{internal}

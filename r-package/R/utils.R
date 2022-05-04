@@ -1,5 +1,3 @@
-############# Support functions for r5r
-
 #' Set verbose argument
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
@@ -7,7 +5,8 @@
 #'
 #' @return No return value, called for side effects.
 #' @family support functions
-
+#'
+#' @keywords internal
 set_verbose <- function(r5r_core, verbose) {
 
   # in silent mode only errors are reported
@@ -19,6 +18,7 @@ set_verbose <- function(r5r_core, verbose) {
 
 }
 
+
 #' Set progress argument
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
@@ -26,7 +26,8 @@ set_verbose <- function(r5r_core, verbose) {
 #'
 #' @return No return value, called for side effects.
 #' @family support functions
-
+#'
+#' @keywords internal
 set_progress <- function(r5r_core, progress) {
 
   # Indicates whether or not a progress counter must be printed during long
@@ -38,20 +39,22 @@ set_progress <- function(r5r_core, progress) {
   r5r_core$setProgress(progress)
 }
 
+
 #' Set max street time
 #'
 #' Converts a time duration and speed input and converts it to distances.
 #'
 #' @param max_walk_dist numeric, Maximum walking distance (in meters) for the
-#'                      whole trip. Passed from routing functions.
+#' whole trip. Passed from routing functions.
 #' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
-#'                    Passed from routing functions.
+#' Passed from routing functions.
 #' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#'                          to 120 minutes (2 hours). Passed from routing functions.
+#' to 120 minutes (2 hours). Passed from routing functions.
 #'
 #' @return An `integer` representing the maximum number of minutes walking
 #' @family support functions
-
+#'
+#' @keywords internal
 set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   checkmate::assert_numeric(max_walk_dist)
@@ -59,10 +62,16 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   if (is.infinite(max_walk_dist)) return(max_trip_duration)
 
-  max_street_time <- as.integer(round(60 * max_walk_dist / (walk_speed * 1000), digits = 0))
+  max_street_time <- as.integer(
+    round(60 * max_walk_dist / (walk_speed * 1000), digits = 0)
+  )
 
-  if (max_street_time == 0) stop(paste("'max_walk_dist' is too low.",
-                                       "Please make sure distances are in meters, not kilometers."))
+  if (max_street_time == 0) {
+    stop(
+      "'max_walk_dist' is too low. ",
+      "Please make sure distances are in meters, not kilometers."
+    )
+  }
 
   # if max_street_time ends up being higher than max_trip_duration, uses
   # max_trip_duration as a ceiling
@@ -74,7 +83,6 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 }
 
 
-
 #' Select transport mode
 #'
 #' @param mode character string passed from routing functions.
@@ -82,28 +90,44 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 #'
 #' @return A `list` with the transport modes used in the routing.
 #' @family support functions
-
+#'
+#' @keywords internal
 select_mode <- function(mode, mode_egress) {
 
   # list all available modes
-  dr_modes  <- c('WALK','BICYCLE','CAR','BICYCLE_RENT','CAR_PARK')
-  tr_modes  <- c('TRANSIT', 'TRAM','SUBWAY','RAIL','BUS','FERRY','CABLE_CAR','GONDOLA','FUNICULAR')
+  dr_modes <- c('WALK', 'BICYCLE', 'CAR', 'BICYCLE_RENT', 'CAR_PARK')
+  tr_modes <- c('TRANSIT', 'TRAM','SUBWAY','RAIL','BUS','FERRY','CABLE_CAR','GONDOLA','FUNICULAR')
   all_modes <- c(tr_modes, dr_modes)
 
   # check for invalid input --------------------------------------------------
   mode <- toupper(unique(mode))
   mode_egress <- toupper(unique(mode_egress))[1]
 
-  lapply(mode, function(x) {
-    if (!x %chin% all_modes) {
-      stop(paste0(x, " is not a valid 'mode'.\nPlease use one of the following: ",
-                  paste(unique(all_modes), collapse = ", "))) }
-    })
-  lapply(mode_egress, function(x) {
-    if (!x %chin% dr_modes) {
-      stop(paste0(x, " is not a valid 'mode'.\nPlease use one of the following: ",
-                  paste(unique(dr_modes), collapse = ", "))) }
-    })
+  lapply(
+    mode,
+    function(x) {
+      if (! x %chin% all_modes) {
+        stop(
+          x,
+          " is not a valid 'mode'.\nPlease use one of the following: ",
+          paste(unique(all_modes), collapse = ", ")
+        )
+      }
+    }
+  )
+
+  lapply(
+    mode_egress,
+    function(x) {
+      if (! x %chin% dr_modes) {
+        stop(
+          x,
+          " is not a valid 'mode_egress'.\nPlease use one of the following: ",
+          paste(unique(dr_modes), collapse = ", ")
+        )
+      }
+    }
+  )
 
   # assign modes accordingly  --------------------------------------------------
   direct_modes <- mode[which(mode %chin% dr_modes)]
@@ -148,7 +172,8 @@ select_mode <- function(mode, mode_egress) {
 #'   characters.
 #'
 #' @family support functions
-
+#'
+#' @keywords internal
 posix_to_string <- function(datetime) {
 
   checkmate::assert_posixct(datetime)
@@ -166,7 +191,6 @@ posix_to_string <- function(datetime) {
 }
 
 
-
 #' Assert class of origin and destination inputs and the type of its columns
 #'
 #' @param df Any object.
@@ -174,7 +198,8 @@ posix_to_string <- function(datetime) {
 #'
 #' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
 #' @family support functions
-
+#'
+#' @keywords internal
 assert_points_input <- function(df, name) {
 
   # check if 'df' is a data.frame or a POINT sf
@@ -226,6 +251,7 @@ assert_points_input <- function(df, name) {
 
 }
 
+
 #' Assert decay function and parameter values
 #'
 #' @param decay_function Name of decay function.
@@ -233,7 +259,8 @@ assert_points_input <- function(df, name) {
 #'
 #' @return A `list` with the validated decay function and parameter value.
 #' @family support functions
-
+#'
+#' @keywords internal
 assert_decay_function <- function(decay_function, decay_value) {
   # list of all decay functions
   decay_functions  <- c('STEP','EXPONENTIAL','FIXED_EXPONENTIAL','LINEAR','LOGISTIC')
@@ -275,7 +302,8 @@ assert_decay_function <- function(decay_function, decay_value) {
 #'
 #' @return A character with the validated statistic function name.
 #' @family support functions
-
+#'
+#' @keywords internal
 assert_breakdown_stat <- function(breakdown_stat) {
   # list of all decay functions
   stat_functions  <- c('MIN', 'MINIMUM', 'MEAN', 'AVG', 'AVERAGE')
@@ -292,6 +320,7 @@ assert_breakdown_stat <- function(breakdown_stat) {
   return(breakdown_stat)
 }
 
+
 #' Set number of threads
 #'
 #' @description Sets number of threads to be used by the r5r .jar.
@@ -301,7 +330,8 @@ assert_breakdown_stat <- function(breakdown_stat) {
 #'
 #' @return No return value, called for side effects.
 #' @family support functions
-
+#'
+#' @keywords internal
 set_n_threads <- function(r5r_core, n_threads) {
 
   checkmate::assert_numeric(n_threads)
@@ -322,7 +352,6 @@ set_n_threads <- function(r5r_core, n_threads) {
 }
 
 
-
 #' Set walk and bike speed
 #'
 #' @description This function receives the walk and bike 'speed' inputs in Km/h
@@ -335,7 +364,8 @@ set_n_threads <- function(r5r_core, n_threads) {
 #'
 #' @return No return value, called for side effects.
 #' @family support functions
-
+#'
+#' @keywords internal
 set_speed <- function(r5r_core, speed, mode) {
 
   checkmate::assert_numeric(speed, .var.name = paste0(mode, "_speed"))
@@ -348,6 +378,7 @@ set_speed <- function(r5r_core, speed, mode) {
 
 }
 
+
 #' Set max Level of Transit Stress (LTS)
 #'
 #' @param r5r_core rJava object to connect with R5 routing engine
@@ -359,6 +390,7 @@ set_speed <- function(r5r_core, speed, mode) {
 #' @return No return value, called for side effects.
 #' @family support functions
 #'
+#' @keywords internal
 set_max_lts <- function(r5r_core, max_lts) {
   checkmate::assert_numeric(max_lts)
 
@@ -369,6 +401,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 
   r5r_core$setMaxLevelTrafficStress(as.integer(max_lts))
 }
+
 
 #' Set max number of transfers
 #'
@@ -381,7 +414,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #' @return No return value, called for side effects.
 #' @family support functions
 #'
-
+#' @keywords internal
 set_max_rides <- function(r5r_core, max_rides) {
 
   checkmate::assert_numeric(max_rides)
@@ -392,6 +425,7 @@ set_max_rides <- function(r5r_core, max_rides) {
   r5r_core$setMaxRides(as.integer(max_rides))
 
 }
+
 
 #' Set suboptimal minutes
 #'
@@ -412,7 +446,8 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'
 #' @return No return value, called for side effects.
 #' @family support functions
-
+#'
+#' @keywords internal
 set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
   checkmate::assert_numeric(suboptimal_minutes)
@@ -425,7 +460,6 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 }
 
 
-
 #' Get most recent JAR file url from metadata
 #'
 #' Returns the most recent JAR file url from metadata, depending on the version.
@@ -435,6 +469,8 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 #' @return The a url a string.
 #'
 #' @family support functions
+#'
+#' @keywords internal
 fileurl_from_metadata <- function(version) {
 
   checkmate::assert_string(version)
@@ -463,7 +499,6 @@ fileurl_from_metadata <- function(version) {
 }
 
 
-
 #' Check internet connection with Ipea server
 #'
 #' @description
@@ -474,6 +509,7 @@ fileurl_from_metadata <- function(version) {
 #' @return Logical. `TRUE` if url is working, `FALSE` if not.
 #' @family support functions
 #'
+#' @keywords internal
 check_connection <- function(file_url = 'https://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv'){
 
   # file_url <- 'http://google.com/'               # ok

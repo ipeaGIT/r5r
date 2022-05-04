@@ -1,5 +1,3 @@
-############# Support functions for r5r
-
 #' Tobler's hiking function
 #'
 #' @description Calculates effect of the topography on walking speeds, using
@@ -9,6 +7,8 @@
 #'
 #' @return numeric. Tobler's weighting factor
 #' @family elevation support functions
+#'
+#' @keywords internal
 tobler_hiking <- function(slope) {
 
   checkmate::assert_class(slope, "numeric")
@@ -19,6 +19,7 @@ tobler_hiking <- function(slope) {
 
   return(1 / tobler_factor)
 }
+
 
 #' Apply elevation to street network
 #'
@@ -33,6 +34,8 @@ tobler_hiking <- function(slope) {
 #'
 #' @return No return value, called for side effects.
 #' @family elevation support functions
+#'
+#' @keywords internal
 apply_elevation <- function(r5r_core, raster_files) {
 
   # check inputs ------------------------------------------------------------

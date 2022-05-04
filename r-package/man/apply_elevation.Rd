@@ -26,3 +26,4 @@ Other elevation support functions:
 \code{\link{tobler_hiking}()}
 }
 \concept{elevation support functions}
+\keyword{internal}
