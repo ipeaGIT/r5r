@@ -3,12 +3,6 @@ context("Detailed itineraries function")
 # skips tests on CRAN since they require a specific version of java
 testthat::skip_on_cran()
 
-# load required data and setup r5r_core
-
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-
 # create testing function
 
 default_tester <- function(r5r_core,
@@ -292,5 +286,3 @@ test_that("detailed_itineraries output is correct", {
   expect_true(nrow(df) == 0)
 
 })
-
-stop_r5(r5r_core)
