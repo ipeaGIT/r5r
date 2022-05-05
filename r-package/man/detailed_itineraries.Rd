@@ -27,7 +27,7 @@ detailed_itineraries(
 }
 \arguments{
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
-\link{setup_r5}.}
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -45,63 +45,66 @@ networks, please check the \code{calendar.txt} within your GTFS feeds for valid
 dates. Please see details for further information on how datetimes are
 parsed.}
 
-\item{max_walk_dist}{numeric. Maximum walking distance (in meters) to access
-and egress the transit network, or to make transfers
-within the network. Defaults to no restrictions as long
-as \code{max_trip_duration} is respected. The max distance is
-considered separately for each leg (e.g. if you set
-\code{max_walk_dist} to 1000, you could potentially walk up
-to 1 km to reach transit, and up to \emph{another} 1 km to
-reach the destination after leaving transit). Obs: if you
-want to set the maximum walking distance considering
-walking-only trips you have to set the \code{max_trip_duration}
-accordingly (e.g. to set a distance of 1 km assuming a
-walking speed of 3.6 km/h you have to set \code{max_trip_duration = 1 / 3.6 * 60}).}
+\item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
+access and egress the transit network, or to make transfers within the
+network. Defaults to no restrictions, as long as \code{max_trip_duration} is
+respected. The max distance is considered separately for each leg (e.g. if
+you set \code{max_walk_dist} to 1000, you could potentially walk up to 1 km to
+reach transit, and up to \emph{another} 1 km to reach the destination after
+leaving transit). Please note that this parameter doesn't affect the maximum
+length of walking-only trips, only walking access, egress and transfer legs.
+If you want to set a maximum walking distance for walking-only trips you
+have to use the \code{max_trip_duration} parameter (e.g. to set a walking-only
+trip max distance of 1 km, assuming a walking speed of 3.6 km/h, you have to
+set \code{max_trip_duration = 1 / 3.6 * 60}).}
 
-\item{max_bike_dist}{numeric. Maximum cycling distance (in meters) to access
-and egress the transit network. Defaults to no
-restrictions as long as \code{max_trip_duration} is respected.
-The max distance is considered separately for each leg
-(e.g. if you set \code{max_bike_dist} to 1000, you could
-potentially cycle up to 1 km to reach transit, and up
-to \emph{another}  1 km to reach the destination after leaving
-transit). Obs: if you want to set the maximum cycling
-distance considering cycling-only trips you have to set
-the \code{max_trip_duration} accordingly (e.g. to set a
-distance of 5 km assuming a cycling speed of 12 km/h you
-have to set \code{max_trip_duration = 5 / 12 * 60}).}
+\item{max_bike_dist}{An integer. The maximum cycling distance (in meters) to
+access and egress the transit network, or to make transfers within the
+network. Defaults to no restrictions, as long as \code{max_trip_duration} is
+respected. The max distance is considered separately for each leg (e.g. if
+you set \code{max_bike_dist} to 1000, you could potentially cycle up to 1 km to
+reach transit, and up to \emph{another} 1 km to reach the destination after
+leaving transit). Please note that this parameter doesn't affect the maximum
+length of cycling-only trips, only cycling access, egress and transfer legs.
+If you want to set a maximum cycling distance for cycling-only trips you
+have to use the \code{max_trip_duration} parameter (e.g. to set a walking-only
+trip max distance of 5 km, assuming a cycling speed of 12 km/h, you have to
+set \code{max_trip_duration = 5 / 12 * 60}).}
 
-\item{max_trip_duration}{numeric. Maximum trip duration in minutes. Defaults
-to 120 minutes (2 hours).}
+\item{max_trip_duration}{An integer. The maximum trip duration in minutes.
+Defaults to 120 minutes (2 hours).}
 
-\item{walk_speed}{numeric. Average walk speed in km/h. Defaults to 3.6 km/h.}
+\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
+km/h.}
 
-\item{bike_speed}{numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
+\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12
+km/h.}
 
-\item{max_rides}{numeric. The max number of public transport rides allowed in
-the same trip. Defaults to 3.}
+\item{max_rides}{An integer. The maximum number of public transport rides
+allowed in the same trip. Defaults to 3.}
 
-\item{max_lts}{numeric (between 1 and 4). The maximum level of traffic stress
-that cyclists will tolerate. A value of 1 means cyclists will
-only travel through the quietest streets, while a value of 4
-indicates cyclists can travel through any road. Defaults to 2.
-See details for more information.}
+\item{max_lts}{An integer between 1 and 4. The maximum level of traffic
+stress that cyclists will tolerate. A value of 1 means cyclists will only
+travel through the quietest streets, while a value of 4 indicates cyclists
+can travel through any road. Defaults to 2. Please see details for more
+information.}
 
 \item{shortest_path}{logical. Whether the function should only return the
 fastest route alternative (the default) or multiple
 alternatives.}
 
-\item{n_threads}{numeric. The number of threads to use in parallel computing.
-Defaults to use all available threads (Inf).}
+\item{n_threads}{An integer. The number of threads to use when running the
+router in parallel. Defaults to use all available threads (Inf).}
 
-\item{verbose}{logical. \code{TRUE} to show detailed output messages (the default).}
+\item{verbose}{A logical. Defaults to \code{TRUE}, showing detailed output
+messages. When \code{FALSE}, only \code{R5} error messages are shown.}
 
-\item{progress}{logical. \code{TRUE} to show a progress counter. Only works when
-\code{verbose} is set to \code{FALSE}, so the progress counter does not
-interfere with R5's output messages. Setting \code{progress} to \code{TRUE}
-may impose a small penalty for computation efficiency, because
-the progress counter must be synchronized among all active
-threads.}
+\item{progress}{A logical. Whether to show a progress counter when running
+the router. Defaults to \code{TRUE}. Only works when \code{verbose} is set to \code{FALSE},
+so the progress counter does not interfere with \code{R5}'s output messages.
+Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
+efficiency, because the progress counter must be synchronized among all
+active threads.}
 
 \item{drop_geometry}{logical. Indicates whether R5 should drop segment's
 geometry column. It can be helpful for saving memory.}
@@ -115,63 +118,58 @@ and travel times are in minutes.
 Fast computation of (multiple) detailed itineraries between one or many
 origin destination pairs.
 }
-\section{Transport modes:}{
-R5 allows for multiple combinations of transport modes. The options include:
-\subsection{Transit modes}{
+\section{Transport modes}{
 
-TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
-'TRANSIT' automatically considers all public transport modes available.
-}
 
-\subsection{Non transit modes}{
-
-WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
-}
-}
-
-\section{max_lts, Maximum Level of Traffic Stress:}{
-When cycling is enabled in R5, setting \code{max_lts} will allow cycling only on
-streets with a given level of danger/stress. Setting \code{max_lts} to 1, for example,
-will allow cycling only on separated bicycle infrastructure or low-traffic
-streets; routing will revert to walking when traversing any links with LTS
-exceeding 1. Setting \code{max_lts} to 3 will allow cycling on links with LTS 1, 2,
-or 3.
-
-The default methodology for assigning LTS values to network edges is based on
-commonly tagged attributes of OSM ways. See more info about LTS in the original
-documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
-In summary:
+\code{R5} allows for multiple combinations of transport modes. The options
+include:
 \itemize{
-\item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume streets,
-as well as those with separated bicycle facilities (such as parking-protected
-lanes or cycle tracks).
-\item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes streets
-where cyclists have dedicated lanes and only have to interact with traffic at
-formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes streets
-which may involve close proximity to moderate- or high-speed vehicular traffic.
-\item \strong{LTS 4}: Tolerable for only “strong and fearless” cyclists. This includes streets
-where cyclists are required to mix with moderate- to high-speed vehicular traffic.
+\item \strong{Transit modes:} \code{TRAM}, \code{SUBWAY}, \code{RAIL}, \code{BUS}, \code{FERRY}, \code{CABLE_CAR},
+\code{GONDOLA}, \code{FUNICULAR}. The option \code{TRANSIT} automatically considers all
+public transport modes available.
+\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}, \code{BICYCLE_RENT},
+\code{CAR_PARK}.
+}
 }
 
-For advanced users, you can provide custom LTS values by adding a tag
-<key = "lts> to the \code{osm.pbf} file
-}
+\section{Level of Traffic Stress (LTS)}{
 
-\section{Routing algorithm:}{
-The detailed_itineraries function uses an R5-specific extension to the
-McRAPTOR routing algorithm to find paths that are optimal or less than
-optimal, with some heuristics around multiple access modes, riding the same
-patterns, etc. The specific extension to McRAPTOR to do suboptimal
-path routing are not documented yet, but a detailed description of base
-McRAPTOR can be found in Delling et al (2015).
+
+When cycling is enabled in \code{R5} (by passing the value \code{BIKE} to either
+\code{mode} or \code{mode_egress}), setting \code{max_lts} will allow cycling only on
+streets with a given level of danger/stress. Setting \code{max_lts} to 1, for
+example, will allow cycling only on separated bicycle infrastructure or
+low-traffic streets and routing will revert to walking when traversing any
+links with LTS exceeding 1. Setting \code{max_lts} to 3 will allow cycling on
+links with LTS 1, 2 or 3. Routing also reverts to walking if the street
+segment is tagged as non-bikable in OSM (e.g. a staircase), independently of
+the specified max LTS.
+
+The default methodology for assigning LTS values to network edges is based
+on commonly tagged attributes of OSM ways. See more info about LTS in the
+original documentation of R5 from Conveyal at
+\url{https://docs.conveyal.com/learn-more/traffic-stress}. In summary:
 \itemize{
-\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
-routing. Transportation Science, 49(3), 591-604.
+\item \strong{LTS 1}: Tolerable for children. This includes low-speed, low-volume
+streets, as well as those with separated bicycle facilities (such as
+parking-protected lanes or cycle tracks).
+\item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
+streets where cyclists have dedicated lanes and only have to interact with
+traffic at formal crossing.
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+streets which may involve close proximity to moderate- or high-speed
+vehicular traffic.
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+includes streets where cyclists are required to mix with moderate- to
+high-speed vehicular traffic.
 }
+
+For advanced users, you can provide custom LTS values by adding a tag \verb{<key = "lts">} to the \code{osm.pbf} file.
 }
 
 \section{Datetime parsing}{
+
+
 \code{r5r} ignores the timezone attribute of datetime objects when parsing dates
 and times, using the study area's timezone instead. For example, let's say
 you are running some calculations using Rio de Janeiro, Brazil, as your study
@@ -181,8 +179,34 @@ the exact same date and time in Rio's local time, perhaps surprisingly,
 ignoring the timezone attribute.
 }
 
+\section{Routing algorithm}{
+
+
+The \code{\link[=detailed_itineraries]{detailed_itineraries()}} and \code{\link[=pareto_frontier]{pareto_frontier()}} functions use an
+\code{R5}-specific extension to the McRAPTOR routing algorithm. The
+implementation used in \code{detailed_itineraries()} allows the router to find
+paths that are optimal and less than optimal in terms of travel time, with
+some heuristics around multiple access modes, riding the same patterns, etc.
+The specific extension to McRAPTOR to do suboptimal path routing is not
+documented yet, but a detailed description of base McRAPTOR can be found in
+Delling et al (2015). The implementation used in \code{pareto_frontier()}, on the
+other hand, returns only the fastest trip within a given monetary cutoff,
+ignoring slower trips that cost the same. A detailed discussion on the
+algorithm can be found in Conway and Stewart (2019).
+\itemize{
+\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public
+transit routing. Transportation Science, 49(3), 591-604.
+\url{https://doi.org/10.1287/trsc.2014.0534}
+\item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
+multiobjective optimization method to account for cost constraints in public
+transit accessibility metrics. International Journal of Geographical
+Information Science, 33(9), 1759–1787.
+\url{https://doi.org/10.1080/13658816.2019.1605075}
+}
+}
+
 \examples{
-if (interactive()) {
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -204,7 +228,7 @@ dit <- detailed_itineraries(r5r_core,
                             max_trip_duration = 120L)
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other routing: 

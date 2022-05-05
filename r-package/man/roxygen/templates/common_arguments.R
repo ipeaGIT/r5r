@@ -1,5 +1,5 @@
 #' @param r5r_core An object to connect with the R5 routing engine, created with
-#' [setup_r5].
+#' [setup_r5()].
 #' @param origins,destinations Either a `POINT sf` object with WGS84 CRS, or a
 #' `data.frame` containing the columns `id`, `lon` and `lat`.
 #' @param mode A character vector. The transport modes allowed for access,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/street_network_to_sf.R
 \name{street_network_to_sf}
 \alias{street_network_to_sf}
-\title{Extract OpenStreetMap network in sf format from a network.dat built with setup_r5}
+\title{Extract OpenStreetMap network in sf format from a network.dat file}
 \usage{
 street_network_to_sf(r5r_core)
 }
@@ -14,11 +14,10 @@ A list with two components of a street network in sf format: vertices
 (POINT) and edges (LINESTRING).
 }
 \description{
-Extract OpenStreetMap network in sf format from a network.dat built with setup_r5
+Extract OpenStreetMap network in sf format from a network.dat file
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -29,7 +28,7 @@ r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 street_net <- street_network_to_sf(r5r_core)
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other support functions: 

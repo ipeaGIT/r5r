@@ -16,8 +16,7 @@
 #'
 #' @family support functions
 #'
-#' @examples if (interactive()) {
-#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -28,9 +27,7 @@
 #' transit_net <- transit_network_to_sf(r5r_core)
 #'
 #' stop_r5(r5r_core)
-#' }
 #' @export
-
 transit_network_to_sf <- function(r5r_core) {
 
   # check input

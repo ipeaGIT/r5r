@@ -29,8 +29,7 @@ returned with \code{NA} coordinates and \code{found = FALSE}. Please note that t
 location of the snapped points depends on the transport mode set by the user.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -46,7 +45,7 @@ snap_df <- find_snap(r5r_core,
                      mode = 'CAR')
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other support functions: 

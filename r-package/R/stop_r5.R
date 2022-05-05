@@ -4,21 +4,19 @@
 #'
 #' @param ... \code{r5r_core} objects currently running. By default, if no cores
 #'            are supplied all running cores are stopped.
-#'
-#' @examples if (interactive()) {
-#'   library(r5r)
-#'
-#'   path <- system.file("extdata/poa", package = "r5r")
-#'
-#'   r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
-#'
-#'   stop_r5(r5r_core)
-#' }
-#'
 #' @return No return value, called for side effects.
+#'
 #' @family support functions
+#'
+#' @examplesIf interactive()
+#' library(r5r)
+#'
+#' path <- system.file("extdata/poa", package = "r5r")
+#'
+#' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
+#'
+#' stop_r5(r5r_core)
 #' @export
-
 stop_r5 <- function(...) {
 
   supplied_cores <- list(...)

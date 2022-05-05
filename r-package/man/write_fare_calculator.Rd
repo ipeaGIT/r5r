@@ -15,6 +15,9 @@ write_fare_calculator(fare_structure, file_path)
 \description{
 Write fare calculator settings to file
 }
+\examples{
+
+}
 \seealso{
 Other fare calculator: 
 \code{\link{read_fare_calculator}()},

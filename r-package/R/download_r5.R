@@ -14,15 +14,14 @@
 #'                 directory. Defaults to FALSE
 #'
 #' @return A jar file is saved locally in the r5r package directory
-#' @family setup
-#' @export
-#' @examples if (interactive()) {
 #'
+#' @family setup
+#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' download_r5(version = "6.6.0", temp_dir = TRUE)
-#' }
-
+#' @export
 download_r5 <- function(version = "6.6.0",
                         quiet = FALSE,
                         force_update = FALSE,

@@ -33,12 +33,11 @@ tailored for the purposes of r5r that keeps R5's essential features. Source
 code available at https://github.com/ipeaGIT/r5r.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 download_r5(version = "6.6.0", temp_dir = TRUE)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other setup: 

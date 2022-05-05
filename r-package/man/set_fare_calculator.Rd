@@ -15,3 +15,7 @@ set_fare_calculator(r5r_core, fare_calculator_settings = NULL)
 \description{
 Title
 }
+\examples{
+
+}
+\keyword{internal}

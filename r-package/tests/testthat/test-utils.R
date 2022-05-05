@@ -2,11 +2,6 @@ context("Support functions")
 
 testthat::skip_on_cran()
 
-# load required data and setup r5r_obj
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-
 
 # set_verbose -------------------------------------------------------------
 
@@ -219,6 +214,3 @@ test_that("raises error if version is not a string", {
 test_that("returns expected result", {
   expect_equal("https://github.com/ipeaGIT/r5/releases/download/v6.4/r5-v6.4-all.jar", fileurl_from_metadata("6.4.0"))
 })
-
-
-stop_r5(r5r_core)

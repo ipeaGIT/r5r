@@ -7,7 +7,6 @@
 #' returned with `NA` coordinates and `found = FALSE`. Please note that the
 #' location of the snapped points depends on the transport mode set by the user.
 #'
-#'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param points a spatial sf POINT object, or a data.frame
 #'               containing the columns 'id', 'lon', 'lat'
@@ -20,10 +19,7 @@
 #'
 #' @family support functions
 #'
-#' @export
-#'
-#' @examples if (interactive()) {
-#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -39,8 +35,7 @@
 #'                      mode = 'CAR')
 #'
 #' stop_r5(r5r_core)
-#' }
-
+#' @export
 find_snap <- function(r5r_core,
                       points,
                       mode = "WALK") {
