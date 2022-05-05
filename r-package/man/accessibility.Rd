@@ -163,6 +163,62 @@ a given transport mode, and per travel time cutoff and percentile.
 Fast computation of access to opportunities given a selected decay function.
 See \code{details} for the available decay functions.
 }
+\details{
+
+}
+\section{Decay functions}{
+
+
+\code{R5} allows one to use different decay functions when calculating
+accessibility. Please see the original \code{R5} documentation from Conveyal for
+more information on each one one
+(\url{https://docs.conveyal.com/learn-more/decay-functions}). A summary of each
+available option, as well as the value passed to \code{decay_function} to use it
+(inside parentheses) are listed below:
+\itemize{
+\item \strong{Step}, also known as cumulative opportunities (\code{"step"}): \cr
+a binary decay function used to find the sum of available opportunities
+within a specific travel time cutoff.
+\item \strong{Logistic CDF} (\code{"logistic"}): \cr
+This is the logistic function, i.e. the cumulative distribution function of
+the logistic distribution, expressed such that its parameters are the median
+(inflection point) and standard deviation. This function applies a sigmoid
+rolloff that has a convenient relationship to discrete choice theory. Its
+parameters can be set to reflect a whole population's tolerance for making
+trips with different travel times. The function's value represents the
+probability that a randomly chosen member of the population would accept
+making a trip, given its duration. Opportunities are then weighted by how
+likely it is that a person would consider them "reachable".
+\itemize{
+\item Calibration: The median parameter is controlled by the \code{cutoff}
+parameter, leaving only the standard deviation to configure through the
+\code{decay_value} parameter.
+}
+\item \strong{Fixed Exponential} (\code{"fixed_exponential"}): \cr
+This function is of the form \code{exp(-Lt)} where L is a single fixed decay
+constant in the range (0, 1). It is constrained to be positive to ensure
+weights decrease (rather than grow) with increasing travel time.
+\itemize{
+\item Calibration: This function is controlled exclusively by the \code{L} constant,
+given by the \code{decay_value} parameter. Values provided in \code{cutoffs} are
+ignored.
+}
+\item \strong{Half-life Exponential Decay} (\code{"exponential"}): \cr
+This is similar to the fixed-exponential option above, but in this case the
+decay parameter is inferred from the \code{cutoffs} parameter values, which is
+treated as the half-life of the decay.
+\item \strong{Linear} (\code{"linear"}): \cr
+This is a simple, vaguely sigmoid option, which may be useful when you have
+a sense of a maximum travel time that would be tolerated by any traveler,
+and a minimum time below which all travel is perceived to be equally easy.
+\itemize{
+\item Calibration: The transition region is transposable and symmetric around
+the \code{cutoffs} parameter values, taking \code{decay_value} minutes to taper down
+from one to zero.
+}
+}
+}
+
 \section{Transport modes}{
 
 
@@ -243,68 +299,6 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 }
 
-\section{Decay functions:}{
-R5 allows for multiple decay functions. More info in the original R5
-documentation from Conveyal, at \url{https://docs.conveyal.com/learn-more/decay-functions}
-The options include:
-\subsection{Step \code{step} (cumulative opportunities)}{
-
-A binary decay function used to calculate cumulative opportunities metrics.
-}
-
-\subsection{Logistic CDF \code{logistic}}{
-
-This is the logistic function, i.e. the cumulative distribution function of
-the logistic distribution, expressed such that its parameters are the median
-(inflection point) and standard deviation. This function applies a sigmoid
-rolloff that has a convenient relationship to discrete choice theory. Its
-parameters can be set to reflect a whole population's tolerance for making
-trips with different travel times. The function's value represents the
-probability that a randomly chosen member of the population would accept
-making a trip, given its duration. Opportunities are then weighted by how
-likely it is a person would consider them "reachable".
-\subsection{calibration}{
-
-The median parameter is controlled by the \code{cutoff} parameter, leaving only
-the standard deviation to configure through the \code{decay_value} parameter.
-}
-
-}
-
-\subsection{Fixed Exponential \code{fixed_exponential}}{
-
-This function is of the form e-Lt where L is a single fixed decay constant
-in the range (0, 1). It is constrained to be positive to ensure weights
-decrease (rather than grow) with increasing travel time.
-\subsection{calibration}{
-
-This function is controlled exclusively by the L constant, given by the
-\code{decay_value} parameter. Values provided in \code{cutoffs} are ignored.
-}
-
-}
-
-\subsection{Half-life Exponential Decay \code{exponential}}{
-
-This is similar to the fixed-exponential option above, but in this case the
-decay parameter is inferred from the \code{cutoffs} parameter values, which is
-treated as the half-life of the decay.
-}
-
-\subsection{Linear \code{linear}}{
-
-This is a simple, vaguely sigmoid option, which may be useful when you have
-a sense of a maximum travel time that would be tolerated by any traveler,
-and a minimum time below which all travel is perceived to be equally easy.
-\subsection{calibration}{
-
-The transition region is transposable and symmetric around the \code{cutoffs}
-parameter values, taking \code{decay_value} minutes to taper down from one to zero.
-}
-
-}
-}
-
 \examples{
 if (interactive()) {
 library(r5r)
@@ -316,6 +310,7 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
+# estimate accessibility
   access <- accessibility(r5r_core,
                           origins = points,
                           destinations = points,

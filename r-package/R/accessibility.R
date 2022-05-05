@@ -39,60 +39,16 @@
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.
 #'
+#' @template decay_functions_section
 #' @template transport_modes_section
 #' @template lts_section
 #' @template datetime_parsing_section
 #' @template raptor_algorithm_section
 #' @details
-#'  # Decay functions:
-#'  R5 allows for multiple decay functions. More info in the original R5
-#'  documentation from Conveyal, at \url{https://docs.conveyal.com/learn-more/decay-functions}
-#'  The options include:
-#'
-#'  ## Step `step` (cumulative opportunities)
-#'  A binary decay function used to calculate cumulative opportunities metrics.
-#'
-#'  ## Logistic CDF `logistic`
-#'  This is the logistic function, i.e. the cumulative distribution function of
-#'  the logistic distribution, expressed such that its parameters are the median
-#'  (inflection point) and standard deviation. This function applies a sigmoid
-#'  rolloff that has a convenient relationship to discrete choice theory. Its
-#'  parameters can be set to reflect a whole population's tolerance for making
-#'  trips with different travel times. The function's value represents the
-#'  probability that a randomly chosen member of the population would accept
-#'  making a trip, given its duration. Opportunities are then weighted by how
-#'  likely it is a person would consider them "reachable".
-#'
-#'  ### calibration
-#'  The median parameter is controlled by the `cutoff` parameter, leaving only
-#'  the standard deviation to configure through the `decay_value` parameter.
-#'
-#'  ## Fixed Exponential `fixed_exponential`
-#'  This function is of the form e-Lt where L is a single fixed decay constant
-#'  in the range (0, 1). It is constrained to be positive to ensure weights
-#'  decrease (rather than grow) with increasing travel time.
-#'
-#'  ### calibration
-#'  This function is controlled exclusively by the L constant, given by the
-#'  `decay_value` parameter. Values provided in `cutoffs` are ignored.
-#'
-#'  ## Half-life Exponential Decay `exponential`
-#'  This is similar to the fixed-exponential option above, but in this case the
-#'  decay parameter is inferred from the `cutoffs` parameter values, which is
-#'  treated as the half-life of the decay.
-#'
-#'  ## Linear `linear`
-#'  This is a simple, vaguely sigmoid option, which may be useful when you have
-#'  a sense of a maximum travel time that would be tolerated by any traveler,
-#'  and a minimum time below which all travel is perceived to be equally easy.
-#'
-#'  ### calibration
-#'  The transition region is transposable and symmetric around the `cutoffs`
-#'  parameter values, taking `decay_value` minutes to taper down from one to zero.
 #'
 #' @family routing
 #' @examples if (interactive()) {
-#'library(r5r)
+#' library(r5r)
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
@@ -101,7 +57,7 @@
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 #'
-# estimate accessibility
+#' # estimate accessibility
 #'   access <- accessibility(r5r_core,
 #'                           origins = points,
 #'                           destinations = points,

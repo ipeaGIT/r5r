@@ -13,16 +13,7 @@
 #' @template transport_modes_section
 #' @template lts_section
 #' @template datetime_parsing_section
-#' @details
-#' # Routing algorithm:
-#'  The detailed_itineraries function uses an R5-specific extension to the
-#'  McRAPTOR routing algorithm to find paths that are optimal or less than
-#'  optimal, with some heuristics around multiple access modes, riding the same
-#'  patterns, etc. The specific extension to McRAPTOR to do suboptimal
-#'  path routing are not documented yet, but a detailed description of base
-#'  McRAPTOR can be found in Delling et al (2015).
-#'  - Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
-#'   routing. Transportation Science, 49(3), 591-604.
+#' @template mcraptor_algorithm_section
 #'
 #' @return A LINESTRING sf with detailed information about the itineraries
 #'         between specified origins and destinations. Distances are in meters

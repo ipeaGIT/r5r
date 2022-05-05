@@ -205,19 +205,29 @@ the exact same date and time in Rio's local time, perhaps surprisingly,
 ignoring the timezone attribute.
 }
 
-\section{Routing algorithm:}{
-The travel_time_matrix function uses an R5-specific extension to the RAPTOR
-routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
-systematic sample of one departure per minute over the time window set by the
-user in the 'time_window' parameter. A detailed description of base RAPTOR
-can be found in Delling et al (2015).
+\section{Routing algorithm}{
+
+
+The \code{\link[=detailed_itineraries]{detailed_itineraries()}} and \code{\link[=pareto_frontier]{pareto_frontier()}} functions use an
+\code{R5}-specific extension to the McRAPTOR routing algorithm. The
+implementation used in \code{detailed_itineraries()} allows the router to find
+paths that are optimal and less than optimal in terms of travel time, with
+some heuristics around multiple access modes, riding the same patterns, etc.
+The specific extension to McRAPTOR to do suboptimal path routing is not
+documented yet, but a detailed description of base McRAPTOR can be found in
+Delling et al (2015). The implementation used in \code{pareto_frontier()}, on the
+other hand, returns only the fastest trip within a given monetary cutoff,
+ignoring slower trips that cost the same. A detailed discussion on the
+algorithm can be found in Conway and Stewart (2019).
 \itemize{
-\item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based transit
-and land use sketch planning using interactive accessibility methods on
-combined schedule and headway-based networks. Transportation Research Record,
-2653(1), 45-53.
-\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
-routing. Transportation Science, 49(3), 591-604.
+\item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public
+transit routing. Transportation Science, 49(3), 591-604.
+\url{https://doi.org/10.1287/trsc.2014.0534}
+\item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
+multiobjective optimization method to account for cost constraints in public
+transit accessibility metrics. International Journal of Geographical
+Information Science, 33(9), 1759–1787.
+\url{https://doi.org/10.1080/13658816.2019.1605075}
 }
 }
 
