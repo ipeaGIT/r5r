@@ -81,13 +81,12 @@ ps. Please keep in mind that the `time_window` only affects the results when the
 
 
 
-### 1.1 Travel time matrix with `time_window`.
+### 3.2 Travel time matrix with `time_window`.
 
-Let's calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
+In this example, we calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
 
 ```{r, message = FALSE, eval = FALSE}
 # estimate travel time matrix
-
 ttm <- travel_time_matrix(r5r_core,   
                           origins = points,
                           destinations = points,    
@@ -107,125 +106,47 @@ head(ttm, n = 10)
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_ttm_head.png?raw=true")
 ```
 
+Now let's look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.
+
+The last row in the result above has a few `NA`s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the `max_trip_duration` we have set (90 minutes).
 
 
 
+### 3.3 Accessibility with `time_window`.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 2. Calculate Accessibility
-
-In this example, we will be calculating the number of schools and public healthcare facilities accessible by public transport within a travel time of up to 20 minutes. The sample data provided contains information on the spatial distribution of schools in Porto Alegre in the `points$schools` column, and healthcare facilities in the `points$healthcare` column. 
-
-With the code below we compute the number of schools and healthcare accessible considering median of multiple travel time estimates departing every minute over a 60-minute time window, between 2pm and 3pm. The `accessibility()` function can calculate access to multiple opportunities in a single call, which is much more efficient and convenient than producing a travel time matrix of the study area and manually computing accessibility.
-
+Now let's calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we'll be using a cumulative accessibility metric `decay_function = "step"` with a max time threshold of 45 minutes `cutoffs = 45`.
+  
+ 
 
 ```{r, message = FALSE, eval = FALSE}
-# read all points in the city
-points <- fread(file.path(data_path, "poa_hexgrid.csv"))
+# estimate accessibility
+acc <- r5r::accessibility(r5r_core,   
+                          origins = points,
+                          destinations = points, 
+                          opportunities_colnames = 'schools',
+                          mode = mode,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          decay_function = "step",
+                          cutoffs = 45,
+                          departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+                          verbose = FALSE,
+                          time_window = 60,
+                          percentiles = c(10, 20, 50, 70, 80)
+                          )
 
-# routing inputs
-mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000 # in meters
-travel_time_cutoff <- 21 # in minutes
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-                                 format = "%d-%m-%Y %H:%M:%S")
+head(acc, n = 10)
 
-time_window <- 60 # in minutes
-percentiles <- 50
-
-# calculate travel time matrix
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        mode = mode,
-                        opportunities_colnames = c("schools", "healthcare"),
-                        decay_function = "step",
-                        cutoffs = travel_time_cutoff,
-                        departure_datetime = departure_datetime,
-                        max_walk_dist = max_walk_dist,
-                        time_window = time_window,
-                        percentiles = percentiles,
-                        verbose = FALSE)
-
-
-head(access)
-#>            from_id percentile cutoff accessibility 
-#> 1: 89a901291abffff         50     21             3 
-#> 2: 89a9012a3cfffff         50     21             0 
-#> 3: 89a901295b7ffff         50     21             6 
-#> 4: 89a901284a3ffff         50     21             1 
-#> 5: 89a9012809bffff         50     21             5 
-#> 6: 89a901285cfffff         50     21             3 
 ```
-
-
-
-
-
-## 3. Map Accessibility
-
-The final step is mapping the accessibility results calculated earlier. The code
-below demonstrates how to do that, with some extra steps to produce a prettier map by doing a spatial interpolation of accessibility estimates.
-
-```{r, message = FALSE, eval = FALSE}
-# interpolate estimates to get spatially smooth result
-access_schools <- access %>% 
-  filter(opportunity == "schools") %>%
-  inner_join(points, by='id') %>%
-  with(interp(lon, lat, accessibility)) %>%
-  with(cbind(acc=as.vector(z),  # Column-major order
-             x=rep(x, times=length(y)),
-             y=rep(y, each=length(x)))) %>% as.data.frame() %>% na.omit() %>%
-  mutate(opportunity = "schools")
-
-access_health <- access %>% 
-  filter(opportunity == "healthcare") %>%
-  inner_join(points, by='id') %>%
-  with(interp(lon, lat, accessibility)) %>%
-  with(cbind(acc=as.vector(z),  # Column-major order
-             x=rep(x, times=length(y)),
-             y=rep(y, each=length(x)))) %>% as.data.frame() %>% na.omit() %>%
-  mutate(opportunity = "healthcare")
-
-access.interp <- rbind(access_schools, access_health)
-
-# find results' bounding box to crop the map
-bb_x <- c(min(access.interp$x), max(access.interp$x))
-bb_y <- c(min(access.interp$y), max(access.interp$y))
-
-# extract OSM network, to plot over map
-street_net <- street_network_to_sf(r5r_core)
-
-# plot
-ggplot(na.omit(access.interp)) +
-  geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.8) +
-  geom_sf(data = street_net$edges, color = "gray55", size=0.1, alpha = 0.9) +
-  scale_fill_viridis_d(direction = -1, option = 'B') +
-  scale_x_continuous(expand=c(0,0)) +
-  scale_y_continuous(expand=c(0,0)) +
-  coord_sf(xlim = bb_x, ylim = bb_y, datum = NA) + 
-  labs(fill = "Facilities within\n20 minutes\n(median travel time)") +
-  theme_minimal() +
-  theme(axis.title = element_blank()) +
-  facet_wrap(~opportunity)
-```
-
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_accessibility.gif?raw=true")
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true")
 ```
+
+
+
+Now let's look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.
+
+
 
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
