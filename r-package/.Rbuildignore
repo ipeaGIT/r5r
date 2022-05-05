@@ -13,4 +13,5 @@
 ^inst/extdata/.*/.*\.mapdb\.p$
 ^\.github$
 ^inst/img
+^inst/jar/r5-.*\.jar$
 ^man/figures
