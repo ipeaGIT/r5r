@@ -33,7 +33,8 @@
 #' @template mcraptor_algorithm_section
 #'
 #' @family routing
-#' @examples if (interactive()) {
+#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -53,8 +54,6 @@
 #'                           departure_datetime = departure_datetime)
 #'
 #' stop_r5(r5r_core)
-#'
-#' }
 #' @export
 pareto_frontier <- function(r5r_core,
                             origins,

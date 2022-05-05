@@ -206,7 +206,7 @@ Information Science, 33(9), 1759–1787.
 }
 
 \examples{
-if (interactive()) {
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -228,7 +228,7 @@ dit <- detailed_itineraries(r5r_core,
                             max_trip_duration = 120L)
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other routing: 

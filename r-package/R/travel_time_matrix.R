@@ -43,7 +43,7 @@
 #' @template raptor_algorithm_section
 #'
 #' @family routing
-#' @examples if (interactive()) {
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -65,10 +65,7 @@
 #'                           max_trip_duration = 120L)
 #'
 #' stop_r5(r5r_core)
-#'
-#' }
 #' @export
-
 travel_time_matrix <- function(r5r_core,
                                origins,
                                destinations,

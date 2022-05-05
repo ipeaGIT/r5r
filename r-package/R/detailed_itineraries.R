@@ -21,7 +21,7 @@
 #'
 #' @family routing
 #'
-#' @examples if (interactive()) {
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -43,9 +43,7 @@
 #'                             max_trip_duration = 120L)
 #'
 #' stop_r5(r5r_core)
-#' }
 #' @export
-
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,

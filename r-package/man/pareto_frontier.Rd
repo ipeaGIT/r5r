@@ -232,7 +232,7 @@ Information Science, 33(9), 1759–1787.
 }
 
 \examples{
-if (interactive()) {
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -252,8 +252,7 @@ pf <- pareto_frontier(r5r_core,
                           departure_datetime = departure_datetime)
 
 stop_r5(r5r_core)
-
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other routing: 

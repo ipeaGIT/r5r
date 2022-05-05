@@ -238,7 +238,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-if (interactive()) {
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -260,8 +260,7 @@ ttm <- travel_time_matrix(r5r_core,
                           max_trip_duration = 120L)
 
 stop_r5(r5r_core)
-
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other routing: 

@@ -47,16 +47,14 @@ directory, both files will be merged. If there is already a 'network.dat'
 file in the directory the function will simply read it and load it to memory.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files
 path <- system.file("extdata/poa", package = "r5r")
 
 r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
-
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other setup: 

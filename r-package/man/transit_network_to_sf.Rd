@@ -24,8 +24,7 @@ Extract transit network in \code{sf} format from a \code{network.dat} file
 built with the \code{\link{setup_r5}} function.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -36,7 +35,7 @@ r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 transit_net <- transit_network_to_sf(r5r_core)
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other support functions: 

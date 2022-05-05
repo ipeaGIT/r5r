@@ -69,11 +69,12 @@ setup_fare_calculator <- function(r5r_core,
 #' @param file_path
 #'
 #' @return
-#' @export
 #'
 #' @family fare calculator
 #'
 #' @examples
+#'
+#' @export
 write_fare_calculator <- function(fare_structure, file_path) {
 
   # get temporary folder
@@ -131,11 +132,12 @@ write_fare_calculator <- function(fare_structure, file_path) {
 #' @param file_path
 #'
 #' @return
-#' @export
 #'
 #' @family fare calculator
 #'
 #' @examples
+#'
+#' @export
 read_fare_calculator <- function(file_path) {
 
   # get temporary folder
@@ -183,9 +185,10 @@ read_fare_calculator <- function(file_path) {
 #' @param fare_calculator_settings
 #'
 #' @return
-#' @export
 #'
 #' @examples
+#'
+#' @keywords internal
 set_fare_calculator <- function(r5r_core,
                                 fare_calculator_settings = NULL) {
 
@@ -206,5 +209,3 @@ set_fare_calculator <- function(r5r_core,
   }
 
 }
-
-

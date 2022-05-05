@@ -47,7 +47,7 @@
 #' @details
 #'
 #' @family routing
-#' @examples if (interactive()) {
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -68,10 +68,7 @@
 #'                           verbose = FALSE)
 #'
 #' stop_r5(r5r_core)
-#'
-#' }
 #' @export
-
 accessibility <- function(r5r_core,
                           origins,
                           destinations,
