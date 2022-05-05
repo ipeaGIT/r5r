@@ -195,7 +195,7 @@ accessibility <- function(r5r_core,
                           max_lts = 2,
                           draws_per_minute = 5L,
                           n_threads = Inf,
-                          verbose = TRUE,
+                          verbose = FALSE,
                           progress = TRUE) {
 
 

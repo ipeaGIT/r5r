@@ -116,7 +116,7 @@ detailed_itineraries <- function(r5r_core,
                                  max_lts = 2,
                                  shortest_path = TRUE,
                                  n_threads = Inf,
-                                 verbose = TRUE,
+                                 verbose = FALSE,
                                  progress = TRUE,
                                  drop_geometry = FALSE) {
 

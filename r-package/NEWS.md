@@ -9,7 +9,9 @@
 
 * Minor changes
   * r5r now downloads R5 Jar directly from Conveyal's github, making the package more stable. Closes [#226](https://github.com/ipeaGIT/r5r/issues/226).
-
+  * All functions now use `verbose = FALSE` by default.
+  
+  
 -------------------------------------------------------
 # r5r v0.7.0
 
