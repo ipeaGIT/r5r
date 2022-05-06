@@ -1,9 +1,9 @@
 context("Detailed itineraries function")
 
-# skips tests on CRAN since they require a specific version of java
-testthat::skip_on_cran()
+# if running manually, please run the following line first:
+# source("tests/testthat/setup.R")
 
-# create testing function
+testthat::skip_on_cran()
 
 default_tester <- function(r5r_core,
                            origins = points[1:2, ],
@@ -132,7 +132,7 @@ test_that("detailed_itineraries adequately raises errors", {
 
 })
 
-test_that("detailed_itineraries adequately raises warnings and messages - needs java", {
+test_that("detailed_itineraries adequately raises warnings and messages", {
 
   # message related to expanding origins/destinations dataframe
   expect_message(default_tester(r5r_core, origins = points[1, ]))
@@ -218,8 +218,8 @@ test_that("detailed_itineraries output is correct", {
   # ps: note that if a very high speed is set then the routes change completely
   # and we lose the ability to use lower walking speeds routes as reference
 
-  origins      <- points[10,]
-  destinations <- points[12,]
+  origins      <- points[1,]
+  destinations <- points[3,]
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
   duration_lower_speed <- data.table::setDT(df)$segment_duration

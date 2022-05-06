@@ -1,5 +1,3 @@
-# testthat::skip_on_cran()
-
 options(java.parameters = '-Xmx2G')
 
 if (Sys.getenv("NOT_CRAN") != "false") {
