@@ -44,7 +44,6 @@
 #' @template lts_section
 #' @template datetime_parsing_section
 #' @template raptor_algorithm_section
-#' @details
 #'
 #' @family routing
 #' @examplesIf interactive()
@@ -93,7 +92,7 @@ accessibility <- function(r5r_core,
                           draws_per_minute = 5L,
                           n_threads = Inf,
                           verbose = FALSE,
-                          progress = TRUE) {
+                          progress = FALSE) {
 
 
   # set data.table options --------------------------------------------------

@@ -75,7 +75,7 @@ pareto_frontier <- function(r5r_core,
                             draws_per_minute = 5L,
                             n_threads = Inf,
                             verbose = FALSE,
-                            progress = TRUE) {
+                            progress = FALSE) {
 
 
   # set data.table options --------------------------------------------------

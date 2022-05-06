@@ -51,11 +51,12 @@
 #' information.
 #' @param n_threads An integer. The number of threads to use when running the
 #' router in parallel. Defaults to use all available threads (Inf).
-#' @param verbose A logical. Defaults to `FALSE`, showing only eventual ERROR
-#' messages. Setting `verbose=TRUE` shows detailed output, which can be useful
-#' for debugging.
+#' @param verbose A logical. Whether to show `R5` informative messages when
+#' running the router. Defaults to `FALSE` (please note that in such case `R5`
+#' error messages are still shown). Setting `verbose` to `TRUE` shows detailed
+#' output, which can be useful for debugging issues not caught by `r5r`.
 #' @param progress A logical. Whether to show a progress counter when running
-#' the router. Defaults to `TRUE`. Only works when `verbose` is set to `FALSE`,
+#' the router. Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`,
 #' so the progress counter does not interfere with `R5`'s output messages.
 #' Setting `progress` to `TRUE` may impose a small penalty for computation
 #' efficiency, because the progress counter must be synchronized among all

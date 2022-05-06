@@ -29,7 +29,7 @@ accessibility(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = TRUE
+  progress = FALSE
 )
 }
 \arguments{
@@ -145,12 +145,13 @@ when estimating accessibility. Defaults to 5. This would mean 300 draws in a
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}
 
-\item{verbose}{A logical. Defaults to \code{FALSE}, showing only eventual ERROR
-messages. Setting \code{verbose=TRUE} shows detailed output, which can be useful
-for debugging.}
+\item{verbose}{A logical. Whether to show \code{R5} informative messages when
+running the router. Defaults to \code{FALSE} (please note that in such case \code{R5}
+error messages are still shown). Setting \code{verbose} to \code{TRUE} shows detailed
+output, which can be useful for debugging issues not caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{TRUE}. Only works when \code{verbose} is set to \code{FALSE},
+the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to \code{FALSE},
 so the progress counter does not interfere with \code{R5}'s output messages.
 Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
 efficiency, because the progress counter must be synchronized among all
@@ -163,9 +164,6 @@ a given transport mode, and per travel time cutoff and percentile.
 \description{
 Fast computation of access to opportunities given a selected decay function.
 See \code{details} for the available decay functions.
-}
-\details{
-
 }
 \section{Decay functions}{
 

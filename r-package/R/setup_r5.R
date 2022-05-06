@@ -37,7 +37,7 @@
 #' @export
 setup_r5 <- function(data_path,
                      version = "6.6.0",
-                     verbose = TRUE,
+                     verbose = FALSE,
                      temp_dir = FALSE,
                      use_elevation = FALSE,
                      overwrite = FALSE) {
