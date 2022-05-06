@@ -200,3 +200,36 @@ pareto_df %>%
 
 r5r_core$setMaxFare(10L, "rio-de-janeiro")
 r5r_core$verboseMode()
+
+
+## accessibility decay
+
+library(r5r)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = FALSE)
+
+
+decay_step <- r5r_core$testDecay("STEP", 0.0)
+decay_exp <- r5r_core$testDecay("EXPONENTIAL", 0.0)
+decay_fixed_exp <- r5r_core$testDecay("FIXED_EXPONENTIAL", 0)
+decay_linear <- r5r_core$testDecay("LINEAR", 10.0)
+decay_logistic <- r5r_core$testDecay("LOGISTIC", 10.0)
+
+decays_df <- data.frame(seconds = 1:3600,
+                        step = decay_step,
+                        exponential = decay_exp,
+                        fixed_exponential = decay_fixed_exp,
+                        linear = decay_linear,
+                        logistic = decay_logistic)
+
+decays_df <- pivot_longer(decays_df, cols = 2:6, names_to = "decay_function", values_to = "decay")
+
+ggplot(decays_df, aes(x=seconds, y=decay, color=decay_function)) +
+  geom_point() +
+  geom_vline(xintercept = 1800) +
+  facet_wrap(~decay_function) +
+  theme(legend.position = "none")
