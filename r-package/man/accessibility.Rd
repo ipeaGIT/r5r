@@ -90,9 +90,12 @@ no effect when using the \code{fixed_exponential} function.}
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
-\item{fare_calculator_settings}{Placeholder description.}
+\item{fare_calculator_settings}{A fare calculator describing how transit
+fares should be calculated. Please see the details and the fare calculator
+vignette to understand how this object must be structured.}
 
-\item{max_fare}{Placeholder description.}
+\item{max_fare}{A numeric. The maximum value that trips can cost when
+calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the

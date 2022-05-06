@@ -95,9 +95,23 @@ set \code{max_trip_duration = 5 / 12 * 60}).}
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{fare_calculator_settings}{Placeholder description.}
+\item{fare_calculator_settings}{A fare calculator describing how transit
+fares should be calculated. Please see the details and the fare calculator
+vignette to understand how this object must be structured.}
 
-\item{monetary_cost_cutoffs}{Placeholder description.}
+\item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
+should be considered when calculating the Pareto frontier. Note that if the
+distribution of such cutoffs is too coarse, many different trips may fall
+within the same cutoff. For example, if you have two different routes in
+your GTFS, one costing $3 and the other costing $4, and you set this
+parameter to \code{5}, the output will tell you the fastest trips that costed up
+to $5, but you won't be able to identify which route was used to complete
+such trips. In this case, it would be more beneficial to set the parameter
+as \code{c(3, 4)} (you could also specify combinations of such values, such as 6,
+7, 8 and so on, because a transit user could hypothetically benefit from
+making transfers between the available routes). Most of the time you'll want
+this parameter to be the combination of all possible fares listed in you
+\code{fare_calculator_settings}.}
 
 \item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.}
@@ -244,14 +258,19 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
 # estimate travel time matrix
-pf <- pareto_frontier(r5r_core,
-                          origins = points,
-                          destinations = points,
-                          mode = c("WALK", "TRANSIT"),
-                          departure_datetime = departure_datetime)
+pf <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime
+)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
