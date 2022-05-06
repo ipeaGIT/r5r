@@ -14,7 +14,7 @@
 #'         snapped to the road network, possibly because the `gtfs.zip` input
 #'         data covers an area larger than the `osm.pbf` input data.
 #'
-#' @family support functions
+#' @family network functions
 #'
 #' @examplesIf interactive()
 #' library(r5r)

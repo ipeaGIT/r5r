@@ -5,7 +5,7 @@
 #' @return A list with two components of a street network in sf format: vertices
 #'         (POINT) and edges (LINESTRING).
 #'
-#' @family support functions
+#' @family network functions
 #'
 #' @examplesIf interactive()
 #' library(r5r)

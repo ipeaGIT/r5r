@@ -72,22 +72,23 @@ upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
-\item{decay_function}{string. Choice of one of the following decay functions:
-'step', 'exponential', 'fixed_exponential', 'linear',
-and 'logistic'. Defaults to 'step', which yields
-cumulative opportunities accessibility metrics.
-More info in \code{details}.}
+\item{decay_function}{A string. Which decay function to use when calculating
+accessibility. One of \code{step}, \code{exponential}, \code{fixed_exponential}, \code{linear}
+or \code{logistic}. Defaults to \code{step}, which is equivalent to a cumulative
+opportunities measure. Please see the details to understand how each
+alternative works and how they relate to the \code{cutoffs} and \code{decay_value}
+parameters.}
 
-\item{cutoffs}{numeric. Cutoff times in minutes for calculating cumulative
-opportunities accessibility when using the 'step decay function'.
-This parameter has different effects for each of the other decay
-functions: it indicates the 'median' (or inflection point) of
-the decay curves in the 'logistic' and 'linear' functions, and
-the 'half-life' in the 'exponential' function. It has no effect
-when using the 'fixed exponential' function.}
+\item{cutoffs}{A numeric vector. This parameter has different effects for
+each decay function: it indicates the cutoff times in minutes when
+calculating cumulative opportunities accessibility with the \code{step} function,
+the median (or inflection point) of the decay curves in the \code{logistic} and
+\code{linear} functions, and the half-life in the \code{exponential} function. It has
+no effect when using the \code{fixed_exponential} function.}
 
-\item{decay_value}{numeric. Extra parameter to be passed to the selected
-\code{decay_function}.}
+\item{decay_value}{A numeric. Extra parameter to be passed to the selected
+\code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
+\code{exponential}.}
 
 \item{fare_calculator_settings}{Placeholder description.}
 
