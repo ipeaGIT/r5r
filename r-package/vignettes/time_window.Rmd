@@ -144,6 +144,12 @@ This output is in long format, so the first 5 rows show the result for the same 
 We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.
 
 ```{r, message = FALSE, eval = FALSE}
+# summarize
+df <- acc[, .(min_acc = min(accessibility),
+              median = accessibility[which(percentile == 50)],
+              max_acc = max(accessibility)), by = id]
+
+# plot
 ggplot(data=df) +
   geom_linerange(color='gray', alpha=.5, aes(x = reorder(id, median) , 
                       y=median, ymin=min_acc, ymax=max_acc)) +
