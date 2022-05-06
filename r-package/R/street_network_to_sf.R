@@ -1,6 +1,6 @@
 #' Extract OpenStreetMap network in sf format from a network.dat file
 #'
-#' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
+#' @template r5r_core
 #'
 #' @return A list with two components of a street network in sf format: vertices
 #'         (POINT) and edges (LINESTRING).

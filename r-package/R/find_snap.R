@@ -7,7 +7,7 @@
 #' returned with `NA` coordinates and `found = FALSE`. Please note that the
 #' location of the snapped points depends on the transport mode set by the user.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param points a spatial sf POINT object, or a data.frame
 #'               containing the columns 'id', 'lon', 'lat'
 #' @param mode string. Defaults to "WALK", also allows "BICYCLE", and "CAR".

@@ -3,6 +3,7 @@
 #' Fast computation of (multiple) detailed itineraries between one or many
 #' origin destination pairs.
 #'
+#' @template r5r_core
 #' @template common_arguments
 #' @param shortest_path logical. Whether the function should only return the
 #'                      fastest route alternative (the default) or multiple

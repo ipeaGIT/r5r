@@ -3,7 +3,7 @@
 #' @description Extract transit network in `sf` format from a `network.dat` file
 #'              built with the \code{\link{setup_r5}} function.
 #'
-#' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
+#' @template r5r_core
 #'
 #' @return A list with two components of a transit network in sf format:
 #'         route shapes (LINESTRING) and transit stops (POINT). The same

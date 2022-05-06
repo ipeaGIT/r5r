@@ -3,6 +3,7 @@
 #' Fast computation of access to opportunities given a selected decay function.
 #' See `details` for the available decay functions.
 #'
+#' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template fare_calculator_settings

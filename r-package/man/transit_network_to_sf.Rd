@@ -7,7 +7,8 @@
 transit_network_to_sf(r5r_core)
 }
 \arguments{
-\item{r5r_core}{a rJava object, the output from 'r5r::setup_r5()'}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 }
 \value{
 A list with two components of a transit network in sf format:

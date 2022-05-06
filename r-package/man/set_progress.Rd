@@ -7,7 +7,8 @@
 set_progress(r5r_core, progress)
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{progress}{logical, passed from function above}
 }

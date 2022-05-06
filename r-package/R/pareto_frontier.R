@@ -3,6 +3,7 @@
 #' Fast computation of travel time and monetary cost Pareto frontier between
 #' origin and destination pairs.
 #'
+#' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template fare_calculator_settings

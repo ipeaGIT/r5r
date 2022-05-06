@@ -7,7 +7,8 @@
 apply_elevation(r5r_core, raster_files)
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{raster_files}{string. Path to raster files containing the study area's
 topography. If a list is provided, all the rasters are

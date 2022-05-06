@@ -7,7 +7,8 @@
 set_suboptimal_minutes(r5r_core, suboptimal_minutes)
 }
 \arguments{
-\item{r5r_core}{rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{suboptimal_minutes}{numeric. The number of suboptimal minutes in a public transport
 point-to-point query. From R5's documentation:

@@ -7,7 +7,8 @@
 find_snap(r5r_core, points, mode = "WALK")
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{points}{a spatial sf POINT object, or a data.frame
 containing the columns 'id', 'lon', 'lat'}

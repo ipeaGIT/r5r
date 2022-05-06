@@ -7,8 +7,6 @@
 set_n_threads(r5r_core, n_threads)
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
-
 \item{n_threads}{Any object.}
 }
 \value{

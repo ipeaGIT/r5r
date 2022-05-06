@@ -1,6 +1,6 @@
 #' Title
 #'
-#' @param r5r_core
+#' @template r5r_core
 #' @param base_fare
 #' @param by
 #'
@@ -181,7 +181,7 @@ read_fare_calculator <- function(file_path) {
 
 #' Title
 #'
-#' @param r5r_core
+#' @template r5r_core
 #' @param fare_calculator_settings
 #'
 #' @return
