@@ -1,6 +1,6 @@
 #' Set verbose argument
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param verbose logical, passed from function above
 #'
 #' @return No return value, called for side effects.
@@ -21,7 +21,7 @@ set_verbose <- function(r5r_core, verbose) {
 
 #' Set progress argument
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param progress logical, passed from function above
 #'
 #' @return No return value, called for side effects.
@@ -325,7 +325,6 @@ assert_breakdown_stat <- function(breakdown_stat) {
 #'
 #' @description Sets number of threads to be used by the r5r .jar.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param n_threads Any object.
 #'
 #' @return No return value, called for side effects.
@@ -358,7 +357,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 #' from routing functions above and converts them to meters per second, which is
 #' then used to set these speed profiles in r5r JAR.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param speed A numeric representing the speed in km/h.
 #' @param mode Either \code{"bike"} or \code{"walk"}.
 #'
@@ -381,7 +380,7 @@ set_speed <- function(r5r_core, speed, mode) {
 
 #' Set max Level of Transit Stress (LTS)
 #'
-#' @param r5r_core rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param max_lts numeric (between 1 and 4). The maximum level of traffic stress
 #' that cyclists will tolerate. A value of 1 means cyclists will only travel
 #' through the quietest streets, while a value of 4 indicates cyclists can travel
@@ -407,7 +406,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #'
 #' @description Set maxTransfers parameter in R5.
 #'
-#' @param r5r_core rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param max_rides numeric. The max number of public transport rides
 #'                  allowed in the same trip. Passed from routing function.
 #'
@@ -431,7 +430,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'
 #' @description Set suboptimalMinutes parameter in R5.
 #'
-#' @param r5r_core rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param suboptimal_minutes numeric. The number of suboptimal minutes in a public transport
 #'                  point-to-point query. From R5's documentation:
 #'                  This parameter compensates for the fact that GTFS does not

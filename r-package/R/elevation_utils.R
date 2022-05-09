@@ -27,7 +27,7 @@ tobler_hiking <- function(slope) {
 #'              weights the street network for walking and cycling according to
 #'              the terrain's slopes
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param raster_files string. Path to raster files containing the study area's
 #'                     topography. If a list is provided, all the rasters are
 #'                     automatically merged.

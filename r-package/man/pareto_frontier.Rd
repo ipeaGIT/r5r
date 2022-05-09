@@ -95,9 +95,23 @@ set \code{max_trip_duration = 5 / 12 * 60}).}
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{fare_calculator_settings}{Placeholder description.}
+\item{fare_calculator_settings}{A fare calculator describing how transit
+fares should be calculated. Please see the details and the fare calculator
+vignette to understand how this object must be structured.}
 
-\item{monetary_cost_cutoffs}{Placeholder description.}
+\item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
+should be considered when calculating the Pareto frontier. Note that if the
+distribution of such cutoffs is too coarse, many different trips may fall
+within the same cutoff. For example, if you have two different routes in
+your GTFS, one costing $3 and the other costing $4, and you set this
+parameter to \code{5}, the output will tell you the fastest trips that costed up
+to $5, but you won't be able to identify which route was used to complete
+such trips. In this case, it would be more beneficial to set the parameter
+as \code{c(3, 4)} (you could also specify combinations of such values, such as 6,
+7, 8 and so on, because a transit user could hypothetically benefit from
+making transfers between the available routes). Most of the time you'll want
+this parameter to be the combination of all possible fares listed in you
+\code{fare_calculator_settings}.}
 
 \item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.}
@@ -184,10 +198,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -228,7 +242,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759â€“1787.
+Information Science, 33(9), 1759–1787.
 \url{https://doi.org/10.1080/13658816.2019.1605075}
 }
 }
@@ -244,14 +258,19 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
 # estimate travel time matrix
-pf <- pareto_frontier(r5r_core,
-                          origins = points,
-                          destinations = points,
-                          mode = c("WALK", "TRANSIT"),
-                          departure_datetime = departure_datetime)
+pf <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime
+)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

@@ -7,6 +7,9 @@
 setup_fare_calculator(r5r_core, base_fare, by = "MODE")
 }
 \arguments{
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
+
 \item{by}{}
 }
 \value{

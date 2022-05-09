@@ -7,6 +7,9 @@
 set_fare_calculator(r5r_core, fare_calculator_settings = NULL)
 }
 \arguments{
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
+
 \item{fare_calculator_settings}{}
 }
 \value{

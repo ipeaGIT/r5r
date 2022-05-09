@@ -3,6 +3,7 @@
 #' Fast computation of access to opportunities given a selected decay function.
 #' See `details` for the available decay functions.
 #'
+#' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template fare_calculator_settings
@@ -21,20 +22,21 @@
 #' upstream restrictions, only 5 percentiles can be specified at a time. For
 #' more details, please see R5 documentation at
 #' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
-#' @param decay_function string. Choice of one of the following decay functions:
-#'                       'step', 'exponential', 'fixed_exponential', 'linear',
-#'                       and 'logistic'. Defaults to 'step', which yields
-#'                       cumulative opportunities accessibility metrics.
-#'                       More info in `details`.
-#' @param cutoffs numeric. Cutoff times in minutes for calculating cumulative
-#'                opportunities accessibility when using the 'step decay function'.
-#'                This parameter has different effects for each of the other decay
-#'                functions: it indicates the 'median' (or inflection point) of
-#'                the decay curves in the 'logistic' and 'linear' functions, and
-#'                the 'half-life' in the 'exponential' function. It has no effect
-#'                when using the 'fixed exponential' function.
-#' @param decay_value numeric. Extra parameter to be passed to the selected
-#'                `decay_function`.
+#' @param decay_function A string. Which decay function to use when calculating
+#' accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
+#' or `logistic`. Defaults to `step`, which is equivalent to a cumulative
+#' opportunities measure. Please see the details to understand how each
+#' alternative works and how they relate to the `cutoffs` and `decay_value`
+#' parameters.
+#' @param cutoffs A numeric vector. This parameter has different effects for
+#' each decay function: it indicates the cutoff times in minutes when
+#' calculating cumulative opportunities accessibility with the `step` function,
+#' the median (or inflection point) of the decay curves in the `logistic` and
+#' `linear` functions, and the half-life in the `exponential` function. It has
+#' no effect when using the `fixed_exponential` function.
+#' @param decay_value A numeric. Extra parameter to be passed to the selected
+#' `decay_function`. Has no effects when `decay_function` is either `step` or
+#' `exponential`.
 #'
 #' @return A data.table with accessibility estimates for all origin points, by
 #' a given transport mode, and per travel time cutoff and percentile.

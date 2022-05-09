@@ -7,17 +7,18 @@
 #' returned with `NA` coordinates and `found = FALSE`. Please note that the
 #' location of the snapped points depends on the transport mode set by the user.
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
-#' @param points a spatial sf POINT object, or a data.frame
-#'               containing the columns 'id', 'lon', 'lat'
-#' @param mode string. Defaults to "WALK", also allows "BICYCLE", and "CAR".
+#' @template r5r_core
+#' @param points Either a `POINT sf` object with WGS84 CRS, or a `data.frame`
+#' containing the columns `id`, `lon` and `lat`.
+#' @param mode A string. Which mode to consider when trying to snap the points
+#' to the network. Defaults to `WALK`, also allows `BICYCLE` and `CAR`.
 #'
 #' @return A data.table with the original points as well as their respective
 #'         snapped coordinates on the street network and the Euclidean distance
 #'         between original points and their respective snapped location. Points
 #'         that could not be snapped show `NA` coordinates and `found = FALSE`.
 #'
-#' @family support functions
+#' @family network functions
 #'
 #' @examplesIf interactive()
 #' library(r5r)
