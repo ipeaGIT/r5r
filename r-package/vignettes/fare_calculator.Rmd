@@ -25,6 +25,7 @@ library(r5r)
 library(sf)
 library(data.table)
 library(ggplot2)
+library(patchwork)
 library(dplyr)
 library(mapview)
 ```
@@ -224,7 +225,7 @@ Basic route information is taken directly from the GTFS data (agency, route id a
 
 We actually don't have any change do to in the `fares_per_route` table, in this example. It does not matter that the `route_fare` value is wrong for the "RAIL" lines, because we are using the fares set in `fares_per_mode` and `fares_per_transfer` which we already set up correctly before.
 
-Now that our `fare_settings` is complete, we can use it to calculate travel time matrices and accessibility while accpouting for monetary cost cutoffs. Let's see how it's done in the next sections.
+Now that our `fare_settings` is complete, we can use it to calculate travel time matrices and accessibility while accounting for monetary cost cutoffs. Let's see how it's done in the next sections.
 
 
 # Calculating travel time and accessibiilty accounting for monetary costs
@@ -236,19 +237,92 @@ The `travel_time_matrix()` and `accessibility()` functions have two new paramete
 
 
 ## Travel time with monetary cost
-???
-example with a pareto frontier showing the trade-offs between time and monetary costs of multiple trip alternatives.
 
+The following example shows travel time differences when monetary costs are accounted for, using the `travel_time_matrix()` function.
 
-
-## Calculating accessibiilty with monetary cost
-
-Now, we can answer questions like "how many healthcare facilities one can access in 60 minutes using public transport, on a R\$5.00 budget?". We'll do that below, and compare the results the accessibility unconstrained by monetary costs: 
 
 ```{r}
 ## load input data
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 
+# calculate travel times function
+calculate_travel_times <- function(fare) {
+
+  ttm_df <- travel_time_matrix(r5r_core,
+                               origins = points,
+                               destinations = points,
+                               departure_datetime = as.POSIXct("13-05-2019 14:00:00",
+                                                               format = "%d-%m-%Y %H:%M:%S"),
+                               mode = c("WALK", "TRANSIT"),
+                               fare_calculator_settings = fare_settings,
+                               max_fare = fare,
+                               max_trip_duration = 45,
+                               max_walk_dist = 800,
+                               verbose = FALSE)
+
+  return(ttm_df)
+}
+
+
+# calculate travel times, and combine results
+ttm <- calculate_travel_times(fare = Inf)
+ttm_500 <- calculate_travel_times(fare = 5)
+
+ttm[ttm_500, on = .(from_id, to_id), travel_time_500 := i.travel_time]
+
+```
+
+Below, we can see a sample of the travel time differences with and without monetary cost restriction. We can see that some trips are not affected at all (`travel_time == travel_time_500`), some trips take a little longer to complete (`travel_time_500 > travel_time`), and other trips cannot be completed at all (`travel_time_500 == NA`).
+
+```{r}
+tail(ttm, 10)
+```
+
+The plots below show the overall distribution of the travel time differences and unreachable destinations:
+
+```{r}
+# plot of overall travel time differences between limited and unlimited cost travel time matrices 
+time_difference = ttm[!is.na(travel_time_500), .(count = .N), 
+                      by = .(travel_time, travel_time_500)]
+
+p1 <- ggplot(time_difference, aes(y = travel_time, x = travel_time_500)) +
+  geom_point(size = 0.7) +
+  coord_fixed() +
+  scale_x_continuous(breaks = seq(0, 45, 5)) +
+  scale_y_continuous(breaks = seq(0, 45, 5)) +
+  theme_light() +
+  theme(legend.position = "none") +
+  labs(y = "travel time (minutes)\nunestricted monetary cost",
+       x = "travel time (minutes)\nmonetary cost restricted to R$ 5.00"
+       )
+
+# plot of unreachable destinations when the monetary cost limit is too low
+unreachable <- ttm[, .(count = .N), by = .(travel_time, is.na(travel_time_500))]
+unreachable[, perc := count / sum(count), by = .(travel_time)]
+unreachable <- unreachable[is.na == TRUE]
+
+p2 <- ggplot(unreachable, aes(x=travel_time, y=perc)) +
+  geom_col() +
+  coord_flip() +
+  scale_x_continuous(breaks = seq(0, 45, 5)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2), 
+                     labels = paste0(seq(0, 100, 20), "%")) +
+  theme_light() +
+  labs(x = "travel time (minutes)\nwithout monetary cost restriction",
+       y = "% of unreachable destinations\nconsidering a R$ 5.00 monetary cost limit")
+
+# combine both plots using patchwork
+p1 + p2 + plot_annotation(subtitle = "Comparing travel times with and without monetary cost restriction")
+
+```
+
+
+
+## Calculating accessibility with monetary cost
+
+Now, we can answer questions like "how many healthcare facilities one can access in 60 minutes using public transport, on a R\$5.00 budget?". We'll do that below, and compare the results the accessibility unconstrained by monetary costs: 
+
+```{r}
 # calculate accessibility function
 calculate_accessibility <- function(fare, fare_string) {
 
@@ -288,7 +362,7 @@ Finally, we can plot the results and see the difference!
 ```{r}
 # plot accessibility maps
 ggplot(data = access) +
-  geom_sf(aes(fill = accessibility, color=NA), size = 0.2) +
+  geom_sf(aes(fill = accessibility), color=NA, size = 0.2) +
   scale_fill_distiller(palette = "Spectral") +
   facet_wrap(~max_fare) +
   labs(subtitle = "Effect of monetary cost on accessibility") +
