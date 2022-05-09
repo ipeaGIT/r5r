@@ -2,24 +2,73 @@
 % Please edit documentation in R/fare_calculator.R
 \name{setup_fare_calculator}
 \alias{setup_fare_calculator}
-\title{Title}
+\title{Setup a fare calculator to use with routing functions}
 \usage{
-setup_fare_calculator(r5r_core, base_fare, by = "MODE")
+setup_fare_calculator(
+  r5r_core,
+  base_fare,
+  by = "MODE",
+  debug_path = NULL,
+  debug_info = NULL
+)
 }
 \arguments{
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{by}{}
+\item{base_fare}{A numeric. A base value used to populate the fare
+calculator.}
+
+\item{by}{A string. Describes how \code{fare_type}s (a classification we created
+to assign fares to different routes) are distributed among routes. Possible
+values are \code{MODE}, \code{AGENCY} and \code{GENERIC}. \code{MODE} is used when the mode is
+what determines the price of a route (e.g. if all the buses of a given city
+cost $5). \code{AGENCY} is used when the agency that operates each route is what
+determines its price (i.e. when two different routes/modes operated by a
+single agency cost the same; note that you can also use \code{AGENCY_NAME}, if
+the agency_ids listed in your GTFS cannot be easily interpreted). \code{GENERIC}
+is used when all the routes cost the same. Please note that this
+classification can later be edited to better suit your needs (when, for
+example, two types of buses cost the same, but one offers discounts after
+riding the subway and the other one doesn't), but this parameter may save
+you some work.}
+
+\item{debug_path}{Either a path to a \code{.csv} file or \code{NULL}. When \code{NULL} (the
+default), fare debugging capabilities are disabled - i.e. there's no way to
+check if the fare calculation is correct. When a path is provided, \code{r5r}
+saves different itineraries and their respective fares to the specified
+file. How each itinerary is described is controlled by \code{debug_info}.}
+
+\item{debug_info}{Either a string (when \code{debug_path} is a path) or \code{NULL}
+(the default). Doesn't have any effect if \code{debug_path} is \code{NULL}. When a
+string, accepts the values \code{MODE}, \code{ROUTE} and \code{MODE_ROUTE}. These values
+dictates how itinerary information is written to the output. Let's suppose
+we have an itinerary composed by two transit legs: first a subway leg whose
+route_id is 001, and then a bus legs whose route_id is 007. If \code{debug_info}
+is \code{MODE}, then this itinerary will be described as \code{SUBWAY|BUS}. If
+\code{ROUTE}, as \code{001|007}. If \code{MODE_ROUTE}, as \verb{SUBWAY 001|BUS 007}. Please note
+that the final debug information will contain not only the itineraries that
+were in fact used in the itineraries returned in \code{\link[=travel_time_matrix]{travel_time_matrix()}},
+\code{\link[=accessibility]{accessibility()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}, but all the itineraries that \code{R5}
+checked when calculating the routes. This imposes a performance penalty when
+tracking debug information (but has the positive effect of returning a
+larger sample of itineraries, which might help finding some implementation
+issues on the fare calculator).}
 }
 \value{
-
+A fare calculator object.
 }
 \description{
-Title
+Creates a basic fare calculator that describes how transit fares should be
+calculated in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=accessibility]{accessibility()}} and
+\code{\link[=pareto_frontier]{pareto_frontier()}}. This fare calculator can be manually edited and
+adjusted to the existing rules in your study area, as long as they stick to
+some basic premises. Please see fare calculator vignetter for more
+information on how the fare calculator works.
 }
 \examples{
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other fare calculator: 

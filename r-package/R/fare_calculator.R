@@ -1,49 +1,82 @@
-#' Title
+#' Setup a fare calculator to use with routing functions
+#'
+#' Creates a basic fare calculator that describes how transit fares should be
+#' calculated in [travel_time_matrix()], [accessibility()] and
+#' [pareto_frontier()]. This fare calculator can be manually edited and
+#' adjusted to the existing rules in your study area, as long as they stick to
+#' some basic premises. Please see fare calculator vignetter for more
+#' information on how the fare calculator works.
 #'
 #' @template r5r_core
-#' @param base_fare
-#' @param by
+#' @param base_fare A numeric. A base value used to populate the fare
+#' calculator.
+#' @param by A string. Describes how `fare_type`s (a classification we created
+#' to assign fares to different routes) are distributed among routes. Possible
+#' values are `MODE`, `AGENCY` and `GENERIC`. `MODE` is used when the mode is
+#' what determines the price of a route (e.g. if all the buses of a given city
+#' cost $5). `AGENCY` is used when the agency that operates each route is what
+#' determines its price (i.e. when two different routes/modes operated by a
+#' single agency cost the same; note that you can also use `AGENCY_NAME`, if
+#' the agency_ids listed in your GTFS cannot be easily interpreted). `GENERIC`
+#' is used when all the routes cost the same. Please note that this
+#' classification can later be edited to better suit your needs (when, for
+#' example, two types of buses cost the same, but one offers discounts after
+#' riding the subway and the other one doesn't), but this parameter may save
+#' you some work.
+#' @param debug_path Either a path to a `.csv` file or `NULL`. When `NULL` (the
+#' default), fare debugging capabilities are disabled - i.e. there's no way to
+#' check if the fare calculation is correct. When a path is provided, `r5r`
+#' saves different itineraries and their respective fares to the specified
+#' file. How each itinerary is described is controlled by `debug_info`.
+#' @param debug_info Either a string (when `debug_path` is a path) or `NULL`
+#' (the default). Doesn't have any effect if `debug_path` is `NULL`. When a
+#' string, accepts the values `MODE`, `ROUTE` and `MODE_ROUTE`. These values
+#' dictates how itinerary information is written to the output. Let's suppose
+#' we have an itinerary composed by two transit legs: first a subway leg whose
+#' route_id is 001, and then a bus legs whose route_id is 007. If `debug_info`
+#' is `MODE`, then this itinerary will be described as `SUBWAY|BUS`. If
+#' `ROUTE`, as `001|007`. If `MODE_ROUTE`, as `SUBWAY 001|BUS 007`. Please note
+#' that the final debug information will contain not only the itineraries that
+#' were in fact used in the itineraries returned in [travel_time_matrix()],
+#' [accessibility()] and [pareto_frontier()], but all the itineraries that `R5`
+#' checked when calculating the routes. This imposes a performance penalty when
+#' tracking debug information (but has the positive effect of returning a
+#' larger sample of itineraries, which might help finding some implementation
+#' issues on the fare calculator).
 #'
-#' @return
+#' @return A fare calculator object.
 #'
 #' @family fare calculator
 #'
-#' @examples
+#' @examplesIf interactive()
 #'
 #' @export
 setup_fare_calculator <- function(r5r_core,
                                   base_fare,
-                                  by = "MODE") {
-
-
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
+                                  by = "MODE",
+                                  debug_path = NULL,
+                                  debug_info = NULL) {
   checkmate::assert_class(r5r_core, "jobjRef")
-
-  # max trip duration
   checkmate::assert_numeric(base_fare, lower = 0.0)
 
-  # by MODE, AGENCY, or GENERIC
-  by_options <- c("MODE", "AGENCY", "AGENCY_ID", "AGENCY_NAME", "GENERIC")
-  checkmate::assert_character(by)
+  by_options <- c("MODE", "AGENCY_ID", "AGENCY_NAME", "GENERIC")
   by <- toupper(by)
-
-  if (!by %chin% by_options) {
-    stop(paste0(by, " is not a valid setup option.\nPlease use one of the following: ",
-                paste(unique(by_options), collapse = ", ")))
-  }
+  checkmate::assert(
+    checkmate::check_string(by),
+    checkmate::assert_names(by, subset.of = by_options),
+    combine = "and"
+  )
 
   # call r5r_core method ----------------------------------------------------
 
   f_struct <- r5r_core$buildFareStructure(rJava::.jfloat(base_fare), by)
 
   json_string <- f_struct$toJson()
-  fare_settings <- jsonlite::parse_json(json_string, simplifyVector = TRUE)
+  fare_calculator <- jsonlite::parse_json(json_string, simplifyVector = TRUE)
 
   # Inf values are not supported by Java, so we use -1 to represent them
-  if (fare_settings$fare_cap <= 0) {
-    fare_settings$fare_cap <- Inf
+  if (fare_calculator$fare_cap <= 0) {
+    fare_calculator$fare_cap <- Inf
   }
 
   # attach debug settings
@@ -52,30 +85,30 @@ setup_fare_calculator <- function(r5r_core,
     trip_info = "MODE"
   )
 
-  fare_settings$debug_settings <- debug
+  fare_calculator$debug_settings <- debug
 
-  # convert data.frames to data.tables, for consistency
-  data.table::setDT(fare_settings$fares_per_mode)
-  data.table::setDT(fare_settings$fares_per_transfer)
-  data.table::setDT(fare_settings$fares_per_route)
+  data.table::setDT(fare_calculator$fares_per_mode)
+  data.table::setDT(fare_calculator$fares_per_transfer)
+  data.table::setDT(fare_calculator$fares_per_route)
 
-  return(fare_settings)
+  return(fare_calculator)
 }
 
 
-#' Write fare calculator settings to file
+#' Write a fare calculator object to disk
 #'
-#' @param fare_structure
-#' @param file_path
+#' @param fare_calculator A fare calculator object, following the convention
+#' set in [setup_fare_calculator()].
+#' @param file_path A string.
 #'
-#' @return
+#' @return The path passed to `file_path`, invisibly.
 #'
 #' @family fare calculator
 #'
-#' @examples
+#' @examplesIf interactive()
 #'
 #' @export
-write_fare_calculator <- function(fare_structure, file_path) {
+write_fare_calculator <- function(fare_calculator, file_path) {
 
   # get temporary folder
   tmp_dir <- tempdir()
@@ -85,30 +118,30 @@ write_fare_calculator <- function(fare_structure, file_path) {
                 "max_discounted_transfers",
                 "transfer_time_allowance",
                 "fare_cap"),
-    value = c(fare_structure$base_fare,
-              fare_structure$max_discounted_transfers,
-              fare_structure$transfer_time_allowance,
-              fare_structure$fare_cap)
+    value = c(fare_calculator$base_fare,
+              fare_calculator$max_discounted_transfers,
+              fare_calculator$transfer_time_allowance,
+              fare_calculator$fare_cap)
   )
 
   fare_debug_settings <- data.table::data.table(
     setting = c("output_file",
                 "trip_info"),
-    value = c(fare_structure$debug_settings$output_file,
-              fare_structure$debug_settings$trip_info)
+    value = c(fare_calculator$debug_settings$output_file,
+              fare_calculator$debug_settings$trip_info)
   )
 
   data.table::fwrite(x = fare_global_settings,
                      file = file.path(tmp_dir, "global_settings.csv"))
 
 
-  data.table::fwrite(x = fare_structure$fares_per_mode,
+  data.table::fwrite(x = fare_calculator$fares_per_mode,
                      file = file.path(tmp_dir, "fares_per_mode.csv"))
 
-  data.table::fwrite(x = fare_structure$fares_per_transfer,
+  data.table::fwrite(x = fare_calculator$fares_per_transfer,
                      file = file.path(tmp_dir, "fares_per_transfer.csv"))
 
-  data.table::fwrite(x = fare_structure$fares_per_route,
+  data.table::fwrite(x = fare_calculator$fares_per_route,
                      file = file.path(tmp_dir, "fares_per_route.csv"))
 
   data.table::fwrite(x = fare_debug_settings,
@@ -127,15 +160,17 @@ write_fare_calculator <- function(fare_structure, file_path) {
 }
 
 
-#' Read fare calculator settings from file
+#' Read a fare calculator object from a file
 #'
-#' @param file_path
+#' @param file_path A string.
 #'
-#' @return
+#' @return A fare calculator object.
 #'
 #' @family fare calculator
 #'
-#' @examples
+#' @examplesIf interactive()
+#' path <- system.file("inst/extdata/poa/fares/fares_poa.zip", package = "r5r")
+#' fare_calculator <- read_fare_calculator(path)
 #'
 #' @export
 read_fare_calculator <- function(file_path) {
@@ -149,15 +184,15 @@ read_fare_calculator <- function(file_path) {
   # global properties
   global_settings <- data.table::fread(normalizePath(file.path(tmp_dir, "global_settings.csv")))
 
-  fare_structure <- as.list(global_settings$value)
-  names(fare_structure) <- global_settings$setting
+  fare_calculator <- as.list(global_settings$value)
+  names(fare_calculator) <- global_settings$setting
 
   # load individual data.frames
-  fare_structure$fares_per_mode <- data.table::fread(file = file.path(tmp_dir, "fares_per_mode.csv"))
+  fare_calculator$fares_per_mode <- data.table::fread(file = file.path(tmp_dir, "fares_per_mode.csv"))
 
-  fare_structure$fares_per_transfer <- data.table::fread(file = file.path(tmp_dir, "fares_per_transfer.csv"))
+  fare_calculator$fares_per_transfer <- data.table::fread(file = file.path(tmp_dir, "fares_per_transfer.csv"))
 
-  fare_structure$fares_per_route <-
+  fare_calculator$fares_per_route <-
     data.table::fread(file = file.path(tmp_dir, "fares_per_route.csv"),
                       colClasses = list(character = c("agency_id",
                                                       "agency_name",
@@ -173,36 +208,35 @@ read_fare_calculator <- function(file_path) {
   debug_settings <- as.list(debug_options$value)
   names(debug_settings) <- debug_options$setting
 
-  fare_structure$debug_settings <- debug_settings
+  fare_calculator$debug_settings <- debug_settings
 
 
-  return(fare_structure)
+  return(fare_calculator)
 }
 
 #' Title
 #'
 #' @template r5r_core
-#' @param fare_calculator_settings
+#' @param fare_calculator
 #'
 #' @return
 #'
 #' @examples
 #'
 #' @keywords internal
-set_fare_calculator <- function(r5r_core,
-                                fare_calculator_settings = NULL) {
+set_fare_calculator <- function(r5r_core, fare_calculator = NULL) {
 
-  if (!is.null(fare_calculator_settings)) {
-    if (fare_calculator_settings$fare_cap == Inf) {
-      fare_calculator_settings$fare_cap = -1
+  if (!is.null(fare_calculator)) {
+    if (fare_calculator$fare_cap == Inf) {
+      fare_calculator$fare_cap <- -1
     }
 
-    fare_settings_json <- jsonlite::toJSON(fare_calculator_settings, auto_unbox = TRUE)
+    fare_settings_json <- jsonlite::toJSON(fare_calculator, auto_unbox = TRUE)
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCalculatorDebugOutputSettings(fare_calculator_settings$debug_settings$output_file,
-                                                  fare_calculator_settings$debug_settings$trip_info)
+    r5r_core$setFareCalculatorDebugOutputSettings(fare_calculator$debug_settings$output_file,
+                                                  fare_calculator$debug_settings$trip_info)
   } else {
     # clear fare calculator settings in r5r_core
     r5r_core$dropFareCalculator()

@@ -89,9 +89,9 @@ travel through the quietest streets, while a value of 4 indicates cyclists
 can travel through any road. Defaults to 2. Please see details for more
 information.}
 
-\item{shortest_path}{logical. Whether the function should only return the
-fastest route alternative (the default) or multiple
-alternatives.}
+\item{shortest_path}{A logical. Whether the function should only return the
+fastest itinerary between each origin and destination pair (the default) or
+multiple alternatives.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}
@@ -108,13 +108,14 @@ Setting \code{progress} to \code{TRUE} may impose a small penalty for computatio
 efficiency, because the progress counter must be synchronized among all
 active threads.}
 
-\item{drop_geometry}{logical. Indicates whether R5 should drop segment's
-geometry column. It can be helpful for saving memory.}
+\item{drop_geometry}{A logical. Whether the output should include the
+geometry of each segment or not. The default value of \code{FALSE} keeps the
+geometry column in the result.}
 }
 \value{
-A LINESTRING sf with detailed information about the itineraries
-between specified origins and destinations. Distances are in meters
-and travel times are in minutes.
+When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
+origins and destinations. When \code{TRUE}, the output is a \code{data.table}. All
+distances are in meters and travel times are in minutes.
 }
 \description{
 Fast computation of (multiple) detailed itineraries between one or many
@@ -219,7 +220,10 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # inputs
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
 dit <- detailed_itineraries(r5r_core,
                             origins = points[10,],

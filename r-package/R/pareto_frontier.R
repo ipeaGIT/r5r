@@ -6,7 +6,7 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
-#' @template fare_calculator_settings
+#' @template fare_calculator
 #' @param percentiles An integer vector with length smaller than or equal to 5.
 #' Specifies the percentile to use when returning travel time estimates within
 #' the given time window. Please note that this parameter is applied to the
@@ -20,21 +20,21 @@
 #' specified at a time. For more details, please see R5 documentation at
 #' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param monetary_cost_cutoffs A numeric vector. The monetary cutoffs that
-#' should be considered when calculating the Pareto frontier. Note that if the
-#' distribution of such cutoffs is too coarse, many different trips may fall
-#' within the same cutoff. For example, if you have two different routes in
-#' your GTFS, one costing $3 and the other costing $4, and you set this
-#' parameter to `5`, the output will tell you the fastest trips that costed up
-#' to $5, but you won't be able to identify which route was used to complete
-#' such trips. In this case, it would be more beneficial to set the parameter
-#' as `c(3, 4)` (you could also specify combinations of such values, such as 6,
-#' 7, 8 and so on, because a transit user could hypothetically benefit from
-#' making transfers between the available routes). Most of the time you'll want
-#' this parameter to be the combination of all possible fares listed in you
-#' `fare_calculator_settings`.
+#' should be considered when calculating the Pareto frontier. Most of the time
+#' you'll want this parameter to be the combination of all possible fares
+#' listed in you `fare_calculator`. Choosing a coarse distribution of
+#' cutoffs may result in many different trips falling within the same cutoff.
+#' For example, if you have two different routes in your GTFS, one costing $3
+#' and the other costing $4, and you set this parameter to `5`, the output will
+#' tell you the fastest trips that costed up to $5, but you won't be able to
+#' identify which route was used to complete such trips. In this case, it would
+#' be more beneficial to set the parameter as `c(3, 4)` (you could also specify
+#' combinations of such values, such as 6, 7, 8 and so on, because a transit
+#' user could hypothetically benefit from making transfers between the
+#' available routes).
 #'
 #' @return A `data.table` with the travel time and monetary cost Pareto
-#' frontier between the specified origins and destinations. And additional
+#' frontier between the specified origins and destinations. An additional
 #' column identifying the travel time percentile is present if more than one
 #' value was passed to `percentiles`. Origin and destination pairs whose trips
 #' couldn't be completed within the maximum travel time using less money than
@@ -84,7 +84,7 @@ pareto_frontier <- function(r5r_core,
                             max_walk_dist = Inf,
                             max_bike_dist = Inf,
                             max_trip_duration = 120L,
-                            fare_calculator_settings = NULL,
+                            fare_calculator = NULL,
                             monetary_cost_cutoffs = -1L,
                             walk_speed = 3.6,
                             bike_speed = 12,
@@ -179,8 +179,8 @@ pareto_frontier <- function(r5r_core,
   # set progress
   set_progress(r5r_core, progress)
 
-  # fare calculator settings
-  set_fare_calculator(r5r_core, fare_calculator_settings)
+  # fare calculator
+  set_fare_calculator(r5r_core, fare_calculator)
 
   # set fare cutoffs
   r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cost_cutoffs))

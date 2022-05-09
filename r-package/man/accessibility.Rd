@@ -17,7 +17,7 @@ accessibility(
   decay_function = "step",
   cutoffs = 30L,
   decay_value = 1,
-  fare_calculator_settings = NULL,
+  fare_calculator = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
@@ -90,9 +90,9 @@ no effect when using the \code{fixed_exponential} function.}
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
-\item{fare_calculator_settings}{A fare calculator describing how transit
-fares should be calculated. Please see the details and the fare calculator
-vignette to understand how this object must be structured.}
+\item{fare_calculator}{A fare calculator describing how transit fares should
+be calculated. Please see the details and the fare calculator vignette to
+understand how this object must be structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
@@ -162,8 +162,9 @@ efficiency, because the progress counter must be synchronized among all
 active threads.}
 }
 \value{
-A data.table with accessibility estimates for all origin points, by
-a given transport mode, and per travel time cutoff and percentile.
+A \code{data.table} with accessibility estimates for all origin points.
+An additional column identifying the percentiles is present if more than one
+value was passed to \code{percentiles}.
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.
@@ -313,15 +314,21 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
+
 # estimate accessibility
-  access <- accessibility(r5r_core,
-                          origins = points,
-                          destinations = points,
-                          opportunities_colnames = "schools",
-                          mode = "WALK",
-                          cutoffs = c(25, 30),
-                          max_trip_duration = 30,
-                          verbose = FALSE)
+access <- accessibility(r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = "schools",
+                        mode = "WALK",
+                        departure_datetime = departure_datetime,
+                        cutoffs = c(25, 30),
+                        max_trip_duration = 30,
+                        verbose = FALSE)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
