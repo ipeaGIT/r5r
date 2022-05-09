@@ -38,8 +38,9 @@
 #' `decay_function`. Has no effects when `decay_function` is either `step` or
 #' `exponential`.
 #'
-#' @return A data.table with accessibility estimates for all origin points, by
-#' a given transport mode, and per travel time cutoff and percentile.
+#' @return A `data.table` with accessibility estimates for all origin points.
+#' An additional column identifying the percentiles is present if more than one
+#' value was passed to `percentiles`.
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section
@@ -48,6 +49,7 @@
 #' @template raptor_algorithm_section
 #'
 #' @family routing
+#'
 #' @examplesIf interactive()
 #' library(r5r)
 #'
@@ -58,15 +60,21 @@
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 #'
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
+#'
 #' # estimate accessibility
-#'   access <- accessibility(r5r_core,
-#'                           origins = points,
-#'                           destinations = points,
-#'                           opportunities_colnames = "schools",
-#'                           mode = "WALK",
-#'                           cutoffs = c(25, 30),
-#'                           max_trip_duration = 30,
-#'                           verbose = FALSE)
+#' access <- accessibility(r5r_core,
+#'                         origins = points,
+#'                         destinations = points,
+#'                         opportunities_colnames = "schools",
+#'                         mode = "WALK",
+#'                         departure_datetime = departure_datetime,
+#'                         cutoffs = c(25, 30),
+#'                         max_trip_duration = 30,
+#'                         verbose = FALSE)
 #'
 #' stop_r5(r5r_core)
 #' @export

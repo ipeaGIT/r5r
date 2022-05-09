@@ -5,20 +5,22 @@
 #'
 #' @template r5r_core
 #' @template common_arguments
-#' @param shortest_path logical. Whether the function should only return the
-#'                      fastest route alternative (the default) or multiple
-#'                      alternatives.
-#' @param drop_geometry logical. Indicates whether R5 should drop segment's
-#'                      geometry column. It can be helpful for saving memory.
+#' @param shortest_path A logical. Whether the function should only return the
+#' fastest itinerary between each origin and destination pair (the default) or
+#' multiple alternatives.
+#' @param drop_geometry A logical. Whether the output should include the
+#' geometry of each segment or not. The default value of `FALSE` keeps the
+#' geometry column in the result.
 #'
 #' @template transport_modes_section
 #' @template lts_section
 #' @template datetime_parsing_section
 #' @template mcraptor_algorithm_section
 #'
-#' @return A LINESTRING sf with detailed information about the itineraries
-#'         between specified origins and destinations. Distances are in meters
-#'         and travel times are in minutes.
+#' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
+#' sf` with detailed information on the itineraries between the specified
+#' origins and destinations. When `TRUE`, the output is a `data.table`. All
+#' distances are in meters and travel times are in minutes.
 #'
 #' @family routing
 #'
@@ -33,7 +35,10 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
 #' dit <- detailed_itineraries(r5r_core,
 #'                             origins = points[10,],

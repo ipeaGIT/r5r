@@ -33,10 +33,10 @@
 #'        the trip itinerary whose waiting time is the closest to the average
 #'        waiting time in the time window.
 #'
-#' @return A data.table with travel time estimates (in minutes) between origin
-#' destination pairs by a given transport mode. Note that origins/destinations
-#' that were beyond the maximum travel time, and/or origins that were far from
-#' the street network are not returned in the data.table.
+#' @return A `data.table` with travel time estimates (in minutes) between
+#' origin and destination pairs. Pairs whose trips couldn't be completed within
+#' the maximum travel time and/or whose origin is too far from the street
+#' network are not returned in the `data.table`.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -44,6 +44,7 @@
 #' @template raptor_algorithm_section
 #'
 #' @family routing
+#'
 #' @examplesIf interactive()
 #' library(r5r)
 #'
@@ -54,7 +55,10 @@
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
 #'
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
 #' # estimate travel time matrix
 #' ttm <- travel_time_matrix(r5r_core,
