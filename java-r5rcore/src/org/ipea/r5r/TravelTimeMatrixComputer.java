@@ -195,15 +195,15 @@ public class TravelTimeMatrixComputer extends R5Process {
                             breakdown.routes = path[0];
                             breakdown.nRides = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.size();
 
-                            if (iteration.departureTime == 0) {
-                                if (!walkingRouteProcessed) {
-                                    breakdown.departureTime = this.departureTime;
-                                    pathResults[d].add(breakdown);
-                                    walkingRouteProcessed = true;
-                                }
-                            } else {
+//                            if (iteration.departureTime == 0) {
+//                                if (!walkingRouteProcessed) {
+//                                    breakdown.departureTime = this.departureTime;
+//                                    pathResults[d].add(breakdown);
+//                                    walkingRouteProcessed = true;
+//                                }
+//                            } else {
                                 pathResults[d].add(breakdown);
-                            }
+//                            }
 //
 //
 //

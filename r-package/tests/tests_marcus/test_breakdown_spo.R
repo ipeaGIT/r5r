@@ -21,7 +21,7 @@ system.time(
                             time_window = 30,
                             percentiles = c(25, 50, 75),
                             departure_datetime = lubridate::mdy_hm("4/19/19 12:00pm"),
-                            draws_per_minute = 10,
+                            draws_per_minute = 5,
                             verbose = F,
                             progress = T,
                             breakdown = T)
