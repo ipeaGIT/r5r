@@ -36,7 +36,7 @@
 #' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
 #' @export
 setup_r5 <- function(data_path,
-                     version = "6.6.0",
+                     version = "6.7.0",
                      verbose = FALSE,
                      temp_dir = FALSE,
                      use_elevation = FALSE,

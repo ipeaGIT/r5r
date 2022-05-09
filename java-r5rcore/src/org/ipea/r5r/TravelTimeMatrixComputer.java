@@ -104,7 +104,7 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
         // summarize travel paths, if required
-        ArrayList<String[]>[] pathResults =  null;
+//        ArrayList<String[]>[] pathResults =  null;
         List<PathBreakdown>[] pathBreakdown = null;
         if (this.routingProperties.travelTimesBreakdown) {
 //            pathResults = travelTimeResults.paths.summarizeIterations(this.routingProperties.travelTimesBreakdownStat);

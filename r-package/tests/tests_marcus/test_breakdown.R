@@ -4,7 +4,7 @@ devtools::load_all(".")
 library(data.table)
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_core <- setup_r5(data_path = data_path, verbose = T)
 
 # load origin/destination points
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
