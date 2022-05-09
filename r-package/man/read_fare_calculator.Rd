@@ -2,21 +2,24 @@
 % Please edit documentation in R/fare_calculator.R
 \name{read_fare_calculator}
 \alias{read_fare_calculator}
-\title{Read fare calculator settings from file}
+\title{Read a fare calculator object from a file}
 \usage{
 read_fare_calculator(file_path)
 }
 \arguments{
-\item{file_path}{}
+\item{file_path}{A string.}
 }
 \value{
-
+A fare calculator object.
 }
 \description{
-Read fare calculator settings from file
+Read a fare calculator object from a file
 }
 \examples{
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+path <- system.file("inst/extdata/poa/fares/fares_poa.zip", package = "r5r")
+fare_calculator <- read_fare_calculator(path)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other fare calculator: 

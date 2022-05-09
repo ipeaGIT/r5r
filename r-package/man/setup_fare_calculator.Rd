@@ -2,7 +2,7 @@
 % Please edit documentation in R/fare_calculator.R
 \name{setup_fare_calculator}
 \alias{setup_fare_calculator}
-\title{Title}
+\title{Setup a fare calculator to use with routing functions}
 \usage{
 setup_fare_calculator(r5r_core, base_fare, by = "MODE")
 }
@@ -10,16 +10,19 @@ setup_fare_calculator(r5r_core, base_fare, by = "MODE")
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{by}{}
+\item{base_fare}{A numeric.}
+
+\item{by}{A string.}
 }
 \value{
-
+A fare calculator object.
 }
 \description{
-Title
+Setup a fare calculator to use with routing functions
 }
 \examples{
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other fare calculator: 

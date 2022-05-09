@@ -15,7 +15,7 @@ travel_time_matrix(
   percentiles = 50L,
   breakdown = FALSE,
   breakdown_stat = "MEAN",
-  fare_calculator_settings = NULL,
+  fare_calculator = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
@@ -81,9 +81,9 @@ time window. If \code{breakdown_stat = mean}, the information is based on
 the trip itinerary whose waiting time is the closest to the average
 waiting time in the time window.}
 
-\item{fare_calculator_settings}{A fare calculator describing how transit
-fares should be calculated. Please see the details and the fare calculator
-vignette to understand how this object must be structured.}
+\item{fare_calculator}{A fare calculator describing how transit fares should
+be calculated. Please see the details and the fare calculator vignette to
+understand how this object must be structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}

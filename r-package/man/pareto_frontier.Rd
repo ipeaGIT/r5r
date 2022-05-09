@@ -16,7 +16,7 @@ pareto_frontier(
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,
-  fare_calculator_settings = NULL,
+  fare_calculator = NULL,
   monetary_cost_cutoffs = -1L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -95,14 +95,14 @@ set \code{max_trip_duration = 5 / 12 * 60}).}
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{fare_calculator_settings}{A fare calculator describing how transit
-fares should be calculated. Please see the details and the fare calculator
-vignette to understand how this object must be structured.}
+\item{fare_calculator}{A fare calculator describing how transit fares should
+be calculated. Please see the details and the fare calculator vignette to
+understand how this object must be structured.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the time
 you'll want this parameter to be the combination of all possible fares
-listed in you \code{fare_calculator_settings}. Choosing a coarse distribution of
+listed in you \code{fare_calculator}. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
 and the other costing $4, and you set this parameter to \code{5}, the output will

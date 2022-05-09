@@ -2,21 +2,25 @@
 % Please edit documentation in R/fare_calculator.R
 \name{write_fare_calculator}
 \alias{write_fare_calculator}
-\title{Write fare calculator settings to file}
+\title{Write a fare calculator object to disk}
 \usage{
-write_fare_calculator(fare_structure, file_path)
+write_fare_calculator(fare_calculator, file_path)
 }
 \arguments{
-\item{file_path}{}
+\item{fare_calculator}{A fare calculator object, following the convention
+set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}.}
+
+\item{file_path}{A string.}
 }
 \value{
-
+The path passed to \code{file_path}, invisibly.
 }
 \description{
-Write fare calculator settings to file
+Write a fare calculator object to disk
 }
 \examples{
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other fare calculator: 
