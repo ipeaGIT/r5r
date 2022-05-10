@@ -57,6 +57,7 @@ Suggests:
     covr,
     dplyr,
     ggplot2 (>= 3.3.1),
+    h3jsr,
     knitr,
     mapview,
     patchwork,
