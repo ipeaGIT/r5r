@@ -236,10 +236,10 @@ A detailed description of base RAPTOR can be found in Delling et al (2015).
 \item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
 on combined schedule and headway-based networks. Transportation Research
-Record, 2653(1), 45-53. \url{https://doi.org/10.3141/2653-06}
+Record, 2653(1), 45-53. \doi{10.3141/2653-06}
 \item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public
 transit routing. Transportation Science, 49(3), 591-604.
-\url{https://doi.org/10.1287/trsc.2014.0534}
+\doi{10.1287/trsc.2014.0534}
 }
 }
 

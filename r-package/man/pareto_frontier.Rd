@@ -239,12 +239,11 @@ algorithm can be found in Conway and Stewart (2019).
 \itemize{
 \item Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public
 transit routing. Transportation Science, 49(3), 591-604.
-\url{https://doi.org/10.1287/trsc.2014.0534}
+\doi{10.1287/trsc.2014.0534}
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759–1787.
-\url{https://doi.org/10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 
