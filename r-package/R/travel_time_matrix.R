@@ -8,6 +8,7 @@
 #' @template time_window_related_args
 #' @template fare_calculator
 #' @template max_fare
+#' @template verbose
 #' @param percentiles An integer vector with length smaller than or equal to 5.
 #' Specifies the percentile to use when returning travel time estimates within
 #' the given time window. For example, if the 25th travel time percentile

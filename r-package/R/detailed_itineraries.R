@@ -5,6 +5,7 @@
 #'
 #' @template r5r_core
 #' @template common_arguments
+#' @template verbose
 #' @param shortest_path A logical. Whether the function should only return the
 #' fastest itinerary between each origin and destination pair (the default) or
 #' multiple alternatives.
