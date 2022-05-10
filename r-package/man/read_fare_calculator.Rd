@@ -7,7 +7,8 @@
 read_fare_calculator(file_path)
 }
 \arguments{
-\item{file_path}{A string.}
+\item{file_path}{A path pointing to a fare calculator with a \code{.zip}
+extension.}
 }
 \value{
 A fare calculator object.

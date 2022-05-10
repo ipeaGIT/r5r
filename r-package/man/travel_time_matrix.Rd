@@ -81,9 +81,10 @@ time window. If \code{breakdown_stat = mean}, the information is based on
 the trip itinerary whose waiting time is the closest to the average
 waiting time in the time window.}
 
-\item{fare_calculator}{A fare calculator describing how transit fares should
-be calculated. Please see the details and the fare calculator vignette to
-understand how this object must be structured.}
+\item{fare_calculator}{A fare calculator object, following the convention
+set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
+should be calculated. Please see the fare calculator vignette to understand
+how this object is structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}

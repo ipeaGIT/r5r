@@ -2,7 +2,7 @@
 % Please edit documentation in R/fare_calculator.R
 \name{set_fare_calculator}
 \alias{set_fare_calculator}
-\title{Title}
+\title{Set the fare calculator used when calculating transit fares}
 \usage{
 set_fare_calculator(r5r_core, fare_calculator = NULL)
 }
@@ -10,15 +10,15 @@ set_fare_calculator(r5r_core, fare_calculator = NULL)
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{fare_calculator}{}
+\item{fare_calculator}{A fare calculator object, following the convention
+set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
+should be calculated. Please see the fare calculator vignette to understand
+how this object is structured.}
 }
 \value{
-
+Invisibly returns \code{TRUE}. Called for side effects.
 }
 \description{
-Title
-}
-\examples{
-
+Set the fare calculator used when calculating transit fares
 }
 \keyword{internal}

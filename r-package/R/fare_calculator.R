@@ -49,6 +49,25 @@
 #' @family fare calculator
 #'
 #' @examplesIf interactive()
+#' library(r5r)
+#'
+#' data_path <- system.file("extdata/poa", package = "r5r")
+#' r5r_core <- setup_r5(data_path)
+#'
+#' fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+#'
+#' # to debug fare calculation
+#' fare_calculator <- setup_fare_calculator(
+#'   r5r_core,
+#'   base_fare = 5,
+#'   debug_path = "fare_debug.csv",
+#'   debug_info = "MODE"
+#' )
+#'
+#' fare_calculator$debug_settings
+#'
+#' # debugging can be manually turned off by setting output_file to ""
+#' fare_calculator$debug_settings <- ""
 #'
 #' @export
 setup_fare_calculator <- function(r5r_core,
@@ -63,7 +82,7 @@ setup_fare_calculator <- function(r5r_core,
   by <- toupper(by)
   checkmate::assert(
     checkmate::check_string(by),
-    checkmate::assert_names(by, subset.of = by_options),
+    checkmate::check_names(by, subset.of = by_options),
     combine = "and"
   )
 
@@ -97,15 +116,27 @@ setup_fare_calculator <- function(r5r_core,
 
 #' Write a fare calculator object to disk
 #'
-#' @param fare_calculator A fare calculator object, following the convention
-#' set in [setup_fare_calculator()].
-#' @param file_path A string.
+#' Writes a fare calculator object do disk. Fare calculators are saved as a
+#' collection of `.csv` files inside a `.zip` file.
+#'
+#' @template fare_calculator
+#' @param file_path A path to a `.zip` file. Where the fare calculator should be
+#' written to.
 #'
 #' @return The path passed to `file_path`, invisibly.
 #'
 #' @family fare calculator
 #'
 #' @examplesIf interactive()
+#' library(r5r)
+#'
+#' data_path <- system.file("extdata/poa", package = "r5r")
+#' r5r_core <- setup_r5(data_path)
+#'
+#' fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+#'
+#' tmpfile <- tempfile("sample_fare_calculator", fileext = ".zip")
+#' write_fare_calculator(fare_calculator, tmpfile)
 #'
 #' @export
 write_fare_calculator <- function(fare_calculator, file_path) {
@@ -162,7 +193,8 @@ write_fare_calculator <- function(fare_calculator, file_path) {
 
 #' Read a fare calculator object from a file
 #'
-#' @param file_path A string.
+#' @param file_path A path pointing to a fare calculator with a `.zip`
+#' extension.
 #'
 #' @return A fare calculator object.
 #'
@@ -214,14 +246,13 @@ read_fare_calculator <- function(file_path) {
   return(fare_calculator)
 }
 
-#' Title
+
+#' Set the fare calculator used when calculating transit fares
 #'
 #' @template r5r_core
-#' @param fare_calculator
+#' @template fare_calculator
 #'
-#' @return
-#'
-#' @examples
+#' @return Invisibly returns `TRUE`. Called for side effects.
 #'
 #' @keywords internal
 set_fare_calculator <- function(r5r_core, fare_calculator = NULL) {
@@ -242,4 +273,5 @@ set_fare_calculator <- function(r5r_core, fare_calculator = NULL) {
     r5r_core$dropFareCalculator()
   }
 
+  return(invisible(TRUE))
 }

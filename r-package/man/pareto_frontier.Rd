@@ -95,9 +95,10 @@ set \code{max_trip_duration = 5 / 12 * 60}).}
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{fare_calculator}{A fare calculator describing how transit fares should
-be calculated. Please see the details and the fare calculator vignette to
-understand how this object must be structured.}
+\item{fare_calculator}{A fare calculator object, following the convention
+set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
+should be calculated. Please see the fare calculator vignette to understand
+how this object is structured.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the time

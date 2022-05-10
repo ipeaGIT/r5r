@@ -68,6 +68,25 @@ information on how the fare calculator works.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+library(r5r)
+
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path)
+
+fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+
+# to debug fare calculation
+fare_calculator <- setup_fare_calculator(
+  r5r_core,
+  base_fare = 5,
+  debug_path = "fare_debug.csv",
+  debug_info = "MODE"
+)
+
+fare_calculator$debug_settings
+
+# debugging can be manually turned off by setting output_file to ""
+fare_calculator$debug_settings <- ""
 \dontshow{\}) # examplesIf}
 }
 \seealso{

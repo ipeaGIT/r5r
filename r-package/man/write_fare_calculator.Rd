@@ -8,18 +8,31 @@ write_fare_calculator(fare_calculator, file_path)
 }
 \arguments{
 \item{fare_calculator}{A fare calculator object, following the convention
-set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}.}
+set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
+should be calculated. Please see the fare calculator vignette to understand
+how this object is structured.}
 
-\item{file_path}{A string.}
+\item{file_path}{A path to a \code{.zip} file. Where the fare calculator should be
+written to.}
 }
 \value{
 The path passed to \code{file_path}, invisibly.
 }
 \description{
-Write a fare calculator object to disk
+Writes a fare calculator object do disk. Fare calculators are saved as a
+collection of \code{.csv} files inside a \code{.zip} file.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+library(r5r)
+
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path)
+
+fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+
+tmpfile <- tempfile("sample_fare_calculator", fileext = ".zip")
+write_fare_calculator(fare_calculator, tmpfile)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
