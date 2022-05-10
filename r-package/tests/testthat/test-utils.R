@@ -130,9 +130,7 @@ test_that("assert_points_input adequately raises warnings and errors", {
 })
 
 test_that("assert_points_input output is coherent", {
-
   sf_points_output <- assert_points_input(sf_points, "points")
-
   df_points_output <- assert_points_input(points, "points")
 
   # correct output column types
@@ -141,12 +139,20 @@ test_that("assert_points_input output is coherent", {
   expect_type(sf_points_output$lat, "double")
   expect_type(sf_points_output$lon, "double")
 
+  expect_type(df_points_output$id, "character")
+  expect_type(df_points_output$lat, "double")
+  expect_type(df_points_output$lon, "double")
+
   # expect output columns to have the same value, irrespective of input class
 
-  expect_equal(sf_points_output$id, df_points_output$id, points$id)
-  expect_equal(sf_points_output$lat, df_points_output$lat, points$lat)
-  expect_equal(sf_points_output$lon, df_points_output$lon, points$lon)
+  expect_equal(sf_points_output$id, points$id)
+  expect_equal(sf_points_output$id, df_points_output$id)
 
+  expect_equal(sf_points_output$lat, points$lat)
+  expect_equal(sf_points_output$lat, df_points_output$lat)
+
+  expect_equal(sf_points_output$lon, points$lon)
+  expect_equal(sf_points_output$lon, df_points_output$lon)
 })
 
 
