@@ -233,3 +233,13 @@ ggplot(decays_df, aes(x=seconds, y=decay, color=decay_function)) +
   geom_vline(xintercept = 1800) +
   facet_wrap(~decay_function) +
   theme(legend.position = "none")
+
+
+
+# LTS ---------------------------------------------------------------------
+
+street_net <- street_network_to_sf(r5r_core)
+View(street_net$vertices)
+View(street_net$edges)
+
+mapview::mapview(street_net$edges, zcol = "bicycle_lts")

@@ -30,9 +30,10 @@ public class StreetNetwork {
         edgesTable.addIntegerColumn("from_vertex", 0);
         edgesTable.addIntegerColumn("to_vertex", 0);
         edgesTable.addDoubleColumn("length", 0.0);
+        edgesTable.addBooleanColumn("car", false);
         edgesTable.addBooleanColumn("walk", false);
         edgesTable.addBooleanColumn("bicycle", false);
-        edgesTable.addBooleanColumn("car", false);
+        edgesTable.addIntegerColumn("bicycle_lts", 0);
         edgesTable.addStringColumn("geometry", "");
 
         EdgeStore edges = transportNetwork.streetLayer.edgeStore;
@@ -46,9 +47,17 @@ public class StreetNetwork {
                 edgesTable.set("from_vertex", edgeCursor.getFromVertex());
                 edgesTable.set("to_vertex", edgeCursor.getToVertex());
                 edgesTable.set("length", edgeCursor.getLengthM());
-                edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
-                edgesTable.set("bicycle", edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
                 edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
+                edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
+
+                int lts = 1;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_2)) lts = 2;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_3)) lts = 3;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_4)) lts = 4;
+
+                edgesTable.set("bicycle", edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
+                edgesTable.set("bicycle_lts", lts);
+
                 edgesTable.set("geometry", edgeCursor.getGeometry().toString());
 
                 // if the edge is originally from OSM, add its from/to vertices to the vertices HashSet, so they can

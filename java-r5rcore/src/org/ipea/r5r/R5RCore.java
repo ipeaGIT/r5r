@@ -4,7 +4,6 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
-import com.conveyal.r5.point_to_point.builder.TNBuilderConfig;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
@@ -688,13 +687,4 @@ public class R5RCore {
 
         return servicesTable;
     }
-
-
-
-    public String defaultBuildConfig() {
-        TNBuilderConfig builderConfig = TNBuilderConfig.defaultConfig();
-
-        return builderConfig.toString();
-    }
-
 }
