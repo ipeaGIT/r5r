@@ -232,7 +232,7 @@ Now that our `fare_settings` is complete, we can use it to calculate travel time
 
 The `travel_time_matrix()` and `accessibility()` functions have two new parameters to account for monetary costs thresholds:
 
--   `fare_calculator_settings`: the settings object that we've been working on.
+-   `fare_calculator`: the settings object that we've been working on.
 -   `max_fare`: the maximum total fare that can be used in the trip.
 
 
@@ -254,7 +254,7 @@ calculate_travel_times <- function(fare) {
                                departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                                format = "%d-%m-%Y %H:%M:%S"),
                                mode = c("WALK", "TRANSIT"),
-                               fare_calculator_settings = fare_settings,
+                               fare_calculator = fare_settings,
                                max_fare = fare,
                                max_trip_duration = 45,
                                max_walk_dist = 800,
@@ -334,7 +334,7 @@ calculate_accessibility <- function(fare, fare_string) {
                              opportunities_colname = "healthcare",
                              mode = c("WALK", "TRANSIT"),
                              cutoffs = c(60),
-                             fare_calculator_settings = fare_settings,
+                             fare_calculator = fare_settings,
                              max_fare = fare,
                              max_trip_duration = 45,
                              max_walk_dist = 800,

@@ -28,5 +28,6 @@ java-r5rcore/target
 jpa-buddy.xml
 r5-*.jar
 r-package/tests_marcus/kinshasa
-
+r-package/vignettes/*.html
+r-package/vignettes/*.R
 aws.xml
