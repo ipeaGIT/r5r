@@ -72,13 +72,15 @@ system.time(
                         destinations = dest,
                         departure_datetime = departure_datetime,
                         opportunities_colname = "schools",
+                        decay_function = "logistic",
+                        decay_value = 15,
                         mode = c("WALK", "TRANSIT"),
                         cutoffs = c(60),
                         max_trip_duration = 60,
                         verbose = FALSE)
 )
 
-access %>% left_join(points, by = c("from_id" = "id")) %>%
+access %>% left_join(points, by = c("id" = "id")) %>%
   ggplot(aes(x=lon, y=lat, color= accessibility)) +
   geom_point() +
   coord_map() +
