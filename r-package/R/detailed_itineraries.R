@@ -219,24 +219,24 @@ detailed_itineraries <- function(r5r_core,
   # origin and destination has been passed, then the result is already a df
 
   if (is.null(path_options)) {
-
     return(data.table::data.table(path_options))
 
   } else {
-
     path_options <- java_to_dt(path_options)
 
     if (!is.data.frame(path_options)) {
-
       path_options <- data.table::rbindlist(path_options)
-
-      if (nrow(path_options) == 0) return(path_options)
-
     }
-
   }
 
-  if (nrow(path_options) == 0) return(path_options)
+  # If there is no result, return empty simple feature
+  if (nrow(path_options) == 0) {
+    if (!drop_geometry) {
+      path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]
+      path_options <- sf::st_sf(path_options, crs = 4326)
+    }
+    return(path_options)
+  }
 
   # return either the fastest or multiple itineraries between an o-d pair (untie
   # it by the option number, if necessary)
