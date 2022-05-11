@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the tradeoffs between travel time and monetary cost in travel time matrices in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Using the time_window parameter} 
+  %\VignetteIndexEntry{Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json
