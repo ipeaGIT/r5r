@@ -204,9 +204,9 @@ assert_points_input <- function(df, name) {
 
   # check if 'df' is a data.frame or a POINT sf
 
-  if (is(df, "data.frame")) {
+  if ("data.frame" %in% class(df)) {
 
-    if (is(df, "sf")) {
+    if ("sf" %in% class(df)) {
 
       if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
         stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
@@ -467,6 +467,8 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 #' @return A data.frame with all possible combinations of origins and destinations.
 #'
 #' @family support functions
+#'
+#' @keywords internal
 get_all_od_combinations <- function(origins, destinations){
 
   # cross join to get all possible id combinations

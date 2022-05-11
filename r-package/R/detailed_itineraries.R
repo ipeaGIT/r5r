@@ -9,6 +9,10 @@
 #' @param shortest_path A logical. Whether the function should only return the
 #' fastest itinerary between each origin and destination pair (the default) or
 #' multiple alternatives.
+#' @param all_to_all A logical. Whether to query routes between the 1st origin
+#' to the 1st destination, then the 2nd origin to the 2nd destination, and so
+#' on (`FALSE`, the default) or to query routes between all origins to all
+#' destinations (`TRUE`).
 #' @param drop_geometry A logical. Whether the output should include the
 #' geometry of each segment or not. The default value of `FALSE` keeps the
 #' geometry column in the result.
@@ -252,7 +256,7 @@ detailed_itineraries <- function(r5r_core,
     # itineraries with the same signature (sequence of routes) are filtered to
     # keep the one with the shortest duration
 
-    path_options[, temp_route := fifelse(route == "", mode, route)]
+    path_options[, temp_route := data.table::fifelse(route == "", mode, route)]
     path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(from_id, to_id, option)]
 
     path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(from_id, to_id, temp_sign)]$V1]

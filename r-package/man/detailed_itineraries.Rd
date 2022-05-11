@@ -94,6 +94,11 @@ information.}
 fastest itinerary between each origin and destination pair (the default) or
 multiple alternatives.}
 
+\item{all_to_all}{A logical. Whether to query routes between the 1st origin
+to the 1st destination, then the 2nd origin to the 2nd destination, and so
+on (\code{FALSE}, the default) or to query routes between all origins to all
+destinations (\code{TRUE}).}
+
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}
 

@@ -8,19 +8,20 @@
 \title{r5r: Rapid Realistic Routing with 'R5'}
 \description{
 Rapid realistic routing on multimodal transport networks (walk, bike, public
-transport and car) using 'R5', the Rapid Realistic Routing on Real-world and
+transport and car) using \code{R5}, the Rapid Realistic Routing on Real-world and
 Reimagined networks engine \url{https://github.com/conveyal/r5}. The package
 allows users to generate detailed routing analysis or calculate travel time
 matrices using seamless parallel computing on top of the R5 Java machine.
-While R5 is developed by Conveyal, the package r5r is independently developed
-by a team at the Institute for Applied Economic Research (Ipea) with
-contributions from collaborators. Apart from the documentation in this
-package, users will find additional information on R5 documentation at
-\url{https://docs.conveyal.com/}. Although we try to keep new releases of r5r in
-synchrony with R5, the development of R5 follows Conveyal's independent update
-process. Hence, users should confirm the R5 version implied by the Conveyal
-user manual (see \url{https://docs.conveyal.com/changelog}) corresponds with the
-R5 version that r5r depends on.
+While \code{R5} is developed by Conveyal, the package \code{r5r} is independently
+developed by a team at the Institute for Applied Economic Research (Ipea)
+with contributions from collaborators. Apart from the documentation in this
+package, users will find additional information on \code{R5} documentation at
+\url{https://docs.conveyal.com/}. Although we try to keep new releases of \code{r5r}
+in synchrony with \code{R5}, the development of \code{R5} follows Conveyal's
+independent update process. Hence, users should confirm if the \code{R5} version
+implied by the Conveyal user manual (see
+\url{https://docs.conveyal.com/changelog}) corresponds with the \code{R5} version
+that \code{r5r} depends on.
 }
 \section{Usage}{
 
@@ -53,3 +54,4 @@ Other contributors:
 }
 
 }
+\keyword{internal}

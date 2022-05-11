@@ -1,29 +1,20 @@
 # log history of r5r package development
 
 
-
--------------------------------------------------------
-# r5r v0.7.09 dev
-
-
-* Minor changes
-
-  * The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query. By default (`FALSE`), the functions queries routes between the the 1st row of origins to the 1st row of destinations, then the 2nd row of origins to the 2nd row of destinations, and so on. Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
-
-
 -------------------------------------------------------
 # r5r v0.7.0.9000
 
 **Major changes**
 
 - Add new parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
-
+- Package documentation has been extensively updated and expanded.
 
 **Minor changes**
 
 - r5r now downloads R5 Jar directly from Conveyal's github, making the package more stable. Closes [#226](https://github.com/ipeaGIT/r5r/issues/226).
 - All functions now use `verbose = FALSE` and `progress = FALSE` by default.
-  
+- The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (`all_to_all = FALSE`, the default). Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
+
   
 -------------------------------------------------------
 # r5r v0.7.0
