@@ -50,7 +50,7 @@ In this case, there isn't a single estimate of travel time / accessibility, but 
 
 ```{r}
 
-df <- tribble::tribble(~option, ~modes, ~time, ~cost,
+df <- tibble::tribble(~option, ~modes, ~time, ~cost,
                1, 'walk',       50,    0,
                2, 'bus',        35,    4,
                3, 'bus + bus',  29,    6,

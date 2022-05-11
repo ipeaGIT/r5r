@@ -62,7 +62,8 @@ Suggests:
     patchwork,
     rgdal,
     rmarkdown,
-    testthat
+    testthat,
+    tibble
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
