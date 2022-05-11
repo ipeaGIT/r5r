@@ -28,7 +28,6 @@ To address this problem, `r5r` has a function called `pareto_frontier()`, which 
 
 
 ## 2. What the `pareto_frontier` measures and how to interpret the results.
-## 2. What the `pareto_frontier` measures and how to interpret the results.
 
 Imagine a hypothetical journey from A to B.
 
@@ -67,7 +66,7 @@ Let's see a couple concrete examples now.
 
 First, let's build the network and create the routing inputs. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE}
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -113,7 +112,7 @@ fare_settings <- setup_fare_calculator(r5r_core,
 
 In this example, we calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE}
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,   
                           origins = points,
@@ -144,7 +143,7 @@ The last row in the result above has a few `NA`s. This tell us that at least 50%
 
 Now let's calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we'll be using a cumulative accessibility metric `decay_function = "step"` with a max time threshold of 45 minutes `cutoffs = 45`.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE}
 # estimate accessibility
 acc <- r5r::accessibility(r5r_core,   
                           origins = points,
@@ -171,7 +170,7 @@ This output is in long format, so the first 5 rows show the result for the same 
 
 We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE}
 # summarize
 df <- acc[, .(min_acc = min(accessibility),
               median = accessibility[which(percentile == 50)],
