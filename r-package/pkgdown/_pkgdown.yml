@@ -13,6 +13,15 @@ reference:
   - contents:
     - detailed_itineraries
     - travel_time_matrix
-  - title: "Support"
+    - pareto_frontier
+    - accessibility
+  - title: "Network"
   - contents:
     - street_network_to_sf
+    - transit_network_to_sf
+    - find_snap
+  - title: "Fare calculator"
+  - contents:
+    - setup_fare_calculator 
+    - read_fare_calculator
+    - write_fare_calculator
