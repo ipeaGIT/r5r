@@ -49,18 +49,7 @@ As mentioned above, when `time_window` is set, R<sup>5</sup> computes multiple t
 In this case, there isn't a single estimate of travel time / accessibility, but a distribution of several estimates that reflect the travel time / accessibility uncertainties in the specified time window. To get our heads around so many estimates, we can use the `percentiles` parameter to specify the percentiles of the distribution we are interested in. For example, if we select the 25th travel time percentile and the results show that the travel time estimate between A and B is 15 minutes, this means that 25% of all trips taken between these points within the specified time window are shorter than 15 minutes.
 
 ```{r}
-
-df <- tibble::tribble(~option, ~modes, ~time, ~cost,
-               1, 'walk',       50,    0,
-               2, 'bus',        35,    4,
-               3, 'bus + bus',  29,    6,
-               4, 'subway',     15,    8)
-        
-        
-        ggplot() + 
-          geom_path(data=df, aes(x=cost, y=time)) +
-          geom_point(data=df, aes(x=cost, y=time)) 
-        
+# plot         
 ```
 Let's see a couple concrete examples now.
 

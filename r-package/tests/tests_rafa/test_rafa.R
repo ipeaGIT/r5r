@@ -657,3 +657,19 @@ tt <- r5r::travel_time_matrix(r5r_core,
                               origins = vertices_buff,
                               destinations = city_center_df,
                               mode = 'walk')
+
+
+
+vignete pareto
+library(tibble)
+
+df <- tibble::tribble(~option, ~modes, ~time, ~cost,
+                      1, 'walk',       50,    0,
+                      2, 'bus',        35,    4,
+                      3, 'bus + bus',  29,    6,
+                      4, 'subway',     15,    8)
+
+
+ggplot() +
+        geom_path(data=df, aes(x=cost, y=time)) +
+        geom_point(data=df, aes(x=cost, y=time))
