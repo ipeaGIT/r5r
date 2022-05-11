@@ -91,7 +91,7 @@ if (getRversion() >= "2.15.1") {
     "Please make sure you have already allocated ",
     "some memory to Java by running:\n",
     "  options(java.parameters = '-Xmx2G').\n",
-    "You should substitute '2G' by the amount of memory you'll require. ",
+    "You should replace '2G' by the amount of memory you'll require. ",
     "Currently, Java memory is set to ", getOption("java.parameters")
   )
 }
