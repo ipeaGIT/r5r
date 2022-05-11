@@ -9,6 +9,10 @@
 #' @template fare_calculator
 #' @template max_fare
 #' @template verbose
+#' @param opportunities_colnames A character vector. The names of the columns
+#' in the `destinations` input that tells the number of opportunities in each
+#' location. Several different column names can be passed, in which case the
+#' accessibility to each kind of opportunity will be calculated.
 #' @param percentiles An integer vector with length smaller than or equal to 5.
 #' Specifies the percentile to use when returning accessibility estimates
 #' within the given time window. Please note that this parameter is applied to
@@ -21,7 +25,7 @@
 #' length bigger than 1 is passed, the output contains an additional column
 #' that specifies the percentile of each accessibility estimate. Due to
 #' upstream restrictions, only 5 percentiles can be specified at a time. For
-#' more details, please see R5 documentation at
+#' more details, please see `R5` documentation at
 #' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param decay_function A string. Which decay function to use when calculating
 #' accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
@@ -40,8 +44,11 @@
 #' `exponential`.
 #'
 #' @return A `data.table` with accessibility estimates for all origin points.
-#' An additional column identifying the percentiles is present if more than one
-#' value was passed to `percentiles`.
+#' This `data.table` contain columns listing the origin id, the type of
+#' opportunities to which accessibility was calculated, the travel time
+#' percentile considered in the accessibility estimate and the specified cutoff
+#' values (except in when `decay_function` is `fixed_exponential`, in which
+#' case the `cutoff` parameter is not used).
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section
@@ -51,31 +58,73 @@
 #'
 #' @family routing
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
-#' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
-#'
-#' # load origin/destination points
-#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+#' r5r_core <- setup_r5(data_path)
+#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 #'
 #' departure_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
-#' # estimate accessibility
-#' access <- accessibility(r5r_core,
-#'                         origins = points,
-#'                         destinations = points,
-#'                         opportunities_colnames = "schools",
-#'                         mode = "WALK",
-#'                         departure_datetime = departure_datetime,
-#'                         cutoffs = c(25, 30),
-#'                         max_trip_duration = 30,
-#'                         verbose = FALSE)
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = 30,
+#'   max_trip_duration = 30
+#' )
+#' head(access)
+#'
+#' # using a different decay function
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "logistic",
+#'   cutoffs = 30,
+#'   decay_value = 1,
+#'   max_trip_duration = 30
+#' )
+#' head(access)
+#'
+#' # using several cutoff values
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = c(25, 30),
+#'   max_trip_duration = 30
+#' )
+#' head(access)
+#'
+#' # calculating access to different types of opportunities
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = c("schools", "healthcare"),
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = 30,
+#'   max_trip_duration = 30
+#' )
+#' head(access)
 #'
 #' stop_r5(r5r_core)
 #' @export

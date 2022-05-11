@@ -39,6 +39,11 @@ accessibility(
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
+\item{opportunities_colnames}{A character vector. The names of the columns
+in the \code{destinations} input that tells the number of opportunities in each
+location. Several different column names can be passed, in which case the
+accessibility to each kind of opportunity will be calculated.}
+
 \item{mode}{A character vector. The transport modes allowed for access,
 transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
 details for other options.}
@@ -69,7 +74,7 @@ accessibility calculated from the median travel time. If a vector with
 length bigger than 1 is passed, the output contains an additional column
 that specifies the percentile of each accessibility estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see R5 documentation at
+more details, please see \code{R5} documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{decay_function}{A string. Which decay function to use when calculating
@@ -164,8 +169,11 @@ active threads.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.
-An additional column identifying the percentiles is present if more than one
-value was passed to \code{percentiles}.
+This \code{data.table} contain columns listing the origin id, the type of
+opportunities to which accessibility was calculated, the travel time
+percentile considered in the accessibility estimate and the specified cutoff
+values (except in when \code{decay_function} is \code{fixed_exponential}, in which
+case the \code{cutoff} parameter is not used).
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.
@@ -305,14 +313,11 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
-# build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
-
-# load origin/destination points
+r5r_core <- setup_r5(data_path)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
 departure_datetime <- as.POSIXct(
@@ -320,16 +325,61 @@ departure_datetime <- as.POSIXct(
   format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate accessibility
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        opportunities_colnames = "schools",
-                        mode = "WALK",
-                        departure_datetime = departure_datetime,
-                        cutoffs = c(25, 30),
-                        max_trip_duration = 30,
-                        verbose = FALSE)
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = 30,
+  max_trip_duration = 30
+)
+head(access)
+
+# using a different decay function
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "logistic",
+  cutoffs = 30,
+  decay_value = 1,
+  max_trip_duration = 30
+)
+head(access)
+
+# using several cutoff values
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = c(25, 30),
+  max_trip_duration = 30
+)
+head(access)
+
+# calculating access to different types of opportunities
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = c("schools", "healthcare"),
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = 30,
+  max_trip_duration = 30
+)
+head(access)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
