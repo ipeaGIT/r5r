@@ -18,22 +18,22 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Rapid Realistic Routing with R5">
-<meta property="og:description" content="Rapid realistic routing on multimodal transport networks (walk, 
-             bike, public transport and car) using R5, the Rapid Realistic 
-             Routing on Real-world and Reimagined networks engine 
-             &lt;https://github.com/conveyal/r5&gt;. The package allows users to 
-             generate detailed routing analysis or calculate travel time matrices
-             using seamless parallel computing on top of the R5 Java machine.
-             While R5 is developed by Conveyal, the package r5r is independently 
-             developed by a team at the Institue for Applied Economic Research
-             (Ipea) with contributions from collaborators. Apart from the 
-             documentation in this pacakge, users will find additional information
-             on R5 documentation at &lt;https://docs.conveyal.com/&gt;. Although we try
-             to keep new releases of r5r in synch with R5, the development of R5
-             follows Conveyal's independent update process. Hence, users should
-             confirm the R5 version implied by the Conveyal user manual (see
-             &lt;https://docs.conveyal.com/changelog&gt;) corresponds with the R5 version
-             that r5r depends on.">
+<meta property="og:description" content="Rapid realistic routing on multimodal transport networks
+    (walk, bike, public transport and car) using R5, the Rapid Realistic
+    Routing on Real-world and Reimagined networks engine
+    &lt;https://github.com/conveyal/r5&gt;. The package allows users to generate
+    detailed routing analysis or calculate travel time matrices using
+    seamless parallel computing on top of the R5 Java machine.  While R5
+    is developed by Conveyal, the package r5r is independently developed
+    by a team at the Institute for Applied Economic Research (Ipea) with
+    contributions from collaborators. Apart from the documentation in this
+    package, users will find additional information on R5 documentation at
+    &lt;https://docs.conveyal.com/&gt;. Although we try to keep new releases of
+    r5r in synchrony with R5, the development of R5 follows Conveyal's
+    independent update process. Hence, users should confirm the R5 version
+    implied by the Conveyal user manual (see
+    &lt;https://docs.conveyal.com/changelog&gt;) corresponds with the R5 version
+    that r5r depends on.">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -41,6 +41,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -53,23 +55,20 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="articles/r5r.html">Get started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -82,7 +81,13 @@
       <a href="articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="articles/intro_to_r5r.html">Intro to r5r: Rapid Realistic Routing with R5 in R</a>
+      <a href="articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+    </li>
+    <li>
+      <a href="articles/pareto_frontier.html">Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()</a>
+    </li>
+    <li>
+      <a href="articles/time_window.html">Using the time_window parameter</a>
     </li>
   </ul>
 </li>
@@ -92,7 +97,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ipeaGIT/r5r/">
+  <a href="https://github.com/ipeaGIT/r5r/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -110,84 +115,67 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="r5r-rapid-realistic-routing-with-r5-in-r-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#r5r-rapid-realistic-routing-with-r5-in-r-" class="anchor"></a>r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="180">
+<div class="section level1">
+<div class="page-header"><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
 </h1></div>
 <!-- badges: start -->
-
-<!-- badges: end -->
-<p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5">Rapid Realistic Routing on Real-world and Reimagined networks</a>.</p>
-<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, what allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html">intro Vignette</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
+<!-- badges: end --><p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
+<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, what allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
 <p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>. Soon, this could also become a <code>python</code> library.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>To use <code>r5r</code>, you need to have <em>Java SE Development Kit 11</em> installed on your computer. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below:</p>
-<ul>
-<li><a href="http://jdk.java.net/java-se-ri/11">OpenJDK</a></li>
-<li><a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">Oracle</a></li>
-</ul>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>To use <code>r5r</code>, you need to have <em>Java SE Development Kit 11</em> installed on your computer. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below: - <a href="http://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a> - <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># From CRAN</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"r5r"</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"r5r"</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
 
 <span class="co"># or use the development version with latest features</span>
-  <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/remove.packages.html">remove.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span>
+  <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/remove.packages.html" class="external-link">remove.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span>
   <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span><span class="op">)</span></code></pre></div>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>The package has four fundamental functions.</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>
-<code>setup_r5</code>
-<ul>
+<code>setup_r5</code><ul>
 <li>Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)</li>
 <li>Builds a multimodal transport network given a street network in <code>.pbf</code> format (mandatory) and one or more public transport networks in <code>GTFS.zip</code> format (optional).</li>
 </ul>
 </li>
 <li>
-<code>detailed_itineraries</code>
-<ul>
-<li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip section</li>
-</ul>
+<code>detailed_itineraries</code><ul><li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip section</li></ul>
 </li>
 <li>
-<code>travel_time_matrix</code>
-<ul>
-<li>Fast function that returns a simple ‘data.frame’ with travel time estimates between one or multiple origin destination pairs.</li>
-</ul>
+<code>travel_time_matrix</code><ul><li>Fast function that returns a simple ‘data.frame’ with travel time estimates between one or multiple origin destination pairs.</li></ul>
 </li>
 <li>
-<code>accessibility</code>
-<ul>
-<li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed Exponential and linear.</li>
-</ul>
+<code>accessibility</code><ul><li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed Exponential and linear.</li></ul>
 </li>
 </ol>
-<div id="demonstration-on-sample-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#demonstration-on-sample-data" class="anchor"></a>Demonstration on sample data</h3>
-<p>See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html">intro Vignette</a>. To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
+<div class="section level3">
+<h3 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
+</h3>
+<p>See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># allocate RAM memory to Java</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
 
 <span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r">r5r</a></span><span class="op">)</span>
-<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
+<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
 <span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># 2) load origin/destination points and set arguments</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"BUS"</span><span class="op">)</span>
+<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"BUS"</span><span class="op">)</span>
 <span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
-<span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
+<span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
 <span class="co"># 3.1) calculate a travel time matrix</span>
@@ -216,24 +204,24 @@
                         opportunities_colname <span class="op">=</span> <span class="st">"schools"</span>,
                         decay_function <span class="op">=</span> <span class="st">"step"</span>,
                         cutoffs <span class="op">=</span> <span class="fl">21</span>,
-                        mode <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
+                        mode <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
                         verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div id="related-r-packages" class="section level4">
-<h4 class="hasAnchor">
-<a href="#related-r-packages" class="anchor"></a><strong>Related R packages</strong>
+<div class="section level4">
+<h4 id="related-r-packages">
+<strong>Related R packages</strong><a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
 </h4>
 <p>There is a growing number of <code>R</code> packages with functionalities for transport routing, analysis and planning more broadly. Here are few of theses packages.</p>
 <ul>
 <li>
-<a href="https://github.com/ATFutures/dodgr">dodgr</a>: Distances on Directed Graphs in R</li>
+<a href="https://github.com/ATFutures/dodgr" class="external-link">dodgr</a>: Distances on Directed Graphs in R</li>
 <li>
-<a href="https://github.com/ATFutures/gtfs-router">gtfsrouter</a>: R package for routing with GTFS data</li>
+<a href="https://github.com/ATFutures/gtfs-router" class="external-link">gtfsrouter</a>: R package for routing with GTFS data</li>
 <li>
-<a href="https://github.com/munterfinger/hereR">hereR</a>: an R interface to the HERE REST APIs</li>
+<a href="https://github.com/munterfinger/hereR" class="external-link">hereR</a>: an R interface to the HERE REST APIs</li>
 <li>
-<a href="https://github.com/ropensci/opentripplanner">opentripplanner</a>: OpenTripPlanner for R</li>
+<a href="https://github.com/ropensci/opentripplanner" class="external-link">opentripplanner</a>: OpenTripPlanner for R</li>
 <li>
-<a href="https://github.com/ropensci/stplanr">stplanr</a>: sustainable transport planning with R</li>
+<a href="https://github.com/ropensci/stplanr" class="external-link">stplanr</a>: sustainable transport planning with R</li>
 </ul>
 <p>The <strong>r5r</strong> package is particularly focused on fast multimodal transport routing. A key advantage of <code>r5r</code> is that is provides a simple and friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing engines availabe.</p>
 <hr>
@@ -241,20 +229,17 @@
 </div>
 </div>
 </div>
-<div id="acknowledgement" class="section level1">
-<h1 class="hasAnchor">
-<a href="#acknowledgement" class="anchor"></a>Acknowledgement</h1>
-<p>The <a href="https://github.com/conveyal/r5">R<sup>5</sup> routing engine</a> is developed at <a href="https://www.conveyal.com/">Conveyal</a> with contributions from several people.</p>
+<div class="section level1">
+<h1 id="acknowledgement">Acknowledgement<a class="anchor" aria-label="anchor" href="#acknowledgement"></a>
+</h1>
+<p>The <a href="https://github.com/conveyal/r5" class="external-link">R<sup>5</sup> routing engine</a> is developed at <a href="https://www.conveyal.com/" class="external-link">Conveyal</a> with contributions from several people.</p>
 </div>
-<div id="citation-" class="section level1">
-<h1 class="hasAnchor">
-<a href="#citation-" class="anchor"></a>Citation <img align="right" src="r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
+<div class="section level1">
+<h1 id="citation-">Citation <img align="right" src="reference/figures/ipea_logo.png" alt="ipea" width="300"><a class="anchor" aria-label="anchor" href="#citation-"></a>
 </h1>
 <p>The R package <strong>r5r</strong> is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:</p>
-<ul>
-<li>Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &amp; Conway, M. W. (2021). <strong>r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R</strong>. <em>Findings</em>, 21262. <a href="https://doi.org/10.32866/001c.21262">https://doi.org/10.32866/001c.21262</a>
-</li>
-</ul>
+<ul><li>Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &amp; Conway, M. W. (2021). <strong>r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R</strong>. <em>Findings</em>, 21262. <a href="https://doi.org/10.32866/001c.21262" class="external-link">https://doi.org/10.32866/001c.21262</a>
+</li></ul>
 <p>BibTeX:</p>
 <pre><code>@article{pereira_r5r_2021,
     title = {r5r: Rapid Realistic Routing on Multimodal Transport Networks with {R}$^{\textrm{5}}$ in R},
@@ -277,62 +262,67 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=r5r">https://​cloud.r-project.org/​package=r5r</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/ipeaGIT/r5r/">https://​github.com/​ipeaGIT/​r5r/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/ipeaGIT/r5r/issues">https://​github.com/​ipeaGIT/​r5r/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="citation">
-<h2>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html">Citing r5r</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Marcus Saraiva <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6218-2338" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Rafael H. M. Pereira <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Daniel Herszenhut <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8066-1105" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Carlos Kaue Vieira Braga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6104-7297" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Matthew Wigginton Conway <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1210-2982" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Ipea - Institue for Applied Economic Research <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li><a href="https://cloud.r-project.org/package=r5r" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/ipeaGIT/r5r/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ipeaGIT/r5r/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=r5r"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a></li>
-<li><a href="https://CRAN.R-project.org/package=r5r"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a></li>
-<li><a href="https://github.com/ipeaGIT/r5r/actions"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://doi.org/10.32866/001c.21262"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing r5r</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Marcus Saraiva <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6218-2338" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Rafael H. M. Pereira <br><small class="roles"> Maintainer </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Rafael H. M. Pereira <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Daniel Herszenhut <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8066-1105" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Carlos Kaue Vieira Braga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6104-7297" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Matthew Wigginton Conway <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1210-2982" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Ipea - Institute for Applied Economic Research <br><small class="roles"> Copyright holder, funder </small>  </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a></li>
+<li><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a></li>
+<li><a href="https://github.com/ipeaGIT/r5r/actions" class="external-link"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://doi.org/10.32866/001c.21262" class="external-link"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Conway, Ipea - Institue for Applied Economic Research.</p>
+  <p></p>
+<p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Conway, Ipea - Institute for Applied Economic Research.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
@@ -340,6 +330,8 @@
 
   
 
+
+  
 
   </body>
 </html>
