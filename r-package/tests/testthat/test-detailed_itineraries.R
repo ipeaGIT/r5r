@@ -1,15 +1,9 @@
 context("Detailed itineraries function")
 
-# skips tests on CRAN since they require a specific version of java
+# if running manually, please run the following line first:
+# source("tests/testthat/setup.R")
+
 testthat::skip_on_cran()
-
-# load required data and setup r5r_core
-
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-
-# create testing function
 
 default_tester <- function(r5r_core,
                            origins = points[1:2, ],
@@ -138,7 +132,7 @@ test_that("detailed_itineraries adequately raises errors", {
 
 })
 
-test_that("detailed_itineraries adequately raises warnings and messages - needs java", {
+test_that("detailed_itineraries adequately raises warnings and messages", {
 
   # message related to expanding origins/destinations dataframe
   expect_message(default_tester(r5r_core, origins = points[1, ]))
@@ -178,7 +172,7 @@ test_that("detailed_itineraries output is correct", {
     points[2:1,],
     coords = c("lon", "lat"),
     crs = 4326
-  ) 
+  )
 
   result_df_input <- default_tester(r5r_core)
   result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)
@@ -201,12 +195,12 @@ test_that("detailed_itineraries output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$fromLat) == "double")
-  expect_true(typeof(result_df_input$fromLon) == "double")
-  expect_true(typeof(result_df_input$toId) == "character")
-  expect_true(typeof(result_df_input$toLat) == "double")
-  expect_true(typeof(result_df_input$toLon) == "double")
+  expect_true(typeof(result_df_input$from_id) == "character")
+  expect_true(typeof(result_df_input$from_lat) == "double")
+  expect_true(typeof(result_df_input$from_lon) == "double")
+  expect_true(typeof(result_df_input$to_id) == "character")
+  expect_true(typeof(result_df_input$to_lat) == "double")
+  expect_true(typeof(result_df_input$to_lon) == "double")
   expect_true(typeof(result_df_input$option) == "integer")
   expect_true(typeof(result_df_input$segment) == "integer")
   expect_true(typeof(result_df_input$mode) == "character")
@@ -224,8 +218,8 @@ test_that("detailed_itineraries output is correct", {
   # ps: note that if a very high speed is set then the routes change completely
   # and we lose the ability to use lower walking speeds routes as reference
 
-  origins      <- points[10,]
-  destinations <- points[12,]
+  origins      <- points[1,]
+  destinations <- points[3,]
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations, mode = "WALK", walk_speed = 4)
   duration_lower_speed <- data.table::setDT(df)$segment_duration
@@ -255,14 +249,14 @@ test_that("detailed_itineraries output is correct", {
   # expect each OD pair to have only option when shortest_path == TRUE
 
   df <- default_tester(r5r_core, shortest_path = TRUE)
-  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(from_id, to_id)][, max(V1)]
 
   expect_true(max_n_options == 1)
 
   # # expect each OD pair to have (possibly) more than one option when shortest_path == FALSE
   #
   # df <- default_tester(r5r_core, shortest_path = FALSE)
-  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(fromId, toId)][, max(V1)]
+  # max_n_options <- data.table::setDT(df)[, length(unique(option)), by = .(from_id, to_id)][, max(V1)]
   #
   # expect_true(max_n_options > 1)
 
@@ -275,7 +269,7 @@ test_that("detailed_itineraries output is correct", {
   df <- default_tester(r5r_core, origins, destinations,
                        max_trip_duration = max_trip_duration, shortest_path = FALSE)
 
-  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(fromId, toId, option)][, max(V1)]
+  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(from_id, to_id, option)][, max(V1)]
 
   expect_true(max_duration < max_trip_duration)
 
@@ -292,5 +286,3 @@ test_that("detailed_itineraries output is correct", {
   expect_true(nrow(df) == 0)
 
 })
-
-stop_r5(r5r_core)

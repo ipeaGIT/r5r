@@ -7,11 +7,9 @@ import com.conveyal.r5.transit.TransportNetwork;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
-public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
+public class DetailedItineraryPlanner extends R5Process {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DetailedItineraryPlanner.class);
 
@@ -27,18 +25,18 @@ public class DetailedItineraryPlanner extends R5MultiDestinationProcess {
 
     @Override
     protected void buildDestinationPointSet() {
-        // not required in this class
+        // not needed in this class
     }
 
     @Override
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         RDataFrame itinerariesDataFrame = new RDataFrame(nRows);
-        itinerariesDataFrame.addStringColumn("fromId", fromId);
-        itinerariesDataFrame.addDoubleColumn("fromLat", 0.0);
-        itinerariesDataFrame.addDoubleColumn("fromLon", 0.0);
-        itinerariesDataFrame.addStringColumn("toId", "");
-        itinerariesDataFrame.addDoubleColumn("toLat", 0.0);
-        itinerariesDataFrame.addDoubleColumn("toLon", 0.0);
+        itinerariesDataFrame.addStringColumn("from_id", fromId);
+        itinerariesDataFrame.addDoubleColumn("from_lat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("from_lon", 0.0);
+        itinerariesDataFrame.addStringColumn("to_id", "");
+        itinerariesDataFrame.addDoubleColumn("to_lat", 0.0);
+        itinerariesDataFrame.addDoubleColumn("to_lon", 0.0);
         itinerariesDataFrame.addIntegerColumn("option", 0);
         itinerariesDataFrame.addIntegerColumn("segment", 0);
         itinerariesDataFrame.addStringColumn("mode", "");

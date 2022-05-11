@@ -1,45 +1,44 @@
-#' Create transport network used for routing in R5
+#' Create a transport network used for routing in R5
 #'
-#' Combine data inputs in a directory to build a multimodal transport network
-#' used for routing in R5. The directory must contain at least one street
-#' network file (in .pbf format). One or more public transport data sets (in
-#' GTFS.zip format) are optional. If there is more than one GTFS file in the
-#' directory, both files will be merged. If there is already a 'network.dat'
-#' file in the directory the function will simply read it and load it to memory.
+#' Builds a multimodal transport network used for routing in `R5`, combining
+#' multiple data inputs present in the directory where the network should be
+#' saved to. The directory must contain at least one street network file (in
+#' `.osm.pbf` format). It may optionally contain one or more public transport
+#' GTFS feeds (in `GTFS.zip` format, where `GTFS` is the name of your feed),
+#' when used for public transport routing, and a `.tif` file describing the
+#' elevation profile of the study area. If there is more than one GTFS feed in
+#' the directory, all feeds are merged. If there is already a 'network.dat'
+#' file in the directory, the function will simply read it and load it to
+#' memory (unless specified not to do so).
 #'
-#' @param data_path character string, the directory where data inputs are stored
-#'                  and where the built network.dat will be saved.
-#' @param version character string, the version of R5 to be used. Defaults to
-#'                latest version '6.4.0'.
-#' @param verbose logical, TRUE to show detailed output messages (Default) or
-#'                FALSE to show only eventual ERROR and WARNING messages.
-#' @param temp_dir logical, whether the R5 Jar file should be saved in temporary
-#'                 directory. Defaults to FALSE
-#' @param use_elevation logical. If TRUE, load any tif files containing
-#'                      elevation found in the data_path folder and calculate
-#'                      impedances for walking and cycling based on street
-#'                      slopes.
-#' @param overwrite logical, whether to overwrite an existing `network.dat` or
-#'                  to use a cached file. Defaults to FALSE (i.e. use a cached
-#'                  network).
+#' @template verbose
+#' @param data_path A string pointing to the directory where data inputs are
+#' stored and where the built `network.dat` will be saved.
+#' @param version A string. The version of `R5` to be used. Defaults to the
+#' latest version.
+#' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
+#' temporary directory. Defaults to `FALSE`.
+#' @param use_elevation A logical. Whether to calculate impedances for walking
+#' and cycling based on street slopes (defaults to `FALSE`). If `TRUE`, loads
+#' elevation data from `.tif` files saved insite the `data_path` directory.
+#' @param overwrite A logical. Whether to overwrite an existing `network.dat`
+#' or to use a cached file. Defaults to `FALSE` (i.e. use a cached network).
 #'
-#' @return An rJava object to connect with R5 routing engine
+#' @return An `rJava` object to connect with `R5` routing engine.
+#'
 #' @family setup
-#' @examples if (interactive()) {
 #'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # directory with street network and gtfs files
 #' path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
-#'
-#' }
+#' r5r_core <- setup_r5(path)
 #' @export
-
 setup_r5 <- function(data_path,
-                     version = "6.4.0",
-                     verbose = TRUE,
+                     version = "6.7.0",
+                     verbose = FALSE,
                      temp_dir = FALSE,
                      use_elevation = FALSE,
                      overwrite = FALSE) {
@@ -92,7 +91,7 @@ setup_r5 <- function(data_path,
   )
 
   if (checkmate::test_file_exists(jar_file)) {
-    if (!verbose) message("Using cached version from ", jar_file)
+    if (!verbose) message("Using cached R5 version from ", jar_file)
   } else {
   check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
   if (is.null(check)) {  return(invisible(NULL)) }

@@ -1,5 +1,3 @@
-############# Support functions for r5r
-
 #' Tobler's hiking function
 #'
 #' @description Calculates effect of the topography on walking speeds, using
@@ -9,6 +7,8 @@
 #'
 #' @return numeric. Tobler's weighting factor
 #' @family elevation support functions
+#'
+#' @keywords internal
 tobler_hiking <- function(slope) {
 
   checkmate::assert_class(slope, "numeric")
@@ -20,19 +20,22 @@ tobler_hiking <- function(slope) {
   return(1 / tobler_factor)
 }
 
+
 #' Apply elevation to street network
 #'
 #' @description Loads a Digital Elevation Model (DEM) from a raster file and
 #'              weights the street network for walking and cycling according to
 #'              the terrain's slopes
 #'
-#' @param r5r_core a rJava object to connect with R5 routing engine
+#' @template r5r_core
 #' @param raster_files string. Path to raster files containing the study area's
 #'                     topography. If a list is provided, all the rasters are
 #'                     automatically merged.
 #'
 #' @return No return value, called for side effects.
 #' @family elevation support functions
+#'
+#' @keywords internal
 apply_elevation <- function(r5r_core, raster_files) {
 
   # check inputs ------------------------------------------------------------

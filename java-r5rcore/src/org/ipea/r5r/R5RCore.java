@@ -4,20 +4,22 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
-import com.conveyal.r5.point_to_point.builder.TNBuilderConfig;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ipea.r5r.Fares.FareStructure;
+import org.ipea.r5r.Fares.FareStructureBuilder;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -26,7 +28,7 @@ public class R5RCore {
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
 
-    private final RoutingProperties routingProperties = new RoutingProperties();
+    private final RoutingProperties routingProperties;
 
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
@@ -43,7 +45,6 @@ public class R5RCore {
     public void setBikeSpeed(double bikeSpeed) {
         this.routingProperties.bikeSpeed = bikeSpeed;
     }
-
 
     public int getMaxLevelTrafficStress() {
         return this.routingProperties.maxLevelTrafficStress;
@@ -121,6 +122,53 @@ public class R5RCore {
         }
     }
 
+    public void setMaxFare(float maxFare) {
+        this.routingProperties.maxFare = (maxFare >= 0) ? maxFare : Integer.MAX_VALUE;
+    }
+
+    public void setFareCutoffs(float maxFare) {
+        this.routingProperties.maxFare = maxFare;
+        this.routingProperties.fareCutoffs = new float[]{maxFare};
+    }
+
+    public void setFareCutoffs(float[] maxFare) {
+        this.routingProperties.maxFare = maxFare[0];
+        this.routingProperties.fareCutoffs = maxFare;
+    }
+
+    public void setFareCalculator(String fareCalculatorSettingsJson) {
+        this.routingProperties.setFareCalculatorJson(fareCalculatorSettingsJson);
+    }
+
+    public void dropFareCalculator() {
+        this.routingProperties.fareCalculator = null;
+        this.routingProperties.maxFare = -1.0f;
+        this.routingProperties.fareCutoffs = new float[]{-1.0f};
+    }
+
+    public void setFareCalculatorDebugOutputSettings(String fileName, String tripInfo) {
+        RuleBasedInRoutingFareCalculator.debugFileName = fileName;
+        RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo;
+        RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");
+    }
+
+    public String getFareCalculatorDebugOutputSettings() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
+        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+    }
+
     public String getTravelTimesBreakdownStat() {
         return this.routingProperties.travelTimesBreakdownStat.toString();
     }
@@ -187,6 +235,9 @@ public class R5RCore {
         setNumberOfThreadsToMax();
 
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
+
+        this.routingProperties = new RoutingProperties();
+        this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
     }
 
 
@@ -307,73 +358,87 @@ public class R5RCore {
         return travelTimeMatrixComputer.run();
     }
 
+    // ----------------------------------  PARETO FRONTIERS  -----------------------------------------
+
+    public RDataFrame paretoFrontier(String fromId, double fromLat, double fromLon,
+                                       String[] toIds, double[] toLats, double[] toLons,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String[] fromIds, double[] fromLats, double[] fromLons,
+                                       String toId, double toLat, double toLon,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String fromId, double fromLat, double fromLon,
+                                       String toId, double toLat, double toLon,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
+
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
+
+        return paretoFrontier(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
+
+    }
+
+    public RDataFrame paretoFrontier(String[] fromIds, double[] fromLats, double[] fromLons,
+                                       String[] toIds, double[] toLats, double[] toLons,
+                                       String directModes, String transitModes, String accessModes, String egressModes,
+                                       String date, String departureTime,
+                                       int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        ParetoFrontierCalculator paretoFrontierCalculator = new ParetoFrontierCalculator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        paretoFrontierCalculator.setOrigins(fromIds, fromLats, fromLons);
+        paretoFrontierCalculator.setDestinations(toIds, toLats, toLons);
+        paretoFrontierCalculator.setModes(directModes, accessModes, transitModes, egressModes);
+        paretoFrontierCalculator.setDepartureDateTime(date, departureTime);
+        paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+
+        return paretoFrontierCalculator.run();
+    }
+
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------
 
-    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
-                                                                           String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
-                                                                           String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunities, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
     public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                           String toId, double toLat, double toLon,  int opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] toIds = {toId};
-        double[] toLats = {toLat};
-        double[] toLons = {toLon};
-        int[] opportunitiesVector = {opportunities};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame accessibility(String fromId, double fromLat, double fromLon,
-                                                                           String toId, double toLat, double toLon, int opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                           String directModes, String transitModes, String accessModes, String egressModes,
-                                                                           String date, String departureTime,
-                                                                           int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        String[] toIds = {toId};
-        double[] toLats = {toLat};
-        double[] toLons = {toLon};
-        int[] opportunitiesVector = {opportunities};
-
-        return accessibility(fromIds, fromLats, fromLons, toIds, toLats, toLons, opportunitiesVector, decayFunction, decayValue,
-                directModes, transitModes, accessModes, egressModes, date, departureTime, maxWalkTime,  maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
-                                                                        String[] toIds, double[] toLats, double[] toLons, int[] opportunities,
-                                                                        String decayFunction, double decayValue,
-                                                                        String directModes, String transitModes, String accessModes, String egressModes,
-                                                                        String date, String departureTime,
-                                                                        int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
+                                    String[] toIds, double[] toLats, double[] toLons,
+                                    String[] opportunities, int[][] opportunityCounts,
+                                    String decayFunction, double decayValue,
+                                    String directModes, String transitModes, String accessModes, String egressModes,
+                                    String date, String departureTime,
+                                    int maxWalkTime, int maxBikeTime, int maxTripDuration)
+            throws ExecutionException, InterruptedException {
 
         AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
         accessibilityEstimator.setOrigins(fromIds, fromLats, fromLons);
-        accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities);
+        accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
         accessibilityEstimator.setDecayFunction(decayFunction, decayValue);
         accessibilityEstimator.setModes(directModes, accessModes, transitModes, egressModes);
         accessibilityEstimator.setDepartureDateTime(date, departureTime);
@@ -382,59 +447,38 @@ public class R5RCore {
         return accessibilityEstimator.run();
     }
 
-    // ----------------------------------  ISOCHRONES  -----------------------------------------
+    // Test decay functions used to calculate accessibility
+    public double[] testDecay(String decayFunctionName, double decayValue) {
+        DecayFunction decayFunction = null;
+        decayFunctionName = decayFunctionName.toUpperCase();
+        if (decayFunctionName.equals("STEP")) { decayFunction = new StepDecayFunction(); }
+        if (decayFunctionName.equals("EXPONENTIAL")) { decayFunction = new ExponentialDecayFunction(); }
 
-    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-        int[] cutoffTimes = {cutoffs};
+        if (decayFunctionName.equals("FIXED_EXPONENTIAL")) {
+            decayFunction = new FixedExponentialDecayFunction();
+            ((FixedExponentialDecayFunction) decayFunction).decayConstant = decayValue;
+        }
+        if (decayFunctionName.equals("LINEAR")) {
+            decayFunction = new LinearDecayFunction();
+            ((LinearDecayFunction) decayFunction).widthMinutes = (int) decayValue;
+        }
+        if (decayFunctionName.equals("LOGISTIC")) {
+            decayFunction = new LogisticDecayFunction();
+            ((LogisticDecayFunction) decayFunction).standardDeviationMinutes = decayValue;
+        }
 
-        return isochrones(fromId, fromLat, fromLon, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime,maxBikeTime, maxTripDuration);
-    }
+        if (decayFunction != null) {
+            decayFunction.prepare();
+            double[] decay = new double [3600];
+            for (int i = 0; i < 3600; i++) {
+                decay[i] = decayFunction.computeWeight(1800, i+1);
+            }
+            return decay;
 
-    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
+        } else {
+            return null;
+        }
 
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-        int[] cutoffTimes = {cutoffs};
-
-        return isochrones(fromIds, fromLats, fromLons, cutoffTimes, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame isochrones(String fromId, double fromLat, double fromLon, int[] cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-
-        String[] fromIds = {fromId};
-        double[] fromLats = {fromLat};
-        double[] fromLons = {fromLon};
-
-        return isochrones(fromIds, fromLats, fromLons, cutoffs, zoom, directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
-
-    }
-
-    public RDataFrame isochrones(String[] fromId, double[] fromLat, double[] fromLon, int[] cutoffs, int zoom,
-                                                                     String directModes, String transitModes, String accessModes, String egressModes,
-                                                                     String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ParseException, ExecutionException, InterruptedException {
-
-        // Instantiate IsochroneBuilder object and set properties
-        IsochroneBuilder isochroneBuilder = new IsochroneBuilder(r5rThreadPool, this.transportNetwork, this.routingProperties);
-        isochroneBuilder.setOrigins(fromId, fromLat, fromLon);
-        isochroneBuilder.setModes(directModes, accessModes, transitModes, egressModes);
-        isochroneBuilder.setDepartureDateTime(date, departureTime);
-        isochroneBuilder.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
-        isochroneBuilder.setCutoffs(cutoffs);
-        isochroneBuilder.setResolution(zoom);
-
-        // Build isochrones and return data to R as a list of data.frames
-        return isochroneBuilder.run();
     }
 
     // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
@@ -467,28 +511,23 @@ public class R5RCore {
         if (!dropGeometry) { gridTable.addStringColumn("geometry", ""); }
 
         for (int index = 0; index < gridPointSet.featureCount(); index++) {
-            int x = index % gridPointSet.width;
-            int y = index / gridPointSet.width;
+            int x = index % gridPointSet.extents.width;
+            int y = index / gridPointSet.extents.width;
 
             gridTable.append();
             gridTable.set("id", String.valueOf(index));
-            gridTable.set("lat", Grid.pixelToCenterLat(y + gridPointSet.north, resolution));
-            gridTable.set("lon", Grid.pixelToCenterLon(x + gridPointSet.west, resolution));
+            gridTable.set("lat", Grid.pixelToCenterLat(y + gridPointSet.extents.north, resolution));
+            gridTable.set("lon", Grid.pixelToCenterLon(x + gridPointSet.extents.west, resolution));
 
             if (!dropGeometry) {
-                gridTable.set("geometry", Grid.getPixelGeometry(x + gridPointSet.west, y + gridPointSet.north, resolution).toString());
+                gridTable.set("geometry", Grid.getPixelGeometry(x + gridPointSet.extents.west, y + gridPointSet.extents.north, gridPointSet.extents).toString());
             }
         }
 
         return gridTable;
     }
 
-
-
-    // ---------------------------------------------------------------------------------------------------
-    //                                    UTILITY FUNCTIONS
-    // ---------------------------------------------------------------------------------------------------
-
+    // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
 
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
@@ -512,6 +551,26 @@ public class R5RCore {
         transportNetworkList.add(transitNetwork.stopsTable);
 
         return transportNetworkList;
+    }
+
+
+    // ------------------------------- FARE CALCULATOR ----------------------------------------
+
+    public FareStructure buildFareStructure(float baseFare, String type) {
+        FareStructureBuilder builder = new FareStructureBuilder(this.transportNetwork);
+
+        type = type.toUpperCase();
+        return builder.build(baseFare, type);
+    }
+
+    public String getFareStructure() {
+        String json = "";
+
+        if (this.routingProperties.fareCalculator != null) {
+            json = ((RuleBasedInRoutingFareCalculator) this.routingProperties.fareCalculator).getFareStructure().toJson();
+        }
+
+        return json;
     }
 
     // ----------------------------------  ELEVATION  -----------------------------------------
@@ -603,6 +662,9 @@ public class R5RCore {
         return ElevationUtils.bikeSpeedCoefficientOTP(slope, altitude);
     }
 
+    // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------
+
+
     // Returns list of public transport services active on a given date
     public RDataFrame getTransitServicesByDate(String date) {
         RDataFrame servicesTable = new RDataFrame();
@@ -625,44 +687,4 @@ public class R5RCore {
 
         return servicesTable;
     }
-
-    public double[] testDecay(String decayFunctionName, double decayValue) {
-        DecayFunction decayFunction = null;
-        decayFunctionName = decayFunctionName.toUpperCase();
-        if (decayFunctionName.equals("STEP")) { decayFunction = new StepDecayFunction(); }
-        if (decayFunctionName.equals("EXPONENTIAL")) { decayFunction = new ExponentialDecayFunction(); }
-
-        if (decayFunctionName.equals("FIXED_EXPONENTIAL")) {
-            decayFunction = new FixedExponentialDecayFunction();
-            ((FixedExponentialDecayFunction) decayFunction).decayConstant = decayValue;
-        }
-        if (decayFunctionName.equals("LINEAR")) {
-            decayFunction = new LinearDecayFunction();
-            ((LinearDecayFunction) decayFunction).widthMinutes = (int) decayValue;
-        }
-        if (decayFunctionName.equals("LOGISTIC")) {
-            decayFunction = new LogisticDecayFunction();
-            ((LogisticDecayFunction) decayFunction).standardDeviationMinutes = decayValue;
-        }
-
-        if (decayFunction != null) {
-            decayFunction.prepare();
-            double[] decay = new double [3600];
-            for (int i = 0; i < 3600; i++) {
-                decay[i] = decayFunction.computeWeight(1800, i+1);
-            }
-            return decay;
-            
-        } else {
-            return null;
-        }
-
-    }
-
-    public String defaultBuildConfig() {
-        TNBuilderConfig builderConfig = TNBuilderConfig.defaultConfig();
-
-        return builderConfig.toString();
-    }
-
 }

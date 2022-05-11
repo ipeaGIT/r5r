@@ -2,11 +2,6 @@ context("Support functions")
 
 testthat::skip_on_cran()
 
-# load required data and setup r5r_obj
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-
 
 # set_verbose -------------------------------------------------------------
 
@@ -135,9 +130,7 @@ test_that("assert_points_input adequately raises warnings and errors", {
 })
 
 test_that("assert_points_input output is coherent", {
-
   sf_points_output <- assert_points_input(sf_points, "points")
-
   df_points_output <- assert_points_input(points, "points")
 
   # correct output column types
@@ -146,12 +139,20 @@ test_that("assert_points_input output is coherent", {
   expect_type(sf_points_output$lat, "double")
   expect_type(sf_points_output$lon, "double")
 
+  expect_type(df_points_output$id, "character")
+  expect_type(df_points_output$lat, "double")
+  expect_type(df_points_output$lon, "double")
+
   # expect output columns to have the same value, irrespective of input class
 
-  expect_equal(sf_points_output$id, df_points_output$id, points$id)
-  expect_equal(sf_points_output$lat, df_points_output$lat, points$lat)
-  expect_equal(sf_points_output$lon, df_points_output$lon, points$lon)
+  expect_equal(sf_points_output$id, points$id)
+  expect_equal(sf_points_output$id, df_points_output$id)
 
+  expect_equal(sf_points_output$lat, points$lat)
+  expect_equal(sf_points_output$lat, df_points_output$lat)
+
+  expect_equal(sf_points_output$lon, points$lon)
+  expect_equal(sf_points_output$lon, df_points_output$lon)
 })
 
 
@@ -219,6 +220,3 @@ test_that("raises error if version is not a string", {
 test_that("returns expected result", {
   expect_equal("https://github.com/ipeaGIT/r5/releases/download/v6.4/r5-v6.4-all.jar", fileurl_from_metadata("6.4.0"))
 })
-
-
-stop_r5(r5r_core)

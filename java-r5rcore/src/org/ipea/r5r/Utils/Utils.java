@@ -55,6 +55,18 @@ public class Utils {
         return (int) ((date.getTime() - reference.getTime()) / 1000L);
     }
 
+    public static String getTimeFromSeconds(int secondsFromMidnight) {
+        int sec = secondsFromMidnight % 60;
+        int min = (secondsFromMidnight / 60)%60;
+        int hours = (secondsFromMidnight/60)/60;
+
+        String strSec=(sec<10)?"0"+ sec :Integer.toString(sec);
+        String strMin=(min<10)?"0"+ min :Integer.toString(min);
+        String strHours=(hours<10)?"0"+ hours :Integer.toString(hours);
+
+        return (strHours + ":" + strMin + ":" + strSec);
+    }
+
     public static void setLogMode(String mode, boolean verbose) {
         Utils.verbose = verbose;
 
@@ -93,5 +105,7 @@ public class Utils {
         logger = loggerContext.getLogger("org.ipea.r5r.PathOptionsTable");
         logger.setLevel(Level.valueOf(mode));
 
+        logger = loggerContext.getLogger("org.ipea.r5r.R5.R5TravelTimeComputer");
+        logger.setLevel(Level.valueOf(mode));
     }
 }

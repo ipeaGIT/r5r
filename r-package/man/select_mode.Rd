@@ -24,7 +24,6 @@ Other support functions:
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
-\code{\link{find_snap}()},
 \code{\link{get_all_od_combinations}()},
 \code{\link{posix_to_string}()},
 \code{\link{set_max_lts}()},
@@ -35,8 +34,7 @@ Other support functions:
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_verbose}()},
-\code{\link{stop_r5}()},
-\code{\link{street_network_to_sf}()},
-\code{\link{transit_network_to_sf}()}
+\code{\link{stop_r5}()}
 }
 \concept{support functions}
+\keyword{internal}

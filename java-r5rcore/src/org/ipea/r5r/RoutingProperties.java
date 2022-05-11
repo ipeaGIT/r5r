@@ -1,6 +1,9 @@
 package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.PathResult;
+import com.conveyal.r5.analyst.fare.*;
+import com.conveyal.r5.transit.TransitLayer;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 
 public class RoutingProperties {
 
@@ -16,6 +19,15 @@ public class RoutingProperties {
     public boolean travelTimesBreakdown;
     public PathResult.Stat travelTimesBreakdownStat;
 
+    public float maxFare;
+    public float[] fareCutoffs = {-1.0f};
+    public InRoutingFareCalculator fareCalculator;
+    public TransitLayer transitLayer;
+
+    public void setFareCalculatorJson(String fareCalculatorJson) {
+        this.fareCalculator = new RuleBasedInRoutingFareCalculator(transitLayer, fareCalculatorJson);
+    }
+
     public RoutingProperties() {
         walkSpeed = 1.0f;
         bikeSpeed = 3.3f;
@@ -27,5 +39,9 @@ public class RoutingProperties {
 
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;
+
+        maxFare = -1.0f;
+        fareCalculator = null;
+        transitLayer = null;
     }
 }

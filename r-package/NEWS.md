@@ -12,6 +12,20 @@
 
 
 -------------------------------------------------------
+# r5r v0.7.0.9000
+
+**Major changes**
+
+- Add new parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
+
+
+**Minor changes**
+
+- r5r now downloads R5 Jar directly from Conveyal's github, making the package more stable. Closes [#226](https://github.com/ipeaGIT/r5r/issues/226).
+- All functions now use `verbose = FALSE` and `progress = FALSE` by default.
+  
+  
+-------------------------------------------------------
 # r5r v0.7.0
 
 * Major changes

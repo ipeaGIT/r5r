@@ -29,16 +29,12 @@
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
 if(getRversion() >= "2.15.1") utils::globalVariables(
-  c('is', 'duration', 'fromId', 'toId', 'option', 'option', '.SD', 'geometry',
+  c('is', 'duration', 'from_id', 'to_id', 'option', 'option', '.SD', 'geometry',
     'route', 'temp_duration', 'temp_route', 'route', 'temp_sign', '.I',
     'segment_duration', 'total_duration', 'wait', 'release_date', 'con',
     "start_lon", "start_lat", "end_lon", "end_lat", "slope", "lat", "lon",
     "walk_multiplier", "bike_multiplier", "found", ".", "%>%", ":=", "%like%",
-    "%chin%", "set", 'i.lat', 'i.lon', 'id_dest', 'id_orig',
-    'lat_dest', 'lat_orig',
-    'lon_dest', 'lon_orig'))
-
-
+    "%chin%", "set", "travel_time"))
 
 
 .onLoad = function(lib, pkg) {

@@ -3,12 +3,6 @@ context("Travel time matrix function")
 # skips tests on CRAN since they require a specific version of java
 testthat::skip_on_cran()
 
-# load required data and setup r5r_core
-
-data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))
-
 # create testing function
 
 default_tester <- function(r5r_core,
@@ -172,13 +166,13 @@ test_that("output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$fromId) == "character")
-  expect_true(typeof(result_df_input$toId) == "character")
+  expect_true(typeof(result_df_input$from_id) == "character")
+  expect_true(typeof(result_df_input$to_id) == "character")
   expect_true(typeof(result_df_input$travel_time) == "integer")
 
   # expect more info with breakdown
   df <- default_tester(r5r_core, breakdown=TRUE)
-  expect_equal(ncol(df), 11)
+  expect_equal(ncol(df), 12)
 
 
   #  * r5r options ----------------------------------------------------------
@@ -234,5 +228,3 @@ test_that("output is correct", {
   expect_true(n_rows <= nrow(origins) * nrow(destinations))
 
 })
-
-stop_r5(r5r_core)

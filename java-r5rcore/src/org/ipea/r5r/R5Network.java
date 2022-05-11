@@ -30,7 +30,7 @@ public class R5Network {
      * This string should be changed to a new value each time the network storage format changes.
      * I considered using an ISO date string but that could get confusing when seen in filenames.
      */
-    public static final String NETWORK_FORMAT_VERSION = "nv1";
+    public static final String NETWORK_FORMAT_VERSION = "nv2";
 
     public static final byte[] HEADER = "R5NETWORK".getBytes();
 

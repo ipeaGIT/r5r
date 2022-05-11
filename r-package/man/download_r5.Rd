@@ -5,7 +5,7 @@
 \title{Download R5 Jar file}
 \usage{
 download_r5(
-  version = "6.4.0",
+  version = "6.7.0",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
@@ -33,12 +33,11 @@ tailored for the purposes of r5r that keeps R5's essential features. Source
 code available at https://github.com/ipeaGIT/r5r.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
-download_r5(version = "6.4.0", temp_dir = TRUE)
-}
+download_r5(version = "6.7.0", temp_dir = TRUE)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other setup: 

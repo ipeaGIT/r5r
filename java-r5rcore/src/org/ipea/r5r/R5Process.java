@@ -1,13 +1,17 @@
 package org.ipea.r5r;
 
+import com.conveyal.r5.analyst.FreeFormPointSet;
+import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
+import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Utils.Utils;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
@@ -28,8 +32,16 @@ public abstract class R5Process {
     protected String[] fromIds;
     protected double[] fromLats;
     protected double[] fromLons;
-
     protected int nOrigins;
+
+    protected String[] toIds;
+    protected double[] toLats;
+    protected double[] toLons;
+    protected String[] opportunities;
+    protected int[][] opportunityCounts;
+    protected int nDestinations;
+
+    protected FreeFormPointSet[] destinationPoints;
 
     protected EnumSet<LegMode> directModes;
     protected EnumSet<TransitModes> transitModes;
@@ -47,6 +59,107 @@ public abstract class R5Process {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = transportNetwork;
         this.routingProperties = routingProperties;
+
+        destinationPoints = null;
+    }
+
+    public RDataFrame run() throws ExecutionException, InterruptedException {
+        buildDestinationPointSet();
+        int[] requestIndices = IntStream.range(0, nOrigins).toArray();
+        AtomicInteger totalProcessed = new AtomicInteger(1);
+
+        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
+                Arrays.stream(requestIndices).parallel().
+                        mapToObj(index -> tryRunProcess(totalProcessed, index)).
+                        filter(Objects::nonNull).
+                        collect(Collectors.toList())).get();
+
+        if (!Utils.verbose & Utils.progress) {
+            System.out.print(".. DONE!\n");
+        }
+
+        RDataFrame results = mergeResults(processResults);
+
+        if (this.routingProperties.fareCalculator != null && this.routingProperties.fareCalculator instanceof RuleBasedInRoutingFareCalculator) {
+            if (RuleBasedInRoutingFareCalculator.debugActive) {
+                Set<String> debugOutput = ((RuleBasedInRoutingFareCalculator) this.routingProperties.fareCalculator).getDebugOutput();
+
+                File debugOutputFile = new File(RuleBasedInRoutingFareCalculator.debugFileName);
+                try (PrintWriter pw = new PrintWriter(debugOutputFile)) {
+
+                    pw.println("pattern,fare");
+                    debugOutput.forEach(pw::println);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return results;
+    }
+
+    protected void buildDestinationPointSet() {
+        destinationPoints = new FreeFormPointSet[this.opportunities.length];
+
+        for (int i = 0; i < this.opportunities.length; i++) {
+            ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            DataOutputStream pointStream = new DataOutputStream(dataStream);
+
+            try {
+                pointStream.writeInt(toIds.length);
+                for (String toId : toIds) {
+                    pointStream.writeUTF(toId);
+                }
+                for (double toLat : toLats) {
+                    pointStream.writeDouble(toLat);
+                }
+                for (double toLon : toLons) {
+                    pointStream.writeDouble(toLon);
+                }
+                for (int opportunity : opportunityCounts[i]) {
+                    pointStream.writeDouble(opportunity);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayInputStream pointsInput = new ByteArrayInputStream(dataStream.toByteArray());
+
+            try {
+                destinationPoints[i] = new FreeFormPointSet(pointsInput);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!this.directModes.isEmpty()) {
+                for (LegMode mode : this.directModes) {
+                    transportNetwork.linkageCache.getLinkage(destinationPoints[i], transportNetwork.streetLayer, StreetMode.valueOf(mode.toString()));
+                }
+            }
+        }
+    }
+
+    public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
+        int[][] opportunityCounts = new int[1][toIds.length];
+        for (int i = 0; i < toIds.length; i++) opportunityCounts[0][i] = 0;
+
+        String[] opportunities = new String[]{"all"};
+
+        setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
+    }
+
+    public void setDestinations(String[] toIds, double[] toLats, double[] toLons, String[] opportunities, int[][] opportunityCounts) {
+        this.toIds = toIds;
+        this.toLats = toLats;
+        this.toLons = toLons;
+        this.opportunities = opportunities;
+        this.opportunityCounts = opportunityCounts;
+
+        this.nDestinations = toIds.length;
+
+        // set maxDestinations in R5 for detailed path information retrieval
+        PathResult.maxDestinations = this.nDestinations;
     }
 
     public void setOrigins(String[] fromIds, double[] fromLats, double[] fromLons) {
@@ -73,23 +186,6 @@ public abstract class R5Process {
         this.maxWalkTime = maxWalkTime;
         this.maxBikeTime = maxBikeTime;
         this.maxTripDuration = maxTripDuration;
-    }
-
-    public RDataFrame run() throws ExecutionException, InterruptedException {
-        int[] requestIndices = IntStream.range(0, nOrigins).toArray();
-        AtomicInteger totalProcessed = new AtomicInteger(1);
-
-        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel().
-                        mapToObj(index -> tryRunProcess(totalProcessed, index)).
-                        filter(Objects::nonNull).
-                        collect(Collectors.toList())).get();
-
-        if (!Utils.verbose & Utils.progress) {
-            System.out.print(".. DONE!\n");
-        }
-
-        return mergeResults(processResults);
     }
 
     private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
@@ -197,6 +293,9 @@ public abstract class R5Process {
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
 
         request.percentiles = routingProperties.percentiles;
+
+        request.inRoutingFareCalculator = routingProperties.fareCalculator;
+        request.maxFare = Math.round(routingProperties.maxFare * 100.0f);
 
         return request;
     }

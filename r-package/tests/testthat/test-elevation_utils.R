@@ -5,9 +5,6 @@ testthat::skip_on_cran()
 
 # load required data and setup r5r_core
 raster_poa <- system.file("extdata/poa/poa_elevation.tif", package = "r5r")
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
-
 
 
 # tobler_hiking -----------------------------------------------------
@@ -37,5 +34,3 @@ test_that("apply_elevation", {
   expect_error( r5r:::apply_elevation(r5r_core, 'bananas') )
 
 })
-
-stop_r5(r5r_core)

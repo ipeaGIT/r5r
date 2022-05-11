@@ -7,7 +7,8 @@
 set_suboptimal_minutes(r5r_core, suboptimal_minutes)
 }
 \arguments{
-\item{r5r_core}{rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
 \item{suboptimal_minutes}{numeric. The number of suboptimal minutes in a public transport
 point-to-point query. From R5's documentation:
@@ -34,7 +35,6 @@ Other support functions:
 \code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
-\code{\link{find_snap}()},
 \code{\link{get_all_od_combinations}()},
 \code{\link{posix_to_string}()},
 \code{\link{select_mode}()},
@@ -45,8 +45,7 @@ Other support functions:
 \code{\link{set_progress}()},
 \code{\link{set_speed}()},
 \code{\link{set_verbose}()},
-\code{\link{stop_r5}()},
-\code{\link{street_network_to_sf}()},
-\code{\link{transit_network_to_sf}()}
+\code{\link{stop_r5}()}
 }
 \concept{support functions}
+\keyword{internal}

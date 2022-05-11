@@ -1,15 +1,13 @@
-#' Extract OpenStreetMap network in sf format from a network.dat built with setup_r5
+#' Extract OpenStreetMap network in sf format from a network.dat file
 #'
-#'
-#' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
+#' @template r5r_core
 #'
 #' @return A list with two components of a street network in sf format: vertices
 #'         (POINT) and edges (LINESTRING).
 #'
-#' @family support functions
+#' @family network functions
 #'
-#' @examples if (interactive()) {
-#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -20,9 +18,7 @@
 #' street_net <- street_network_to_sf(r5r_core)
 #'
 #' stop_r5(r5r_core)
-#' }
 #' @export
-
 street_network_to_sf <- function(r5r_core) {
 
   # check input

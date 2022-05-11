@@ -3,7 +3,7 @@
 #' @description Extract transit network in `sf` format from a `network.dat` file
 #'              built with the \code{\link{setup_r5}} function.
 #'
-#' @param r5r_core a rJava object, the output from 'r5r::setup_r5()'
+#' @template r5r_core
 #'
 #' @return A list with two components of a transit network in sf format:
 #'         route shapes (LINESTRING) and transit stops (POINT). The same
@@ -14,10 +14,9 @@
 #'         snapped to the road network, possibly because the `gtfs.zip` input
 #'         data covers an area larger than the `osm.pbf` input data.
 #'
-#' @family support functions
+#' @family network functions
 #'
-#' @examples if (interactive()) {
-#'
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -28,9 +27,7 @@
 #' transit_net <- transit_network_to_sf(r5r_core)
 #'
 #' stop_r5(r5r_core)
-#' }
 #' @export
-
 transit_network_to_sf <- function(r5r_core) {
 
   # check input

@@ -21,3 +21,4 @@ Other elevation support functions:
 \code{\link{apply_elevation}()}
 }
 \concept{elevation support functions}
+\keyword{internal}

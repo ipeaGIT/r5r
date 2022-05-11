@@ -76,12 +76,12 @@ public class PathOptionsTable {
     void buildDataFrameStructure() {
         // Build data.frame to return data to R in tabular form
         optionsDataFrame = new RDataFrame();
-        optionsDataFrame.addStringColumn("fromId", fromId);
-        optionsDataFrame.addDoubleColumn("fromLat", fromLat);
-        optionsDataFrame.addDoubleColumn("fromLon", fromLon);
-        optionsDataFrame.addStringColumn("toId", toId);
-        optionsDataFrame.addDoubleColumn("toLat", toLat);
-        optionsDataFrame.addDoubleColumn("toLon", toLon);
+        optionsDataFrame.addStringColumn("from_id", fromId);
+        optionsDataFrame.addDoubleColumn("from_lat", fromLat);
+        optionsDataFrame.addDoubleColumn("from_lon", fromLon);
+        optionsDataFrame.addStringColumn("to_id", toId);
+        optionsDataFrame.addDoubleColumn("to_lat", toLat);
+        optionsDataFrame.addDoubleColumn("to_lon", toLon);
         optionsDataFrame.addIntegerColumn("option", 0);
         optionsDataFrame.addIntegerColumn("segment", 0);
         optionsDataFrame.addStringColumn("mode", "");
@@ -303,10 +303,12 @@ public class PathOptionsTable {
     }
 
     private int calculateSegmentLength(StreetSegment segment) {
-        int sum = 0;
-        for (StreetEdgeInfo streetEdgeInfo : segment.streetEdges) {
-            sum += streetEdgeInfo.distance;
-        }
-        return sum;
+        return segment.distance;
+
+//        int sum = 0;
+//        for (StreetEdgeInfo streetEdgeInfo : segment.streetEdges) {
+//            sum += streetEdgeInfo.distance;
+//        }
+//        return sum;
     }
 }

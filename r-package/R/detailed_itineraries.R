@@ -1,145 +1,31 @@
 #' Calculate detailed itineraries between origin destination pairs
 #'
-#' @description Fast computation of (multiple) detailed itineraries between one
-#'              or many origin destination pairs.
+#' Fast computation of (multiple) detailed itineraries between one or many
+#' origin destination pairs.
 #'
-#' @param r5r_core rJava object to connect with R5 routing engine
-#' @param origins,destinations a spatial sf POINT object with WGS84 CRS, or a
-#'                             data.frame containing the columns 'id', 'lon',
-#'                             'lat'.
-#' @param mode string. Transport modes allowed for the trips. Defaults to
-#'             "WALK". See details for other options.
-#' @param mode_egress string. Transport mode used after egress from public
-#'                    transport. It can be either 'WALK', 'BICYCLE', or 'CAR'.
-#'                    Defaults to "WALK". Ignored when public transport is not
-#'                    used.
-#' @param departure_datetime POSIXct object. If working with public transport
-#'                           networks, please check \code{calendar.txt} within
-#'                           the GTFS file for valid dates. See details for
-#'                           further information on how datetimes are parsed.
-#' @param max_walk_dist numeric. Maximum walking distance (in meters) to access
-#'                      and egress the transit network, or to make transfers
-#'                      within the network. Defaults to no restrictions as long
-#'                      as `max_trip_duration` is respected. The max distance is
-#'                      considered separately for each leg (e.g. if you set
-#'                      `max_walk_dist` to 1000, you could potentially walk up
-#'                      to 1 km to reach transit, and up to _another_ 1 km to
-#'                      reach the destination after leaving transit). Obs: if you
-#'                      want to set the maximum walking distance considering
-#'                      walking-only trips you have to set the `max_trip_duration`
-#'                      accordingly (e.g. to set a distance of 1 km assuming a
-#'                      walking speed of 3.6 km/h you have to set `max_trip_duration = 1 / 3.6 * 60`).
-#' @param max_bike_dist numeric. Maximum cycling distance (in meters) to access
-#'                      and egress the transit network. Defaults to no
-#'                      restrictions as long as `max_trip_duration` is respected.
-#'                      The max distance is considered separately for each leg
-#'                      (e.g. if you set `max_bike_dist` to 1000, you could
-#'                      potentially cycle up to 1 km to reach transit, and up
-#'                      to _another_  1 km to reach the destination after leaving
-#'                      transit). Obs: if you want to set the maximum cycling
-#'                      distance considering cycling-only trips you have to set
-#'                      the `max_trip_duration` accordingly (e.g. to set a
-#'                      distance of 5 km assuming a cycling speed of 12 km/h you
-#'                      have to set `max_trip_duration = 5 / 12 * 60`).
-#' @param max_trip_duration numeric. Maximum trip duration in minutes. Defaults
-#'                          to 120 minutes (2 hours).
-#' @param walk_speed numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
-#' @param bike_speed numeric. Average cycling speed in km/h. Defaults to 12 km/h.
-#' @param max_rides numeric. The max number of public transport rides allowed in
-#'                  the same trip. Defaults to 3.
-#' @param max_lts  numeric (between 1 and 4). The maximum level of traffic stress
-#'                 that cyclists will tolerate. A value of 1 means cyclists will
-#'                 only travel through the quietest streets, while a value of 4
-#'                 indicates cyclists can travel through any road. Defaults to 2.
-#'                 See details for more information.
-#' @param shortest_path logical. Whether the function should only return the
-#'                      fastest route alternative (the default) or multiple
-#'                      alternatives.
-#' @param all_to_all logical. By default (`FALSE`), the functions queries routes
-#'                   between the the 1st row of origins to the 1st row of
-#'                   destinations, then the 2nd row of origins to the 2nd row of
-#'                   destinations, and so on. If `all_to_all` is set to `TRUE`,
-#'                   the function will query routes between all possible
-#'                   combinations of origin-destination pairs.
-#' @param n_threads numeric. The number of threads to use in parallel computing.
-#'                  Defaults to use all available threads (Inf).
-#' @param verbose logical. `TRUE` to show detailed output messages (the default).
-#' @param progress logical. `TRUE` to show a progress counter. Only works when
-#'                `verbose` is set to `FALSE`, so the progress counter does not
-#'                interfere with R5's output messages. Setting `progress` to `TRUE`
-#'                may impose a small penalty for computation efficiency, because
-#'                the progress counter must be synchronized among all active
-#'                threads.
-#' @param drop_geometry logical. Indicates whether R5 should drop segment's
-#'                      geometry column. It can be helpful for saving memory.
+#' @template r5r_core
+#' @template common_arguments
+#' @template verbose
+#' @param shortest_path A logical. Whether the function should only return the
+#' fastest itinerary between each origin and destination pair (the default) or
+#' multiple alternatives.
+#' @param drop_geometry A logical. Whether the output should include the
+#' geometry of each segment or not. The default value of `FALSE` keeps the
+#' geometry column in the result.
 #'
-#' @details
-#'  # Transport modes:
-#'  R5 allows for multiple combinations of transport modes. The options include:
+#' @template transport_modes_section
+#' @template lts_section
+#' @template datetime_parsing_section
+#' @template mcraptor_algorithm_section
 #'
-#'   ## Transit modes
-#'   TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
-#'   'TRANSIT' automatically considers all public transport modes available.
-#'
-#'   ## Non transit modes
-#'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
-#'
-#' # max_lts, Maximum Level of Traffic Stress:
-#' When cycling is enabled in R5, setting `max_lts` will allow cycling only on
-#' streets with a given level of danger/stress. Setting `max_lts` to 1, for example,
-#' will allow cycling only on separated bicycle infrastructure or low-traffic
-#' streets; routing will revert to walking when traversing any links with LTS
-#' exceeding 1. Setting `max_lts` to 3 will allow cycling on links with LTS 1, 2,
-#' or 3.
-#'
-#' The default methodology for assigning LTS values to network edges is based on
-#' commonly tagged attributes of OSM ways. See more info about LTS in the original
-#' documentation of R5 from Conveyal at \url{https://docs.conveyal.com/learn-more/traffic-stress}.
-#' In summary:
-#'
-#'- **LTS 1**: Tolerable for children. This includes low-speed, low-volume streets,
-#'  as well as those with separated bicycle facilities (such as parking-protected
-#'  lanes or cycle tracks).
-#'- **LTS 2**: Tolerable for the mainstream adult population. This includes streets
-#'  where cyclists have dedicated lanes and only have to interact with traffic at
-#'  formal crossing.
-#'- **LTS 3**: Tolerable for “enthused and confident” cyclists. This includes streets
-#'  which may involve close proximity to moderate- or high-speed vehicular traffic.
-#'- **LTS 4**: Tolerable for only “strong and fearless” cyclists. This includes streets
-#'  where cyclists are required to mix with moderate- to high-speed vehicular traffic.
-#'
-#'  For advanced users, you can provide custom LTS values by adding a tag
-#'  <key = "lts> to the `osm.pbf` file
-#'
-#' # Routing algorithm:
-#'  The detailed_itineraries function uses an R5-specific extension to the
-#'  McRAPTOR routing algorithm to find paths that are optimal or less than
-#'  optimal, with some heuristics around multiple access modes, riding the same
-#'  patterns, etc. The specific extension to McRAPTOR to do suboptimal
-#'  path routing are not documented yet, but a detailed description of base
-#'  McRAPTOR can be found in Delling et al (2015).
-#'  - Delling, D., Pajor, T., & Werneck, R. F. (2015). Round-based public transit
-#'   routing. Transportation Science, 49(3), 591-604.
-#'
-#' # Datetime parsing
-#'
-#' `r5r` ignores the timezone attribute of datetime objects when parsing dates
-#' and times, using the study area's timezone instead. For example, let's say
-#' you are running some calculations using Rio de Janeiro, Brazil, as your study
-#' area. The datetime `as.POSIXct("13-05-2019 14:00:00",
-#' format = "%d-%m-%Y %H:%M:%S")` will be parsed as May 13th, 2019, 14:00h in
-#' Rio's local time, as expected. But `as.POSIXct("13-05-2019 14:00:00",
-#' format = "%d-%m-%Y %H:%M:%S", tz = "Europe/Paris")` will also be parsed as
-#' the exact same date and time in Rio's local time, perhaps surprisingly,
-#' ignoring the timezone attribute.
-#'
-#' @return A LINESTRING sf with detailed information about the itineraries
-#'         between specified origins and destinations. Distances are in meters
-#'         and travel times are in minutes.
+#' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
+#' sf` with detailed information on the itineraries between the specified
+#' origins and destinations. When `TRUE`, the output is a `data.table`. All
+#' distances are in meters and travel times are in minutes.
 #'
 #' @family routing
 #'
-#' @examples if (interactive()) {
+#' @examplesIf interactive()
 #' library(r5r)
 #'
 #' # build transport network
@@ -150,7 +36,10 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
 #' dit <- detailed_itineraries(r5r_core,
 #'                             origins = points[10,],
@@ -161,9 +50,7 @@
 #'                             max_trip_duration = 120L)
 #'
 #' stop_r5(r5r_core)
-#' }
 #' @export
-
 detailed_itineraries <- function(r5r_core,
                                  origins,
                                  destinations,
@@ -180,8 +67,8 @@ detailed_itineraries <- function(r5r_core,
                                  shortest_path = TRUE,
                                  all_to_all = FALSE,
                                  n_threads = Inf,
-                                 verbose = TRUE,
-                                 progress = TRUE,
+                                 verbose = FALSE,
+                                 progress = FALSE,
                                  drop_geometry = FALSE) {
 
 
@@ -350,12 +237,12 @@ detailed_itineraries <- function(r5r_core,
   # return either the fastest or multiple itineraries between an o-d pair (untie
   # it by the option number, if necessary)
 
-  path_options[, total_duration := sum(segment_duration, wait), by = .(fromId, toId, option)]
+  path_options[, total_duration := sum(segment_duration, wait), by = .(from_id, to_id, option)]
 
   if (shortest_path) {
 
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(fromId, toId)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(from_id, to_id)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id)]$V1]
 
   } else {
 
@@ -366,10 +253,10 @@ detailed_itineraries <- function(r5r_core,
     # keep the one with the shortest duration
 
     path_options[, temp_route := fifelse(route == "", mode, route)]
-    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(fromId, toId, option)]
+    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(from_id, to_id, option)]
 
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(fromId, toId, temp_sign)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(fromId, toId, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(from_id, to_id, temp_sign)]$V1]
+    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id, temp_sign)]$V1]
 
     # remove temporary columns
     path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
@@ -378,7 +265,7 @@ detailed_itineraries <- function(r5r_core,
 
   # substitute 'option' id assigned by r5 to a run-length id from 1 to number of
   # options
-  path_options[, option := data.table::rleid(option), by = .(fromId, toId)]
+  path_options[, option := data.table::rleid(option), by = .(from_id, to_id)]
 
   # if results include the geometry, convert path_options from data.frame to
   # data.table with sfc column

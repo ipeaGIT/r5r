@@ -3,16 +3,19 @@ package org.ipea.r5r;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
+import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.conveyal.r5.transit.path.RouteSequence;
+import com.google.common.collect.Multimap;
+import org.ipea.r5r.R5.R5TravelTimeComputer;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ForkJoinPool;
 
-public class AccessibilityEstimator extends R5MultiDestinationProcess {
+public class AccessibilityEstimator extends R5Process {
 
     private DecayFunction decayFunction;
 
@@ -44,7 +47,7 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
+        TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
@@ -57,19 +60,33 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     }
 
     private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
-        int[][][] accessibility = travelTimeResults.accessibility.getIntValues();
+        // Create Field object
+        Field privateField = null;
+        try {
+            privateField = travelTimeResults.accessibility.getClass().getDeclaredField("cumulativeOpportunities");
 
-        int nPercentiles = routingProperties.percentiles.length;
-        int nCutoffs = routingProperties.cutoffs.length;
+            // Set the accessibility as true
+            privateField.setAccessible(true);
 
+            double[][][] accessibility = (double[][][]) privateField.get(travelTimeResults.accessibility);
 
-        for (int p = 0; p < nPercentiles; p++) {
-            for (int c = 0; c < nCutoffs; c++) {
-                travelTimesTable.append();
-                travelTimesTable.set("percentile", routingProperties.percentiles[p]);
-                travelTimesTable.set("cutoff", routingProperties.cutoffs[c]);
-                travelTimesTable.set("accessibility", accessibility[0][p][c]);
+            int nOpportunities = this.opportunities.length;
+            int nPercentiles = routingProperties.percentiles.length;
+            int nCutoffs = routingProperties.cutoffs.length;
+
+            for (int o = 0; o < nOpportunities; o++) {
+                for (int p = 0; p < nPercentiles; p++) {
+                    for (int c = 0; c < nCutoffs; c++) {
+                        travelTimesTable.append();
+                        travelTimesTable.set("opportunity", this.opportunities[o]);
+                        travelTimesTable.set("percentile", routingProperties.percentiles[p]);
+                        travelTimesTable.set("cutoff", routingProperties.cutoffs[c]);
+                        travelTimesTable.set("accessibility", accessibility[o][p][c]);
+                    }
+                }
             }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,10 +94,11 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
         // Build return table
         RDataFrame travelTimesTable = new RDataFrame(nRows);
-        travelTimesTable.addStringColumn("from_id", fromId);
+        travelTimesTable.addStringColumn("id", fromId);
+        travelTimesTable.addStringColumn("opportunity", "");
         travelTimesTable.addIntegerColumn("percentile", 0);
         travelTimesTable.addIntegerColumn("cutoff", 0);
-        travelTimesTable.addIntegerColumn("accessibility", 0);
+        travelTimesTable.addDoubleColumn("accessibility", 0.0);
 
         return travelTimesTable;
     }
@@ -89,10 +107,8 @@ public class AccessibilityEstimator extends R5MultiDestinationProcess {
     protected RegionalTask buildRequest(int index) throws ParseException {
         RegionalTask request = super.buildRequest(index);
 
-        request.destinationPointSetKeys = new String[1];
-        request.destinationPointSetKeys[0] = "opportunities";
-        request.destinationPointSets = new PointSet[1];
-        request.destinationPointSets[0] = destinationPoints;
+        request.destinationPointSetKeys = this.opportunities;
+        request.destinationPointSets = this.destinationPoints;
 
         request.percentiles = this.routingProperties.percentiles;
         request.recordAccessibility = true;

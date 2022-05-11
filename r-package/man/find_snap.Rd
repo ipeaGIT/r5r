@@ -7,12 +7,14 @@
 find_snap(r5r_core, points, mode = "WALK")
 }
 \arguments{
-\item{r5r_core}{a rJava object to connect with R5 routing engine}
+\item{r5r_core}{An object to connect with the R5 routing engine, created with
+\code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{points}{a spatial sf POINT object, or a data.frame
-containing the columns 'id', 'lon', 'lat'}
+\item{points}{Either a \verb{POINT sf} object with WGS84 CRS, or a \code{data.frame}
+containing the columns \code{id}, \code{lon} and \code{lat}.}
 
-\item{mode}{string. Defaults to "WALK", also allows "BICYCLE", and "CAR".}
+\item{mode}{A string. Which mode to consider when trying to snap the points
+to the network. Defaults to \code{WALK}, also allows \code{BICYCLE} and \code{CAR}.}
 }
 \value{
 A data.table with the original points as well as their respective
@@ -29,8 +31,7 @@ returned with \code{NA} coordinates and \code{found = FALSE}. Please note that t
 location of the snapped points depends on the transport mode set by the user.
 }
 \examples{
-if (interactive()) {
-
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
@@ -46,28 +47,11 @@ snap_df <- find_snap(r5r_core,
                      mode = 'CAR')
 
 stop_r5(r5r_core)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
-Other support functions: 
-\code{\link{assert_breakdown_stat}()},
-\code{\link{assert_decay_function}()},
-\code{\link{assert_points_input}()},
-\code{\link{check_connection}()},
-\code{\link{fileurl_from_metadata}()},
-\code{\link{get_all_od_combinations}()},
-\code{\link{posix_to_string}()},
-\code{\link{select_mode}()},
-\code{\link{set_max_lts}()},
-\code{\link{set_max_rides}()},
-\code{\link{set_max_street_time}()},
-\code{\link{set_n_threads}()},
-\code{\link{set_progress}()},
-\code{\link{set_speed}()},
-\code{\link{set_suboptimal_minutes}()},
-\code{\link{set_verbose}()},
-\code{\link{stop_r5}()},
+Other network functions: 
 \code{\link{street_network_to_sf}()},
 \code{\link{transit_network_to_sf}()}
 }
-\concept{support functions}
+\concept{network functions}

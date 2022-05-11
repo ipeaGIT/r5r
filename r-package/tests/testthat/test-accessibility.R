@@ -1,15 +1,9 @@
 context("Accessibility function")
 
-# skips tests on CRAN since they require a specific version of java
+# if running manually, please run the following line first:
+# source("tests/testthat/setup.R")
+
 testthat::skip_on_cran()
-
-# load required data and setup r5r_core
-
-data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
-
-# create testing function
 
 default_tester <- function(r5r_core=r5r_core,
                            origins = points[1:10,],
@@ -190,8 +184,8 @@ test_that("output is correct", {
 
   # expect each column to be of right class
 
-  expect_true(typeof(result_df_input$from_id ) == "character")
-  expect_true(typeof(result_df_input$accessibility) == "integer")
+  expect_true(typeof(result_df_input$id ) == "character")
+  expect_true(typeof(result_df_input$accessibility) == "double")
 
 
   #  * r5r options ----------------------------------------------------------
@@ -203,5 +197,3 @@ test_that("output is correct", {
 
 
 })
-
-stop_r5(r5r_core)

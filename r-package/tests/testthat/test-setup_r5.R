@@ -63,5 +63,3 @@ test_that("'overwrite' parameter works correctly", {
   )
 
 })
-
-stop_r5()
