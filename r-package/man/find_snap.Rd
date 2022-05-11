@@ -17,34 +17,33 @@ containing the columns \code{id}, \code{lon} and \code{lat}.}
 to the network. Defaults to \code{WALK}, also allows \code{BICYCLE} and \code{CAR}.}
 }
 \value{
-A data.table with the original points as well as their respective
-snapped coordinates on the street network and the Euclidean distance
-between original points and their respective snapped location. Points
-that could not be snapped show \code{NA} coordinates and \code{found = FALSE}.
+A \code{data.table} with the original points, their respective
+snapped coordinates on the street network and the Euclidean distance between
+the original points and their snapped location. Points that could not
+be snapped show \code{NA} coordinates and \code{found = FALSE}.
 }
 \description{
-R5 tries to snap origin and destination points to the street
-network in two rounds. First, it uses a search radius of 300 meters. If the
-first round is unsuccessful, then R5 expands the search radius to 1.6 km.
-Points that aren't linked to the street network after those two rounds are
-returned with \code{NA} coordinates and \code{found = FALSE}. Please note that the
-location of the snapped points depends on the transport mode set by the user.
+Finds the snapped location of points on \code{R5} network. Snapping is a very
+important step of the routing process, which is when the origins and
+destinations specified by the user are actually positioned on the network
+created by \code{R5}. The snapping process in \code{R5} is composed of two rounds.
+First, it tries to snap the points within a radius of 300 meters from
+themselves. If the first round is unsuccessful, then \code{R5} expands the search
+radius to 1.6 km. If yet again it is unsuccessful, then the unsnapped points
+won't be used during the routing process. The snapped location of each point
+depends on the transport mode set by the user, because some network edges
+are not available to specific modes (e.g. a pedestrian-only street cannot be
+used to snap car trips).
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
-# build transport network
-path <- system.file("extdata/spo", package = "r5r")
+path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
-
-# load origin/destination points
 points <- read.csv(file.path(path, "spo_hexgrid.csv"))
 
-# find where origin or destination points are snapped
-snap_df <- find_snap(r5r_core,
-                     points = points,
-                     mode = 'CAR')
+snap_df <- find_snap(r5r_core, points, mode = "WALK")
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
