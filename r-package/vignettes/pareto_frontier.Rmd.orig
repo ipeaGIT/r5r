@@ -27,7 +27,11 @@ To address this problem, `r5r` has a function called `pareto_frontier()`, which 
 
 
 
+<<<<<<< HEAD
 ## 2. What the `pareto_frontier` means.
+=======
+## 2. What the `pareto_frontier` measures and how to interpret the results.
+>>>>>>> f65f9fbf0d489f972515349c7f243f70b22b60a2
 
 Imagine a hypothetical journey from A to B. There are multiple route alternatives between this origin and destination with varying combinations of travel time and cost (figure below).
 
@@ -127,6 +131,24 @@ fare_settings$fares_per_mode[, fare := fcase(mode == "BUS", 4.80,
 fare_settings$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
                                                  first_leg != second_leg, 8.37)]
 
+<<<<<<< HEAD
+=======
+```{r, message = FALSE}
+# estimate travel time matrix
+ttm <- travel_time_matrix(r5r_core,   
+                          origins = points,
+                          destinations = points,    
+                          mode = mode,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+                          verbose = FALSE,
+                          time_window = 60,
+                          percentiles = c(10, 20, 50, 70, 80)
+                          )
+
+head(ttm, n = 10)
+>>>>>>> f65f9fbf0d489f972515349c7f243f70b22b60a2
 
 # update transfer_time_allowance to 60 minutes
 fare_settings$transfer_time_allowance <- 60
@@ -140,12 +162,61 @@ fare_settings$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
 
 
 
+<<<<<<< HEAD
 ### 3.3 Calculating a `pareto_frontier()`.
+=======
+```{r, message = FALSE}
+# estimate accessibility
+acc <- r5r::accessibility(r5r_core,   
+                          origins = points,
+                          destinations = points, 
+                          opportunities_colnames = 'schools',
+                          mode = mode,
+                          max_walk_dist = max_walk_dist,
+                          decay_function = "step",
+                          cutoffs = 45,
+                          departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+                          verbose = FALSE,
+                          time_window = 60,
+                          percentiles = c(10, 20, 50, 70, 80)
+                          )
+
+head(acc, n = 10)
+
+```
+```{r detailed head of acc, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true")
+```
+>>>>>>> f65f9fbf0d489f972515349c7f243f70b22b60a2
 
 One cannot make a faster trip without increasing costs, 
 one cannot make a cheaper trip without increasing travel time.
 
 
+<<<<<<< HEAD
+=======
+```{r, message = FALSE}
+# summarize
+df <- acc[, .(min_acc = min(accessibility),
+              median = accessibility[which(percentile == 50)],
+              max_acc = max(accessibility)), by = id]
+
+# plot
+ggplot(data=df) +
+  geom_linerange(color='gray', alpha=.5, aes(x = reorder(id, median) , 
+                      y=median, ymin=min_acc, ymax=max_acc)) +
+  geom_point(color='#0570b0', size=.5, aes(x = reorder(id, median), y=median)) +
+  labs(y='N. of schools accessible\nby public transport', x='Origins sorted by accessibility',
+       title="Accessibility uncertainty between 2pm and 3pm",
+       subtitle = 'Upper limit 10% and lower limit 80% of the times') +
+  theme_classic() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+```{r acc_uncertainty figure, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true")
+```
+>>>>>>> f65f9fbf0d489f972515349c7f243f70b22b60a2
 
 
 ## References
