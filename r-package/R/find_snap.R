@@ -30,7 +30,7 @@
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
 #' r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
-#' points <- read.csv(file.path(path, "spo_hexgrid.csv"))
+#' points <- read.csv(file.path(path, "poa_hexgrid.csv"))
 #'
 #' snap_df <- find_snap(r5r_core, points, mode = "WALK")
 #'
