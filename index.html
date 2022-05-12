@@ -116,16 +116,16 @@
   <div class="contents col-md-9">
 
 <div class="section level1">
-<div class="page-header"><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
+<div class="page-header"><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="reference/figures/r5r_blue.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
 </h1></div>
-<!-- badges: start -->
-<!-- badges: end --><p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
-<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, what allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
-<p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>. Soon, this could also become a <code>python</code> library.</p>
+
+<p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
+<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
+<p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>To use <code>r5r</code>, you need to have <em>Java SE Development Kit 11</em> installed on your computer. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below: - <a href="http://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a> - <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p>
+<p>You can install <code>r5r</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># From CRAN</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"r5r"</span><span class="op">)</span>
@@ -135,6 +135,11 @@
   <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/remove.packages.html" class="external-link">remove.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span>
   <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span>
   <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></code></pre></div>
+<p>Please bear in mind that you need to have <em>Java SE Development Kit 11</em> installed on your computer to use <code>r5r</code>. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below: - <a href="http://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a> - <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p>
+<p>If you don’t know what version of Java you have installed on your computer, you can check it by running this on R console.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jinit.html" class="external-link">.jinit</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">.jcall</a></span><span class="op">(</span><span class="st">"java.lang.System"</span>, <span class="st">"S"</span>, <span class="st">"getProperty"</span>, <span class="st">"java.version"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -161,7 +166,7 @@
 <h3 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
 </h3>
 <p>See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># allocate RAM memory to Java</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
 
@@ -254,8 +259,7 @@
     month = mar,
     year = {2021},
     note = {Publisher: Network Design Lab}
-}
-</code></pre>
+}</code></pre>
 </div>
 
   </div>
@@ -306,7 +310,7 @@
 <li><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a></li>
 <li><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a></li>
 <li><a href="https://github.com/ipeaGIT/r5r/actions" class="external-link"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg" alt="Lifecycle: maturing"></a></li>
 <li><a href="https://doi.org/10.32866/001c.21262" class="external-link"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></li>
 </ul>
 </div>
