@@ -31,3 +31,4 @@ r-package/tests_marcus/kinshasa
 r-package/vignettes/*.html
 r-package/vignettes/*.R
 aws.xml
+docs/
