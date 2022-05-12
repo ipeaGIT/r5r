@@ -11,7 +11,7 @@
 networks (walk, bike, public transport and car). It provides a simple and 
 friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5), the routing engine developed independently by [Conveyal](http://conveyal.com).
 
-**r5r** is a simple way to run R<sup>5</sup> locally, what allows users to
+**r5r** is a simple way to run R<sup>5</sup> locally, allowing `R` users to
 generate detailed routing analysis or calculate travel time matrices and 
 accessibility using seamless parallel computing. See a detailed demonstration of
 `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html).
