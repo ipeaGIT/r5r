@@ -22,7 +22,7 @@ library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path = path, temp_dir = TRUE)
+r5r_core <- setup_r5(path)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
