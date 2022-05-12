@@ -14,7 +14,7 @@ friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world 
 **r5r** is a simple way to run R<sup>5</sup> locally, allowing `R` users to
 generate detailed routing analysis or calculate travel time matrices and 
 accessibility using seamless parallel computing. See a detailed demonstration of
-`r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html).
+`r5r` in the [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html).
 More details about **r5r** can be found on the [package webpage](https://ipeagit.github.io/r5r/index.html) or on this [paper](
 https://doi.org/10.32866/001c.21262). Over time, `r5r` migth be expanded to 
 incorporate other functionalities from R<sup>5</sup>
