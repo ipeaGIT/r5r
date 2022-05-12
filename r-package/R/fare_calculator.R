@@ -48,7 +48,7 @@
 #'
 #' @family fare calculator
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' data_path <- system.file("extdata/poa", package = "r5r")
@@ -127,7 +127,7 @@ setup_fare_calculator <- function(r5r_core,
 #'
 #' @family fare calculator
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' data_path <- system.file("extdata/poa", package = "r5r")
@@ -200,7 +200,7 @@ write_fare_calculator <- function(fare_calculator, file_path) {
 #'
 #' @family fare calculator
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' path <- system.file("inst/extdata/poa/fares/fares_poa.zip", package = "r5r")
 #' fare_calculator <- read_fare_calculator(path)
 #'

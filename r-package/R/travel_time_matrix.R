@@ -46,7 +46,7 @@
 #'
 #' @family routing
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' # build transport network

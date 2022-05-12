@@ -51,7 +51,7 @@ file in the directory, the function will simply read it and load it to
 memory (unless specified not to do so).
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files

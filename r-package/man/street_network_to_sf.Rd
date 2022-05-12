@@ -18,7 +18,7 @@ A list with two components of a street network in sf format: vertices
 Extract OpenStreetMap network in sf format from a network.dat file
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network

@@ -17,7 +17,7 @@
 #'
 #' @family setup
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' download_r5(version = "6.7.0", temp_dir = TRUE)

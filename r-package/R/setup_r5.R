@@ -28,7 +28,7 @@
 #'
 #' @family setup
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' # directory with street network and gtfs files

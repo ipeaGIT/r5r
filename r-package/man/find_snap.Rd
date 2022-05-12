@@ -36,7 +36,7 @@ are not available to specific modes (e.g. a pedestrian-only street cannot be
 used to snap car trips).
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")

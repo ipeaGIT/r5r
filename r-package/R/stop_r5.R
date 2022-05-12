@@ -8,7 +8,7 @@
 #'
 #' @family support functions
 #'
-#' @examplesIf interactive()
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
