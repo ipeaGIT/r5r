@@ -1,38 +1,30 @@
-# r5r: Rapid Realistic Routing with R5 in R <img align="right" src="https://github.com/ipeaGIT/r5r/blob/master/r-package/man/figures/r5r_blue.png?raw=true" alt="logo" width="180">
-<!-- badges: start -->
+# r5r: Rapid Realistic Routing with R5 in R <img align="right" src=man/figures/r5r_blue.png" alt="logo" width="180">
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r)
 [![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
 [![R build status](https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/r5r/actions)
-![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg) [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg)
+[![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Publication](https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow)](https://doi.org/10.32866/001c.21262)
-
-
-<!-- badges: end -->
 
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
 networks (walk, bike, public transport and car). It provides a simple and 
 friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5), the routing engine developed independently by [Conveyal](http://conveyal.com).
 
-
-**r5r** is a simple way to run R<sup>5</sup> locally, what allows users to
-generate detailed routing analysis or calculate travel time matrices using 
-seamless parallel computing. See a detailed demonstration of `r5r` in this
-[intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). Over time, `r5r` migth be expanded to incorporate
-other functionalities from R<sup>5</sup>
-
+**r5r** is a simple way to run R<sup>5</sup> locally, allowing `R` users to
+generate detailed routing analysis or calculate travel time matrices and 
+accessibility using seamless parallel computing. See a detailed demonstration of
+`r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html).
+More details about **r5r** can be found on the [package webpage](https://ipeagit.github.io/r5r/index.html) or on this [paper](
+https://doi.org/10.32866/001c.21262). Over time, `r5r` migth be expanded to 
+incorporate other functionalities from R<sup>5</sup>
 
 This repository contains the `R` code (r-package folder) and the Java code 
-(java-api folder) that provides the interface to R<sup>5</sup>. Soon, this
-could also become a `python` library. 
-
+(java-api folder) that provides the interface to R<sup>5</sup>.
 
 ## Installation
 
-To use `r5r`, you need to have *Java SE Development Kit 11* installed on your computer. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
-- [OpenJDK](http://jdk.java.net/java-se-ri/11)
-- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+You can install `r5r`:
 
 ```R
 # From CRAN
@@ -44,6 +36,17 @@ To use `r5r`, you need to have *Java SE Development Kit 11* installed on your co
   devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
   library(r5r)
 
+```
+
+Please bear in mind that you need to have *Java SE Development Kit 11* installed on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
+- [OpenJDK](http://jdk.java.net/java-se-ri/11)
+- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+
+If you don't know what version of Java you have installed on your computer, you can check it by running this on R console.
+
+```R
+rJava::.jinit()
+rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 ```
 
 ## Usage
@@ -73,6 +76,7 @@ The package has four fundamental functions.
    opportunities), logistic, fixed Exponential and linear.
 
 ### Demonstration on sample data
+
 See a detailed demonstration of `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). To illustrate
 functionality, the package includes a small sample data set of the public transport
 and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to 
@@ -123,10 +127,7 @@ access <- accessibility(r5r_core = r5r_core,
                         cutoffs = 21,
                         mode =  c("WALK", "TRANSIT"),
                         verbose = FALSE)
-
 ```
-
-
 
 #### **Related R packages**
 
@@ -149,8 +150,7 @@ to R<sup>5</sup>, one of the fastest and most robust routing engines availabe.
 The [R<sup>5</sup> routing engine](https://github.com/conveyal/r5) is developed 
 at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
-
-# Citation <img align="right" src="man/figures/ipea_logo.png" alt="ipea" width="300">
+# Citation <img align="right" src=man/figures/ipea_logo.png" alt="ipea" width="300">
 
  The R package **r5r** is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:
 
@@ -172,6 +172,4 @@ BibTeX:
 	year = {2021},
 	note = {Publisher: Network Design Lab}
 }
-
 ```
-
