@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - r-package/**
+      - README.md
     branches:
       - master
 
@@ -49,6 +50,12 @@ jobs:
           install.packages("pkgdown")
         shell: Rscript {0}
         working-directory: r-package
+
+      - name: Copy README.md to r-package/index.md
+        run: cp README.md r-package/index.md
+
+      - name: Update r-package/index.md figures source
+        run: sed -i 's/\"r-package\//\"/g' r-package/index.md
 
       - name: Install package
         run: R CMD INSTALL .
