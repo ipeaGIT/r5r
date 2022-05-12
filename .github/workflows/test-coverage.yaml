@@ -1,10 +1,14 @@
 on:
   push:
+    paths:
+      - r-package/**
     branches:
       - dev
       - main
       - master
   pull_request:
+    paths:
+      - r-package/**
     branches:
       - dev
       - main
