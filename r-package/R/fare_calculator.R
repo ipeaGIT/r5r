@@ -201,7 +201,7 @@ write_fare_calculator <- function(fare_calculator, file_path) {
 #' @family fare calculator
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
-#' path <- system.file("inst/extdata/poa/fares/fares_poa.zip", package = "r5r")
+#' path <- system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
 #' fare_calculator <- read_fare_calculator(path)
 #'
 #' @export

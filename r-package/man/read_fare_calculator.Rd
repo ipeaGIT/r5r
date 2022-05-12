@@ -18,7 +18,7 @@ Read a fare calculator object from a file
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-path <- system.file("inst/extdata/poa/fares/fares_poa.zip", package = "r5r")
+path <- system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
 fare_calculator <- read_fare_calculator(path)
 \dontshow{\}) # examplesIf}
 }
