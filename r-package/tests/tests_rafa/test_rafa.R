@@ -660,16 +660,33 @@ tt <- r5r::travel_time_matrix(r5r_core,
 
 
 
-vignete pareto
 library(tibble)
+library(ggplot2)
 
-df <- tibble::tribble(~option, ~modes, ~time, ~cost,
-                      1, 'walk',       50,    0,
-                      2, 'bus',        35,    4,
-                      3, 'bus + bus',  29,    6,
-                      4, 'subway',     15,    8)
+df <- tribble(~option, ~modes,       ~time, ~cost,
+              1,      'Walk',         50,   0,
+              2,      'Bus',          35,   3,
+              3,      'Bus + Bus',    29,   5,
+              4,      'Subway',       20,   6,
+              5,      'Bus + Subway', 15,   8)
 
 
-ggplot() +
-        geom_path(data=df, aes(x=cost, y=time)) +
-        geom_point(data=df, aes(x=cost, y=time))
+# data.frame
+df <- structure(list(option = c(1, 2, 3, 4, 5),
+                     modes = c("Walk", "Bus","Bus + Bus", "Subway", "Bus + Subway"),
+                     time = c(50, 35, 29, 20, 15),
+                     cost = c(0, 3, 5, 6, 8)), class = "data.frame",
+                row.names = c(NA, -5L))
+
+# figure
+ggplot(data=df, aes(x=cost, y=time, label = modes)) +
+        geom_step(linetype = "dashed") +
+        geom_point() +
+        geom_text(color='gray30', hjust = -.2, nudge_x = 0.05, angle = 45) +
+        # labs(y="Travel time in minutes", x="Travel cost in R$") +
+        scale_x_continuous(name="Travel cost (R$)", breaks=seq(0,12,3)) +
+        scale_y_continuous(name="Travel time (minutes)", breaks=seq(0,60,10)) +
+        coord_cartesian(xlim = c(0,15), ylim = c(0, 60)) +
+        theme_classic()
+
+
