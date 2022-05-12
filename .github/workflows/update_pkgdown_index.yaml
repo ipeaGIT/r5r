@@ -8,7 +8,7 @@ on:
 name: update_pkgdown_index
 
 jobs:
-  pkgdown:
+  update_index:
     runs-on: ubuntu-20.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -25,5 +25,5 @@ jobs:
         run: |
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git commit index.md -m 'Update pkgdown index' || echo "No changes to pkgdown index"
+          git commit r-package/index.md -m 'Update pkgdown index' || echo "No changes to pkgdown index"
           git push origin || echo "No changes to pkgdown index"
