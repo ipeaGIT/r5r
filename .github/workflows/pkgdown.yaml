@@ -56,4 +56,4 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          Rscript -e 'pkgdown::deploy_to_branch(pkg = "./r-package", new_process = FALSE, examples = FALSE)'
+          Rscript -e 'pkgdown::deploy_to_branch(pkg = "./r-package", new_process = FALSE)'
