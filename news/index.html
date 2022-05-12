@@ -73,102 +73,129 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.7.0" id="r5r-v070">r5r v0.7.0<small>2022-02-11</small><a class="anchor" aria-label="anchor" href="#r5r-v070"></a></h2>
-<ul><li>
-<p>Major changes</p>
+<h2 class="page-header" data-toc-text="development version" id="r5r-development-version">r5r (development version)<a class="anchor" aria-label="anchor" href="#r5r-development-version"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>Add new parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
+<li>Package documentation has been extensively updated and expanded.</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>r5r now downloads R5 Jar directly from Conveyal’s github, making the package more stable. Closes <a href="https://github.com/ipeaGIT/r5r/issues/226" class="external-link">#226</a>.</li>
+<li>All functions now use <code>verbose = FALSE</code> and <code>progress = FALSE</code> by default.</li>
+<li>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function has a new parameter <code>all_to_all</code>, which allows users to set whether they want to query routes between all origins to all destinations (<code>all_to_all = TRUE</code>) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (<code>all_to_all = FALSE</code>, the default). Closes <a href="https://github.com/ipeaGIT/r5r/issues/224" class="external-link">#224</a>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.7.0" id="r5r-070">r5r 0.7.0<small>2022-02-11</small><a class="anchor" aria-label="anchor" href="#r5r-070"></a></h2>
+<p><strong>Major changes</strong></p>
 <ul><li>From this version onwards, r5r downloads R5 JAR from github, which provides more stable connection than Ipea server.</li>
 <li>The number of Monte Carlo draws to perform per time window minute when calculating travel time matrices and when estimating accessibility is now set via the <code>r5r.montecarlo_draws</code> option. Defaults to 5. This would mean 300 draws in a 60 minutes time window, for example. The user may also set a custom value using <code>options(r5r.montecarlo_draws = 10L)</code> (in which you substitute 10L by the value you want to set).</li>
-</ul></li>
-<li>
-<p>Minor changes</p>
-<ul><li>Changed <code>total_time</code> column name to <code>combined_time</code> in <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> output, to avoid confusion with <code>travel_time</code> column.</li></ul></li>
-</ul><table style="width:78%;" class="table"><colgroup><col width="77%"></colgroup><tbody><tr class="odd"><td align="left"># r5r v0.6.0</td></tr><tr class="even"><td align="left">* Major changes</td></tr><tr class="odd"><td align="left">* Updated R5 to version 6.4. Closes <a href="https://github.com/ipeaGIT/r5r/issues/182" class="external-link">#182</a>.</td></tr><tr class="even"><td align="left">* Significant performance improvements in all functions, due to a faster method for consolidating outputs. Closes <a href="https://github.com/ipeaGIT/r5r/issues/180" class="external-link">#180</a>
-</td></tr><tr class="odd"><td align="left">* New function <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code>, to extract the public transport network from R5 as simple features. Closes <a href="https://github.com/ipeaGIT/r5r/issues/179" class="external-link">#179</a>
-</td></tr><tr class="even"><td align="left">* New <code>progress</code> parameter in the <code><a href="../reference/accessibility.html">accessibility()</a></code>, <code>travel_time_matrix</code>, and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions, to show or hide the progress counter indicator. Closes <a href="https://github.com/ipeaGIT/r5r/issues/186" class="external-link">#186</a>
-</td></tr><tr class="odd"><td align="left">* Created new support function <code><a href="../reference/java_to_dt.html">java_to_dt()</a></code> and removed dependency on the <code>jdx</code> package. Closes <a href="https://github.com/ipeaGIT/r5r/issues/206" class="external-link">#206</a>
-</td></tr><tr class="even"><td align="left">* Reduced r5r’s internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn’t been downloaded before. Closes <a href="https://github.com/ipeaGIT/r5r/issues/197" class="external-link">#197</a>.</td></tr><tr class="odd"><td align="left">* Added two new parameters <code>breakdown</code> and <code>breakdown_stat</code> to the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. This allows users to breakdown the travel time information by trip subcomponents (access time, waiting time, traveling time etc). It allows one to extract more information but it makes computation time slower. Closes <a href="https://github.com/ipeaGIT/r5r/issues/194" class="external-link">#194</a>
-</td></tr><tr class="even"><td align="left">* Minor changes</td></tr><tr class="odd"><td align="left">* New <code><a href="../reference/setup_r5.html">setup_r5()</a></code> parameter, <code>overwrite</code>, that forces the building of a new <code>network.dat</code>, even if one already exists. * Improved documentation of parameter <code>departure_datetime</code> to clarify the parameter must be set to local time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/188" class="external-link">#188</a> * Improved documentation regarding personalized LTS values. <a href="https://github.com/ipeaGIT/r5r/issues/190" class="external-link">Closes #190</a>. * Improved documentation of <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> regarding stops that are not snapped to road network. <a href="https://github.com/ipeaGIT/r5r/issues/192" class="external-link">Closes #192</a>. * Improved documentation of <code>max_walking_dist</code> and <code>max_cycling_dist</code> parameters. <a href="https://github.com/ipeaGIT/r5r/issues/193" class="external-link">Closes #193</a>. * Started raising an error if the CRS of origins/destinations is not WGS 84. Closes <a href="https://github.com/ipeaGIT/r5r/issues/201" class="external-link">#201</a>.</td></tr></tbody></table></div>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>Changed <code>total_time</code> column name to <code>combined_time</code> in <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> output, to avoid confusion with <code>travel_time</code> column.</li></ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.5.0" id="r5r-v050">r5r v0.5.0<small>2021-07-02</small><a class="anchor" aria-label="anchor" href="#r5r-v050"></a></h2>
-<ul><li>Major changes<ul><li><p>New function <code><a href="../reference/accessibility.html">accessibility()</a></code> to calculate access to opportunities. Closes <a href="https://github.com/ipeaGIT/r5r/issues/169" class="external-link">#169</a></p></li>
+<h2 class="page-header" data-toc-text="0.6.0" id="r5r-060">r5r 0.6.0<small>2021-10-26</small><a class="anchor" aria-label="anchor" href="#r5r-060"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li><p>Updated R5 to version 6.4. Closes <a href="https://github.com/ipeaGIT/r5r/issues/182" class="external-link">#182</a>.</p></li>
+<li><p>Significant performance improvements in all functions, due to a faster method for consolidating outputs. Closes <a href="https://github.com/ipeaGIT/r5r/issues/180" class="external-link">#180</a></p></li>
+<li><p>New function <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code>, to extract the public transport network from R5 as simple features. Closes <a href="https://github.com/ipeaGIT/r5r/issues/179" class="external-link">#179</a></p></li>
+<li><p>New <code>progress</code> parameter in the <code><a href="../reference/accessibility.html">accessibility()</a></code>, <code>travel_time_matrix</code>, and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions, to show or hide the progress counter indicator. Closes <a href="https://github.com/ipeaGIT/r5r/issues/186" class="external-link">#186</a></p></li>
+<li><p>Created new support function <code><a href="../reference/java_to_dt.html">java_to_dt()</a></code> and removed dependency on the <code>jdx</code> package. Closes <a href="https://github.com/ipeaGIT/r5r/issues/206" class="external-link">#206</a></p></li>
+<li><p>Reduced r5r’s internet dependency quite considerably. Internet is now only required to download the latest R5 jar if it hasn’t been downloaded before. Closes <a href="https://github.com/ipeaGIT/r5r/issues/197" class="external-link">#197</a>.</p></li>
+<li><p>Added two new parameters <code>breakdown</code> and <code>breakdown_stat</code> to the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. This allows users to breakdown the travel time information by trip subcomponents (access time, waiting time, traveling time etc). It allows one to extract more information but it makes computation time slower. Closes <a href="https://github.com/ipeaGIT/r5r/issues/194" class="external-link">#194</a></p></li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>New <code><a href="../reference/setup_r5.html">setup_r5()</a></code> parameter, <code>overwrite</code>, that forces the building of a new <code>network.dat</code>, even if one already exists.</li>
+<li>Improved documentation of parameter <code>departure_datetime</code> to clarify the parameter must be set to local time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/188" class="external-link">#188</a>
+</li>
+<li>Improved documentation regarding personalized LTS values. <a href="https://github.com/ipeaGIT/r5r/issues/190" class="external-link">Closes #190</a>.</li>
+<li>Improved documentation of <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> regarding stops that are not snapped to road network. <a href="https://github.com/ipeaGIT/r5r/issues/192" class="external-link">Closes #192</a>.</li>
+<li>Improved documentation of <code>max_walking_dist</code> and <code>max_cycling_dist</code> parameters. <a href="https://github.com/ipeaGIT/r5r/issues/193" class="external-link">Closes #193</a>.</li>
+<li>Started raising an error if the CRS of origins/destinations is not WGS 84. Closes <a href="https://github.com/ipeaGIT/r5r/issues/201" class="external-link">#201</a>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.0" id="r5r-050">r5r 0.5.0<small>2021-07-02</small><a class="anchor" aria-label="anchor" href="#r5r-050"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li><p>New function <code><a href="../reference/accessibility.html">accessibility()</a></code> to calculate access to opportunities. Closes <a href="https://github.com/ipeaGIT/r5r/issues/169" class="external-link">#169</a></p></li>
 <li><p>New function <code><a href="../reference/find_snap.html">find_snap()</a></code> to help users identify where in the street network the input of origin and destination points are snapped to. Closes <a href="https://github.com/ipeaGIT/r5r/issues/168" class="external-link">168</a>.</p></li>
 <li><p>New parameter <code>max_bike_dist</code> added to routing and accessibility functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/174" class="external-link">#174</a></p></li>
 <li><p>Implemented temporary solution for elevation. Closes <a href="https://github.com/ipeaGIT/r5r/issues/171" class="external-link">#171</a>. Now r5r can read Digital Elevation Model (DEM) data from raster files in <code>.tif</code> format to weight the street network for walking and cycling according to the terrain’s slopes. Ideally, we would like to see a solution that accounts for elevation implemented upstream in R5. For now, this is a temporary solution implemented within r5r.</p></li>
-</ul></li>
-<li>Minor changes<ul><li><p>The <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> now has a more clean output when the provided GTFS covers a larger area than the street network pbf. Closes <a href="https://github.com/ipeaGIT/r5r/issues/173" class="external-link">#173</a></p></li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li><p>The <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> now has a more clean output when the provided GTFS covers a larger area than the street network pbf. Closes <a href="https://github.com/ipeaGIT/r5r/issues/173" class="external-link">#173</a></p></li>
 <li><p>The size of poa.zip sample GTFS data has been reduced due to CRAN policies. Closes <a href="https://github.com/ipeaGIT/r5r/issues/172" class="external-link">#172</a>.</p></li>
 <li><p>Progress counter Implemented. Closes <a href="https://github.com/ipeaGIT/r5r/issues/150" class="external-link">150</a>. When the <code>verbose</code> parameter is set to <code>FALSE</code>, r5r prints a progress counter and eventual <code>ERROR</code> messages. This comes with a minor penalty for computation performance. Hence we have kept <code>verbose</code> defautls to <code>TRUE</code>.</p></li>
-</ul></li>
-<li>Bug fixes<ul><li>Fixed bug that prevented r5r from running without internet connection. Closes <a href="https://github.com/ipeaGIT/r5r/issues/163" class="external-link">#163</a>.</li></ul></li>
-</ul><table style="width:78%;" class="table"><colgroup><col width="77%"></colgroup><tbody><tr class="odd"><td align="left"># r5r v0.4-0</td></tr><tr class="even"><td align="left">* Major changes * Updated R5 to version 6.2. Closes <a href="https://github.com/ipeaGIT/r5r/issues/158" class="external-link">#158</a>. * Added <code>max_lts</code> parameter to <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> and <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> functions. LTS stands for Level of Traffic Stress, and allows modeling of bicycle comfort in routing analysis. Additional information can be found in <a href="https://docs.conveyal.com/learn-more/traffic-stress" class="external-link">Conveyal’s documentation</a> as well as blog posts <a href="https://blog.conveyal.com/bike-lts-with-single-point-analysis-in-conveyal-55eecff8c0c7" class="external-link">1</a> and <a href="https://blog.conveyal.com/modeling-bicycle-comfort-with-conveyal-analysis-part-2-6c0a3d004c6a" class="external-link">2</a>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/160" class="external-link">#160</a>
-</td></tr><tr class="odd"><td align="left">* Minor changes * new support function <code><a href="../reference/check_connection.html">check_connection()</a></code> to check internect connection before download files from Ipea server.</td></tr></tbody></table></div>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>Fixed bug that prevented r5r from running without internet connection. Closes <a href="https://github.com/ipeaGIT/r5r/issues/163" class="external-link">#163</a>.</li></ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3-3" id="r5r-v03-3">r5r v0.3-3<small>2021-03-09</small><a class="anchor" aria-label="anchor" href="#r5r-v03-3"></a></h2>
-<ul><li>Major changes<ul><li>New vignette to <a href="https://ipeagit.github.io/r5r/articles/calculating_isochrones.html" class="external-link">calculate and visualize isochrones</a>.</li>
+<h2 class="page-header" data-toc-text="0.4-0" id="r5r-04-0">r5r 0.4-0<a class="anchor" aria-label="anchor" href="#r5r-04-0"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>Updated R5 to version 6.2. Closes <a href="https://github.com/ipeaGIT/r5r/issues/158" class="external-link">#158</a>.</li>
+<li>Added <code>max_lts</code> parameter to <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> and <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> functions. LTS stands for Level of Traffic Stress, and allows modeling of bicycle comfort in routing analysis. Additional information can be found in <a href="https://docs.conveyal.com/learn-more/traffic-stress" class="external-link">Conveyal’s documentation</a> as well as blog posts <a href="https://blog.conveyal.com/bike-lts-with-single-point-analysis-in-conveyal-55eecff8c0c7" class="external-link">1</a> and <a href="https://blog.conveyal.com/modeling-bicycle-comfort-with-conveyal-analysis-part-2-6c0a3d004c6a" class="external-link">2</a>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/160" class="external-link">#160</a>
+</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>New support function <code><a href="../reference/check_connection.html">check_connection()</a></code> to check internect connection before download files from Ipea server.</li></ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3-3" id="r5r-03-3">r5r 0.3-3<small>2021-03-09</small><a class="anchor" aria-label="anchor" href="#r5r-03-3"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>New vignette to <a href="https://ipeagit.github.io/r5r/articles/calculating_isochrones.html" class="external-link">calculate and visualize isochrones</a>.</li>
 <li>New vignette to <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html" class="external-link">calculate and visualize accessibility</a>.</li>
 <li>Significant performance increase in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> when <code>shortest_path = TRUE</code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/153" class="external-link">#153</a>.</li>
 <li>
 <a href="https://doi.org/10.32866/001c.21262" class="external-link">Paper on the r5r package published on <strong>Findings</strong></a>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/108" class="external-link">#108</a>.</li>
-</ul></li>
-<li>Minor changes<ul><li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>
 <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> now output more detailed messages in the console, when <code>verbose = TRUE</code>. This shall make debugging the package much easier.</li>
 <li>Improved documentation of <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/149" class="external-link">#149</a>.</li>
 <li>Checks origins/destinations inputs to make sure they have and <code>id</code> column. Closes <a href="https://github.com/ipeaGIT/r5r/issues/154" class="external-link">#154</a>.</li>
-</ul></li>
-<li>Bug fixes<ul><li>Fixed <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">introductory vignette</a> to list only files that are included in the package installation. Closes <a href="https://github.com/ipeaGIT/r5r/issues/111" class="external-link">#111</a>.</li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>Fixed <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">introductory vignette</a> to list only files that are included in the package installation. Closes <a href="https://github.com/ipeaGIT/r5r/issues/111" class="external-link">#111</a>.</li>
 <li>Fixed conflict with <code>{geobr}</code> package when downloading metadata. Closed <a href="https://github.com/ipeaGIT/r5r/issues/137" class="external-link">#137</a>.</li>
 <li>Fixed a bug when when parsing date and time from <code>departure_datetime</code> in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> and <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/147" class="external-link">#147</a>.</li>
-</ul></li>
-<li>Bug fixes<ul><li>Fixed a bug in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> that caused a crash when the shape of a route in the input GTFS is broken. Closes <a href="https://github.com/ipeaGIT/r5r/issues/145" class="external-link">#145</a>
-</li></ul></li>
-</ul><hr></div>
+<li>Fixed a bug in <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> that caused a crash when the shape of a route in the input GTFS is broken. Closes <a href="https://github.com/ipeaGIT/r5r/issues/145" class="external-link">#145</a>
+</li>
+</ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3-2" id="r5r-v03-2">r5r v0.3-2<small>2021-01-08</small><a class="anchor" aria-label="anchor" href="#r5r-v03-2"></a></h2>
-<ul><li>Minor changes<ul><li>r5r does not save the medatada file in the package directory anymore, following CRAN’s policies. Closed #136.</li></ul></li></ul><hr></div>
+<h2 class="page-header" data-toc-text="0.3-2" id="r5r-03-2">r5r 0.3-2<small>2021-01-08</small><a class="anchor" aria-label="anchor" href="#r5r-03-2"></a></h2>
+<p><strong>Minor changes</strong></p>
+<ul><li>r5r does not save the medatada file in the package directory anymore, following CRAN’s policies. Closed #136.</li></ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3-1" id="r5r-v03-1">r5r v0.3-1<small>2021-01-07</small><a class="anchor" aria-label="anchor" href="#r5r-v03-1"></a></h2>
-<ul><li>Minor changes<ul><li>Allow for combination of bicycle and public transport. Closed #135.</li>
+<h2 class="page-header" data-toc-text="0.3-1" id="r5r-03-1">r5r 0.3-1<small>2021-01-07</small><a class="anchor" aria-label="anchor" href="#r5r-03-1"></a></h2>
+<p><strong>Minor changes</strong></p>
+<ul><li>Allow for combination of bicycle and public transport. Closed #135.</li>
 <li>Added new parameter <code>mode_egress</code> to routing functions, so that users can explicitly set the transport mode used after egress from public transport (walk, car or bicycle). Closed #63.</li>
 <li>Allow for using the r5r package off-line, provided the user has successfully ran <code><a href="../reference/setup_r5.html">setup_r5()</a></code> before.</li>
-</ul></li></ul><hr></div>
+</ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3-0" id="r5r-v03-0">r5r v0.3-0<small>2021-01-05</small><a class="anchor" aria-label="anchor" href="#r5r-v03-0"></a></h2>
-<ul><li>Major changes<ul><li>Added Conveyal’s R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed #105.</li>
+<h2 class="page-header" data-toc-text="0.3-0" id="r5r-03-0">r5r 0.3-0<small>2021-01-05</small><a class="anchor" aria-label="anchor" href="#r5r-03-0"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>Added Conveyal’s R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed #105.</li>
 <li>Internal changes to make r5r compatible with R5 latest version 6.0.1.</li>
-</ul></li>
-<li>Minor changes<ul><li>Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.</li>
 <li>The <code>percentiles</code> parameter in the <code>travel_time_matrix</code> function now only accepts up to 5 cut points due to changes in R5.</li>
-</ul></li>
-</ul><hr></div>
+</ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2-1" id="r5r-v02-1">r5r v0.2-1<small>2020-11-30</small><a class="anchor" aria-label="anchor" href="#r5r-v02-1"></a></h2>
-<ul><li>Minor changes<ul><li>Expanded number of routes in the sample GTFS for Porto Alegre, allowing for more complex/realistic examples.</li>
+<h2 class="page-header" data-toc-text="0.2-1" id="r5r-02-1">r5r 0.2-1<small>2020-11-30</small><a class="anchor" aria-label="anchor" href="#r5r-02-1"></a></h2>
+<p><strong>Minor changes</strong></p>
+<ul><li>Expanded number of routes in the sample GTFS for Porto Alegre, allowing for more complex/realistic examples.</li>
 <li>Fixes format of columns of the output of <code>travel_matrix_function</code> when the user sets <code>time_window</code> parameter. Closes #127.</li>
 <li>Remove repeated bus route alternatives from the output from <code>detailed_itineraries</code>
 </li>
 <li>Explicitly link destination points to street network before starting. Closes #121</li>
-</ul></li></ul><hr></div>
+</ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2-0" id="r5r-v02-0">r5r v0.2-0<small>2020-10-20</small><a class="anchor" aria-label="anchor" href="#r5r-v02-0"></a></h2>
-<ul><li>
-<p>Major changes</p>
-<ul><li>Function <code>travel_time_matrix</code> now has new parameters <code>time_window</code> and <code>percentiles</code> it now calculates travel times for multiple departure times each minute within a given time window. For now, the function automatically set the number of Monte Carlo Draws to 5 times the size of <code>time_window</code>. Closes #104 and #118</li></ul></li>
-<li>
-<p>Minor changes</p>
+<h2 class="page-header" data-toc-text="0.2-0" id="r5r-02-0">r5r 0.2-0<small>2020-10-20</small><a class="anchor" aria-label="anchor" href="#r5r-02-0"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>Function <code>travel_time_matrix</code> now has new parameters <code>time_window</code> and <code>percentiles</code> it now calculates travel times for multiple departure times each minute within a given time window. For now, the function automatically set the number of Monte Carlo Draws to 5 times the size of <code>time_window</code>. Closes #104 and #118</li></ul><p><strong>Minor changes</strong></p>
 <ul><li>Added a sample of frequency-based GTFS for Sao Paulo. Closed #116</li>
 <li>Improved documentation of routing functions adding more info on the routing algorithms used in R5. Closes #114</li>
-</ul></li>
-</ul><hr></div>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1-1" id="r5r-v01-1">r5r v0.1-1<small>2020-09-25</small><a class="anchor" aria-label="anchor" href="#r5r-v01-1"></a></h2>
-<ul><li>Minor changes<ul><li>Fixed issues with time zone when setting departure times</li>
+<p><strong>Minor changes</strong></p>
+<ul><li>Fixed issues with time zone when setting departure times</li>
 <li>Fixed issues to address CRAN checks<ul><li>Now r5r can be installed on R (&gt;= 3.6)</li>
 <li>Appropriate hyperlinks indocumentation</li>
 <li>Metadata is now downloaded from <a href="https://" class="external-link uri">https://</a> server</li>
 </ul></li>
-</ul></li></ul><hr></div>
+</ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.1-0" id="r5r-v01-0">r5r v0.1-0<a class="anchor" aria-label="anchor" href="#r5r-v01-0"></a></h2>
+<h2 class="page-header" data-toc-text="0.1-0" id="r5r-01-0">r5r 0.1-0<a class="anchor" aria-label="anchor" href="#r5r-01-0"></a></h2>
 <ul><li>Launch of <strong>r5r</strong> v0.1.0 on <a href="https://CRAN.R-project.org/package=r5r" class="external-link">CRAN</a>.</li>
 <li>Package website <a href="https://ipeagit.github.io/r5r/" class="external-link uri">https://ipeagit.github.io/r5r/</a>
 </li>

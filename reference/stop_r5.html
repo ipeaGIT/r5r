@@ -114,15 +114,17 @@ are supplied all running cores are stopped.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
-
-<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
-
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, temp_dir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">stop_r5</span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
-<span class="op">}</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/work/_temp/Library/r5r/jar/r5-v6.7-all.jar</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="fu">stop_r5</span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
 </code></pre></div>
     </div>
   </div>
