@@ -1,0 +1,35 @@
+on:
+  push:
+    paths:
+      - README.md
+    branches:
+      - master
+
+name: update_pkgdown_index
+
+jobs:
+  pkgdown:
+    runs-on: ubuntu-20.04
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Copy README.md to index.md
+        run: cp README.md r-package/index.md
+
+      - name: Update figures source
+        run: sed -i 's/\"r-package\///g' r-package/index.md
+
+      - name: Commit results
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git commit index.md -m 'Update pkgdown index' || echo "No changes to pkgdown index"
+          git push origin || echo "No changes to pkgdown index"
+
+      - name: Deploy package
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          Rscript -e 'pkgdown::deploy_to_branch(pkg = "./r-package", new_process = FALSE)'
