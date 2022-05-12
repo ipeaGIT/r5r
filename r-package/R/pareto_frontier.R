@@ -52,25 +52,34 @@
 #' library(r5r)
 #'
 #' # build transport network
-#' data_path <- system.file("extdata/spo", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
+#' data_path <- system.file("extdata/poa", package = "r5r")
+#' r5r_core <- setup_r5(data_path = data_path)
 #'
 #' # load origin/destination points
-#' points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
+#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
+#'
+#' # load fare calculator object
+#' fare_calculator_path <- system.file(
+#'   "extdata/poa/fares/fares_poa.zip",
+#'   package = "r5r"
+#' )
+#' fare_calculator <- read_fare_calculator(fare_calculator_path)
 #'
 #' departure_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
-#' # estimate travel time matrix
 #' pf <- pareto_frontier(
 #'   r5r_core,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
-#'   departure_datetime = departure_datetime
+#'   departure_datetime = departure_datetime,
+#'   fare_calculator = fare_calculator,
+#'   monetary_cost_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
 #' )
+#' head(pf)
 #'
 #' stop_r5(r5r_core)
 #' @export

@@ -243,34 +243,43 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759â€“1787. \doi{10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # build transport network
-data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/destination points
-points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
+
+# load fare calculator object
+fare_calculator_path <- system.file(
+  "extdata/poa/fares/fares_poa.zip",
+  package = "r5r"
+)
+fare_calculator <- read_fare_calculator(fare_calculator_path)
 
 departure_datetime <- as.POSIXct(
   "13-05-2019 14:00:00",
   format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate travel time matrix
 pf <- pareto_frontier(
   r5r_core,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
-  departure_datetime = departure_datetime
+  departure_datetime = departure_datetime,
+  fare_calculator = fare_calculator,
+  monetary_cost_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
 )
+head(pf)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
