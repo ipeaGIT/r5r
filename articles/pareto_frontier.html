@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculating the tradeoffs between travel time and monetary cost with pareto_frontier() • r5r</title>
+<title>pareto_frontier() to analyze the trade-offs between travel time and monetary cost • r5r</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()">
+<script src="../pkgdown.js"></script><meta property="og:title" content="pareto_frontier() to analyze the trade-offs between travel time and monetary cost">
 <meta property="og:description" content="r5r">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -69,7 +69,7 @@
       <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()</a>
+      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
@@ -100,10 +100,10 @@
       </header><script src="pareto_frontier_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()</h1>
+      <h1 data-toc-skip>pareto_frontier() to analyze the trade-offs between travel time and monetary cost</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway</h4>
             
-            <h4 data-toc-skip class="date">2022-05-11</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -113,26 +113,34 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to use the <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> function to examine the tradeoffs between travel time and monetary cost in travel time matrices in r5r.
+      This vignette shows how to use the <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r.
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In most cases, transport routing models find either the fastest or the lowest-cost routes that connect places in a given transport network. Sometimes, though, we might want a more sophisticated analysis that considers both the time and monetary costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge for routing models because of the tradeoffs between the objectives of minimizing trip duration and cost <a href="https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075" class="external-link">(ref ‘Getting Charlie off the MTA’)</a>.</p>
-<p>To address this problem, <code>r5r</code> has a function called <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary cost. This vignette uses a reproducible example to demonstrate how to use <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
+<p>In most cases, transport routing models find either the fastest or the lowest-cost routes that connect places in a given transport network. Sometimes, though, we might want a more sophisticated analysis that considers both the time and monetary costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge for routing models because of the trade-offs between the objectives of minimizing trip duration and cost <a href="https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075" class="external-link">(ref ‘Getting Charlie off the MTA’)</a>.</p>
+<p>To address this problem, <code>r5r</code> has a function called <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette uses a reproducible example to demonstrate how to use <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
 <div class="section level3">
-<h3 id="what-the-pareto_frontier-measures-and-how-to-interpret-the-results-">2. What the <code>pareto_frontier</code> measures and how to interpret the results.<a class="anchor" aria-label="anchor" href="#what-the-pareto_frontier-measures-and-how-to-interpret-the-results-"></a>
+<h3 id="what-the-pareto_frontier-means-">2. What the <code>pareto_frontier</code> means.<a class="anchor" aria-label="anchor" href="#what-the-pareto_frontier-means-"></a>
 </h3>
-<p>Imagine a hypothetical journey from A to B.</p>
-<p>tradeoffs between travel time and monetary cost objectives</p>
-<p>The cheapest</p>
-<p>A person could walk the whole trip</p>
-<p>As mentioned above, when <code>time_window</code> is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified <code>departure_datetime</code> and within the <code>time_window</code> selected by the user. By default, <code>r5r</code> will generate one estimate per minute. Nonetheless, users can set a number to the <code>draws_per_minute</code> parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of <code>draws_per_minute</code> is 5, which mean 300 draws in a 60 minutes time window, for example.</p>
-<p>In this case, there isn’t a single estimate of travel time / accessibility, but a distribution of several estimates that reflect the travel time / accessibility uncertainties in the specified time window. To get our heads around so many estimates, we can use the <code>percentiles</code> parameter to specify the percentiles of the distribution we are interested in. For example, if we select the 25th travel time percentile and the results show that the travel time estimate between A and B is 15 minutes, this means that 25% of all trips taken between these points within the specified time window are shorter than 15 minutes.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># plot         </span></code></pre></div>
-<p>Let’s see a couple concrete examples now.</p>
+<p>Imagine a hypothetical journey from A to B. There are multiple route alternatives between this origin and destination with varying combinations of travel time and cost (figure below).</p>
+<ul>
+<li>Walking from A to B would be the <strong>cheapest</strong> option but it would take 50 minutes.</li>
+<li>The <strong>fastest</strong> option would be to take a bus to a subway station and transfer to the subway. This option would only take 15 minutes, but it would cost $8.</li>
+<li>There are some intermediary alternatives, such as taking:
+<ul>
+<li>a single bus, $3 for 35 min.</li>
+<li>two buses with one transfer, $5 for 29 min.</li>
+<li>taking the subway after walking to the station , $6 for 20 min.</li>
+</ul>
+</li>
+</ul>
+<p>This figure illustrates the Pareto frontier of alternative routes from A to B. In other words, it shows the most optimal set of route alternatives between A and B. There are certainly other route options, but there is no other option that is both faster and cheaper at the same time.</p>
+<p><img src="pareto_frontier_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p><br></p>
+<p>This kind of abstraction allows us to have a better grasp of the trade-offs between travel time and monetary cost passengers face when using public transport. It also allows us to calculate cumulative-opportunity accessibility metrics with cutoffs for both time and cost (e.g. the number of jobs reachable from a given origin with limits of 40 minutes and $5) (ref paper by Matt and Anson).</p>
+<p>Let’s see a couple concrete examples showing how <code>r5r</code> can calculate the Pareto frontier for multiple origins.</p>
 </div>
 <div class="section level3">
 <h3 id="demonstration-of-pareto_frontier-">3. Demonstration of <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-pareto_frontier-"></a>
@@ -141,7 +149,7 @@
 <h4 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h4>
 <p>First, let’s build the network and create the routing inputs. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># increase Java memory</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
 
@@ -150,7 +158,6 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
 <span class="co"># build a routable transport network with r5r</span>
 <span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
@@ -167,112 +174,35 @@
 <div class="section level4">
 <h4 id="set-up-the-fare-calculator">3.2 Set up the fare calculator<a class="anchor" aria-label="anchor" href="#set-up-the-fare-calculator"></a>
 </h4>
-<p>Now we need to set what are the fare rules of our public transport system, which will then be used by <code>R5</code> to calculate the monetary cost of alternative routes.</p>
-<p>We can do this with the support of the <code><a href="../reference/setup_fare_calculator.html">setup_fare_calculator()</a></code> function.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fare_settings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_calculator.html">setup_fare_calculator</a></span><span class="op">(</span><span class="va">r5r_core</span>, 
+<p>Now we need to set what are the fare rules of our public transport system. These rules will be used by <code>R5</code> to calculate the monetary cost of alternative routes. In the case of Porto Alegre, the fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a second bus adds R$ 2.40 to the total cost. Subsequent bus rides cost the full ticket price of R$ 4.80. * Each train ticket costs R$ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station. * The integrated fare between bus and train has a 10% discount, which totals R$ 8.37.</p>
+<p>We create do this with the support of the <code><a href="../reference/setup_fare_calculator.html">setup_fare_calculator()</a></code> function as shown in the code below. A detailed explanation of how to use the fare calculator of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">(this other vignette)</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create basic fare calculator</span>
+<span class="va">fare_settings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_calculator.html">setup_fare_calculator</a></span><span class="op">(</span><span class="va">r5r_core</span>, 
                                        base_fare <span class="op">=</span> <span class="fl">4.8</span>,
-                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></code></pre></div>
+                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span>
+
+
+<span class="co"># update the cost of bus and train fares</span>
+<span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">4.80</span>,
+                                             <span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="fl">4.50</span><span class="op">)</span><span class="op">]</span>
+
+
+<span class="co"># update the cost of tranfers</span>
+<span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,
+                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span>
+
+
+<span class="co"># update transfer_time_allowance to 60 minutes</span>
+<span class="va">fare_settings</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span>
+
+<span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span>
+<span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="calculating-a-pareto_frontier-">3.3 Calculating a <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#calculating-a-pareto_frontier-"></a>
 </h4>
-<p>In this example, we calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># estimate travel time matrix</span>
-<span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>,    
-                          mode <span class="op">=</span> <span class="va">mode</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
-                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                          departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>,
-                          verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-                          time_window <span class="op">=</span> <span class="fl">60</span>,
-                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span>
-                          <span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;             from_id           to_id travel_time_p010 travel_time_p020</span>
-<span class="co">#&gt;  1: 89a901291abffff 89a901291abffff                1                1</span>
-<span class="co">#&gt;  2: 89a901291abffff 89a901295b7ffff               39               40</span>
-<span class="co">#&gt;  3: 89a901291abffff 89a9012809bffff               43               44</span>
-<span class="co">#&gt;  4: 89a901291abffff 89a901285cfffff               33               34</span>
-<span class="co">#&gt;  5: 89a901291abffff 89a90e934d7ffff               59               59</span>
-<span class="co">#&gt;  6: 89a901291abffff 89a90129b47ffff               57               61</span>
-<span class="co">#&gt;  7: 89a901291abffff 89a90128a1bffff               52               54</span>
-<span class="co">#&gt;  8: 89a901291abffff 89a90129977ffff               45               47</span>
-<span class="co">#&gt;  9: 89a901291abffff 89a90128e27ffff               43               45</span>
-<span class="co">#&gt; 10: 89a901291abffff 89a9012a2a3ffff               71               77</span>
-<span class="co">#&gt;     travel_time_p050 travel_time_p070 travel_time_p080</span>
-<span class="co">#&gt;  1:                1                1                1</span>
-<span class="co">#&gt;  2:               45               47               48</span>
-<span class="co">#&gt;  3:               49               51               53</span>
-<span class="co">#&gt;  4:               38               40               42</span>
-<span class="co">#&gt;  5:               62               64               65</span>
-<span class="co">#&gt;  6:               66               69               71</span>
-<span class="co">#&gt;  7:               60               63               65</span>
-<span class="co">#&gt;  8:               52               54               55</span>
-<span class="co">#&gt;  9:               48               50               51</span>
-<span class="co">#&gt; 10:               NA               NA               NA</span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_ttm_head.png?raw=true" width="100%"></p>
-<p>Now let’s look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.</p>
-<p>The last row in the result above has a few <code>NA</code>s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the <code>max_trip_duration</code> we have set (90 minutes).</p>
-</div>
-<div class="section level4">
-<h4 id="accessibility-with-time_window-">3.3 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
-</h4>
-<p>Now let’s calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we’ll be using a cumulative accessibility metric <code>decay_function = "step"</code> with a max time threshold of 45 minutes <code>cutoffs = 45</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># estimate accessibility</span>
-<span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span><span class="va">r5r_core</span>,   
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>, 
-                          opportunities_colnames <span class="op">=</span> <span class="st">'schools'</span>,
-                          mode <span class="op">=</span> <span class="va">mode</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
-                          decay_function <span class="op">=</span> <span class="st">"step"</span>,
-                          cutoffs <span class="op">=</span> <span class="fl">45</span>,
-                          departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>,
-                          verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-                          time_window <span class="op">=</span> <span class="fl">60</span>,
-                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span>
-                          <span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span>
-<span class="co">#&gt;  1: 89a901291abffff     schools         10     45           111</span>
-<span class="co">#&gt;  2: 89a901291abffff     schools         20     45           102</span>
-<span class="co">#&gt;  3: 89a901291abffff     schools         50     45            79</span>
-<span class="co">#&gt;  4: 89a901291abffff     schools         70     45            64</span>
-<span class="co">#&gt;  5: 89a901291abffff     schools         80     45            57</span>
-<span class="co">#&gt;  6: 89a9012a3cfffff     schools         10     45             0</span>
-<span class="co">#&gt;  7: 89a9012a3cfffff     schools         20     45             0</span>
-<span class="co">#&gt;  8: 89a9012a3cfffff     schools         50     45             0</span>
-<span class="co">#&gt;  9: 89a9012a3cfffff     schools         70     45             0</span>
-<span class="co">#&gt; 10: 89a9012a3cfffff     schools         80     45             0</span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true" width="100%"></p>
-<p>This output is in long format, so the first 5 rows show the result for the same origin. In this case, we see that in only 10% of the trips departing from that origin between 2pm and 3pm a person would be able to access up to 111 schools. Meanwhile, 50% of the times she would only access 79 schools. By contrast, the accessibility from the other origin shown in the output above is 0, meaning there are no schools accessible from that location given the max travel time of 45 minutes.</p>
-<p>We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># summarize</span>
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="va">acc</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>min_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span>,
-              median <span class="op">=</span> <span class="va">accessibility</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">percentile</span> <span class="op">==</span> <span class="fl">50</span><span class="op">)</span><span class="op">]</span>,
-              max_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">id</span><span class="op">]</span>
-
-<span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">df</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span> , 
-                      y<span class="op">=</span><span class="va">median</span>, ymin<span class="op">=</span><span class="va">min_acc</span>, ymax<span class="op">=</span><span class="va">max_acc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'#0570b0'</span>, size<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span>, y<span class="op">=</span><span class="va">median</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y<span class="op">=</span><span class="st">'N. of schools accessible\nby public transport'</span>, x<span class="op">=</span><span class="st">'Origins sorted by accessibility'</span>,
-       title<span class="op">=</span><span class="st">"Accessibility uncertainty between 2pm and 3pm"</span>,
-       subtitle <span class="op">=</span> <span class="st">'Upper limit 10% and lower limit 80% of the times'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="700"><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true" width="100%"></p>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>One cannot make a faster trip without increasing costs, one cannot make a cheaper trip without increasing travel time.</p>
 </div>
 </div>
 <div class="section level3">

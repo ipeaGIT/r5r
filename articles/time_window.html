@@ -69,7 +69,7 @@
       <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()</a>
+      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
@@ -103,7 +103,7 @@
       <h1 data-toc-skip>Using the time_window parameter</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway</h4>
             
-            <h4 data-toc-skip class="date">2022-05-11</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -122,7 +122,7 @@
 <div class="section level3">
 <h3 id="the-problem">The problem<a class="anchor" aria-label="anchor" href="#the-problem"></a>
 </h3>
-<p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stępniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019, @levinson2020manual)</span>.</p>
+<p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stępniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019; Levinson and et al. 2020)</span>.</p>
 <p>This problem gets even more complicated when public transport GTFS feeds have a <code>frequencies.txt</code> table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018)</span>.</p>
 </div>
 <div class="section level3">

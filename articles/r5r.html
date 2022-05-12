@@ -69,7 +69,7 @@
       <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Calculating the tradeoffs between travel time and monetary cost with pareto_frontier()</a>
+      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
@@ -103,7 +103,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2022-05-11</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -199,12 +199,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools healthcare</span>
-<span class="co">#&gt; 1: 89a9012845bffff -51.18407 -30.09047        126       0          0</span>
-<span class="co">#&gt; 2: 89a9012848fffff -51.19940 -30.09333         31       0          0</span>
-<span class="co">#&gt; 3: 89a9012ae33ffff -51.24460 -30.08253        290       0          0</span>
-<span class="co">#&gt; 4: 89a90129c47ffff -51.16684 -30.04063        620       0          0</span>
-<span class="co">#&gt; 5: 89a90129037ffff -51.14027 -30.06092         19       0          0</span>
-<span class="co">#&gt; 6: 89a9012831bffff -51.19166 -30.05239        967       0          0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a90129e23ffff -51.15724 -30.02896        473       0          0</span>
+<span class="co">#&gt; 2: 89a901298d3ffff -51.16650 -30.03233        335       0          0</span>
+<span class="co">#&gt; 3: 89a9012aecfffff -51.23270 -30.08909       2379       0          0</span>
+<span class="co">#&gt; 4: 89a90128087ffff -51.20171 -30.07511        279       0          0</span>
+<span class="co">#&gt; 5: 89a901299afffff -51.20210 -30.00987       1018       0          0</span>
+<span class="co">#&gt; 6: 89a9012a203ffff -51.19699 -30.10878        130       0          0</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="build-routable-transport-network-with-setup_r5">Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
