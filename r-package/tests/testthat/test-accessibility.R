@@ -162,8 +162,6 @@ test_that("output is correct", {
 
 
 
-
-
   #  * output class ---------------------------------------------------------
 
 
@@ -191,8 +189,11 @@ test_that("output is correct", {
   #  * r5r options ----------------------------------------------------------
 
 
-
-
+  # access to multiple opportunities
+  one_opport <- default_tester(r5r_core, opportunities_colname = c("schools"))
+  two_opport <- default_tester(r5r_core, opportunities_colname = c("schools", "healthcare"))
+  expect_true( nrow(two_opport) > nrow(one_opport))
+  expect_true(is(two_opport, "data.table"))
 
 
 
