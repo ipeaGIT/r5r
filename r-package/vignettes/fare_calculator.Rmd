@@ -93,7 +93,7 @@ There are three support functions in `r5r` to help users configure the fare calc
 -   `setup_fare_calculator()` analyses the study area's GTFS and builds a 'skeleton' fare calculator structure with the parameters that need to be set;
 -   `write_fare_calculator()` and `read_fare_calculator()` allow saving the current fare calculator settings to disk, and reading them back into memory. The settings are saved as standard `.csv` files inside a zipped folder. These files can be edited outside the R session using external text editors and spreadsheet software, for user's convenience.
 
-First, we need to call `setup_fare_calculator()`, providing three parameters: the current `r5r_core` object, a `base_fare` that represents the default cost of trips that don't fall into the available categories, and the `by` parameters that identifies what is the main property of the route that defines the different fares.
+First, we need to call `setup_fare_calculator()`, providing three parameters: the current `r5r_core` object, a `base_fare` used to populate the fare calculator, and the `by` parameters that identifies what is the main property of the route that defines the different fares.
 
 In the example below, the `base_fare` is the standard bus ticket price of R\$ 4.80. We are also stating that `by = "MODE"`, so that each transport mode has its own fares and integration rules. `by` can also be set to `"AGENCY_ID"` and `"AGENCY_NAME"`, so different rules can be applied to routes ran by different agencies, and to `"GENERIC"` when the entire system follows the same rules.
 
@@ -107,16 +107,13 @@ fare_settings <- setup_fare_calculator(r5r_core,
 Now let's check the contents of the `fare_settings` object. We can see below that it is simply a `list` with a few properties and data.frames.
 
 ```{r}
-head(fare_settings, n=8)
+head(fare_settings, n=7)
 
 ```
 
 ## Global Properties
 
 Let's configure the global properties first, which are the ones that are applied to the entire system. 
-
-### `base_fare`
-First, we can see that `base_fare` has already been configured to 4.80, so we leave it as it is. 
 
 ### `max_discounted_transfers`
 Note that `max_discounted_transfers` is set to 1 by default. This means that the passenger gets a fare discount in the first transfer between buses, but she would pay the full fare price in subsequent transfers. 
@@ -129,7 +126,6 @@ Finally, the `fare_cap` setting indicates if there is a maximum value that can b
 
 Here is how we can check or update the values of these components:
 ```{r}
-fare_settings$base_fare
 fare_settings$max_discounted_transfers
 fare_settings$transfer_time_allowance <- 60 # update transfer_time_allowance
 fare_settings$fare_cap
