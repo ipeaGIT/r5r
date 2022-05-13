@@ -22,14 +22,14 @@ public class FareStructureBuilder {
     }
 
     public FareStructure build(float baseFare, String routeType) {
-        this.fareStructure = new FareStructure(baseFare);
+        this.fareStructure = new FareStructure();
 
-        populateFareStructure(routeType);
+        populateFareStructure(routeType, baseFare);
 
         return this.fareStructure;
     }
 
-    private void populateFareStructure(String type) {
+    private void populateFareStructure(String type, float fare) {
         Set<String> modes = new HashSet<>();
         Set<String> transfers = new HashSet<>();
 
@@ -44,7 +44,7 @@ public class FareStructureBuilder {
             newRoute.setRouteShortName(route.route_short_name);
             newRoute.setRouteLongName(route.route_long_name);
             newRoute.setMode(TransitLayer.getTransitModes(route.route_type).toString());
-            newRoute.setRouteFare(this.fareStructure.getBaseFare());
+            newRoute.setRouteFare(fare);
 
             switch (type) {
                 case "MODE":
@@ -80,7 +80,7 @@ public class FareStructureBuilder {
         for (String mode : modes) {
             FarePerMode newMode = new FarePerMode();
             newMode.setMode(mode);
-            newMode.setFare(this.fareStructure.getBaseFare());
+            newMode.setFare(fare);
 
             faresPerMode.add(newMode);
         }
@@ -92,7 +92,7 @@ public class FareStructureBuilder {
             FarePerTransfer newTransfer = new FarePerTransfer();
             newTransfer.setFirstLeg(legs[0]);
             newTransfer.setSecondLeg(legs[1]);
-            newTransfer.setFare(this.fareStructure.getBaseFare());
+            newTransfer.setFare(fare);
 
             faresPerTransfer.add(newTransfer);
         }

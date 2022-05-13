@@ -12,13 +12,6 @@ import java.util.List;
 public class FareStructure {
 
     /**
-     * When fares are not found in farePerMode or farePerTransfer, the value of baseFare is used.
-     */
-    private float baseFare;
-    @JsonIgnore
-    private int integerBaseFare;
-
-    /**
      * Maximum number of transfers that can have a discount. The transfer fare is obtained from the farePerTransfer
      * Map up to the number of transfers informed in this field. After that, each new leg gets the full fare from the
      * farePerMode Map.
@@ -40,18 +33,6 @@ public class FareStructure {
     private final List <FarePerRoute> faresPerRoute;
 
     // Getters and Setters
-    public float getBaseFare() {
-        return baseFare;
-    }
-
-    public int getIntegerBaseFare() {
-        return integerBaseFare;
-    }
-
-    public void setBaseFare(float baseFare) {
-        this.baseFare = baseFare;
-        this.integerBaseFare = Math.round(baseFare * 100.0f);
-    }
 
     public int getMaxDiscountedTransfers() {
         return maxDiscountedTransfers;
@@ -88,13 +69,6 @@ public class FareStructure {
     }
 
     public FareStructure() {
-        this(100);
-    }
-
-    public FareStructure(float fare) {
-        this.baseFare = fare;
-        this.integerBaseFare = Math.round(fare * 100.0f);
-
         this.maxDiscountedTransfers = 1;
         this.transferTimeAllowance = 120;
         this.fareCap = -1;
