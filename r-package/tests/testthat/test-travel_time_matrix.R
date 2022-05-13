@@ -168,11 +168,7 @@ test_that("output is correct", {
 
   expect_true(typeof(result_df_input$from_id) == "character")
   expect_true(typeof(result_df_input$to_id) == "character")
-  expect_true(typeof(result_df_input$travel_time) == "integer")
-
-  # expect more info with breakdown
-  df <- default_tester(r5r_core, breakdown=TRUE)
-  expect_equal(ncol(df), 12)
+  expect_true(typeof(result_df_input$travel_time_p50) == "integer")
 
 
   #  * r5r options ----------------------------------------------------------
@@ -185,23 +181,23 @@ test_that("output is correct", {
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,
                        mode = "WALK", walk_speed = 3.6, max_trip_duration = max_trip_duration)
-  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time)]
+  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time_p50)]
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,
                        mode = "WALK", walk_speed = 4, max_trip_duration = max_trip_duration)
-  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time)]
+  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time_p50)]
 
   expect_true(travel_time_higher_speed < travel_time_lower_speed)
 
-  # expect bike segments to be shorter when setting higher walk speeds
+  # expect bike segments to be shorter when setting higher bike speeds
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "BICYCLE", walk_speed = 12, max_trip_duration = max_trip_duration)
-  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time)]
+                       mode = "BICYCLE", bike_speed = 12, max_trip_duration = max_trip_duration)
+  travel_time_lower_speed <- data.table::setDT(df)[, max(travel_time_p50)]
 
   df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "BICYCLE", walk_speed = 13, max_trip_duration = max_trip_duration)
-  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time)]
+                       mode = "BICYCLE", bike_speed = 13, max_trip_duration = max_trip_duration)
+  travel_time_higher_speed <- data.table::setDT(df)[, max(travel_time_p50)]
 
   expect_true(travel_time_higher_speed < travel_time_lower_speed)
 
@@ -214,7 +210,7 @@ test_that("output is correct", {
   max_trip_duration <- 60L
 
   df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
-  max_duration <- data.table::setDT(df)[, max(travel_time)]
+  max_duration <- data.table::setDT(df)[, max(travel_time_p50)]
 
   expect_true(max_duration <= max_trip_duration)
 

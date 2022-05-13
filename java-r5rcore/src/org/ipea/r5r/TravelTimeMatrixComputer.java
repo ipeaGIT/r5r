@@ -111,7 +111,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                 for (int p = 0; p < this.routingProperties.percentiles.length; p++) {
                     int tt = travelTimeResults.travelTimes.getValues()[p][destination];
                     String ps = String.format("%02d", this.routingProperties.percentiles[p]);
-                    if (tt < maxTripDuration) {
+                    if (tt <= maxTripDuration) {
                         travelTimesTable.set("travel_time_p" + ps, tt);
                     }
                 }
