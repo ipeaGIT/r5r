@@ -109,10 +109,10 @@ Now we only need to organize the travel time matrix output `ttm` and plot it on 
 street_net <- street_network_to_sf(r5r_core)
 
 # add coordinates of destinations to travel time matrix
-ttm[points, on=c('toId' ='id'), `:=`(lon = i.lon, lat = i.lat)]
+ttm[points, on=c('to_id' ='id'), `:=`(lon = i.lon, lat = i.lat)]
 
 # interpolate estimates to get spatially smooth result
-travel_times.interp <- with(na.omit(ttm), interp(lon, lat, travel_time)) %>%
+travel_times.interp <- with(na.omit(ttm), interp(lon, lat, travel_time_p50)) %>%
                         with(cbind(travel_time=as.vector(z),  # Column-major order
                                    x=rep(x, times=length(y)),
                                    y=rep(y, each=length(x)))) %>%
