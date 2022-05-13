@@ -268,11 +268,12 @@ calculate_travel_times <- function(fare) {
 ttm <- calculate_travel_times(fare = Inf)
 ttm_500 <- calculate_travel_times(fare = 5)
 
-ttm[ttm_500, on = .(from_id, to_id), travel_time_500 := i.travel_time]
-
+ttm[ttm_500, on = .(from_id, to_id), travel_time_500 := i.travel_time_p50]
+ttm[, travel_time_unl := travel_time_p50]
+ttm[, travel_time_p50 := NULL]
 ```
 
-Below, we can see a sample of the travel time differences with and without monetary cost restriction. We can see that some trips are not affected at all (`travel_time == travel_time_500`), some trips take a little longer to complete (`travel_time_500 > travel_time`), and other trips cannot be completed at all (`travel_time_500 == NA`).
+Below, we can see a sample of the travel time differences with and without monetary cost restriction. We can see that some trips are not affected at all (`travel_time_unl == travel_time_500`), some trips take a little longer to complete (`travel_time_500 > travel_time_unl`), and other trips cannot be completed at all (`travel_time_500 == NA`).
 
 ```{r}
 tail(ttm, 10)
@@ -283,9 +284,9 @@ The plots below show the overall distribution of the travel time differences and
 ```{r}
 # plot of overall travel time differences between limited and unlimited cost travel time matrices 
 time_difference = ttm[!is.na(travel_time_500), .(count = .N), 
-                      by = .(travel_time, travel_time_500)]
+                      by = .(travel_time_unl, travel_time_500)]
 
-p1 <- ggplot(time_difference, aes(y = travel_time, x = travel_time_500)) +
+p1 <- ggplot(time_difference, aes(y = travel_time_unl, x = travel_time_500)) +
   geom_point(size = 0.7) +
   coord_fixed() +
   scale_x_continuous(breaks = seq(0, 45, 5)) +
@@ -297,11 +298,12 @@ p1 <- ggplot(time_difference, aes(y = travel_time, x = travel_time_500)) +
        )
 
 # plot of unreachable destinations when the monetary cost limit is too low
-unreachable <- ttm[, .(count = .N), by = .(travel_time, is.na(travel_time_500))]
-unreachable[, perc := count / sum(count), by = .(travel_time)]
+unreachable <- ttm[, .(count = .N), by = .(travel_time_unl, is.na(travel_time_500))]
+unreachable[, perc := count / sum(count, na.rm = T), by = .(travel_time_unl)]
 unreachable <- unreachable[is.na == TRUE]
+unreachable <- na.omit(unreachable)
 
-p2 <- ggplot(unreachable, aes(x=travel_time, y=perc)) +
+p2 <- ggplot(unreachable, aes(x=travel_time_unl, y=perc)) +
   geom_col() +
   coord_flip() +
   scale_x_continuous(breaks = seq(0, 45, 5)) +
