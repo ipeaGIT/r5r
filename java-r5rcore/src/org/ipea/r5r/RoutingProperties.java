@@ -17,6 +17,7 @@ public class RoutingProperties {
     public int[] percentiles = {50};
     public int [] cutoffs = {30};
     public boolean travelTimesBreakdown;
+    public boolean expandedTravelTimes;
     public PathResult.Stat travelTimesBreakdownStat;
 
     public float maxFare;
@@ -39,6 +40,7 @@ public class RoutingProperties {
 
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;
+        expandedTravelTimes = false;
 
         maxFare = -1.0f;
         fareCalculator = null;

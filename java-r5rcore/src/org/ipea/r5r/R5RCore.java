@@ -104,6 +104,10 @@ public class R5RCore {
         this.routingProperties.maxRides = maxRides;
     }
 
+    public void setExpandedTravelTimes(boolean expandedTravelTimes) {
+        this.routingProperties.expandedTravelTimes = expandedTravelTimes;
+    }
+
     public void setTravelTimesBreakdown(boolean detailedTravelTimes) {
         this.routingProperties.travelTimesBreakdown = detailedTravelTimes;
     }

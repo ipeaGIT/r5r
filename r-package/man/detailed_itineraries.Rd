@@ -244,6 +244,7 @@ stop_r5(r5r_core)
 \seealso{
 Other routing: 
 \code{\link{accessibility}()},
+\code{\link{expanded_travel_time_matrix}()},
 \code{\link{pareto_frontier}()},
 \code{\link{travel_time_matrix}()}
 }
