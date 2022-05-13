@@ -145,12 +145,10 @@ write_fare_calculator <- function(fare_calculator, file_path) {
   tmp_dir <- tempdir()
 
   fare_global_settings <- data.table::data.table(
-    setting = c("base_fare",
-                "max_discounted_transfers",
+    setting = c("max_discounted_transfers",
                 "transfer_time_allowance",
                 "fare_cap"),
-    value = c(fare_calculator$base_fare,
-              fare_calculator$max_discounted_transfers,
+    value = c(fare_calculator$max_discounted_transfers,
               fare_calculator$transfer_time_allowance,
               fare_calculator$fare_cap)
   )
