@@ -53,27 +53,53 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 The package has four fundamental functions.
 
-1. `setup_r5`
-   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)
+1. `setup_r5()`
+   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once per installation)
    * Builds a multimodal transport network given a street network in `.pbf` format
    (mandatory) and one or more public transport networks in `GTFS.zip` format 
    (optional).
 
-2. `detailed_itineraries`
+2. `detailed_itineraries()`
    * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
    between one or multiple origin destination pairs. The data output brings 
    detailed information on transport mode, travel time, walk distance etc for 
    each trip section
  
-3. `travel_time_matrix`
+3. `travel_time_matrix()`
    * Fast function that returns a simple 'data.frame' with travel time 
    estimates between one or multiple origin destination pairs.
 
-4. `accessibility`
+4. `accessibility()`
    * Fast computation of access to opportunities. The function returns a `data.table` 
    with accessibility estimates for all origin points by  transport mode given a selected
    decay function. Multiple decay functions are available, including step (cumulative 
    opportunities), logistic, fixed Exponential and linear.
+
+
+### Data requirements:
+
+To use `r5r`, you will need:
+- A road network data set from OpenStreetMap in `.pbf` format (*mandatory*)
+- A public transport feed in `GTFS.zip` format (optional)
+- A raster file of Digital Elevation Model data in `.tif` format (optional)
+
+Here are a few places from where you can download these data sets:
+
+- OpenStreetMap
+  - [osmextract](https://docs.ropensci.org/osmextract/) R package
+  - [geofabrik](https://download.geofabrik.de/) website
+  - [hot export tool](https://export.hotosm.org/) website
+  - [BBBike.org](https://extract.bbbike.org/) website
+
+- GTFS
+  - [tidytransit](http://tidytransit.r-transit.org/) R package
+  - [transitland](https://www.transit.land/) website
+  
+- Elevation
+  - [elevatr](https://github.com/jhollist/elevatr) R package
+  - [Nasa's SRTMGL1](https://lpdaac.usgs.gov/products/srtmgl1v003/) website
+
+
 
 ### Demonstration on sample data
 

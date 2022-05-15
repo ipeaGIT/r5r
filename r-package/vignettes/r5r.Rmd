@@ -91,7 +91,32 @@ The `r5r` package has 3 fundamental functions.
 
 3. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
 
-Let's have a quick look at how these functions work using a sample data set.
+
+## Data requirements:
+
+To use `r5r`, you will need:
+- A road network data set from OpenStreetMap in `.pbf` format (*mandatory*)
+- A public transport feed in `GTFS.zip` format (optional)
+- A raster file of Digital Elevation Model data in `.tif` format (optional)
+
+Here are a few places from where you can download these data sets:
+
+- OpenStreetMap
+  - [osmextract](https://docs.ropensci.org/osmextract/) R package
+  - [geofabrik](https://download.geofabrik.de/) website
+  - [hot export tool](https://export.hotosm.org/) website
+  - [BBBike.org](https://extract.bbbike.org/) website
+
+- GTFS
+  - [tidytransit](http://tidytransit.r-transit.org/) R package
+  - [transitland](https://www.transit.land/) website
+  
+- Elevation
+  - [elevatr](https://github.com/jhollist/elevatr) R package
+  - [Nasa's SRTMGL1](https://lpdaac.usgs.gov/products/srtmgl1v003/) website
+
+
+Let's have a quick look at how `r5r` works using a sample data set.
 
 # Demonstration on sample data
 
@@ -99,10 +124,11 @@ Let's have a quick look at how these functions work using a sample data set.
 
 To illustrate functionality, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes four files:
 
-* An Open Street Map network in `.pbf` format (*mandatory*);
+* An OpenStreetMap network in `.pbf` format (*mandatory*);
 * A public transport feed in `GTFS.zip` format;
 * A *points of interest* file, in `.csv` format, containing the names and spatial coordinates of 15 places within Porto Alegre;
 * The spatial coordinates of a regular hexagonal grid covering the sample area, in a `.csv` file, which can be used as origin/destination pairs in a travel time matrix calculation.
+
 
 
 ```{r}
