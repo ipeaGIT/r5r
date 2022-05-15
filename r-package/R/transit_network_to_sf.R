@@ -42,7 +42,7 @@ transit_network_to_sf <- function(r5r_core) {
   routes_df[, geometry := sf::st_as_sfc(geometry)]
   routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
 
-    # supress warning
+    # suppress warning
     defaultW <- getOption("warn")
     options(warn = -1)
 
