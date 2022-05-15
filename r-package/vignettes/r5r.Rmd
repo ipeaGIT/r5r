@@ -70,7 +70,7 @@ Before we start, we need to increase the memory available to Java. This is neces
 options(java.parameters = "-Xmx2G")
 ```
 
-Note: It's very important to allocate enough memory before attaching `r5r` or any other Java-based package, since `rJava` starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven't succeeded in your previous attempts. 
+Note: It's very important to allocate enough memory before loading `r5r` or any other Java-based package, since `rJava` starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven't succeeded in your previous attempts. 
 
 Then we can load the packages used in this vignette:
 
@@ -83,13 +83,20 @@ library(mapview)
 mapviewOptions(platform = 'leafgl')
 ```
 
-The `r5r` package has 3 fundamental functions.
+The `r5r` package has five fundamental functions:
 
-1. `setup_r5()` to initialize an instance of `r5r`, that also builds a routable transport network given an Open Street Map street network and public transport feeds in GTFS format;
+1. `setup_r5()` to initialize an instance of `r5r`, that also builds a routable
+transport network;
 
-2. `travel_time_matrix()` for fast computation of travel time estimates between origin/destination pairs;
+2. `accessibility()` for fast computation of access to opportunities considering
+a selected decay function;
 
-3. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
+3. `travel_time_matrix()` for fast computation of travel time estimates between origin/destination pairs;
+
+4. `expanded_travel_time_matrix()` for calculating minute-by-minute travel time
+estimates between origin destination pairs within a specified time window;
+
+5. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
 
 
 ## Data requirements:
@@ -118,17 +125,20 @@ Here are a few places from where you can download these data sets:
 
 Let's have a quick look at how `r5r` works using a sample data set.
 
+
+
 # Demonstration on sample data
 
 ## Data
 
-To illustrate functionality, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes four files:
+To illustrate the functionalities of `r5r`, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes seven files:
 
-* An OpenStreetMap network in `.pbf` format (*mandatory*);
-* A public transport feed in `GTFS.zip` format;
-* A *points of interest* file, in `.csv` format, containing the names and spatial coordinates of 15 places within Porto Alegre;
-* The spatial coordinates of a regular hexagonal grid covering the sample area, in a `.csv` file, which can be used as origin/destination pairs in a travel time matrix calculation.
-
+* An OpenStreetMap network: `poa_osm.pbf`
+* Two public transport feeds: `poa_eptc.zip` and `poa_trensurb.zip`
+* A raster elevation data: `poa_elevation.tif`
+* A `poa_hexgrid.csv` file with spatial coordinates of a regular hexagonal grid covering the sample area, which can be used as origin/destination pairs in a travel time matrix calculation.
+* A `poa_points_of_interest.csv` file containing the names and spatial coordinates of 15 places within Porto Alegre
+* A `fares_poa.zip` file with the fare rules of the city's public transport system.
 
 
 ```{r}
@@ -143,15 +153,20 @@ poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 head(poi)
 ```
 
-The data with origin destination pairs is shown below. In this example, we will be building a travel time matrix between ten random points in this data set.
+The data with origin destination pairs is shown below. In this example, we will be using  200 points randomly selected from this data set.
 
 ```{r}
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
-points <- points[ c(sample(1:nrow(points), 10, replace=TRUE)), ]
+
+# sample points
+sampled_rows <-  sample(1:nrow(points), 200, replace=TRUE)
+points <- points[ sampled_rows, ]
 head(points)
 ```
 
-## Build routable transport network with `setup_r5()`
+
+
+## Building routable transport network with `setup_r5()`
 
 The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the `setup_r5` function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the `r5r` package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.
 
@@ -160,13 +175,53 @@ The first step is to build the multimodal transport network used for routing in 
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE)
 ```
 
+
+## Accessibility analysis
+
+The faster way to calculate accessibility estimates is using the `accessibility()`
+function. In this example, we calculate the number of schools and health care 
+facilities accessible in less than 60 minutes by public transport and walking.
+More details in this vignette on [Calculating and visualizing Accessibility](https://ipeagit.github.io/r5r/articles/calculating_accessibility.html).
+
+```{r, message = FALSE, eval = FALSE}
+# set departure datetime input
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+# calculate accessibility
+access <- accessibility(r5r_core = r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = c("schools", "healthcare"),
+                        mode = c("WALK", "TRANSIT"),
+                        departure_datetime = departure_datetime,
+                        decay_function = "step",
+                        cutoffs = 60
+                        )
+head(access)
+```
+
+
+
 ## Routing analysis
 
-For fast routing analysis, **r5r** currently has two core functions: `travel_time_matrix` and `detailed_itineraries`.
+For fast routing analysis, **r5r** currently has three core functions: 
+`travel_time_matrix()`, `expanded_travel_time_matrix()` and `detailed_itineraries()`.
+
 
 ### Fast many to many travel time matrix
 
-The `travel_time_matrix` function is a really simple and fast function to compute travel time estimates between one or multiple origin/destination pairs. The origin/destination input can be either a spatial `sf POINT` object, or a `data.frame` containing the columns `id, lon, lat`. The function also receives as inputs the *max walking distance*, in meters, and the *max trip duration*, in minutes. Resulting travel times are also output in minutes.
+The `travel_time_matrix()` function is a really simple and fast function to 
+compute travel time estimates between one or multiple origin/destination pairs. 
+The origin/destination input can be either a spatial `sf POINT` object, or a 
+`data.frame` containing the columns `id, lon, lat`. The function also receives 
+as inputs the *max walking distance*, in meters, and the *max trip duration*, in
+minutes. Resulting travel times are also output in minutes.
+
+This function also allows users to very efficiently capture the travel time 
+uncertainties inside a given time window considering multiple departure times. 
+[More info on this vignette](https://ipeagit.github.io/r5r/articles/time_window.html). 
+
 
 ```{r, message = FALSE, eval = FALSE}
 # set inputs
@@ -183,8 +238,7 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           mode = mode,
                           departure_datetime = departure_datetime,
                           max_walk_dist = max_walk_dist,
-                          max_trip_duration = max_trip_duration,
-                          verbose = FALSE)
+                          max_trip_duration = max_trip_duration)
 
 head(ttm)
 ```
@@ -194,9 +248,39 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 ```
 
 
+### Expanded travel time matrix with minute-by-minute estimates
+
+For those interested in more detailed outputs, the `expanded_travel_time_matrix()` 
+works very similarly with `travel_time_matrix()` but it brings much more 
+information.  It estimates for each origin destination pair the travel time of 
+the fastest route alternative departing each minute within a specified time 
+window. This examples below uses a 20-minute time window. Please note this 
+function can be very memory intensive for large data sets and time windows.
+
+
+```{r, message = FALSE, eval = FALSE}
+# calculate a travel time matrix
+ettm <- expanded_travel_time_matrix(r5r_core = r5r_core,
+                          origins = points,
+                          destinations = points,
+                          mode = mode,
+                          departure_datetime = departure_datetime,
+                          time_window = 20,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration)
+
+head(ettm)
+```
+
+
+
 ### Detailed itineraries
 
-Most routing packages only return the fastest route. A key advantage of the `detailed_itineraries` function is that is allows for fast routing analysis while providing multiple alternative routes between origin/destination pairs. The output also brings detailed information for each route alternative at the trip segment level, including the transport mode, waiting times, travel time and distance of each trip segment. 
+Most routing packages only return the fastest route. A key advantage of the `detailed_itineraries()` function is that is allows for fast routing analysis 
+while providing multiple alternative routes between origin destination pairs. 
+The output also brings detailed information for each route alternative at the 
+trip segment level, including the transport mode, waiting times, travel time and
+distance of each trip segment. 
 
 In this example below, we want to know some alternative routes between one origin/destination pair only.
 
@@ -210,16 +294,15 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate detailed itineraries
-dit <- detailed_itineraries(r5r_core = r5r_core,
+det <- detailed_itineraries(r5r_core = r5r_core,
                             origins = origins,
                             destinations = destinations,
                             mode = mode,
                             departure_datetime = departure_datetime,
                             max_walk_dist = max_walk_dist,
-                            shortest_path = FALSE,
-                            verbose = FALSE)
+                            shortest_path = FALSE)
 
-head(dit)
+head(det)
 ```
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
@@ -229,16 +312,20 @@ The output is a `data.frame sf` object, so we can easily visualize the results.
 
 #### Visualize results
 
-**Static visualization** with `ggplot2` package: To provide a geographic context for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf` function to  extract the OSM street network used in the routing.
+**Static visualization** with `ggplot2` package: To provide a geographic context 
+for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf((` function to  extract the OSM street network used in the routing.
 
 ```{r, message = FALSE, eval = FALSE}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
+# extract public transport network
+transit_net <- transit_network_to_sf(r5r_core)
+
 # plot
 ggplot() +
   geom_sf(data = street_net$edges, color='gray85') +
-  geom_sf(data = dit, aes(color=mode)) +
+  geom_sf(data = det, aes(color=mode)) +
   facet_wrap(.~option) + 
   theme_void()
 

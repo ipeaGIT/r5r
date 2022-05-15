@@ -132,8 +132,9 @@ are not returned in the \code{data.table}.
 \description{
 Detailed computation of travel time estimates between one or multiple origin
 destination pairs. Results show the travel time of the fastest route
-alternative departing each minute within a specified time window. This
-function can be very memory expensive for large data sets and windows.
+alternative departing each minute within a specified time window. Please note
+this function can be very memory intensive for large data sets and time
+windows.
 }
 \section{Transport modes}{
 
@@ -231,15 +232,15 @@ departure_datetime <- as.POSIXct(
   format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate travel time matrix
-ttm <- expanded_travel_time_matrix(r5r_core,
-                                   origins = points,
-                                   destinations = points,
-                                   mode = c("WALK", "TRANSIT"),
-                                   time_window = 20,
-                                   departure_datetime = departure_datetime,
-                                   max_walk_dist = Inf,
-                                   max_trip_duration = 120L)
+# estimate expanded travel time matrix
+ettm <- expanded_travel_time_matrix(r5r_core,
+                                    origins = points,
+                                    destinations = points,
+                                    mode = c("WALK", "TRANSIT"),
+                                    time_window = 20,
+                                    departure_datetime = departure_datetime,
+                                    max_walk_dist = Inf,
+                                    max_trip_duration = 120L)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

@@ -54,7 +54,7 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 ## Usage
 
-The package has four fundamental functions.
+The package has five fundamental functions.
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (Jar file is downloaded only 
@@ -129,7 +129,7 @@ r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
 # 2) load origin/destination points and set arguments
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
-mode <- c("WALK", "BUS")
+mode <- c("WALK", "TRANSIT")
 max_walk_dist <- 3000   # meters
 max_trip_duration <- 60 # minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
@@ -152,7 +152,8 @@ det <- detailed_itineraries(r5r_core = r5r_core,
                             departure_datetime = departure_datetime,
                             max_walk_dist = max_walk_dist,
                             max_trip_duration = max_trip_duration,
-                            shortest_path = FALSE)
+                            shortest_path = FALSE,
+                            drop_geometry = FALSE)
 
 # 4) Calculate number of schools accessible within 20 minutes 
 access <- accessibility(r5r_core = r5r_core,
@@ -176,9 +177,10 @@ routing, analysis and planning more broadly. Here are few of theses packages.
 - [opentripplanner](https://github.com/ropensci/opentripplanner): OpenTripPlanner for R
 - [stplanr](https://github.com/ropensci/stplanr): sustainable transport planning with R
 
-The **r5r** package is particularly focused on fast multimodal transport routing.
-A key advantage of `r5r` is that is provides a simple and friendly R interface
-to R<sup>5</sup>, one of the fastest and most robust routing engines availabe.
+The **r5r** package is particularly focused on fast multimodal transport routing
+and accessibility. A key advantage of `r5r` is that is provides a simple and 
+friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing
+engines available.
 
 -----
 
@@ -188,7 +190,9 @@ at [Conveyal](https://www.conveyal.com/) with contributions from several people.
 
 # Citation <img align="right" src="r-package/man/figures/ipea_logo.png" alt="ipea" width="300">
 
- The R package **r5r** is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:
+ The R package **r5r** is developed by a team at the Institute for Applied 
+ Economic Research (Ipea), Brazil. If you use this package in research 
+ publications, we please cite it as:
 
 * Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., & Conway, M. W. (2021). **r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R**. *Findings*, 21262. [https://doi.org/10.32866/001c.21262](https://doi.org/10.32866/001c.21262)
 
