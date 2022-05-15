@@ -1,11 +1,11 @@
-#' Setup a fare calculator to use with routing functions
+#' Setup a fare calculator to account for monetary costs in routing and accessibility functions
 #'
 #' Creates a basic fare calculator that describes how transit fares should be
-#' calculated in [travel_time_matrix()], [accessibility()] and
-#' [pareto_frontier()]. This fare calculator can be manually edited and
-#' adjusted to the existing rules in your study area, as long as they stick to
-#' some basic premises. Please see fare calculator vignetter for more
-#' information on how the fare calculator works.
+#' calculated in [travel_time_matrix()], [expanded_travel_time_matrix()],
+#' [accessibility()] and [pareto_frontier()]. This fare calculator can be
+#' manually edited and adjusted to the existing rules in your study area, as
+#' long as they stick to some basic premises. Please see fare calculator
+#' vignette for more information on how the fare calculator works.
 #'
 #' @template r5r_core
 #' @param base_fare A numeric. A base value used to populate the fare

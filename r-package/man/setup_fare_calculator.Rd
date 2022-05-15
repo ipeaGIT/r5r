@@ -2,7 +2,7 @@
 % Please edit documentation in R/fare_calculator.R
 \name{setup_fare_calculator}
 \alias{setup_fare_calculator}
-\title{Setup a fare calculator to use with routing functions}
+\title{Setup a fare calculator to account for monetary costs in routing and accessibility functions}
 \usage{
 setup_fare_calculator(
   r5r_core,
@@ -60,11 +60,11 @@ A fare calculator object.
 }
 \description{
 Creates a basic fare calculator that describes how transit fares should be
-calculated in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=accessibility]{accessibility()}} and
-\code{\link[=pareto_frontier]{pareto_frontier()}}. This fare calculator can be manually edited and
-adjusted to the existing rules in your study area, as long as they stick to
-some basic premises. Please see fare calculator vignetter for more
-information on how the fare calculator works.
+calculated in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
+\code{\link[=accessibility]{accessibility()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}. This fare calculator can be
+manually edited and adjusted to the existing rules in your study area, as
+long as they stick to some basic premises. Please see fare calculator
+vignette for more information on how the fare calculator works.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
