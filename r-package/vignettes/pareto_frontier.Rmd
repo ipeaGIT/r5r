@@ -178,6 +178,8 @@ destinations considering multiple cutoffs of monetary costs:
 - $8.37, which would allow for walking walking + bus + rail
 
 ```{r}
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+
 pf <- pareto_frontier(r5r_core,
                       origins = points,
                       destinations = points,
