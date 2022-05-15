@@ -85,6 +85,9 @@ The package has five fundamental functions.
    detailed information on transport mode, travel time, walk distance etc for 
    each trip section
 
+obs. Most of these functions also allow users to account for monetary travel costs 
+when generating travel time matrices and accessibility estimates. More info about
+how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
 
 ### Data requirements:
 

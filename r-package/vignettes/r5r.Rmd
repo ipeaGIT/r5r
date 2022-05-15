@@ -98,6 +98,10 @@ estimates between origin destination pairs within a specified time window;
 
 5. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
 
+Most of these functions also allow users to account for monetary travel costs 
+when generating travel time matrices and accessibility estimates. More info about
+how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+
 
 ## Data requirements:
 
