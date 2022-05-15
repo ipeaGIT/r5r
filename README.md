@@ -38,11 +38,14 @@ You can install `r5r`:
 
 ```
 
-Please bear in mind that you need to have *Java SE Development Kit 11* installed on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
+Please bear in mind that you need to have *Java SE Development Kit 11* installed 
+on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 
+11 is freely available from the options below:
 - [OpenJDK](http://jdk.java.net/java-se-ri/11)
 - [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 
-If you don't know what version of Java you have installed on your computer, you can check it by running this on R console.
+If you don't know what version of Java you have installed on your computer, you 
+can check it by running this on R console.
 
 ```R
 rJava::.jinit()
@@ -54,26 +57,33 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 The package has four fundamental functions.
 
 1. `setup_r5()`
-   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only once per installation)
-   * Builds a multimodal transport network given a street network in `.pbf` format
-   (mandatory) and one or more public transport networks in `GTFS.zip` format 
-   (optional).
+   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only 
+   once per installation)
+   * Builds a multimodal transport network given (1) a street network in `.pbf`
+   format (*mandatory*), (2) one or more public transport networks in `GTFS.zip`
+   format  (optional), and (3) elevation data in `raster.tif` (optional).
 
-2. `detailed_itineraries()`
+2. `accessibility()`
+   * Fast computation of access to opportunities. The function returns a 
+   `data.table` with accessibility estimates for all origin points by transport 
+   mode given a selected decay function. Multiple decay functions are available,
+   including step (cumulative opportunities), logistic, fixed exponential and 
+   linear.
+
+3. `travel_time_matrix()`
+   * Fast function that returns a simple `data.table` with travel time estimates
+   between one or multiple origin destination pairs.
+
+4. `expanded_travel_time_matrix()`
+   * Calculates travel times between origin destination pairs with multiple 
+   estimates departing minute-by-minute within a time window. The function 
+   returns a `data.table`.
+
+5. `detailed_itineraries()`
    * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
    between one or multiple origin destination pairs. The data output brings 
    detailed information on transport mode, travel time, walk distance etc for 
    each trip section
- 
-3. `travel_time_matrix()`
-   * Fast function that returns a simple 'data.frame' with travel time 
-   estimates between one or multiple origin destination pairs.
-
-4. `accessibility()`
-   * Fast computation of access to opportunities. The function returns a `data.table` 
-   with accessibility estimates for all origin points by  transport mode given a selected
-   decay function. Multiple decay functions are available, including step (cumulative 
-   opportunities), logistic, fixed Exponential and linear.
 
 
 ### Data requirements:

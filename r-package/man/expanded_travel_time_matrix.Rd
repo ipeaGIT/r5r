@@ -2,7 +2,7 @@
 % Please edit documentation in R/expanded_travel_time_matrix.R
 \name{expanded_travel_time_matrix}
 \alias{expanded_travel_time_matrix}
-\title{Calculate travel times between origin destination pairs}
+\title{Calculate minute-by-minute travel times between origin destination pairs}
 \usage{
 expanded_travel_time_matrix(
   r5r_core,
@@ -126,12 +126,14 @@ active threads.}
 \value{
 A \code{data.table} with travel time estimates (in minutes) between
 origin and destination pairs. Pairs whose trips couldn't be completed within
-the maximum travel time and/or whose origin is too far from the street
-network are not returned in the \code{data.table}.
+the maximum travel time and/or whose origin is too far from the street network
+are not returned in the \code{data.table}.
 }
 \description{
 Detailed computation of travel time estimates between one or multiple origin
-destination pairs, producing results minute-by-minute within a time window.
+destination pairs. Results show the travel time of the fastest route
+alternative departing each minute within a specified time window. This
+function can be very memory expensive for large data sets and windows.
 }
 \section{Transport modes}{
 
@@ -171,10 +173,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -234,6 +236,7 @@ ttm <- expanded_travel_time_matrix(r5r_core,
                                    origins = points,
                                    destinations = points,
                                    mode = c("WALK", "TRANSIT"),
+                                   time_window = 20,
                                    departure_datetime = departure_datetime,
                                    max_walk_dist = Inf,
                                    max_trip_duration = 120L)

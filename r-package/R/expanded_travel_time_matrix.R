@@ -1,7 +1,10 @@
-#' Calculate travel times between origin destination pairs
+#' Calculate minute-by-minute travel times between origin destination pairs
 #'
 #' Detailed computation of travel time estimates between one or multiple origin
-#' destination pairs, producing results minute-by-minute within a time window.
+#' destination pairs. Results show the travel time of the fastest route
+#' alternative departing each minute within a specified time window. Please note
+#' this function can be very memory intensive for large data sets and time
+#' windows.
 #'
 #' @template r5r_core
 #' @template common_arguments
@@ -17,8 +20,8 @@
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
 #' origin and destination pairs. Pairs whose trips couldn't be completed within
-#' the maximum travel time and/or whose origin is too far from the street
-#' network are not returned in the `data.table`.
+#' the maximum travel time and/or whose origin is too far from the street network
+#' are not returned in the `data.table`.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -42,14 +45,15 @@
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
-#' # estimate travel time matrix
-#' ttm <- expanded_travel_time_matrix(r5r_core,
-#'                                    origins = points,
-#'                                    destinations = points,
-#'                                    mode = c("WALK", "TRANSIT"),
-#'                                    departure_datetime = departure_datetime,
-#'                                    max_walk_dist = Inf,
-#'                                    max_trip_duration = 120L)
+#' # estimate expanded travel time matrix
+#' ettm <- expanded_travel_time_matrix(r5r_core,
+#'                                     origins = points,
+#'                                     destinations = points,
+#'                                     mode = c("WALK", "TRANSIT"),
+#'                                     time_window = 20,
+#'                                     departure_datetime = departure_datetime,
+#'                                     max_walk_dist = Inf,
+#'                                     max_trip_duration = 120L)
 #'
 #' stop_r5(r5r_core)
 #' @export
