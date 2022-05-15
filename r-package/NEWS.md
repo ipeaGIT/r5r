@@ -11,6 +11,13 @@
 - All functions now use `verbose = FALSE` and `progress = FALSE` by default.
 - The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (`all_to_all = FALSE`, the default). Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
 
+
+**Bug fixes**
+
+* Fixed bug that `transit_network_to_sf()` generated some routes with invalid geometries. Closes [#256](https://github.com/ipeaGIT/r5r/issues/256).
+
+
+
 # r5r 0.7.0
 
 **Major changes**
