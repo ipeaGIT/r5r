@@ -50,6 +50,7 @@ public abstract class R5Process {
 
     protected String departureDate;
     protected String departureTime;
+    protected int secondsFromMidnight;
 
     protected int maxWalkTime;
     protected int maxBikeTime;
@@ -285,7 +286,7 @@ public abstract class R5Process {
 
         request.date = LocalDate.parse(departureDate);
 
-        int secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
+        secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
         request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60);
