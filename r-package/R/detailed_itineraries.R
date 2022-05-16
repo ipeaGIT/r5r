@@ -53,7 +53,7 @@
 #'                             mode = c("WALK", "TRANSIT"),
 #'                             departure_datetime = departure_datetime,
 #'                             max_walk_dist = 1000,
-#'                             max_trip_duration = 120L)
+#'                             max_trip_duration = 60)
 #'
 #' stop_r5(r5r_core)
 #' @export

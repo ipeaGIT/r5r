@@ -159,7 +159,7 @@ active threads.}
 results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running estimates on memory-constrained settings,
-because writing the results to disk prevents \code{R5} from storing them in
+because writing the results to disk prevents \code{r5r} from storing them in
 memory.}
 }
 \value{
@@ -212,10 +212,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -263,7 +263,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 
 # load origin/destination points
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 departure_datetime <- as.POSIXct(
   "13-05-2019 14:00:00",
@@ -277,7 +277,7 @@ ttm <- travel_time_matrix(r5r_core,
                           mode = c("WALK", "TRANSIT"),
                           departure_datetime = departure_datetime,
                           max_walk_dist = Inf,
-                          max_trip_duration = 120L)
+                          max_trip_duration = 60)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

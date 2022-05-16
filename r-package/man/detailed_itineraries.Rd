@@ -124,7 +124,7 @@ geometry column in the result.}
 results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running estimates on memory-constrained settings,
-because writing the results to disk prevents \code{R5} from storing them in
+because writing the results to disk prevents \code{r5r} from storing them in
 memory.}
 }
 \value{
@@ -176,10 +176,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -220,7 +220,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759â€“1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 
@@ -247,7 +247,7 @@ dit <- detailed_itineraries(r5r_core,
                             mode = c("WALK", "TRANSIT"),
                             departure_datetime = departure_datetime,
                             max_walk_dist = 1000,
-                            max_trip_duration = 120L)
+                            max_trip_duration = 60)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
