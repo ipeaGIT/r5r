@@ -1,5 +1,6 @@
 package org.ipea.r5r;
 
+import com.conveyal.analysis.components.WorkerComponents;
 import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
+import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
@@ -237,6 +239,8 @@ public class R5RCore {
         }
 
         setNumberOfThreadsToMax();
+
+        WorkerComponents.fileStorage = new R5RFileStorage(null);
 
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
 
