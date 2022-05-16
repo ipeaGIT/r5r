@@ -99,7 +99,8 @@ origin destination pairs.</p>
   n_threads <span class="op">=</span> <span class="cn">Inf</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   progress <span class="op">=</span> <span class="cn">FALSE</span>,
-  drop_geometry <span class="op">=</span> <span class="cn">FALSE</span>
+  drop_geometry <span class="op">=</span> <span class="cn">FALSE</span>,
+  output_dir <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -196,12 +197,22 @@ active threads.</p></dd>
 <dd><p>A logical. Whether the output should include the
 geometry of each segment or not. The default value of <code>FALSE</code> keeps the
 geometry column in the result.</p></dd>
+<dt>output_dir</dt>
+<dd><p>Either <code>NULL</code> or a path to an existing directory. When not
+<code>NULL</code> (the default), the function will write one <code>.csv</code> file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents <code>R5</code> from storing them in
+memory.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p>When <code>drop_geometry</code> is <code>FALSE</code>, the function outputs a <code>LINESTRING sf</code> with detailed information on the itineraries between the specified
 origins and destinations. When <code>TRUE</code>, the output is a <code>data.table</code>. All
-distances are in meters and travel times are in minutes.</p>
+distances are in meters and travel times are in minutes. If <code>output_dir</code> is
+not <code>NULL</code>, the function returns the path specified in that parameter, in
+which the <code>.csv</code> files containing the results are saved.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>

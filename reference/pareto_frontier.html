@@ -101,7 +101,8 @@ origin and destination pairs.</p>
   draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,
   n_threads <span class="op">=</span> <span class="cn">Inf</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  progress <span class="op">=</span> <span class="cn">FALSE</span>
+  progress <span class="op">=</span> <span class="cn">FALSE</span>,
+  output_dir <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -227,6 +228,14 @@ so the progress counter does not interfere with <code>R5</code>'s output message
 Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for computation
 efficiency, because the progress counter must be synchronized among all
 active threads.</p></dd>
+<dt>output_dir</dt>
+<dd><p>Either <code>NULL</code> or a path to an existing directory. When not
+<code>NULL</code> (the default), the function will write one <code>.csv</code> file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents <code>R5</code> from storing them in
+memory.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -235,7 +244,9 @@ frontier between the specified origins and destinations. An additional
 column identifying the travel time percentile is present if more than one
 value was passed to <code>percentiles</code>. Origin and destination pairs whose trips
 couldn't be completed within the maximum travel time using less money than
-the specified monetary cutoffs are not returned in the <code>data.table</code>.</p>
+the specified monetary cutoffs are not returned in the <code>data.table</code>. If
+<code>output_dir</code> is not <code>NULL</code>, the function returns the path specified in that
+parameter, in which the <code>.csv</code> files containing the results are saved.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>

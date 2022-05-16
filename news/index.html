@@ -75,7 +75,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="r5r-development-version">r5r (development version)<a class="anchor" aria-label="anchor" href="#r5r-development-version"></a></h2>
 <p><strong>Major changes</strong></p>
-<ul><li>Add new parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
+<ul><li>New parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
+<li>New parameter <code>output_dir</code> to all routing functions, which is used to specify a directory in which the results should be saved as <code>.csv</code> files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents <code>R5</code> from storing them in memory.</li>
 <li>Package documentation has been extensively updated and expanded.</li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>r5r now downloads R5 Jar directly from Conveyal’s github, making the package more stable. Closes <a href="https://github.com/ipeaGIT/r5r/issues/226" class="external-link">#226</a>.</li>
