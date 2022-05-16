@@ -103,7 +103,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2022-05-12</h4>
+            <h4 data-toc-skip class="date">2022-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -147,7 +147,7 @@
 <p>Before we start, we need to increase the memory available to Java. This is necessary because, by default, <code>R</code> allocates only 512MB of memory for Java processes, which is not enough for large queries using <code>r5r</code>. To increase available memory to 2GB, for example, we need to set the <code>java.parameters</code> option at the beginning of the script, as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></code></pre></div>
-<p>Note: It’s very important to allocate enough memory before attaching <code>r5r</code> or any other Java-based package, since <code>rJava</code> starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven’t succeeded in your previous attempts.</p>
+<p>Note: It’s very important to allocate enough memory before loading <code>r5r</code> or any other Java-based package, since <code>rJava</code> starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven’t succeeded in your previous attempts.</p>
 <p>Then we can load the packages used in this vignette:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
@@ -156,13 +156,52 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapviewOptions.html" class="external-link">mapviewOptions</a></span><span class="op">(</span>platform <span class="op">=</span> <span class="st">'leafgl'</span><span class="op">)</span></code></pre></div>
-<p>The <code>r5r</code> package has 3 fundamental functions.</p>
+<p>The <code>r5r</code> package has five fundamental functions:</p>
 <ol style="list-style-type: decimal">
-<li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of <code>r5r</code>, that also builds a routable transport network given an Open Street Map street network and public transport feeds in GTFS format;</p></li>
+<li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of <code>r5r</code>, that also builds a routable transport network;</p></li>
+<li><p><code><a href="../reference/accessibility.html">accessibility()</a></code> for fast computation of access to opportunities considering a selected decay function;</p></li>
 <li><p><code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> for fast computation of travel time estimates between origin/destination pairs;</p></li>
+<li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating minute-by-minute travel time estimates between origin destination pairs within a specified time window;</p></li>
 <li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information on one or multiple alternative routes between origin/destination pairs.</p></li>
 </ol>
-<p>Let’s have a quick look at how these functions work using a sample data set.</p>
+<p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
+<div class="section level3">
+<h3 id="data-requirements">Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
+</h3>
+<p>To use <code>r5r</code>, you will need: - A road network data set from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A public transport feed in <code>GTFS.zip</code> format (optional) - A raster file of Digital Elevation Model data in <code>.tif</code> format (optional)</p>
+<p>Here are a few places from where you can download these data sets:</p>
+<ul>
+<li>OpenStreetMap
+<ul>
+<li>
+<a href="https://docs.ropensci.org/osmextract/" class="external-link">osmextract</a> R package</li>
+<li>
+<a href="https://download.geofabrik.de/" class="external-link">geofabrik</a> website</li>
+<li>
+<a href="https://export.hotosm.org/" class="external-link">hot export tool</a> website</li>
+<li>
+<a href="https://extract.bbbike.org/" class="external-link">BBBike.org</a> website</li>
+</ul>
+</li>
+<li>GTFS
+<ul>
+<li>
+<a href="http://tidytransit.r-transit.org/" class="external-link">tidytransit</a> R package</li>
+<li>
+<a href="https://www.transit.land/" class="external-link">transitland</a> website</li>
+</ul>
+</li>
+<li>Elevation
+<ul>
+<li>
+<a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R package</li>
+<li>
+<a href="https://lpdaac.usgs.gov/products/srtmgl1v003/" class="external-link">Nasa’s SRTMGL1</a> website</li>
+</ul>
+</li>
+</ul>
+<p>Let’s have a quick look at how <code>r5r</code> works using a sample data set.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
@@ -170,12 +209,17 @@
 <div class="section level3">
 <h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h3>
-<p>To illustrate functionality, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes four files:</p>
+<p>To illustrate the functionalities of <code>r5r</code>, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes seven files:</p>
 <ul>
-<li>An Open Street Map network in <code>.pbf</code> format (<em>mandatory</em>);</li>
-<li>A public transport feed in <code>GTFS.zip</code> format;</li>
-<li>A <em>points of interest</em> file, in <code>.csv</code> format, containing the names and spatial coordinates of 15 places within Porto Alegre;</li>
-<li>The spatial coordinates of a regular hexagonal grid covering the sample area, in a <code>.csv</code> file, which can be used as origin/destination pairs in a travel time matrix calculation.</li>
+<li>An OpenStreetMap network: <code>poa_osm.pbf</code>
+</li>
+<li>Two public transport feeds: <code>poa_eptc.zip</code> and <code>poa_trensurb.zip</code>
+</li>
+<li>A raster elevation data: <code>poa_elevation.tif</code>
+</li>
+<li>A <code>poa_hexgrid.csv</code> file with spatial coordinates of a regular hexagonal grid covering the sample area, which can be used as origin/destination pairs in a travel time matrix calculation.</li>
+<li>A <code>poa_points_of_interest.csv</code> file containing the names and spatial coordinates of 15 places within Porto Alegre</li>
+<li>A <code>fares_poa.zip</code> file with the fare rules of the city’s public transport system.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
@@ -193,21 +237,24 @@
 <span class="co">#&gt; 4: santa_casa_hospital -30.03043 -51.22240</span>
 <span class="co">#&gt; 5:            townhall -30.02800 -51.22865</span>
 <span class="co">#&gt; 6:     piratini_palace -30.03363 -51.23068</span></code></pre></div>
-<p>The data with origin destination pairs is shown below. In this example, we will be building a travel time matrix between ten random points in this data set.</p>
+<p>The data with origin destination pairs is shown below. In this example, we will be using 200 points randomly selected from this data set.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">10</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span>
+
+<span class="co"># sample points</span>
+<span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools healthcare</span>
-<span class="co">#&gt; 1: 89a90128e33ffff -51.22141 -30.03598       1155       1          0</span>
-<span class="co">#&gt; 2: 89a90128363ffff -51.19132 -30.04410        979       0          0</span>
-<span class="co">#&gt; 3: 89a9012a333ffff -51.22377 -30.09402        633       1          0</span>
-<span class="co">#&gt; 4: 89a90129dbbffff -51.20002 -30.03364       1135       0          0</span>
-<span class="co">#&gt; 5: 89a90129ba7ffff -51.18358 -30.00312         15       0          0</span>
-<span class="co">#&gt; 6: 89a9012919bffff -51.15252 -30.06265        123       1          0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a90128533ffff -51.22298 -30.07468       1714       0          0</span>
+<span class="co">#&gt; 2: 89a9012822fffff -51.17953 -30.05342        403       0          0</span>
+<span class="co">#&gt; 3: 89a9012b3d3ffff -51.14802 -30.10186         27       0          0</span>
+<span class="co">#&gt; 4: 89a90129cb7ffff -51.18526 -30.04461        960       0          0</span>
+<span class="co">#&gt; 5: 89a90128123ffff -51.22209 -30.05257        665       0          0</span>
+<span class="co">#&gt; 6: 89a901284a7ffff -51.20833 -30.08840        484       0          0</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="build-routable-transport-network-with-setup_r5">Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h3 id="building-routable-transport-network-with-setup_r5">Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
 </h3>
 <p>The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the <code>setup_r5</code> function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the <code>r5r</code> package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -215,14 +262,36 @@
 <span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="accessibility-analysis">Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
+</h3>
+<p>The faster way to calculate accessibility estimates is using the <code><a href="../reference/accessibility.html">accessibility()</a></code> function. In this example, we calculate the number of schools and health care facilities accessible in less than 60 minutes by public transport and walking. More details in this vignette on <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html" class="external-link">Calculating and visualizing Accessibility</a>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># set departure datetime input</span>
+<span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
+                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
+
+<span class="co"># calculate accessibility</span>
+<span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
+                        origins <span class="op">=</span> <span class="va">points</span>,
+                        destinations <span class="op">=</span> <span class="va">points</span>,
+                        opportunities_colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"schools"</span>, <span class="st">"healthcare"</span><span class="op">)</span>,
+                        mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
+                        departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
+                        decay_function <span class="op">=</span> <span class="st">"step"</span>,
+                        cutoffs <span class="op">=</span> <span class="fl">60</span>
+                        <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="routing-analysis">Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
 </h3>
-<p>For fast routing analysis, <strong>r5r</strong> currently has two core functions: <code>travel_time_matrix</code> and <code>detailed_itineraries</code>.</p>
+<p>For fast routing analysis, <strong>r5r</strong> currently has three core functions: <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>.</p>
 <div class="section level4">
 <h4 id="fast-many-to-many-travel-time-matrix">Fast many to many travel time matrix<a class="anchor" aria-label="anchor" href="#fast-many-to-many-travel-time-matrix"></a>
 </h4>
-<p>The <code>travel_time_matrix</code> function is a really simple and fast function to compute travel time estimates between one or multiple origin/destination pairs. The origin/destination input can be either a spatial <code>sf POINT</code> object, or a <code>data.frame</code> containing the columns <code>id, lon, lat</code>. The function also receives as inputs the <em>max walking distance</em>, in meters, and the <em>max trip duration</em>, in minutes. Resulting travel times are also output in minutes.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function is a really simple and fast function to compute travel time estimates between one or multiple origin/destination pairs. The origin/destination input can be either a spatial <code>sf POINT</code> object, or a <code>data.frame</code> containing the columns <code>id, lon, lat</code>. The function also receives as inputs the <em>max walking distance</em>, in meters, and the <em>max trip duration</em>, in minutes. Resulting travel times are also output in minutes.</p>
+<p>This function also allows users to very efficiently capture the travel time uncertainties inside a given time window considering multiple departure times. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More info on this vignette</a>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># set inputs</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
 <span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">5000</span>
@@ -237,18 +306,34 @@
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                           max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
-                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                          verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_ttm.png?raw=true" width="100%"></p>
 </div>
 <div class="section level4">
+<h4 id="expanded-travel-time-matrix-with-minute-by-minute-estimates">Expanded travel time matrix with minute-by-minute estimates<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-minute-by-minute-estimates"></a>
+</h4>
+<p>For those interested in more detailed outputs, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> works very similarly with <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> but it brings much more information. It estimates for each origin destination pair the travel time of the fastest route alternative departing each minute within a specified time window. This examples below uses a 20-minute time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># calculate a travel time matrix</span>
+<span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
+                          origins <span class="op">=</span> <span class="va">points</span>,
+                          destinations <span class="op">=</span> <span class="va">points</span>,
+                          mode <span class="op">=</span> <span class="va">mode</span>,
+                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
+                          time_window <span class="op">=</span> <span class="fl">20</span>,
+                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level4">
 <h4 id="detailed-itineraries">Detailed itineraries<a class="anchor" aria-label="anchor" href="#detailed-itineraries"></a>
 </h4>
-<p>Most routing packages only return the fastest route. A key advantage of the <code>detailed_itineraries</code> function is that is allows for fast routing analysis while providing multiple alternative routes between origin/destination pairs. The output also brings detailed information for each route alternative at the trip segment level, including the transport mode, waiting times, travel time and distance of each trip segment.</p>
+<p>Most routing packages only return the fastest route. A key advantage of the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function is that is allows for fast routing analysis while providing multiple alternative routes between origin destination pairs. The output also brings detailed information for each route alternative at the trip segment level, including the transport mode, waiting times, travel time and distance of each trip segment.</p>
 <p>In this example below, we want to know some alternative routes between one origin/destination pair only.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># set inputs</span>
 <span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>
 <span class="va">destinations</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>
@@ -258,35 +343,37 @@
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
 <span class="co"># calculate detailed itineraries</span>
-<span class="va">dit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
+<span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
                             origins <span class="op">=</span> <span class="va">origins</span>,
                             destinations <span class="op">=</span> <span class="va">destinations</span>,
                             mode <span class="op">=</span> <span class="va">mode</span>,
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                             max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
-                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span>,
-                            verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dit</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true" width="100%"></p>
 <p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
 <div class="section level5">
 <h5 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
 </h5>
-<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf</code> function to extract the OSM street network used in the routing.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf((</code> function to extract the OSM street network used in the routing.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># extract OSM network</span>
 <span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
+
+<span class="co"># extract public transport network</span>
+<span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
 
 <span class="co"># plot</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">street_net</span><span class="op">$</span><span class="va">edges</span>, color<span class="op">=</span><span class="st">'gray85'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dit</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">det</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span><span class="op">~</span><span class="va">option</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true" width="100%"></p>
 <p><strong>Interactive visualization</strong> with <code>mapview</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">dit</span>, zcol <span class="op">=</span> <span class="st">'option'</span><span class="op">)</span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_mapview.png?raw=true" width="80%"></p>
 </div>
@@ -295,7 +382,7 @@
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
 <p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
 <span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>

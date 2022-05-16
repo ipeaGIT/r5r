@@ -103,7 +103,7 @@
       <h1 data-toc-skip>pareto_frontier() to analyze the trade-offs between travel time and monetary cost</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway</h4>
             
-            <h4 data-toc-skip class="date">2022-05-12</h4>
+            <h4 data-toc-skip class="date">2022-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -168,41 +168,97 @@
 <span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">1000</span> <span class="co"># meters</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span>
 
-<span class="co"># load origin/destination points</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="co"># load origin/destination points of interest</span>
+<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="set-up-the-fare-calculator">3.2 Set up the fare calculator<a class="anchor" aria-label="anchor" href="#set-up-the-fare-calculator"></a>
 </h4>
-<p>Now we need to set what are the fare rules of our public transport system. These rules will be used by <code>R5</code> to calculate the monetary cost of alternative routes. In the case of Porto Alegre, the fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a second bus adds R$ 2.40 to the total cost. Subsequent bus rides cost the full ticket price of R$ 4.80. * Each train ticket costs R$ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station. * The integrated fare between bus and train has a 10% discount, which totals R$ 8.37.</p>
-<p>We create do this with the support of the <code><a href="../reference/setup_fare_calculator.html">setup_fare_calculator()</a></code> function as shown in the code below. A detailed explanation of how to use the fare calculator of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">(this other vignette)</a>.</p>
+<p>Now we need to set what are the fare rules of our public transport system. These rules will be used by <code>R5</code> to calculate the monetary cost of alternative routes. In the case of Porto Alegre, the fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a second bus adds <code>$</code> 2.40 to the total cost. Subsequent bus rides cost the full ticket price of $ 4.80. * Each train ticket costs $ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station. * The integrated fare between bus and train has a 10% discount, which totals $ 8.37.</p>
+<p>We can create <code>list</code> object with these fare rules with the support of the <code><a href="../reference/setup_fare_calculator.html">setup_fare_calculator()</a></code> function as shown in the code below. A detailed explanation of how to use the fare calculator of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">(this other vignette)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create basic fare calculator</span>
 <span class="va">fare_settings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_calculator.html">setup_fare_calculator</a></span><span class="op">(</span><span class="va">r5r_core</span>, 
                                        base_fare <span class="op">=</span> <span class="fl">4.8</span>,
                                        by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span>
 
-
 <span class="co"># update the cost of bus and train fares</span>
 <span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">4.80</span>,
                                              <span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="fl">4.50</span><span class="op">)</span><span class="op">]</span>
 
-
 <span class="co"># update the cost of tranfers</span>
 <span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,
                                                  <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span>
-
 
 <span class="co"># update transfer_time_allowance to 60 minutes</span>
 <span class="va">fare_settings</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span>
 
 <span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span>
 <span class="va">fare_settings</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></code></pre></div>
+<p>For convenience, we can save these fare rules as a <code>zip</code> file and load again for a future application.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+<span class="co"># save fare rules to temp file</span>
+<span class="va">temp_fares</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'fares_poaa.zip'</span><span class="op">)</span>
+<span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/write_fare_calculator.html">write_fare_calculator</a></span><span class="op">(</span><span class="va">fare_settings</span>, file_path <span class="op">=</span> <span class="va">temp_fares</span><span class="op">)</span>
+
+
+<span class="va">fare_settings</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/read_fare_calculator.html">read_fare_calculator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"fares/fares_poa.zip"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="calculating-a-pareto_frontier-">3.3 Calculating a <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#calculating-a-pareto_frontier-"></a>
 </h4>
+<p>In this example, we calculate the Pareto frontier from all origins to all destinations considering multiple cutoffs of monetary costs: - $1, which would only allow for walking trips - $4.5, which would only allow for rail trips - $4.8, which would allow for a single bus trip - $7.20, which would allow for bus + bus - $8.37, which would allow for walking walking + bus + rail</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
+
+<span class="va">pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,
+                      origins <span class="op">=</span> <span class="va">points</span>,
+                      destinations <span class="op">=</span> <span class="va">points</span>,
+                      mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
+                      departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
+                      fare_calculator <span class="op">=</span> <span class="va">fare_settings</span>,
+                      monetary_cost_cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4.5</span>, <span class="fl">4.8</span>, <span class="fl">7.20</span>, <span class="fl">8.37</span><span class="op">)</span>,
+                      progress <span class="op">=</span> <span class="cn">TRUE</span>
+                      <span class="op">)</span>
+<span class="co">#&gt; Preparing final output... DONE!</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span>
+<span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span>
+<span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span>
+<span class="co">#&gt; 2: public_market bus_central_station         50          21           1.0</span>
+<span class="co">#&gt; 3: public_market bus_central_station         50          18           4.5</span>
+<span class="co">#&gt; 4: public_market bus_central_station         50          13           4.8</span>
+<span class="co">#&gt; 5: public_market    gasometer_museum         50          26           1.0</span>
+<span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></code></pre></div>
+<p>For the sake of illustration, let’s check the most optimum route alternatives from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the Moinhos hospital.</p>
 <p>One cannot make a faster trip without increasing costs, one cannot make a cheaper trip without increasing travel time.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># select origin and destinations</span>
+<span class="va">pf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">to_id</span> <span class="op">==</span> <span class="st">'farrapos_station'</span>  <span class="op">&amp;</span>
+               <span class="va">from_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'moinhos_de_vento_hospital'</span>, <span class="st">'praia_de_belas_shopping_center'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># recode modes</span>
+<span class="va">pf2</span><span class="op">[</span>, <span class="va">modes</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">monetary_cost</span> <span class="op">==</span> <span class="fl">1</span>,   <span class="st">'Walk'</span>,
+                     <span class="va">monetary_cost</span> <span class="op">==</span> <span class="fl">4.5</span>, <span class="st">'Train'</span>,
+                     <span class="va">monetary_cost</span> <span class="op">==</span> <span class="fl">4.8</span>, <span class="st">'Bus'</span>,
+                     <span class="va">monetary_cost</span> <span class="op">==</span> <span class="fl">7.2</span>, <span class="st">'Bus + Bus'</span>,
+                     <span class="va">monetary_cost</span> <span class="op">==</span> <span class="fl">8.37</span>, <span class="st">'Bus + Train'</span><span class="op">)</span><span class="op">]</span>
+
+<span class="co"># plot</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">pf2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">monetary_cost</span>, y<span class="op">=</span><span class="va">travel_time</span>, color<span class="op">=</span><span class="va">from_id</span>, label <span class="op">=</span> <span class="va">modes</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'gray30'</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>, nudge_x <span class="op">=</span> <span class="fl">0.05</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">'Pareto frontier of alternative routes from Farrapos station to:'</span>, 
+       subtitle <span class="op">=</span> <span class="st">'Praia de Belas shopping mall and Moinhos hospital'</span>,
+       color<span class="op">=</span><span class="st">'Destination'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Travel cost ($)"</span>, breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">12</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Travel time (minutes)"</span>, breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">120</span>,<span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">12</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.6</span>,<span class="fl">0.8</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_text).</span></code></pre></div>
+<p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">

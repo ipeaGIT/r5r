@@ -81,7 +81,8 @@
 <ul><li>r5r now downloads R5 Jar directly from Conveyal’s github, making the package more stable. Closes <a href="https://github.com/ipeaGIT/r5r/issues/226" class="external-link">#226</a>.</li>
 <li>All functions now use <code>verbose = FALSE</code> and <code>progress = FALSE</code> by default.</li>
 <li>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function has a new parameter <code>all_to_all</code>, which allows users to set whether they want to query routes between all origins to all destinations (<code>all_to_all = TRUE</code>) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (<code>all_to_all = FALSE</code>, the default). Closes <a href="https://github.com/ipeaGIT/r5r/issues/224" class="external-link">#224</a>.</li>
-</ul></div>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>Fixed bug that <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> generated some routes with invalid geometries. Closes <a href="https://github.com/ipeaGIT/r5r/issues/256" class="external-link">#256</a>.</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.0" id="r5r-070">r5r 0.7.0<small>2022-02-11</small><a class="anchor" aria-label="anchor" href="#r5r-070"></a></h2>
 <p><strong>Major changes</strong></p>

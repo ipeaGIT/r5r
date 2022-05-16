@@ -120,7 +120,7 @@
 </h1></div>
 
 <p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
-<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/intro_to_r5r.html" class="external-link">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
+<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/r5r.html" class="external-link">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> migth be expanded to incorporate other functionalities from R<sup>5</sup></p>
 <p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -144,24 +144,61 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>The package has four fundamental functions.</p>
+<p>The package has five fundamental functions.</p>
 <ol style="list-style-type: decimal">
 <li>
-<code>setup_r5</code><ul>
-<li>Downloads and stores locally an R5 Jar file (Jar file is downloaded only once)</li>
-<li>Builds a multimodal transport network given a street network in <code>.pbf</code> format (mandatory) and one or more public transport networks in <code>GTFS.zip</code> format (optional).</li>
+<code><a href="reference/setup_r5.html">setup_r5()</a></code><ul>
+<li>Downloads and stores locally an R5 Jar file (Jar file is downloaded only once per installation)</li>
+<li>Builds a multimodal transport network given (1) a street network in <code>.pbf</code> format (<em>mandatory</em>), (2) one or more public transport networks in <code>GTFS.zip</code> format (optional), and (3) elevation data in <code>raster.tif</code> (optional).</li>
 </ul>
 </li>
 <li>
-<code>detailed_itineraries</code><ul><li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip section</li></ul>
+<code><a href="reference/accessibility.html">accessibility()</a></code><ul><li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed exponential and linear.</li></ul>
 </li>
 <li>
-<code>travel_time_matrix</code><ul><li>Fast function that returns a simple ‘data.frame’ with travel time estimates between one or multiple origin destination pairs.</li></ul>
+<code><a href="reference/travel_time_matrix.html">travel_time_matrix()</a></code><ul><li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs.</li></ul>
 </li>
 <li>
-<code>accessibility</code><ul><li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed Exponential and linear.</li></ul>
+<code><a href="reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code><ul><li>Calculates travel times between origin destination pairs with multiple estimates departing minute-by-minute within a time window. The function returns a <code>data.table</code>.</li></ul>
+</li>
+<li>
+<code><a href="reference/detailed_itineraries.html">detailed_itineraries()</a></code><ul><li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip section</li></ul>
 </li>
 </ol>
+<p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
+<div class="section level3">
+<h3 id="data-requirements">Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
+</h3>
+<p>To use <code>r5r</code>, you will need: - A road network data set from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A public transport feed in <code>GTFS.zip</code> format (optional) - A raster file of Digital Elevation Model data in <code>.tif</code> format (optional)</p>
+<p>Here are a few places from where you can download these data sets:</p>
+<ul>
+<li>OpenStreetMap<ul>
+<li>
+<a href="https://docs.ropensci.org/osmextract/" class="external-link">osmextract</a> R package</li>
+<li>
+<a href="https://download.geofabrik.de/" class="external-link">geofabrik</a> website</li>
+<li>
+<a href="https://export.hotosm.org/" class="external-link">hot export tool</a> website</li>
+<li>
+<a href="https://extract.bbbike.org/" class="external-link">BBBike.org</a> website</li>
+</ul>
+</li>
+<li>GTFS<ul>
+<li>
+<a href="http://tidytransit.r-transit.org/" class="external-link">tidytransit</a> R package</li>
+<li>
+<a href="https://www.transit.land/" class="external-link">transitland</a> website</li>
+</ul>
+</li>
+<li>Elevation<ul>
+<li>
+<a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R package</li>
+<li>
+<a href="https://lpdaac.usgs.gov/products/srtmgl1v003/" class="external-link">Nasa’s SRTMGL1</a> website</li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="section level3">
 <h3 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
 </h3>
@@ -177,7 +214,7 @@
 
 <span class="co"># 2) load origin/destination points and set arguments</span>
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"BUS"</span><span class="op">)</span>
+<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
 <span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
@@ -200,7 +237,8 @@
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                             max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
                             max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span>,
+                            drop_geometry <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># 4) Calculate number of schools accessible within 20 minutes </span>
 <span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
@@ -228,7 +266,7 @@
 <li>
 <a href="https://github.com/ropensci/stplanr" class="external-link">stplanr</a>: sustainable transport planning with R</li>
 </ul>
-<p>The <strong>r5r</strong> package is particularly focused on fast multimodal transport routing. A key advantage of <code>r5r</code> is that is provides a simple and friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing engines availabe.</p>
+<p>The <strong>r5r</strong> package is particularly focused on fast multimodal transport routing and accessibility. A key advantage of <code>r5r</code> is that is provides a simple and friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing engines available.</p>
 <hr>
 </div>
 </div>
