@@ -505,6 +505,10 @@ Sys.setenv(NOT_CRAN = "true")
 r5r_cov2 <- covr::package_coverage(path = ".", type = "tests")
 r5r_cov
 
+as.data.frame(r5r_cov2)[, c(1:3, 5, 11)]
+
+zeroCov <- covr::zero_coverage(r5r_cov2)
+
 
 x <- as.data.frame(r5r_cov)
 covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )

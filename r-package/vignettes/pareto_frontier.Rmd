@@ -132,7 +132,7 @@ In the case of Porto Alegre, the fare rules are as follows:
 We can create `list` object with these fare rules with the support of the `setup_fare_calculator()` function as shown in the code below. A detailed explanation of how to use the fare calculator of `5r5` can be found in [(this other vignette)](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
 
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 # create basic fare calculator
 fare_settings <- setup_fare_calculator(r5r_core, 
                                        base_fare = 4.8,
