@@ -42,14 +42,22 @@ transit_network_to_sf <- function(r5r_core) {
   routes_df[, geometry := sf::st_as_sfc(geometry)]
   routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
 
+
     # suppress warning
     defaultW <- getOption("warn")
     options(warn = -1)
 
     # fix eventual invalid geometries
-    if( any(FALSE, sf::st_is_valid(routes_sf)) ){
-      routes_sf <- sf::st_make_valid(routes_sf)
-    }
+    suppressWarnings({
+      if( any(FALSE, sf::st_is_valid(routes_sf)) ){
+        routes_sf <- sf::st_make_valid(routes_sf)
+        routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
+      }
+    })
+
+    # restore warnings
+    options(warn = defaultW)
+
 
   # Convert stops to SF (point)
   stops_df <- java_to_dt(network$get(1L))
@@ -59,9 +67,6 @@ transit_network_to_sf <- function(r5r_core) {
 
   # gather in a list
   transit_network <- list(stops = stops_sf, routes = routes_sf)
-
-  # restore warnings
-  options(warn = defaultW)
 
   return(transit_network)
 }

@@ -464,8 +464,9 @@ mapview(street_net) + points_sf
 
 
 ##### Coverage ------------------------
+library(covr)
 
- Sys.setenv(NOT_CRAN = "true")
+Sys.setenv(NOT_CRAN = "true")
 
 
 # each function separately
@@ -502,8 +503,8 @@ covr::function_coverage(fun=r5r::set_speed, test_file("tests/testthat/test-utils
 
 # the whole package
 Sys.setenv(NOT_CRAN = "true")
-r5r_cov2 <- covr::package_coverage(path = ".", type = "tests")
-r5r_cov
+r5r_cov3<- covr::package_coverage(path = ".", type = "tests")
+r5r_cov2
 
 as.data.frame(r5r_cov2)[, c(1:3, 5, 11)]
 
@@ -558,16 +559,16 @@ r5r_core <- setup_r5(path)
 library(tictoc)
 
 # LOCAL
-tic()
+tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
-toc()
+tictoc::toc()
 
 # CRAN
-tic()
+tictoc::tic()
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
-toc()
+tictoc::toc()
 
 
 devtools::check_win_release(pkg = ".")
