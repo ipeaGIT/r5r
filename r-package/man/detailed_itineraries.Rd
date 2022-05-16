@@ -23,7 +23,8 @@ detailed_itineraries(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  drop_geometry = FALSE
+  drop_geometry = FALSE,
+  output_dir = NULL
 )
 }
 \arguments{
@@ -117,11 +118,21 @@ active threads.}
 \item{drop_geometry}{A logical. Whether the output should include the
 geometry of each segment or not. The default value of \code{FALSE} keeps the
 geometry column in the result.}
+
+\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
+\code{NULL} (the default), the function will write one \code{.csv} file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents \code{r5r} from storing them in
+memory.}
 }
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
 origins and destinations. When \code{TRUE}, the output is a \code{data.table}. All
-distances are in meters and travel times are in minutes.
+distances are in meters and travel times are in minutes. If \code{output_dir} is
+not \code{NULL}, the function returns the path specified in that parameter, in
+which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of (multiple) detailed itineraries between one or many
@@ -225,18 +236,17 @@ r5r_core <- setup_r5(data_path)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # inputs
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
-)
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
-dit <- detailed_itineraries(r5r_core,
+det <- detailed_itineraries(r5r_core,
                             origins = points[10,],
                             destinations = points[12,],
                             mode = c("WALK", "TRANSIT"),
                             departure_datetime = departure_datetime,
                             max_walk_dist = 1000,
-                            max_trip_duration = 120L)
+                            max_trip_duration = 60)
+head(det)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

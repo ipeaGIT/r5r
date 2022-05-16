@@ -15,6 +15,7 @@ reference:
     - travel_time_matrix
     - pareto_frontier
     - accessibility
+    - expanded_travel_time_matrix
   - title: "Network"
   - contents:
     - street_network_to_sf

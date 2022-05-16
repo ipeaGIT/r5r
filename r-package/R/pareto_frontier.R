@@ -39,7 +39,9 @@
 #' column identifying the travel time percentile is present if more than one
 #' value was passed to `percentiles`. Origin and destination pairs whose trips
 #' couldn't be completed within the maximum travel time using less money than
-#' the specified monetary cutoffs are not returned in the `data.table`.
+#' the specified monetary cutoffs are not returned in the `data.table`. If
+#' `output_dir` is not `NULL`, the function returns the path specified in that
+#' parameter, in which the `.csv` files containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -103,20 +105,16 @@ pareto_frontier <- function(r5r_core,
                             draws_per_minute = 5L,
                             n_threads = Inf,
                             verbose = FALSE,
-                            progress = FALSE) {
+                            progress = FALSE,
+                            output_dir = NULL) {
 
+  old_options <- options(datatable.optimize = Inf)
+  on.exit(options(old_options), add = TRUE)
 
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
   old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+  dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
+  data.table::setDTthreads(dt_threads)
+  on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
 
   # check inputs ------------------------------------------------------------
@@ -164,6 +162,9 @@ pareto_frontier <- function(r5r_core,
   percentiles <- as.integer(percentiles)
 
   # set r5r_core options ----------------------------------------------------
+
+  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
+  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
 
   # time window
   r5r_core$setTimeWindowSize(time_window)
@@ -228,5 +229,7 @@ pareto_frontier <- function(r5r_core,
   }
 
   if (!verbose & progress) { cat(" DONE!\n") }
+
+  if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
 }

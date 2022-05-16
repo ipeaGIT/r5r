@@ -11,18 +11,19 @@ transit_network_to_sf(r5r_core)
 \code{\link[=setup_r5]{setup_r5()}}.}
 }
 \value{
-A list with two components of a transit network in sf format:
-route shapes (LINESTRING) and transit stops (POINT). The same
-\code{route_id}/\code{short_name} might appear with different geometries. This
-occurs when a route has two different shape_ids. Some transit stops
-might be returned with geometry \verb{POINT EMPTY} (i.e. missing \code{NA}
-spatial coordinates). This may occur when a transit stop is not
-snapped to the road network, possibly because the \code{gtfs.zip} input
-data covers an area larger than the \code{osm.pbf} input data.
+A list with two components of a transit network in \code{sf} format:
+route shapes (\code{LINESTRING}) and transit stops (\code{POINT}). The same
+\code{route_id}/\code{short_name} might appear with different geometries. This occurs
+when the same route is associated to more than one \code{shape_id}s in the GTFS
+feed used to create the transit network. Some transit stops might be
+returned with geometry \verb{POINT EMPTY} (i.e. missing spatial coordinates).
+This may occur when a transit stop is not snapped to the road network,
+possibly because the GTFS feed used to create the transit network covers an
+area larger than the \code{.osm.pbf} input data.
 }
 \description{
-Extract transit network in \code{sf} format from a \code{network.dat} file
-built with the \code{\link{setup_r5}} function.
+Extracts the transit network from a \code{network.dat} file (built with
+\code{\link[=setup_r5]{setup_r5()}}) in \code{sf} format.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

@@ -27,7 +27,8 @@ travel_time_matrix(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = FALSE,
+  output_dir = NULL
 )
 }
 \arguments{
@@ -152,12 +153,22 @@ so the progress counter does not interfere with \code{R5}'s output messages.
 Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
 efficiency, because the progress counter must be synchronized among all
 active threads.}
+
+\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
+\code{NULL} (the default), the function will write one \code{.csv} file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents \code{r5r} from storing them in
+memory.}
 }
 \value{
 A \code{data.table} with travel time estimates (in minutes) between
 origin and destination pairs. Pairs whose trips couldn't be completed within
 the maximum travel time and/or whose origin is too far from the street
-network are not returned in the \code{data.table}.
+network are not returned in the \code{data.table}. If \code{output_dir} is not \code{NULL},
+the function returns the path specified in that parameter, in which the
+\code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of travel time estimates between one or multiple origin
@@ -252,12 +263,10 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 
 # load origin/destination points
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
-)
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,
@@ -266,7 +275,8 @@ ttm <- travel_time_matrix(r5r_core,
                           mode = c("WALK", "TRANSIT"),
                           departure_datetime = departure_datetime,
                           max_walk_dist = Inf,
-                          max_trip_duration = 120L)
+                          max_trip_duration = 60)
+head(ttm)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

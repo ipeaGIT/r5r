@@ -25,7 +25,9 @@
 #' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
 #' sf` with detailed information on the itineraries between the specified
 #' origins and destinations. When `TRUE`, the output is a `data.table`. All
-#' distances are in meters and travel times are in minutes.
+#' distances are in meters and travel times are in minutes. If `output_dir` is
+#' not `NULL`, the function returns the path specified in that parameter, in
+#' which the `.csv` files containing the results are saved.
 #'
 #' @family routing
 #'
@@ -40,18 +42,17 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct(
-#'   "13-05-2019 14:00:00",
-#'   format = "%d-%m-%Y %H:%M:%S"
-#' )
+#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+#'                                  format = "%d-%m-%Y %H:%M:%S")
 #'
-#' dit <- detailed_itineraries(r5r_core,
+#' det <- detailed_itineraries(r5r_core,
 #'                             origins = points[10,],
 #'                             destinations = points[12,],
 #'                             mode = c("WALK", "TRANSIT"),
 #'                             departure_datetime = departure_datetime,
 #'                             max_walk_dist = 1000,
-#'                             max_trip_duration = 120L)
+#'                             max_trip_duration = 60)
+#'head(det)
 #'
 #' stop_r5(r5r_core)
 #' @export
@@ -73,20 +74,16 @@ detailed_itineraries <- function(r5r_core,
                                  n_threads = Inf,
                                  verbose = FALSE,
                                  progress = FALSE,
-                                 drop_geometry = FALSE) {
+                                 drop_geometry = FALSE,
+                                 output_dir = NULL) {
 
+  old_options <- options(datatable.optimize = Inf)
+  on.exit(options(old_options), add = TRUE)
 
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
   old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+  dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
+  data.table::setDTthreads(dt_threads)
+  on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
 
   # check inputs ------------------------------------------------------------
@@ -162,6 +159,9 @@ detailed_itineraries <- function(r5r_core,
 
 
   # set r5r_core options ----------------------------------------------------
+
+  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
+  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
@@ -281,6 +281,7 @@ detailed_itineraries <- function(r5r_core,
 
   }
 
+  if (!is.null(output_dir)) return(output_dir)
   return(path_options)
 
 }

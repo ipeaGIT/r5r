@@ -55,3 +55,10 @@
 #' Setting `progress` to `TRUE` may impose a small penalty for computation
 #' efficiency, because the progress counter must be synchronized among all
 #' active threads.
+#' @param output_dir Either `NULL` or a path to an existing directory. When not
+#' `NULL` (the default), the function will write one `.csv` file with the
+#' results for each origin in the specified directory. In such case, the
+#' function returns the path specified in this parameter. This parameter is
+#' particularly useful when running estimates on memory-constrained settings,
+#' because writing the results to disk prevents `r5r` from storing them in
+#' memory.
