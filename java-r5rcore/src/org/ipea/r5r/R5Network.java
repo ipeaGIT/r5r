@@ -3,6 +3,7 @@ package org.ipea.r5r;
 import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
+import com.conveyal.r5.analyst.scenario.RasterCost;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.esotericsoftware.kryo.Kryo;
@@ -68,6 +69,21 @@ public class R5Network {
         if (mapdbFiles != null) { for (File file:mapdbFiles) file.delete(); }
 
         TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
+
+        // apply elevation costs if tif files are available
+        File[] tiffFiles = dir.listFiles((d, name) -> name.contains(".tif") | name.contains(".tiff"));
+        if (tiffFiles != null) {
+            if (tiffFiles.length > 0) {
+                RasterCost elevationRaster = new RasterCost();
+                elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
+                elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
+
+                elevationRaster.resolve(tn);
+                elevationRaster.apply(tn);
+            }
+        }
+
+
         try {
             KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
         } catch (IOException e) {

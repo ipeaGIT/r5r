@@ -12,7 +12,7 @@ public class R5RFileStorage implements FileStorage {
     private final String urlPrefix;
 
     public R5RFileStorage (LocalFileStorage.Config config) {
-        this.urlPrefix = String.format("http://localhost:%s/files", config.serverPort());
+        this.urlPrefix = "http://localhost:%s/files";
     }
 
     @Override

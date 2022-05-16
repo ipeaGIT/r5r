@@ -215,7 +215,6 @@ public class TravelTimeMatrixComputer extends R5Process {
 
                     travelTimesTable.set("departure_time", path.departureTime);
                     travelTimesTable.set("routes", path.routes);
-                    travelTimesTable.set("n_rides", path.nRides);
                     travelTimesTable.set("total_time", path.getCombinedTravelTime() > 0 ? path.getCombinedTravelTime() : path.getTotalTime());
 
                     if (routingProperties.travelTimesBreakdown) {
@@ -224,6 +223,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                         travelTimesTable.set("ride_time", path.getRideTime());
                         travelTimesTable.set("transfer_time", path.getTransferTime());
                         travelTimesTable.set("egress_time", path.getEgressTime());
+                        travelTimesTable.set("n_rides", path.nRides);
                     }
                 }
             }
@@ -257,7 +257,10 @@ public class TravelTimeMatrixComputer extends R5Process {
             }
 
             travelTimesTable.addStringColumn("routes", "");
-            travelTimesTable.addIntegerColumn("n_rides", 0);
+
+            if (this.routingProperties.travelTimesBreakdown) {
+                travelTimesTable.addIntegerColumn("n_rides", 0);
+            }
 
             travelTimesTable.addDoubleColumn("total_time", 0.0);
         }
