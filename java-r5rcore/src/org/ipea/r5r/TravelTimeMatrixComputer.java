@@ -4,6 +4,7 @@ import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
+import com.conveyal.r5.analyst.cluster.TravelTimeResult;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.path.RouteSequence;
 import com.google.common.collect.Multimap;
@@ -121,7 +122,7 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     private void populateExpandedResults(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
         // extract travel paths, if required
-        List<PathBreakdown>[] pathBreakdown = extractPathResults(travelTimeResults.paths);
+        List<PathBreakdown>[] pathBreakdown = extractPathResults(travelTimeResults.paths, travelTimeResults.travelTimes);
 
         for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
             // fill travel details for destination
@@ -129,14 +130,12 @@ public class TravelTimeMatrixComputer extends R5Process {
         }
     }
 
-    private List<PathBreakdown>[] extractPathResults(PathResult paths) {
-        // Create Field object
-        Field privateField = null;
+    private List<PathBreakdown>[] extractPathResults(PathResult paths, TravelTimeResult travelTimes) {
         try {
-            privateField = PathResult.class.getDeclaredField("iterationsForPathTemplates");
+            // Create Field object
+            Field privateField = PathResult.class.getDeclaredField("iterationsForPathTemplates");
             // Set the accessibility as true
             privateField.setAccessible(true);
-
             // Store the value of private field in variable
             Multimap<RouteSequence, PathResult.Iteration>[] iterationMaps = (Multimap<RouteSequence, PathResult.Iteration>[])privateField.get(paths);
 
@@ -149,22 +148,14 @@ public class TravelTimeMatrixComputer extends R5Process {
                 if (iterationMap != null) {
 
                     for (RouteSequence routeSequence : iterationMap.keySet()) {
-                        boolean directRouteProcessed = false;
-
                         Collection<PathResult.Iteration> iterations = iterationMap.get(routeSequence);
                         int nIterations = iterations.size();
                         checkState(nIterations > 0, "A path was stored without any iterations");
-//                        String waits = null, transfer = null, totalTime = null;
+
+                        // extract the route id's
                         String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer);
 
                         for (PathResult.Iteration iteration : iterations) {
-
-//                            if (routeSequence.stopSequence == null) System.out.println("stop sequence is null");
-//                            if (routeSequence.stopSequence.access == null) System.out.println("stop sequence access is null");
-//                            if (routeSequence.stopSequence.egress == null) System.out.println("stop sequence egress is null");
-//                            if (iteration.waitTimes == null) System.out.println("wait times is null");
-//                            if (routeSequence.stopSequence.rideTimesSeconds == null) System.out.println("ride time is null");
-
                             PathBreakdown breakdown = new PathBreakdown();
                             breakdown.departureTime = Utils.getTimeFromSeconds(iteration.departureTime);
                             breakdown.accessTime = routeSequence.stopSequence.access == null ? 0 : routeSequence.stopSequence.access.time / 60.0f;
@@ -178,19 +169,23 @@ public class TravelTimeMatrixComputer extends R5Process {
                             breakdown.nRides = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.size();
 
                             if (iteration.departureTime == 0) {
-                                if (!directRouteProcessed) {
-                                    breakdown.departureTime = "";
-                                    breakdown.routes = this.directModes.toString();
-                                    pathResults[d].add(breakdown);
-                                    directRouteProcessed = true;
-                                }
-                            } else {
-                                pathResults[d].add(breakdown);
+                                breakdown.departureTime = "";
+                                breakdown.routes = this.directModes.toString();
                             }
+
+                            pathResults[d].add(breakdown);
                         }
                     }
+                } else {
+                    // if iteration map for this destination is null, add possible direct route if shorter than max trip duration
+                    if (travelTimes.getValues()[0][d] <= this.maxTripDuration) {
+                        PathBreakdown breakdown = new PathBreakdown();
+                        breakdown.departureTime = "";
+                        breakdown.routes = this.directModes.toString();
+                        breakdown.totalTime = travelTimes.getValues()[0][d];
+                        pathResults[d].add(breakdown);
+                    }
                 }
-
             }
 
             return pathResults;
@@ -210,7 +205,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                     // set destination id
                     travelTimesTable.set("to_id", toIds[destination]);
 
-                    // get only first recorded path
+                    // get recorded path
                     PathBreakdown path = pathBreakdown[destination].get(i);
 
                     travelTimesTable.set("departure_time", path.departureTime);

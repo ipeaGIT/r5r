@@ -17,20 +17,19 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M
 
 # poi <- read.csv(file.path(data_path, "spo_hexgrid.csv"))
 # poi <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 # dest <- points
 
-dir.create(here::here("csv"))
+# dir.create(here::here("csv"))
 
-r5r_core$setCsvOutput(here::here("csv"))
+# r5r_core$setCsvOutput(here::here("csv"))
 system.time(
-  normal_ttm <- travel_time_matrix(r5r_core, origins = poi,
-                            destinations = poi,
-                            mode = c("WALK", "TRANSIT"),
-                            breakdown = FALSE,
+  normal_ttm <- travel_time_matrix(r5r_core, origins = points, #[id == "89a9012a3cfffff",],
+                                   destinations = points, #[id == "89a901284a3ffff",],
+                            mode = c("WALK"),
                             departure_datetime = departure_datetime,
                             max_trip_duration = 60,
-                            max_walk_dist = 800,
+                            max_walk_dist = Inf,
                             time_window = 30,
                             percentiles = c(1, 25, 50, 75, 99),
                             verbose = FALSE,
@@ -43,21 +42,32 @@ normal_ttm %>%
   nrow()
 
 system.time(
-  expanded_ttm <- expanded_travel_time_matrix(r5r_core, origins = points,
-                                   destinations = points,
-                                   mode = c("WALK", "TRANSIT"),
+  expanded_ttm <- expanded_travel_time_matrix(r5r_core,
+                                              origins = points[id == "89a9012a3cfffff",],
+                                   destinations = points[id == "89a901284a3ffff",],
+                                   mode = c("WALK"),
                                    breakdown = F,
                                    departure_datetime = departure_datetime,
                                    max_trip_duration = 60,
-                                   max_walk_dist = 800,
+                                   max_walk_dist = Inf,
                                    time_window = 30,
                                    verbose = FALSE,
                                    progress = TRUE)
 )
 
 expanded_ttm %>%
-  # filter(from_id == "89a8100c2b3ffff", to_id == "89a8100c38fffff") %>% # poa
+  filter(from_id == "89a9012a3cfffff", to_id == "89a901284a3ffff") %>% # poa
   # filter(from_id == "89a8100c2b3ffff", to_id == "89a8100c38fffff") %>% # spo
   View()
+
+
+
+
+
+
+
+
+
+
 
 
