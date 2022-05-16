@@ -44,7 +44,8 @@ transit_network_to_sf <- function(r5r_core) {
 
 
     # suppress warning
-    defaultW <- getOption("warn")
+    old_options <- options()
+    on.exit(options(old_options), add = TRUE)
     options(warn = -1)
 
     # fix eventual invalid geometries
@@ -54,9 +55,6 @@ transit_network_to_sf <- function(r5r_core) {
         routes_sf <- sf::st_sf(routes_df, crs = 4326) # WGS 84
       }
     })
-
-    # restore warnings
-    options(warn = defaultW)
 
 
   # Convert stops to SF (point)

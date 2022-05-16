@@ -159,8 +159,11 @@ a future application.
 
 
 ```{r}
-# save fare rules
-r5r::write_fare_calculator(fare_settings, file_path = "fares_poa.zip")
+
+
+# save fare rules to temp file
+temp_fares <- tempfile(pattern = 'fares_poaa.zip')
+r5r::write_fare_calculator(fare_settings, file_path = temp_fares)
 
 
 fare_settings <- r5r::read_fare_calculator(file.path(data_path, "fares/fares_poa.zip"))
