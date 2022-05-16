@@ -43,6 +43,8 @@ transit_network_to_sf <- function(r5r_core) {
     routes_sf <- sf::st_make_valid(routes_sf)
   }
 
+  routes_sf <- routes_sf[!sf::st_is_empty(routes_sf), ] # removing empty geometries
+
   # Convert stops to SF (point)
   stops_df <- java_to_dt(network$get(1L))
   stops_df[
