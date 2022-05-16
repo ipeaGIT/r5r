@@ -1,4 +1,4 @@
-context("Expanded travel time matrix function")
+context("Pareto frontier function")
 
 # skips tests on CRAN since they require a specific version of java
 testthat::skip_on_cran()
@@ -12,7 +12,9 @@ default_tester <- function(r5r_core,
                            departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            time_window = 1L,
-                           breakdown = FALSE,
+                           percentiles = 50,
+                           fare_calculator = NULL,
+                           monetary_cost_cutoffs = -1L,
                            max_walk_dist = Inf,
                            max_bike_dist = Inf,
                            max_trip_duration = 120L,
@@ -23,14 +25,16 @@ default_tester <- function(r5r_core,
                            verbose = FALSE,
                            progress=TRUE) {
 
-  results <- expanded_travel_time_matrix(
+  results <- pareto_frontier(
     r5r_core,
     origins = origins,
     destinations = destinations,
     mode = mode,
     departure_datetime = departure_datetime,
     time_window = time_window,
-    breakdown = breakdown,
+    percentiles = percentiles,
+    fare_calculator = fare_calculator,
+    monetary_cost_cutoffs = monetary_cost_cutoffs,
     max_walk_dist = max_walk_dist,
     max_bike_dist = max_bike_dist,
     max_trip_duration = max_trip_duration,
@@ -45,6 +49,10 @@ default_tester <- function(r5r_core,
 
 }
 
+# load fare calculator object
+fare_calculator_path <- system.file("extdata/poa/fares/fares_poa.zip",
+                                    package = "r5r")
+fare_calculator <- r5r::read_fare_calculator(fare_calculator_path)
 
 # errors and warnings -----------------------------------------------------
 
@@ -88,9 +96,6 @@ test_that("adequately raises errors", {
 
   expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
-
-  # error with breakdown
-  expect_error(default_tester(r5r_core, breakdown ='test'))
 
   # errors related to max_walk_dist
   expect_error(default_tester(r5r_core, max_walk_dist = "1000"))
@@ -164,7 +169,7 @@ test_that("output is correct", {
 
   expect_true(typeof(result_df_input$from_id) == "character")
   expect_true(typeof(result_df_input$to_id) == "character")
-  expect_true(typeof(result_df_input$total_time) == "double")
+  expect_true(typeof(result_df_input$travel_time ) == "integer")
 
 
   #  * r5r options ----------------------------------------------------------
@@ -181,7 +186,7 @@ test_that("output is correct", {
   max_trip_duration <- 60L
 
   df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
-  max_duration <- data.table::setDT(df)[, max(total_time)]
+  max_duration <- data.table::setDT(df)[, max(travel_time)]
 
   expect_true(max_duration <= max_trip_duration)
 
@@ -193,30 +198,5 @@ test_that("output is correct", {
   n_rows <- nrow(df)
 
   expect_true(n_rows <= nrow(origins) * nrow(destinations))
-
-  # expect number of columns to be larger when breakdown = TRUE
-  df2 <- default_tester(r5r_core, breakdown =TRUE)
-  df3 <- default_tester(r5r_core, breakdown =FALSE)
-  expect_true(ncol(df2) > ncol(df3))
-
-  expect_true(typeof(df2$routes) == "character")
-  expect_true(typeof(df2$access_time ) == "double")
-
-  # expect Empty data.table for trips walking and cycling and by car
-
-  origins <- destinations <- points[1:15,]
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "WALK")
-  expect_true(nrow(df) == 0)
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "BICYCLE")
-  expect_true(nrow(df) == 0)
-
-  df <- default_tester(r5r_core, origins = origins, destinations = destinations,
-                       mode = "CAR")
-  expect_true(nrow(df) == 0)
-
 
 })
