@@ -158,7 +158,7 @@ For convenience, we can save these fare rules as a `zip` file and load again for
 a future application.
 
 
-```{r, eval=FALSE}
+```{r}
 # save fare rules
 r5r::write_fare_calculator(fare_settings, file_path = "fares_poa.zip")
 
