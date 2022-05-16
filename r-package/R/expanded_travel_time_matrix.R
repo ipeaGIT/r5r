@@ -11,20 +11,18 @@
 #' @template time_window_related_args
 #' @template verbose
 #' @param breakdown A logical. If `FALSE` (the default), the function returns a
-#' simple output with columns listing the origin, destination and travel time
-#' percentiles. If `TRUE`, the output breaks down the trip information and
-#' returns more columns listing the routes used to complete the trip and the total
-#' access, waiting, in-vehicle and transfer time.
-#' such as the with estimates of `access_time`, `waiting_time`,
-#' `ride_time`, `transfer_time`, `total_time`, `n_rides` and `route`.
-#' Please note that setting this parameter to `TRUE` makes the function significantly slower.
+#' simple output that lists the total time between each pair in each minute of
+#' the specified time window. If `TRUE`, the output breaks down the trip
+#' information, showing the routes used to complete each trip and their total
+#' access, waiting, in-vehicle and transfer time. Please note that setting this
+#' parameter to `TRUE` makes the function significantly slower.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
-#' origin and destination pairs. Pairs whose trips couldn't be completed within
-#' the maximum travel time and/or whose origin is too far from the street
-#' network are not returned in the `data.table`. If `output_dir` is not `NULL`,
-#' the function returns the path specified in that parameter, in which the
-#' `.csv` files containing the results are saved.
+#' origin and destination pairs for each minute of the specified time window. A
+#' pair is absent from the final output if no trips could be completed in any
+#' of the minutes of the time window. If `output_dir` is not `NULL`, the
+#' function returns the path specified in that parameter, in which the `.csv`
+#' files containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -48,38 +46,52 @@
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
-#' # estimate expanded travel time matrix
-#' ettm <- expanded_travel_time_matrix(r5r_core,
-#'                                     origins = points,
-#'                                     destinations = points,
-#'                                     mode = c("WALK", "TRANSIT"),
-#'                                     time_window = 20,
-#'                                     departure_datetime = departure_datetime,
-#'                                     max_walk_dist = Inf,
-#'                                     max_trip_duration = 120L)
+#' # by default only returns the total time between each pair in each minute of
+#' # the specified time window
+#' ettm <- expanded_travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   time_window = 20,
+#'   departure_datetime = departure_datetime
+#' )
+#' ettm
+#'
+#' # when breakdown = TRUE the output contains much more information
+#' ettm <- expanded_travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   time_window = 20,
+#'   departure_datetime = departure_datetime,
+#'   breakdown = TRUE
+#' )
+#' ettm
 #'
 #' stop_r5(r5r_core)
 #' @export
 expanded_travel_time_matrix <- function(r5r_core,
-                               origins,
-                               destinations,
-                               mode = "WALK",
-                               mode_egress = "WALK",
-                               departure_datetime = Sys.time(),
-                               time_window = 1L,
-                               breakdown = FALSE,
-                               max_walk_dist = Inf,
-                               max_bike_dist = Inf,
-                               max_trip_duration = 120L,
-                               walk_speed = 3.6,
-                               bike_speed = 12,
-                               max_rides = 3,
-                               max_lts = 2,
-                               draws_per_minute = 5L,
-                               n_threads = Inf,
-                               verbose = FALSE,
-                               progress = FALSE,
-                               output_dir = NULL) {
+                                        origins,
+                                        destinations,
+                                        mode = "WALK",
+                                        mode_egress = "WALK",
+                                        departure_datetime = Sys.time(),
+                                        time_window = 1L,
+                                        breakdown = FALSE,
+                                        max_walk_dist = Inf,
+                                        max_bike_dist = Inf,
+                                        max_trip_duration = 120L,
+                                        walk_speed = 3.6,
+                                        bike_speed = 12,
+                                        max_rides = 3,
+                                        max_lts = 2,
+                                        draws_per_minute = 5L,
+                                        n_threads = Inf,
+                                        verbose = FALSE,
+                                        progress = FALSE,
+                                        output_dir = NULL) {
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
