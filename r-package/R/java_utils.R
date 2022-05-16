@@ -10,6 +10,10 @@
 #' @keywords internal
 java_to_dt <- function(obj) {
 
+  # check input
+  if(class(obj)[1] != "jobjRef"){
+    stop("Input must be an object of class 'jobjRef'")}
+
   # get column names from Java table
   columns <- obj$getColumnNames()
 
