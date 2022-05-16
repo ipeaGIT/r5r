@@ -2,26 +2,29 @@
 #'
 #' Detailed computation of travel time estimates between one or multiple origin
 #' destination pairs. Results show the travel time of the fastest route
-#' alternative departing each minute within a specified time window. Please note
-#' this function can be very memory intensive for large data sets and time
+#' alternative departing each minute within a specified time window. Please
+#' note this function can be very memory intensive for large data sets and time
 #' windows.
 #'
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template verbose
-#' @param breakdown logic. If `FALSE` (default), the function returns a simple
-#'                  output with columns origin, destination and travel time
-#'                  percentiles. If `TRUE`, r5r breaks down the trip information
-#'                  and returns more columns with estimates of `access_time`,
-#'                  `waiting_time`, `ride_time`, `transfer_time`, `total_time` , `n_rides`
-#'                  and `route`. Warning: Setting `TRUE` makes the function
-#'                  significantly slower.
+#' @param breakdown A logical. If `FALSE` (the default), the function returns a
+#' simple output with columns listing the origin, destination and travel time
+#' percentiles. If `TRUE`, the output breaks down the trip information and
+#' returns more columns listing the routes used to complete the trip and the total
+#' access, waiting, in-vehicle and transfer time.
+#' such as the with estimates of `access_time`, `waiting_time`,
+#' `ride_time`, `transfer_time`, `total_time`, `n_rides` and `route`.
+#' Please note that setting this parameter to `TRUE` makes the function significantly slower.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
 #' origin and destination pairs. Pairs whose trips couldn't be completed within
-#' the maximum travel time and/or whose origin is too far from the street network
-#' are not returned in the `data.table`.
+#' the maximum travel time and/or whose origin is too far from the street
+#' network are not returned in the `data.table`. If `output_dir` is not `NULL`,
+#' the function returns the path specified in that parameter, in which the
+#' `.csv` files containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -38,7 +41,7 @@
 #' r5r_core <- setup_r5(data_path)
 #'
 #' # load origin/destination points
-#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
+#' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 #'
 #' departure_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
@@ -75,20 +78,16 @@ expanded_travel_time_matrix <- function(r5r_core,
                                draws_per_minute = 5L,
                                n_threads = Inf,
                                verbose = FALSE,
-                               progress = FALSE) {
+                               progress = FALSE,
+                               output_dir = NULL) {
 
+  old_options <- options(datatable.optimize = Inf)
+  on.exit(options(old_options), add = TRUE)
 
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
   old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+  dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
+  data.table::setDTthreads(dt_threads)
+  on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
 
   # check inputs ------------------------------------------------------------
@@ -133,6 +132,9 @@ expanded_travel_time_matrix <- function(r5r_core,
   checkmate::assert_logical(breakdown)
 
   # set r5r_core options ----------------------------------------------------
+
+  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
+  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
 
   # time window
   r5r_core$setTimeWindowSize(time_window)
@@ -205,5 +207,7 @@ expanded_travel_time_matrix <- function(r5r_core,
   # }
 
   if (!verbose & progress) { cat(" DONE!\n") }
+
+  if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
 }

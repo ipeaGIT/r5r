@@ -23,7 +23,8 @@ detailed_itineraries(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  drop_geometry = FALSE
+  drop_geometry = FALSE,
+  output_dir = NULL
 )
 }
 \arguments{
@@ -117,11 +118,21 @@ active threads.}
 \item{drop_geometry}{A logical. Whether the output should include the
 geometry of each segment or not. The default value of \code{FALSE} keeps the
 geometry column in the result.}
+
+\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
+\code{NULL} (the default), the function will write one \code{.csv} file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents \code{R5} from storing them in
+memory.}
 }
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
 origins and destinations. When \code{TRUE}, the output is a \code{data.table}. All
-distances are in meters and travel times are in minutes.
+distances are in meters and travel times are in minutes. If \code{output_dir} is
+not \code{NULL}, the function returns the path specified in that parameter, in
+which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of (multiple) detailed itineraries between one or many

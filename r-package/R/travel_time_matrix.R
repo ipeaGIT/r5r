@@ -37,7 +37,9 @@
 #' @return A `data.table` with travel time estimates (in minutes) between
 #' origin and destination pairs. Pairs whose trips couldn't be completed within
 #' the maximum travel time and/or whose origin is too far from the street
-#' network are not returned in the `data.table`.
+#' network are not returned in the `data.table`. If `output_dir` is not `NULL`,
+#' the function returns the path specified in that parameter, in which the
+#' `.csv` files containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -94,20 +96,16 @@ travel_time_matrix <- function(r5r_core,
                                draws_per_minute = 5L,
                                n_threads = Inf,
                                verbose = FALSE,
-                               progress = FALSE) {
+                               progress = FALSE,
+                               output_dir = NULL) {
 
+  old_options <- options(datatable.optimize = Inf)
+  on.exit(options(old_options), add = TRUE)
 
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
   old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+  dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
+  data.table::setDTthreads(dt_threads)
+  on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
 
   # check inputs ------------------------------------------------------------
@@ -160,6 +158,9 @@ travel_time_matrix <- function(r5r_core,
 
 
   # set r5r_core options ----------------------------------------------------
+
+  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
+  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
 
   # time window
   r5r_core$setTimeWindowSize(time_window)
@@ -240,5 +241,7 @@ travel_time_matrix <- function(r5r_core,
   }
 
   if (!verbose & progress) { cat(" DONE!\n") }
+
+  if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
 }

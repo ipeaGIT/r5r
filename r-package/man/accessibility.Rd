@@ -29,7 +29,8 @@ accessibility(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = FALSE,
+  output_dir = NULL
 )
 }
 \arguments{
@@ -166,6 +167,14 @@ so the progress counter does not interfere with \code{R5}'s output messages.
 Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
 efficiency, because the progress counter must be synchronized among all
 active threads.}
+
+\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
+\code{NULL} (the default), the function will write one \code{.csv} file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents \code{R5} from storing them in
+memory.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.
@@ -173,7 +182,9 @@ This \code{data.table} contain columns listing the origin id, the type of
 opportunities to which accessibility was calculated, the travel time
 percentile considered in the accessibility estimate and the specified cutoff
 values (except in when \code{decay_function} is \code{fixed_exponential}, in which
-case the \code{cutoff} parameter is not used).
+case the \code{cutoff} parameter is not used). If \code{output_dir} is not \code{NULL},
+the function returns the path specified in that parameter, in which the
+\code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.

@@ -25,7 +25,8 @@ pareto_frontier(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = FALSE,
+  output_dir = NULL
 )
 }
 \arguments{
@@ -148,6 +149,14 @@ so the progress counter does not interfere with \code{R5}'s output messages.
 Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
 efficiency, because the progress counter must be synchronized among all
 active threads.}
+
+\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
+\code{NULL} (the default), the function will write one \code{.csv} file with the
+results for each origin in the specified directory. In such case, the
+function returns the path specified in this parameter. This parameter is
+particularly useful when running estimates on memory-constrained settings,
+because writing the results to disk prevents \code{R5} from storing them in
+memory.}
 }
 \value{
 A \code{data.table} with the travel time and monetary cost Pareto
@@ -155,7 +164,9 @@ frontier between the specified origins and destinations. An additional
 column identifying the travel time percentile is present if more than one
 value was passed to \code{percentiles}. Origin and destination pairs whose trips
 couldn't be completed within the maximum travel time using less money than
-the specified monetary cutoffs are not returned in the \code{data.table}.
+the specified monetary cutoffs are not returned in the \code{data.table}. If
+\code{output_dir} is not \code{NULL}, the function returns the path specified in that
+parameter, in which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of travel time and monetary cost Pareto frontier between

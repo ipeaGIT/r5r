@@ -48,7 +48,9 @@
 #' opportunities to which accessibility was calculated, the travel time
 #' percentile considered in the accessibility estimate and the specified cutoff
 #' values (except in when `decay_function` is `fixed_exponential`, in which
-#' case the `cutoff` parameter is not used).
+#' case the `cutoff` parameter is not used). If `output_dir` is not `NULL`,
+#' the function returns the path specified in that parameter, in which the
+#' `.csv` files containing the results are saved.
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section
@@ -152,20 +154,16 @@ accessibility <- function(r5r_core,
                           draws_per_minute = 5L,
                           n_threads = Inf,
                           verbose = FALSE,
-                          progress = FALSE) {
+                          progress = FALSE,
+                          output_dir = NULL) {
 
+  old_options <- options(datatable.optimize = Inf)
+  on.exit(options(old_options), add = TRUE)
 
-  # set data.table options --------------------------------------------------
-
-  old_options <- options()
   old_dt_threads <- data.table::getDTthreads()
-
-  on.exit({
-    options(old_options)
-    data.table::setDTthreads(old_dt_threads)
-  })
-
-  options(datatable.optimize = Inf)
+  dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
+  data.table::setDTthreads(dt_threads)
+  on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
 
   # check inputs ------------------------------------------------------------
@@ -234,6 +232,9 @@ accessibility <- function(r5r_core,
   decay_list <- assert_decay_function(decay_function, decay_value)
 
   # set r5r_core options ----------------------------------------------------
+
+  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
+  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
 
   # time window
   r5r_core$setTimeWindowSize(time_window)
@@ -318,5 +319,6 @@ accessibility <- function(r5r_core,
   accessibility <- java_to_dt(accessibility)
   if (!verbose & progress) { cat(" DONE!\n") }
 
+  if (!is.null(output_dir)) return(output_dir)
   return(accessibility)
 }
