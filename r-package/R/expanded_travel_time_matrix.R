@@ -203,16 +203,14 @@ expanded_travel_time_matrix <- function(r5r_core,
   travel_times <- java_to_dt(travel_times)
 
   # only perform following operations when result is not empty
-  # if (nrow(travel_times) > 0) {
+  if (nrow(travel_times) > 0) {
     # replace travel-times of nonviable trips with NAs
     #   the first column with travel time information is column 3, because
     #     columns 1 and 2 contain the id's of OD point (hence from = 3)
     #   the percentiles parameter indicates how many travel times columns we'll,
     #     have, with a minimum of 1 (in which case, to = 3).
-  #   for(j in seq(from = 3, to = (length(percentiles) + 2))){
-  #     data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
-  #   }
-  # }
+    travel_times[total_time > max_trip_duration, `:=`(routes = NA_character_, total_time = NA_integer_)]
+  }
 
   if (!verbose & progress) { cat(" DONE!\n") }
 
