@@ -265,10 +265,8 @@ r5r_core <- setup_r5(data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
-)
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,
@@ -278,6 +276,7 @@ ttm <- travel_time_matrix(r5r_core,
                           departure_datetime = departure_datetime,
                           max_walk_dist = Inf,
                           max_trip_duration = 60)
+head(ttm)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

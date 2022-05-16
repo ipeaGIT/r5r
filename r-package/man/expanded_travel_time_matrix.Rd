@@ -237,10 +237,8 @@ r5r_core <- setup_r5(data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
-)
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
 # by default only returns the total time between each pair in each minute of
 # the specified time window

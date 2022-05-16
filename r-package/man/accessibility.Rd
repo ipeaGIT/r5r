@@ -331,65 +331,55 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
-)
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
 
-access <- accessibility(
-  r5r_core,
-  origins = points,
-  destinations = points,
-  opportunities_colnames = "schools",
-  mode = "WALK",
-  departure_datetime = departure_datetime,
-  decay_function = "step",
-  cutoffs = 30,
-  max_trip_duration = 30
-)
+access <- accessibility(r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = "schools",
+                        mode = "WALK",
+                        departure_datetime = departure_datetime,
+                        decay_function = "step",
+                        cutoffs = 30,
+                        max_trip_duration = 30)
 head(access)
 
 # using a different decay function
-access <- accessibility(
-  r5r_core,
-  origins = points,
-  destinations = points,
-  opportunities_colnames = "schools",
-  mode = "WALK",
-  departure_datetime = departure_datetime,
-  decay_function = "logistic",
-  cutoffs = 30,
-  decay_value = 1,
-  max_trip_duration = 30
-)
+access <- accessibility(r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = "schools",
+                        mode = "WALK",
+                        departure_datetime = departure_datetime,
+                        decay_function = "logistic",
+                        cutoffs = 30,
+                        decay_value = 1,
+                        max_trip_duration = 30)
 head(access)
 
 # using several cutoff values
-access <- accessibility(
-  r5r_core,
-  origins = points,
-  destinations = points,
-  opportunities_colnames = "schools",
-  mode = "WALK",
-  departure_datetime = departure_datetime,
-  decay_function = "step",
-  cutoffs = c(25, 30),
-  max_trip_duration = 30
-)
+access <- accessibility(r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = "schools",
+                        mode = "WALK",
+                        departure_datetime = departure_datetime,
+                        decay_function = "step",
+                        cutoffs = c(25, 30),
+                        max_trip_duration = 30)
 head(access)
 
 # calculating access to different types of opportunities
-access <- accessibility(
-  r5r_core,
-  origins = points,
-  destinations = points,
-  opportunities_colnames = c("schools", "healthcare"),
-  mode = "WALK",
-  departure_datetime = departure_datetime,
-  decay_function = "step",
-  cutoffs = 30,
-  max_trip_duration = 30
-)
+access <- accessibility(r5r_core,
+                        origins = points,
+                        destinations = points,
+                        opportunities_colnames = c("schools", "healthcare"),
+                        mode = "WALK",
+                        departure_datetime = departure_datetime,
+                        decay_function = "step",
+                        cutoffs = 30,
+                        max_trip_duration = 30)
 head(access)
 
 stop_r5(r5r_core)
