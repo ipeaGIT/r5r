@@ -60,5 +60,5 @@
 #' results for each origin in the specified directory. In such case, the
 #' function returns the path specified in this parameter. This parameter is
 #' particularly useful when running estimates on memory-constrained settings,
-#' because writing the results to disk prevents `R5` from storing them in
+#' because writing the results to disk prevents `r5r` from storing them in
 #' memory.
