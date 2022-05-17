@@ -40,9 +40,6 @@
     <loc>/reference/accessibility.html</loc>
   </url>
   <url>
-    <loc>/reference/apply_elevation.html</loc>
-  </url>
-  <url>
     <loc>/reference/assert_breakdown_stat.html</loc>
   </url>
   <url>
@@ -131,9 +128,6 @@
   </url>
   <url>
     <loc>/reference/street_network_to_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tobler_hiking.html</loc>
   </url>
   <url>
     <loc>/reference/transit_network_to_sf.html</loc>
