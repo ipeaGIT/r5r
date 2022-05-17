@@ -1,7 +1,6 @@
 #' Calculate access to opportunities
 #'
 #' Fast computation of access to opportunities given a selected decay function.
-#' See `details` for the available decay functions.
 #'
 #' @template r5r_core
 #' @template common_arguments
@@ -10,47 +9,47 @@
 #' @template max_fare
 #' @template verbose
 #' @param opportunities_colnames A character vector. The names of the columns
-#' in the `destinations` input that tells the number of opportunities in each
-#' location. Several different column names can be passed, in which case the
-#' accessibility to each kind of opportunity will be calculated.
+#'   in the `destinations` input that tells the number of opportunities in each
+#'   location. Several different column names can be passed, in which case the
+#'   accessibility to each kind of opportunity will be calculated.
 #' @param percentiles An integer vector with length smaller than or equal to 5.
-#' Specifies the percentile to use when returning accessibility estimates
-#' within the given time window. Please note that this parameter is applied to
-#' the travel time estimates that generate the accessibility results, and not
-#' to the accessibility distribution itself (i.e. if the 25th percentile is
-#' specified, the accessibility is calculated from the 25th percentile travel
-#' time, which may or may not be equal to the 25th percentile of the
-#' accessibility distribution itself). Defaults to 50, returning the
-#' accessibility calculated from the median travel time. If a vector with
-#' length bigger than 1 is passed, the output contains an additional column
-#' that specifies the percentile of each accessibility estimate. Due to
-#' upstream restrictions, only 5 percentiles can be specified at a time. For
-#' more details, please see `R5` documentation at
-#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#'   Specifies the percentile to use when returning accessibility estimates
+#'   within the given time window. Please note that this parameter is applied
+#'   to the travel time estimates that generate the accessibility results, and
+#'   not to the accessibility distribution itself (i.e. if the 25th percentile
+#'   is specified, the accessibility is calculated from the 25th percentile
+#'   travel time, which may or may not be equal to the 25th percentile of the
+#'   accessibility distribution itself). Defaults to 50, returning the
+#'   accessibility calculated from the median travel time. If a vector with
+#'   length bigger than 1 is passed, the output contains an additional column
+#'   that specifies the percentile of each accessibility estimate. Due to
+#'   upstream restrictions, only 5 percentiles can be specified at a time. For
+#'   more details, please see `R5` documentation at
+#'   'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param decay_function A string. Which decay function to use when calculating
-#' accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
-#' or `logistic`. Defaults to `step`, which is equivalent to a cumulative
-#' opportunities measure. Please see the details to understand how each
-#' alternative works and how they relate to the `cutoffs` and `decay_value`
-#' parameters.
+#'   accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
+#'   or `logistic`. Defaults to `step`, which is equivalent to a cumulative
+#'   opportunities measure. Please see the details to understand how each
+#'   alternative works and how they relate to the `cutoffs` and `decay_value`
+#'   parameters.
 #' @param cutoffs A numeric vector. This parameter has different effects for
-#' each decay function: it indicates the cutoff times in minutes when
-#' calculating cumulative opportunities accessibility with the `step` function,
-#' the median (or inflection point) of the decay curves in the `logistic` and
-#' `linear` functions, and the half-life in the `exponential` function. It has
-#' no effect when using the `fixed_exponential` function.
+#'   each decay function: it indicates the cutoff times in minutes when
+#'   calculating cumulative opportunities accessibility with the `step`
+#'   function, the median (or inflection point) of the decay curves in the
+#'   `logistic` and `linear` functions, and the half-life in the `exponential`
+#'   function. It has no effect when using the `fixed_exponential` function.
 #' @param decay_value A numeric. Extra parameter to be passed to the selected
-#' `decay_function`. Has no effects when `decay_function` is either `step` or
-#' `exponential`.
+#'   `decay_function`. Has no effects when `decay_function` is either `step` or
+#'   `exponential`.
 #'
 #' @return A `data.table` with accessibility estimates for all origin points.
-#' This `data.table` contain columns listing the origin id, the type of
-#' opportunities to which accessibility was calculated, the travel time
-#' percentile considered in the accessibility estimate and the specified cutoff
-#' values (except in when `decay_function` is `fixed_exponential`, in which
-#' case the `cutoff` parameter is not used). If `output_dir` is not `NULL`,
-#' the function returns the path specified in that parameter, in which the
-#' `.csv` files containing the results are saved.
+#'   This `data.table` contain columns listing the origin id, the type of
+#'   opportunities to which accessibility was calculated, the travel time
+#'   percentile considered in the accessibility estimate and the specified
+#'   cutoff values (except in when `decay_function` is `fixed_exponential`, in
+#'   which case the `cutoff` parameter is not used). If `output_dir` is not
+#'   `NULL`, the function returns the path specified in that parameter, in
+#'   which the `.csv` files containing the results are saved.
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section
@@ -67,58 +66,69 @@
 #' r5r_core <- setup_r5(data_path)
 #' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 #'
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-#'                                  format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#' access <- accessibility(r5r_core,
-#'                         origins = points,
-#'                         destinations = points,
-#'                         opportunities_colnames = "schools",
-#'                         mode = "WALK",
-#'                         departure_datetime = departure_datetime,
-#'                         decay_function = "step",
-#'                         cutoffs = 30,
-#'                         max_trip_duration = 30)
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = 30,
+#'   max_trip_duration = 30
+#' )
 #' head(access)
 #'
 #' # using a different decay function
-#' access <- accessibility(r5r_core,
-#'                         origins = points,
-#'                         destinations = points,
-#'                         opportunities_colnames = "schools",
-#'                         mode = "WALK",
-#'                         departure_datetime = departure_datetime,
-#'                         decay_function = "logistic",
-#'                         cutoffs = 30,
-#'                         decay_value = 1,
-#'                         max_trip_duration = 30)
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "logistic",
+#'   cutoffs = 30,
+#'   decay_value = 1,
+#'   max_trip_duration = 30
+#' )
 #' head(access)
 #'
 #' # using several cutoff values
-#' access <- accessibility(r5r_core,
-#'                         origins = points,
-#'                         destinations = points,
-#'                         opportunities_colnames = "schools",
-#'                         mode = "WALK",
-#'                         departure_datetime = departure_datetime,
-#'                         decay_function = "step",
-#'                         cutoffs = c(25, 30),
-#'                         max_trip_duration = 30)
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = "schools",
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = c(25, 30),
+#'   max_trip_duration = 30
+#' )
 #' head(access)
 #'
 #' # calculating access to different types of opportunities
-#' access <- accessibility(r5r_core,
-#'                         origins = points,
-#'                         destinations = points,
-#'                         opportunities_colnames = c("schools", "healthcare"),
-#'                         mode = "WALK",
-#'                         departure_datetime = departure_datetime,
-#'                         decay_function = "step",
-#'                         cutoffs = 30,
-#'                         max_trip_duration = 30)
+#' access <- accessibility(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   opportunities_colnames = c("schools", "healthcare"),
+#'   mode = "WALK",
+#'   departure_datetime = departure_datetime,
+#'   decay_function = "step",
+#'   cutoffs = 30,
+#'   max_trip_duration = 30
+#' )
 #' head(access)
 #'
 #' stop_r5(r5r_core)
+#'
 #' @export
 accessibility <- function(r5r_core,
                           origins,

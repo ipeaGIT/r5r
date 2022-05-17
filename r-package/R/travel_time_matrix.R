@@ -10,36 +10,23 @@
 #' @template max_fare
 #' @template verbose
 #' @param percentiles An integer vector with length smaller than or equal to 5.
-#' Specifies the percentile to use when returning travel time estimates within
-#' the given time window. For example, if the 25th travel time percentile
-#' between A and B is 15 minutes, 25% of all trips taken between these points
-#' within the specified time window are shorter than 15 minutes. Defaults to
-#' 50, returning the median travel time. If a vector with length bigger than 1
-#' is passed, the output contains an additional column for each percentile
-#' specifying the percentile travel time estimate. each estimate. Due to
-#' upstream restrictions, only 5 percentiles can be specified at a time. For
-#' more details, please see R5 documentation at
-#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
-#' @param breakdown logic. If `FALSE` (default), the function returns a simple
-#'                  output with columns origin, destination and travel time
-#'                  percentiles. If `TRUE`, r5r breaks down the trip information
-#'                  and returns more columns with estimates of `access_time`,
-#'                  `waiting_time`, `ride_time`, `transfer_time`, `total_time` , `n_rides`
-#'                  and `route`. Warning: Setting `TRUE` makes the function
-#'                  significantly slower.
-#'
-#' @param breakdown_stat string. If `min`, all the brokendown trip informantion
-#'        is based on the trip itinerary with the smallest waiting time in the
-#'        time window. If `breakdown_stat = mean`, the information is based on
-#'        the trip itinerary whose waiting time is the closest to the average
-#'        waiting time in the time window.
+#'   Specifies the percentile to use when returning travel time estimates
+#'   within the given time window. For example, if the 25th travel time
+#'   percentile between A and B is 15 minutes, 25% of all trips taken between
+#'   these points within the specified time window are shorter than 15 minutes.
+#'   Defaults to 50, returning the median travel time. If a vector with length
+#'   bigger than 1 is passed, the output contains an additional column for each
+#'   percentile specifying the percentile travel time estimate. each estimate.
+#'   Due to upstream restrictions, only 5 percentiles can be specified at a
+#'   time. For more details, please see R5 documentation at
+#'   'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
-#' origin and destination pairs. Pairs whose trips couldn't be completed within
-#' the maximum travel time and/or whose origin is too far from the street
-#' network are not returned in the `data.table`. If `output_dir` is not `NULL`,
-#' the function returns the path specified in that parameter, in which the
-#' `.csv` files containing the results are saved.
+#'   origin and destination pairs. Pairs whose trips couldn't be completed
+#'   within the maximum travel time and/or whose origin is too far from the
+#'   street network are not returned in the `data.table`. If `output_dir` is
+#'   not `NULL`, the function returns the path specified in that parameter, in
+#'   which the `.csv` files containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -58,20 +45,78 @@
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-#'                                  format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#' # estimate travel time matrix
-#' ttm <- travel_time_matrix(r5r_core,
-#'                           origins = points,
-#'                           destinations = points,
-#'                           mode = c("WALK", "TRANSIT"),
-#'                           departure_datetime = departure_datetime,
-#'                           max_walk_dist = Inf,
-#'                           max_trip_duration = 60)
-#'head(ttm)
+#' ttm <- travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   max_trip_duration = 60
+#' )
+#' head(ttm)
+#'
+#' # using a larger time window
+#' ttm <- travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   time_window = 30,
+#'   max_trip_duration = 60
+#' )
+#' head(ttm)
+#'
+#' # selecting different percentiles
+#' ttm <- travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   time_window = 30,
+#'   percentiles = c(25, 50, 75),
+#'   max_trip_duration = 60
+#' )
+#' head(ttm)
+#'
+#' # selecting different percentiles
+#' ttm <- travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   time_window = 30,
+#'   percentiles = c(25, 50, 75),
+#'   max_trip_duration = 60
+#' )
+#' head(ttm)
+#'
+#' # use a fare calculator and set a max fare to take monetary constraints into
+#' # account
+#' fare_calculator <- read_fare_calculator(
+#'   file.path(data_path, "fares/fares_poa.zip")
+#' )
+#' ttm <- travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   fare_calculator = fare_calculator,
+#'   max_fare = 5,
+#'   max_trip_duration = 60,
+#' )
+#' head(ttm)
 #'
 #' stop_r5(r5r_core)
+#'
 #' @export
 travel_time_matrix <- function(r5r_core,
                                origins,
@@ -81,8 +126,6 @@ travel_time_matrix <- function(r5r_core,
                                departure_datetime = Sys.time(),
                                time_window = 1L,
                                percentiles = 50L,
-                               breakdown = FALSE,
-                               breakdown_stat = "MEAN",
                                fare_calculator = NULL,
                                max_fare = Inf,
                                max_walk_dist = Inf,
@@ -106,8 +149,7 @@ travel_time_matrix <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
-
-  # check inputs ------------------------------------------------------------
+  # input checking --------------------------------------------------------
 
   # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
@@ -151,11 +193,6 @@ travel_time_matrix <- function(r5r_core,
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)
 
-  # travel times breakdown
-  checkmate::assert_logical(breakdown)
-  breakdown_stat <- assert_breakdown_stat(breakdown_stat)
-
-
   # set r5r_core options ----------------------------------------------------
 
   if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
@@ -167,8 +204,7 @@ travel_time_matrix <- function(r5r_core,
   r5r_core$setNumberOfMonteCarloDraws(draws)
 
   # travel times breakdown
-  r5r_core$setTravelTimesBreakdown(breakdown)
-  r5r_core$setTravelTimesBreakdownStat(breakdown_stat)
+  r5r_core$setExpandedTravelTimes(FALSE)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")

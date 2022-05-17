@@ -12,8 +12,8 @@ set_fare_calculator(r5r_core, fare_calculator = NULL)
 
 \item{fare_calculator}{A fare calculator object, following the convention
 set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to understand
-how this object is structured.}
+should be calculated. Please see the fare calculator vignette to
+understand how this object is structured.}
 }
 \value{
 Invisibly returns \code{TRUE}. Called for side effects.
