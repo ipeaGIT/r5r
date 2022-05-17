@@ -124,8 +124,8 @@ transfer and vehicle legs of the trips. Defaults to <code>WALK</code>. Please se
 details for other options.</p></dd>
 <dt>mode_egress</dt>
 <dd><p>A character vector. The transport mode used after egress
-from the last public transport. It can be either <code>WALK</code>, <code>BICYCLE</code> or <code>CAR</code>.
-Defaults to <code>WALK</code>. Ignored when public transport is not used.</p></dd>
+from the last public transport. It can be either <code>WALK</code>, <code>BICYCLE</code> or
+<code>CAR</code>. Defaults to <code>WALK</code>. Ignored when public transport is not used.</p></dd>
 <dt>departure_datetime</dt>
 <dd><p>A POSIXct object. If working with public transport
 networks, please check the <code>calendar.txt</code> within your GTFS feeds for valid
@@ -133,9 +133,9 @@ dates. Please see details for further information on how datetimes are
 parsed.</p></dd>
 <dt>time_window</dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
-will calculate multiple travel time matrices departing each minute. Defaults
-to 1 minute. This parameter only affects the results when the GTFS feeds
-contain a <code>frequencies.txt</code> table.</p></dd>
+will calculate multiple travel time matrices departing each minute.
+Defaults to 1 minute. This parameter only affects the results when the
+GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
 <dt>breakdown</dt>
 <dd><p>A logical. If <code>FALSE</code> (the default), the function returns a
 simple output that lists the total time between each pair in each minute of
@@ -150,12 +150,12 @@ network. Defaults to no restrictions, as long as <code>max_trip_duration</code> 
 respected. The max distance is considered separately for each leg (e.g. if
 you set <code>max_walk_dist</code> to 1000, you could potentially walk up to 1 km to
 reach transit, and up to <em>another</em> 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the maximum
-length of walking-only trips, only walking access, egress and transfer legs.
-If you want to set a maximum walking distance for walking-only trips you
-have to use the <code>max_trip_duration</code> parameter (e.g. to set a walking-only
-trip max distance of 1 km, assuming a walking speed of 3.6 km/h, you have to
-set <code>max_trip_duration = 1 / 3.6 * 60</code>).</p></dd>
+leaving transit). Please note that this parameter doesn't affect the
+maximum length of walking-only trips, only walking access, egress and
+transfer legs. If you want to set a maximum walking distance for
+walking-only trips you have to use the <code>max_trip_duration</code> parameter (e.g.
+to set a walking-only trip max distance of 1 km, assuming a walking speed
+of 3.6 km/h, you have to set <code>max_trip_duration = 1 / 3.6 * 60</code>).</p></dd>
 <dt>max_bike_dist</dt>
 <dd><p>An integer. The maximum cycling distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -163,12 +163,12 @@ network. Defaults to no restrictions, as long as <code>max_trip_duration</code> 
 respected. The max distance is considered separately for each leg (e.g. if
 you set <code>max_bike_dist</code> to 1000, you could potentially cycle up to 1 km to
 reach transit, and up to <em>another</em> 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the maximum
-length of cycling-only trips, only cycling access, egress and transfer legs.
-If you want to set a maximum cycling distance for cycling-only trips you
-have to use the <code>max_trip_duration</code> parameter (e.g. to set a walking-only
-trip max distance of 5 km, assuming a cycling speed of 12 km/h, you have to
-set <code>max_trip_duration = 5 / 12 * 60</code>).</p></dd>
+leaving transit). Please note that this parameter doesn't affect the
+maximum length of cycling-only trips, only cycling access, egress and
+transfer legs. If you want to set a maximum cycling distance for
+cycling-only trips you have to use the <code>max_trip_duration</code> parameter (e.g.
+to set a walking-only trip max distance of 5 km, assuming a cycling speed
+of 12 km/h, you have to set <code>max_trip_duration = 5 / 12 * 60</code>).</p></dd>
 <dt>max_trip_duration</dt>
 <dd><p>An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).</p></dd>
@@ -190,23 +190,24 @@ information.</p></dd>
 <dt>draws_per_minute</dt>
 <dd><p>An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in a
-60 minutes time window, for example.</p></dd>
+when estimating accessibility. Defaults to 5. This would mean 300 draws in
+a 60 minutes time window, for example.</p></dd>
 <dt>n_threads</dt>
 <dd><p>An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).</p></dd>
 <dt>verbose</dt>
 <dd><p>A logical. Whether to show <code>R5</code> informative messages when
-running the function. Defaults to <code>FALSE</code> (please note that in such case <code>R5</code>
-error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows detailed
-output, which can be useful for debugging issues not caught by <code>r5r</code>.</p></dd>
+running the function. Defaults to <code>FALSE</code> (please note that in such case
+<code>R5</code> error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows
+detailed output, which can be useful for debugging issues not caught by
+<code>r5r</code>.</p></dd>
 <dt>progress</dt>
 <dd><p>A logical. Whether to show a progress counter when running
-the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code> is set to <code>FALSE</code>,
-so the progress counter does not interfere with <code>R5</code>'s output messages.
-Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for computation
-efficiency, because the progress counter must be synchronized among all
-active threads.</p></dd>
+the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code> is set to
+<code>FALSE</code>, so the progress counter does not interfere with <code>R5</code>'s output
+messages. Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for
+computation efficiency, because the progress counter must be synchronized
+among all active threads.</p></dd>
 <dt>output_dir</dt>
 <dd><p>Either <code>NULL</code> or a path to an existing directory. When not
 <code>NULL</code> (the default), the function will write one <code>.csv</code> file with the
@@ -259,10 +260,10 @@ parking-protected lanes or cycle tracks).</p></li>
 <li><p><strong>LTS 2</strong>: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.</p></li>
-<li><p><strong>LTS 3</strong>: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+<li><p><strong>LTS 3</strong>: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.</p></li>
-<li><p><strong>LTS 4</strong>: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+<li><p><strong>LTS 4</strong>: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.</p></li>
 </ul><p>For advanced users, you can provide custom LTS values by adding a tag <code>&lt;key = "lts"&gt;</code> to the <code>osm.pbf</code> file.</p>
