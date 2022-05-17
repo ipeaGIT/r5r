@@ -5,8 +5,6 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
-import com.conveyal.r5.streets.EdgeStore;
-import com.conveyal.r5.streets.EdgeTraversalTimes;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +13,6 @@ import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
-import org.ipea.r5r.Utils.ElevationUtils;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
@@ -227,11 +224,7 @@ public class R5RCore {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
-    public R5RCore(String dataFolder) throws Exception {
-        this(dataFolder, true);
-    }
-
-    public R5RCore(String dataFolder, boolean verbose) throws Exception {
+    public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
         if (verbose) {
             verboseMode();
         } else {
@@ -242,12 +235,14 @@ public class R5RCore {
 
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
+        nativeElevationFunction = nativeElevationFunction.toUpperCase();
+        R5Network.useNativeElevation = nativeElevationFunction.equals("TOBLER");
+
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
 
         this.routingProperties = new RoutingProperties();
         this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
     }
-
 
     public void buildDistanceTables() {
         this.transportNetwork.transitLayer.buildDistanceTables(null);
@@ -581,97 +576,7 @@ public class R5RCore {
         return json;
     }
 
-    // ----------------------------------  ELEVATION  -----------------------------------------
-
-    public RDataFrame getEdges() {
-        // Build edges return table
-        RDataFrame edgesTable = new RDataFrame();
-        edgesTable.addIntegerColumn("edge_index", 0);
-        edgesTable.addDoubleColumn("length", 0.0);
-        edgesTable.addDoubleColumn("start_lat", 0.0);
-        edgesTable.addDoubleColumn("start_lon", 0.0);
-        edgesTable.addDoubleColumn("end_lat", 0.0);
-        edgesTable.addDoubleColumn("end_lon", 0.0);
-        edgesTable.addStringColumn("geometry", "");
-
-        EdgeStore edges = transportNetwork.streetLayer.edgeStore;
-
-        EdgeStore.Edge edgeCursor = edges.getCursor();
-        while (edgeCursor.advance()) {
-            edgesTable.append();
-            edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
-            edgesTable.set("length", edgeCursor.getLengthM());
-            edgesTable.set("start_lat", edgeCursor.getGeometry().getStartPoint().getY());
-            edgesTable.set("start_lon", edgeCursor.getGeometry().getStartPoint().getX());
-            edgesTable.set("end_lat", edgeCursor.getGeometry().getEndPoint().getY());
-            edgesTable.set("end_lon", edgeCursor.getGeometry().getEndPoint().getX());
-            edgesTable.set("geometry", edgeCursor.getGeometry().toString());
-        }
-
-        return edgesTable;
-    }
-
-    public void updateEdges(int[] edgeIndices, double[] walkTimeFactor, double[] bikeTimeFactor) {
-        EdgeStore edges = transportNetwork.streetLayer.edgeStore;
-        EdgeStore.Edge edgeCursor = edges.getCursor();
-
-        buildEdgeTraversalTimes(edges);
-
-        for (int i = 0; i < edgeIndices.length; i++) {
-            edgeCursor.seek(edgeIndices[i]);
-
-            edgeCursor.setWalkTimeFactor(walkTimeFactor[i]);
-            edgeCursor.setBikeTimeFactor(bikeTimeFactor[i]);
-        }
-    }
-
-    public void resetEdges() {
-        EdgeStore edges = transportNetwork.streetLayer.edgeStore;
-        EdgeStore.Edge edgeCursor = edges.getCursor();
-
-        buildEdgeTraversalTimes(edges);
-
-        while (edgeCursor.advance()) {
-            edgeCursor.setWalkTimeFactor(1.0);
-            edgeCursor.setBikeTimeFactor(1.0);
-        }
-    }
-
-    public void dropElevation() {
-        resetEdges();
-        buildDistanceTables();
-    }
-
-    private void buildEdgeTraversalTimes(EdgeStore edges) {
-        if (edges.edgeTraversalTimes == null) {
-            edges.edgeTraversalTimes = new EdgeTraversalTimes(edges);
-
-            for (int edge = 0; edge < edges.nEdges(); edge++) {
-                edges.edgeTraversalTimes.addOneEdge();
-            }
-        }
-    }
-
-
-    public static double[] bikeSpeedCoefficientOTP(double[] slope, double[] altitude) {
-        double[] results = new double[slope.length];
-
-        int[] indices = new int[slope.length];
-        for (int i = 0; i < slope.length; i++) { indices[i] = i; }
-
-        Arrays.stream(indices).parallel().forEach(index -> {
-            results[index] = bikeSpeedCoefficientOTP(slope[index], altitude[index]);
-        });
-
-        return results;
-    }
-
-    public static double bikeSpeedCoefficientOTP(double slope, double altitude) {
-        return ElevationUtils.bikeSpeedCoefficientOTP(slope, altitude);
-    }
-
     // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------
-
 
     // Returns list of public transport services active on a given date
     public RDataFrame getTransitServicesByDate(String date) {

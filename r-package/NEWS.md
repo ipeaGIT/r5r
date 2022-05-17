@@ -2,8 +2,10 @@
 
 **Major changes**
 
+- New function `expanded_travel_time_matrix()`.
 - New parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
 - New parameter `output_dir` to all routing functions, which is used to specify a directory in which the results should be saved as `.csv` files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents `R5` from storing them in memory.
+- Parameters `breakdown` and `breakdown_stat` in `travel_time_matrix()` were removed. New function `expanded_travel_time_matrix()` should be used to retrieve detailed information of travel time matrices.
 - Package documentation has been extensively updated and expanded.
 
 **Minor changes**
@@ -11,6 +13,7 @@
 - r5r now downloads R5 Jar directly from Conveyal's github, making the package more stable. Closes [#226](https://github.com/ipeaGIT/r5r/issues/226).
 - All functions now use `verbose = FALSE` and `progress = FALSE` by default.
 - The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (`all_to_all = FALSE`, the default). Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
+- Routing functions now require the users to be non-ambiguous when specifying the modes, raising errors when it cannot disambiguate them. This new behaviour replaces the old one, in which the functions could end up trying to "guess" which mode was to be used in some edge cases.
 
 - Informatio on bicycle 'level of traffic stress' is now added to the output of `street_network_to_sf()`. Closes [#251](https://github.com/ipeaGIT/r5r/issues/251).
 

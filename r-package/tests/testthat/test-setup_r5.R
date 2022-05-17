@@ -11,7 +11,7 @@ test_that("setup_r5 - expected behavior", {
   testthat::expect_message( setup_r5(data_path = path, verbose = F, temp_dir = TRUE) )
   testthat::expect_message( setup_r5(data_path = path, verbose = T, temp_dir = TRUE) )
 
-  testthat::expect_message( setup_r5(data_path = path, use_elevation=T, temp_dir = TRUE) )
+  testthat::expect_message( setup_r5(data_path = path, elevation="TOBLER", temp_dir = TRUE) )
 
   # remove files GTFS
   #  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
@@ -32,7 +32,7 @@ test_that("setup_r5 - expected errors", {
   testthat::expect_error( setup_r5(data_path = 'a') )
   testthat::expect_error(setup_r5(data_path = path, verbose = 'a'))
   testthat::expect_error(setup_r5(data_path = path, temp_dir = 'a'))
-  testthat::expect_error(setup_r5(data_path = path, use_elevation = 'a'))
+  # testthat::expect_error(setup_r5(data_path = path, elevation = 'a'))
 #  testthat::expect_error(setup_r5(data_path = path, version = 'a'))
 
   # No OSM data
