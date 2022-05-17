@@ -50,8 +50,8 @@ transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
 details for other options.}
 
 \item{mode_egress}{A character vector. The transport mode used after egress
-from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or \code{CAR}.
-Defaults to \code{WALK}. Ignored when public transport is not used.}
+from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
+\code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
 \item{departure_datetime}{A POSIXct object. If working with public transport
 networks, please check the \code{calendar.txt} within your GTFS feeds for valid
@@ -59,17 +59,17 @@ dates. Please see details for further information on how datetimes are
 parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple travel time matrices departing each minute. Defaults
-to 1 minute. This parameter only affects the results when the GTFS feeds
-contain a \code{frequencies.txt} table.}
+will calculate multiple travel time matrices departing each minute.
+Defaults to 1 minute. This parameter only affects the results when the
+GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{percentiles}{An integer vector with length smaller than or equal to 5.
 Specifies the percentile to use when returning accessibility estimates
-within the given time window. Please note that this parameter is applied to
-the travel time estimates that generate the accessibility results, and not
-to the accessibility distribution itself (i.e. if the 25th percentile is
-specified, the accessibility is calculated from the 25th percentile travel
-time, which may or may not be equal to the 25th percentile of the
+within the given time window. Please note that this parameter is applied
+to the travel time estimates that generate the accessibility results, and
+not to the accessibility distribution itself (i.e. if the 25th percentile
+is specified, the accessibility is calculated from the 25th percentile
+travel time, which may or may not be equal to the 25th percentile of the
 accessibility distribution itself). Defaults to 50, returning the
 accessibility calculated from the median travel time. If a vector with
 length bigger than 1 is passed, the output contains an additional column
@@ -87,10 +87,10 @@ parameters.}
 
 \item{cutoffs}{A numeric vector. This parameter has different effects for
 each decay function: it indicates the cutoff times in minutes when
-calculating cumulative opportunities accessibility with the \code{step} function,
-the median (or inflection point) of the decay curves in the \code{logistic} and
-\code{linear} functions, and the half-life in the \code{exponential} function. It has
-no effect when using the \code{fixed_exponential} function.}
+calculating cumulative opportunities accessibility with the \code{step}
+function, the median (or inflection point) of the decay curves in the
+\code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
+function. It has no effect when using the \code{fixed_exponential} function.}
 
 \item{decay_value}{A numeric. Extra parameter to be passed to the selected
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
@@ -98,8 +98,8 @@ no effect when using the \code{fixed_exponential} function.}
 
 \item{fare_calculator}{A fare calculator object, following the convention
 set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to understand
-how this object is structured.}
+should be calculated. Please see the fare calculator vignette to
+understand how this object is structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
@@ -110,12 +110,12 @@ network. Defaults to no restrictions, as long as \code{max_trip_duration} is
 respected. The max distance is considered separately for each leg (e.g. if
 you set \code{max_walk_dist} to 1000, you could potentially walk up to 1 km to
 reach transit, and up to \emph{another} 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the maximum
-length of walking-only trips, only walking access, egress and transfer legs.
-If you want to set a maximum walking distance for walking-only trips you
-have to use the \code{max_trip_duration} parameter (e.g. to set a walking-only
-trip max distance of 1 km, assuming a walking speed of 3.6 km/h, you have to
-set \code{max_trip_duration = 1 / 3.6 * 60}).}
+leaving transit). Please note that this parameter doesn't affect the
+maximum length of walking-only trips, only walking access, egress and
+transfer legs. If you want to set a maximum walking distance for
+walking-only trips you have to use the \code{max_trip_duration} parameter (e.g.
+to set a walking-only trip max distance of 1 km, assuming a walking speed
+of 3.6 km/h, you have to set \code{max_trip_duration = 1 / 3.6 * 60}).}
 
 \item{max_bike_dist}{An integer. The maximum cycling distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -123,12 +123,12 @@ network. Defaults to no restrictions, as long as \code{max_trip_duration} is
 respected. The max distance is considered separately for each leg (e.g. if
 you set \code{max_bike_dist} to 1000, you could potentially cycle up to 1 km to
 reach transit, and up to \emph{another} 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the maximum
-length of cycling-only trips, only cycling access, egress and transfer legs.
-If you want to set a maximum cycling distance for cycling-only trips you
-have to use the \code{max_trip_duration} parameter (e.g. to set a walking-only
-trip max distance of 5 km, assuming a cycling speed of 12 km/h, you have to
-set \code{max_trip_duration = 5 / 12 * 60}).}
+leaving transit). Please note that this parameter doesn't affect the
+maximum length of cycling-only trips, only cycling access, egress and
+transfer legs. If you want to set a maximum cycling distance for
+cycling-only trips you have to use the \code{max_trip_duration} parameter (e.g.
+to set a walking-only trip max distance of 5 km, assuming a cycling speed
+of 12 km/h, you have to set \code{max_trip_duration = 5 / 12 * 60}).}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
@@ -150,23 +150,24 @@ information.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in a
-60 minutes time window, for example.}
+when estimating accessibility. Defaults to 5. This would mean 300 draws in
+a 60 minutes time window, for example.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
-running the function. Defaults to \code{FALSE} (please note that in such case \code{R5}
-error messages are still shown). Setting \code{verbose} to \code{TRUE} shows detailed
-output, which can be useful for debugging issues not caught by \code{r5r}.}
+running the function. Defaults to \code{FALSE} (please note that in such case
+\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
+detailed output, which can be useful for debugging issues not caught by
+\code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to \code{FALSE},
-so the progress counter does not interfere with \code{R5}'s output messages.
-Setting \code{progress} to \code{TRUE} may impose a small penalty for computation
-efficiency, because the progress counter must be synchronized among all
-active threads.}
+the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
+\code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
+messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
+computation efficiency, because the progress counter must be synchronized
+among all active threads.}
 
 \item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
 \code{NULL} (the default), the function will write one \code{.csv} file with the
@@ -180,15 +181,14 @@ memory.}
 A \code{data.table} with accessibility estimates for all origin points.
 This \code{data.table} contain columns listing the origin id, the type of
 opportunities to which accessibility was calculated, the travel time
-percentile considered in the accessibility estimate and the specified cutoff
-values (except in when \code{decay_function} is \code{fixed_exponential}, in which
-case the \code{cutoff} parameter is not used). If \code{output_dir} is not \code{NULL},
-the function returns the path specified in that parameter, in which the
-\code{.csv} files containing the results are saved.
+percentile considered in the accessibility estimate and the specified
+cutoff values (except in when \code{decay_function} is \code{fixed_exponential}, in
+which case the \code{cutoff} parameter is not used). If \code{output_dir} is not
+\code{NULL}, the function returns the path specified in that parameter, in
+which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.
-See \code{details} for the available decay functions.
 }
 \section{Decay functions}{
 
@@ -281,10 +281,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -331,55 +331,65 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        opportunities_colnames = "schools",
-                        mode = "WALK",
-                        departure_datetime = departure_datetime,
-                        decay_function = "step",
-                        cutoffs = 30,
-                        max_trip_duration = 30)
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = 30,
+  max_trip_duration = 30
+)
 head(access)
 
 # using a different decay function
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        opportunities_colnames = "schools",
-                        mode = "WALK",
-                        departure_datetime = departure_datetime,
-                        decay_function = "logistic",
-                        cutoffs = 30,
-                        decay_value = 1,
-                        max_trip_duration = 30)
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "logistic",
+  cutoffs = 30,
+  decay_value = 1,
+  max_trip_duration = 30
+)
 head(access)
 
 # using several cutoff values
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        opportunities_colnames = "schools",
-                        mode = "WALK",
-                        departure_datetime = departure_datetime,
-                        decay_function = "step",
-                        cutoffs = c(25, 30),
-                        max_trip_duration = 30)
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = "schools",
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = c(25, 30),
+  max_trip_duration = 30
+)
 head(access)
 
 # calculating access to different types of opportunities
-access <- accessibility(r5r_core,
-                        origins = points,
-                        destinations = points,
-                        opportunities_colnames = c("schools", "healthcare"),
-                        mode = "WALK",
-                        departure_datetime = departure_datetime,
-                        decay_function = "step",
-                        cutoffs = 30,
-                        max_trip_duration = 30)
+access <- accessibility(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  opportunities_colnames = c("schools", "healthcare"),
+  mode = "WALK",
+  departure_datetime = departure_datetime,
+  decay_function = "step",
+  cutoffs = 30,
+  max_trip_duration = 30
+)
 head(access)
 
 stop_r5(r5r_core)

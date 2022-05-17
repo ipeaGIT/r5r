@@ -42,7 +42,6 @@ Useful links:
 Authors:
 \itemize{
   \item Marcus Saraiva \email{marcus.saraiva@gmail.com} (\href{https://orcid.org/0000-0001-6218-2338}{ORCID})
-  \item Rafael H. M. Pereira \email{rafa.pereira.br@gmail.com} (\href{https://orcid.org/0000-0003-2125-7465}{ORCID})
   \item Daniel Herszenhut \email{dhersz@gmail.com} (\href{https://orcid.org/0000-0001-8066-1105}{ORCID})
   \item Carlos Kaue Vieira Braga \email{kaue@kauebraga.dev} (\href{https://orcid.org/0000-0002-6104-7297}{ORCID})
   \item Matthew Wigginton Conway \email{mwconway@asu.edu} (\href{https://orcid.org/0000-0002-1210-2982}{ORCID})

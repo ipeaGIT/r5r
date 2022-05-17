@@ -9,8 +9,8 @@ write_fare_calculator(fare_calculator, file_path)
 \arguments{
 \item{fare_calculator}{A fare calculator object, following the convention
 set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to understand
-how this object is structured.}
+should be calculated. Please see the fare calculator vignette to
+understand how this object is structured.}
 
 \item{file_path}{A path to a \code{.zip} file. Where the fare calculator should be
 written to.}
