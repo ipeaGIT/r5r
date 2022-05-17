@@ -18,6 +18,7 @@ import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
+import org.apache.commons.io.FilenameUtils;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
 import org.geotools.coverage.grid.io.GridFormatFinder;
 import org.geotools.gce.geotiff.GeoTiffFormat;
@@ -88,29 +89,12 @@ public class R5Network {
         try
         {
             if (useNativeElevation) {
-                GridFormatFinder.scanForPlugins();
                 File[] tiffFiles = dir.listFiles((d, name) -> name.endsWith(".tif") | name.endsWith(".tiff"));
                 if (tiffFiles != null) {
                     if (tiffFiles.length > 0) {
-
-                        System.out.println("available formats");
-                        GridFormatFinder.getAvailableFormats().forEach(f -> System.out.println(f.createFormat().getName()));
-
-                        FileStorageKey fileStorageKey = new FileStorageKey(DATASOURCES, tiffFiles[0].getAbsolutePath(), GEOTIFF.extension);
-                        File localRasterFile = WorkerComponents.fileStorage.getFile(fileStorageKey);
-                        AbstractGridFormat format = GridFormatFinder.findFormat(localRasterFile);
-
-                        Set<AbstractGridFormat> formats =  GridFormatFinder.findFormats(localRasterFile);
-                        System.out.println("formats for file");
-                        formats.forEach(f -> System.out.println(f.getName()));
-
-//                        System.out.println(format.getName());
-
-
-
                         RasterCost elevationRaster = new RasterCost();
-                        elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
-                        elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
+                        elevationRaster.dataSourceId = FilenameUtils.removeExtension(tiffFiles[0].getAbsolutePath());
+                        elevationRaster.costFunction = RasterCost.CostFunction.MINETTI;
 
                         elevationRaster.resolve(tn);
                         elevationRaster.apply(tn);

@@ -18,9 +18,10 @@
 #' latest version.
 #' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
 #' temporary directory. Defaults to `FALSE`.
-#' @param use_elevation A logical. Whether to calculate impedances for walking
-#' and cycling based on street slopes (defaults to `FALSE`). If `TRUE`, loads
-#' elevation data from `.tif` files saved insite the `data_path` directory.
+#' @param elevation A string. The name of the impedance function to be used to
+#' calculate impedances for walking and cycling based on street slopes (defaults
+#' to `TOBLER`). It accepts `TOBLER` and `MANETTI`, or `NONE` to ignore elevation.
+#' R5 loads elevation data from `.tif` files saved insite the `data_path` directory.
 #' @param overwrite A logical. Whether to overwrite an existing `network.dat`
 #' or to use a cached file. Defaults to `FALSE` (i.e. use a cached network).
 #'
@@ -40,8 +41,7 @@ setup_r5 <- function(data_path,
                      version = "6.7.0",
                      verbose = FALSE,
                      temp_dir = FALSE,
-                     use_elevation = FALSE,
-                     use_native_elevation = FALSE,
+                     elevation = "TOBLER",
                      overwrite = FALSE) {
 
   # check inputs ------------------------------------------------------------
@@ -49,7 +49,7 @@ setup_r5 <- function(data_path,
   checkmate::assert_directory_exists(data_path)
   checkmate::assert_logical(verbose)
   checkmate::assert_logical(temp_dir)
-  checkmate::assert_logical(use_elevation)
+  checkmate::assert_character(elevation)
   checkmate::assert_logical(overwrite)
 
   # check Java version installed locally ---------------------------------------
@@ -115,7 +115,7 @@ setup_r5 <- function(data_path,
 
   if (checkmate::test_file_exists(dat_file) && !overwrite) {
 
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, use_native_elevation)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
 
     message("\nUsing cached network.dat from ", dat_file)
 
@@ -131,7 +131,7 @@ setup_r5 <- function(data_path,
     )
 
     # build new r5r_core
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
 
     # display a message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
@@ -141,31 +141,6 @@ setup_r5 <- function(data_path,
 
     message("\nFinished building network.dat at ", dat_file)
 
-  }
-
-  # elevation
-
-  if (use_elevation) {
-    # check for any elevation files in data_path (*.tif)
-    tif_files <- list.files(
-      path = data_path,
-      pattern = "*.tif$",
-      full.names = TRUE
-    )
-
-    # if there are any .tif files in the data_path folder, apply elevation to street network
-    if (length(tif_files) > 0) {
-      if (verbose)
-        message(
-          length(tif_files), " TIFF file(s) found in data path. ",
-          "Loading elevation into street edges.\n",
-          "DISCLAIMER: this is an r5r specific feature, and it will be ",
-          "deprecated once native support\n",
-          "for elevation data is added to R5."
-        )
-
-      apply_elevation(r5r_core, tif_files)
-    }
   }
 
   # finish R5's setup by pre-calculating distances between transit stops and street network
