@@ -1,5 +1,8 @@
 package org.ipea.r5r;
 
+import com.conveyal.analysis.components.WorkerComponents;
+import com.conveyal.analysis.datasource.DataSourceException;
+import com.conveyal.file.FileStorageKey;
 import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
@@ -15,6 +18,11 @@ import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
+import org.geotools.coverage.grid.io.AbstractGridFormat;
+import org.geotools.coverage.grid.io.GridFormatFinder;
+import org.geotools.gce.geotiff.GeoTiffFormat;
+import org.geotools.gce.geotiff.GeoTiffFormatFactorySpi;
+import org.geotools.util.factory.FactoryRegistry;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +32,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Set;
+
+import static com.conveyal.file.FileCategory.DATASOURCES;
+import static com.conveyal.file.FileStorageFormat.GEOTIFF;
 
 public class R5Network {
+
+    public static boolean useNativeElevation = false;
 
     /**
      * This string should be changed to a new value each time the network storage format changes.
@@ -71,16 +85,40 @@ public class R5Network {
         TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
 
         // apply elevation costs if tif files are available
-        File[] tiffFiles = dir.listFiles((d, name) -> name.contains(".tif") | name.contains(".tiff"));
-        if (tiffFiles != null) {
-            if (tiffFiles.length > 0) {
-                RasterCost elevationRaster = new RasterCost();
-                elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
-                elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
+        try
+        {
+            if (useNativeElevation) {
+                GridFormatFinder.scanForPlugins();
+                File[] tiffFiles = dir.listFiles((d, name) -> name.endsWith(".tif") | name.endsWith(".tiff"));
+                if (tiffFiles != null) {
+                    if (tiffFiles.length > 0) {
 
-                elevationRaster.resolve(tn);
-                elevationRaster.apply(tn);
+                        System.out.println("available formats");
+                        GridFormatFinder.getAvailableFormats().forEach(f -> System.out.println(f.createFormat().getName()));
+
+                        FileStorageKey fileStorageKey = new FileStorageKey(DATASOURCES, tiffFiles[0].getAbsolutePath(), GEOTIFF.extension);
+                        File localRasterFile = WorkerComponents.fileStorage.getFile(fileStorageKey);
+                        AbstractGridFormat format = GridFormatFinder.findFormat(localRasterFile);
+
+                        Set<AbstractGridFormat> formats =  GridFormatFinder.findFormats(localRasterFile);
+                        System.out.println("formats for file");
+                        formats.forEach(f -> System.out.println(f.getName()));
+
+//                        System.out.println(format.getName());
+
+
+
+                        RasterCost elevationRaster = new RasterCost();
+                        elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
+                        elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
+
+                        elevationRaster.resolve(tn);
+                        elevationRaster.apply(tn);
+                    }
+                }
             }
+        } catch (DataSourceException e) {
+            e.printStackTrace();
         }
 
 

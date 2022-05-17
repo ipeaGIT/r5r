@@ -231,7 +231,7 @@ public class R5RCore {
         this(dataFolder, true);
     }
 
-    public R5RCore(String dataFolder, boolean verbose) throws Exception {
+    public R5RCore(String dataFolder, boolean verbose, boolean nativeElevation) throws Exception {
         if (verbose) {
             verboseMode();
         } else {
@@ -242,10 +242,16 @@ public class R5RCore {
 
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
+        R5Network.useNativeElevation = nativeElevation;
+
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
 
         this.routingProperties = new RoutingProperties();
         this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
+    }
+
+    public R5RCore(String dataFolder, boolean verbose) throws Exception {
+        this(dataFolder, verbose, true);
     }
 
 
