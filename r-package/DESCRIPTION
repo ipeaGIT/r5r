@@ -42,7 +42,6 @@ Imports:
     data.table,
     httr,
     jsonlite,
-    raster,
     rJava (>= 0.9-10),
     sf (>= 0.9-3),
     sfheaders,
@@ -57,7 +56,6 @@ Suggests:
     knitr,
     mapview,
     patchwork,
-    rgdal,
     rmarkdown,
     testthat,
     tibble
