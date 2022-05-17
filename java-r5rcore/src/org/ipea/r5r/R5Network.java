@@ -71,17 +71,17 @@ public class R5Network {
         TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
 
         // apply elevation costs if tif files are available
-        File[] tiffFiles = dir.listFiles((d, name) -> name.contains(".tif") | name.contains(".tiff"));
-        if (tiffFiles != null) {
-            if (tiffFiles.length > 0) {
-                RasterCost elevationRaster = new RasterCost();
-                elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
-                elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
-
-                elevationRaster.resolve(tn);
-                elevationRaster.apply(tn);
-            }
-        }
+//        File[] tiffFiles = dir.listFiles((d, name) -> name.endsWith(".tif") | name.endsWith(".tiff"));
+//        if (tiffFiles != null) {
+//            if (tiffFiles.length > 0) {
+//                RasterCost elevationRaster = new RasterCost();
+//                elevationRaster.dataSourceId = tiffFiles[0].getAbsolutePath();
+//                elevationRaster.costFunction = RasterCost.CostFunction.TOBLER;
+//
+//                elevationRaster.resolve(tn);
+//                elevationRaster.apply(tn);
+//            }
+//        }
 
 
         try {
