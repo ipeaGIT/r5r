@@ -55,15 +55,15 @@ Defaults to 1 minute. This parameter only affects the results when the
 GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{percentiles}{An integer vector with length smaller than or equal to 5.
-Specifies the percentile to use when returning travel time estimates within
-the given time window. For example, if the 25th travel time percentile
-between A and B is 15 minutes, 25\% of all trips taken between these points
-within the specified time window are shorter than 15 minutes. Defaults to
-50, returning the median travel time. If a vector with length bigger than 1
-is passed, the output contains an additional column for each percentile
-specifying the percentile travel time estimate. each estimate. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see R5 documentation at
+Specifies the percentile to use when returning travel time estimates
+within the given time window. For example, if the 25th travel time
+percentile between A and B is 15 minutes, 25\% of all trips taken between
+these points within the specified time window are shorter than 15 minutes.
+Defaults to 50, returning the median travel time. If a vector with length
+bigger than 1 is passed, the output contains an additional column for each
+percentile specifying the percentile travel time estimate. each estimate.
+Due to upstream restrictions, only 5 percentiles can be specified at a
+time. For more details, please see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{fare_calculator}{A fare calculator object, following the convention
@@ -149,11 +149,11 @@ memory.}
 }
 \value{
 A \code{data.table} with travel time estimates (in minutes) between
-origin and destination pairs. Pairs whose trips couldn't be completed within
-the maximum travel time and/or whose origin is too far from the street
-network are not returned in the \code{data.table}. If \code{output_dir} is not \code{NULL},
-the function returns the path specified in that parameter, in which the
-\code{.csv} files containing the results are saved.
+origin and destination pairs. Pairs whose trips couldn't be completed
+within the maximum travel time and/or whose origin is too far from the
+street network are not returned in the \code{data.table}. If \code{output_dir} is
+not \code{NULL}, the function returns the path specified in that parameter, in
+which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of travel time estimates between one or multiple origin
@@ -250,17 +250,74 @@ r5r_core <- setup_r5(data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
-# estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core,
-                          origins = points,
-                          destinations = points,
-                          mode = c("WALK", "TRANSIT"),
-                          departure_datetime = departure_datetime,
-                          max_walk_dist = Inf,
-                          max_trip_duration = 60)
+ttm <- travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  max_trip_duration = 60
+)
+head(ttm)
+
+# using a larger time window
+ttm <- travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  time_window = 30,
+  max_trip_duration = 60
+)
+head(ttm)
+
+# selecting different percentiles
+ttm <- travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  time_window = 30,
+  percentiles = c(25, 50, 75),
+  max_trip_duration = 60
+)
+head(ttm)
+
+# selecting different percentiles
+ttm <- travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  time_window = 30,
+  percentiles = c(25, 50, 75),
+  max_trip_duration = 60
+)
+head(ttm)
+
+# use a fare calculator and set a max fare to take monetary constraints into
+# account
+fare_calculator <- read_fare_calculator(
+  file.path(data_path, "fares/fares_poa.zip")
+)
+ttm <- travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  fare_calculator = fare_calculator,
+  max_fare = 5,
+  max_trip_duration = 60,
+)
 head(ttm)
 
 stop_r5(r5r_core)
