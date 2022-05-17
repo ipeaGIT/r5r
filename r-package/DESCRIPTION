@@ -5,9 +5,7 @@ Version: 0.7.9000
 Authors@R: c(
     person("Marcus", "Saraiva", , "marcus.saraiva@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-6218-2338")),
-    person("Rafael H. M.", "Pereira", , "rafa.pereira.br@gmail.com", role = "cre",
-           comment = c(ORCID = "0000-0003-2125-7465")),
-    person("Rafael H. M.", "Pereira", , "rafa.pereira.br@gmail.com", role = "aut",
+    person("Rafael H. M.", "Pereira", , "rafa.pereira.br@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2125-7465")),
     person("Daniel", "Herszenhut", , "dhersz@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-8066-1105")),
