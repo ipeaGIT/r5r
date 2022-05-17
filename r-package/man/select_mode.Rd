@@ -7,12 +7,12 @@
 select_mode(mode, mode_egress)
 }
 \arguments{
-\item{mode}{character string passed from routing functions.}
+\item{mode}{A character vector, passed from routing functions.}
 
-\item{mode_egress}{character string passed from routing functions.}
+\item{mode_egress}{A character vector, passed from routing functions.}
 }
 \value{
-A \code{list} with the transport modes used in the routing.
+A list with the transport modes to be used in the routing.
 }
 \description{
 Select transport mode
