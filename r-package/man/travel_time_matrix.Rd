@@ -13,8 +13,6 @@ travel_time_matrix(
   departure_datetime = Sys.time(),
   time_window = 1L,
   percentiles = 50L,
-  breakdown = FALSE,
-  breakdown_stat = "MEAN",
   fare_calculator = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
@@ -67,20 +65,6 @@ specifying the percentile travel time estimate. each estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
-
-\item{breakdown}{logic. If \code{FALSE} (default), the function returns a simple
-output with columns origin, destination and travel time
-percentiles. If \code{TRUE}, r5r breaks down the trip information
-and returns more columns with estimates of \code{access_time},
-\code{waiting_time}, \code{ride_time}, \code{transfer_time}, \code{total_time} , \code{n_rides}
-and \code{route}. Warning: Setting \code{TRUE} makes the function
-significantly slower.}
-
-\item{breakdown_stat}{string. If \code{min}, all the brokendown trip informantion
-is based on the trip itinerary with the smallest waiting time in the
-time window. If \code{breakdown_stat = mean}, the information is based on
-the trip itinerary whose waiting time is the closest to the average
-waiting time in the time window.}
 
 \item{fare_calculator}{A fare calculator object, following the convention
 set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares

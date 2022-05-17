@@ -20,19 +20,6 @@
 #' upstream restrictions, only 5 percentiles can be specified at a time. For
 #' more details, please see R5 documentation at
 #' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
-#' @param breakdown logic. If `FALSE` (default), the function returns a simple
-#'                  output with columns origin, destination and travel time
-#'                  percentiles. If `TRUE`, r5r breaks down the trip information
-#'                  and returns more columns with estimates of `access_time`,
-#'                  `waiting_time`, `ride_time`, `transfer_time`, `total_time` , `n_rides`
-#'                  and `route`. Warning: Setting `TRUE` makes the function
-#'                  significantly slower.
-#'
-#' @param breakdown_stat string. If `min`, all the brokendown trip informantion
-#'        is based on the trip itinerary with the smallest waiting time in the
-#'        time window. If `breakdown_stat = mean`, the information is based on
-#'        the trip itinerary whose waiting time is the closest to the average
-#'        waiting time in the time window.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
 #' origin and destination pairs. Pairs whose trips couldn't be completed within
@@ -81,8 +68,6 @@ travel_time_matrix <- function(r5r_core,
                                departure_datetime = Sys.time(),
                                time_window = 1L,
                                percentiles = 50L,
-                               breakdown = FALSE,
-                               breakdown_stat = "MEAN",
                                fare_calculator = NULL,
                                max_fare = Inf,
                                max_walk_dist = Inf,
@@ -151,11 +136,6 @@ travel_time_matrix <- function(r5r_core,
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)
 
-  # travel times breakdown
-  checkmate::assert_logical(breakdown)
-  breakdown_stat <- assert_breakdown_stat(breakdown_stat)
-
-
   # set r5r_core options ----------------------------------------------------
 
   if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
@@ -167,8 +147,7 @@ travel_time_matrix <- function(r5r_core,
   r5r_core$setNumberOfMonteCarloDraws(draws)
 
   # travel times breakdown
-  r5r_core$setTravelTimesBreakdown(breakdown)
-  r5r_core$setTravelTimesBreakdownStat(breakdown_stat)
+  r5r_core$setExpandedTravelTimes(FALSE)
 
   # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")

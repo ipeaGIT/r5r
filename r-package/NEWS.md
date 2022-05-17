@@ -2,8 +2,10 @@
 
 **Major changes**
 
+- New function `expanded_travel_time_matrix()`.
 - New parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
 - New parameter `output_dir` to all routing functions, which is used to specify a directory in which the results should be saved as `.csv` files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents `R5` from storing them in memory.
+- Parameters `breakdown` and `breakdown_stat` in `travel_time_matrix()` were removed. New function `expanded_travel_time_matrix()` should be used to retrieve detailed information of travel time matrices.
 - Package documentation has been extensively updated and expanded.
 
 **Minor changes**
