@@ -183,6 +183,8 @@ test_that("output is correct", {
 
   # expect all travel times to be lower than max_trip_duration
 
+  origins <- destinations <- points[1:10,]
+
   max_trip_duration <- 60L
 
   df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
