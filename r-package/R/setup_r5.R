@@ -19,9 +19,10 @@
 #' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
 #' temporary directory. Defaults to `FALSE`.
 #' @param elevation A string. The name of the impedance function to be used to
-#' calculate impedances for walking and cycling based on street slopes (defaults
-#' to `TOBLER`). It accepts `TOBLER` and `MANETTI`, or `NONE` to ignore elevation.
-#' R5 loads elevation data from `.tif` files saved insite the `data_path` directory.
+#' calculate impedance for walking and cycling based on street slopes.
+#' Available options include `TOBLER` (Default) and `MANETTI`, or `NONE` to
+#' ignore elevation. R5 loads elevation data from `.tif` files saved inside the
+#' `data_path` directory.
 #' @param overwrite A logical. Whether to overwrite an existing `network.dat`
 #' or to use a cached file. Defaults to `FALSE` (i.e. use a cached network).
 #'
@@ -52,6 +53,11 @@ setup_r5 <- function(data_path,
   checkmate::assert_character(elevation)
   checkmate::assert_logical(overwrite)
 
+  if (!(elevation %in% c('TOBLER', 'MANETTI','NONE'))) {
+    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MANETTI','NONE')")
+    }
+
+
   # check Java version installed locally ---------------------------------------
 
   rJava::.jinit()
@@ -70,14 +76,21 @@ setup_r5 <- function(data_path,
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
 
-  # check if data_path has osm.pbf and gtfs data, or a network.dat file
+  # check if data_path has osm.pbf, .tif gtfs data, or a network.dat file
   any_network <- length(grep("network.dat", list.files(data_path))) > 0
   any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
   any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
+  any_tif <- length(grep(".tif", list.files(data_path))) > 0
 
   # stop if there is no input data
   if (!(any_pbf | any_network))
     stop("\nAn OSM PBF file is required to build a network.")
+
+  # use no elevation model if there is no raster.tif input data
+  if (!(any_tif)) {
+    elevation <- 'NONE'
+    message("No raster .tif files found. Using elevation = 'NONE'.")
+    }
 
   # check if the most recent JAR release is stored already. If it's not
   # download it

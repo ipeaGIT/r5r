@@ -9,7 +9,7 @@ setup_r5(
   version = "6.7.0",
   verbose = FALSE,
   temp_dir = FALSE,
-  use_elevation = FALSE,
+  elevation = "TOBLER",
   overwrite = FALSE
 )
 }
@@ -29,9 +29,11 @@ detailed output, which can be useful for debugging issues not caught by
 \item{temp_dir}{A logical. Whether the \code{R5} Jar file should be saved to a
 temporary directory. Defaults to \code{FALSE}.}
 
-\item{use_elevation}{A logical. Whether to calculate impedances for walking
-and cycling based on street slopes (defaults to \code{FALSE}). If \code{TRUE}, loads
-elevation data from \code{.tif} files saved insite the \code{data_path} directory.}
+\item{elevation}{A string. The name of the impedance function to be used to
+calculate impedance for walking and cycling based on street slopes.
+Available options include \code{TOBLER} (Default) and \code{MANETTI}, or \code{NONE} to
+ignore elevation. R5 loads elevation data from \code{.tif} files saved inside the
+\code{data_path} directory.}
 
 \item{overwrite}{A logical. Whether to overwrite an existing \code{network.dat}
 or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached network).}
