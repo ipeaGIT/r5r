@@ -75,7 +75,8 @@ if (getRversion() >= "2.15.1") {
       "lat_dest",
       "lon_dest",
       "i.lon",
-      "i.lat"
+      "i.lat",
+      "total_time"
     )
   )
 }
