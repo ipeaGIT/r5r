@@ -32,7 +32,7 @@ test_that("setup_r5 - expected errors", {
   testthat::expect_error( setup_r5(data_path = 'a') )
   testthat::expect_error(setup_r5(data_path = path, verbose = 'a'))
   testthat::expect_error(setup_r5(data_path = path, temp_dir = 'a'))
-  testthat::expect_error(setup_r5(data_path = path, elevation = 'a'))
+  # testthat::expect_error(setup_r5(data_path = path, elevation = 'a'))
 #  testthat::expect_error(setup_r5(data_path = path, version = 'a'))
 
   # No OSM data
