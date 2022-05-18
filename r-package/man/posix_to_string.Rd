@@ -10,7 +10,7 @@ posix_to_string(datetime)
 \item{datetime}{An object of POSIXct class.}
 }
 \value{
-A \code{list} with the \code{date} and \code{time} of the trip departure as
+A list with the \code{date} and \code{time} of the trip departure as
 characters.
 }
 \description{

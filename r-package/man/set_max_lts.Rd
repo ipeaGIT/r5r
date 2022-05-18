@@ -10,10 +10,10 @@ set_max_lts(r5r_core, max_lts)
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{max_lts}{numeric (between 1 and 4). The maximum level of traffic stress
-that cyclists will tolerate. A value of 1 means cyclists will only travel
-through the quietest streets, while a value of 4 indicates cyclists can travel
-through any road.}
+\item{max_lts}{A number (between 1 and 4). The maximum level of traffic
+stress that cyclists will tolerate. A value of 1 means cyclists will only
+travel through the quietest streets, while a value of 4 indicates cyclists
+can travel through any road.}
 }
 \value{
 No return value, called for side effects.

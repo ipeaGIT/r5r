@@ -10,13 +10,13 @@ set_verbose(r5r_core, verbose)
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{verbose}{logical, passed from function above}
+\item{verbose}{A logical, passed from function above.}
 }
 \value{
 No return value, called for side effects.
 }
 \description{
-Set verbose argument
+R5 error messages are still reported even when \code{verbose} is \code{FALSE}.
 }
 \seealso{
 Other support functions: 

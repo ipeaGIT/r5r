@@ -13,12 +13,13 @@
 #'   percentile to use when returning travel time estimates within the given
 #'   time window. For example, if the 25th travel time percentile between A and
 #'   B is 15 minutes, 25% of all trips taken between these points within the
-#'   specified time window are shorter than 15 minutes. Defaults to 50, returning
-#'   the median travel time. If a vector with length bigger than 1 is passed, the
-#'   output contains an additional column for each percentile specifying the
-#'   percentile travel time estimate. each estimate. Due to upstream restrictions,
-#'   only 5 percentiles can be specified at a time. For more details, please see
-#'   R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#'   specified time window are shorter than 15 minutes. Defaults to 50,
+#'   returning the median travel time. If a vector with length bigger than 1 is
+#'   passed, the output contains an additional column for each percentile
+#'   specifying the percentile travel time estimate. each estimate. Due to
+#'   upstream restrictions, only 5 percentiles can be specified at a time. For
+#'   more details, please see R5 documentation at
+#'   'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
 #'   origin and destination pairs. Pairs whose trips couldn't be completed
@@ -143,61 +144,65 @@ travel_time_matrix <- function(r5r_core,
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
 
+  checkmate::assert_number(n_threads, lower = 1)
+
   old_dt_threads <- data.table::getDTthreads()
   dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
   # input checking --------------------------------------------------------
+  # max_rides, max_lts, verbose, progress and output_dir are checked a bit
+  # later when setting r5r_core options
 
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
-  mode_list <- select_mode(mode, mode_egress)
-
-  # departure time
-  departure <- posix_to_string(departure_datetime)
-
-  # max trip duration
-  checkmate::assert_numeric(max_trip_duration, lower=1)
-  max_trip_duration <- as.integer(max_trip_duration)
-
-  # max_walking_distance, max_bike_distance, and max_street_time
-  max_walk_time <- set_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration)
-  max_bike_time <- set_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration)
-
-  # origins and destinations
-  origins      <- assert_points_input(origins, "origins")
+  origins <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
 
-  checkmate::assert_subset("id", names(origins))
-  checkmate::assert_subset("id", names(destinations))
+  mode_list <- select_mode(mode, mode_egress)
 
-  # time window
-  checkmate::assert_numeric(time_window, lower=1)
+  departure <- posix_to_string(departure_datetime)
+
+  checkmate::assert_number(time_window, lower = 1)
   time_window <- as.integer(time_window)
 
-  # montecarlo draws per minute
+  checkmate::assert_numeric(
+    percentiles,
+    lower = 1,
+    upper = 99,
+    max.len = 5,
+    unique = TRUE,
+    any.missing = FALSE
+  )
+  percentiles <- as.integer(percentiles)
+
+  max_walk_time <- set_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration
+  )
+  max_bike_time <- set_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration
+  )
+
+  checkmate::assert_number(max_trip_duration, lower = 1)
+  max_trip_duration <- as.integer(max_trip_duration)
+
+  checkmate::assert_number(draws_per_minute, lower = 1)
   draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
 
-  # percentiles
-  if (length(percentiles) > 5) {
-    stop("Maximum number of percentiles allowed is 5.")
-  }
-  percentiles <- percentiles[!is.na(percentiles)]
-  checkmate::assert_numeric(percentiles)
-  percentiles <- as.integer(percentiles)
-
   # set r5r_core options ----------------------------------------------------
 
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
+  checkmate::assert_string(output_dir, null.ok = TRUE)
+  if (!is.null(output_dir)) {
+    checkmate::assert_directory_exists(output_dir)
+    r5r_core$setCsvOutput(output_dir)
+    on.exit(r5r_core$setCsvOutput(""), add = TRUE)
+  }
 
   # time window
   r5r_core$setTimeWindowSize(time_window)

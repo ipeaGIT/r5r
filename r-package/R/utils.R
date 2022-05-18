@@ -1,40 +1,39 @@
 #' Set verbose argument
 #'
+#' R5 error messages are still reported even when `verbose` is `FALSE`.
+#'
 #' @template r5r_core
-#' @param verbose logical, passed from function above
+#'
+#' @param verbose A logical, passed from function above.
 #'
 #' @return No return value, called for side effects.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 set_verbose <- function(r5r_core, verbose) {
-
-  # in silent mode only errors are reported
-
-  checkmate::assert_logical(verbose)
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
 
   if (verbose) r5r_core$verboseMode()
   else r5r_core$silentMode()
-
 }
 
 
 #' Set progress argument
 #'
+#' Indicates whether or not a progress counter must be printed during
+#' computations. Applies to all routing functions.
+#'
 #' @template r5r_core
-#' @param progress logical, passed from function above
+#' @param progress A logical, passed from function above.
 #'
 #' @return No return value, called for side effects.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 set_progress <- function(r5r_core, progress) {
-
-  # Indicates whether or not a progress counter must be printed during long
-  # computations. Applies to detailed_itineraries(), travel_time_matrix(), and
-  # accessibility() functions
-
-  checkmate::assert_logical(progress)
+  checkmate::assert_logical(progress, len = 1)
 
   r5r_core$setProgress(progress)
 }
@@ -44,23 +43,27 @@ set_progress <- function(r5r_core, progress) {
 #'
 #' Converts a time duration and speed input and converts it to distances.
 #'
-#' @param max_walk_dist numeric, Maximum walking distance (in meters) for the
-#' whole trip. Passed from routing functions.
-#' @param walk_speed numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
-#' Passed from routing functions.
-#' @param max_trip_duration numeric, Maximum trip duration in seconds. Defaults
-#' to 120 minutes (2 hours). Passed from routing functions.
+#' @param max_walk_dist A numeric of length 1. Maximum walking distance (in
+#'   meters) for the whole trip. Passed from routing functions.
+#' @param walk_speed A numeric of length 1. Average walk speed in km/h.
+#'   Defaults to 3.6 Km/h. Passed from routing functions.
+#' @param max_trip_duration A numeric of length 1. Maximum trip duration in
+#'   seconds. Defaults to 120 minutes (2 hours). Passed from routing functions.
 #'
-#' @return An `integer` representing the maximum number of minutes walking
+#' @return An `integer` representing the maximum number of minutes walking.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
+  checkmate::assert_number(max_walk_dist)
+  checkmate::assert_number(walk_speed)
 
-  checkmate::assert_numeric(max_walk_dist)
-  checkmate::assert_numeric(walk_speed)
+  if (walk_speed == 0) {
+    stop("Assertion on speed failed: must have value greater than 0.")
+  }
 
-  if (is.infinite(max_walk_dist)) return(max_trip_duration)
+  if (is.infinite(max_walk_dist)) return(as.integer(max_trip_duration))
 
   max_street_time <- as.integer(
     round(60 * max_walk_dist / (walk_speed * 1000), digits = 0)
@@ -78,8 +81,7 @@ set_max_street_time <- function(max_walk_dist, walk_speed, max_trip_duration) {
 
   if (max_street_time > max_trip_duration) max_street_time <- max_trip_duration
 
-  return(max_street_time)
-
+  return(as.integer(max_street_time))
 }
 
 
@@ -174,15 +176,18 @@ select_mode <- function(mode, mode_egress) {
 #'
 #' @param datetime An object of POSIXct class.
 #'
-#' @return A `list` with the `date` and `time` of the trip departure as
+#' @return A list with the `date` and `time` of the trip departure as
 #'   characters.
 #'
 #' @family support functions
 #'
 #' @keywords internal
 posix_to_string <- function(datetime) {
-
-  checkmate::assert_posixct(datetime)
+  checkmate::assert_posixct(
+    datetime,
+    len = 1,
+    .var.name = "departure_datetime"
+  )
 
   tz <- attr(datetime, "tzone")
   if (is.null(tz)) tz <- ""
@@ -193,7 +198,6 @@ posix_to_string <- function(datetime) {
   )
 
   return(datetime_list)
-
 }
 
 
@@ -202,59 +206,51 @@ posix_to_string <- function(datetime) {
 #' @param df Any object.
 #' @param name Object name.
 #'
-#' @return A data.frame with columns \code{id}, \code{lon} and \code{lat}.
+#' @return A `data.frame` with columns `id`, `lon` and `lat`.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 assert_points_input <- function(df, name) {
-
-  # check if 'df' is a data.frame or a POINT sf
-
   if ("data.frame" %in% class(df)) {
-
     if ("sf" %in% class(df)) {
-
-      if (as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT") {
+      if (
+        as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT"
+      ) {
         stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
       }
 
-      if (sf::st_crs(df) != sf::st_crs(4326))
+      if (sf::st_crs(df) != sf::st_crs(4326)) {
         stop(
           "'", name, "' CRS must be WGS 84 (EPSG 4326). ",
           "Please use either sf::set_crs() to set it or ",
           "sf::st_transform() to reproject it."
         )
+      }
 
       df <- sfheaders::sf_to_df(df, fill = TRUE)
       data.table::setDT(df)
       data.table::setnames(df, "x", "lon")
       data.table::setnames(df, "y", "lat")
-      checkmate::assert_names(
-        names(df),
-        must.include = c("id"),
-        .var.name = name
-      )
-
     }
 
-    checkmate::assert_names(names(df), must.include = c("id", "lat", "lon"), .var.name = name)
-
-    if (!is.character(df$id)) {
-
-      df$id <- as.character(df$id)
-      warning(paste0("'", name, "$id' forcefully cast to character."))
-
-    }
-
+    checkmate::assert_names(
+      names(df),
+      must.include = c("id", "lat", "lon"),
+      .var.name = name
+    )
     checkmate::assert_numeric(df$lon, .var.name = paste0(name, "$lon"))
     checkmate::assert_numeric(df$lat, .var.name = paste0(name, "$lat"))
 
-    return(df)
+    if (!is.character(df$id)) {
+      df$id <- as.character(df$id)
+      warning(paste0("'", name, "$id' forcefully cast to character."))
+    }
 
+    return(df)
   }
 
-  stop(paste0("'", name, "' must be either a 'data.frame' or a 'sf POINT'."))
-
+  stop(paste0("'", name, "' must be either a 'data.frame' or a 'POINT sf'."))
 }
 
 
@@ -331,29 +327,22 @@ assert_breakdown_stat <- function(breakdown_stat) {
 #'
 #' @description Sets number of threads to be used by the r5r .jar.
 #'
-#' @param n_threads Any object.
+#' @param n_threads A number.
 #'
 #' @return No return value, called for side effects.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 set_n_threads <- function(r5r_core, n_threads) {
-
-  checkmate::assert_numeric(n_threads)
+  checkmate::assert_number(n_threads, lower = 1)
 
   if (is.infinite(n_threads)) {
-
     r5r_core$setNumberOfThreadsToMax()
-    data.table::setDTthreads(percent = 100)
-
   } else {
-
     n_threads <- as.integer(n_threads)
     r5r_core$setNumberOfThreads(n_threads)
-    data.table::setDTthreads(threads = n_threads)
-
   }
-
 }
 
 
@@ -387,21 +376,25 @@ set_speed <- function(r5r_core, speed, mode) {
 #' Set max Level of Transit Stress (LTS)
 #'
 #' @template r5r_core
-#' @param max_lts numeric (between 1 and 4). The maximum level of traffic stress
-#' that cyclists will tolerate. A value of 1 means cyclists will only travel
-#' through the quietest streets, while a value of 4 indicates cyclists can travel
-#' through any road.
+#' @param max_lts A number (between 1 and 4). The maximum level of traffic
+#'   stress that cyclists will tolerate. A value of 1 means cyclists will only
+#'   travel through the quietest streets, while a value of 4 indicates cyclists
+#'   can travel through any road.
 #'
 #' @return No return value, called for side effects.
+#'
 #' @family support functions
 #'
 #' @keywords internal
 set_max_lts <- function(r5r_core, max_lts) {
-  checkmate::assert_numeric(max_lts)
+  checkmate::assert_number(max_lts)
 
   if (max_lts < 1 | max_lts > 4) {
-    stop(paste0(max_lts, " is not a valid value for the maximum Level of Transit Stress (LTS).\n",
-                "Please enter a value between 1 and 4."))
+    stop(
+      max_lts,
+      " is not a valid value for the maximum Level of Transit Stress (LTS).\n",
+      "Please enter a value between 1 and 4."
+    )
   }
 
   r5r_core$setMaxLevelTrafficStress(as.integer(max_lts))
@@ -422,7 +415,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #' @keywords internal
 set_max_rides <- function(r5r_core, max_rides) {
 
-  checkmate::assert_numeric(max_rides)
+  checkmate::assert_number(max_rides, lower = 0)
 
   # R5 defaults maxTransfers to 8L
   if (is.infinite(max_rides)) max_rides <- 8L
