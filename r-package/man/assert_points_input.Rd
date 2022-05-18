@@ -12,7 +12,7 @@ assert_points_input(df, name)
 \item{name}{Object name.}
 }
 \value{
-A data.frame with columns \code{id}, \code{lon} and \code{lat}.
+A \code{data.frame} with columns \code{id}, \code{lon} and \code{lat}.
 }
 \description{
 Assert class of origin and destination inputs and the type of its columns

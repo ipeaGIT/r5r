@@ -7,7 +7,7 @@
 set_n_threads(r5r_core, n_threads)
 }
 \arguments{
-\item{n_threads}{Any object.}
+\item{n_threads}{A number.}
 }
 \value{
 No return value, called for side effects.

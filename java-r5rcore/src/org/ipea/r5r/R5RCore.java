@@ -236,7 +236,8 @@ public class R5RCore {
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
         nativeElevationFunction = nativeElevationFunction.toUpperCase();
-        R5Network.useNativeElevation = nativeElevationFunction.equals("TOBLER");
+        R5Network.useNativeElevation = !nativeElevationFunction.equals("NONE");
+        R5Network.elevationCostFunction = nativeElevationFunction;
 
         this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
 

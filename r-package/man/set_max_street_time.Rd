@@ -7,17 +7,17 @@
 set_max_street_time(max_walk_dist, walk_speed, max_trip_duration)
 }
 \arguments{
-\item{max_walk_dist}{numeric, Maximum walking distance (in meters) for the
-whole trip. Passed from routing functions.}
+\item{max_walk_dist}{A numeric of length 1. Maximum walking distance (in
+meters) for the whole trip. Passed from routing functions.}
 
-\item{walk_speed}{numeric, Average walk speed in Km/h. Defaults to 3.6 Km/h.
-Passed from routing functions.}
+\item{walk_speed}{A numeric of length 1. Average walk speed in km/h.
+Defaults to 3.6 Km/h. Passed from routing functions.}
 
-\item{max_trip_duration}{numeric, Maximum trip duration in seconds. Defaults
-to 120 minutes (2 hours). Passed from routing functions.}
+\item{max_trip_duration}{A numeric of length 1. Maximum trip duration in
+seconds. Defaults to 120 minutes (2 hours). Passed from routing functions.}
 }
 \value{
-An \code{integer} representing the maximum number of minutes walking
+An \code{integer} representing the maximum number of minutes walking.
 }
 \description{
 Converts a time duration and speed input and converts it to distances.

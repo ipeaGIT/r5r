@@ -41,6 +41,7 @@ import static com.conveyal.file.FileStorageFormat.GEOTIFF;
 public class R5Network {
 
     public static boolean useNativeElevation = false;
+    public static String elevationCostFunction = "NONE";
 
     /**
      * This string should be changed to a new value each time the network storage format changes.
@@ -94,7 +95,7 @@ public class R5Network {
                     if (tiffFiles.length > 0) {
                         RasterCost elevationRaster = new RasterCost();
                         elevationRaster.dataSourceId = FilenameUtils.removeExtension(tiffFiles[0].getAbsolutePath());
-                        elevationRaster.costFunction = RasterCost.CostFunction.MINETTI;
+                        elevationRaster.costFunction = RasterCost.CostFunction.valueOf(elevationCostFunction);
 
                         elevationRaster.resolve(tn);
                         elevationRaster.apply(tn);

@@ -10,13 +10,14 @@ set_progress(r5r_core, progress)
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{progress}{logical, passed from function above}
+\item{progress}{A logical, passed from function above.}
 }
 \value{
 No return value, called for side effects.
 }
 \description{
-Set progress argument
+Indicates whether or not a progress counter must be printed during
+computations. Applies to all routing functions.
 }
 \seealso{
 Other support functions: 

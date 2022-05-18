@@ -53,8 +53,9 @@ setup_r5 <- function(data_path,
   checkmate::assert_character(elevation)
   checkmate::assert_logical(overwrite)
 
-  if (!(elevation %in% c('TOBLER', 'MANETTI','NONE'))) {
-    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MANETTI','NONE')")
+  elevation <- toupper(elevation)
+  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
+    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
     }
 
 
