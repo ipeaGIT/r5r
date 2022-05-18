@@ -9,17 +9,16 @@
 #' @template fare_calculator
 #' @template max_fare
 #' @template verbose
-#' @param percentiles An integer vector with length smaller than or equal to 5.
-#'   Specifies the percentile to use when returning travel time estimates
-#'   within the given time window. For example, if the 25th travel time
-#'   percentile between A and B is 15 minutes, 25% of all trips taken between
-#'   these points within the specified time window are shorter than 15 minutes.
-#'   Defaults to 50, returning the median travel time. If a vector with length
-#'   bigger than 1 is passed, the output contains an additional column for each
-#'   percentile specifying the percentile travel time estimate. each estimate.
-#'   Due to upstream restrictions, only 5 percentiles can be specified at a
-#'   time. For more details, please see R5 documentation at
-#'   'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#' @param percentiles An integer vector (max length of 5). Specifies the
+#'   percentile to use when returning travel time estimates within the given
+#'   time window. For example, if the 25th travel time percentile between A and
+#'   B is 15 minutes, 25% of all trips taken between these points within the
+#'   specified time window are shorter than 15 minutes. Defaults to 50, returning
+#'   the median travel time. If a vector with length bigger than 1 is passed, the
+#'   output contains an additional column for each percentile specifying the
+#'   percentile travel time estimate. each estimate. Due to upstream restrictions,
+#'   only 5 percentiles can be specified at a time. For more details, please see
+#'   R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
 #'   origin and destination pairs. Pairs whose trips couldn't be completed
@@ -188,7 +187,9 @@ travel_time_matrix <- function(r5r_core,
   draws <- as.integer(draws)
 
   # percentiles
-  percentiles <- percentiles[1:5]
+  if (length(percentiles) > 5) {
+    stop("Maximum number of percentiles allowed is 5.")
+  }
   percentiles <- percentiles[!is.na(percentiles)]
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)

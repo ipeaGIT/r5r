@@ -8,18 +8,17 @@
 #' @template time_window_related_args
 #' @template fare_calculator
 #' @template verbose
-#' @param percentiles An integer vector with length smaller than or equal to 5.
-#' Specifies the percentile to use when returning travel time estimates within
-#' the given time window. Please note that this parameter is applied to the
-#' travel time estimates only (e.g. if the 25th percentile is specified, and
-#' the output between A and B is 15 minutes and 10 dollars, 25% of all trips
-#' cheaper than 10 dollars taken between these points are shorter than 15
-#' minutes). Defaults to 50, returning the median travel time. If a vector with
-#' length bigger than 1 is passed, the output contains an additional column
-#' that specifies the percentile of each travel time and monetary cost
-#' combination. Due to upstream restrictions, only 5 percentiles can be
-#' specified at a time. For more details, please see R5 documentation at
-#' 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#' @param percentiles An integer vector (max length of 5). Specifies the
+#'   percentile to use when returning travel time estimates within the given
+#'   time window. Please note that this parameter is applied to the travel time
+#'   estimates only (e.g. if the 25th percentile is specified, and the output
+#'   between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper than
+#'   10 dollars taken between these points are shorter than 15 minutes). Defaults
+#'   to 50, returning the median travel time. If a vector with length bigger than
+#'   1 is passed, the output contains an additional column that specifies the
+#'   percentile of each travel time and monetary cost combination. Due to
+#'   upstream restrictions, only 5 percentiles can be specified at a time. For
+#'   more details, please see R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param monetary_cost_cutoffs A numeric vector. The monetary cutoffs that
 #' should be considered when calculating the Pareto frontier. Most of the time
 #' you'll want this parameter to be the combination of all possible fares
@@ -156,7 +155,9 @@ pareto_frontier <- function(r5r_core,
   draws <- as.integer(draws)
 
   # percentiles
-  percentiles <- percentiles[1:5]
+  if (length(percentiles) > 5) {
+    stop("Maximum number of percentiles allowed is 5.")
+  }
   percentiles <- percentiles[!is.na(percentiles)]
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)

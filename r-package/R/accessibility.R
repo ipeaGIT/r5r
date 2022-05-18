@@ -12,20 +12,19 @@
 #'   in the `destinations` input that tells the number of opportunities in each
 #'   location. Several different column names can be passed, in which case the
 #'   accessibility to each kind of opportunity will be calculated.
-#' @param percentiles An integer vector with length smaller than or equal to 5.
-#'   Specifies the percentile to use when returning accessibility estimates
-#'   within the given time window. Please note that this parameter is applied
-#'   to the travel time estimates that generate the accessibility results, and
-#'   not to the accessibility distribution itself (i.e. if the 25th percentile
-#'   is specified, the accessibility is calculated from the 25th percentile
-#'   travel time, which may or may not be equal to the 25th percentile of the
-#'   accessibility distribution itself). Defaults to 50, returning the
-#'   accessibility calculated from the median travel time. If a vector with
-#'   length bigger than 1 is passed, the output contains an additional column
-#'   that specifies the percentile of each accessibility estimate. Due to
-#'   upstream restrictions, only 5 percentiles can be specified at a time. For
-#'   more details, please see `R5` documentation at
-#'   'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#' @param percentiles An integer vector (max length of 5). Specifies the
+#'   percentile to use when returning accessibility estimates within the given
+#'   time window. Please note that this parameter is applied to the travel time
+#'   estimates that generate the accessibility results, and not to the
+#'   accessibility distribution itself (i.e. if the 25th percentile is specified,
+#'   the accessibility is calculated from the 25th percentile travel time, which
+#'   may or may not be equal to the 25th percentile of the accessibility
+#'   distribution itself). Defaults to 50, returning the accessibility calculated
+#'   from the median travel time. If a vector with length bigger than 1 is passed,
+#'   the output contains an additional column that specifies the percentile of
+#'   each accessibility estimate. Due to upstream restrictions, only 5 percentiles
+#'   can be specified at a time. For more details, please see `R5` documentation
+#'   at https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param decay_function A string. Which decay function to use when calculating
 #'   accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
 #'   or `logistic`. Defaults to `step`, which is equivalent to a cumulative
@@ -219,7 +218,9 @@ accessibility <- function(r5r_core,
   draws <- as.integer(draws)
 
   # percentiles
-  percentiles <- percentiles[1:5]
+  if (length(percentiles) > 5) {
+    stop("Maximum number of percentiles allowed is 5.")
+    }
   percentiles <- percentiles[!is.na(percentiles)]
   checkmate::assert_numeric(percentiles)
   percentiles <- as.integer(percentiles)

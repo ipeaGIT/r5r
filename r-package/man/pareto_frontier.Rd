@@ -54,18 +54,17 @@ will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
 GTFS feeds contain a \code{frequencies.txt} table.}
 
-\item{percentiles}{An integer vector with length smaller than or equal to 5.
-Specifies the percentile to use when returning travel time estimates within
-the given time window. Please note that this parameter is applied to the
-travel time estimates only (e.g. if the 25th percentile is specified, and
-the output between A and B is 15 minutes and 10 dollars, 25\% of all trips
-cheaper than 10 dollars taken between these points are shorter than 15
-minutes). Defaults to 50, returning the median travel time. If a vector with
-length bigger than 1 is passed, the output contains an additional column
-that specifies the percentile of each travel time and monetary cost
-combination. Due to upstream restrictions, only 5 percentiles can be
-specified at a time. For more details, please see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+\item{percentiles}{An integer vector (max length of 5). Specifies the
+percentile to use when returning travel time estimates within the given
+time window. Please note that this parameter is applied to the travel time
+estimates only (e.g. if the 25th percentile is specified, and the output
+between A and B is 15 minutes and 10 dollars, 25\% of all trips cheaper than
+10 dollars taken between these points are shorter than 15 minutes). Defaults
+to 50, returning the median travel time. If a vector with length bigger than
+1 is passed, the output contains an additional column that specifies the
+percentile of each travel time and monetary cost combination. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the

@@ -54,17 +54,16 @@ will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
 GTFS feeds contain a \code{frequencies.txt} table.}
 
-\item{percentiles}{An integer vector with length smaller than or equal to 5.
-Specifies the percentile to use when returning travel time estimates
-within the given time window. For example, if the 25th travel time
-percentile between A and B is 15 minutes, 25\% of all trips taken between
-these points within the specified time window are shorter than 15 minutes.
-Defaults to 50, returning the median travel time. If a vector with length
-bigger than 1 is passed, the output contains an additional column for each
-percentile specifying the percentile travel time estimate. each estimate.
-Due to upstream restrictions, only 5 percentiles can be specified at a
-time. For more details, please see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+\item{percentiles}{An integer vector (max length of 5). Specifies the
+percentile to use when returning travel time estimates within the given
+time window. For example, if the 25th travel time percentile between A and
+B is 15 minutes, 25\% of all trips taken between these points within the
+specified time window are shorter than 15 minutes. Defaults to 50, returning
+the median travel time. If a vector with length bigger than 1 is passed, the
+output contains an additional column for each percentile specifying the
+percentile travel time estimate. each estimate. Due to upstream restrictions,
+only 5 percentiles can be specified at a time. For more details, please see
+R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{fare_calculator}{A fare calculator object, following the convention
 set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
