@@ -1,6 +1,5 @@
 ---
 title: 'Using the time_window parameter'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use and interpret the `time_window` parameter in r5r."

@@ -1,6 +1,5 @@
 ---
 title: 'Travel time matrices'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the travel_time_matrix() and expanded_travel_time_matrix() functions in r5r."
@@ -96,15 +95,12 @@ This can be done very efficiently by using the `time_window` and `percentile` pa
 
 ## 4. The `expaded_travel_time_matrix()` function
 
-Sometimes, we want to know more than simply the total travel time from A to B. You want to know more information about each route. This is the when the `expaded_travel_time_matrix()` function comes in.
+Sometimes, we want to know more than simply the total travel time from A to B. This is the when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken for each origin destination pair.
 
-how many transfers that trip required, or how much was spent walking, waiting for the public transport and traveling inside the vehicle.
+Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expaded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer time. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
 
-
-
-
+*A general call to expanded_travel_time_matrix()*
 ```{r, message = FALSE, eval = FALSE}
-# estimate accessibility
 ettm <- expanded_travel_time_matrix(r5r_core,   
                                     origins = points,
                                     destinations = points,    
@@ -113,12 +109,11 @@ ettm <- expanded_travel_time_matrix(r5r_core,
                                     departure_datetime = departure_datetime )
 
 head(ettm, n = 10)
-
 ```
 
+*Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
 
 ```{r, message = FALSE, eval = FALSE}
-# estimate accessibility
 ettm2 <- expanded_travel_time_matrix(r5r_core,   
                                     origins = points,
                                     destinations = points,    
@@ -128,8 +123,25 @@ ettm2 <- expanded_travel_time_matrix(r5r_core,
                                     breakdown = TRUE)
 
 head(ettm2, n = 10)
-
 ```
+
+
+Please note that the `expaded_travel_time_matrix()` function also has a `time_window` parameter.
+
+```{r, message = FALSE, eval = FALSE}
+ettm_window <- expanded_travel_time_matrix(r5r_core,   
+                                           origins = points,
+                                           destinations = points,    
+                                           mode = mode,
+                                           max_trip_duration = max_trip_duration,
+                                           departure_datetime = departure_datetime,
+                                           breakdown = TRUE,
+                                           time_window = 20)
+
+head(ettm_window, n = 10)
+```
+
+
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
 ## References

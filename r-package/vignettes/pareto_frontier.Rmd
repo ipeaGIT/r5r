@@ -1,6 +1,5 @@
 ---
 title: 'pareto_frontier() to analyze the trade-offs between travel time and monetary cost'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r."

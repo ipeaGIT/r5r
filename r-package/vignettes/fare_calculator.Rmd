@@ -1,12 +1,11 @@
 ---
-title: 'Configuring and Using Fare Calculators'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
+title: 'Accounting for monetary costs'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to configure and use custom fare calculators in order to account for monetary travel costs when generating travel time matrices and accessibility estimates with the `r5r` package."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Configuring and Using Fare Calculators} 
+  %\VignetteIndexEntry{Accounting for monetary costs} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 ---
