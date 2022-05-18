@@ -76,7 +76,7 @@ download_r5 <- function(version = "6.7.0",
   if (!dir.exists(jar_dir)) dir.create(jar_dir)
 
   # download JAR
-  if (!quiet) message("R5 will be saved to ", destfile)
+  message("Downloading R5 jar file to ", destfile)
   utils::download.file(
     url = file_url,
     destfile = destfile,

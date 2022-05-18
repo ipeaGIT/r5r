@@ -13,7 +13,7 @@ travel_time_matrix(
   departure_datetime = Sys.time(),
   time_window = 1L,
   percentiles = 50L,
-  fare_calculator = NULL,
+  fare_structure = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
@@ -65,9 +65,9 @@ percentile travel time estimate. each estimate. Due to upstream restrictions,
 only 5 percentiles can be specified at a time. For more details, please see
 R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
-\item{fare_calculator}{A fare calculator object, following the convention
-set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
 understand how this object is structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when
@@ -302,9 +302,9 @@ ttm <- travel_time_matrix(
 )
 head(ttm)
 
-# use a fare calculator and set a max fare to take monetary constraints into
+# use a fare structure and set a max fare to take monetary constraints into
 # account
-fare_calculator <- read_fare_calculator(
+fare_structure <- read_fare_structure(
   file.path(data_path, "fares/fares_poa.zip")
 )
 ttm <- travel_time_matrix(
@@ -313,7 +313,7 @@ ttm <- travel_time_matrix(
   destinations = points,
   mode = c("WALK", "TRANSIT"),
   departure_datetime = departure_datetime,
-  fare_calculator = fare_calculator,
+  fare_structure = fare_structure,
   max_fare = 5,
   max_trip_duration = 60,
 )
