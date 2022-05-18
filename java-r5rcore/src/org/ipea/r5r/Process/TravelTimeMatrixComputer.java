@@ -1,4 +1,4 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Process;
 
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.TravelTimeComputer;
@@ -10,6 +10,8 @@ import com.conveyal.r5.transit.path.RouteSequence;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.ipea.r5r.R5.R5TravelTimeComputer;
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -13,6 +13,10 @@ import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
+import org.ipea.r5r.Process.AccessibilityEstimator;
+import org.ipea.r5r.Process.DetailedItineraryPlanner;
+import org.ipea.r5r.Process.ParetoFrontierCalculator;
+import org.ipea.r5r.Process.TravelTimeMatrixComputer;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 

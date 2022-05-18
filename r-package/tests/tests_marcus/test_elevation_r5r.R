@@ -10,7 +10,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE,
                      overwrite = TRUE,
                      temp_dir = FALSE,
-                     elevation = "minetti")
+                     elevation = "tobler")
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
@@ -19,7 +19,6 @@ points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 ttm_r5r_walk <- travel_time_matrix(r5r_core,
                             origins = points,
                             destinations = points,
-                            breakdown = FALSE,
                             mode = c("WALK"),
                             max_trip_duration = 60,
                             max_walk_dist = Inf,

@@ -1,9 +1,11 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Process;
 
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.point_to_point.builder.PointToPointQuery;
 import com.conveyal.r5.transit.TransportNetwork;
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;

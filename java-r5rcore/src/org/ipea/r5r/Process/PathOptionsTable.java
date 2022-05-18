@@ -1,16 +1,15 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Process;
 
 import com.conveyal.r5.api.ProfileResponse;
 import com.conveyal.r5.api.util.*;
 import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.ipea.r5r.RDataFrame;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.conveyal.r5.streets.VertexStore.FIXED_FACTOR;

@@ -1,4 +1,4 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Process;
 
 import com.conveyal.r5.analyst.FreeFormPointSet;
 import com.conveyal.r5.analyst.cluster.PathResult;
@@ -9,6 +9,8 @@ import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
 
 import java.io.*;

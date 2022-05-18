@@ -1,11 +1,12 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Process;
 
 import com.conveyal.r5.OneOriginResult;
-import com.conveyal.r5.analyst.PointSet;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
 import org.ipea.r5r.R5.R5TravelTimeComputer;
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
 
 import java.text.ParseException;
 import java.util.HashMap;
