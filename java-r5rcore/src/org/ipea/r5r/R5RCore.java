@@ -240,10 +240,10 @@ public class R5RCore {
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
         nativeElevationFunction = nativeElevationFunction.toUpperCase();
-        R5Network.useNativeElevation = !nativeElevationFunction.equals("NONE");
-        R5Network.elevationCostFunction = nativeElevationFunction;
+        NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
+        NetworkBuilder.elevationCostFunction = nativeElevationFunction;
 
-        this.transportNetwork = R5Network.checkAndLoadR5Network(dataFolder);
+        this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(dataFolder);
 
         this.routingProperties = new RoutingProperties();
         this.routingProperties.transitLayer = this.transportNetwork.transitLayer;

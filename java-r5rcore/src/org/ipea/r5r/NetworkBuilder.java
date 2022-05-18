@@ -1,8 +1,6 @@
 package org.ipea.r5r;
 
-import com.conveyal.analysis.components.WorkerComponents;
 import com.conveyal.analysis.datasource.DataSourceException;
-import com.conveyal.file.FileStorageKey;
 import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
@@ -19,11 +17,6 @@ import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
 import org.apache.commons.io.FilenameUtils;
-import org.geotools.coverage.grid.io.AbstractGridFormat;
-import org.geotools.coverage.grid.io.GridFormatFinder;
-import org.geotools.gce.geotiff.GeoTiffFormat;
-import org.geotools.gce.geotiff.GeoTiffFormatFactorySpi;
-import org.geotools.util.factory.FactoryRegistry;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Set;
 
-import static com.conveyal.file.FileCategory.DATASOURCES;
-import static com.conveyal.file.FileStorageFormat.GEOTIFF;
-
-public class R5Network {
+public class NetworkBuilder {
 
     public static boolean useNativeElevation = false;
     public static String elevationCostFunction = "NONE";
@@ -54,24 +43,24 @@ public class R5Network {
     /** Set this to true to count instances and print a report including which serializer is handling each class. */
     private static final boolean COUNT_CLASS_INSTANCES = false;
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5Network.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NetworkBuilder.class);
 
     public static TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
-            R5Network.createR5Network(dataFolder);
+            NetworkBuilder.createR5Network(dataFolder);
         } else {
             // network.dat file exists
             // check version
-            if (!R5Network.checkR5NetworkVersion(dataFolder)) {
+            if (!NetworkBuilder.checkR5NetworkVersion(dataFolder)) {
                 // incompatible versions. try to create a new one
                 // network could not be loaded, probably due to incompatible versions. create a new one
-                R5Network.createR5Network(dataFolder);
+                NetworkBuilder.createR5Network(dataFolder);
             }
         }
         // compatible versions, load network
-        return R5Network.loadR5Network(dataFolder);
+        return NetworkBuilder.loadR5Network(dataFolder);
     }
 
     public static TransportNetwork loadR5Network(String dataFolder) throws Exception {
