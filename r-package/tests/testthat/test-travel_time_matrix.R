@@ -78,19 +78,15 @@ test_that("errors due to incorrect input types - origins and destinations", {
 
   # wrong columns types
 
-  origins_char_lat <- origins
-  origins_char_lat$lat <- as.character(origins$lat)
-  origins_char_lon <- origins
-  origins_char_lon$lon <- as.character(origins$lon)
-  destinations_char_lat <- destinations
-  destinations_char_lat$lat <- as.character(destinations$lat)
-  destinations_char_lon <- destinations
-  destinations_char_lon$lon <- as.character(destinations$lon)
+  pois_char_lat <- pois 
+  pois_char_lat$lat <- as.character(pois$lat)
+  pois_char_lon <- pois
+  pois_char_lon$lon <- as.character(pois$lon)
 
-  expect_error(tester(origins = origins_char_lat))
-  expect_error(tester(origins = origins_char_lon))
-  expect_error(tester(destinations = destinations_char_lat))
-  expect_error(tester(destinations = destinations_char_lon))
+  expect_error(tester(origins = pois_char_lat))
+  expect_error(tester(origins = pois_char_lon))
+  expect_error(tester(destinations = pois_char_lat))
+  expect_error(tester(destinations = pois_char_lon))
 })
 
 test_that("errors due to incorrect input types - other inputs", {
@@ -355,7 +351,7 @@ test_that("bike trips are shorter with higher lts values", {
 test_that("all travel times are lower than max_trip_duration", {
   max_trip_duration <- 60L
   ttm <- tester(max_trip_duration = max_trip_duration, percentiles = 99)
-  expect_true(all(ttm$travel_time_p99 < max_trip_duration))
+  expect_true(all(ttm$travel_time_p99 <= max_trip_duration))
 })
 
 test_that("all od pairs are unique", {
