@@ -13,6 +13,7 @@ import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
+import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.AccessibilityEstimator;
 import org.ipea.r5r.Process.DetailedItineraryPlanner;
 import org.ipea.r5r.Process.ParetoFrontierCalculator;
@@ -247,11 +248,6 @@ public class R5RCore {
 
         this.routingProperties = new RoutingProperties();
         this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
-    }
-
-    public void buildDistanceTables() {
-        this.transportNetwork.transitLayer.buildDistanceTables(null);
-        new TransferFinder(transportNetwork).findTransfers();
     }
 
     // ---------------------------------------------------------------------------------------------------

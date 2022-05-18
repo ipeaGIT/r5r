@@ -12,6 +12,10 @@ r5r_core <- setup_r5(data_path = data_path, verbose = FALSE,
                      temp_dir = FALSE,
                      elevation = "tobler")
 
+tn <- transit_network_to_sf(r5r_core)
+
+mapview::mapview(tn$routes, zcol = "mode")
+
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 

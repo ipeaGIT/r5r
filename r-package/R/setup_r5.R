@@ -157,9 +157,6 @@ setup_r5 <- function(data_path,
 
   }
 
-  # finish R5's setup by pre-calculating distances between transit stops and street network
-  r5r_core$buildDistanceTables()
-
   return(r5r_core)
 
 }

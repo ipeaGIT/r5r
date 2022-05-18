@@ -107,5 +107,8 @@ public class Utils {
 
         logger = loggerContext.getLogger("org.ipea.r5r.R5.R5TravelTimeComputer");
         logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.Network.TransitLayerWithShapes");
+        logger.setLevel(Level.valueOf(mode));
     }
 }

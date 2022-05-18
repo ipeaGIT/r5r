@@ -1,36 +1,23 @@
-package org.ipea.r5r;
+package org.ipea.r5r.Network;
 
-import com.conveyal.analysis.datasource.DataSourceException;
-import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
-import com.conveyal.r5.analyst.scenario.RasterCost;
-import com.conveyal.r5.kryo.KryoNetworkSerializer;
-import com.conveyal.r5.transit.TransportNetwork;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
-import com.esotericsoftware.kryo.util.DefaultStreamFactory;
-import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
-import org.apache.commons.io.FilenameUtils;
 import org.objenesis.strategy.SerializingInstantiatorStrategy;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
 
-public class NetworkBuilder {
-
-    public static boolean useNativeElevation = false;
-    public static String elevationCostFunction = "NONE";
+public class NetworkChecker {
 
     /**
      * This string should be changed to a new value each time the network storage format changes.
@@ -40,68 +27,7 @@ public class NetworkBuilder {
 
     public static final byte[] HEADER = "R5NETWORK".getBytes();
 
-    /** Set this to true to count instances and print a report including which serializer is handling each class. */
-    private static final boolean COUNT_CLASS_INSTANCES = false;
-
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NetworkBuilder.class);
-
-    public static TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
-        File file = new File(dataFolder, "network.dat");
-        if (!file.isFile()) {
-            // network.dat file does not exist. create!
-            NetworkBuilder.createR5Network(dataFolder);
-        } else {
-            // network.dat file exists
-            // check version
-            if (!NetworkBuilder.checkR5NetworkVersion(dataFolder)) {
-                // incompatible versions. try to create a new one
-                // network could not be loaded, probably due to incompatible versions. create a new one
-                NetworkBuilder.createR5Network(dataFolder);
-            }
-        }
-        // compatible versions, load network
-        return NetworkBuilder.loadR5Network(dataFolder);
-    }
-
-    public static TransportNetwork loadR5Network(String dataFolder) throws Exception {
-        return KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
-    }
-
-    public static void createR5Network(String dataFolder) {
-        File dir = new File(dataFolder);
-        File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
-
-        if (mapdbFiles != null) { for (File file:mapdbFiles) file.delete(); }
-
-        TransportNetwork tn = TransportNetwork.fromDirectory(new File(dataFolder));
-
-        // apply elevation costs if tif files are available
-        try
-        {
-            if (useNativeElevation) {
-                File[] tiffFiles = dir.listFiles((d, name) -> name.endsWith(".tif") | name.endsWith(".tiff"));
-                if (tiffFiles != null) {
-                    if (tiffFiles.length > 0) {
-                        RasterCost elevationRaster = new RasterCost();
-                        elevationRaster.dataSourceId = FilenameUtils.removeExtension(tiffFiles[0].getAbsolutePath());
-                        elevationRaster.costFunction = RasterCost.CostFunction.valueOf(elevationCostFunction);
-
-                        elevationRaster.resolve(tn);
-                        elevationRaster.apply(tn);
-                    }
-                }
-            }
-        } catch (DataSourceException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NetworkChecker.class);
 
     public static boolean checkR5NetworkVersion(String dataFolder) throws FileNotFoundException {
         LOG.info("Reading transport network...");
@@ -135,12 +61,7 @@ public class NetworkBuilder {
      * Registration is more important for small network messages.
      */
     private static Kryo makeKryo () {
-        Kryo kryo;
-        if (COUNT_CLASS_INSTANCES) {
-            kryo = new Kryo(new InstanceCountingClassResolver(), new MapReferenceResolver(), new DefaultStreamFactory());
-        } else {
-            kryo = new Kryo();
-        }
+        Kryo kryo = new Kryo();
         // Auto-associate classes with default serializers the first time each class is encountered.
         kryo.setRegistrationRequired(false);
         // Handle references and loops in the object graph, do not repeatedly serialize the same instance.
@@ -167,4 +88,5 @@ public class NetworkBuilder {
         kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
         return kryo;
     }
+
 }
