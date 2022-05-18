@@ -32,10 +32,10 @@
 #'   opportunities measure. Please see the details to understand how each
 #'   alternative works and how they relate to the `cutoffs` and `decay_value`
 #'   parameters.
-#' @param cutoffs A numeric vector. This parameter has different effects for
-#'   each decay function: it indicates the cutoff times in minutes when
-#'   calculating cumulative opportunities accessibility with the `step`
-#'   function, the median (or inflection point) of the decay curves in the
+#' @param cutoffs A numeric vector (maximum length of 12). This parameter has
+#'   different effects for each decay function: it indicates the cutoff times in
+#'   minutes when calculating cumulative opportunities accessibility with the
+#'   `step` function, the median (or inflection point) of the decay curves in the
 #'   `logistic` and `linear` functions, and the half-life in the `exponential`
 #'   function. It has no effect when using the `fixed_exponential` function.
 #' @param decay_value A numeric. Extra parameter to be passed to the selected
@@ -57,7 +57,7 @@
 #' @template datetime_parsing_section
 #' @template raptor_algorithm_section
 #'
-#' @family routing
+#' @family accessibility
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)

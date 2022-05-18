@@ -85,10 +85,10 @@ opportunities measure. Please see the details to understand how each
 alternative works and how they relate to the \code{cutoffs} and \code{decay_value}
 parameters.}
 
-\item{cutoffs}{A numeric vector. This parameter has different effects for
-each decay function: it indicates the cutoff times in minutes when
-calculating cumulative opportunities accessibility with the \code{step}
-function, the median (or inflection point) of the decay curves in the
+\item{cutoffs}{A numeric vector (maximum length of 12). This parameter has
+different effects for each decay function: it indicates the cutoff times in
+minutes when calculating cumulative opportunities accessibility with the
+\code{step} function, the median (or inflection point) of the decay curves in the
 \code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
 function. It has no effect when using the \code{fixed_exponential} function.}
 
@@ -395,11 +395,4 @@ head(access)
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
 }
-\seealso{
-Other routing: 
-\code{\link{detailed_itineraries}()},
-\code{\link{expanded_travel_time_matrix}()},
-\code{\link{pareto_frontier}()},
-\code{\link{travel_time_matrix}()}
-}
-\concept{routing}
+\concept{accessibility}
