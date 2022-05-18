@@ -162,10 +162,10 @@ opportunities measure. Please see the details to understand how each
 alternative works and how they relate to the <code>cutoffs</code> and <code>decay_value</code>
 parameters.</p></dd>
 <dt>cutoffs</dt>
-<dd><p>A numeric vector. This parameter has different effects for
-each decay function: it indicates the cutoff times in minutes when
-calculating cumulative opportunities accessibility with the <code>step</code>
-function, the median (or inflection point) of the decay curves in the
+<dd><p>A numeric vector (maximum length of 12). This parameter has
+different effects for each decay function: it indicates the cutoff times in
+minutes when calculating cumulative opportunities accessibility with the
+<code>step</code> function, the median (or inflection point) of the decay curves in the
 <code>logistic</code> and <code>linear</code> functions, and the half-life in the <code>exponential</code>
 function. It has no effect when using the <code>fixed_exponential</code> function.</p></dd>
 <dt>decay_value</dt>
@@ -383,14 +383,6 @@ Record, 2653(1), 45-53. <a href="https://doi.org/10.3141/2653-06" class="externa
 transit routing. Transportation Science, 49(3), 591-604.
 <a href="https://doi.org/10.1287/trsc.2014.0534" class="external-link">doi:10.1287/trsc.2014.0534</a></p></li>
 </ul></div>
-    <div id="see-also">
-    <h2>See also</h2>
-    <div class="dont-index"><p>Other routing: 
-<code><a href="detailed_itineraries.html">detailed_itineraries</a>()</code>,
-<code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix</a>()</code>,
-<code><a href="pareto_frontier.html">pareto_frontier</a>()</code>,
-<code><a href="travel_time_matrix.html">travel_time_matrix</a>()</code></p></div>
-    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>

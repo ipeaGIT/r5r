@@ -77,8 +77,11 @@
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>.</li>
 <li>New parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
+<li>
+<code>r5r</code> now uses <code>R5</code>’s native elevation weighting for walking and cycling impedance functions. As a result <code>r5r</code> does not have raster or rgdal package dependencies anymore. Closes <a href="https://github.com/ipeaGIT/r5r/issues/243" class="external-link">#243</a> and <a href="https://github.com/ipeaGIT/r5r/issues/233" class="external-link">#233</a>.</li>
 <li>New parameter <code>output_dir</code> to all routing functions, which is used to specify a directory in which the results should be saved as <code>.csv</code> files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents <code>R5</code> from storing them in memory.</li>
 <li>Parameters <code>breakdown</code> and <code>breakdown_stat</code> in <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> were removed. New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> should be used to retrieve detailed information of travel time matrices.</li>
+<li>Improved documentation of the <code>cutoffs</code> parameter in <code><a href="../reference/accessibility.html">accessibility()</a></code>, clarifying the function only accepts up to 12 cutoff values. Closes <a href="https://github.com/ipeaGIT/r5r/issues/216" class="external-link">#216</a>.</li>
 <li>Package documentation has been extensively updated and expanded.</li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li><p>r5r now downloads R5 Jar directly from Conveyal’s github, making the package more stable. Closes <a href="https://github.com/ipeaGIT/r5r/issues/226" class="external-link">#226</a>.</p></li>
