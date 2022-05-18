@@ -17,7 +17,7 @@ accessibility(
   decay_function = "step",
   cutoffs = 30L,
   decay_value = 1,
-  fare_calculator = NULL,
+  fare_structure = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
@@ -95,9 +95,9 @@ function. It has no effect when using the \code{fixed_exponential} function.}
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
-\item{fare_calculator}{A fare calculator object, following the convention
-set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
 understand how this object is structured.}
 
 \item{max_fare}{A numeric. The maximum value that trips can cost when

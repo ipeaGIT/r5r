@@ -472,7 +472,7 @@ Sys.setenv(NOT_CRAN = "true")
 # each function separately
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
-covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
+a <- covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
 covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat/test-detailed_itineraries.R"))
 a <- covr::function_coverage(fun=r5r::expanded_travel_time_matrix, test_file("tests/testthat/test-expanded_travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::pareto_frontier, test_file("tests/testthat/test-pareto_frontier.R"))
@@ -505,7 +505,7 @@ covr::function_coverage(fun=r5r::set_speed, test_file("tests/testthat/test-utils
 
 # the whole package
 Sys.setenv(NOT_CRAN = "true")
-r5r_cov3<- covr::package_coverage(path = ".", type = "tests")
+r5r_cov3 <- covr::package_coverage(path = ".", type = "tests")
 r5r_cov2
 
 saveRDS(r5r_cov3, file = './tests/tests_rafa/r5r_coverage.rds')
@@ -562,11 +562,15 @@ r5r_core <- setup_r5(path)
 # Check package errors
 library(tictoc)
 
+
 # LOCAL
 tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
 tictoc::toc()
+
+
+
 
 # CRAN
 tictoc::tic()

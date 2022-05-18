@@ -1,0 +1,147 @@
+---
+title: 'Travel time matrices'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+abstract: "This vignette shows how to use the travel_time_matrix() and expanded_travel_time_matrix() functions in r5r."
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{Using the time_window parameter} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+bibliography: references.json
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## 1. Introduction 
+
+Some of the most common tasks in transport planning and modeling involve require having good quality data with travel time estimates between origins and destinations. `R5` is incredibly fast in generating realistic door-to-door travel time estimates in multimodal transport systems.
+
+The `r5r` packages has two functions that allow users to leverage the computing power of `R5`:
+- `travel_time_matrix()`
+- `expanded_travel_time_matrix()`
+
+This vignette shows a reproducible example to explain how these two functions work and the differences between them.
+
+
+## 2. Build routable transport network with `setup_r5()`
+
+First, let's build the multimodal transport network we'll be using in this vignette. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
+
+
+```{r, message = FALSE, eval = FALSE}
+# increase Java memory
+options(java.parameters = "-Xmx2G")
+
+# load libraries
+library(r5r)
+library(data.table)
+library(ggplot2)
+
+# build a routable transport network with r5r
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path)
+
+# routing inputs
+mode <- c('walk', 'transit')
+max_trip_duration <- 60 # minutes
+
+# departure time
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+# load origin/destination points
+points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
+
+```
+
+
+## 3. The `travel_time_matrix()` function
+
+The `travel_time_matrix()` function provides a simple and really fast way to calculate the travel time between all possible origin destination pairs at a given departure time using a given transport mode.
+
+The user can also customize many parameters such as:
+- `max_trip_duration`: maximum trip duration
+- `max_rides`: maximum number of transfer in the public transport system
+- `max_walk_dist` and `max_bike_dist`: maximum walking or cycling distance to and from public transport
+- `walk_speed` and `bike_speed`: maximum walking or cycling speed
+- `max_fare`: maximum monetary cost in public transport. [See this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+
+
+```{r, message = FALSE, eval = FALSE}
+# estimate travel time matrix
+ttm <- travel_time_matrix(r5r_core,   
+                          origins = points,
+                          destinations = points,    
+                          mode = mode,
+                          max_trip_duration = max_trip_duration,
+                          departure_datetime = departure_datetime )
+
+head(ttm, n = 10)
+
+```
+
+Now remember that travel time estimates can vary significantly across the day because of variations in public transport service levels. In order to account for this, you might want to calculate multiple travel time matrices departing at different times.
+
+This can be done very efficiently by using the `time_window` and `percentile` parameters in the `travel_time_matrix()` function. When these parameters are set, R<sup>5</sup> will automatically compute multiple travel times estimates considering multiple departures per minute within the `time_window` selected by the user. [More information about this functionality can found in this vignette](https://ipeagit.github.io/r5r/articles/time_window.html).
+
+
+
+
+## 4. The `expaded_travel_time_matrix()` function
+
+Sometimes, we want to know more than simply the total travel time from A to B. This is the when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken for each origin destination pair.
+
+Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expaded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer time. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
+
+*A general call to expanded_travel_time_matrix()*
+```{r, message = FALSE, eval = FALSE}
+ettm <- expanded_travel_time_matrix(r5r_core,   
+                                    origins = points,
+                                    destinations = points,    
+                                    mode = mode,
+                                    max_trip_duration = max_trip_duration,
+                                    departure_datetime = departure_datetime )
+
+head(ettm, n = 10)
+```
+
+*Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
+
+```{r, message = FALSE, eval = FALSE}
+ettm2 <- expanded_travel_time_matrix(r5r_core,   
+                                    origins = points,
+                                    destinations = points,    
+                                    mode = mode,
+                                    max_trip_duration = max_trip_duration,
+                                    departure_datetime = departure_datetime,
+                                    breakdown = TRUE)
+
+head(ettm2, n = 10)
+```
+
+
+Please note that the `expaded_travel_time_matrix()` function also has a `time_window` parameter.
+
+```{r, message = FALSE, eval = FALSE}
+ettm_window <- expanded_travel_time_matrix(r5r_core,   
+                                           origins = points,
+                                           destinations = points,    
+                                           mode = mode,
+                                           max_trip_duration = max_trip_duration,
+                                           departure_datetime = departure_datetime,
+                                           breakdown = TRUE,
+                                           time_window = 20)
+
+head(ettm_window, n = 10)
+```
+
+
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+
+## References

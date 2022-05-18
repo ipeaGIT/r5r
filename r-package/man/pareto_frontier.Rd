@@ -16,7 +16,7 @@ pareto_frontier(
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,
-  fare_calculator = NULL,
+  fare_structure = NULL,
   monetary_cost_cutoffs = -1L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -95,15 +95,15 @@ of 12 km/h, you have to set \code{max_trip_duration = 5 / 12 * 60}).}
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{fare_calculator}{A fare calculator object, following the convention
-set in \code{\link[=setup_fare_calculator]{setup_fare_calculator()}}. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
 understand how this object is structured.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the time
 you'll want this parameter to be the combination of all possible fares
-listed in you \code{fare_calculator}. Choosing a coarse distribution of
+listed in you \code{fare_structure}. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
 and the other costing $4, and you set this parameter to \code{5}, the output will
@@ -269,12 +269,12 @@ r5r_core <- setup_r5(data_path = data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
 
-# load fare calculator object
-fare_calculator_path <- system.file(
+# load fare structure object
+fare_structure_path <- system.file(
   "extdata/poa/fares/fares_poa.zip",
   package = "r5r"
 )
-fare_calculator <- read_fare_calculator(fare_calculator_path)
+fare_structure <- read_fare_structure(fare_structure_path)
 
 departure_datetime <- as.POSIXct(
   "13-05-2019 14:00:00",
@@ -287,7 +287,7 @@ pf <- pareto_frontier(
   destinations = points,
   mode = c("WALK", "TRANSIT"),
   departure_datetime = departure_datetime,
-  fare_calculator = fare_calculator,
+  fare_structure = fare_structure,
   monetary_cost_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
 )
 head(pf)

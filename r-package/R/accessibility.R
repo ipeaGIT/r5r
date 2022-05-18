@@ -5,7 +5,7 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
-#' @template fare_calculator
+#' @template fare_structure
 #' @template max_fare
 #' @template verbose
 #' @param opportunities_colnames A character vector. The names of the columns
@@ -141,7 +141,7 @@ accessibility <- function(r5r_core,
                           decay_function = "step",
                           cutoffs = 30L,
                           decay_value = 1.0,
-                          fare_calculator = NULL,
+                          fare_structure = NULL,
                           max_fare = Inf,
                           max_walk_dist = Inf,
                           max_bike_dist = Inf,
@@ -263,8 +263,8 @@ accessibility <- function(r5r_core,
   # set progress
   set_progress(r5r_core, progress)
 
-  # configure fare calculator
-  set_fare_calculator(r5r_core, fare_calculator)
+  # configure fare structure
+  set_fare_structure(r5r_core, fare_structure)
 
   # set max fare
   # Inf and NULL values are not allowed in Java,

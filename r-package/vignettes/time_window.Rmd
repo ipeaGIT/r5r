@@ -1,6 +1,5 @@
 ---
 title: 'Using the time_window parameter'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use and interpret the `time_window` parameter in r5r."
@@ -31,7 +30,7 @@ This problem gets even more complicated when public transport GTFS feeds have a 
 
 A common strategy to overcome this problem is to calculate travel times and accessibilities at multiple departure times sampled over a time window, and then take the average or median value. Now you may ask, but how many departure times should I use? You might also be thinking  that doing multiple repeated routing analysis can be cumbersome and take a lot of time. Right?
 
-Here is where `r5r` comes in. Both the `travel_time_matrix()`and `accessibility()` functions have a parameter called `time_window`. When this parameter is set, R<sup>5</sup> will automatically compute multiple travel times / accessibility estimates starting at the specified `departure_datetime` and within the `time_window` (in minutes) selected by the user.
+Here is where `r5r` comes in. Both the `travel_time_matrix()`and `accessibility()` functions have a parameter called `time_window`. When this parameter is set, R<sup>5</sup> will automatically compute multiple travel times / accessibility estimates considering multiple departures per minute within the `time_window` selected by the user.
 
 This vignette shows a reproducible example to explain how one can use the `time_window` and interpret the results.
 

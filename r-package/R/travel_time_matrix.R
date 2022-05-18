@@ -6,7 +6,7 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
-#' @template fare_calculator
+#' @template fare_structure
 #' @template max_fare
 #' @template verbose
 #' @param percentiles An integer vector (max length of 5). Specifies the
@@ -98,9 +98,9 @@
 #' )
 #' head(ttm)
 #'
-#' # use a fare calculator and set a max fare to take monetary constraints into
+#' # use a fare structure and set a max fare to take monetary constraints into
 #' # account
-#' fare_calculator <- read_fare_calculator(
+#' fare_structure <- read_fare_structure(
 #'   file.path(data_path, "fares/fares_poa.zip")
 #' )
 #' ttm <- travel_time_matrix(
@@ -109,7 +109,7 @@
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
 #'   departure_datetime = departure_datetime,
-#'   fare_calculator = fare_calculator,
+#'   fare_structure = fare_structure,
 #'   max_fare = 5,
 #'   max_trip_duration = 60,
 #' )
@@ -126,7 +126,7 @@ travel_time_matrix <- function(r5r_core,
                                departure_datetime = Sys.time(),
                                time_window = 1L,
                                percentiles = 50L,
-                               fare_calculator = NULL,
+                               fare_structure = NULL,
                                max_fare = Inf,
                                max_walk_dist = Inf,
                                max_bike_dist = Inf,
@@ -231,8 +231,8 @@ travel_time_matrix <- function(r5r_core,
   # set progress
   set_progress(r5r_core, progress)
 
-  # configure fare calculator
-  set_fare_calculator(r5r_core, fare_calculator)
+  # configure fare structure
+  set_fare_structure(r5r_core, fare_structure)
 
   # set max fare
   # Inf and NULL values are not allowed in Java,

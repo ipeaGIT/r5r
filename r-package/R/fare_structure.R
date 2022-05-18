@@ -1,15 +1,15 @@
-#' Setup a fare calculator to account for monetary costs in routing and accessibility functions
+#' Setup fare structure to account for monetary costs in routing and accessibility functions
 #'
-#' Creates a basic fare calculator that describes how transit fares should be
+#' Creates a basic fare structure that describes how transit fares should be
 #' calculated in [travel_time_matrix()], [expanded_travel_time_matrix()],
-#' [accessibility()] and [pareto_frontier()]. This fare calculator can be
+#' [accessibility()] and [pareto_frontier()]. This fare structure can be
 #' manually edited and adjusted to the existing rules in your study area, as
-#' long as they stick to some basic premises. Please see fare calculator
-#' vignette for more information on how the fare calculator works.
+#' long as they stick to some basic premises. Please see fare structure
+#' vignette for more information on how the fare structure works.
 #'
 #' @template r5r_core
 #' @param base_fare A numeric. A base value used to populate the fare
-#' calculator.
+#' structure.
 #' @param by A string. Describes how `fare_type`s (a classification we created
 #' to assign fares to different routes) are distributed among routes. Possible
 #' values are `MODE`, `AGENCY` and `GENERIC`. `MODE` is used when the mode is
@@ -42,11 +42,11 @@
 #' checked when calculating the routes. This imposes a performance penalty when
 #' tracking debug information (but has the positive effect of returning a
 #' larger sample of itineraries, which might help finding some implementation
-#' issues on the fare calculator).
+#' issues on the fare structure).
 #'
-#' @return A fare calculator object.
+#' @return A fare structure object.
 #'
-#' @family fare calculator
+#' @family fare structure
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -54,23 +54,23 @@
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #' r5r_core <- setup_r5(data_path)
 #'
-#' fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+#' fare_structure <- setup_fare_structure(r5r_core, base_fare = 5)
 #'
 #' # to debug fare calculation
-#' fare_calculator <- setup_fare_calculator(
+#' fare_structure <- setup_fare_structure(
 #'   r5r_core,
 #'   base_fare = 5,
 #'   debug_path = "fare_debug.csv",
 #'   debug_info = "MODE"
 #' )
 #'
-#' fare_calculator$debug_settings
+#' fare_structure$debug_settings
 #'
 #' # debugging can be manually turned off by setting output_file to ""
-#' fare_calculator$debug_settings <- ""
+#' fare_structure$debug_settings <- ""
 #'
 #' @export
-setup_fare_calculator <- function(r5r_core,
+setup_fare_structure <- function(r5r_core,
                                   base_fare,
                                   by = "MODE",
                                   debug_path = NULL,
@@ -91,11 +91,11 @@ setup_fare_calculator <- function(r5r_core,
   f_struct <- r5r_core$buildFareStructure(rJava::.jfloat(base_fare), by)
 
   json_string <- f_struct$toJson()
-  fare_calculator <- jsonlite::parse_json(json_string, simplifyVector = TRUE)
+  fare_structure <- jsonlite::parse_json(json_string, simplifyVector = TRUE)
 
   # Inf values are not supported by Java, so we use -1 to represent them
-  if (fare_calculator$fare_cap <= 0) {
-    fare_calculator$fare_cap <- Inf
+  if (fare_structure$fare_cap <= 0) {
+    fare_structure$fare_cap <- Inf
   }
 
   # attach debug settings
@@ -104,28 +104,28 @@ setup_fare_calculator <- function(r5r_core,
     trip_info = "MODE"
   )
 
-  fare_calculator$debug_settings <- debug
+  fare_structure$debug_settings <- debug
 
-  data.table::setDT(fare_calculator$fares_per_mode)
-  data.table::setDT(fare_calculator$fares_per_transfer)
-  data.table::setDT(fare_calculator$fares_per_route)
+  data.table::setDT(fare_structure$fares_per_mode)
+  data.table::setDT(fare_structure$fares_per_transfer)
+  data.table::setDT(fare_structure$fares_per_route)
 
-  return(fare_calculator)
+  return(fare_structure)
 }
 
 
-#' Write a fare calculator object to disk
+#' Write a fare structure object to disk
 #'
-#' Writes a fare calculator object do disk. Fare calculators are saved as a
+#' Writes a fare structure object do disk. Fare structure is saved as a
 #' collection of `.csv` files inside a `.zip` file.
 #'
-#' @template fare_calculator
-#' @param file_path A path to a `.zip` file. Where the fare calculator should be
+#' @template fare_structure
+#' @param file_path A path to a `.zip` file. Where the fare structure should be
 #' written to.
 #'
 #' @return The path passed to `file_path`, invisibly.
 #'
-#' @family fare calculator
+#' @family fare structure
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -133,13 +133,13 @@ setup_fare_calculator <- function(r5r_core,
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #' r5r_core <- setup_r5(data_path)
 #'
-#' fare_calculator <- setup_fare_calculator(r5r_core, base_fare = 5)
+#' fare_structure <- setup_fare_structure(r5r_core, base_fare = 5)
 #'
-#' tmpfile <- tempfile("sample_fare_calculator", fileext = ".zip")
-#' write_fare_calculator(fare_calculator, tmpfile)
+#' tmpfile <- tempfile("sample_fare_structure", fileext = ".zip")
+#' write_fare_structure(fare_structure, tmpfile)
 #'
 #' @export
-write_fare_calculator <- function(fare_calculator, file_path) {
+write_fare_structure <- function(fare_structure, file_path) {
 
   # get temporary folder
   tmp_dir <- tempdir()
@@ -148,29 +148,29 @@ write_fare_calculator <- function(fare_calculator, file_path) {
     setting = c("max_discounted_transfers",
                 "transfer_time_allowance",
                 "fare_cap"),
-    value = c(fare_calculator$max_discounted_transfers,
-              fare_calculator$transfer_time_allowance,
-              fare_calculator$fare_cap)
+    value = c(fare_structure$max_discounted_transfers,
+              fare_structure$transfer_time_allowance,
+              fare_structure$fare_cap)
   )
 
   fare_debug_settings <- data.table::data.table(
     setting = c("output_file",
                 "trip_info"),
-    value = c(fare_calculator$debug_settings$output_file,
-              fare_calculator$debug_settings$trip_info)
+    value = c(fare_structure$debug_settings$output_file,
+              fare_structure$debug_settings$trip_info)
   )
 
   data.table::fwrite(x = fare_global_settings,
                      file = file.path(tmp_dir, "global_settings.csv"))
 
 
-  data.table::fwrite(x = fare_calculator$fares_per_mode,
+  data.table::fwrite(x = fare_structure$fares_per_mode,
                      file = file.path(tmp_dir, "fares_per_mode.csv"))
 
-  data.table::fwrite(x = fare_calculator$fares_per_transfer,
+  data.table::fwrite(x = fare_structure$fares_per_transfer,
                      file = file.path(tmp_dir, "fares_per_transfer.csv"))
 
-  data.table::fwrite(x = fare_calculator$fares_per_route,
+  data.table::fwrite(x = fare_structure$fares_per_route,
                      file = file.path(tmp_dir, "fares_per_route.csv"))
 
   data.table::fwrite(x = fare_debug_settings,
@@ -189,21 +189,21 @@ write_fare_calculator <- function(fare_calculator, file_path) {
 }
 
 
-#' Read a fare calculator object from a file
+#' Read a fare structure object from a file
 #'
-#' @param file_path A path pointing to a fare calculator with a `.zip`
+#' @param file_path A path pointing to a fare structure with a `.zip`
 #' extension.
 #'
-#' @return A fare calculator object.
+#' @return A fare structure object.
 #'
-#' @family fare calculator
+#' @family fare structure
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' path <- system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
-#' fare_calculator <- read_fare_calculator(path)
+#' fare_structure <- read_fare_structure(path)
 #'
 #' @export
-read_fare_calculator <- function(file_path) {
+read_fare_structure <- function(file_path) {
 
   # get temporary folder
   tmp_dir <- tempdir()
@@ -214,15 +214,15 @@ read_fare_calculator <- function(file_path) {
   # global properties
   global_settings <- data.table::fread(normalizePath(file.path(tmp_dir, "global_settings.csv")))
 
-  fare_calculator <- as.list(global_settings$value)
-  names(fare_calculator) <- global_settings$setting
+  fare_structure <- as.list(global_settings$value)
+  names(fare_structure) <- global_settings$setting
 
   # load individual data.frames
-  fare_calculator$fares_per_mode <- data.table::fread(file = file.path(tmp_dir, "fares_per_mode.csv"))
+  fare_structure$fares_per_mode <- data.table::fread(file = file.path(tmp_dir, "fares_per_mode.csv"))
 
-  fare_calculator$fares_per_transfer <- data.table::fread(file = file.path(tmp_dir, "fares_per_transfer.csv"))
+  fare_structure$fares_per_transfer <- data.table::fread(file = file.path(tmp_dir, "fares_per_transfer.csv"))
 
-  fare_calculator$fares_per_route <-
+  fare_structure$fares_per_route <-
     data.table::fread(file = file.path(tmp_dir, "fares_per_route.csv"),
                       colClasses = list(character = c("agency_id",
                                                       "agency_name",
@@ -238,36 +238,36 @@ read_fare_calculator <- function(file_path) {
   debug_settings <- as.list(debug_options$value)
   names(debug_settings) <- debug_options$setting
 
-  fare_calculator$debug_settings <- debug_settings
+  fare_structure$debug_settings <- debug_settings
 
 
-  return(fare_calculator)
+  return(fare_structure)
 }
 
 
-#' Set the fare calculator used when calculating transit fares
+#' Set the fare structure used when calculating transit fares
 #'
 #' @template r5r_core
-#' @template fare_calculator
+#' @template fare_structure
 #'
 #' @return Invisibly returns `TRUE`. Called for side effects.
 #'
 #' @keywords internal
-set_fare_calculator <- function(r5r_core, fare_calculator = NULL) {
+set_fare_structure <- function(r5r_core, fare_structure = NULL) {
 
-  if (!is.null(fare_calculator)) {
-    if (fare_calculator$fare_cap == Inf) {
-      fare_calculator$fare_cap <- -1
+  if (!is.null(fare_structure)) {
+    if (fare_structure$fare_cap == Inf) {
+      fare_structure$fare_cap <- -1
     }
 
-    fare_settings_json <- jsonlite::toJSON(fare_calculator, auto_unbox = TRUE)
+    fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCalculatorDebugOutputSettings(fare_calculator$debug_settings$output_file,
-                                                  fare_calculator$debug_settings$trip_info)
+    r5r_core$setFareCalculatorDebugOutputSettings(fare_structure$debug_settings$output_file,
+                                                  fare_structure$debug_settings$trip_info)
   } else {
-    # clear fare calculator settings in r5r_core
+    # clear fare structure settings in r5r_core
     r5r_core$dropFareCalculator()
   }
 

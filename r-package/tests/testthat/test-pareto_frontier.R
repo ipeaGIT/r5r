@@ -13,7 +13,7 @@ default_tester <- function(r5r_core,
                                                            format = "%d-%m-%Y %H:%M:%S"),
                            time_window = 1L,
                            percentiles = 50,
-                           fare_calculator = NULL,
+                           fare_structure = NULL,
                            monetary_cost_cutoffs = -1L,
                            max_walk_dist = Inf,
                            max_bike_dist = Inf,
@@ -33,7 +33,7 @@ default_tester <- function(r5r_core,
     departure_datetime = departure_datetime,
     time_window = time_window,
     percentiles = percentiles,
-    fare_calculator = fare_calculator,
+    fare_structure = fare_structure,
     monetary_cost_cutoffs = monetary_cost_cutoffs,
     max_walk_dist = max_walk_dist,
     max_bike_dist = max_bike_dist,
@@ -50,9 +50,9 @@ default_tester <- function(r5r_core,
 }
 
 # load fare calculator object
-fare_calculator_path <- system.file("extdata/poa/fares/fares_poa.zip",
+fare_structure_path <- system.file("extdata/poa/fares/fares_poa.zip",
                                     package = "r5r")
-fare_calculator <- r5r::read_fare_calculator(fare_calculator_path)
+fare_structure <- r5r::read_fare_structure(fare_structure_path)
 
 # errors and warnings -----------------------------------------------------
 

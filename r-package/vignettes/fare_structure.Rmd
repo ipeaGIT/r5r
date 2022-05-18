@@ -1,12 +1,11 @@
 ---
-title: 'Configuring and Using Fare Calculators'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
+title: 'Accounting for monetary costs'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-abstract: "This vignette shows how to configure and use custom fare calculators in order to account for monetary travel costs when generating travel time matrices and accessibility estimates with the `r5r` package."
+abstract: "This vignette shows how to configure and use custom fare rules in order to account for monetary travel costs when generating travel time matrices and accessibility estimates with the `r5r` package."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Configuring and Using Fare Calculators} 
+  %\VignetteIndexEntry{Accounting for monetary costs} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 ---
@@ -42,23 +41,23 @@ across multiple trip alternatives and are currently not captured by any
 multimodal routing engine, except for R5.
 
 R5 has native capabilities and an open architecture for creating and including 
-fare calculators in routing models, making it possible to estimate travel time 
+fare structures in routing models, making it possible to estimate travel time 
 matrices and accessibility estimates simultaneously considering different 
 combinations of time and monetary cost cutoffs. The main challenge, however, is 
-that a specific fare calculator for each city needs to be programmed in Java and 
+that a specific fare structure for each city needs to be programmed in Java and 
 tightly integrated into R5, making this functionality out of reach for those who 
 do not know how to code in Java (i.e. most of us!).
 
 To help tackle this challenge, `r5r` has a simple generic rule-based fare 
-calculator that can be configured via a predefined set of properties and rules 
+structure that can be configured via a predefined set of properties and rules 
 that can be set directly from R or using external tools such as text editors and
 spreadsheets. This approach currently available in `r5r` is able to account for 
 the monetary costs of public transport systems that follow a simple set of fare 
 rules according to which the cost of a journey depends on combinations of modes 
 (see details below).
 
-**This vignette shows the features of `r5r`s fare calculator. It also uses a 
-reproducible example to demonstrate how to configure the fare calculator to 
+**This vignette shows the features of `r5r`s fare structure. It also uses a 
+reproducible example to demonstrate how to configure the fare structure to 
 account for monetary costs when generating travel time matrices and accessibility 
 estimates with `r5r`**. 
 
@@ -70,7 +69,8 @@ A common feature among many public transport services is the possibility of
 discounted transfers, when passengers can use a single ticket for a trip composed 
 of multiple rides sometimes combining different transport modes. Such trips usually 
 come with a discount in the second or subsequent fares, as well as a limit on the 
-number of discounted transfers the user can make and/or a time limit for using that discount. This is the type of fare rule currently covered by `r5r`.
+number of discounted transfers the user can make and/or a time limit for using that 
+discount. This is the type of fare structure currently covered by `r5r`.
 
 We acknowledge that there are several types fare rules that vary from one public 
 transport system to another. According to these rules, the cost of a journey can 
@@ -135,34 +135,34 @@ In the following sections, we will demonstrate how to implement those rules with
 
 <br>
 
-# Setting up the fare calculator
+# Setting up the fare structure
 
-There are three support functions in `r5r` to help users configure the fare calculator:
+There are three support functions in `r5r` to help users configure the fare structure:
 
--   `setup_fare_calculator()` analyses the study area's GTFS and builds a 'skeleton' fare calculator structure with the parameters that need to be set;
--   `write_fare_calculator()` and `read_fare_calculator()` allow saving the current fare calculator settings to disk, and reading them back into memory. The settings are saved as standard `.csv` files inside a zipped folder. These files can be edited outside the R session using external text editors and spreadsheet software, for user's convenience.
+-   `setup_fare_structure()` analyses the study area's GTFS and builds a 'skeleton' fare structure structure with the parameters that need to be set;
+-   `write_fare_structure()` and `read_fare_structure()` allow saving the current fare structure settings to disk, and reading them back into memory. The settings are saved as standard `.csv` files inside a zipped folder. These files can be edited outside the R session using external text editors and spreadsheet software, for user's convenience.
 
-First, we need to call `setup_fare_calculator()`, providing three parameters: the
-current `r5r_core` object, a `base_fare` used to populate the fare calculator, and
+First, we need to call `setup_fare_structure()`, providing three parameters: the
+current `r5r_core` object, a `base_fare` used to populate the fare structure, and
 the `by` parameters that identifies what is the main property of the route that 
 defines the different fares.
 
 In the example below, the `base_fare` is the standard bus ticket price of R\$ 4.80. 
 We are also stating that `by = "MODE"`, so that each transport mode has its own 
-fares and integration rules. Users can also create a fare calculator where fare 
+fares and integration rules. Users can also create a fare structure where fare 
 rules of routes differ by `"AGENCY_ID"` or `"AGENCY_NAME"`, or simply set `by = "GENERIC"` when the entire system follows the same rules.
 
 ```{r}
-fare_settings <- setup_fare_calculator(r5r_core, 
+fare_structure <- setup_fare_structure(r5r_core, 
                                        base_fare = 4.8,
                                        by = "MODE")
 ```
 
 
-Now let's check the contents of the `fare_settings` object. We can see below that it is simply a `list` with a few properties and data.frames.
+Now let's check the contents of the `fare_structure` object. We can see below that it is simply a `list` with a few properties and data.frames.
 
 ```{r}
-head(fare_settings, n=7)
+head(fare_structure, n=7)
 
 ```
 
@@ -189,14 +189,14 @@ feature is not applicable to Porto Alegre.
 
 Here is how we can check or update the values of these components:
 ```{r}
-fare_settings$max_discounted_transfers
-fare_settings$transfer_time_allowance <- 60 # update transfer_time_allowance
-fare_settings$fare_cap
+fare_structure$max_discounted_transfers
+fare_structure$transfer_time_allowance <- 60 # update transfer_time_allowance
+fare_structure$fare_cap
 ```
 
 ## Configure fares by transport mode
 
-To configure mode-, transfer-, and route-specific properties, we can use the three `data.frames` inside our `fare_settings` list. Let's configure the modes first. 
+To configure mode-, transfer-, and route-specific properties, we can use the three `data.frames` inside our `fare_structure` list. Let's configure the modes first. 
 Below, we can see that the `fares_per_mode` data.frame contains five columns:
 
 -   `mode`: the transport mode to which rules on each row refer to;
@@ -206,7 +206,7 @@ Below, we can see that the `fares_per_mode` data.frame contains five columns:
 -   `fare`: the full fare price of this mode.
 
 ```{r}
-fare_settings$fares_per_mode
+fare_structure$fares_per_mode
 ```
 
 We need to do a few small changes in the `fares_per_mode` table to accomodate the
@@ -219,15 +219,15 @@ buses within the same route (for example, from bus route T1 to another T1). We'l
 do those changes below, using `data.table` notation.
 
 ```{r}
-fare_settings$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
-fare_settings$fares_per_mode[mode == "RAIL", fare := 4.50]
-fare_settings$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
+fare_structure$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
+fare_structure$fares_per_mode[mode == "RAIL", fare := 4.50]
+fare_structure$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
 ```
 
 Checking the results below, everything looks OK:
 
 ```{r}
-fare_settings$fares_per_mode
+fare_structure$fares_per_mode
 ```
 
 ## Configure fares by transfers
@@ -237,7 +237,7 @@ which is shown below. Each row contains the fare prices for transfers between th
 modes specified in `first_leg` and `second_leg` columns.
 
 ```{r}
-fare_settings$fares_per_transfer
+fare_structure$fares_per_transfer
 ```
 
 Let's update `fare_per_transfer` to account for the actual integration rules in 
@@ -247,17 +247,17 @@ Porto Alegre.
 
 ```{r}
 # conditional update fare value
-fare_settings$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare := 7.2]
+fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare := 7.2]
 ```
 
 - Transfers between "BUS" and "RAIL" (in any direction) cost 8.37, once the 10% discount is applied. Let's make a final update in the data.frame to account for that.
 
 ```{r}
 # conditional update fare value
-fare_settings$fares_per_transfer[first_leg != second_leg, fare := 8.37]
+fare_structure$fares_per_transfer[first_leg != second_leg, fare := 8.37]
 
 # use fcase instead ?
-fare_settings$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
+fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
                                                  first_leg != second_leg, 8.37)]
 
 ```
@@ -270,7 +270,7 @@ will count to the global `max_discounted_transfers` allowance.
 
 ```{r}
 # remove row
-fare_settings$fares_per_transfer <- fare_settings$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
+fare_structure$fares_per_transfer <- fare_structure$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
 
 ```
 
@@ -279,7 +279,7 @@ Once all changes are applied, the `fare_per_transfer` data.frame should look lik
 this:
 
 ```{r}
-fare_settings$fares_per_transfer
+fare_structure$fares_per_transfer
 ```
 
 ## Routes configuration
@@ -292,22 +292,22 @@ these values can be updated in this `fares_per_route` data.frame.
 
 
 ```{r}
-tail(fare_settings$fares_per_route)
+tail(fare_structure$fares_per_route)
 ```
 
 Basic route information is taken directly from the GTFS data (agency, route id 
 and names, mode, etc), but the `route_fare` and `fare_type` columns were added 
-specifically for the `r5r` fare calculator.
+specifically for the `r5r` fare structure.
 
 -   `route_fare`: is used to set a specific fare for each route. This field can 
 be used to represent services that have many unique fares, such as metropolitan 
 / suburban trains and buses. This is used together with the `use_route_fare` 
 column in the `fares_per_mode` table: the `route_fare` field is only considered 
-by the `r5r` fare calculator when `use_route_fare` of that mode is set to `TRUE`.
+by the `r5r` fare structure when `use_route_fare` of that mode is set to `TRUE`.
 
 -   `fare_type`: is used to link each route with information in the `fares_per_mode` 
 and `fares_per_transfer` tables. In this example, `fare_type` is always the same 
-as `mode`, because that was what we chose in the `by` parameter when calling `setup_fare_calculator` earlier (we could have chosen to discriminate fares by 
+as `mode`, because that was what we chose in the `by` parameter when calling `setup_fare_structure` earlier (we could have chosen to discriminate fares by 
 agency, for example).
 
 We actually don't have any change do to in the `fares_per_route` table, in this 
@@ -315,7 +315,7 @@ example. It does not matter that the `route_fare` value is wrong for the "RAIL"
 lines, because we are using the fares set in `fares_per_mode` and `fares_per_transfer` 
 which we already set up correctly before.
 
-Now that our `fare_settings` is complete, we can use it to calculate travel time 
+Now that our `fare_structure` is complete, we can use it to calculate travel time 
 matrices and accessibility while accounting for monetary cost cutoffs. Let's see 
 how it's done in the next sections.
 
@@ -325,7 +325,7 @@ how it's done in the next sections.
 The `travel_time_matrix()` and `accessibility()` functions have two new parameters 
 to account for monetary costs thresholds:
 
--   `fare_calculator`: the settings object that we've been working on.
+-   `fare_structure`: the settings object that we've been working on.
 -   `max_fare`: the maximum total fare that can be used in the trip.
 
 
@@ -348,7 +348,7 @@ calculate_travel_times <- function(fare) {
                                departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                                format = "%d-%m-%Y %H:%M:%S"),
                                mode = c("WALK", "TRANSIT"),
-                               fare_calculator = fare_settings,
+                               fare_structure = fare_structure,
                                max_fare = fare,
                                max_trip_duration = 45,
                                max_walk_dist = 800)
@@ -434,7 +434,7 @@ calculate_accessibility <- function(fare, fare_string) {
                              opportunities_colname = "healthcare",
                              mode = c("WALK", "TRANSIT"),
                              cutoffs = c(60),
-                             fare_calculator = fare_settings,
+                             fare_structure = fare_structure,
                              max_fare = fare,
                              max_trip_duration = 45,
                              max_walk_dist = 800,
@@ -447,8 +447,8 @@ calculate_accessibility <- function(fare, fare_string) {
 }
 
 # calculate accessibility, combine results, and convert to SF
-access_500 <- calculate_accessibility(5, "R$ 5.00 budget")
-access_unl <- calculate_accessibility(Inf, "Unlimited budget")
+access_500 <- calculate_accessibility(fare=5, fare_string="R$ 5.00 budget")
+access_unl <- calculate_accessibility(fare=Inf, fare_string="Unlimited budget")
 
 access <- rbind(access_500, access_unl)
 

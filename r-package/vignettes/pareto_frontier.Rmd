@@ -1,6 +1,5 @@
 ---
 title: 'pareto_frontier() to analyze the trade-offs between travel time and monetary cost'
-author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r."
@@ -119,7 +118,7 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 ```
 
 
-### 3.2 Set up the fare calculator
+### 3.2 Set up the fare structure
 
 Now we need to set what are the fare rules of our public transport system. These 
 rules will be used by `R5` to calculate the monetary cost of alternative routes. 
@@ -129,28 +128,28 @@ In the case of Porto Alegre, the fare rules are as follows:
 * Each train ticket costs $ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station.
 * The integrated fare between bus and train has a 10% discount, which totals $ 8.37.
 
-We can create `list` object with these fare rules with the support of the `setup_fare_calculator()` function as shown in the code below. A detailed explanation of how to use the fare calculator of `5r5` can be found in [(this other vignette)](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+We can create `list` object with these fare rules with the support of the `setup_fare_structure()` function as shown in the code below. A detailed explanation of how to use the fare structure of `5r5` can be found in [(this other vignette)](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 
 ```{r, eval=TRUE}
-# create basic fare calculator
-fare_settings <- setup_fare_calculator(r5r_core, 
+# create basic fare structure
+fare_structure <- setup_fare_structure(r5r_core, 
                                        base_fare = 4.8,
                                        by = "MODE")
 
 # update the cost of bus and train fares
-fare_settings$fares_per_mode[, fare := fcase(mode == "BUS", 4.80,
+fare_structure$fares_per_mode[, fare := fcase(mode == "BUS", 4.80,
                                              mode == "RAIL", 4.50)]
 
 # update the cost of tranfers
-fare_settings$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
+fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
                                                  first_leg != second_leg, 8.37)]
 
 # update transfer_time_allowance to 60 minutes
-fare_settings$transfer_time_allowance <- 60
+fare_structure$transfer_time_allowance <- 60
 
-fare_settings$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
-fare_settings$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
+fare_structure$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
+fare_structure$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
 
 ```
 
@@ -163,10 +162,10 @@ a future application.
 
 # save fare rules to temp file
 temp_fares <- tempfile(pattern = 'fares_poaa.zip')
-r5r::write_fare_calculator(fare_settings, file_path = temp_fares)
+r5r::write_fare_structure(fare_structure, file_path = temp_fares)
 
 
-fare_settings <- r5r::read_fare_calculator(file.path(data_path, "fares/fares_poa.zip"))
+fare_structure <- r5r::read_fare_structure(file.path(data_path, "fares/fares_poa.zip"))
 ```
 
 
@@ -188,7 +187,7 @@ pf <- pareto_frontier(r5r_core,
                       destinations = points,
                       mode = c("WALK", "TRANSIT"),
                       departure_datetime = departure_datetime,
-                      fare_calculator = fare_settings,
+                      fare_structure = fare_structure,
                       monetary_cost_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
                       progress = TRUE
                       )
@@ -206,7 +205,7 @@ One cannot make a faster trip without increasing costs,
 one cannot make a cheaper trip without increasing travel time.
 
 
-```{r}
+```{r, echo = FALSE, fig.width=7, fig.height=4}
 # select origin and destinations
 pf2 <- subset(pf, to_id == 'farrapos_station'  &
                from_id %in% c('moinhos_de_vento_hospital', 'praia_de_belas_shopping_center'))
