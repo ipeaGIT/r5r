@@ -346,10 +346,10 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id               to_id travel_time_p50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market       public_market               0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              17</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># using a larger time window</span></span>
 <span class="r-in"><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">travel_time_matrix</span><span class="op">(</span></span>
@@ -364,11 +364,11 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id               to_id travel_time_p50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market       public_market               0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              17</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># selecting different percentiles</span></span>
 <span class="r-in"><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">travel_time_matrix</span><span class="op">(</span></span>
@@ -384,18 +384,18 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id               to_id travel_time_p25 travel_time_p50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market       public_market               0               0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13              13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              14              15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              18              19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               4               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              20              21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13              14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              12              13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              15              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               3               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              17              17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    travel_time_p75</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:               0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:              14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:              16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:              20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6:              23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:              14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5:               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6:              17</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># selecting different percentiles</span></span>
 <span class="r-in"><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">travel_time_matrix</span><span class="op">(</span></span>
@@ -411,18 +411,18 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id               to_id travel_time_p25 travel_time_p50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market       public_market               0               0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13              13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              14              15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              18              19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               4               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              20              21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13              14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              12              13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              15              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               3               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              17              17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    travel_time_p75</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:               0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:              14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:              16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:              20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6:              23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:              14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5:               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6:              17</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># use a fare calculator and set a max fare to take monetary constraints into</span></span>
 <span class="r-in"><span class="co"># account</span></span>
@@ -444,9 +444,9 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market       public_market               0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: public_market bus_central_station              13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: public_market    gasometer_museum              15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: public_market santa_casa_hospital              15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: public_market            townhall               3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market     piratini_palace              17</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
