@@ -9,20 +9,22 @@ reference:
     - download_r5
     - setup_r5
     - stop_r5
+  - title: "Accessibility"
+    - contents:
+    - accessibility
   - title: "Routing"
   - contents:
     - detailed_itineraries
     - travel_time_matrix
     - pareto_frontier
-    - accessibility
     - expanded_travel_time_matrix
   - title: "Network"
   - contents:
     - street_network_to_sf
     - transit_network_to_sf
     - find_snap
-  - title: "Fare calculator"
+  - title: "Fare structure"
   - contents:
-    - setup_fare_calculator 
-    - read_fare_calculator
-    - write_fare_calculator
+    - setup_fare_structure
+    - read_fare_structure
+    - write_fare_structure
