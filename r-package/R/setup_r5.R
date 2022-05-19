@@ -136,10 +136,13 @@ setup_r5 <- function(data_path,
 
   } else {
 
+    # stop r5 in case it is already running
+    suppressMessages( r5r::stop_r5() )
+
     # clean up any files that might have been created by previous r5r usage
     # if the files do not exist 'file.remove()' will raise a warning, which is
     # suppressed here
-    mapdb_files <- list.files(data_path)
+    mapdb_files <- list.files(data_path, full.names = TRUE)
     mapdb_files <- mapdb_files[grepl("\\.mapdb", mapdb_files)]
     suppressWarnings(
       invisible(file.remove(dat_file, mapdb_files))
