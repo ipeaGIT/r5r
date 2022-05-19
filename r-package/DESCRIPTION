@@ -58,8 +58,7 @@ Suggests:
     mapview,
     patchwork,
     rmarkdown,
-    testthat,
-    gtfstools
+    testthat
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
