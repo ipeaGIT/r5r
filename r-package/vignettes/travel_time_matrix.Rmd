@@ -1,11 +1,11 @@
 ---
-title: 'Travel time matrices'
+title: 'Calculating travel time matrices'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the travel_time_matrix() and expanded_travel_time_matrix() functions in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Travel time matrices} 
+  %\VignetteIndexEntry{Calculating travel time matrices} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json
@@ -95,9 +95,9 @@ This can be done very efficiently by using the `time_window` and `percentile` pa
 
 ## 4. The `expaded_travel_time_matrix()` function
 
-Sometimes, we want to know more than simply the total travel time from A to B. This is the when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken for each origin destination pair.
+Sometimes, we want to know more than simply the total travel time from A to B. This is when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.
 
-Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expaded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer time. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
+Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expaded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
 
 *A general call to expanded_travel_time_matrix()*
 ```{r, message = FALSE, eval = FALSE}
@@ -125,8 +125,7 @@ ettm2 <- expanded_travel_time_matrix(r5r_core,
 head(ettm2, n = 10)
 ```
 
-
-Please note that the `expaded_travel_time_matrix()` function also has a `time_window` parameter.
+You will notice in the documentation that the `expanded_travel_time_matrix()` also has a `time_window` parameter. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
 ```{r, message = FALSE, eval = FALSE}
 ettm_window <- expanded_travel_time_matrix(r5r_core,   
@@ -136,9 +135,9 @@ ettm_window <- expanded_travel_time_matrix(r5r_core,
                                            max_trip_duration = max_trip_duration,
                                            departure_datetime = departure_datetime,
                                            breakdown = TRUE,
-                                           time_window = 20)
+                                           time_window = 10)
 
-head(ettm_window, n = 10)
+ettm_window[15:25,]
 ```
 
 

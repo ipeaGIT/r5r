@@ -1,0 +1,171 @@
+---
+title: 'Planning routes with detailed_itineraries()'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+abstract: "This vignette shows how to do route planning using the `detailed_itineraries()` function in r5r."
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{Planning routes with detailed_itineraries()} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+
+
+
+# Introduction 
+
+**r5r** has some extremely efficient functions to run multimodal routing and accessibility analysis. In general, though, these functions output only the essential information required by most transport planning applications and simulation models. Moreover, the algorithms behind these function return only the optimal route in terms of minimizing travel times and/or monetary costs. Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too.
+
+This is where the `detailed_itineraries()` function comes in. This function outputs for each origin destination pair a detailed route plan with information desegregated by trip segment. This includes information on the transport mode, waiting times, travel times and distances of each trip segment and the trip geometry. Moreover, the `detailed_itineraries()` function can also return results for multiple route alternatives. Let's see how this function works using a reproducible example.
+ 
+
+**obs.** We only recommend using `detailed_itineraries()` in case you are interested in finding suboptimal alternative routes and/or need the geometry information of the outputs. If you only want to have route information detailed by trip segments, then we would strongly encourage you to use the `expanded_travel_time_matrix()` function. More info here.
+
+# 2. Build routable transport network with `setup_r5()`
+
+First, let's load some libraries and build our multimodal transport network. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
+
+```{r, message = FALSE, eval = FALSE}
+# increase Java memory
+options(java.parameters = "-Xmx2G")
+
+# load libraries
+library(r5r)
+library(sf)
+library(ggplot2)
+library(data.table)
+library(mapview)
+mapviewOptions(platform = 'leafgl')
+
+
+# build a routable transport network with r5r
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path)
+
+# routing inputs
+mode <- c('walk', 'transit')
+max_trip_duration <- 60 # minutes
+
+# departure time
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+# load origin/destination points
+poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
+
+```
+
+
+# 3. Detailed info by trip segment for multiple trip alternatives
+
+In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set `shortest_path = FALSE`.
+
+```{r, message = FALSE, eval = FALSE}
+# set inputs
+origins <- poi[10,]
+destinations <- poi[12,]
+mode <- c("WALK", "TRANSIT")
+max_walk_dist <- 10000
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+# calculate detailed itineraries
+det <- detailed_itineraries(r5r_core = r5r_core,
+                            origins = origins,
+                            destinations = destinations,
+                            mode = mode,
+                            departure_datetime = departure_datetime,
+                            max_walk_dist = max_walk_dist,
+                            shortest_path = FALSE)
+
+head(det)
+```
+```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
+```
+
+
+The output is a `data.frame sf` object, so we can easily visualize the results.
+
+## Visualize results
+
+**Static visualization** with `ggplot2` package: To provide a geographic context 
+for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf((` function to  extract the OSM street network used in the routing.
+
+```{r, message = FALSE, eval = FALSE}
+# extract OSM network
+street_net <- street_network_to_sf(r5r_core)
+
+# extract public transport network
+transit_net <- transit_network_to_sf(r5r_core)
+
+# plot
+ggplot() +
+  geom_sf(data = street_net$edges, color='gray85') +
+  geom_sf(data = det, aes(color=mode)) +
+  facet_wrap(.~option) + 
+  theme_void()
+
+```
+
+```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
+```
+
+**Interactive visualization** with `mapview`:
+
+```{r, message = FALSE, eval = FALSE}
+mapview(dit, zcol = 'option')
+```
+
+```{r mapview output, echo = FALSE, out.width='80%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_mapview.png?raw=true")
+```
+
+# 4. A few options:
+
+## Combining orings and destinations
+
+- By default, `detailed_itineraries()` will query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on. If you would like to query routes between all origins to all destinations you can simply set `all_to_all = TRUE`.
+
+## Keep geometry data in the output
+
+- Be default, `detailed_itineraries()` will not return the spatial geometry of results. To retrieve this information you can simply set `geometry = TRUE`.
+
+
+
+# 5. Hack for frequency-based GTFS feeds
+
+Please note that the `detailed_itineraries()` functions does not run on frequency-based GTFS feeds. A simple hack to overcome this problem is to convert your GTFS data from frequencies to time tables. This can be easily done using the [`gtfstools` package](https://ipeagit.github.io/gtfstools/). Here is how:
+
+```{r, message = FALSE}
+library(gtfstools)
+
+# location of your frequency-based GTFS
+freq_gtfs_file <- system.file("extdata/spo/spo.zip", package = "r5r")
+
+# read GTFS data
+freq_gtfs <- gtfstools::read_gtfs(freq_gtfs_file)
+
+# convert from frequencies to time tables
+stop_times_gtfs <- gtfstools::frequencies_to_stop_times(freq_gtfs)
+
+# save it as a new GTFS.zip file
+gtfstools::write_gtfs(gtfs = stop_times_gtfs,
+                      path = tempfile(pattern = 'stop_times_gtfs', fileext = '.zip'))
+
+
+```
+
+
+
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).

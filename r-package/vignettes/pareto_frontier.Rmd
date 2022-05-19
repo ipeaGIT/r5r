@@ -1,11 +1,11 @@
 ---
-title: 'pareto_frontier() to analyze the trade-offs between travel time and monetary cost'
+title: 'Analyzing the trade-offs between travel time and monetary cost'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{pareto_frontier() to analyze the trade-offs between travel time and monetary cost} 
+  %\VignetteIndexEntry{Analyzing the trade-offs between travel time and monetary cost} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json
@@ -105,7 +105,7 @@ library(ggplot2)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')

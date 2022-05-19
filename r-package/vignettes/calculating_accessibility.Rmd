@@ -63,7 +63,7 @@ GTFS data are stored.
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path)
 ```
 
 
@@ -100,7 +100,7 @@ access <- accessibility(r5r_core,
                         max_walk_dist = max_walk_dist,
                         time_window = time_window,
                         percentiles = percentiles,
-                        verbose = FALSE)
+                        progress = FALSE)
 
 
 head(access)

@@ -52,7 +52,7 @@ To build a routable transport network with `r5r` and load it into memory, the us
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path)
 ```
 
 ## 3. Calculate travel times
@@ -86,7 +86,7 @@ ttm <- travel_time_matrix(r5r_core,
                           max_trip_duration = max_trip_duration,
                           time_window = time_window,
                           percentiles = percentiles,
-                          verbose = FALSE)
+                          progress = FALSE)
 
 head(ttm)
 #>             fromId            toId travel_time

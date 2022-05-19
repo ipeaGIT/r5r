@@ -64,7 +64,7 @@ library(dplyr)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, verbose = FALSE)
+r5r_core <- setup_r5(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
@@ -74,50 +74,22 @@ max_trip_duration <- 90 # minutes
 # load origin/destination points
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
+# departure datetime
+departure_datetime = as.POSIXct("13-05-2019 14:00:00", 
+                                format = "%d-%m-%Y %H:%M:%S")
 ```
 
 ps. Please keep in mind that the `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table.
 
 
 
-### 3.2 Travel time matrix with `time_window`.
+### 3.2 Accessibility with `time_window`.
 
-In this example, we calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
-
-```{r, message = FALSE, eval = FALSE}
-# estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core,   
-                          origins = points,
-                          destinations = points,    
-                          mode = mode,
-                          max_walk_dist = max_walk_dist,
-                          max_trip_duration = max_trip_duration,
-                          departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
-                          verbose = FALSE,
-                          time_window = 60,
-                          percentiles = c(10, 20, 50, 70, 80)
-                          )
-
-head(ttm, n = 10)
-
-```
-```{r detailed head of ttm, echo = FALSE, out.width='100%', message = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_ttm_head.png?raw=true")
-```
-
-Now let's look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.
-
-The last row in the result above has a few `NA`s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the `max_trip_duration` we have set (90 minutes).
-
-
-
-### 3.3 Accessibility with `time_window`.
-
-Now let's calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we'll be using a cumulative accessibility metric `decay_function = "step"` with a max time threshold of 45 minutes `cutoffs = 45`.
+In this example we calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we'll be using a cumulative accessibility metric `decay_function = "step"` with a max time threshold of 45 minutes `cutoffs = 45`.
 
 ```{r, message = FALSE, eval = FALSE}
 # estimate accessibility
-acc <- r5r::accessibility(r5r_core,   
+acc <- r5r::accessibility(r5r_core = r5r_core,   
                           origins = points,
                           destinations = points, 
                           opportunities_colnames = 'schools',
@@ -125,8 +97,8 @@ acc <- r5r::accessibility(r5r_core,
                           max_walk_dist = max_walk_dist,
                           decay_function = "step",
                           cutoffs = 45,
-                          departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
-                          verbose = FALSE,
+                          departure_datetime = departure_datetime,
+                          progress = FALSE,
                           time_window = 60,
                           percentiles = c(10, 20, 50, 70, 80)
                           )
@@ -142,7 +114,7 @@ This output is in long format, so the first 5 rows show the result for the same 
 
 We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, eval = FALSE}
 # summarize
 df <- acc[, .(min_acc = min(accessibility),
               median = accessibility[which(percentile == 50)],
@@ -163,6 +135,59 @@ ggplot(data=df) +
 ```{r acc_uncertainty figure, echo = FALSE, out.width='100%', message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true")
 ```
+
+
+
+### 3.3 Travel time matrix with `time_window`.
+
+Now let's calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
+
+```{r, message = FALSE, eval = FALSE}
+# estimate travel time matrix
+ttm <- travel_time_matrix(r5r_core = r5r_core,   
+                          origins = points,
+                          destinations = points,    
+                          mode = mode,
+                          max_walk_dist = max_walk_dist,
+                          max_trip_duration = max_trip_duration,
+                          departure_datetime = departure_datetime,
+                          progress = TRUE,
+                          time_window = 20,
+                          percentiles = c(10, 20, 50, 70, 80)
+                          )
+
+head(ttm, n = 10)
+
+```
+```{r detailed head of ttm, echo = FALSE, out.width='100%', message = FALSE}
+knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_ttm_head.png?raw=true")
+```
+
+Now let's look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.
+
+The last row in the result above has a few `NA`s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the `max_trip_duration` we have set (90 minutes).
+
+
+
+### 3.4 Expanded travel time matrix with `time_window`.
+
+Finally, we can also use the `time_window` in the `expanded_travel_time_matrix()` function. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
+
+```{r, eval = TRUE}
+ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,   
+                                    origins = points[1:30,],
+                                    destinations = points[31:61,],    
+                                    mode = mode,
+                                    max_walk_dist = max_walk_dist,
+                                    max_trip_duration = max_trip_duration,
+                                    departure_datetime = departure_datetime,
+                                    progress = FALSE,
+                                    time_window = 20)
+
+head(ettm, n = 10)
+
+```
+
 
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
