@@ -10,7 +10,7 @@ reference:
     - setup_r5
     - stop_r5
   - title: "Accessibility"
-    - contents:
+  - contents:
     - accessibility
   - title: "Routing"
   - contents:
