@@ -466,6 +466,7 @@ mapview(street_net) + points_sf
 ##### Coverage ------------------------
 library(covr)
 library(testthat)
+library(r5r)
 Sys.setenv(NOT_CRAN = "true")
 
 

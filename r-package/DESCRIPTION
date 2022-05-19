@@ -52,6 +52,7 @@ Suggests:
     covr,
     dplyr,
     ggplot2 (>= 3.3.1),
+    gtfstools,
     h3jsr,
     knitr,
     mapview,
