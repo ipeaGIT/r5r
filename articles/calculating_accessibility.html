@@ -122,7 +122,7 @@
     </div>
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>Accessibility indicators measure the ease with which opportunities, such as jobs, can be reached by a traveler from a particular location <span class="citation">(Levinson and et al. 2020)</span>. One of the simplest forms of accessibility metrics is the cumulative-opportunities, which counts all of the opportunities accessible from each location in less than a cutoff time. Using a travel time matrix and information on the number of opportunities available at each location, we can calculate and map accessibility. This vignette shows how to do that in R using the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link"><code>r5r</code> package</a>.</p>
 <p>In this reproducible example, we will be using a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>. We can compute accessibility in 5 quick steps:</p>
@@ -134,8 +134,11 @@
 </ol>
 </div>
 <div class="section level2">
-<h2 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
+<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h2>
+<div class="section level4">
+<h4 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
+</h4>
 <p>Before we start, we need to increase the memory available to Java and load the packages used in this vignette</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
@@ -146,10 +149,6 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">akima</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="build-routable-transport-network-with-setup_r5">1. Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
-</h2>
 <p>To build a routable transport network with r5r and load it into memory, the user needs to call <code>setup_r5</code> with the path to the directory where OpenStreetMap and GTFS data are stored.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># system.file returns the directory with example data inside the r5r package</span>
@@ -158,8 +157,9 @@
 
 <span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></code></pre></div>
 </div>
+</div>
 <div class="section level2">
-<h2 id="calculate-accessibility">2. Calculate Accessibility<a class="anchor" aria-label="anchor" href="#calculate-accessibility"></a>
+<h2 id="calculate-accessibility">3. Calculate Accessibility<a class="anchor" aria-label="anchor" href="#calculate-accessibility"></a>
 </h2>
 <p>In this example, we will be calculating the number of schools and public healthcare facilities accessible by public transport within a travel time of up to 20 minutes. The sample data provided contains information on the spatial distribution of schools in Porto Alegre in the <code>points$schools</code> column, and healthcare facilities in the <code>points$healthcare</code> column.</p>
 <p>With the code below we compute the number of schools and healthcare accessible considering median of multiple travel time estimates departing every minute over a 60-minute time window, between 2pm and 3pm. The <code><a href="../reference/accessibility.html">accessibility()</a></code> function can calculate access to multiple opportunities in a single call, which is much more efficient and convenient than producing a travel time matrix of the study area and manually computing accessibility.</p>
@@ -202,7 +202,7 @@
 <span class="co">#&gt; 6: 89a901285cfffff         50     21             3 </span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="map-accessibility">3. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>
+<h2 id="map-accessibility">4. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>
 </h2>
 <p>The final step is mapping the accessibility results calculated earlier. The code below demonstrates how to do that, with some extra steps to produce a prettier map by doing a spatial interpolation of accessibility estimates.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -248,13 +248,13 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">opportunity</span><span class="op">)</span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_accessibility.gif?raw=true" width="100%"></p>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
-</div>
-<div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h2>
+<div class="section level3">
+<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h3>
 <div id="refs" class="references">
 <div id="ref-levinson2020manual">
 <p>Levinson, David, and et al. 2020. “Transport Access Manual: A Guide for Measuring Connection Between People and Places,” January. <a href="https://ses.library.usyd.edu.au/handle/2123/23733" class="external-link">https://ses.library.usyd.edu.au/handle/2123/23733</a>.</p>
+</div>
 </div>
 </div>
 </div>

@@ -123,12 +123,12 @@
     </div>
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r" class="external-link">R package for rapid realistic routing on multimodal transport networks</a> (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by <a href="https://www.conveyal.com/" class="external-link">Conveyal</a>. R<sup>5</sup> stands for <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="installation">2. Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install <code>r5r</code> from CRAN, or the development version from github.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -148,7 +148,7 @@
   <span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">.jcall</a></span><span class="op">(</span><span class="st">"java.lang.System"</span>, <span class="st">"S"</span>, <span class="st">"getProperty"</span>, <span class="st">"java.version"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="usage">3. Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>Before we start, we need to increase the memory available to Java. This is necessary because, by default, <code>R</code> allocates only 512MB of memory for Java processes, which is not enough for large queries using <code>r5r</code>. To increase available memory to 2GB, for example, we need to set the <code>java.parameters</code> option at the beginning of the script, as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -172,7 +172,7 @@
 </ol>
 <p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
 <div class="section level3">
-<h3 id="data-requirements">Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
+<h3 id="data-requirements">3.1 Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
 </h3>
 <p>To use <code>r5r</code>, you will need: - A road network data set from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A public transport feed in <code>GTFS.zip</code> format (optional) - A raster file of Digital Elevation Model data in <code>.tif</code> format (optional)</p>
 <p>Here are a few places from where you can download these data sets:</p>
@@ -210,7 +210,7 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
+<h2 id="demonstration-on-sample-data">4. Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
 </h2>
 <div class="section level3">
 <h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
@@ -252,15 +252,15 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools healthcare</span>
-<span class="co">#&gt; 1: 89a901291afffff -51.16122 -30.05220        833       0          0</span>
-<span class="co">#&gt; 2: 89a9012a36fffff -51.21439 -30.08789        711       0          0</span>
-<span class="co">#&gt; 3: 89a90128297ffff -51.18020 -30.07001        544       0          0</span>
-<span class="co">#&gt; 4: 89a90128367ffff -51.19430 -30.04245       1167       0          0</span>
-<span class="co">#&gt; 5: 89a90128c43ffff -51.22793 -30.04652        616       0          0</span>
-<span class="co">#&gt; 6: 89a9012a02bffff -51.22135 -30.10947        657       0          0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a9012ae6fffff -51.23522 -30.07640         66       0          0</span>
+<span class="co">#&gt; 2: 89a90128c6fffff -51.23365 -30.03771        420       1          0</span>
+<span class="co">#&gt; 3: 89a90129bbbffff -51.17763 -30.00641        637       1          0</span>
+<span class="co">#&gt; 4: 89a90129acfffff -51.14466 -30.01892        370       0          0</span>
+<span class="co">#&gt; 5: 89a9012aa43ffff -51.22871 -30.06587        970       0          0</span>
+<span class="co">#&gt; 6: 89a9012aa13ffff -51.23797 -30.06923        159       0          2</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="building-routable-transport-network-with-setup_r5">Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
+<h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
 </h3>
 <p>The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the <code>setup_r5</code> function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the <code>r5r</code> package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -268,7 +268,7 @@
 <span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="accessibility-analysis">Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
+<h3 id="accessibility-analysis">4.2 Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
 </h3>
 <p>The faster way to calculate accessibility estimates is using the <code><a href="../reference/accessibility.html">accessibility()</a></code> function. In this example, we calculate the number of schools and health care facilities accessible in less than 60 minutes by public transport and walking. More details in this vignette on <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html" class="external-link">Calculating and visualizing Accessibility</a>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -289,7 +289,7 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="routing-analysis">Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
+<h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
 </h3>
 <p>For fast routing analysis, <strong>r5r</strong> currently has three core functions: <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>.</p>
 <div class="section level4">

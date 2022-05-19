@@ -122,7 +122,7 @@
     </div>
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p><strong>r5r</strong> has some extremely efficient functions to run multimodal routing and accessibility analysis. In general, though, these functions output only the essential information required by most transport planning applications and simulation models. Moreover, the algorithms behind these function return only the optimal route in terms of minimizing travel times and/or monetary costs. Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too.</p>
 <p>This is where the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function comes in. This function outputs for each origin destination pair a detailed route plan with information desegregated by trip segment. This includes information on the transport mode, waiting times, travel times and distances of each trip segment and the trip geometry. Moreover, the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function can also return results for multiple route alternatives. Let’s see how this function works using a reproducible example.</p>
@@ -186,7 +186,7 @@
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true" width="100%"></p>
 <p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
 <div class="section level3">
-<h3 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
+<h3 id="visualize-results">3.1 Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
 </h3>
 <p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf((</code> function to extract the OSM street network used in the routing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -212,16 +212,16 @@
 <div class="section level2">
 <h2 id="a-few-options">4. A few options:<a class="anchor" aria-label="anchor" href="#a-few-options"></a>
 </h2>
-<div class="section level3">
-<h3 id="combining-orings-and-destinations">Combining orings and destinations<a class="anchor" aria-label="anchor" href="#combining-orings-and-destinations"></a>
-</h3>
+<div class="section level4">
+<h4 id="combining-orings-and-destinations">4.1 Combining orings and destinations<a class="anchor" aria-label="anchor" href="#combining-orings-and-destinations"></a>
+</h4>
 <ul>
 <li>By default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on. If you would like to query routes between all origins to all destinations you can simply set <code>all_to_all = TRUE</code>.</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="keep-geometry-data-in-the-output">Keep geometry data in the output<a class="anchor" aria-label="anchor" href="#keep-geometry-data-in-the-output"></a>
-</h3>
+<div class="section level4">
+<h4 id="keep-geometry-data-in-the-output">4.2 Keep geometry data in the output<a class="anchor" aria-label="anchor" href="#keep-geometry-data-in-the-output"></a>
+</h4>
 <ul>
 <li>Be default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will not return the spatial geometry of results. To retrieve this information you can simply set <code>geometry = TRUE</code>.</li>
 </ul>
