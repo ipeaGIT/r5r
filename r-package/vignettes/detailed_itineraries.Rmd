@@ -147,7 +147,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 Please note that the `detailed_itineraries()` functions does not run on frequency-based GTFS feeds. A simple hack to overcome this problem is to convert your GTFS data from frequencies to time tables. This can be easily done using the [`gtfstools` package](https://ipeagit.github.io/gtfstools/). Here is how:
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 library(gtfstools)
 
 # location of your frequency-based GTFS
