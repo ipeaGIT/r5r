@@ -171,14 +171,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     private int getFullFareForRoute(int patternIndex) {
         FarePerRoute routeInfoData = faresPerRoute[patternIndex];
 
-//        return routeInfoData.getIntegerFare();
-
-        if (routeInfoData != null) {
-            return routeInfoData.getIntegerFare();
-        } else {
-            return 1;
-        }
-
+        return routeInfoData.getIntegerFare();
     }
 
     private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern) {
