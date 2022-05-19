@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## 1. Introduction 
+# 1. Introduction 
 
 Some of the most common tasks in transport planning and modeling involve require having good quality data with travel time estimates between origins and destinations. `R5` is incredibly fast in generating realistic door-to-door travel time estimates in multimodal transport systems.
 
@@ -29,7 +29,7 @@ The `r5r` packages has two functions that allow users to leverage the computing 
 This vignette shows a reproducible example to explain how these two functions work and the differences between them.
 
 
-## 2. Build routable transport network with `setup_r5()`
+# 2. Build routable transport network with `setup_r5()`
 
 First, let's build the multimodal transport network we'll be using in this vignette. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
@@ -61,7 +61,7 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 ```
 
 
-## 3. The `travel_time_matrix()` function
+# 3. The `travel_time_matrix()` function
 
 The `travel_time_matrix()` function provides a simple and really fast way to calculate the travel time between all possible origin destination pairs at a given departure time using a given transport mode.
 
@@ -93,7 +93,7 @@ This can be done very efficiently by using the `time_window` and `percentile` pa
 
 
 
-## 4. The `expaded_travel_time_matrix()` function
+# 4. The `expaded_travel_time_matrix()` function
 
 Sometimes, we want to know more than simply the total travel time from A to B. This is when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.
 

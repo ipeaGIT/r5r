@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+# 1. Introduction
 
 An isochrone of a given place includes all the areas reachable from that place within a certain amount of time. This vignette shows how to calculate and visualize isochrones in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html).
 
@@ -28,7 +28,10 @@ In this reproducible example, we will be using a sample data set for the city of
 3. Calculate travel times 
 4. Map Isochrones
 
-## 1. Increase Java memory and load libraries
+
+# 2. Build routable transport network with `setup_r5()`
+
+### Increase Java memory and load libraries
 
 Before we start, we need to increase the memory available to Java and load the packages used in this vignette.
 
@@ -43,7 +46,6 @@ library(akima)
 library(dplyr)
 ```
 
-## 2. Build routable transport network with `setup_r5()`
 
 To build a routable transport network with `r5r` and load it into memory, the user needs to call `setup_r5` with the path to the directory where OpenStreetMap and GTFS data are stored.
 
@@ -55,7 +57,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 ```
 
-## 3. Calculate travel times
+# 3. Calculate travel times
 
 In this example, we will be calculating the travel times by public transport from the central bus station in Porto Alegre to every other block in the city. With the code below we compute multiple travel time estimates departing every minute over a 120-minute time window, between 2pm and 4pm.
 
@@ -99,7 +101,7 @@ head(ttm)
 
 ```
 
-## 4. Map Isochrones
+# 4. Map Isochrones
 
 Now we only need to organize the travel time matrix output `ttm` and plot it on the map.
 

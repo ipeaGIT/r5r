@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 
 
-# Introduction 
+# 1. Introduction 
 
 **r5r** has some extremely efficient functions to run multimodal routing and accessibility analysis. In general, though, these functions output only the essential information required by most transport planning applications and simulation models. Moreover, the algorithms behind these function return only the optimal route in terms of minimizing travel times and/or monetary costs. Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too.
 
@@ -96,7 +96,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 The output is a `data.frame sf` object, so we can easily visualize the results.
 
-## Visualize results
+## 3.1 Visualize results
 
 **Static visualization** with `ggplot2` package: To provide a geographic context 
 for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf((` function to  extract the OSM street network used in the routing.
@@ -133,11 +133,11 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 # 4. A few options:
 
-## Combining orings and destinations
+### 4.1 Combining orings and destinations
 
 - By default, `detailed_itineraries()` will query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on. If you would like to query routes between all origins to all destinations you can simply set `all_to_all = TRUE`.
 
-## Keep geometry data in the output
+### 4.2 Keep geometry data in the output
 
 - Be default, `detailed_itineraries()` will not return the spatial geometry of results. To retrieve this information you can simply set `geometry = TRUE`.
 

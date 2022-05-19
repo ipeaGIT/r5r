@@ -30,12 +30,12 @@ files_to_remove <- existing_files[! existing_files %in% files_to_keep]
 invisible(file.remove(file.path(data_path, files_to_remove)))
 ```
 
-# Introduction 
+# 1. Introduction 
 
 **r5r** is an [R package for rapid realistic routing on multimodal transport networks](https://github.com/ipeaGIT/r5r) (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by [Conveyal](https://www.conveyal.com/). R<sup>5</sup> stands for [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5). More details about **r5r** can be found on the [package webpage](https://ipeagit.github.io/r5r/index.html) or on this [paper](
 https://doi.org/10.32866/001c.21262).
 
-# Installation
+# 2. Installation
 
 You can install `r5r` from CRAN, or the development version from github.
 
@@ -62,7 +62,7 @@ If you don't know what version of Java you have installed on your computer, you 
 ```
 
 
-# Usage
+# 3. Usage
 
 Before we start, we need to increase the memory available to Java. This is necessary because, by default, `R` allocates only 512MB of memory for Java processes, which is not enough for large queries using `r5r`. To increase available memory to 2GB, for example, we need to set the `java.parameters` option at the beginning of the script, as follows:
 
@@ -102,7 +102,7 @@ when generating travel time matrices and accessibility estimates. More info abou
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
 
 
-## Data requirements:
+## 3.1 Data requirements:
 
 To use `r5r`, you will need:
 - A road network data set from OpenStreetMap in `.pbf` format (*mandatory*)
@@ -130,7 +130,7 @@ Let's have a quick look at how `r5r` works using a sample data set.
 
 
 
-# Demonstration on sample data
+# 4. Demonstration on sample data
 
 ## Data
 
@@ -169,7 +169,7 @@ head(points)
 
 
 
-## Building routable transport network with `setup_r5()`
+## 4.1 Building routable transport network with `setup_r5()`
 
 The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the `setup_r5` function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the `r5r` package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.
 
@@ -179,7 +179,7 @@ r5r_core <- setup_r5(data_path = data_path)
 ```
 
 
-## Accessibility analysis
+## 4.2 Accessibility analysis
 
 The faster way to calculate accessibility estimates is using the `accessibility()`
 function. In this example, we calculate the number of schools and health care 
@@ -206,7 +206,7 @@ head(access)
 
 
 
-## Routing analysis
+## 4.3 Routing analysis
 
 For fast routing analysis, **r5r** currently has three core functions: 
 `travel_time_matrix()`, `expanded_travel_time_matrix()` and `detailed_itineraries()`.

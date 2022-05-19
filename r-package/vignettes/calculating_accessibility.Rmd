@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction 
+# 1. Introduction 
 
 Accessibility indicators measure the ease with which opportunities, such as jobs,
 can be reached by a traveler from a particular location [@levinson2020manual]. One
@@ -35,7 +35,11 @@ steps:
 3. Calculate Accessibility
 4. Map Accessibility
 
-## Increase Java memory and load libraries
+
+
+# 2. Build routable transport network with `setup_r5()`
+
+### Increase Java memory and load libraries
 
 Before we start, we need to increase the memory available to Java and load the 
 packages used in this vignette
@@ -51,9 +55,6 @@ library(akima)
 library(dplyr)
 ```
 
-
-## 1. Build routable transport network with `setup_r5()`
-
 To build a routable transport network with r5r and load it into memory, the user 
 needs to call `setup_r5` with the path to the directory where OpenStreetMap and 
 GTFS data are stored.
@@ -67,7 +68,7 @@ r5r_core <- setup_r5(data_path)
 ```
 
 
-## 2. Calculate Accessibility
+# 3. Calculate Accessibility
 
 In this example, we will be calculating the number of schools and public healthcare facilities accessible by public transport within a travel time of up to 20 minutes. The sample data provided contains information on the spatial distribution of schools in Porto Alegre in the `points$schools` column, and healthcare facilities in the `points$healthcare` column. 
 
@@ -117,7 +118,7 @@ head(access)
 
 
 
-## 3. Map Accessibility
+# 4. Map Accessibility
 
 The final step is mapping the accessibility results calculated earlier. The code
 below demonstrates how to do that, with some extra steps to produce a prettier map by doing a spatial interpolation of accessibility estimates.

@@ -30,7 +30,7 @@ library(mapview)
 ```
 
 
-# Introduction
+# 1. Introduction
 
 Considering the monetary costs of public transport trips in the calculation of 
 travel time matrices and accessibility estimates is a major challenge faced by 
@@ -63,7 +63,7 @@ estimates with `r5r`**.
 
 
 
-## Details
+## 1.1 Details
 
 A common feature among many public transport services is the possibility of 
 discounted transfers, when passengers can use a single ticket for a trip composed 
@@ -97,7 +97,7 @@ GTFS feeds with full fare information.
 
 <br>
 
-# Reprex: the public transport system of Porto Alegre
+# 2. Reprex: the public transport system of Porto Alegre
 
 In this vignette, we will be using the sample data set for the city of Porto 
 Alegre (Brazil) included in `r5r`. Porto Alegre has a relatively straightforward 
@@ -135,7 +135,7 @@ In the following sections, we will demonstrate how to implement those rules with
 
 <br>
 
-# Setting up the fare structure
+# 3. Setting up the fare structure
 
 There are three support functions in `r5r` to help users configure the fare structure:
 
@@ -166,7 +166,7 @@ head(fare_structure, n=7)
 
 ```
 
-## Global Properties
+## 3.1 Global Properties
 
 Let's configure the global properties first, which are the ones that are applied 
 to the entire system. 
@@ -194,7 +194,7 @@ fare_structure$transfer_time_allowance <- 60 # update transfer_time_allowance
 fare_structure$fare_cap
 ```
 
-## Configure fares by transport mode
+## 3.2 Configure fares by transport mode
 
 To configure mode-, transfer-, and route-specific properties, we can use the three `data.frames` inside our `fare_structure` list. Let's configure the modes first. 
 Below, we can see that the `fares_per_mode` data.frame contains five columns:
@@ -230,7 +230,7 @@ Checking the results below, everything looks OK:
 fare_structure$fares_per_mode
 ```
 
-## Configure fares by transfers
+## 3.3 Configure fares by transfers
 
 The fare rules for transfer are stored in the `fares_per_transfer` data.frame, 
 which is shown below. Each row contains the fare prices for transfers between the
@@ -282,7 +282,7 @@ this:
 fare_structure$fares_per_transfer
 ```
 
-## Routes configuration
+## 3.4 Routes configuration
 
 The information on the fare price for each route is stored in the `fares_per_route` 
 data.frame. Below, we can see a sample of the bus and train routes in Porto Alegre. 
@@ -320,7 +320,7 @@ matrices and accessibility while accounting for monetary cost cutoffs. Let's see
 how it's done in the next sections.
 
 
-# Calculating travel time and accessibiilty accounting for monetary costs
+# 4. Calculating travel time and accessibiilty accounting for monetary costs
 
 The `travel_time_matrix()` and `accessibility()` functions have two new parameters 
 to account for monetary costs thresholds:
@@ -329,7 +329,7 @@ to account for monetary costs thresholds:
 -   `max_fare`: the maximum total fare that can be used in the trip.
 
 
-## Travel time with monetary cost
+## 4.1 Travel time with monetary cost
 
 The following example shows travel time differences when monetary costs are 
 accounted for, using the `travel_time_matrix()` function.
@@ -416,7 +416,7 @@ p1 + p2 + plot_annotation(subtitle = "Comparing travel times with and without mo
 
 
 
-## Calculating accessibility with monetary cost
+## 4.2 Calculating accessibility with monetary cost
 
 Now, we can answer questions like "how many health care facilities one can access 
 in 60 minutes using public transport, on a R\$5.00 budget?". We'll do that below, 
