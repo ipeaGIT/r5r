@@ -58,9 +58,9 @@ memory (unless specified not to do so).
 library(r5r)
 
 # directory with street network and gtfs files
-path <- system.file("extdata/poa", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(path)
+r5r_core <- setup_r5(data_path)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

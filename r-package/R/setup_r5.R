@@ -34,9 +34,9 @@
 #' library(r5r)
 #'
 #' # directory with street network and gtfs files
-#' path <- system.file("extdata/poa", package = "r5r")
+#' data_path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(path)
+#' r5r_core <- setup_r5(data_path)
 #' @export
 setup_r5 <- function(data_path,
                      version = "6.7.0",
@@ -84,8 +84,9 @@ setup_r5 <- function(data_path,
   any_tif <- length(grep(".tif", list.files(data_path))) > 0
 
   # stop if there is no input data
-  if (!(any_pbf | any_network))
+  if (!(any_pbf | any_network)){
     stop("\nAn OSM PBF file is required to build a network.")
+    }
 
   # use no elevation model if there is no raster.tif input data
   if (!(any_tif)) {
@@ -93,8 +94,7 @@ setup_r5 <- function(data_path,
     message("No raster .tif files found. Using elevation = 'NONE'.")
     }
 
-  # check if the most recent JAR release is stored already. If it's not
-  # download it
+  # check if the most recent JAR release is stored already.
 
   fileurl <- fileurl_from_metadata(version)
   filename <- basename(fileurl)
@@ -105,6 +105,7 @@ setup_r5 <- function(data_path,
     file.path(system.file("jar", package = "r5r"), filename)
   )
 
+  # If there isn't a JAR already, download it
   if (checkmate::test_file_exists(jar_file)) {
     if (!verbose) message("Using cached R5 version from ", jar_file)
   } else {
