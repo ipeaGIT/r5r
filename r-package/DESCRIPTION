@@ -58,7 +58,7 @@ Suggests:
     patchwork,
     rmarkdown,
     testthat,
-    tibble
+    gtfstools
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

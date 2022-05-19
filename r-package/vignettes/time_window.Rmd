@@ -173,7 +173,7 @@ The last row in the result above has a few `NA`s. This tell us that at least 50%
 
 Finally, we can also use the `time_window` in the `expanded_travel_time_matrix()` function. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,   
                                     origins = points[1:30,],
                                     destinations = points[31:61,],    
