@@ -13,7 +13,10 @@
     <loc>/articles/calculating_isochrones.html</loc>
   </url>
   <url>
-    <loc>/articles/fare_calculator.html</loc>
+    <loc>/articles/detailed_itineraries.html</loc>
+  </url>
+  <url>
+    <loc>/articles/fare_structure.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -26,6 +29,9 @@
   </url>
   <url>
     <loc>/articles/time_window.html</loc>
+  </url>
+  <url>
+    <loc>/articles/travel_time_matrix.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -85,13 +91,13 @@
     <loc>/reference/r5r.html</loc>
   </url>
   <url>
-    <loc>/reference/read_fare_calculator.html</loc>
+    <loc>/reference/read_fare_structure.html</loc>
   </url>
   <url>
     <loc>/reference/select_mode.html</loc>
   </url>
   <url>
-    <loc>/reference/set_fare_calculator.html</loc>
+    <loc>/reference/set_fare_structure.html</loc>
   </url>
   <url>
     <loc>/reference/set_max_lts.html</loc>
@@ -118,7 +124,7 @@
     <loc>/reference/set_verbose.html</loc>
   </url>
   <url>
-    <loc>/reference/setup_fare_calculator.html</loc>
+    <loc>/reference/setup_fare_structure.html</loc>
   </url>
   <url>
     <loc>/reference/setup_r5.html</loc>
@@ -136,6 +142,6 @@
     <loc>/reference/travel_time_matrix.html</loc>
   </url>
   <url>
-    <loc>/reference/write_fare_calculator.html</loc>
+    <loc>/reference/write_fare_structure.html</loc>
   </url>
 </urlset>

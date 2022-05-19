@@ -42,13 +42,19 @@ origin and destination pairs."><meta property="og:image" content="/logo.png"><!-
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
+    </li>
+    <li>
+      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
     </li>
   </ul></li>
 <li>
@@ -92,7 +98,7 @@ origin and destination pairs.</p>
   max_walk_dist <span class="op">=</span> <span class="cn">Inf</span>,
   max_bike_dist <span class="op">=</span> <span class="cn">Inf</span>,
   max_trip_duration <span class="op">=</span> <span class="fl">120L</span>,
-  fare_calculator <span class="op">=</span> <span class="cn">NULL</span>,
+  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,
   monetary_cost_cutoffs <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span>,
   walk_speed <span class="op">=</span> <span class="fl">3.6</span>,
   bike_speed <span class="op">=</span> <span class="fl">12</span>,
@@ -173,16 +179,16 @@ of 12 km/h, you have to set <code>max_trip_duration = 5 / 12 * 60</code>).</p></
 <dt>max_trip_duration</dt>
 <dd><p>An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).</p></dd>
-<dt>fare_calculator</dt>
-<dd><p>A fare calculator object, following the convention
-set in <code><a href="setup_fare_calculator.html">setup_fare_calculator()</a></code>. This object describes how transit fares
-should be calculated. Please see the fare calculator vignette to
+<dt>fare_structure</dt>
+<dd><p>A fare structure object, following the convention
+set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
 understand how this object is structured.</p></dd>
 <dt>monetary_cost_cutoffs</dt>
 <dd><p>A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the time
 you'll want this parameter to be the combination of all possible fares
-listed in you <code>fare_calculator</code>. Choosing a coarse distribution of
+listed in you <code>fare_structure</code>. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
 and the other costing $4, and you set this parameter to <code>5</code>, the output will
@@ -283,10 +289,10 @@ parking-protected lanes or cycle tracks).</p></li>
 <li><p><strong>LTS 2</strong>: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.</p></li>
-<li><p><strong>LTS 3</strong>: Tolerable for “enthused and confident” cyclists. This includes
+<li><p><strong>LTS 3</strong>: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.</p></li>
-<li><p><strong>LTS 4</strong>: Tolerable only for “strong and fearless” cyclists. This
+<li><p><strong>LTS 4</strong>: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.</p></li>
 </ul><p>For advanced users, you can provide custom LTS values by adding a tag <code>&lt;key = "lts"&gt;</code> to the <code>osm.pbf</code> file.</p>
@@ -325,7 +331,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 <li><p>Conway, M. W., &amp; Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/13658816.2019.1605075" class="external-link">doi:10.1080/13658816.2019.1605075</a></p></li>
+Information Science, 33(9), 1759â€“1787. <a href="https://doi.org/10.1080/13658816.2019.1605075" class="external-link">doi:10.1080/13658816.2019.1605075</a></p></li>
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -349,12 +355,12 @@ Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/136588
 <span class="r-in"><span class="co"># load origin/destination points</span></span>
 <span class="r-in"><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># load fare calculator object</span></span>
-<span class="r-in"><span class="va">fare_calculator_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span class="r-in"><span class="co"># load fare structure object</span></span>
+<span class="r-in"><span class="va">fare_structure_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
 <span class="r-in">  <span class="st">"extdata/poa/fares/fares_poa.zip"</span>,</span>
 <span class="r-in">  package <span class="op">=</span> <span class="st">"r5r"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">fare_calculator</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_fare_calculator.html">read_fare_calculator</a></span><span class="op">(</span><span class="va">fare_calculator_path</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_fare_structure.html">read_fare_structure</a></span><span class="op">(</span><span class="va">fare_structure_path</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
 <span class="r-in">  <span class="st">"13-05-2019 14:00:00"</span>,</span>
@@ -367,7 +373,7 @@ Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/136588
 <span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span class="r-in">  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
 <span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">  fare_calculator <span class="op">=</span> <span class="va">fare_calculator</span>,</span>
+<span class="r-in">  fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
 <span class="r-in">  monetary_cost_cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">4.8</span>, <span class="fl">9</span>, <span class="fl">9.3</span>, <span class="fl">9.6</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span></span>

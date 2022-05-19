@@ -66,13 +66,19 @@
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
+    </li>
+    <li>
+      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
     </li>
   </ul>
 </li>
@@ -103,7 +109,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2022-05-18</h4>
+            <h4 data-toc-skip class="date">2022-05-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -161,7 +167,7 @@
 <li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of <code>r5r</code>, that also builds a routable transport network;</p></li>
 <li><p><code><a href="../reference/accessibility.html">accessibility()</a></code> for fast computation of access to opportunities considering a selected decay function;</p></li>
 <li><p><code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> for fast computation of travel time estimates between origin/destination pairs;</p></li>
-<li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating minute-by-minute travel time estimates between origin destination pairs within a specified time window;</p></li>
+<li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating travel matrices between origin destination pairs with additional information such routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</p></li>
 <li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information on one or multiple alternative routes between origin/destination pairs.</p></li>
 </ol>
 <p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
@@ -246,12 +252,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools healthcare</span>
-<span class="co">#&gt; 1: 89a9012824fffff -51.16453 -30.05886          0       0          0</span>
-<span class="co">#&gt; 2: 89a9012b39bffff -51.15408 -30.10134         49       0          0</span>
-<span class="co">#&gt; 3: 89a9012b03bffff -51.15740 -30.10799          0       0          0</span>
-<span class="co">#&gt; 4: 89a90129ba3ffff -51.18060 -30.00476        172       1          0</span>
-<span class="co">#&gt; 5: 89a90129a47ffff -51.14444 -30.01339       1309       0          0</span>
-<span class="co">#&gt; 6: 89a9012852fffff -51.22276 -30.06915       1027       0          0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a90129a0bffff -51.14753 -30.01452        634       0          0</span>
+<span class="co">#&gt; 2: 89a90128207ffff -51.17678 -30.06059        126       0          0</span>
+<span class="co">#&gt; 3: 89a9012994bffff -51.18083 -30.01030        534       0          1</span>
+<span class="co">#&gt; 4: 89a90128447ffff -51.19003 -30.08719         47       0          0</span>
+<span class="co">#&gt; 5: 89a9012b1d7ffff -51.17261 -30.10808         62       0          0</span>
+<span class="co">#&gt; 6: 89a9012866bffff -51.16818 -30.07380       1062       1          0</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -259,7 +265,7 @@
 <p>The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the <code>setup_r5</code> function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the <code>r5r</code> package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Indicate the path where OSM and GTFS data are stored</span>
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="accessibility-analysis">Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
@@ -301,8 +307,8 @@
 
 <span class="co"># calculate a travel time matrix</span>
 <span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>,
+                          origins <span class="op">=</span> <span class="va">poi</span>,
+                          destinations <span class="op">=</span> <span class="va">poi</span>,
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                           max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
@@ -314,15 +320,15 @@
 <div class="section level4">
 <h4 id="expanded-travel-time-matrix-with-minute-by-minute-estimates">Expanded travel time matrix with minute-by-minute estimates<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-minute-by-minute-estimates"></a>
 </h4>
-<p>For those interested in more detailed outputs, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> works very similarly with <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> but it brings much more information. It estimates for each origin destination pair the travel time of the fastest route alternative departing each minute within a specified time window. This examples below uses a 20-minute time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
+<p>For those interested in more detailed outputs, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> works very similarly with <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> but it brings much more information. It estimates for each origin destination pair the routes used and total time disaggregated by access, waiting, in-vehicle and transfer times. Please note this function can be very memory intensive for large data sets.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># calculate a travel time matrix</span>
 <span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>,
+                          origins <span class="op">=</span> <span class="va">poi</span>,
+                          destinations <span class="op">=</span> <span class="va">poi</span>,
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          time_window <span class="op">=</span> <span class="fl">20</span>,
+                          breakdown <span class="op">=</span> <span class="cn">TRUE</span>,
                           max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
@@ -357,7 +363,7 @@
 <div class="section level5">
 <h5 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
 </h5>
-<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf((</code> function to extract the OSM street network used in the routing.</p>
+<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> function to extract the OSM street network used in the routing.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># extract OSM network</span>
 <span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>

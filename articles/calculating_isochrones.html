@@ -66,13 +66,19 @@
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
+    </li>
+    <li>
+      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
     </li>
   </ul>
 </li>
@@ -101,9 +107,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating and visualizing Isochrones</h1>
-                        <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga, Matthew Wigginton Conway</h4>
             
-            <h4 data-toc-skip class="date">2022-05-18</h4>
+            <h4 data-toc-skip class="date">2022-05-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/calculating_isochrones.Rmd" class="external-link"><code>../vignettes/calculating_isochrones.Rmd</code></a></small>
       <div class="hidden name"><code>calculating_isochrones.Rmd</code></div>
@@ -151,7 +156,7 @@
 <span class="co"># set data path to directory containing your own data if not using the examples</span>
 <span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
 
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="calculate-travel-times">3. Calculate travel times<a class="anchor" aria-label="anchor" href="#calculate-travel-times"></a>
@@ -184,7 +189,7 @@
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                           time_window <span class="op">=</span> <span class="va">time_window</span>,
                           percentiles <span class="op">=</span> <span class="va">percentiles</span>,
-                          verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+                          progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span>
 <span class="co">#&gt;             fromId            toId travel_time</span>

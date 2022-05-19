@@ -50,13 +50,19 @@ memory (unless specified not to do so)."><meta property="og:image" content="/log
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
+    </li>
+    <li>
+      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
     </li>
   </ul></li>
 <li>
@@ -148,9 +154,9 @@ or to use a cached file. Defaults to <code>FALSE</code> (i.e. use a cached netwo
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># directory with street network and gtfs files</span></span>
-<span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu">setup_r5</span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu">setup_r5</span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/work/_temp/Library/r5r/jar/r5-v6.7-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>

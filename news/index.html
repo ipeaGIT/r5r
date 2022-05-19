@@ -41,13 +41,19 @@
       <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
     </li>
     <li>
-      <a href="../articles/fare_calculator.html">Configuring and Using Fare Calculators</a>
+      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">pareto_frontier() to analyze the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
+    </li>
+    <li>
+      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
     </li>
   </ul></li>
 <li>
@@ -92,7 +98,9 @@
 <li><p>Routing functions now require the users to be non-ambiguous when specifying the modes, raising errors when it cannot disambiguate them. This new behaviour replaces the old one, in which the functions could end up trying to “guess” which mode was to be used in some edge cases.</p></li>
 <li><p>Informatio on bicycle ‘level of traffic stress’ is now added to the output of <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/251" class="external-link">#251</a>.</p></li>
 </ul><p><strong>Bug fixes</strong></p>
-<ul><li>Fixed bug that <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> generated some routes with invalid geometries. Closes <a href="https://github.com/ipeaGIT/r5r/issues/256" class="external-link">#256</a>.</li></ul></div>
+<ul><li>Fixed bug that <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> generated some routes with invalid geometries. Closes <a href="https://github.com/ipeaGIT/r5r/issues/256" class="external-link">#256</a>.</li>
+<li>Fixed bug that prevented <code>setup_r5(path, overwrite = TRUE)</code> to work.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.0" id="r5r-070">r5r 0.7.0<small>2022-02-11</small><a class="anchor" aria-label="anchor" href="#r5r-070"></a></h2>
 <p><strong>Major changes</strong></p>
