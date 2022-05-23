@@ -75,9 +75,9 @@ The package has five fundamental functions.
    between one or multiple origin destination pairs.
 
 4. `expanded_travel_time_matrix()`
-   * Calculates travel times between origin destination pairs with multiple 
-   estimates departing minute-by-minute within a time window. The function 
-   returns a `data.table`.
+   * Calculates travel time matrices between origin destination pairs with 
+   additional information such routes used and total time disaggregated by access, 
+   waiting, in-vehicle and transfer times
 
 5. `detailed_itineraries()`
    * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
