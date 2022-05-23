@@ -5,6 +5,7 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.point_to_point.PointToPointRouterServer;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +21,10 @@ import org.ipea.r5r.Process.ParetoFrontierCalculator;
 import org.ipea.r5r.Process.TravelTimeMatrixComputer;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
+import spark.Spark;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
@@ -575,6 +579,36 @@ public class R5RCore {
         }
 
         return json;
+    }
+
+
+    // ------------------------------- FARE CALCULATOR ----------------------------------------
+
+    public void startServer(String jsonFareCalculator) {
+        if (jsonFareCalculator.equals("")) {
+            dropFareCalculator();
+        } else {
+            setFareCalculator(jsonFareCalculator);
+        }
+
+        this.transportNetwork.fareCalculator = this.routingProperties.fareCalculator;
+
+        try {
+            Method run = PointToPointRouterServer.class.getDeclaredMethod("run", TransportNetwork.class);
+
+            // Set the accessibility as true
+            run.setAccessible(true);
+
+            run.invoke(null, this.transportNetwork);
+
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void stopServer() {
+        Spark.stop();
     }
 
     // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------
