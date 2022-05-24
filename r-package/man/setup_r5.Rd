@@ -31,7 +31,7 @@ temporary directory. Defaults to \code{FALSE}.}
 
 \item{elevation}{A string. The name of the impedance function to be used to
 calculate impedance for walking and cycling based on street slopes.
-Available options include \code{TOBLER} (Default) and \code{MANETTI}, or \code{NONE} to
+Available options include \code{TOBLER} (Default) and \code{MINETTI}, or \code{NONE} to
 ignore elevation. R5 loads elevation data from \code{.tif} files saved inside the
 \code{data_path} directory.}
 
