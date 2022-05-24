@@ -22,13 +22,27 @@
 #' calculate impedance for walking and cycling based on street slopes.
 #' Available options include `TOBLER` (Default) and `MINETTI`, or `NONE` to
 #' ignore elevation. R5 loads elevation data from `.tif` files saved inside the
-#' `data_path` directory.
+#' `data_path` directory. See more info in the Details below.
 #' @param overwrite A logical. Whether to overwrite an existing `network.dat`
 #' or to use a cached file. Defaults to `FALSE` (i.e. use a cached network).
 #'
 #' @return An `rJava` object to connect with `R5` routing engine.
 #'
 #' @family setup
+#'
+#' @section Details:
+#' More information about the `TOBLER` and `MINETTI` options to calculate the
+#' effects of elevation on travel times can be found in the references below:
+#'
+#'- Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
+#'model the relationship between slope and travel rates. Applied geography, 106,
+#'93-107. \doi{10.1016/j.apgeog.2019.03.008}.
+#'- Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
+#'uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
+#'- Tobler, W. (1993). Three presentations on geographical analysis and modeling:
+#'Non-isotropic geographic modeling speculations on the geometry of geography
+#'global spatial analysis. Technical Report. National center for geographic
+#'information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)

@@ -33,7 +33,7 @@ temporary directory. Defaults to \code{FALSE}.}
 calculate impedance for walking and cycling based on street slopes.
 Available options include \code{TOBLER} (Default) and \code{MINETTI}, or \code{NONE} to
 ignore elevation. R5 loads elevation data from \code{.tif} files saved inside the
-\code{data_path} directory.}
+\code{data_path} directory. See more info in the Details below.}
 
 \item{overwrite}{A logical. Whether to overwrite an existing \code{network.dat}
 or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached network).}
@@ -53,6 +53,23 @@ the directory, all feeds are merged. If there is already a 'network.dat'
 file in the directory, the function will simply read it and load it to
 memory (unless specified not to do so).
 }
+\section{Details}{
+
+More information about the \code{TOBLER} and \code{MINETTI} options to calculate the
+effects of elevation on travel times can be found in the references below:
+\itemize{
+\item Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
+model the relationship between slope and travel rates. Applied geography, 106,
+93-107. \doi{10.1016/j.apgeog.2019.03.008}.
+\item Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
+uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
+\item Tobler, W. (1993). Three presentations on geographical analysis and modeling:
+Non-isotropic geographic modeling speculations on the geometry of geography
+global spatial analysis. Technical Report. National center for geographic
+information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
+}
+}
+
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
