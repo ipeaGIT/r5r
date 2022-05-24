@@ -5,8 +5,6 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
-import com.conveyal.r5.point_to_point.PointToPointRouterServer;
-import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,19 +13,16 @@ import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
-import org.ipea.r5r.Process.AccessibilityEstimator;
-import org.ipea.r5r.Process.DetailedItineraryPlanner;
-import org.ipea.r5r.Process.ParetoFrontierCalculator;
-import org.ipea.r5r.Process.TravelTimeMatrixComputer;
+import org.ipea.r5r.Process.*;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
-import spark.Spark;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -582,33 +577,42 @@ public class R5RCore {
     }
 
 
-    // ------------------------------- FARE CALCULATOR ----------------------------------------
+    // ------------------------------- PARETO ITINERARIES ----------------------------------------
 
-    public void startServer(String jsonFareCalculator) {
-        if (jsonFareCalculator.equals("")) {
-            dropFareCalculator();
-        } else {
-            setFareCalculator(jsonFareCalculator);
-        }
+    public RDataFrame paretoItineraries(String fromId, double fromLat, double fromLon,
+                                     String toId, double toLat, double toLon,
+                                     String directModes, String transitModes, String accessModes, String egressModes,
+                                     String date, String departureTime,
+                                     int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-        this.transportNetwork.fareCalculator = this.routingProperties.fareCalculator;
+        String[] fromIds = {fromId};
+        double[] fromLats = {fromLat};
+        double[] fromLons = {fromLon};
 
-        try {
-            Method run = PointToPointRouterServer.class.getDeclaredMethod("run", TransportNetwork.class);
+        String[] toIds = {toId};
+        double[] toLats = {toLat};
+        double[] toLons = {toLon};
 
-            // Set the accessibility as true
-            run.setAccessible(true);
-
-            run.invoke(null, this.transportNetwork);
-
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        return paretoItineraries(fromIds, fromLats, fromLons, toIds, toLats, toLons,
+                directModes, transitModes, accessModes, egressModes,
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration);
 
     }
 
-    public void stopServer() {
-        Spark.stop();
+    public RDataFrame paretoItineraries(String[] fromIds, double[] fromLats, double[] fromLons,
+                                     String[] toIds, double[] toLats, double[] toLons,
+                                     String directModes, String transitModes, String accessModes, String egressModes,
+                                     String date, String departureTime,
+                                     int maxWalkTime, int maxBikeTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+
+        ParetoItineraryPlanner paretoFrontierCalculator = new ParetoItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        paretoFrontierCalculator.setOrigins(fromIds, fromLats, fromLons);
+        paretoFrontierCalculator.setDestinations(toIds, toLats, toLons);
+        paretoFrontierCalculator.setModes(directModes, accessModes, transitModes, egressModes);
+        paretoFrontierCalculator.setDepartureDateTime(date, departureTime);
+        paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+
+        return paretoFrontierCalculator.run();
     }
 
     // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------

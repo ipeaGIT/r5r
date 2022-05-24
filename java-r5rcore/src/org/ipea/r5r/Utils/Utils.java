@@ -113,5 +113,9 @@ public class Utils {
 
         logger = loggerContext.getLogger("org.ipea.r5r.Network.NetworkChecker");
         logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.R5.R5ParetoServer");
+        logger.setLevel(Level.valueOf(mode));
+
     }
 }

@@ -118,7 +118,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int discountsApplied = 0;
         int previousBoardTime = 0;
 
-        int currentPatternIndex;
+        int currentPatternIndex = -1;
+        int currentBoardTime = -1;
 
         // first leg of multimodal trip
         if (patterns.size() > 0) {
@@ -133,7 +134,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // subsequent legs
         for (int ride = 1; ride < patterns.size(); ride ++) {
             currentPatternIndex = patterns.get(ride);
-            int currentBoardTime = boardTimes.get(ride);
+            currentBoardTime = boardTimes.get(ride);
 
             // get info on each leg
             FarePerRoute firstLegMode = faresPerRoute[previousPatternIndex];
@@ -178,7 +179,45 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             debugOutput.add(tripPattern + "," + debugFare);
         }
 
-        return new FareBounds(fareForState, new TransferAllowance());
+        // initialize transfer allowance
+        // if (discountsApplied >= this.fareStructure.getMaxDiscountedTransfers()) -> NO TRANSFER ALLOWANCE
+        // if (currentBoardTime - previousBoardTime) > fareStructure.getTransferTimeAllowanceSeconds() -> NO TRANSFER ALLOWANCE
+        // if (fareForState >= fareStructure.getIntegerFareCap()) -> MAX TRANSFER ALLOWANCE
+
+        // pattern is valid?
+        if (currentPatternIndex == -1) {
+            // no public transport patterns - return empty transfer allowance
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
+        // remaining transfers
+        int numberOfRemainingTransfers = fareStructure.getMaxDiscountedTransfers() - discountsApplied;
+        if (numberOfRemainingTransfers <= 0) {
+            // no remaining available transfers - return empty transfer allowance
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
+        // get max benefit from possible transfers
+        int fullFare = getFullFareForRoute(currentPatternIndex);
+        int maxAllowanceValue = 0;
+        for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getModeIndex()]) {
+            if (transfer != null) {
+                int allowance = transfer.getIntegerFare() - fullFare;
+                maxAllowanceValue = Math.max(allowance, maxAllowanceValue);
+            }
+        }
+
+        // if fare cap has been reached, the max remaining allowance may be the full fare
+        if (fareStructure.getFareCap() > 0 && fareForState > fareStructure.getIntegerFareCap() ) {
+            maxAllowanceValue = Math.max(fullFare, maxAllowanceValue);
+        }
+
+        // remaining time available to use discount
+        int expirationTime = currentBoardTime + fareStructure.getTransferTimeAllowanceSeconds();
+
+        // build transfer allowance considering constraints above
+        TransferAllowance transferAllowance = new TransferAllowance(maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
+        return new FareBounds(fareForState, transferAllowance);
     }
 
     private int getFullFareForRoute(int patternIndex) {
