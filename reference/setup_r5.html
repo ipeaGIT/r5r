@@ -134,7 +134,7 @@ temporary directory. Defaults to <code>FALSE</code>.</p></dd>
 calculate impedance for walking and cycling based on street slopes.
 Available options include <code>TOBLER</code> (Default) and <code>MINETTI</code>, or <code>NONE</code> to
 ignore elevation. R5 loads elevation data from <code>.tif</code> files saved inside the
-<code>data_path</code> directory.</p></dd>
+<code>data_path</code> directory. See more info in the Details below.</p></dd>
 <dt>overwrite</dt>
 <dd><p>A logical. Whether to overwrite an existing <code>network.dat</code>
 or to use a cached file. Defaults to <code>FALSE</code> (i.e. use a cached network).</p></dd>
@@ -143,6 +143,23 @@ or to use a cached file. Defaults to <code>FALSE</code> (i.e. use a cached netwo
     <h2>Value</h2>
     <p>An <code>rJava</code> object to connect with <code>R5</code> routing engine.</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    
+
+<p>More information about the <code>TOBLER</code> and <code>MINETTI</code> options to calculate the
+effects of elevation on travel times can be found in the references below:</p><ul><li><p>Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
+model the relationship between slope and travel rates. Applied geography, 106,
+93-107. <a href="https://doi.org/10.1016/j.apgeog.2019.03.008" class="external-link">doi:10.1016/j.apgeog.2019.03.008</a>
+.</p></li>
+<li><p>Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
+uphill and downhill slopes. Journal of applied physiology. <a href="https://doi.org/10.1152/japplphysiol.01177.2001" class="external-link">doi:10.1152/japplphysiol.01177.2001</a>
+.</p></li>
+<li><p>Tobler, W. (1993). Three presentations on geographical analysis and modeling:
+Non-isotropic geographic modeling speculations on the geometry of geography
+global spatial analysis. Technical Report. National center for geographic
+information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r820mz" class="external-link">https://escholarship.org/uc/item/05r820mz</a>.</p></li>
+</ul></div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other setup: 
