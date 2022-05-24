@@ -197,10 +197,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -327,6 +327,7 @@ stop_r5(r5r_core)
 Other routing: 
 \code{\link{detailed_itineraries}()},
 \code{\link{expanded_travel_time_matrix}()},
-\code{\link{pareto_frontier}()}
+\code{\link{pareto_frontier}()},
+\code{\link{pareto_itineraries}()}
 }
 \concept{routing}

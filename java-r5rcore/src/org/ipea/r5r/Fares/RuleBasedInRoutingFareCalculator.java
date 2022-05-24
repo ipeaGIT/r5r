@@ -81,6 +81,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             int firstModeIndex = indexTransportMode.get(transfer.getFirstLeg());
             int secondModeIndex = indexTransportMode.get(transfer.getSecondLeg());
 
+            transfer.setFirstLegFullIntegerFare(fareStructure.getFaresPerMode().get(firstModeIndex).getIntegerFare());
+            transfer.setSecondLegFullIntegerFare(fareStructure.getFaresPerMode().get(secondModeIndex).getIntegerFare());
+
             faresPerTransfer[firstModeIndex][secondModeIndex] = transfer;
         }
 
@@ -202,12 +205,14 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int maxAllowanceValue = 0;
         for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getModeIndex()]) {
             if (transfer != null) {
-                int allowance = transfer.getIntegerFare() - fullFare;
+                int fullTransferFare = transfer.getFirstLegFullIntegerFare() + transfer.getSecondLegFullIntegerFare();
+
+                int allowance = fullTransferFare - transfer.getIntegerFare();
                 maxAllowanceValue = Math.max(allowance, maxAllowanceValue);
             }
         }
 
-        // if fare cap has been reached, the max remaining allowance may be the full fare
+        // if fare cap has been reached, the max remaining allowance may be the mode's full fare
         if (fareStructure.getFareCap() > 0 && fareForState > fareStructure.getIntegerFareCap() ) {
             maxAllowanceValue = Math.max(fullFare, maxAllowanceValue);
         }

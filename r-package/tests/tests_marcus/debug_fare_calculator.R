@@ -71,19 +71,20 @@ calculate_and_plot_frontiers <- function() {
 # debug_df <- read.csv(here::here("debug.csv"))
 # r5r_core$getFareStructure() %>% clipr::write_clip()
 
-orig <- poi %>% sample_n(size = nrow(poi))
-dest <- poi %>% sample_n(size = nrow(poi))
+# orig <- poi %>% sample_n(size = nrow(poi))
+# dest <- poi %>% sample_n(size = nrow(poi))
 
 system.time(
   frontiers_df <- pareto_itineraries(r5r_core,
-                                     # origins = poi[10, ],
-                                     # destinations = poi[12, ],
+                                     origins = poi[10, ],
+                                     destinations = poi[12, ],
                                      # origins = poi[c(10, 10), ],
                                      # destinations = poi[c(9, 12), ],
-                                     origins = orig,
-                                     destinations = dest,
+                                     # origins = orig,
+                                     # destinations = dest,
                                      departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                                      format = "%d-%m-%Y %H:%M:%S"),
+                                     time_window = 30,
                                      mode = c("WALK", "TRANSIT"),
                                      max_trip_duration = 90,
                                      max_walk_dist = 1000,
