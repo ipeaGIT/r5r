@@ -257,7 +257,6 @@ stop_r5(r5r_core)
 Other routing: 
 \code{\link{expanded_travel_time_matrix}()},
 \code{\link{pareto_frontier}()},
-\code{\link{pareto_itineraries}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}

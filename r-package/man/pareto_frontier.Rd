@@ -300,7 +300,6 @@ stop_r5(r5r_core)
 Other routing: 
 \code{\link{detailed_itineraries}()},
 \code{\link{expanded_travel_time_matrix}()},
-\code{\link{pareto_itineraries}()},
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}
