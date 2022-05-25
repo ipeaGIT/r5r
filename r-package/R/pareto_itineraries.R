@@ -26,6 +26,8 @@
 #'
 #' @family routing
 #'
+#' @keywords internal
+#'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'

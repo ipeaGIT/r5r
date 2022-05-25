@@ -280,3 +280,4 @@ Other routing:
 \code{\link{travel_time_matrix}()}
 }
 \concept{routing}
+\keyword{internal}

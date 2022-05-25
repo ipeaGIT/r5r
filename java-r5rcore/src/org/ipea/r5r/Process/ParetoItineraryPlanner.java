@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParetoItineraryPlanner extends R5Process {
 
+    public static boolean travelAllowanceActive = true;
+
     public ParetoItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }
@@ -77,6 +79,10 @@ public class ParetoItineraryPlanner extends R5Process {
                     travelTimesTable.set("agency_id", ((R5ParetoServer.ParetoTransitLeg) leg).route.agency_id);
                     travelTimesTable.set("route_id", ((R5ParetoServer.ParetoTransitLeg) leg).route.route_id);
                     travelTimesTable.set("route_short_name", ((R5ParetoServer.ParetoTransitLeg) leg).route.route_short_name);
+                } else {
+                    travelTimesTable.set("agency_id", "");
+                    travelTimesTable.set("route_id", "");
+                    travelTimesTable.set("route_short_name", "");
                 }
 
                 travelTimesTable.set("allowance_value", leg.transferAllowance.value / 100.0);

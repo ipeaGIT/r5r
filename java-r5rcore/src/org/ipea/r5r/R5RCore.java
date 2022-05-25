@@ -99,6 +99,10 @@ public class R5RCore {
         this.routingProperties.cutoffs[0] = cutoff;
     }
 
+    public void setTravelAllowance(boolean active) {
+        ParetoItineraryPlanner.travelAllowanceActive = active;
+    }
+
     public int getMaxRides() {
         return this.routingProperties.maxRides;
     }

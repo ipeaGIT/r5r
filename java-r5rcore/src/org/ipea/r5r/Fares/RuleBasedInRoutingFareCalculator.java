@@ -9,6 +9,7 @@ import com.conveyal.r5.transit.TransitLayer;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import org.ipea.r5r.Process.ParetoItineraryPlanner;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -187,6 +188,10 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // if (currentBoardTime - previousBoardTime) > fareStructure.getTransferTimeAllowanceSeconds() -> NO TRANSFER ALLOWANCE
         // if (fareForState >= fareStructure.getIntegerFareCap()) -> MAX TRANSFER ALLOWANCE
 
+        if (!ParetoItineraryPlanner.travelAllowanceActive) {
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
         // pattern is valid?
         if (currentPatternIndex == -1) {
             // no public transport patterns - return empty transfer allowance
@@ -223,6 +228,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // build transfer allowance considering constraints above
         TransferAllowance transferAllowance = new TransferAllowance(maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
         return new FareBounds(fareForState, transferAllowance);
+
     }
 
     private int getFullFareForRoute(int patternIndex) {

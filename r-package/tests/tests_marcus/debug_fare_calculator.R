@@ -5,6 +5,7 @@ devtools::load_all(".")
 library(data.table)
 library(tidyverse)
 library(sf)
+library(mapview)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -71,8 +72,8 @@ calculate_and_plot_frontiers <- function() {
 # debug_df <- read.csv(here::here("debug.csv"))
 # r5r_core$getFareStructure() %>% clipr::write_clip()
 
-# orig <- poi %>% sample_n(size = nrow(poi))
-# dest <- poi %>% sample_n(size = nrow(poi))
+orig <- poi %>% sample_n(size = nrow(poi))
+dest <- poi %>% sample_n(size = nrow(poi))
 
 system.time(
   frontiers_df <- pareto_itineraries(r5r_core,
@@ -80,8 +81,8 @@ system.time(
                                      destinations = poi[12, ],
                                      # origins = poi[c(10, 10), ],
                                      # destinations = poi[c(9, 12), ],
-                                     # origins = orig,
-                                     # destinations = dest,
+                                     origins = orig,
+                                     destinations = dest,
                                      departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                                                      format = "%d-%m-%Y %H:%M:%S"),
                                      time_window = 30,
@@ -94,33 +95,138 @@ system.time(
                                      progress = TRUE)
 )
 
-
 frontiers_df$geometry <- st_as_sfc(frontiers_df$geometry)
 frontiers_df <- st_as_sf(frontiers_df, crs = 4326)
 
-frontiers_df %>%
-  filter(to_id == "praia_de_belas_shopping_center", trip_id %in% c(1, 7)) %>%
-  View()
 
-st_write(frontiers_df[frontiers_df$to_id == "praia_de_belas_shopping_center",],
-         here::here("trips.gpkg"))
+# df <- frontiers_df
+# trip = 2
+view_results <- function(df, trip = 1) {
+  df_filtered <- filter(df, trip_id == trip)
 
-mapview::mapview(frontiers_df[frontiers_df$to_id == "praia_de_belas_shopping_center",],
-                 zcol="trip_id")
+  df_filtered %>%
+    select(from_id, to_id, departure_time, duration, total_fare,
+           leg_id, leg_type, route_id, origin_stop_name, destination_stop_name, cumulative_fare,
+           allowance_value, allowance_number, allowance_time) %>%
+    st_set_geometry(NULL) %>%
+    View()
 
-library(ggspatial)
+  mv1 <- mapview(df_filtered, zcol = "route_id")
 
-frontiers_df %>%
-  filter(to_id == "praia_de_belas_shopping_center", trip_id <= 8) %>%
-  # filter(to_id == "moinhos_de_vento_hospital") %>%
-  # filter(trip_id == 1) %>%
-  ggplot() +
-  # coord_sf(datum = NA) +
-  # annotation_map_tile(type = "cartolight") +
-  geom_sf(aes(color=route_id)) +
-  theme_minimal() +
-  facet_wrap(~trip_id)
-# frontiers_df$json[1] %>% jsonlite::prettify() %>% clipr::write_clip()
-# trips <- jsonlite::parse_json(frontiers_df$json[1], simplifyVector = F)
-#
-# trips <- trips$trips
+  df_stops <- st_set_geometry(df_filtered, NULL)
+
+  df_stops1 <- df_stops %>% select(lon = origin_lon, lat = origin_lat, stop = origin_stop_name)
+  df_stops2 <- df_stops %>% select(lon = destination_lon, lat = destination_lat, stop = destination_stop_name)
+  df_stops3 <- rbind(df_stops1, df_stops2) %>% distinct()
+
+  mv2 <- mapview(df_stops3, xcol = "lon", ycol = "lat", zcol = "stop", crs = 4326)
+
+  mv1 + mv2
+}
+view_results(frontiers_df, 1)
+view_results(frontiers_df, 2)
+
+
+
+# Pareto Frontiers Plot ---------------------------------------------------
+
+
+pareto_frontiers_df <- frontiers_df %>%
+  st_set_geometry(NULL) %>%
+  select(from_id, to_id, trip_id, duration, total_fare) %>%
+  distinct()
+
+pareto_frontiers_df <- pareto_frontiers_df %>%
+  group_by(from_id, to_id) %>%
+  arrange(total_fare, duration) %>%
+  mutate(is_better = duration < lag(duration, default = Inf)) %>%
+  filter(is_better == T)
+
+
+pareto_frontiers_df %>%
+  ggplot(aes(x=total_fare, y=duration)) +
+  geom_vline(xintercept = c(0, 4.5, 4.8, 7.2, 8.37, 9.3 ), color = "grey80") +
+  geom_step() +
+  geom_point() +
+  scale_x_continuous(limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 90)) +
+  facet_wrap(~from_id+to_id)
+
+
+# comparing TA and no TA --------------------------------------------------
+
+frontiers_no_ta <- frontiers_no_ta %>% st_set_geometry(NULL)
+frontiers_with_ta <- frontiers_with_ta %>% st_set_geometry(NULL)
+
+full_frontiers <-
+  full_join(frontiers_with_ta %>% mutate(departure_time = str_sub(departure_time, 1, 5)),
+            frontiers_no_ta %>% mutate(departure_time = str_sub(departure_time, 1, 5)),
+          by = c("from_id", "to_id", "departure_time", "origin_stop_id", "destination_stop_id",
+                 "agency_id", "route_id", "route_short_name"))
+
+full_frontiers %>%
+  filter(is.na(trip_id.x)) %>%
+  slice(200) %>%
+  glimpse()
+
+
+
+# full frontiers ----------------------------------------------------------
+
+points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
+
+r5r_core$setTravelAllowance(TRUE)
+full_frontiers_with_ta_df <- pareto_frontier(r5r_core,
+                                origins = points,
+                                destinations = points,
+                                departure_datetime = as.POSIXct("13-05-2019 14:00:00",
+                                                                format = "%d-%m-%Y %H:%M:%S"),
+                                mode = c("WALK", "TRANSIT"),
+                                max_trip_duration = 180,
+                                fare_structure = fare_structure,
+                                monetary_cost_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37, 11.4, 12.57),
+                                max_rides = 5,
+                                progress = TRUE
+)
+
+r5r_core$setTravelAllowance(FALSE)
+full_frontiers_no_ta_df <- pareto_frontier(r5r_core,
+                                             origins = points,
+                                             destinations = points,
+                                             departure_datetime = as.POSIXct("13-05-2019 14:00:00",
+                                                                             format = "%d-%m-%Y %H:%M:%S"),
+                                             mode = c("WALK", "TRANSIT"),
+                                             max_trip_duration = 180,
+                                             fare_structure = fare_structure,
+                                             monetary_cost_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37, 11.4, 12.57),
+                                             max_rides = 5,
+                                             progress = TRUE)
+
+## combine frontiers
+points_wta <- full_frontiers_with_ta_df %>%
+  select(from_id, to_id, monetary_cost) %>%
+  distinct()
+
+points_nta <- full_frontiers_no_ta_df %>%
+  select(from_id, to_id, monetary_cost) %>%
+  distinct()
+
+full_points <- rbind(points_wta, points_nta) %>%
+  distinct()
+
+full_points %>%
+  left_join(full_frontiers_with_ta_df, suffix = c("", ".wta"))
+
+
+full_frontiers_df <-
+  full_join(full_frontiers_with_ta_df, full_frontiers_no_ta_df,
+          by = c("from_id", "to_id", "monetary_cost", "percentile"),
+          suffix = c(".wta", ".nta")) %>%
+  select(from_id, to_id, monetary_cost, travel_time.wta, travel_time.nta)
+
+diff_frontiers_df <- filter(full_frontiers_df,
+                            travel_time.wta != travel_time.nta |
+                              is.na(travel_time.wta) | is.na(travel_time.nta))
+
+write_csv(diff_frontiers_df, here::here("diff_frontiers.csv"))
+
