@@ -14,6 +14,7 @@ library(mapview)
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, elevation = "none")
 
+f <- setup_fare_structure(r5r_core, 5)
 # load points
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 

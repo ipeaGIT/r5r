@@ -49,6 +49,7 @@ public class FareStructure {
         return transferTimeAllowance;
     }
 
+    @JsonIgnore
     public int getTransferTimeAllowanceSeconds() {
         return transferTimeAllowance * 60;
     }
