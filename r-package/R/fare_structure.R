@@ -99,7 +99,7 @@ setup_fare_structure <- function(r5r_core,
   debug_info_options <- c("MODE", "ROUTE", "MODE_ROUTE")
   debug_info <- toupper(debug_info)
   checkmate::assert(
-    checkmate::check_string(debug_info),
+    checkmate::check_string(debug_info, null.ok = TRUE),
     checkmate::check_names(debug_info, subset.of = debug_info_options),
     combine = "and"
   )
