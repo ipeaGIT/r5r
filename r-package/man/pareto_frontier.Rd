@@ -44,10 +44,11 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check the \code{calendar.txt} within your GTFS feeds for valid
-dates. Please see details for further information on how datetimes are
-parsed.}
+\item{departure_datetime}{A POSIXct object. Please note that the departure
+time only influences public transport legs. When working with public
+transport networks, please check the \code{calendar.txt} within your GTFS feeds
+for valid dates. Please see details for further information on how
+datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
@@ -210,10 +211,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -254,7 +255,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759â€“1787. \doi{10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 
