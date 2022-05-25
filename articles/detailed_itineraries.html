@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Planning routes with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2022-05-24</h4>
+            <h4 data-toc-skip class="date">2022-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/detailed_itineraries.Rmd" class="external-link"><code>../vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="hidden name"><code>detailed_itineraries.Rmd</code></div>
@@ -241,7 +241,7 @@
 <span class="va">freq_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/read_gtfs.html" class="external-link">read_gtfs</a></span><span class="op">(</span><span class="va">freq_gtfs_file</span><span class="op">)</span>
 
 <span class="co"># convert from frequencies to time tables</span>
-<span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu">frequencies_to_stop_times</span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span>
+<span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">frequencies_to_stop_times</a></span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span>
 
 <span class="co"># save it as a new GTFS.zip file</span>
 <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,
