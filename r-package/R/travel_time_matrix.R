@@ -237,6 +237,7 @@ travel_time_matrix <- function(r5r_core,
   # set max fare
   # Inf and NULL values are not allowed in Java,
   # so -1 is used to indicate max_fare is unconstrained
+  checkmate::assert_numeric(max_fare, lower = 0, len = 1, any.missing = FALSE)
   if (max_fare != Inf) {
     r5r_core$setMaxFare(rJava::.jfloat(max_fare))
   } else {
