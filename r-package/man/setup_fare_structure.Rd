@@ -20,40 +20,41 @@ setup_fare_structure(
 structure.}
 
 \item{by}{A string. Describes how \code{fare_type}s (a classification we created
-to assign fares to different routes) are distributed among routes. Possible
-values are \code{MODE}, \code{AGENCY} and \code{GENERIC}. \code{MODE} is used when the mode is
-what determines the price of a route (e.g. if all the buses of a given city
-cost $5). \code{AGENCY} is used when the agency that operates each route is what
-determines its price (i.e. when two different routes/modes operated by a
-single agency cost the same; note that you can also use \code{AGENCY_NAME}, if
-the agency_ids listed in your GTFS cannot be easily interpreted). \code{GENERIC}
-is used when all the routes cost the same. Please note that this
-classification can later be edited to better suit your needs (when, for
-example, two types of buses cost the same, but one offers discounts after
-riding the subway and the other one doesn't), but this parameter may save
-you some work.}
+to assign fares to different routes) are distributed among routes.
+Possible values are \code{MODE}, \code{AGENCY} and \code{GENERIC}. \code{MODE} is used when
+the mode is what determines the price of a route (e.g. if all the buses of
+a given city cost $5). \code{AGENCY} is used when the agency that operates each
+route is what determines its price (i.e. when two different routes/modes
+operated by a single agency cost the same; note that you can also use
+\code{AGENCY_NAME}, if the agency_ids listed in your GTFS cannot be easily
+interpreted). \code{GENERIC} is used when all the routes cost the same. Please
+note that this classification can later be edited to better suit your
+needs (when, for example, two types of buses cost the same, but one offers
+discounts after riding the subway and the other one doesn't), but this
+parameter may save you some work.}
 
 \item{debug_path}{Either a path to a \code{.csv} file or \code{NULL}. When \code{NULL} (the
-default), fare debugging capabilities are disabled - i.e. there's no way to
-check if the fare calculation is correct. When a path is provided, \code{r5r}
-saves different itineraries and their respective fares to the specified
-file. How each itinerary is described is controlled by \code{debug_info}.}
+default), fare debugging capabilities are disabled - i.e. there's no way
+to check if the fare calculation is correct. When a path is provided,
+\code{r5r} saves different itineraries and their respective fares to the
+specified file. How each itinerary is described is controlled by
+\code{debug_info}.}
 
 \item{debug_info}{Either a string (when \code{debug_path} is a path) or \code{NULL}
 (the default). Doesn't have any effect if \code{debug_path} is \code{NULL}. When a
 string, accepts the values \code{MODE}, \code{ROUTE} and \code{MODE_ROUTE}. These values
 dictates how itinerary information is written to the output. Let's suppose
-we have an itinerary composed by two transit legs: first a subway leg whose
-route_id is 001, and then a bus legs whose route_id is 007. If \code{debug_info}
-is \code{MODE}, then this itinerary will be described as \code{SUBWAY|BUS}. If
-\code{ROUTE}, as \code{001|007}. If \code{MODE_ROUTE}, as \verb{SUBWAY 001|BUS 007}. Please note
-that the final debug information will contain not only the itineraries that
-were in fact used in the itineraries returned in \code{\link[=travel_time_matrix]{travel_time_matrix()}},
-\code{\link[=accessibility]{accessibility()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}, but all the itineraries that \code{R5}
-checked when calculating the routes. This imposes a performance penalty when
-tracking debug information (but has the positive effect of returning a
-larger sample of itineraries, which might help finding some implementation
-issues on the fare structure).}
+we have an itinerary composed by two transit legs: first a subway leg
+whose route_id is 001, and then a bus legs whose route_id is 007. If
+\code{debug_info} is \code{MODE}, then this itinerary will be described as
+\code{SUBWAY|BUS}. If \code{ROUTE}, as \code{001|007}. If \code{MODE_ROUTE}, as \verb{SUBWAY 001|BUS 007}. Please note that the final debug information will contain
+not only the itineraries that were in fact used in the itineraries
+returned in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=accessibility]{accessibility()}} and
+\code{\link[=pareto_frontier]{pareto_frontier()}}, but all the itineraries that \code{R5} checked when
+calculating the routes. This imposes a performance penalty when tracking
+debug information (but has the positive effect of returning a larger
+sample of itineraries, which might help finding some implementation issues
+on the fare structure).}
 }
 \value{
 A fare structure object.
