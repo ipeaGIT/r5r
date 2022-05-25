@@ -67,7 +67,6 @@ test_that("outputs a list with correct elements", {
       "fares_per_mode",
       "fares_per_transfer",
       "fares_per_route",
-      "transfer_time_allowance_seconds",
       "debug_settings"
     )
   )
