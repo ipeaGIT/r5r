@@ -42,10 +42,11 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check the \code{calendar.txt} within your GTFS feeds for valid
-dates. Please see details for further information on how datetimes are
-parsed.}
+\item{departure_datetime}{A POSIXct object. Please note that the departure
+time only influences public transport legs. When working with public
+transport networks, please check the \code{calendar.txt} within your GTFS feeds
+for valid dates. Please see details for further information on how
+datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.

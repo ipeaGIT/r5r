@@ -42,10 +42,11 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check the \code{calendar.txt} within your GTFS feeds for valid
-dates. Please see details for further information on how datetimes are
-parsed.}
+\item{departure_datetime}{A POSIXct object. Please note that the departure
+time only influences public transport legs. When working with public
+transport networks, please check the \code{calendar.txt} within your GTFS feeds
+for valid dates. Please see details for further information on how
+datetimes are parsed.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the

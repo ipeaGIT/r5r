@@ -108,7 +108,12 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(percentiles = 1:6))
   expect_error(tester(percentiles = NA))
 
-  # TODO: test fare_calculator and max_fare
+  # TODO: test fare_structure
+
+  expect_error(tester(max_fare = "0"))
+  expect_error(tester(max_fare = -1))
+  expect_error(tester(max_fare = c(0, 20)))
+  expect_error(tester(max_fare = NA))
 
   expect_error(tester(max_walk_dist = "1000"))
   expect_error(tester(max_walk_dist = NULL))
@@ -358,4 +363,32 @@ test_that("all od pairs are unique", {
   ttm <- tester()
   ttm <- ttm[, .N, keyby = .(from_id, to_id)]
   expect_equal(unique(ttm$N), 1)
+})
+
+test_that("output is saved to dir and function returns path with output_dir", {
+  tmpdir <- tempfile("ttm_output")
+  dir.create(tmpdir)
+
+  ttm_output_dir <- tester(output_dir = tmpdir)
+  expect_equal(normalizePath(ttm_output_dir), normalizePath(tmpdir))
+
+  ttm_from_files <- lapply(
+    list.files(ttm_output_dir, full.names = TRUE),
+    data.table::fread
+  )
+  ttm_from_files <- data.table::rbindlist(ttm_from_files)
+  ttm_from_files <- ttm_from_files[order(from_id, to_id)]
+
+  ttm_normal <- tester()
+  ttm_normal <- ttm_normal[order(from_id, to_id)]
+
+  expect_identical(ttm_normal, ttm_from_files)
+})
+
+test_that("returns ttm even if last call saved to dir", {
+  tmpdir <- tempfile("ttm_output")
+  dir.create(tmpdir)
+  ttm_output_dir <- tester(output_dir = tmpdir)
+  ttm_normal <- tester()
+  expect_s3_class(ttm_normal, "data.table")
 })
