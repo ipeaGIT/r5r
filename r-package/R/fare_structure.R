@@ -97,12 +97,11 @@ setup_fare_structure <- function(r5r_core,
   }
 
   debug_info_options <- c("MODE", "ROUTE", "MODE_ROUTE")
-  debug_info <- toupper(debug_info)
-  checkmate::assert(
-    checkmate::check_string(debug_info, null.ok = TRUE),
-    checkmate::check_names(debug_info, subset.of = debug_info_options),
-    combine = "and"
-  )
+  checkmate::assert_string(debug_info, null.ok = TRUE)
+  if (!is.null(debug_info)) {
+    debug_info <- toupper(debug_info)
+    checkmate::assert_names(debug_info, subset.of = debug_info_options)
+  }
 
   # r5r_core method to build fare structure returns a json
 
