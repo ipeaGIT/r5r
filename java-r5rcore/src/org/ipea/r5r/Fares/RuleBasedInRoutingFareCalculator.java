@@ -188,6 +188,8 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // if (currentBoardTime - previousBoardTime) > fareStructure.getTransferTimeAllowanceSeconds() -> NO TRANSFER ALLOWANCE
         // if (fareForState >= fareStructure.getIntegerFareCap()) -> MAX TRANSFER ALLOWANCE
 
+        // if transfer allowances are inactive (for debugging purposes), just use and empty transfer allowance and
+        // quit the function
         if (!ParetoItineraryPlanner.travelAllowanceActive) {
             return new FareBounds(fareForState, new TransferAllowance());
         }
