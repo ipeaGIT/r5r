@@ -2,7 +2,7 @@
 % Please edit documentation in R/fare_structure.R
 \name{setup_fare_structure}
 \alias{setup_fare_structure}
-\title{Setup fare structure to account for monetary costs in routing and accessibility functions}
+\title{Setup a fare structure to calculate the monetary costs of trips}
 \usage{
 setup_fare_structure(
   r5r_core,

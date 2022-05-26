@@ -1,4 +1,4 @@
-#' Setup fare structure to account for monetary costs in routing and accessibility functions
+#' Setup a fare structure to calculate the monetary costs of trips
 #'
 #' Creates a basic fare structure that describes how transit fares should be
 #' calculated in [travel_time_matrix()], [expanded_travel_time_matrix()],
@@ -142,7 +142,7 @@ setup_fare_structure <- function(r5r_core,
 #'
 #' @template fare_structure
 #' @param file_path A path to a `.zip` file. Where the fare structure should be
-#' written to.
+#'   written to.
 #'
 #' @return The path passed to `file_path`, invisibly.
 #'
@@ -213,7 +213,7 @@ write_fare_structure <- function(fare_structure, file_path) {
 #' Read a fare structure object from a file
 #'
 #' @param file_path A path pointing to a fare structure with a `.zip`
-#' extension.
+#'   extension.
 #'
 #' @return A fare structure object.
 #'
