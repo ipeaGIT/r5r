@@ -160,7 +160,7 @@ travel_time_matrix <- function(r5r_core,
   origins <- assert_points_input(origins, "origins")
   destinations <- assert_points_input(destinations, "destinations")
 
-  mode_list <- select_mode(mode, mode_egress)
+  mode_list <- select_mode(mode, mode_egress, style = "ttm")
 
   departure <- posix_to_string(departure_datetime)
 

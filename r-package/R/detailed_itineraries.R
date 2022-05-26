@@ -92,7 +92,7 @@ detailed_itineraries <- function(r5r_core,
   checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
-  mode_list <- select_mode(mode, mode_egress)
+  mode_list <- select_mode(mode, mode_egress, style = "dit")
 
   # departure time
   departure <- posix_to_string(departure_datetime)
