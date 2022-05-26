@@ -234,42 +234,68 @@ write_fare_structure <- function(fare_structure, file_path) {
 #'
 #' @export
 read_fare_structure <- function(file_path) {
+  checkmate::assert_file_exists(file_path, extension = "zip")
 
-  # get temporary folder
-  tmp_dir <- tempdir()
+  tmpdir <- tempfile("read_fare_structure")
+  dir.create(tmpdir)
+  zip::unzip(zipfile = file_path, exdir = tmpdir)
 
-  # unzip fare settings file
-  zip::unzip(zipfile = file_path, exdir = tmp_dir)
+  tmpfile <- function(path) file.path(tmpdir, path)
 
-  # global properties
-  global_settings <- data.table::fread(normalizePath(file.path(tmp_dir, "global_settings.csv")))
+  global_settings <- data.table::fread(tmpfile("global_settings.csv"))
 
-  fare_structure <- as.list(global_settings$value)
-  names(fare_structure) <- global_settings$setting
+  fare_structure <- list()
 
-  # load individual data.frames
-  fare_structure$fares_per_mode <- data.table::fread(file = file.path(tmp_dir, "fares_per_mode.csv"))
+  fare_structure$max_discounted_transfers <- as.integer(
+    global_settings[setting == "max_discounted_transfers"]$value
+  )
+  fare_structure$transfer_time_allowance <- as.integer(
+    global_settings[setting == "transfer_time_allowance"]$value
+  )
+  fare_structure$fare_cap <- as.numeric(
+    global_settings[setting == "fare_cap"]$value
+  )
 
-  fare_structure$fares_per_transfer <- data.table::fread(file = file.path(tmp_dir, "fares_per_transfer.csv"))
+  fare_structure$fares_per_mode <- data.table::fread(
+    tmpfile("fares_per_mode.csv"),
+    select = c(
+      mode = "character",
+      unlimited_transfers = "logical",
+      allow_same_route_transfer = "logical",
+      use_route_fare = "logical",
+      fare = "numeric"
+    )
+  )
 
-  fare_structure$fares_per_route <-
-    data.table::fread(file = file.path(tmp_dir, "fares_per_route.csv"),
-                      colClasses = list(character = c("agency_id",
-                                                      "agency_name",
-                                                      "route_id",
-                                                      "route_short_name",
-                                                      "route_long_name",
-                                                      "mode",
-                                                      "fare_type")))
+  fare_structure$fares_per_transfer <- data.table::fread(
+    file = tmpfile("fares_per_transfer.csv"),
+    select = c(
+      first_leg = "character",
+      second_leg = "character",
+      fare = "numeric"
+    )
+  )
 
-  # debug settings
-  debug_options <- data.table::fread(normalizePath(file.path(tmp_dir, "debug_settings.csv")))
+  fare_structure$fares_per_route <- data.table::fread(
+    file = tmpfile("fares_per_route.csv"),
+    select = c(
+      agency_id = "character",
+      agency_name = "character",
+      route_id = "character",
+      route_short_name = "character",
+      route_long_name = "character",
+      mode = "character",
+      route_fare = "numeric",
+      fare_type = "character"
+    )
+  )
 
-  debug_settings <- as.list(debug_options$value)
-  names(debug_settings) <- debug_options$setting
 
-  fare_structure$debug_settings <- debug_settings
-
+  debug_options <- data.table::fread(tmpfile("debug_settings.csv"))
+  fare_structure$debug_settings <- list(
+    output_file = debug_options[setting == "output_file"]$value,
+    trip_info = debug_options[setting == "trip_info"]$value
+  )
 
   return(fare_structure)
 }

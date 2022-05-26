@@ -27,6 +27,5 @@ test_that("debug_info defaults to 'ROUTE' if non-specified", {
 test_that("written structure is identical to original", {
   tester()
   written_struc <- read_fare_structure(tmpfile)
-  # should be identical, but will have to make some quick fixes to read_fare_...
-  expect_equal(struc, written_struc)
+  expect_identical(struc, written_struc)
 })
