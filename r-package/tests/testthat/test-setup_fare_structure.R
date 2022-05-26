@@ -140,3 +140,25 @@ test_that("uses the parameter 'by' to fill the structure", {
   expect_true(struc$fares_per_transfer$first_leg == "GENERIC")
   expect_true(struc$fares_per_transfer$second_leg == "GENERIC")
 })
+
+test_that("debug info is correctly set", {
+  # debug disabled by default
+  struc <- tester()
+  expect_equal(struc$debug_settings$output_file, "")
+  expect_equal(struc$debug_settings$trip_info, "MODE")
+
+  # assigns trip_info as ROUTE when not specified
+  struc <- tester(debug_path = tmpfile)
+  expect_equal(struc$debug_settings$output_file, tmpfile)
+  expect_equal(struc$debug_settings$trip_info, "ROUTE")
+
+  # else assigns what is specified
+  struc <- tester(debug_path = tmpfile, debug_info = "MODE_ROUTE")
+  expect_equal(struc$debug_settings$output_file, tmpfile)
+  expect_equal(struc$debug_settings$trip_info, "MODE_ROUTE")
+})
+
+test_that("fare_cap is infinite by default", {
+  struc <- tester()
+  expect_true(is.infinite(struc$fare_cap))
+})
