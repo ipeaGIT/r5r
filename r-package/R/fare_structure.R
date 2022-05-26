@@ -223,6 +223,10 @@ write_fare_structure <- function(fare_structure, file_path) {
 #'
 #' @param file_path A path pointing to a fare structure with a `.zip`
 #'   extension.
+#' @param encoding A string. Passed to [data.table::fread()], defaults to
+#'   `"UTF-8"`. Other possible options are `"unknown"` and `"Latin-1"`. Please
+#'   note that this is not used to re-encode the input, but to enable handling
+#'   encoded strings in their native encoding.
 #'
 #' @return A fare structure object.
 #'
@@ -233,8 +237,14 @@ write_fare_structure <- function(fare_structure, file_path) {
 #' fare_structure <- read_fare_structure(path)
 #'
 #' @export
-read_fare_structure <- function(file_path) {
+read_fare_structure <- function(file_path, encoding = "UTF-8") {
   checkmate::assert_file_exists(file_path, extension = "zip")
+  val_enc <- c("unknown", "UTF-8", "Latin-1")
+  checkmate::assert(
+    checkmate::check_string(encoding),
+    checkmate::check_names(encoding, subset.of = val_enc),
+    combine = "and"
+  )
 
   tmpdir <- tempfile("read_fare_structure")
   dir.create(tmpdir)
@@ -242,7 +252,10 @@ read_fare_structure <- function(file_path) {
 
   tmpfile <- function(path) file.path(tmpdir, path)
 
-  global_settings <- data.table::fread(tmpfile("global_settings.csv"))
+  global_settings <- data.table::fread(
+    tmpfile("global_settings.csv"),
+    encoding = encoding
+  )
 
   fare_structure <- list()
 
@@ -264,7 +277,8 @@ read_fare_structure <- function(file_path) {
       allow_same_route_transfer = "logical",
       use_route_fare = "logical",
       fare = "numeric"
-    )
+    ),
+    encoding = encoding
   )
 
   fare_structure$fares_per_transfer <- data.table::fread(
@@ -273,7 +287,8 @@ read_fare_structure <- function(file_path) {
       first_leg = "character",
       second_leg = "character",
       fare = "numeric"
-    )
+    ),
+    encoding = encoding
   )
 
   fare_structure$fares_per_route <- data.table::fread(
@@ -287,11 +302,15 @@ read_fare_structure <- function(file_path) {
       mode = "character",
       route_fare = "numeric",
       fare_type = "character"
-    )
+    ),
+    encoding = encoding
   )
 
 
-  debug_options <- data.table::fread(tmpfile("debug_settings.csv"))
+  debug_options <- data.table::fread(
+    tmpfile("debug_settings.csv"),
+    encoding = encoding
+  )
   fare_structure$debug_settings <- list(
     output_file = debug_options[setting == "output_file"]$value,
     trip_info = debug_options[setting == "trip_info"]$value

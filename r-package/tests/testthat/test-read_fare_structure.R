@@ -5,13 +5,16 @@ testthat::skip_on_cran()
 
 path <- system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
 
-tester <- function(file_path = path) {
-  read_fare_structure(file_path)
+tester <- function(file_path = path, encoding = "UTF-8") {
+  read_fare_structure(file_path, encoding)
 }
 
 test_that("raises error due to incorrect input types", {
   expect_error(tester(tempfile(fileext = ".csv")))
   expect_error(tester("DESCRIPTION"))
+  expect_error(tester(encoding = as.factor("UTF-8")))
+  expect_error(tester(encoding = c("UTF-8", "UTF-8")))
+  expect_error(tester(encoding = "oie"))
 })
 
 test_that("outputs a list with correct elements", {
@@ -60,4 +63,22 @@ test_that("outputs a list with correct elements", {
   expect_type(struc$debug_settings, "list")
   expect_type(struc$debug_settings$output_file, "character")
   expect_type(struc$debug_settings$trip_info, "character")
+})
+
+test_that("encoding argument works", {
+  utf8_struc <- tester()
+  latin1_struc <- tester(encoding = "Latin-1")
+  expect_false(identical(utf8_struc, latin1_struc))
+  expect_false(
+    identical(
+      utf8_struc$fares_per_route$agency_name,
+      latin1_struc$fares_per_route$agency_name
+    )
+  )
+  expect_false(
+    identical(
+      utf8_struc$fares_per_route$route_long_name,
+      latin1_struc$fares_per_route$route_long_name
+    )
+  )
 })
