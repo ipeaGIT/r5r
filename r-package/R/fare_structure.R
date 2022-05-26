@@ -322,14 +322,17 @@ read_fare_structure <- function(file_path, encoding = "UTF-8") {
 
 #' Set the fare structure used when calculating transit fares
 #'
+#' Sets the fare structure used by our "generic" fare calculator. A value of
+#' `NULL` is passed to `fare_structure` by the upstream routing and
+#' accessibility functions when fares are not be calculated.
+#'
 #' @template r5r_core
 #' @template fare_structure
 #'
 #' @return Invisibly returns `TRUE`. Called for side effects.
 #'
 #' @keywords internal
-set_fare_structure <- function(r5r_core, fare_structure = NULL) {
-
+set_fare_structure <- function(r5r_core, fare_structure) {
   if (!is.null(fare_structure)) {
     if (fare_structure$fare_cap == Inf) {
       fare_structure$fare_cap <- -1
@@ -339,10 +342,11 @@ set_fare_structure <- function(r5r_core, fare_structure = NULL) {
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCalculatorDebugOutputSettings(fare_structure$debug_settings$output_file,
-                                                  fare_structure$debug_settings$trip_info)
+    r5r_core$setFareCalculatorDebugOutputSettings(
+      fare_structure$debug_settings$output_file,
+      fare_structure$debug_settings$trip_info
+    )
   } else {
-    # clear fare structure settings in r5r_core
     r5r_core$dropFareCalculator()
   }
 

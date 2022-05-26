@@ -4,7 +4,7 @@
 \alias{set_fare_structure}
 \title{Set the fare structure used when calculating transit fares}
 \usage{
-set_fare_structure(r5r_core, fare_structure = NULL)
+set_fare_structure(r5r_core, fare_structure)
 }
 \arguments{
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
@@ -19,6 +19,8 @@ understand how this object is structured.}
 Invisibly returns \code{TRUE}. Called for side effects.
 }
 \description{
-Set the fare structure used when calculating transit fares
+Sets the fare structure used by our "generic" fare calculator. A value of
+\code{NULL} is passed to \code{fare_structure} by the upstream routing and
+accessibility functions when fares are not be calculated.
 }
 \keyword{internal}

@@ -4,11 +4,16 @@
 \alias{read_fare_structure}
 \title{Read a fare structure object from a file}
 \usage{
-read_fare_structure(file_path)
+read_fare_structure(file_path, encoding = "UTF-8")
 }
 \arguments{
 \item{file_path}{A path pointing to a fare structure with a \code{.zip}
 extension.}
+
+\item{encoding}{A string. Passed to \code{\link[data.table:fread]{data.table::fread()}}, defaults to
+\code{"UTF-8"}. Other possible options are \code{"unknown"} and \code{"Latin-1"}. Please
+note that this is not used to re-encode the input, but to enable handling
+encoded strings in their native encoding.}
 }
 \value{
 A fare structure object.
