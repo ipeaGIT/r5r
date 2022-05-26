@@ -161,52 +161,61 @@ setup_fare_structure <- function(r5r_core,
 #'
 #' @export
 write_fare_structure <- function(fare_structure, file_path) {
-
-  # get temporary folder
-  tmp_dir <- tempdir()
+  checkmate::assert_string(file_path, pattern = "\\.zip$", null.ok = TRUE)
 
   fare_global_settings <- data.table::data.table(
-    setting = c("max_discounted_transfers",
-                "transfer_time_allowance",
-                "fare_cap"),
-    value = c(fare_structure$max_discounted_transfers,
-              fare_structure$transfer_time_allowance,
-              fare_structure$fare_cap)
+    setting = c(
+      "max_discounted_transfers",
+      "transfer_time_allowance",
+      "fare_cap"
+    ),
+    value = c(
+      fare_structure$max_discounted_transfers,
+      fare_structure$transfer_time_allowance,
+      fare_structure$fare_cap
+    )
   )
 
   fare_debug_settings <- data.table::data.table(
-    setting = c("output_file",
-                "trip_info"),
-    value = c(fare_structure$debug_settings$output_file,
-              fare_structure$debug_settings$trip_info)
+    setting = c("output_file", "trip_info"),
+    value = c(
+      fare_structure$debug_settings$output_file,
+      fare_structure$debug_settings$trip_info
+    )
   )
 
-  data.table::fwrite(x = fare_global_settings,
-                     file = file.path(tmp_dir, "global_settings.csv"))
+  tmpdir <- tempfile(pattern = "r5r_fare_structure")
+  dir.create(tmpdir)
+  tmpfile <- function(path) file.path(tmpdir, path)
 
+  data.table::fwrite(fare_global_settings, tmpfile("global_settings.csv"))
+  data.table::fwrite(
+    fare_structure$fares_per_mode,
+    tmpfile("fares_per_mode.csv")
+  )
+  data.table::fwrite(
+    fare_structure$fares_per_transfer,
+    tmpfile("fares_per_transfer.csv")
+  )
+  data.table::fwrite(
+    fare_structure$fares_per_route,
+    tmpfile("fares_per_route.csv")
+  )
+  data.table::fwrite(fare_debug_settings, tmpfile("debug_settings.csv"))
 
-  data.table::fwrite(x = fare_structure$fares_per_mode,
-                     file = file.path(tmp_dir, "fares_per_mode.csv"))
+  zip::zip(
+    zipfile = file_path,
+    files = c(
+      normalizePath(tmpfile("global_settings.csv")),
+      normalizePath(tmpfile("fares_per_mode.csv")),
+      normalizePath(tmpfile("fares_per_transfer.csv")),
+      normalizePath(tmpfile("fares_per_route.csv")),
+      normalizePath(tmpfile("debug_settings.csv"))
+    ),
+    mode = "cherry-pick"
+  )
 
-  data.table::fwrite(x = fare_structure$fares_per_transfer,
-                     file = file.path(tmp_dir, "fares_per_transfer.csv"))
-
-  data.table::fwrite(x = fare_structure$fares_per_route,
-                     file = file.path(tmp_dir, "fares_per_route.csv"))
-
-  data.table::fwrite(x = fare_debug_settings,
-                     file = file.path(tmp_dir, "debug_settings.csv"))
-
-  zip::zip(zipfile = file_path,
-           files = c(
-             normalizePath(file.path(tmp_dir, "global_settings.csv")),
-             normalizePath(file.path(tmp_dir, "fares_per_mode.csv")),
-             normalizePath(file.path(tmp_dir, "fares_per_transfer.csv")),
-             normalizePath(file.path(tmp_dir, "fares_per_route.csv")),
-             normalizePath(file.path(tmp_dir, "debug_settings.csv"))
-           ),
-           mode = "cherry-pick")
-
+  return(invisible(file_path))
 }
 
 
