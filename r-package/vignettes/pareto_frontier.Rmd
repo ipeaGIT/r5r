@@ -158,10 +158,8 @@ a future application.
 
 
 ```{r}
-
-
 # save fare rules to temp file
-temp_fares <- tempfile(pattern = 'fares_poaa.zip')
+temp_fares <- tempfile(pattern = "fares_poa", fileext = ".zip")
 r5r::write_fare_structure(fare_structure, file_path = temp_fares)
 
 
