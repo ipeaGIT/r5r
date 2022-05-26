@@ -6,10 +6,12 @@ testthat::skip_on_cran()
 tmpfile <- tempfile(fileext = ".csv")
 
 gtfs_eptc <- gtfstools::read_gtfs(
-  system.file("extdata/poa/poa_eptc.zip", package = "r5r")
+  system.file("extdata/poa/poa_eptc.zip", package = "r5r"),
+  encoding = "UTF-8"
 )
 gtfs_trensurb <- gtfstools::read_gtfs(
-  system.file("extdata/poa/poa_trensurb.zip", package = "r5r")
+  system.file("extdata/poa/poa_trensurb.zip", package = "r5r"),
+  encoding = "UTF-8"
 )
 gtfs <- gtfstools::merge_gtfs(gtfs_eptc, gtfs_trensurb)
 
