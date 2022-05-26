@@ -62,7 +62,9 @@ datetimes are parsed.}
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table.}
+GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
+vignette for more details on its usage:
+\code{vignette("time_window", package = "r5r")}}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning accessibility estimates within the given

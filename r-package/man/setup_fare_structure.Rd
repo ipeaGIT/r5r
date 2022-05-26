@@ -65,7 +65,8 @@ calculated in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\li
 \code{\link[=accessibility]{accessibility()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}. This fare structure can be
 manually edited and adjusted to the existing rules in your study area, as
 long as they stick to some basic premises. Please see fare structure
-vignette for more information on how the fare structure works.
+vignette for more information on how the fare structure works:
+\code{vignette("fare_structure", package = "r5r")}.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

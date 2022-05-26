@@ -5,7 +5,8 @@
 #' [accessibility()] and [pareto_frontier()]. This fare structure can be
 #' manually edited and adjusted to the existing rules in your study area, as
 #' long as they stick to some basic premises. Please see fare structure
-#' vignette for more information on how the fare structure works.
+#' vignette for more information on how the fare structure works:
+#' `vignette("fare_structure", package = "r5r")`.
 #'
 #' @template r5r_core
 #' @param base_fare A numeric. A base value used to populate the fare

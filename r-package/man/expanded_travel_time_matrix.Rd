@@ -51,7 +51,9 @@ datetimes are parsed.}
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table.}
+GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
+vignette for more details on its usage:
+\code{vignette("time_window", package = "r5r")}}
 
 \item{breakdown}{A logical. If \code{FALSE} (the default), the function returns a
 simple output that lists the total time between each pair in each minute of
