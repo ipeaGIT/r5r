@@ -138,7 +138,9 @@ datetimes are parsed.</p></dd>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
+GTFS feeds contain a <code>frequencies.txt</code> table. Please read the time window
+vignette for more details on its usage:
+<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 <dt>percentiles</dt>
 <dd><p>An integer vector (max length of 5). Specifies the
 percentile to use when returning travel time estimates within the given

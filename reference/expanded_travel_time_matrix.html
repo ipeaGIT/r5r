@@ -142,7 +142,9 @@ datetimes are parsed.</p></dd>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
+GTFS feeds contain a <code>frequencies.txt</code> table. Please read the time window
+vignette for more details on its usage:
+<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 <dt>breakdown</dt>
 <dd><p>A logical. If <code>FALSE</code> (the default), the function returns a
 simple output that lists the total time between each pair in each minute of
