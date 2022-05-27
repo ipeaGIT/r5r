@@ -288,8 +288,16 @@ public class R5RCore {
                                                                             boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
 
         if (Utils.detailedItinerariesV2) {
-            // call improved detailed itineraries
-            return null;
+            // call regular detailed itineraries, based on PointToPointQuery
+            FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
+            detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
+            detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
+            detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
+            detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+            if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
+
+            return detailedItineraryPlanner.run();
         } else {
             // call regular detailed itineraries, based on PointToPointQuery
             DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
