@@ -19,6 +19,8 @@ public class Utils {
     static public boolean benchmark = false;
     static public boolean progress = true;
 
+    static public boolean detailedItinerariesV2 = false;
+
     static public boolean saveOutputToCsv = false;
     static public String outputCsvFolder = "";
 

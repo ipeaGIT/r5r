@@ -228,6 +228,10 @@ public class R5RCore {
         return Utils.outputCsvFolder;
     }
 
+    public void setDetailedItinerariesV2(boolean v2) {
+        Utils.detailedItinerariesV2 = v2;
+    }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
@@ -283,15 +287,21 @@ public class R5RCore {
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
                                                                             boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
 
-        DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
-        detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
-        detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
-        detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
-        detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
-        detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
-        if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
+        if (Utils.detailedItinerariesV2) {
+            // call improved detailed itineraries
+            return null;
+        } else {
+            // call regular detailed itineraries, based on PointToPointQuery
+            DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
+            detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
+            detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
+            detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
+            detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+            if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
-        return detailedItineraryPlanner.run();
+            return detailedItineraryPlanner.run();
+        }
     }
 
 
