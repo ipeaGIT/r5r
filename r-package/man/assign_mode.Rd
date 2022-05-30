@@ -2,7 +2,7 @@
 % Please edit documentation in R/assign.R
 \name{assign_mode}
 \alias{assign_mode}
-\title{Assign transport mode}
+\title{Check and select transport modes from user input}
 \usage{
 assign_mode(mode, mode_egress, style)
 }
@@ -25,6 +25,10 @@ Selects the transport modes used in the routing functions.
 }
 \seealso{
 Other assigning functions: 
+\code{\link{assign_departure}()},
+\code{\link{assign_max_street_time}()},
+\code{\link{assign_max_trip_duration}()},
+\code{\link{assign_opportunities}()},
 \code{\link{assign_points_input}()}
 }
 \concept{assigning functions}

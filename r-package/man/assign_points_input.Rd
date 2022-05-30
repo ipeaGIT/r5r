@@ -19,7 +19,11 @@ Check and convert origin and destination inputs
 }
 \seealso{
 Other assigning functions: 
-\code{\link{assign_mode}()}
+\code{\link{assign_departure}()},
+\code{\link{assign_max_street_time}()},
+\code{\link{assign_max_trip_duration}()},
+\code{\link{assign_mode}()},
+\code{\link{assign_opportunities}()}
 }
 \concept{assigning functions}
 \keyword{internal}

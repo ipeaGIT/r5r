@@ -26,22 +26,22 @@ test_that("set_progress adequately raises warnings and errors", {
 
 })
 
-# set_max_street_time -----------------------------------------------------
+# assign_max_street_time -----------------------------------------------------
 
 
-test_that("set_max_street_time adequately raises warnings and errors", {
+test_that("assign_max_street_time adequately raises warnings and errors", {
 
-  expect_error(set_max_walk_distance("1000", 3.6, 60L))
-  expect_error(set_max_walk_distance(1000, "3.6", 60L))
-  # expect_error(set_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
+  expect_error(assign_max_walk_distance("1000", 3.6, 60L, "walk"))
+  expect_error(assign_max_walk_distance(1000, "3.6", 60L, "walk"))
+  # expect_error(assign_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
 
 })
 
-test_that("set_max_street_time output is coherent", {
+test_that("assign_max_street_time output is coherent", {
 
-  expect_equal(set_max_street_time(Inf, 3.6, 60L), 60L)
-  expect_equal(set_max_street_time(1800, 3.6, 60L), 30L)
-  expect_equal(set_max_street_time(7200, 3.6, 60L), 60L)
+  expect_equal(assign_max_street_time(Inf, 3.6, 60L, "walk"), 60L)
+  expect_equal(assign_max_street_time(1800, 3.6, 60L, "walk"), 30L)
+  expect_equal(assign_max_street_time(7200, 3.6, 60L, "walk"), 60L)
 
 })
 
@@ -56,28 +56,28 @@ test_that("assign_mode adequately raises warnings and errors", {
 })
 
 
-# posix_to_string ---------------------------------------------------------
+# assign_departure ---------------------------------------------------------
 
 
-test_that("posix_to_string adequately raises warnings and errors", {
+test_that("assign_departure adequately raises warnings and errors", {
 
   datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-  expect_error(posix_to_string(as.character(datetime)))
-  expect_error(posix_to_string(as.integer(datetime)))
+  expect_error(assign_departure(as.character(datetime)))
+  expect_error(assign_departure(as.integer(datetime)))
 
 })
 
-test_that("posix_to_string output is coherent", {
+test_that("assign_departure output is coherent", {
 
   datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-  datetime <- posix_to_string(datetime)
+  datetime <- assign_departure(datetime)
 
   expect_equal(datetime$date, "2019-03-13")
   expect_equal(datetime$time, "14:00:00")
 
   datetime <- as.POSIXct("13-03-1919 2:00:00 pm", format = "%d-%m-%Y %I:%M:%S %p")
-  datetime <- posix_to_string(datetime)
+  datetime <- assign_departure(datetime)
 
   expect_equal(datetime$date, "1919-03-13")
   expect_equal(datetime$time, "14:00:00")

@@ -23,8 +23,6 @@ Other support functions:
 \code{\link{assert_decay_function}()},
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
-\code{\link{posix_to_string}()},
-\code{\link{set_max_street_time}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{stop_r5}()}
 }

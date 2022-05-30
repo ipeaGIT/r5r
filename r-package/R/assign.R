@@ -50,7 +50,7 @@ assign_points_input <- function(df, name) {
 }
 
 
-#' Assign transport mode
+#' Check and select transport modes from user input
 #'
 #' Selects the transport modes used in the routing functions.
 #'
@@ -147,4 +147,143 @@ assign_mode <- function(mode, mode_egress, style) {
   )
 
   return(mode_list)
+}
+
+
+#' Check and convert POSIXct objects to strings
+#'
+#' @param datetime An object of POSIXct class.
+#'
+#' @return A list with the `date` and `time` of the trip departure as
+#'   characters.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_departure <- function(datetime) {
+  checkmate::assert_posixct(
+    datetime,
+    len = 1,
+    any.missing = FALSE,
+    .var.name = "departure_datetime"
+  )
+
+  tz <- attr(datetime, "tzone")
+  if (is.null(tz)) tz <- ""
+
+  datetime_list <- list(
+    date = strftime(datetime, format = "%Y-%m-%d", tz = tz),
+    time = strftime(datetime, format = "%H:%M:%S", tz = tz)
+  )
+
+  return(datetime_list)
+}
+
+
+#' Assign max street time from walk/bike distance and speed
+#'
+#' Checks the time duration and speed inputs and converts them to distance.
+#'
+#' @param max_dist A numeric of length 1. Maximum walking distance (in
+#'   meters) for the whole trip. Passed from routing functions.
+#' @param speed A numeric of length 1. Average walk speed in km/h.
+#'   Defaults to 3.6 Km/h. Passed from routing functions.
+#' @param max_trip_duration A numeric of length 1. Maximum trip duration in
+#'   seconds. Defaults to 120 minutes (2 hours). Passed from routing functions.
+#' @param mode A string. Either `"bike"` or `"walk"`.
+#'
+#' @return An `integer` representing the maximum number of minutes walking.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
+  checkmate::assert_number(max_dist)
+  checkmate::assert_number(speed, finite = TRUE)
+
+  if (speed <= 0) {
+    stop("Assertion on speed failed: must have value greater than 0.")
+  }
+
+  if (is.infinite(max_dist)) return(as.integer(max_trip_duration))
+
+  max_street_time <- as.integer(
+    round(60 * max_dist / (speed * 1000), digits = 0)
+  )
+
+  if (max_street_time == 0) {
+    stop(
+      "'max_", mode, "_dist' is too low. ",
+      "Please make sure distances are in meters, not kilometers."
+    )
+  }
+
+  # if max_street_time ends up being higher than max_trip_duration, uses
+  # max_trip_duration as a ceiling
+
+  if (max_street_time > max_trip_duration) max_street_time <- max_trip_duration
+
+  return(as.integer(max_street_time))
+}
+
+
+#' Assign max trip duration
+#'
+#' Check and convert the max trip duration input.
+#'
+#' @param max_trip_duration A number.
+#'
+#' @return An `integer` representing the maximum trip duration in minutes.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_max_trip_duration <- function(max_trip_duration) {
+  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+
+  max_trip_duration <- as.integer(max_trip_duration)
+
+  return(max_trip_duration)
+}
+
+
+#' Assign opportunities data
+#'
+#' Check and create an opportunities dataset.
+#'
+#' @param destinations Either a `data.frame` or a `POINT sf`.
+#' @param opportunities_colnames A character vector with the names of the
+#'   opportunities columns in `destinations`.
+#'
+#' @return A list of `Java-Array` objects.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_opportunities <- function(destinations, opportunities_colnames) {
+  checkmate::assert_character(
+    opportunities_colnames,
+    min.len = 1,
+    unique = TRUE,
+    any.missing = FALSE
+  )
+  checkmate::assert_names(
+    names(destinations),
+    must.include = opportunities_colnames,
+    .var.name = "destinations"
+  )
+
+  opportunities_data <- lapply(
+    opportunities_colnames,
+    function(colname) {
+      checkmate::assert_numeric(destinations[[colname]])
+
+      opp_array <- as.integer(destinations[[colname]])
+      opp_array <- rJava::.jarray(opp_array)
+
+      opp_array
+    }
+  )
+
+  return(opportunities_data)
 }
