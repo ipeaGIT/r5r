@@ -16,15 +16,16 @@
 #'   percentile to use when returning accessibility estimates within the given
 #'   time window. Please note that this parameter is applied to the travel time
 #'   estimates that generate the accessibility results, and not to the
-#'   accessibility distribution itself (i.e. if the 25th percentile is specified,
-#'   the accessibility is calculated from the 25th percentile travel time, which
-#'   may or may not be equal to the 25th percentile of the accessibility
-#'   distribution itself). Defaults to 50, returning the accessibility calculated
-#'   from the median travel time. If a vector with length bigger than 1 is passed,
-#'   the output contains an additional column that specifies the percentile of
-#'   each accessibility estimate. Due to upstream restrictions, only 5 percentiles
-#'   can be specified at a time. For more details, please see `R5` documentation
-#'   at https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#'   accessibility distribution itself (i.e. if the 25th percentile is
+#'   specified, the accessibility is calculated from the 25th percentile travel
+#'   time, which may or may not be equal to the 25th percentile of the
+#'   accessibility distribution itself). Defaults to 50, returning the
+#'   accessibility calculated from the median travel time. If a vector with
+#'   length bigger than 1 is passed, the output contains an additional column
+#'   that specifies the percentile of each accessibility estimate. Due to
+#'   upstream restrictions, only 5 percentiles can be specified at a time. For
+#'   more details, please see `R5` documentation at
+#'   https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
 #' @param decay_function A string. Which decay function to use when calculating
 #'   accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
 #'   or `logistic`. Defaults to `step`, which is equivalent to a cumulative
@@ -32,11 +33,12 @@
 #'   alternative works and how they relate to the `cutoffs` and `decay_value`
 #'   parameters.
 #' @param cutoffs A numeric vector (maximum length of 12). This parameter has
-#'   different effects for each decay function: it indicates the cutoff times in
-#'   minutes when calculating cumulative opportunities accessibility with the
-#'   `step` function, the median (or inflection point) of the decay curves in the
-#'   `logistic` and `linear` functions, and the half-life in the `exponential`
-#'   function. It has no effect when using the `fixed_exponential` function.
+#'   different effects for each decay function: it indicates the cutoff times
+#'   in minutes when calculating cumulative opportunities accessibility with
+#'   the `step` function, the median (or inflection point) of the decay curves
+#'   in the `logistic` and `linear` functions, and the half-life in the
+#'   `exponential` function. It has no effect when using the
+#'   `fixed_exponential` function.
 #' @param decay_value A numeric. Extra parameter to be passed to the selected
 #'   `decay_function`. Has no effects when `decay_function` is either `step` or
 #'   `exponential`.
@@ -164,17 +166,15 @@ accessibility <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
-
   # check inputs and set r5r options --------------------------------------
 
   checkmate::assert_class(r5r_core, "jobjRef")
 
+  origins <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
+  opportunities <- assign_opportunities(destinations, opportunities_colnames)
   mode_list <- assign_mode(mode, mode_egress, style = "ttm")
-
   departure <- assign_departure(departure_datetime)
-
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
   max_walk_time <- assign_max_street_time(
     max_walk_dist,
     walk_speed,
@@ -187,25 +187,7 @@ accessibility <- function(r5r_core,
     max_trip_duration,
     "bike"
   )
-
-  origins <- assign_points_input(origins, "origins")
-  destinations <- assign_points_input(destinations, "destinations")
-
-  # opportunities
-  checkmate::assert_character(opportunities_colnames)
-  checkmate::assert_names(names(destinations), must.include = opportunities_colnames,
-                          .var.name = "destinations")
-
-  opportunities_data <- lapply(opportunities_colnames, function(colname) {
-    ## check if provided column contains numeric values only
-    checkmate::assert_numeric(destinations[[colname]])
-
-    ## convert to Java compatible array
-    opp_array <- as.integer(destinations[[colname]])
-    opp_array <- rJava::.jarray(opp_array)
-
-    return(opp_array)
-  })
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
 
   # time window
   checkmate::assert_numeric(time_window)
@@ -273,11 +255,10 @@ accessibility <- function(r5r_core,
     r5r_core$setMaxFare(rJava::.jfloat(-1.0))
   }
 
+  # call r5r_core method and process results ------------------------------
 
-  # call r5r_core method ----------------------------------------------------
+  # wrap r5r_core inputs in arrays (this helps to simplify the Java code)
 
-  ## wrap r5r_core inputs in arrays
-  ## this helps to simplify the Java code
   from_id_arr <- rJava::.jarray(origins$id)
   from_lat_arr <- rJava::.jarray(origins$lat)
   from_lon_arr <- rJava::.jarray(origins$lon)
@@ -286,37 +267,34 @@ accessibility <- function(r5r_core,
   to_lat_arr <- rJava::.jarray(destinations$lat)
   to_lon_arr <- rJava::.jarray(destinations$lon)
 
-
   opportunities_names <- rJava::.jarray(opportunities_colnames)
-  opportunities_values <- rJava::.jarray(opportunities_data, "[I")
+  opportunities_values <- rJava::.jarray(opportunities, "[I")
 
-  accessibility <- r5r_core$accessibility(from_id_arr,
-                                          from_lat_arr,
-                                          from_lon_arr,
-                                          to_id_arr,
-                                          to_lat_arr,
-                                          to_lon_arr,
-                                          opportunities_names,
-                                          opportunities_values,
-                                          decay_list$fun,
-                                          decay_list$value,
-                                          mode_list$direct_modes,
-                                          mode_list$transit_mode,
-                                          mode_list$access_mode,
-                                          mode_list$egress_mode,
-                                          departure$date,
-                                          departure$time,
-                                          max_walk_time,
-                                          max_bike_time,
-                                          max_trip_duration)
+  accessibility <- r5r_core$accessibility(
+    from_id_arr,
+    from_lat_arr,
+    from_lon_arr,
+    to_id_arr,
+    to_lat_arr,
+    to_lon_arr,
+    opportunities_names,
+    opportunities_values,
+    decay_list$fun,
+    decay_list$value,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration
+  )
 
-
-  # process results ---------------------------------------------------------
-
-  # convert travel_times from java object to data.table
-  if (!verbose & progress) { cat("Preparing final output...") }
+  if (!verbose & progress) cat("Preparing final output...")
   accessibility <- java_to_dt(accessibility)
-  if (!verbose & progress) { cat(" DONE!\n") }
+  if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
   return(accessibility)

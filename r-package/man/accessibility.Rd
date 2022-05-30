@@ -70,15 +70,16 @@ vignette for more details on its usage:
 percentile to use when returning accessibility estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates that generate the accessibility results, and not to the
-accessibility distribution itself (i.e. if the 25th percentile is specified,
-the accessibility is calculated from the 25th percentile travel time, which
-may or may not be equal to the 25th percentile of the accessibility
-distribution itself). Defaults to 50, returning the accessibility calculated
-from the median travel time. If a vector with length bigger than 1 is passed,
-the output contains an additional column that specifies the percentile of
-each accessibility estimate. Due to upstream restrictions, only 5 percentiles
-can be specified at a time. For more details, please see \code{R5} documentation
-at https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see \code{R5} documentation at
+https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
 
 \item{decay_function}{A string. Which decay function to use when calculating
 accessibility. One of \code{step}, \code{exponential}, \code{fixed_exponential}, \code{linear}
@@ -88,11 +89,12 @@ alternative works and how they relate to the \code{cutoffs} and \code{decay_valu
 parameters.}
 
 \item{cutoffs}{A numeric vector (maximum length of 12). This parameter has
-different effects for each decay function: it indicates the cutoff times in
-minutes when calculating cumulative opportunities accessibility with the
-\code{step} function, the median (or inflection point) of the decay curves in the
-\code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
-function. It has no effect when using the \code{fixed_exponential} function.}
+different effects for each decay function: it indicates the cutoff times
+in minutes when calculating cumulative opportunities accessibility with
+the \code{step} function, the median (or inflection point) of the decay curves
+in the \code{logistic} and \code{linear} functions, and the half-life in the
+\code{exponential} function. It has no effect when using the
+\code{fixed_exponential} function.}
 
 \item{decay_value}{A numeric. Extra parameter to be passed to the selected
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or

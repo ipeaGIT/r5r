@@ -239,6 +239,7 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
 #'
 #' @keywords internal
 assign_max_trip_duration <- function(max_trip_duration) {
+  # TODO: adjust max trip duration based on max walk/bike dist if appropriate
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
