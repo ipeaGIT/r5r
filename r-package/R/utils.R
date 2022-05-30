@@ -73,59 +73,6 @@ posix_to_string <- function(datetime) {
 }
 
 
-#' Assert class of origin and destination inputs and the type of its columns
-#'
-#' @param df Any object.
-#' @param name Object name.
-#'
-#' @return A `data.frame` with columns `id`, `lon` and `lat`.
-#'
-#' @family support functions
-#'
-#' @keywords internal
-assert_points_input <- function(df, name) {
-  if ("data.frame" %in% class(df)) {
-    if ("sf" %in% class(df)) {
-      if (
-        as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT"
-      ) {
-        stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
-      }
-
-      if (sf::st_crs(df) != sf::st_crs(4326)) {
-        stop(
-          "'", name, "' CRS must be WGS 84 (EPSG 4326). ",
-          "Please use either sf::set_crs() to set it or ",
-          "sf::st_transform() to reproject it."
-        )
-      }
-
-      df <- sfheaders::sf_to_df(df, fill = TRUE)
-      data.table::setDT(df)
-      data.table::setnames(df, "x", "lon")
-      data.table::setnames(df, "y", "lat")
-    }
-
-    checkmate::assert_names(
-      names(df),
-      must.include = c("id", "lat", "lon"),
-      .var.name = name
-    )
-    checkmate::assert_numeric(df$lon, .var.name = paste0(name, "$lon"))
-    checkmate::assert_numeric(df$lat, .var.name = paste0(name, "$lat"))
-
-    if (!is.character(df$id)) {
-      df$id <- as.character(df$id)
-      warning(paste0("'", name, "$id' forcefully cast to character."))
-    }
-
-    return(df)
-  }
-
-  stop(paste0("'", name, "' must be either a 'data.frame' or a 'POINT sf'."))
-}
-
-
 #' Assert decay function and parameter values
 #'
 #' @param decay_function Name of decay function.

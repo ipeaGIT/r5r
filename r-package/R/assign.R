@@ -1,4 +1,56 @@
-#' Select transport mode (non-detailed_itineraries)
+#' Check and convert origin and destination inputs
+#'
+#' @param df Either a `data.frame` or a `POINT sf`.
+#' @param name Object name.
+#'
+#' @return A `data.frame` with columns `id`, `lon` and `lat`.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_points_input <- function(df, name) {
+  if (!inherits(df, "data.frame")) {
+    stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
+  }
+
+  if ("sf" %in% class(df)) {
+    if (
+      as.character(sf::st_geometry_type(df, by_geometry = FALSE)) != "POINT"
+    ) {
+      stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
+    }
+
+    if (sf::st_crs(df) != sf::st_crs(4326)) {
+      stop(
+        "'", name, "' CRS must be WGS 84 (EPSG 4326). ",
+        "Please use either sf::set_crs() to set it or ",
+        "sf::st_transform() to reproject it."
+      )
+    }
+
+    df <- sfheaders::sf_to_df(df, fill = TRUE)
+    data.table::setDT(df)
+    data.table::setnames(df, c("x", "y"), c("lon", "lat"))
+  }
+
+  checkmate::assert_names(
+    names(df),
+    must.include = c("id", "lat", "lon"),
+    .var.name = name
+  )
+  checkmate::assert_numeric(df$lon, .var.name = paste0(name, "$lon"))
+  checkmate::assert_numeric(df$lat, .var.name = paste0(name, "$lat"))
+
+  if (!is.character(df$id)) {
+    df$id <- as.character(df$id)
+    warning("'", name, "$id' forcefully cast to character.")
+  }
+
+  return(df)
+}
+
+
+#' Assign transport mode
 #'
 #' Selects the transport modes used in the routing functions.
 #'
@@ -12,10 +64,10 @@
 #'
 #' @return A list with the transport modes to be used in the routing.
 #'
-#' @family mode selectors
+#' @family assigning functions
 #'
 #' @keywords internal
-select_mode <- function(mode, mode_egress, style) {
+assign_mode <- function(mode, mode_egress, style) {
   dr_modes <- c("WALK", "BICYCLE", "CAR", "BICYCLE_RENT", "CAR_PARK")
   tr_modes <- c(
     "TRANSIT",

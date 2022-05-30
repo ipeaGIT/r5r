@@ -104,7 +104,7 @@ expanded_travel_time_matrix <- function(r5r_core,
   checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
-  mode_list <- select_mode(mode, mode_egress, style = "ttm")
+  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
 
   # departure time
   departure <- posix_to_string(departure_datetime)
@@ -122,8 +122,8 @@ expanded_travel_time_matrix <- function(r5r_core,
                                        max_trip_duration)
 
   # origins and destinations
-  origins      <- assert_points_input(origins, "origins")
-  destinations <- assert_points_input(destinations, "destinations")
+  origins      <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
 
   checkmate::assert_subset("id", names(origins))
   checkmate::assert_subset("id", names(destinations))

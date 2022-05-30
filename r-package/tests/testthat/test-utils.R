@@ -46,12 +46,12 @@ test_that("set_max_street_time output is coherent", {
 })
 
 
-# select_mode -------------------------------------------------------------
+# assign_mode -------------------------------------------------------------
 
 
-test_that("select_mode adequately raises warnings and errors", {
+test_that("assign_mode adequately raises warnings and errors", {
 
-  expect_error(select_mode("POGOBALL"))
+  expect_error(assign_mode("POGOBALL"))
 
 })
 
@@ -85,11 +85,11 @@ test_that("posix_to_string output is coherent", {
 })
 
 
-# assert_points_input -----------------------------------------------------
+# assign_points_input -----------------------------------------------------
 
 sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326)
 
-test_that("assert_points_input adequately raises warnings and errors", {
+test_that("assign_points_input adequately raises warnings and errors", {
 
   # object class
 
@@ -102,9 +102,9 @@ test_that("assert_points_input adequately raises warnings and errors", {
     names(points)
   )
 
-  expect_error(assert_points_input(as.matrix(points), "points"))
-  expect_error(assert_points_input(list_points, "points"))
-  expect_error(assert_points_input(multipoint_points, "points"))
+  expect_error(assign_points_input(as.matrix(points), "points"))
+  expect_error(assign_points_input(list_points, "points"))
+  expect_error(assign_points_input(multipoint_points, "points"))
 
   # object columns types
 
@@ -118,20 +118,20 @@ test_that("assert_points_input adequately raises warnings and errors", {
     lon := as.character(lon)
   ]
 
-  expect_warning(assert_points_input(points_numeric_id, "points"))
-  expect_error(assert_points_input(points_char_lat, "points"))
-  expect_error(assert_points_input(points_char_lon, "points"))
+  expect_warning(assign_points_input(points_numeric_id, "points"))
+  expect_error(assign_points_input(points_char_lat, "points"))
+  expect_error(assign_points_input(points_char_lon, "points"))
 
   # object crs
 
   wrong_crs_sf <- sf::st_transform(sf_points, 4674)
-  expect_error(assert_points_input(wrong_crs_sf, "points"))
+  expect_error(assign_points_input(wrong_crs_sf, "points"))
 
 })
 
-test_that("assert_points_input output is coherent", {
-  sf_points_output <- assert_points_input(sf_points, "points")
-  df_points_output <- assert_points_input(points, "points")
+test_that("assign_points_input output is coherent", {
+  sf_points_output <- assign_points_input(sf_points, "points")
+  df_points_output <- assign_points_input(points, "points")
 
   # correct output column types
 

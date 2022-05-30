@@ -92,7 +92,7 @@ detailed_itineraries <- function(r5r_core,
   checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
-  mode_list <- select_mode(mode, mode_egress, style = "dit")
+  mode_list <- assign_mode(mode, mode_egress, style = "dit")
 
   # departure time
   departure <- posix_to_string(departure_datetime)
@@ -118,8 +118,8 @@ detailed_itineraries <- function(r5r_core,
   # origins and destinations
   # either they have the same number of rows or one of them has only one row,
   # in which case the smaller dataframe is expanded
-  origins      <- assert_points_input(origins, "origins")
-  destinations <- assert_points_input(destinations, "destinations")
+  origins      <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
 
 
   # check if user wants to route all possible combinations of origin-destination pairs

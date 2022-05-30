@@ -90,7 +90,7 @@ test_that("errors due to incorrect input types - origins and destinations", {
 })
 
 test_that("errors due to incorrect input types - other inputs", {
-  # mode and mode_egress are tested in select_mode() tests
+  # mode and mode_egress are tested in assign_mode() tests
 
   expect_error(tester(unclass(r5r_core)))
 
