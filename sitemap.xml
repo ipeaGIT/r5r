@@ -52,7 +52,22 @@
     <loc>/reference/assert_decay_function.html</loc>
   </url>
   <url>
-    <loc>/reference/assert_points_input.html</loc>
+    <loc>/reference/assign_departure.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_max_street_time.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_max_trip_duration.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_mode.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_opportunities.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_points_input.html</loc>
   </url>
   <url>
     <loc>/reference/check_connection.html</loc>
@@ -85,9 +100,6 @@
     <loc>/reference/pareto_frontier.html</loc>
   </url>
   <url>
-    <loc>/reference/posix_to_string.html</loc>
-  </url>
-  <url>
     <loc>/reference/r5r.html</loc>
   </url>
   <url>
@@ -97,10 +109,10 @@
     <loc>/reference/read_fare_structure.html</loc>
   </url>
   <url>
-    <loc>/reference/select_mode.html</loc>
+    <loc>/reference/set_fare_structure.html</loc>
   </url>
   <url>
-    <loc>/reference/set_fare_structure.html</loc>
+    <loc>/reference/set_max_fare.html</loc>
   </url>
   <url>
     <loc>/reference/set_max_lts.html</loc>
@@ -109,10 +121,16 @@
     <loc>/reference/set_max_rides.html</loc>
   </url>
   <url>
-    <loc>/reference/set_max_street_time.html</loc>
+    <loc>/reference/set_monte_carlo_draws.html</loc>
   </url>
   <url>
     <loc>/reference/set_n_threads.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_output_dir.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_percentiles.html</loc>
   </url>
   <url>
     <loc>/reference/set_progress.html</loc>
@@ -122,6 +140,9 @@
   </url>
   <url>
     <loc>/reference/set_suboptimal_minutes.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_time_window.html</loc>
   </url>
   <url>
     <loc>/reference/set_verbose.html</loc>

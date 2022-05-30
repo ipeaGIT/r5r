@@ -153,15 +153,16 @@ vignette for more details on its usage:
 percentile to use when returning accessibility estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates that generate the accessibility results, and not to the
-accessibility distribution itself (i.e. if the 25th percentile is specified,
-the accessibility is calculated from the 25th percentile travel time, which
-may or may not be equal to the 25th percentile of the accessibility
-distribution itself). Defaults to 50, returning the accessibility calculated
-from the median travel time. If a vector with length bigger than 1 is passed,
-the output contains an additional column that specifies the percentile of
-each accessibility estimate. Due to upstream restrictions, only 5 percentiles
-can be specified at a time. For more details, please see <code>R5</code> documentation
-at https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.</p></dd>
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see <code>R5</code> documentation at
+https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.</p></dd>
 <dt>decay_function</dt>
 <dd><p>A string. Which decay function to use when calculating
 accessibility. One of <code>step</code>, <code>exponential</code>, <code>fixed_exponential</code>, <code>linear</code>
@@ -171,11 +172,12 @@ alternative works and how they relate to the <code>cutoffs</code> and <code>deca
 parameters.</p></dd>
 <dt>cutoffs</dt>
 <dd><p>A numeric vector (maximum length of 12). This parameter has
-different effects for each decay function: it indicates the cutoff times in
-minutes when calculating cumulative opportunities accessibility with the
-<code>step</code> function, the median (or inflection point) of the decay curves in the
-<code>logistic</code> and <code>linear</code> functions, and the half-life in the <code>exponential</code>
-function. It has no effect when using the <code>fixed_exponential</code> function.</p></dd>
+different effects for each decay function: it indicates the cutoff times
+in minutes when calculating cumulative opportunities accessibility with
+the <code>step</code> function, the median (or inflection point) of the decay curves
+in the <code>logistic</code> and <code>linear</code> functions, and the half-life in the
+<code>exponential</code> function. It has no effect when using the
+<code>fixed_exponential</code> function.</p></dd>
 <dt>decay_value</dt>
 <dd><p>A numeric. Extra parameter to be passed to the selected
 <code>decay_function</code>. Has no effects when <code>decay_function</code> is either <code>step</code> or
@@ -184,9 +186,10 @@ function. It has no effect when using the <code>fixed_exponential</code> functio
 <dd><p>A fare structure object, following the convention
 set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.</p></dd>
+understand how this object is structured:
+<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
 <dt>max_fare</dt>
-<dd><p>A numeric. The maximum value that trips can cost when
+<dd><p>A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.</p></dd>
 <dt>max_walk_dist</dt>
 <dd><p>An integer. The maximum walking distance (in meters) to
