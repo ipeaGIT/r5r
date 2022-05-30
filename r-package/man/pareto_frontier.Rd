@@ -101,7 +101,8 @@ Defaults to 120 minutes (2 hours).}
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.}
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the time
