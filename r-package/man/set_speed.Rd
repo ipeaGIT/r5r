@@ -24,10 +24,16 @@ to set these speed profiles in r5r JAR.
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_fare_structure}()},
+\code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},
+\code{\link{set_monte_carlo_draws}()},
 \code{\link{set_n_threads}()},
+\code{\link{set_output_dir}()},
+\code{\link{set_percentiles}()},
 \code{\link{set_progress}()},
+\code{\link{set_time_window}()},
 \code{\link{set_verbose}()}
 }
 \concept{setting functions}

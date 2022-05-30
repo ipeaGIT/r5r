@@ -154,3 +154,174 @@ set_speed <- function(r5r_core, speed, mode) {
 
   return(invisible(TRUE))
 }
+
+
+#' Set time window
+#'
+#' Sets the time window to be used by R5.
+#'
+#' @template r5r_core
+#' @param time_window A number.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_time_window <- function(r5r_core, time_window) {
+  checkmate::assert_number(time_window, lower = 1, finite = TRUE)
+
+  time_window <- as.integer(time_window)
+
+  r5r_core$setTimeWindowSize(time_window)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set percentiles
+#'
+#' Sets the percentiles to be used by R5.
+#'
+#' @template r5r_core
+#' @param percentiles An integer vector of maximum length 5.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_percentiles <- function(r5r_core, percentiles) {
+  checkmate::assert_numeric(
+    percentiles,
+    lower = 1,
+    upper = 99,
+    max.len = 5,
+    unique = TRUE,
+    any.missing = FALSE
+  )
+
+  percentiles <- as.integer(percentiles)
+
+  r5r_core$setPercentiles(percentiles)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set number of Monte Carlo draws
+#'
+#' Sets the number of Monte Carlo draws to be used by R5.
+#'
+#' @template r5r_core
+#' @param draws_per_minute A number.
+#' @param time_window A number.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
+  # time_window is previously checked in set_time_window()
+  checkmate::assert_number(draws_per_minute, lower = 1, finite = TRUE)
+
+  draws <- time_window * draws_per_minute
+  draws <- as.integer(draws)
+
+  r5r_core$setNumberOfMonteCarloDraws(draws)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set the fare structure used when calculating transit fares
+#'
+#' Sets the fare structure used by our "generic" fare calculator. A value of
+#' `NULL` is passed to `fare_structure` by the upstream routing and
+#' accessibility functions when fares are not to be calculated.
+#'
+#' @template r5r_core
+#' @template fare_structure
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_fare_structure <- function(r5r_core, fare_structure) {
+  if (!is.null(fare_structure)) {
+    # TODO: assert_fare_structure
+
+    if (fare_structure$fare_cap == Inf) {
+      fare_structure$fare_cap <- -1
+    }
+
+    fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
+    json_string <- as.character(fare_settings_json)
+
+    r5r_core$setFareCalculator(json_string)
+    r5r_core$setFareCalculatorDebugOutputSettings(
+      fare_structure$debug_settings$output_file,
+      fare_structure$debug_settings$trip_info
+    )
+  } else {
+    r5r_core$dropFareCalculator()
+  }
+
+  return(invisible(TRUE))
+}
+
+
+#' Set max fare
+#'
+#' Sets the max fare allowed when calculating transit fares.
+#'
+#' @template r5r_core
+#' @param max_fare A number.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_max_fare <- function(r5r_core, max_fare) {
+  checkmate::assert_number(max_fare, lower = 0)
+
+  # Inf values are not allowed in Java, so -1 is used to indicate when max_fare
+  # is unconstrained
+
+  if (!is.infinite(max_fare)) {
+    r5r_core$setMaxFare(rJava::.jfloat(max_fare))
+  } else {
+    r5r_core$setMaxFare(rJava::.jfloat(-1.0))
+  }
+
+  return(invisible(TRUE))
+}
+
+
+#' Set output directory
+#'
+#' Sets whether r5r should save output to a specified directory.
+#'
+#' @template r5r_core
+#' @param output_dir A path.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_output_dir <- function(r5r_core, output_dir) {
+  checkmate::assert_string(output_dir, null.ok = TRUE)
+
+  if (!is.null(output_dir)) {
+    checkmate::assert_directory_exists(output_dir)
+    r5r_core$setCsvOutput(output_dir)
+  } else {
+    r5r_core$setCsvOutput("")
+  }
+
+  return(invisible(TRUE))
+}

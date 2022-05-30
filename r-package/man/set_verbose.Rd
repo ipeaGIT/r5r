@@ -21,11 +21,17 @@ that R5 error messages are still reported even when \code{verbose} is \code{FALS
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_fare_structure}()},
+\code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},
+\code{\link{set_monte_carlo_draws}()},
 \code{\link{set_n_threads}()},
+\code{\link{set_output_dir}()},
+\code{\link{set_percentiles}()},
 \code{\link{set_progress}()},
-\code{\link{set_speed}()}
+\code{\link{set_speed}()},
+\code{\link{set_time_window}()}
 }
 \concept{setting functions}
 \keyword{internal}

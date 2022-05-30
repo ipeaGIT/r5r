@@ -85,19 +85,6 @@
 #' )
 #' head(ttm)
 #'
-#' # selecting different percentiles
-#' ttm <- travel_time_matrix(
-#'   r5r_core,
-#'   origins = points,
-#'   destinations = points,
-#'   mode = c("WALK", "TRANSIT"),
-#'   departure_datetime = departure_datetime,
-#'   time_window = 30,
-#'   percentiles = c(25, 50, 75),
-#'   max_trip_duration = 60
-#' )
-#' head(ttm)
-#'
 #' # use a fare structure and set a max fare to take monetary constraints into
 #' # account
 #' fare_structure <- read_fare_structure(
@@ -151,7 +138,7 @@ travel_time_matrix <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
-  # input checking --------------------------------------------------------
+  # check inputs and set r5r options --------------------------------------
 
   checkmate::assert_class(r5r_core, "jobjRef")
 
@@ -161,19 +148,6 @@ travel_time_matrix <- function(r5r_core,
   mode_list <- select_mode(mode, mode_egress, style = "ttm")
 
   departure <- posix_to_string(departure_datetime)
-
-  checkmate::assert_number(time_window, lower = 1)
-  time_window <- as.integer(time_window)
-
-  checkmate::assert_numeric(
-    percentiles,
-    lower = 1,
-    upper = 99,
-    max.len = 5,
-    unique = TRUE,
-    any.missing = FALSE
-  )
-  percentiles <- as.integer(percentiles)
 
   max_walk_time <- set_max_street_time(
     max_walk_dist,
@@ -186,30 +160,12 @@ travel_time_matrix <- function(r5r_core,
     max_trip_duration
   )
 
-  checkmate::assert_number(max_trip_duration, lower = 1)
+  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
   max_trip_duration <- as.integer(max_trip_duration)
 
-  checkmate::assert_number(draws_per_minute, lower = 1)
-  draws <- time_window * draws_per_minute
-  draws <- as.integer(draws)
-
-  # set r5r_core options ----------------------------------------------------
-
-  checkmate::assert_string(output_dir, null.ok = TRUE)
-  if (!is.null(output_dir)) {
-    checkmate::assert_directory_exists(output_dir)
-    r5r_core$setCsvOutput(output_dir)
-    on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-  }
-
-  # time window
-  r5r_core$setTimeWindowSize(time_window)
-  r5r_core$setPercentiles(percentiles)
-  r5r_core$setNumberOfMonteCarloDraws(draws)
-
-  # travel times breakdown
-  r5r_core$setExpandedTravelTimes(FALSE)
-
+  set_time_window(r5r_core, time_window)
+  set_percentiles(r5r_core, percentiles)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
   set_max_rides(r5r_core, max_rides)
@@ -217,59 +173,54 @@ travel_time_matrix <- function(r5r_core,
   set_n_threads(r5r_core, n_threads)
   set_verbose(r5r_core, verbose)
   set_progress(r5r_core, progress)
-
-  # configure fare structure
   set_fare_structure(r5r_core, fare_structure)
+  set_max_fare(r5r_core, max_fare)
+  set_output_dir(r5r_core, output_dir)
 
-  # set max fare
-  # Inf and NULL values are not allowed in Java,
-  # so -1 is used to indicate max_fare is unconstrained
-  checkmate::assert_numeric(max_fare, lower = 0, len = 1, any.missing = FALSE)
-  if (max_fare != Inf) {
-    r5r_core$setMaxFare(rJava::.jfloat(max_fare))
-  } else {
-    r5r_core$setMaxFare(rJava::.jfloat(-1.0))
-  }
+  # travel times breakdown
+  r5r_core$setExpandedTravelTimes(FALSE)
 
-  # call r5r_core method ----------------------------------------------------
+  # call r5r_core method and process result -------------------------------
 
-  travel_times <- r5r_core$travelTimeMatrix(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_walk_time,
-                                            max_bike_time,
-                                            max_trip_duration)
+  travel_times <- r5r_core$travelTimeMatrix(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration
+  )
 
-
-  # process results ---------------------------------------------------------
-
-  # convert travel_times from java object to data.table
-  if (!verbose & progress) { cat("Preparing final output...") }
+  if (!verbose & progress) cat("Preparing final output...")
 
   travel_times <- java_to_dt(travel_times)
 
-  # only perform following operations when result is not empty
   if (nrow(travel_times) > 0) {
-    # replace travel-times of nonviable trips with NAs
-    #   the first column with travel time information is column 3, because
-    #     columns 1 and 2 contain the id's of OD point (hence from = 3)
-    #   the percentiles parameter indicates how many travel times columns we'll,
-    #     have, with a minimum of 1 (in which case, to = 3).
-    for(j in seq(from = 3, to = (length(percentiles) + 2))){
-      data.table::set(travel_times, i=which(travel_times[[j]]>max_trip_duration), j=j, value=NA_integer_)
+    # replace travel-times of nonviable trips with NAs.
+    # the first column with travel time information is column 3, because
+    # columns 1 and 2 contain the ids of OD point.
+    # the percentiles parameter indicates how many travel times columns we'll
+    # have
+    for (j in seq(from = 3, to = (length(percentiles) + 2))) {
+      data.table::set(
+        travel_times,
+        i = which(travel_times[[j]] > max_trip_duration),
+        j = j,
+        value = NA_integer_
+      )
     }
   }
 
-  if (!verbose & progress) { cat(" DONE!\n") }
+  if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
   return(travel_times)

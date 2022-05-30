@@ -103,7 +103,7 @@ set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object 
 should be calculated. Please see the fare structure vignette to
 understand how this object is structured.}
 
-\item{max_fare}{A numeric. The maximum value that trips can cost when
+\item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to

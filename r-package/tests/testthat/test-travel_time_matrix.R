@@ -78,7 +78,7 @@ test_that("errors due to incorrect input types - origins and destinations", {
 
   # wrong columns types
 
-  pois_char_lat <- pois 
+  pois_char_lat <- pois
   pois_char_lat$lat <- as.character(pois$lat)
   pois_char_lon <- pois
   pois_char_lon$lon <- as.character(pois$lon)
@@ -100,6 +100,7 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(time_window = "1"))
   expect_error(tester(time_window = c(12, 15)))
   expect_error(tester(time_window = 0))
+  expect_error(tester(time_window = Inf))
 
   expect_error(tester(percentiles = "50"))
   expect_error(tester(percentiles = 0))
@@ -127,6 +128,7 @@ test_that("errors due to incorrect input types - other inputs", {
 
   expect_error(tester(max_trip_duration = "120"))
   expect_error(tester(max_trip_duration = c(25, 30)))
+  expect_error(tester(max_trip_duration = Inf))
 
   expect_error(tester(walk_speed = "3.6"))
   expect_error(tester(walk_speed = c(3.6, 5)))
@@ -139,6 +141,7 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(max_rides = "3"))
   expect_error(tester(max_rides = c(3, 4)))
   expect_error(tester(max_rides = -1))
+  expect_error(tester(max_rides = Inf))
 
   expect_error(tester(max_lts = "3"))
   expect_error(tester(max_lts = c(3, 4)))
@@ -147,6 +150,7 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(draws_per_minute = "1"))
   expect_error(tester(draws_per_minute = c(12, 15)))
   expect_error(tester(draws_per_minute = 0))
+  expect_error(tester(draws_per_minute = Inf))
 
   expect_error(tester(n_threads = "1"))
   expect_error(tester(n_threads = c(2, 3)))
