@@ -152,8 +152,6 @@ travel_time_matrix <- function(r5r_core,
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
   # input checking --------------------------------------------------------
-  # max_rides, max_lts, verbose, progress and output_dir are checked a bit
-  # later when setting r5r_core options
 
   checkmate::assert_class(r5r_core, "jobjRef")
 
@@ -212,23 +210,12 @@ travel_time_matrix <- function(r5r_core,
   # travel times breakdown
   r5r_core$setExpandedTravelTimes(FALSE)
 
-  # set bike and walk speed
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
-
-  # set max transfers
   set_max_rides(r5r_core, max_rides)
-
-  # set max lts (level of traffic stress)
   set_max_lts(r5r_core, max_lts)
-
-  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
-
-  # set verbose
   set_verbose(r5r_core, verbose)
-
-  # set progress
   set_progress(r5r_core, progress)
 
   # configure fare structure
