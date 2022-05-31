@@ -74,7 +74,8 @@ if (getRversion() >= "2.15.1") {
       "i.lon",
       "i.lat",
       "total_time",
-      "setting"
+      "setting",
+      "cutoff"
     )
   )
 }
