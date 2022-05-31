@@ -146,13 +146,14 @@ vignette for more details on its usage:
 percentile to use when returning travel time estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates only (e.g. if the 25th percentile is specified, and the output
-between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper than
-10 dollars taken between these points are shorter than 15 minutes). Defaults
-to 50, returning the median travel time. If a vector with length bigger than
-1 is passed, the output contains an additional column that specifies the
-percentile of each travel time and monetary cost combination. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.</p></dd>
+between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper
+than 10 dollars taken between these points are shorter than 15 minutes).
+Defaults to 50, returning the median travel time. If a vector with length
+bigger than 1 is passed, the output contains an additional column that
+specifies the percentile of each travel time and monetary cost
+combination. Due to upstream restrictions, only 5 percentiles can be
+specified at a time. For more details, please see R5 documentation at
+<a href="https://docs.conveyal.com/analysis/methodology#accounting-for-variability" class="external-link">https://docs.conveyal.com/analysis/methodology#accounting-for-variability</a>.</p></dd>
 <dt>max_walk_dist</dt>
 <dd><p>An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -190,18 +191,18 @@ understand how this object is structured:
 <code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
 <dt>monetary_cost_cutoffs</dt>
 <dd><p>A numeric vector. The monetary cutoffs that
-should be considered when calculating the Pareto frontier. Most of the time
-you'll want this parameter to be the combination of all possible fares
-listed in you <code>fare_structure</code>. Choosing a coarse distribution of
+should be considered when calculating the Pareto frontier. Most of the
+time you'll want this parameter to be the combination of all possible
+fares listed in you <code>fare_structure</code>. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
-and the other costing $4, and you set this parameter to <code>5</code>, the output will
-tell you the fastest trips that costed up to $5, but you won't be able to
-identify which route was used to complete such trips. In this case, it would
-be more beneficial to set the parameter as <code>c(3, 4)</code> (you could also specify
-combinations of such values, such as 6, 7, 8 and so on, because a transit
-user could hypothetically benefit from making transfers between the
-available routes).</p></dd>
+and the other costing $4, and you set this parameter to <code>5</code>, the output
+will tell you the fastest trips that costed up to $5, but you won't be
+able to identify which route was used to complete such trips. In this
+case, it would be more beneficial to set the parameter as <code>c(3, 4)</code> (you
+could also specify combinations of such values, such as 6, 7, 8 and so on,
+because a transit user could hypothetically benefit from making transfers
+between the available routes).</p></dd>
 <dt>walk_speed</dt>
 <dd><p>A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.</p></dd>
@@ -249,14 +250,15 @@ memory.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>data.table</code> with the travel time and monetary cost Pareto
-frontier between the specified origins and destinations. An additional
-column identifying the travel time percentile is present if more than one
-value was passed to <code>percentiles</code>. Origin and destination pairs whose trips
+    <p>A <code>data.table</code> with the travel time and monetary cost Pareto frontier
+between the specified origins and destinations. An additional column
+identifying the travel time percentile is present if more than one value
+was passed to <code>percentiles</code>. Origin and destination pairs whose trips
 couldn't be completed within the maximum travel time using less money than
 the specified monetary cutoffs are not returned in the <code>data.table</code>. If
-<code>output_dir</code> is not <code>NULL</code>, the function returns the path specified in that
-parameter, in which the <code>.csv</code> files containing the results are saved.</p>
+<code>output_dir</code> is not <code>NULL</code>, the function returns the path specified in
+that parameter, in which the <code>.csv</code> files containing the results are
+saved.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>

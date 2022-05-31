@@ -49,7 +49,7 @@
     <loc>/reference/assert_breakdown_stat.html</loc>
   </url>
   <url>
-    <loc>/reference/assert_decay_function.html</loc>
+    <loc>/reference/assign_decay_function.html</loc>
   </url>
   <url>
     <loc>/reference/assign_departure.html</loc>
@@ -109,6 +109,9 @@
     <loc>/reference/read_fare_structure.html</loc>
   </url>
   <url>
+    <loc>/reference/set_cutoffs.html</loc>
+  </url>
+  <url>
     <loc>/reference/set_fare_structure.html</loc>
   </url>
   <url>
@@ -119,6 +122,9 @@
   </url>
   <url>
     <loc>/reference/set_max_rides.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_monetary_cutoffs.html</loc>
   </url>
   <url>
     <loc>/reference/set_monte_carlo_draws.html</loc>
