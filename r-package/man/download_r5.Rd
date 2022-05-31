@@ -2,7 +2,7 @@
 % Please edit documentation in R/download_r5.R
 \name{download_r5}
 \alias{download_r5}
-\title{Download R5 Jar file}
+\title{Download \code{R5.jar}}
 \usage{
 download_r5(
   version = "6.7.0",
@@ -12,25 +12,23 @@ download_r5(
 )
 }
 \arguments{
-\item{version}{string with the version of R5 to be downloaded. Defaults to
-latest version '6.4'.}
+\item{version}{A string. The version of R5 to be downloaded. Defaults to the
+latest version.}
 
-\item{quiet}{logical, passed to download.file. Defaults to FALSE}
+\item{quiet}{A logical. Whether to show informative messages when downloading
+the file. Defaults to \code{FALSE}.}
 
-\item{force_update}{logical, Replaces the jar file stored locally with a new
-one. Defaults to FALSE.}
+\item{force_update}{A logical. Whether to overwrite a previously downloaded
+\code{R5.jar} in the local directory. Defaults to \code{FALSE}.}
 
-\item{temp_dir}{logical, whether the R5 Jar file should be saved in temporary
-directory. Defaults to FALSE}
+\item{temp_dir}{A logical. Whether the file should be saved in a temporary
+directory. Defaults to \code{FALSE}.}
 }
 \value{
-A jar file is saved locally in the r5r package directory
+The path to the downloaded file.
 }
 \description{
-Download a compiled JAR file of R5 and saves it locally. The JAR file is
-saved within the package directory. The package uses a compilation of R5
-tailored for the purposes of r5r that keeps R5's essential features. Source
-code available at https://github.com/ipeaGIT/r5r.
+Downloads \code{R5.jar} and saves it locally, inside the package directory.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

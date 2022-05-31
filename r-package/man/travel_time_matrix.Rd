@@ -67,7 +67,7 @@ passed, the output contains an additional column for each percentile
 specifying the percentile travel time estimate. each estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares

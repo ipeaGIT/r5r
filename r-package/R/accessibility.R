@@ -25,7 +25,7 @@
 #'   that specifies the percentile of each accessibility estimate. Due to
 #'   upstream restrictions, only 5 percentiles can be specified at a time. For
 #'   more details, please see `R5` documentation at
-#'   https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.
+#'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
 #' @param decay_function A string. Which decay function to use when calculating
 #'   accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
 #'   or `logistic`. Defaults to `step`, which is equivalent to a cumulative

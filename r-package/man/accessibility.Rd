@@ -79,7 +79,7 @@ length bigger than 1 is passed, the output contains an additional column
 that specifies the percentile of each accessibility estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see \code{R5} documentation at
-https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{decay_function}{A string. Which decay function to use when calculating
 accessibility. One of \code{step}, \code{exponential}, \code{fixed_exponential}, \code{linear}
