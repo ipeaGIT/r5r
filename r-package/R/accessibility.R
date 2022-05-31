@@ -175,6 +175,7 @@ accessibility <- function(r5r_core,
   opportunities <- assign_opportunities(destinations, opportunities_colnames)
   mode_list <- assign_mode(mode, mode_egress, style = "ttm")
   departure <- assign_departure(departure_datetime)
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   max_walk_time <- assign_max_street_time(
     max_walk_dist,
     walk_speed,
@@ -187,7 +188,6 @@ accessibility <- function(r5r_core,
     max_trip_duration,
     "bike"
   )
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   decay_list <- assign_decay_function(decay_function, decay_value)
 
   set_time_window(r5r_core, time_window)

@@ -1,5 +1,3 @@
-context("Travel time matrix function")
-
 # if running manually, please run the following line first:
 # source("tests/testthat/setup.R")
 
