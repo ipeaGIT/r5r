@@ -376,3 +376,31 @@ set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
 
   return(invisible(TRUE))
 }
+
+
+#' Set monetary cutoffs
+#'
+#' Sets the monetary cutoffs that should be considered when calculating the
+#' Pareto frontier.
+#'
+#' @template r5r_core
+#' @param monetary_cutoffs A path.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_monetary_cutoffs <- function(r5r_core, monetary_cutoffs) {
+  checkmate::assert_numeric(
+    monetary_cutoffs,
+    lower = 0,
+    any.missing = FALSE,
+    min.len = 1,
+    unique = TRUE
+  )
+
+  r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cutoffs))
+
+  return(invisible(TRUE))
+}

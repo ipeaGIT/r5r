@@ -117,123 +117,73 @@ pareto_frontier <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
+  # check inputs and set r5r options --------------------------------------
 
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
-  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
-
-  # departure time
-  departure <- assign_departure(departure_datetime)
-
-  # max trip duration
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
-  # max_walking_distance, max_bike_distance, and max_street_time
-  max_walk_time <- assign_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration,
-                                       "walk")
-  max_bike_time <- assign_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration,
-                                       "bike")
-
-  # origins and destinations
-  origins      <- assign_points_input(origins, "origins")
+  origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
+  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
+  departure <- assign_departure(departure_datetime)
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
+  max_walk_time <- assign_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration,
+    "walk"
+  )
+  max_bike_time <- assign_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration,
+    "bike"
+  )
 
-  checkmate::assert_subset("id", names(origins))
-  checkmate::assert_subset("id", names(destinations))
-
-  # time window
-  checkmate::assert_numeric(time_window, lower=1)
-  time_window <- as.integer(time_window)
-
-  # montecarlo draws per minute
-  draws <- time_window * draws_per_minute
-  draws <- as.integer(draws)
-
-  # percentiles
-  if (length(percentiles) > 5) {
-    stop("Maximum number of percentiles allowed is 5.")
-  }
-  percentiles <- percentiles[!is.na(percentiles)]
-  checkmate::assert_numeric(percentiles)
-  percentiles <- as.integer(percentiles)
-
-  # set r5r_core options ----------------------------------------------------
-
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-
-  # time window
-  r5r_core$setTimeWindowSize(time_window)
-  r5r_core$setPercentiles(percentiles)
-  r5r_core$setNumberOfMonteCarloDraws(draws)
-
-  # set bike and walk speed
+  set_time_window(r5r_core, time_window)
+  set_percentiles(r5r_core, percentiles)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
-
-  # set max transfers
   set_max_rides(r5r_core, max_rides)
-
-  # set max lts (level of traffic stress)
   set_max_lts(r5r_core, max_lts)
-
-  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
-
-  # set verbose
   set_verbose(r5r_core, verbose)
-
-  # set progress
   set_progress(r5r_core, progress)
-
-  # fare structure
   set_fare_structure(r5r_core, fare_structure)
+  set_output_dir(r5r_core, output_dir)
+  set_monetary_cutoffs(r5r_core, monetary_cost_cutoffs)
 
-  # set fare cutoffs
-  r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cost_cutoffs))
+  # call r5r_core method and process result -------------------------------
 
-  # call r5r_core method ----------------------------------------------------
+  frontier <- r5r_core$paretoFrontier(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration
+  )
 
-  travel_times <- r5r_core$paretoFrontier(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_walk_time,
-                                            max_bike_time,
-                                            max_trip_duration)
+  if (!verbose & progress) cat("Preparing final output...")
 
+  frontier <- java_to_dt(frontier)
 
-  # process results ---------------------------------------------------------
-
-  # convert travel_times from java object to data.table
-  if (!verbose & progress) { cat("Preparing final output...") }
-
-  travel_times <- java_to_dt(travel_times)
-
-  # only perform following operations when result is not empty
-  if (nrow(travel_times) > 0) {
+  if (nrow(frontier) > 0) {
     # replace travel-times of nonviable trips with NAs
-    travel_times[travel_time > max_trip_duration, travel_time := NA_integer_]
+    frontier[travel_time > max_trip_duration, travel_time := NA_integer_]
   }
 
-  if (!verbose & progress) { cat(" DONE!\n") }
+  if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
-  return(travel_times)
+  return(frontier)
 }
