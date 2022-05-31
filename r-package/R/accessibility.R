@@ -243,9 +243,13 @@ accessibility <- function(r5r_core,
   )
 
   if (!verbose & progress) cat("Preparing final output...")
+
   accessibility <- java_to_dt(accessibility)
+
+  if (decay_function == "fixed_exponential") accessibility[, cutoff := NULL]
+
   if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
-  return(accessibility)
+  return(accessibility[])
 }
