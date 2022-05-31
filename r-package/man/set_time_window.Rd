@@ -20,6 +20,7 @@ Sets the time window to be used by R5.
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_cutoffs}()},
 \code{\link{set_fare_structure}()},
 \code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},

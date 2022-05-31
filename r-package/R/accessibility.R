@@ -203,11 +203,7 @@ accessibility <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_output_dir(r5r_core, output_dir)
-
-  # cutoffs
-  checkmate::assert_numeric(cutoffs)
-  cutoffs <- as.integer(cutoffs)
-  r5r_core$setCutoffs(cutoffs)
+  set_cutoffs(r5r_core, cutoffs, decay_function)
 
   # call r5r_core method and process results ------------------------------
 

@@ -325,3 +325,54 @@ set_output_dir <- function(r5r_core, output_dir) {
 
   return(invisible(TRUE))
 }
+
+
+#' Set cutoffs
+#'
+#' Sets the cutoffs used when calculating accessibility.
+#'
+#' @template r5r_core
+#' @param cutoffs A numeric vector.
+#' @param decay_function A string, the name of the decay function.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
+  checkmate::assert_numeric(
+    cutoffs,
+    min.len = 1,
+    max.len = 12,
+    any.missing = FALSE,
+    finite = TRUE,
+    null.ok = TRUE
+  )
+
+  non_null_cutoffs <- c("step", "exponential", "linear", "logistic")
+  if (!is.null(cutoffs) & decay_function == "fixed_exponential") {
+    stop(
+      "Assertion on cutoffs failed: must be NULL when decay_function ",
+      "is ", decay_function, "."
+    )
+  } else if (is.null(cutoffs) & decay_function %in% non_null_cutoffs) {
+    stop(
+      "Assertion on cutoffs failed: must not be NULL when decay_function ",
+      "is ", decay_function, "."
+    )
+  }
+
+  # java does not accept NULL values, so if cutoffs is NULL we assign a
+  # placeholder number to it (it's ignored in R5 anyway)
+
+  if (is.null(cutoffs)) {
+    cutoffs <- 0L
+  } else {
+    cutoffs <- as.integer(cutoffs)
+  }
+
+  r5r_core$setCutoffs(cutoffs)
+
+  return(invisible(TRUE))
+}

@@ -26,6 +26,7 @@ accessibility functions when fares are not to be calculated.
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_cutoffs}()},
 \code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},

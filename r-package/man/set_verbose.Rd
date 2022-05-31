@@ -21,6 +21,7 @@ that R5 error messages are still reported even when \code{verbose} is \code{FALS
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_cutoffs}()},
 \code{\link{set_fare_structure}()},
 \code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},
