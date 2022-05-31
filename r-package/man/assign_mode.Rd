@@ -25,6 +25,7 @@ Selects the transport modes used in the routing functions.
 }
 \seealso{
 Other assigning functions: 
+\code{\link{assign_decay_function}()},
 \code{\link{assign_departure}()},
 \code{\link{assign_max_street_time}()},
 \code{\link{assign_max_trip_duration}()},

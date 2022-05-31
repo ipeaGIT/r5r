@@ -20,7 +20,6 @@ Checks if there is internet connection to Ipea server to download r5r data.
 \seealso{
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
-\code{\link{assert_decay_function}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{get_all_od_combinations}()},
 \code{\link{set_suboptimal_minutes}()},

@@ -15,8 +15,8 @@ accessibility(
   time_window = 1L,
   percentiles = 50L,
   decay_function = "step",
-  cutoffs = 30L,
-  decay_value = 1,
+  cutoffs = NULL,
+  decay_value = NULL,
   fare_structure = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
@@ -96,7 +96,7 @@ in the \code{logistic} and \code{linear} functions, and the half-life in the
 \code{exponential} function. It has no effect when using the
 \code{fixed_exponential} function.}
 
-\item{decay_value}{A numeric. Extra parameter to be passed to the selected
+\item{decay_value}{A number. Extra parameter to be passed to the selected
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 

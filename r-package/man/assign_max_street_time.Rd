@@ -26,6 +26,7 @@ Checks the time duration and speed inputs and converts them to distance.
 }
 \seealso{
 Other assigning functions: 
+\code{\link{assign_decay_function}()},
 \code{\link{assign_departure}()},
 \code{\link{assign_max_trip_duration}()},
 \code{\link{assign_mode}()},

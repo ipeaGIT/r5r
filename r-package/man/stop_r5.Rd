@@ -30,7 +30,6 @@ stop_r5(r5r_core)
 \seealso{
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
-\code{\link{assert_decay_function}()},
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{get_all_od_combinations}()},

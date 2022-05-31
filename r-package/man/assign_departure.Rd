@@ -18,6 +18,7 @@ Check and convert POSIXct objects to strings
 }
 \seealso{
 Other assigning functions: 
+\code{\link{assign_decay_function}()},
 \code{\link{assign_max_street_time}()},
 \code{\link{assign_max_trip_duration}()},
 \code{\link{assign_mode}()},

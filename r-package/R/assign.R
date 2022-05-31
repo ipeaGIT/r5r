@@ -288,3 +288,79 @@ assign_opportunities <- function(destinations, opportunities_colnames) {
 
   return(opportunities_data)
 }
+
+
+#' Assign decay function and parameter values
+#'
+#' Checks and assigns decay function and values.
+#'
+#' @param decay_function A string, the name of the decay function.
+#' @param decay_value A number, the value of decay parameter.
+#'
+#' @return A `list` with the validated decay function and parameter value.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_decay_function <- function(decay_function, decay_value) {
+  all_functions  <- c(
+    "step",
+    "exponential",
+    "fixed_exponential",
+    "linear",
+    "logistic"
+  )
+  checkmate::assert(
+    checkmate::check_string(decay_function),
+    checkmate::check_names(decay_function, subset.of = all_functions),
+    combine = "and"
+  )
+  checkmate::assert_number(decay_value, finite = TRUE, null.ok = TRUE)
+
+  non_null_decay <- c("fixed_exponential", "linear", "logistic")
+  if (!is.null(decay_value) & decay_function %in% c("step", "exponential")) {
+    stop(
+      "Assertion on decay_value failed: must be NULL when decay_function ",
+      "is ", decay_function, "."
+    )
+  } else if (is.null(decay_value) & decay_function %in% non_null_decay) {
+    stop(
+      "Assertion on decay_value failed: must not be NULL when decay_function ",
+      "is ", decay_function, "."
+    )
+  }
+
+  if (decay_function == "fixed_exponential") {
+    if (decay_value <= 0 | decay_value >= 1) {
+      stop(
+        "Assertion on decay_value failed: must be a number between 0 and 1 ",
+        "(exclusive) when decay_function is fixed_exponential."
+      )
+    }
+  }
+
+  if (decay_function %in% c("logistic", "linear")) {
+    if (decay_value < 1) {
+      stop(
+        "Assertion on decay_value failed: must be a number greater than or ",
+        "equal to 1 when decay_function is ",
+        decay_function, "."
+      )
+    }
+  }
+
+  decay_function <- toupper(decay_function)
+
+  # java does not accept NULL values, so if decay_value is NULL we assign a
+  # placeholder number to it (it's ignored in R5 anyway)
+
+  if (is.null(decay_value)) {
+    decay_value <- 0
+  } else {
+    decay_value <- as.double(decay_value)
+  }
+
+  decay_list <- list("fun" = decay_function, "value" = decay_value)
+
+  return(decay_list)
+}

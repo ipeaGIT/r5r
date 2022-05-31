@@ -20,7 +20,6 @@ Get all possible combinations of origin-destination pairs
 \seealso{
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
-\code{\link{assert_decay_function}()},
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{set_suboptimal_minutes}()},
