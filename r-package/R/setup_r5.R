@@ -14,8 +14,6 @@
 #' @template verbose
 #' @param data_path A string pointing to the directory where data inputs are
 #' stored and where the built `network.dat` will be saved.
-#' @param version A string. The version of `R5` to be used. Defaults to the
-#' latest version.
 #' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
 #' temporary directory. Defaults to `FALSE`.
 #' @param elevation A string. The name of the impedance function to be used to
@@ -53,11 +51,13 @@
 #' r5r_core <- setup_r5(data_path)
 #' @export
 setup_r5 <- function(data_path,
-                     version = "6.7.0",
                      verbose = FALSE,
                      temp_dir = FALSE,
                      elevation = "TOBLER",
                      overwrite = FALSE) {
+
+  # R5 version
+  version = "6.7.0"
 
   # check inputs ------------------------------------------------------------
 

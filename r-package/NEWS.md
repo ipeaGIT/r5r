@@ -11,8 +11,7 @@
 - Improved documentation of the `percentiles` parameter in `accessibility()` and `travel_time_matrix()`, clarifying these function only accepts up to 5 values. Closes [#246](https://github.com/ipeaGIT/r5r/issues/246).
 - The accessibility estimates from `accessibility()` are now of returned as doubles / class `numeric`, except when using a `step` decay function. Closes [#235](https://github.com/ipeaGIT/r5r/issues/235).
 - Package documentation has been extensively updated and expanded.
-
-
+- Function `setup_r5()` no longer has a `version` parameter.
 
 
 
