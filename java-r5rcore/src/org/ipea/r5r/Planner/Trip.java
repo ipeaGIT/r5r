@@ -15,6 +15,7 @@ import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.Logger;
@@ -109,8 +110,7 @@ public class Trip {
         return trip;
     }
 
-    public Trip(Map<LegMode, StreetRouter> accessRouter, Map<LegMode, StreetRouter> egressRouter,
-                McRaptorSuboptimalPathProfileRouter.McRaptorState state,
+    public Trip(McRaptorSuboptimalPathProfileRouter.McRaptorState state,
                 int departureTime, TransportNetwork network, ProfileRequest request) {
         this.departureTime = departureTime;
         this.totalDurationSeconds = state.time - departureTime;
@@ -121,11 +121,6 @@ public class Trip {
         try {
             loadTransitLegs(state, network, request);
             Collections.reverse(legs);
-
-            // add access and egress legs
-//            addAccessPath(accessRouter, network, request);
-//            addEgressPath(egressRouter, network, request);
-
         } catch (Exception e) {
             LOG.error("error loading legs");
             e.printStackTrace();
@@ -135,10 +130,19 @@ public class Trip {
     public void augment(Map<LegMode, StreetRouter> accessRouter, Map<LegMode, StreetRouter> egressRouter,
                         TransportNetwork network, ProfileRequest request) {
 
+        Map<Integer, StreetSegment> accessPaths = new HashMap<>();
+        Map<Integer, StreetSegment> egressPaths = new HashMap<>();
+        MultiKeyMap<Integer, StreetSegment> transferPaths = new MultiKeyMap<>();
+
+
         if (!isDirect) {
             // add access and egress legs
-            addAccessPath(accessRouter, network, request);
-            addEgressPath(egressRouter, network, request);
+            addAccessPath(accessRouter, accessPaths, network, request);
+            addEgressPath(egressRouter, egressPaths, network, request);
+
+            for (TripLeg leg : legs) {
+                leg.augmentTransitLeg(transferPaths, network, request);
+            }
 //        addTransferPath();
         }
     }
@@ -168,6 +172,8 @@ public class Trip {
                                 new Coordinate(originStopCoord.getX() / VertexStore.FIXED_FACTOR, originStopCoord.getY() / VertexStore.FIXED_FACTOR),
                                 new Coordinate(destStopCoord.getX() / VertexStore.FIXED_FACTOR, destStopCoord.getY() / VertexStore.FIXED_FACTOR),
                         });
+
+
 
                         //// FIND STREET PATH BETWEEN STOPS
 
@@ -206,9 +212,11 @@ public class Trip {
                     }
 
 
-                    legs.add(TripLeg.newTransferLeg(StreetMode.WALK.toString(),
-                            destTime - originTime, fare, geom)
-                    );
+                    TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom);
+
+                    leg.setODStops(originStopIndex, destStopIndex);
+
+                    legs.add(leg);
 
                 } else {
                     TripPattern pattern = network.transitLayer.tripPatterns.get(state.pattern);
@@ -216,20 +224,24 @@ public class Trip {
                     int boardStopIndex = pattern.stops[state.boardStopPosition];
                     int alightStopIndex = pattern.stops[state.alightStopPosition];
 
-                    List<Coordinate> coords = new ArrayList<>();
-                    List<LineString> hops = pattern.getHopGeometries(network.transitLayer);
-                    for (int i = state.boardStopPosition; i < state.alightStopPosition; i++) { // hop i is from stop i to i + 1, don't include last stop index
-                        LineString hop = hops.get(i);
-                        coords.addAll(Arrays.asList(hop.getCoordinates()));
-                    }
-                    LineString shape = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
+//                    List<Coordinate> coords = new ArrayList<>();
+//                    List<LineString> hops = pattern.getHopGeometries(network.transitLayer);
+//                    for (int i = state.boardStopPosition; i < state.alightStopPosition; i++) { // hop i is from stop i to i + 1, don't include last stop index
+//                        LineString hop = hops.get(i);
+//                        coords.addAll(Arrays.asList(hop.getCoordinates()));
+//                    }
+//                    LineString shape = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
 
                     RouteInfo route = network.transitLayer.routes.get(pattern.routeIndex);
                     String mode = TransitLayer.getTransitModes(route.route_type).toString();
 
                     int fare = state.fare != null ? state.fare.cumulativeFarePaid : 0;
-                    legs.add(TripLeg.newTransitLeg(mode, state.time - state.boardTime,
-                            fare, 0, boardStopIndex, alightStopIndex, route.route_id, shape));
+                    TripLeg leg = TripLeg.newTransitLeg(mode, state.time - state.boardTime,
+                            fare, 0, boardStopIndex, alightStopIndex, route.route_id);
+
+                    leg.setPatternData(pattern, state.boardStopPosition, state.alightStopPosition);
+
+                    legs.add(leg);
                 }
 
             }
@@ -237,7 +249,8 @@ public class Trip {
         }
     }
 
-    private void addAccessPath(Map<LegMode, StreetRouter> accessRouter, TransportNetwork network, ProfileRequest request) {
+    private void addAccessPath(Map<LegMode, StreetRouter> accessRouter, Map<Integer, StreetSegment> accessPaths,
+                               TransportNetwork network, ProfileRequest request) {
         TripLeg leg = legs.get(0);
 
         int startStopIndex = leg.getBoardStop();
@@ -247,35 +260,48 @@ public class Trip {
         //TODO: update this so that each stopIndex and mode pair is changed to streetpath only once
         LegMode accessMode = request.accessModes.iterator().next();
         if (accessMode != null) {
+
+            StreetSegment streetSegment = accessPaths.get(startVertexStopIndex);
+            if (streetSegment == null) {
 //                int accessPathIndex = profileOption.getAccessIndex(accessMode, startVertexStopIndex);
 //                if (accessPathIndex < 0) {
-            //Here accessRouter needs to have this access mode since stopModeAccessMap is filled from accessRouter
-            StreetRouter streetRouter = accessRouter.get(accessMode);
-            //FIXME: Must we really update this on every streetrouter?
-            streetRouter.profileRequest.reverseSearch = false;
-            StreetRouter.State streetState = streetRouter.getStateAtVertex(startVertexStopIndex);
-            if (streetState != null) {
-                StreetPath streetPath;
+                //Here accessRouter needs to have this access mode since stopModeAccessMap is filled from accessRouter
+                StreetRouter streetRouter = accessRouter.get(accessMode);
+                //FIXME: Must we really update this on every streetrouter?
+                streetRouter.profileRequest.reverseSearch = false;
+                StreetRouter.State streetState = streetRouter.getStateAtVertex(startVertexStopIndex);
+                if (streetState != null) {
+                    StreetPath streetPath;
 
-                streetPath = new StreetPath(streetState, network, false);
+                    streetPath = new StreetPath(streetState, network, false);
 
-                StreetSegment streetSegment = new StreetSegment(streetPath, accessMode, network.streetLayer);
+                    streetSegment = new StreetSegment(streetPath, accessMode, network.streetLayer);
 
+                    TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
+                            streetSegment.duration, 0, streetSegment.geometry);
+                    legs.add(0, accessLeg);
+
+                    accessPaths.put(startVertexStopIndex, streetSegment);
+                } else {
+                    LOG.warn("Access: Last state not found for mode:{} stop:{}({})", accessMode, startVertexStopIndex, startStopIndex);
+                }
+            } else {
                 TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
                         streetSegment.duration, 0, streetSegment.geometry);
                 legs.add(0, accessLeg);
+
+                accessPaths.put(startVertexStopIndex, streetSegment);
+            }
 //                        profileOption.addAccess(streetSegment, accessMode, startVertexStopIndex);
                 //This should never happen since stopModeAccessMap is filled from reached stops in accessRouter
-            } else {
-                LOG.warn("Access: Last state not found for mode:{} stop:{}({})", accessMode, startVertexStopIndex, startStopIndex);
-            }
 //                }
         } else {
             LOG.warn("Mode is not in stopModeAccessMap for start stop:{}({})", startVertexStopIndex, startStopIndex);
         }
     }
 
-    private void addEgressPath(Map<LegMode, StreetRouter> egressRouter, TransportNetwork network, ProfileRequest request) {
+    private void addEgressPath(Map<LegMode, StreetRouter> egressRouter, Map<Integer, StreetSegment> egressPaths,
+                               TransportNetwork network, ProfileRequest request) {
         TripLeg leg = legs.get(legs.size() - 1);
 
         int endStopIndex = leg.getAlightStop(); // currentTransitPath.alightStops[currentTransitPath.length-1];
@@ -285,22 +311,31 @@ public class Trip {
         LegMode egressMode = request.egressModes.iterator().next();
         if (egressMode != null) {
             //Here egressRouter needs to have this egress mode since stopModeEgressMap is filled from egressRouter
-            StreetRouter streetRouter = egressRouter.get(egressMode);
-            //FIXME: Must we really update this on every streetrouter?
-            streetRouter.profileRequest.reverseSearch = true;
-            StreetRouter.State streetState = streetRouter.getStateAtVertex(endVertexStopIndex);
-            if (streetState != null) {
-                StreetPath streetPath = new StreetPath(streetState, network, true);
-                StreetSegment streetSegment = new StreetSegment(streetPath, egressMode, network.streetLayer);
+            StreetSegment streetSegment = egressPaths.get(endVertexStopIndex);
+            if (streetSegment == null) {
+                StreetRouter streetRouter = egressRouter.get(egressMode);
+                //FIXME: Must we really update this on every streetrouter?
+                streetRouter.profileRequest.reverseSearch = true;
+                StreetRouter.State streetState = streetRouter.getStateAtVertex(endVertexStopIndex);
+                if (streetState != null) {
+                    StreetPath streetPath = new StreetPath(streetState, network, true);
+                    streetSegment = new StreetSegment(streetPath, egressMode, network.streetLayer);
 //                profileOption.addEgress(streetSegment, egressMode, endVertexStopIndex);
-                //This should never happen since stopModeEgressMap is filled from reached stops in egressRouter
+                    //This should never happen since stopModeEgressMap is filled from reached stops in egressRouter
 
+                    TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
+                            streetSegment.duration, 0, streetSegment.geometry);
+                    legs.add(egressLeg);
+                } else {
+                    LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
+                }
+            } else {
                 TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
                         streetSegment.duration, 0, streetSegment.geometry);
                 legs.add(egressLeg);
-            } else {
-                LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
+                egressPaths.put(endVertexStopIndex, streetSegment);
             }
+
         } else {
             LOG.warn("Mode is not in stopModeEgressMap for END stop:{}({})", endVertexStopIndex, endStopIndex);
         }

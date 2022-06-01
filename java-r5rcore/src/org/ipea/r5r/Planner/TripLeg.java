@@ -1,11 +1,29 @@
 package org.ipea.r5r.Planner;
 
+import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.StreetSegment;
+import com.conveyal.r5.common.GeometryUtils;
+import com.conveyal.r5.profile.ProfileRequest;
+import com.conveyal.r5.profile.StreetMode;
+import com.conveyal.r5.profile.StreetPath;
+import com.conveyal.r5.streets.StreetRouter;
+import com.conveyal.r5.streets.VertexStore;
+import com.conveyal.r5.transit.TransportNetwork;
+import com.conveyal.r5.transit.TripPattern;
+import org.apache.commons.collections4.map.MultiKeyMap;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.conveyal.r5.transit.TransitLayer.TRANSFER_DISTANCE_LIMIT_METERS;
 
 public class TripLeg {
     private String mode;
     private boolean isTransfer = false;
+    private boolean isTransit = false;
 
     private int legDurationSeconds;
     private int legDistance;
@@ -13,6 +31,24 @@ public class TripLeg {
 
     private int boardStop;
     private int alightStop;
+
+    private int fromStop;
+    private int toStop;
+
+    private int boardStopPosition;
+    private int alightStopPosition;
+    private TripPattern pattern;
+
+    public void setPatternData(TripPattern pattern, int boardStopPosition, int alightStopPosition) {
+        this.pattern = pattern;
+        this.boardStopPosition = boardStopPosition;
+        this.alightStopPosition = alightStopPosition;
+    }
+
+    public void setODStops(int fromStop, int toStop) {
+        this.fromStop = fromStop;
+        this.toStop = toStop;
+    }
 
     private int waitTime;
     private String route;
@@ -83,23 +119,88 @@ public class TripLeg {
     }
 
     public static TripLeg newTransitLeg(String mode, int duration, int fare, int waitTime,
-                                        int boardStop, int alightStop, String route,
-                                        LineString geometry) {
+                                        int boardStop, int alightStop, String route) {
         TripLeg newLeg = new TripLeg();
 
         newLeg.mode = mode;
-        newLeg.legDistance = (int) geometry.getLength();
+        newLeg.isTransit = true;
         newLeg.legDurationSeconds = duration;
         newLeg.cumulativeFare = fare;
         newLeg.waitTime = waitTime;
         newLeg.boardStop = boardStop;
         newLeg.alightStop = alightStop;
         newLeg.route = route;
-        newLeg.geometry = geometry;
+
+//        newLeg.legDistance = (int) geometry.getLength();
+//        newLeg.geometry = geometry;
 
         return newLeg;
     }
 
+    public void augmentTransitLeg(MultiKeyMap<Integer, StreetSegment> transferPaths,
+                                  TransportNetwork network, ProfileRequest request) {
+//        TripPattern pattern = network.transitLayer.tripPatterns.get(state.pattern);
+//
+//        int boardStopIndex = pattern.stops[state.boardStopPosition];
+//        int alightStopIndex = pattern.stops[state.alightStopPosition];
+
+        if (isTransit) {
+            List<Coordinate> coords = new ArrayList<>();
+            List<LineString> hops = pattern.getHopGeometries(network.transitLayer);
+            for (int i = boardStopPosition; i < alightStopPosition; i++) { // hop i is from stop i to i + 1, don't include last stop index
+                LineString hop = hops.get(i);
+                coords.addAll(Arrays.asList(hop.getCoordinates()));
+            }
+            geometry = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
+            legDistance = (int) geometry.getLength();
+        } else {
+            // street path between stops
+            if (this.fromStop > 0 & this.toStop > 0) {
+                StreetSegment streetSegment = transferPaths.get(this.fromStop, this.toStop);
+
+                if (streetSegment == null) {
+                    boolean prevReverseSearch = request.reverseSearch;
+                    request.reverseSearch = false;
+
+                    //LOG.info("Filling middle paths");
+                    StreetRouter streetRouter = new StreetRouter(network.streetLayer);
+                    streetRouter.streetMode = StreetMode.WALK;
+                    streetRouter.profileRequest = request;
+                    //TODO: make configurable distanceLimitMeters in middle
+                    streetRouter.distanceLimitMeters = TRANSFER_DISTANCE_LIMIT_METERS;
+
+                    int stopVertexId = network.transitLayer.streetVertexForStop.get(this.fromStop);
+                    streetRouter.setOrigin(stopVertexId);
+
+                    Coordinate destStopCoord = network.transitLayer.getCoordinateForStopFixed(this.toStop);
+                    streetRouter.setDestination(destStopCoord.getY() / VertexStore.FIXED_FACTOR,
+                            destStopCoord.getX() / VertexStore.FIXED_FACTOR);
+
+                    streetRouter.route();
+
+//                stopVertexId = network.transitLayer.streetVertexForStop.get(this.toStop);
+
+                    StreetRouter.State lastState = streetRouter.getState(destStopCoord.getY() / VertexStore.FIXED_FACTOR,
+                            destStopCoord.getX() / VertexStore.FIXED_FACTOR);
+//                StreetRouter.State lastState = streetRouter.getStateAtVertex(stopVertexId); //streetRouter.getState();
+                    if (lastState != null) {
+                        StreetPath streetPath = new StreetPath(lastState, network, false);
+                        streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
+
+                        this.geometry = streetSegment.geometry;
+                        this.legDistance = streetSegment.distance;
+
+                        transferPaths.put(this.fromStop, this.toStop, streetSegment);
+                    }
+
+                    request.reverseSearch = prevReverseSearch;
+                } else {
+                    this.geometry = streetSegment.geometry;
+                    this.legDistance = streetSegment.distance;
+                }
+            }
+        }
+    }
 
 }
 

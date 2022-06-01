@@ -67,7 +67,7 @@ public class TripPlanner {
                 int departureTime = it.key();
 
                 for (McRaptorSuboptimalPathProfileRouter.McRaptorState state : it.value()) {
-                    Trip newTrip = new Trip(accessRouter, egressRouter, state, departureTime, transportNetwork, request);
+                    Trip newTrip = new Trip(state, departureTime, transportNetwork, request);
                     newTrip.setOD(fromId, toId, request);
 
                     if (!trips.containsKey(newTrip.getKey()) ||

@@ -5,7 +5,9 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 
 # load origin/destination points
-points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+# points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv")) %>%
+  dplyr::sample_n(50)
 
 # load fare structure object
 fare_structure_path <- system.file(
@@ -34,7 +36,12 @@ system.time(
                               shortest_path = T)
   )
 
-mapview::mapview(filter(det2, option==4), zcol = "mode")
+mapview::mapview(det2, zcol = "mode")
+mapview::mapview(dplyr::filter(det2, option == 36), zcol = "mode")
+mapview::mapview(dplyr::filter(det2,
+                               from_id == "beira_rio_stadium",
+                               to_id == "bus_central_station",
+                               option == 2), zcol = "mode")
 
 r5r::select_mode(c("WALK", "BICYCLE"), "WALK", style = "dit")
 set_fare_structure(r5r_core, fare_structure)
