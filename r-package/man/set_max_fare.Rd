@@ -20,7 +20,9 @@ Sets the max fare allowed when calculating transit fares.
 }
 \seealso{
 Other setting functions: 
+\code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},
+\code{\link{set_expanded_travel_times}()},
 \code{\link{set_fare_structure}()},
 \code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},

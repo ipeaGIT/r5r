@@ -404,3 +404,47 @@ set_monetary_cutoffs <- function(r5r_core, monetary_cutoffs) {
 
   return(invisible(TRUE))
 }
+
+
+#' Set breakdown
+#'
+#' Sets whether travel time matrices should include detailed trip information or
+#' not.
+#'
+#' @template r5r_core
+#' @param breakdown A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_breakdown <- function(r5r_core, breakdown) {
+  checkmate::assert_logical(breakdown, any.missing = FALSE, len = 1)
+
+  r5r_core$setTravelTimesBreakdown(breakdown)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set expanded travel times
+#'
+#' Sets whether travel time matrices should return results for each minute of
+#' the specified time window.
+#'
+#' @template r5r_core
+#' @param expanded A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_expanded_travel_times <- function(r5r_core, expanded) {
+  checkmate::assert_logical(expanded, any.missing = FALSE, len = 1)
+
+  r5r_core$setExpandedTravelTimes(expanded)
+
+  return(invisible(TRUE))
+}

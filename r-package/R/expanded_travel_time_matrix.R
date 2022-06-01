@@ -144,18 +144,8 @@ expanded_travel_time_matrix <- function(r5r_core,
   set_verbose(r5r_core, verbose)
   set_progress(r5r_core, progress)
   set_output_dir(r5r_core, output_dir)
-
-  # travel times breakdown
-  checkmate::assert_logical(breakdown)
-
-  # expanded travel times and breakdown
-  r5r_core$setExpandedTravelTimes(TRUE)
-  r5r_core$setTravelTimesBreakdown(breakdown)
-
-  on.exit({
-    r5r_core$setExpandedTravelTimes(FALSE)
-    r5r_core$setTravelTimesBreakdown(FALSE)
-  })
+  set_expanded_travel_times(r5r_core, TRUE)
+  set_breakdown(r5r_core, breakdown)
 
   # call r5r_core method and process result -------------------------------
 
