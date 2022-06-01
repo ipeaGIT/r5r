@@ -227,7 +227,14 @@ detailed_itineraries <- function(r5r_core,
     if (!is.data.frame(path_options)) {
       path_options <- data.table::rbindlist(path_options)
     }
+
+    path_options[, geometry := sf::st_as_sfc(geometry)]
+    path_options <- sf::st_sf(path_options, crs = 4326)
+
+    return(path_options)
   }
+
+
 
   # If there is no result, return empty simple feature
   if (nrow(path_options) == 0) {

@@ -2,13 +2,15 @@ package org.ipea.r5r.Process;
 
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.R5.R5ParetoServer;
+import org.ipea.r5r.Planner.Trip;
+import org.ipea.r5r.Planner.TripPlanner;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,11 +30,17 @@ public class FastDetailedItineraryPlanner extends R5Process {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        R5ParetoServer computer = new R5ParetoServer(request, transportNetwork);
-        R5ParetoServer.ParetoReturn travelTimeResults = computer.handle();
+        TripPlanner computer = new TripPlanner(transportNetwork, request);
+        computer.setOD(fromIds[index], toIds[index]);
+        List<Trip> trips = computer.plan();
 
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
-        populateDataFrame(index, travelTimeResults, travelTimesTable);
+        try {
+            populateDataFrame(index, trips, travelTimesTable);
+        } catch (Exception e) {
+            LOG.error("error populating itineraries");
+            e.printStackTrace();
+        }
 
         if (travelTimesTable.nRow() > 0) {
             return travelTimesTable;
@@ -45,10 +53,10 @@ public class FastDetailedItineraryPlanner extends R5Process {
         // not needed in this class
     }
 
-    private void populateDataFrame(int index, R5ParetoServer.ParetoReturn travelTimeResults, RDataFrame travelTimesTable) {
+    private void populateDataFrame(int index, List<Trip> trips, RDataFrame travelTimesTable) {
 
         AtomicInteger tripId = new AtomicInteger(0);
-        travelTimeResults.trips.forEach(trip -> {
+        trips.forEach(trip -> {
             travelTimesTable.append();
 
             travelTimesTable.set("from_id", fromIds[index]);
@@ -60,30 +68,22 @@ public class FastDetailedItineraryPlanner extends R5Process {
             travelTimesTable.set("to_lon", toLons[index]);
 
             travelTimesTable.set("option", tripId.incrementAndGet());
-            travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.departureTime));
-            travelTimesTable.set("total_duration", trip.durationSeconds / 60.0);
-            travelTimesTable.set("total_fare", trip.fare / 100.0);
+            travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
+            travelTimesTable.set("total_duration", trip.getTotalDurationSeconds() / 60.0);
+            travelTimesTable.set("total_fare", trip.getTotalFare() / 100.0);
 
             AtomicInteger legId = new AtomicInteger(0);
-            trip.legs.forEach(leg -> {
+            trip.getLegs().forEach(leg -> {
                 if (legId.get() > 0) travelTimesTable.appendRepeat();
 
                 travelTimesTable.set("segment", legId.incrementAndGet());
-                travelTimesTable.set("mode", leg.getType());
+                travelTimesTable.set("mode", leg.getMode());
+                travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
+                travelTimesTable.set("segment_duration", leg.getLegDurationSeconds() / 60.0);
+                travelTimesTable.set("distance", leg.getGeometry().getLength());
+                travelTimesTable.set("route", leg.getRoute());
 
-                travelTimesTable.set("cumulative_fare", leg.cumulativeFare / 100.0);
-                travelTimesTable.set("segment_duration", (leg.destTime - leg.originTime) / 60.0);
-
-                travelTimesTable.set("distance", leg.geom.getLength());
-
-                if (leg instanceof R5ParetoServer.ParetoTransitLeg) {
-                    travelTimesTable.set("route", ((R5ParetoServer.ParetoTransitLeg) leg).route.route_id);
-                } else {
-                    travelTimesTable.set("route", "");
-                }
-
-
-                if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.geom.toString());
+                if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
             });
         });
     }

@@ -286,7 +286,6 @@ public class R5RCore {
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
                                                                             boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
-
         if (Utils.detailedItinerariesV2) {
             // call regular detailed itineraries, based on PointToPointQuery
             FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);

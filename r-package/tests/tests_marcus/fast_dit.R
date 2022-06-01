@@ -22,20 +22,28 @@ r5r_core$setDetailedItinerariesV2(TRUE)
 r5r_core$setDetailedItinerariesV2(FALSE)
 
 system.time(
-  det <- detailed_itineraries(r5r_core,
-                              origins = points[10,],
-                              destinations = points[12,],
+  det2 <- detailed_itineraries(r5r_core,
+                              origins = points,
+                              destinations = points,
                               mode = c("WALK", "TRANSIT"),
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
-                              max_trip_duration = 60,
-                              shortest_path = FALSE)
+                              max_trip_duration = 120,
+                              all_to_all = T,
+                              progress = T,
+                              shortest_path = T)
   )
 
-mapview::mapview(det, zcol = "option")
+mapview::mapview(filter(det2, option==4), zcol = "mode")
 
-
+r5r::select_mode(c("WALK", "BICYCLE"), "WALK", style = "dit")
 set_fare_structure(r5r_core, fare_structure)
 r5r_core$setMaxFare(rJava::.jfloat(10.0))
 
 r5r_core$dropFareCalculator()
+
+library("tidyverse")
+
+saveRDS(det, "det_v2.rds")
+saveRDS(det2, "det_v1.rds")
+
