@@ -123,16 +123,27 @@ public class Trip {
             Collections.reverse(legs);
 
             // add access and egress legs
-            addAccessPath(accessRouter, network, request);
-            addEgressPath(egressRouter, network, request);
+//            addAccessPath(accessRouter, network, request);
+//            addEgressPath(egressRouter, network, request);
 
         } catch (Exception e) {
             LOG.error("error loading legs");
             e.printStackTrace();
         }
-
-
     }
+
+    public void augment(Map<LegMode, StreetRouter> accessRouter, Map<LegMode, StreetRouter> egressRouter,
+                        TransportNetwork network, ProfileRequest request) {
+
+        if (!isDirect) {
+            // add access and egress legs
+            addAccessPath(accessRouter, network, request);
+            addEgressPath(egressRouter, network, request);
+//        addTransferPath();
+        }
+    }
+
+
 
     private void loadTransitLegs(McRaptorSuboptimalPathProfileRouter.McRaptorState state,
                                  TransportNetwork network, ProfileRequest request) {

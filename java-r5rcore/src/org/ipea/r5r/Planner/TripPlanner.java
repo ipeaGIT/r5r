@@ -76,6 +76,10 @@ public class TripPlanner {
                     }
                 }
             }
+
+            for (Trip trip : trips.values()) {
+                trip.augment(accessRouter, egressRouter, transportNetwork, request);
+            }
         }
 
         return new ArrayList<>(trips.values());
