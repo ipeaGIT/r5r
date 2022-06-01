@@ -146,12 +146,13 @@ GTFS feeds contain a <code>frequencies.txt</code> table. Please read the time wi
 vignette for more details on its usage:
 <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 <dt>breakdown</dt>
-<dd><p>A logical. If <code>FALSE</code> (the default), the function returns a
-simple output that lists the total time between each pair in each minute of
-the specified time window. If <code>TRUE</code>, the output breaks down the trip
-information, showing the routes used to complete each trip and their total
-access, waiting, in-vehicle and transfer time. Please note that setting this
-parameter to <code>TRUE</code> makes the function significantly slower.</p></dd>
+<dd><p>A logical. Whether to include detailed information about
+each trip in the output. If <code>FALSE</code> (the default), the output lists the
+total time between each origin-destination pair and the routes used to
+complete the trip for each minute of the specified time window. If <code>TRUE</code>,
+the output includes the total access, waiting, in-vehicle and transfer
+time of each trip. Please note that setting this parameter to <code>TRUE</code> makes
+the function significantly slower.</p></dd>
 <dt>max_walk_dist</dt>
 <dd><p>An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -228,11 +229,19 @@ memory.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>data.table</code> with travel time estimates (in minutes) between
-origin and destination pairs for each minute of the specified time window. A
-pair is absent from the final output if no trips could be completed in any
-of the minutes of the time window. If <code>output_dir</code> is not <code>NULL</code>, the
-function returns the path specified in that parameter, in which the <code>.csv</code>files containing the results are saved.</p>
+    <p>A <code>data.table</code> with travel time estimates (in minutes) and the
+routes used in each trip between origin and destination pairs, for each
+minute of the specified time window. Each set of origin, destination and
+departure minute can appear up to N times, where N is the number of Monte
+Carlo draws specified in the function arguments (please note that this
+only applies when the GTFS feeds that describe the transit network include
+a frequencies table, otherwise only a single draw is performed). A pair is
+completely absent from the final output if no trips could be completed in
+any of the minutes of the time window. If for a single pair trips could be
+completed in some of the minutes of the time window, but not for all of
+them, the minutes in which trips couldn't be completed will have <code>NA</code>travel time and routes used. If <code>output_dir</code> is not <code>NULL</code>, the function
+returns the path specified in that parameter, in which the <code>.csv</code> files
+containing the results are saved.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>
@@ -329,18 +338,22 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span class="co"># load origin/destination points</span></span>
 <span class="r-in"><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
-<span class="r-in">                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"13-05-2019 14:00:00"</span>,</span>
+<span class="r-in">  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># by default only returns the total time between each pair in each minute of</span></span>
 <span class="r-in"><span class="co"># the specified time window</span></span>
-<span class="r-in"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">expanded_travel_time_matrix</span><span class="op">(</span><span class="va">r5r_core</span>,</span>
-<span class="r-in">                                    origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">                                    destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">                                    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
-<span class="r-in">                                    time_window <span class="op">=</span> <span class="fl">20</span>,</span>
-<span class="r-in">                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">                                    max_trip_duration <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">expanded_travel_time_matrix</span><span class="op">(</span></span>
+<span class="r-in">  <span class="va">r5r_core</span>,</span>
+<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span class="r-in">  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
+<span class="r-in">  time_window <span class="op">=</span> <span class="fl">20</span>,</span>
+<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">60</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id         to_id departure_time draw_number routes total_time</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market public_market       14:00:00           1 [WALK]          0</span>
@@ -351,14 +364,16 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6: public_market public_market       14:05:00           1 [WALK]          0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># when breakdown = TRUE the output contains much more information</span></span>
-<span class="r-in"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">expanded_travel_time_matrix</span><span class="op">(</span><span class="va">r5r_core</span>,</span>
-<span class="r-in">                                    origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">                                    destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">                                    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
-<span class="r-in">                                    time_window <span class="op">=</span> <span class="fl">20</span>,</span>
-<span class="r-in">                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">                                    max_trip_duration <span class="op">=</span> <span class="fl">60</span>,</span>
-<span class="r-in">                                    breakdown <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">expanded_travel_time_matrix</span><span class="op">(</span></span>
+<span class="r-in">  <span class="va">r5r_core</span>,</span>
+<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span class="r-in">  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
+<span class="r-in">  time_window <span class="op">=</span> <span class="fl">20</span>,</span>
+<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">60</span>,</span>
+<span class="r-in">  breakdown <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from_id         to_id departure_time draw_number access_time wait_time</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: public_market public_market       14:00:00           1           0         0</span>

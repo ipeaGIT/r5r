@@ -49,6 +49,9 @@
     <loc>/reference/assert_breakdown_stat.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_fare_structure.html</loc>
+  </url>
+  <url>
     <loc>/reference/assign_decay_function.html</loc>
   </url>
   <url>
@@ -109,7 +112,13 @@
     <loc>/reference/read_fare_structure.html</loc>
   </url>
   <url>
+    <loc>/reference/set_breakdown.html</loc>
+  </url>
+  <url>
     <loc>/reference/set_cutoffs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_expanded_travel_times.html</loc>
   </url>
   <url>
     <loc>/reference/set_fare_structure.html</loc>
