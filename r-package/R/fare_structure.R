@@ -320,3 +320,142 @@ read_fare_structure <- function(file_path, encoding = "UTF-8") {
 }
 
 
+#' Assert fare structure
+#'
+#' Asserts whether the specified fare structure object complies with the
+#' structure set in [setup_fare_structure()].
+#'
+#' @template fare_structure
+#'
+#' @return Throws and error upon failure and invisibly returns `TRUE` on
+#'   success.
+#'
+#' @keywords internal
+assert_fare_structure <- function(fare_structure) {
+  # TODO: all GTFS routes must be in fares_per_route
+  checkmate::assert_list(fare_structure, any.missing = FALSE)
+
+  element_names <- c(
+    "max_discounted_transfers",
+    "transfer_time_allowance",
+    "fare_cap",
+    "fares_per_mode",
+    "fares_per_transfer",
+    "fares_per_route",
+    "debug_settings"
+  )
+  checkmate::assert_names(
+    names(fare_structure),
+    type = "unique",
+    must.include = element_names,
+    subset.of = element_names
+  )
+
+  checkmate::assert_number(fare_structure$max_discounted_transfers, lower = 0)
+  checkmate::assert_number(fare_structure$transfer_time_allowance, lower = 0)
+  checkmate::assert_number(fare_structure$fare_cap, lower = 0)
+
+  checkmate::expect_data_frame(fare_structure$fares_per_mode)
+  checkmate::expect_character(
+    fare_structure$fares_per_mode$mode,
+    any.missing = FALSE,
+    unique = TRUE
+  )
+  checkmate::expect_logical(
+    fare_structure$fares_per_mode$unlimited_transfers,
+    any.missing = FALSE
+  )
+  checkmate::expect_logical(
+    fare_structure$fares_per_mode$allow_same_route_transfer,
+    any.missing = FALSE
+  )
+  checkmate::expect_logical(
+    fare_structure$fares_per_mode$use_route_fare,
+    any.missing = FALSE
+  )
+  checkmate::expect_numeric(
+    fare_structure$fares_per_mode$fare,
+    any.missing = FALSE,
+    lower = 0,
+    finite = TRUE
+  )
+
+  checkmate::expect_data_frame(fare_structure$fares_per_transfer)
+  if (length(names(fare_structure$fares_per_transfer)) > 0) {
+    checkmate::expect_character(
+      fare_structure$fares_per_transfer$first_leg,
+      any.missing = FALSE
+    )
+    checkmate::assert_names(
+      fare_structure$fares_per_transfer$first_leg,
+      subset.of = unique(fare_structure$fares_per_mode$mode)
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_transfer$second_leg,
+      any.missing = FALSE
+    )
+    checkmate::assert_names(
+      fare_structure$fares_per_transfer$second_leg,
+      subset.of = unique(fare_structure$fares_per_mode$mode)
+    )
+    checkmate::expect_numeric(
+      fare_structure$fares_per_transfer$fare,
+      any.missing = FALSE,
+      lower = 0,
+      finite = TRUE
+    )
+  }
+
+  checkmate::expect_data_frame(fare_structure$fares_per_route)
+  checkmate::expect_character(
+    fare_structure$fares_per_route$agency_id,
+    any.missing = FALSE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$agency_name,
+    any.missing = FALSE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$route_id,
+    any.missing = FALSE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$route_short_name,
+    any.missing = FALSE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$route_long_name,
+    any.missing = FALSE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$mode,
+    any.missing = FALSE
+  )
+  checkmate::expect_numeric(
+    fare_structure$fares_per_route$route_fare,
+    any.missing = FALSE,
+    lower = 0,
+    finite = TRUE
+  )
+  checkmate::expect_character(
+    fare_structure$fares_per_route$fare_type,
+    any.missing = FALSE
+  )
+  checkmate::assert_names(
+    fare_structure$fares_per_route$fare_type,
+    subset.of = unique(fare_structure$fares_per_mode$mode)
+  )
+
+  debug_elements <- c("output_file", "trip_info")
+  checkmate::assert_list(fare_structure$debug_settings)
+  checkmate::assert_names(
+    names(fare_structure$debug_settings),
+    type = "unique",
+    must.include = debug_elements,
+    subset.of = debug_elements
+  )
+  checkmate::assert_string(fare_structure$debug_settings$output_file)
+  checkmate::assert_string(fare_structure$debug_settings$trip_info)
+
+  return(invisible(TRUE))
+}

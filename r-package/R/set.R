@@ -251,10 +251,16 @@ set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
 #' @keywords internal
 set_fare_structure <- function(r5r_core, fare_structure) {
   if (!is.null(fare_structure)) {
-    # TODO: assert_fare_structure
+    assert_fare_structure(fare_structure)
 
     if (fare_structure$fare_cap == Inf) {
       fare_structure$fare_cap <- -1
+    }
+    if (fare_structure$transfer_time_allowance == Inf) {
+      fare_structure$transfer_time_allowance <- -1
+    }
+    if (fare_structure$max_discounted_transfers == Inf) {
+      fare_structure$max_discounted_transfers <- -1
     }
 
     fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
