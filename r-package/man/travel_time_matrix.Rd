@@ -67,14 +67,15 @@ passed, the output contains an additional column for each percentile
 specifying the percentile travel time estimate. each estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
-'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.}
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
 
-\item{max_fare}{A numeric. The maximum value that trips can cost when
+\item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
@@ -276,19 +277,6 @@ ttm <- travel_time_matrix(
   mode = c("WALK", "TRANSIT"),
   departure_datetime = departure_datetime,
   time_window = 30,
-  max_trip_duration = 60
-)
-head(ttm)
-
-# selecting different percentiles
-ttm <- travel_time_matrix(
-  r5r_core,
-  origins = points,
-  destinations = points,
-  mode = c("WALK", "TRANSIT"),
-  departure_datetime = departure_datetime,
-  time_window = 30,
-  percentiles = c(25, 50, 75),
   max_trip_duration = 60
 )
 head(ttm)

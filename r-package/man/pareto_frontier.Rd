@@ -61,13 +61,14 @@ vignette for more details on its usage:
 percentile to use when returning travel time estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates only (e.g. if the 25th percentile is specified, and the output
-between A and B is 15 minutes and 10 dollars, 25\% of all trips cheaper than
-10 dollars taken between these points are shorter than 15 minutes). Defaults
-to 50, returning the median travel time. If a vector with length bigger than
-1 is passed, the output contains an additional column that specifies the
-percentile of each travel time and monetary cost combination. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+between A and B is 15 minutes and 10 dollars, 25\% of all trips cheaper
+than 10 dollars taken between these points are shorter than 15 minutes).
+Defaults to 50, returning the median travel time. If a vector with length
+bigger than 1 is passed, the output contains an additional column that
+specifies the percentile of each travel time and monetary cost
+combination. Due to upstream restrictions, only 5 percentiles can be
+specified at a time. For more details, please see R5 documentation at
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -101,21 +102,22 @@ Defaults to 120 minutes (2 hours).}
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.}
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
-should be considered when calculating the Pareto frontier. Most of the time
-you'll want this parameter to be the combination of all possible fares
-listed in you \code{fare_structure}. Choosing a coarse distribution of
+should be considered when calculating the Pareto frontier. Most of the
+time you'll want this parameter to be the combination of all possible
+fares listed in you \code{fare_structure}. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
-and the other costing $4, and you set this parameter to \code{5}, the output will
-tell you the fastest trips that costed up to $5, but you won't be able to
-identify which route was used to complete such trips. In this case, it would
-be more beneficial to set the parameter as \code{c(3, 4)} (you could also specify
-combinations of such values, such as 6, 7, 8 and so on, because a transit
-user could hypothetically benefit from making transfers between the
-available routes).}
+and the other costing $4, and you set this parameter to \code{5}, the output
+will tell you the fastest trips that costed up to $5, but you won't be
+able to identify which route was used to complete such trips. In this
+case, it would be more beneficial to set the parameter as \code{c(3, 4)} (you
+could also specify combinations of such values, such as 6, 7, 8 and so on,
+because a transit user could hypothetically benefit from making transfers
+between the available routes).}
 
 \item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.}
@@ -162,14 +164,15 @@ because writing the results to disk prevents \code{r5r} from storing them in
 memory.}
 }
 \value{
-A \code{data.table} with the travel time and monetary cost Pareto
-frontier between the specified origins and destinations. An additional
-column identifying the travel time percentile is present if more than one
-value was passed to \code{percentiles}. Origin and destination pairs whose trips
+A \code{data.table} with the travel time and monetary cost Pareto frontier
+between the specified origins and destinations. An additional column
+identifying the travel time percentile is present if more than one value
+was passed to \code{percentiles}. Origin and destination pairs whose trips
 couldn't be completed within the maximum travel time using less money than
 the specified monetary cutoffs are not returned in the \code{data.table}. If
-\code{output_dir} is not \code{NULL}, the function returns the path specified in that
-parameter, in which the \code{.csv} files containing the results are saved.
+\code{output_dir} is not \code{NULL}, the function returns the path specified in
+that parameter, in which the \code{.csv} files containing the results are
+saved.
 }
 \description{
 Fast computation of travel time and monetary cost Pareto frontier between

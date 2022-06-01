@@ -26,58 +26,58 @@ test_that("set_progress adequately raises warnings and errors", {
 
 })
 
-# set_max_street_time -----------------------------------------------------
+# assign_max_street_time -----------------------------------------------------
 
 
-test_that("set_max_street_time adequately raises warnings and errors", {
+test_that("assign_max_street_time adequately raises warnings and errors", {
 
-  expect_error(set_max_walk_distance("1000", 3.6, 60L))
-  expect_error(set_max_walk_distance(1000, "3.6", 60L))
-  # expect_error(set_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
-
-})
-
-test_that("set_max_street_time output is coherent", {
-
-  expect_equal(set_max_street_time(Inf, 3.6, 60L), 60L)
-  expect_equal(set_max_street_time(1800, 3.6, 60L), 30L)
-  expect_equal(set_max_street_time(7200, 3.6, 60L), 60L)
+  expect_error(assign_max_walk_distance("1000", 3.6, 60L, "walk"))
+  expect_error(assign_max_walk_distance(1000, "3.6", 60L, "walk"))
+  # expect_error(assign_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
 
 })
 
+test_that("assign_max_street_time output is coherent", {
 
-# select_mode -------------------------------------------------------------
-
-
-test_that("select_mode adequately raises warnings and errors", {
-
-  expect_error(select_mode("POGOBALL"))
+  expect_equal(assign_max_street_time(Inf, 3.6, 60L, "walk"), 60L)
+  expect_equal(assign_max_street_time(1800, 3.6, 60L, "walk"), 30L)
+  expect_equal(assign_max_street_time(7200, 3.6, 60L, "walk"), 60L)
 
 })
 
 
-# posix_to_string ---------------------------------------------------------
+# assign_mode -------------------------------------------------------------
 
 
-test_that("posix_to_string adequately raises warnings and errors", {
+test_that("assign_mode adequately raises warnings and errors", {
+
+  expect_error(assign_mode("POGOBALL"))
+
+})
+
+
+# assign_departure ---------------------------------------------------------
+
+
+test_that("assign_departure adequately raises warnings and errors", {
 
   datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-  expect_error(posix_to_string(as.character(datetime)))
-  expect_error(posix_to_string(as.integer(datetime)))
+  expect_error(assign_departure(as.character(datetime)))
+  expect_error(assign_departure(as.integer(datetime)))
 
 })
 
-test_that("posix_to_string output is coherent", {
+test_that("assign_departure output is coherent", {
 
   datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-  datetime <- posix_to_string(datetime)
+  datetime <- assign_departure(datetime)
 
   expect_equal(datetime$date, "2019-03-13")
   expect_equal(datetime$time, "14:00:00")
 
   datetime <- as.POSIXct("13-03-1919 2:00:00 pm", format = "%d-%m-%Y %I:%M:%S %p")
-  datetime <- posix_to_string(datetime)
+  datetime <- assign_departure(datetime)
 
   expect_equal(datetime$date, "1919-03-13")
   expect_equal(datetime$time, "14:00:00")
@@ -85,11 +85,11 @@ test_that("posix_to_string output is coherent", {
 })
 
 
-# assert_points_input -----------------------------------------------------
+# assign_points_input -----------------------------------------------------
 
 sf_points <- sf::st_as_sf(points, coords = c("lon", "lat"), crs = 4326)
 
-test_that("assert_points_input adequately raises warnings and errors", {
+test_that("assign_points_input adequately raises warnings and errors", {
 
   # object class
 
@@ -102,9 +102,9 @@ test_that("assert_points_input adequately raises warnings and errors", {
     names(points)
   )
 
-  expect_error(assert_points_input(as.matrix(points), "points"))
-  expect_error(assert_points_input(list_points, "points"))
-  expect_error(assert_points_input(multipoint_points, "points"))
+  expect_error(assign_points_input(as.matrix(points), "points"))
+  expect_error(assign_points_input(list_points, "points"))
+  expect_error(assign_points_input(multipoint_points, "points"))
 
   # object columns types
 
@@ -118,20 +118,20 @@ test_that("assert_points_input adequately raises warnings and errors", {
     lon := as.character(lon)
   ]
 
-  expect_warning(assert_points_input(points_numeric_id, "points"))
-  expect_error(assert_points_input(points_char_lat, "points"))
-  expect_error(assert_points_input(points_char_lon, "points"))
+  expect_warning(assign_points_input(points_numeric_id, "points"))
+  expect_error(assign_points_input(points_char_lat, "points"))
+  expect_error(assign_points_input(points_char_lon, "points"))
 
   # object crs
 
   wrong_crs_sf <- sf::st_transform(sf_points, 4674)
-  expect_error(assert_points_input(wrong_crs_sf, "points"))
+  expect_error(assign_points_input(wrong_crs_sf, "points"))
 
 })
 
-test_that("assert_points_input output is coherent", {
-  sf_points_output <- assert_points_input(sf_points, "points")
-  df_points_output <- assert_points_input(points, "points")
+test_that("assign_points_input output is coherent", {
+  sf_points_output <- assign_points_input(sf_points, "points")
+  df_points_output <- assign_points_input(points, "points")
 
   # correct output column types
 
@@ -157,20 +157,20 @@ test_that("assert_points_input output is coherent", {
 
 
 
-# assert_decay_function -----------------------------------------------------
+  # assign_decay_function -----------------------------------------------------
 
-test_that("assert_decay_function adequately raises warnings and errors", {
+  test_that("assign_decay_function adequately raises warnings and errors", {
 
-  expect_error(assert_decay_function(decay_function='STEP', decay_value=NULL))
-  expect_error(assert_decay_function(decay_function='STEP', decay_value='bananas'))
-  expect_error(assert_decay_function(decay_function='bananas', decay_value=4))
-  expect_error(assert_decay_function(decay_function= 444, decay_value=4))
-  expect_error(assert_decay_function(decay_function= 'LOGISTIC', decay_value=0.4))
-})
+    expect_error(assign_decay_function(decay_function='step', decay_value=4))
+    expect_error(assign_decay_function(decay_function='step', decay_value='bananas'))
+    expect_error(assign_decay_function(decay_function='bananas', decay_value=4))
+    expect_error(assign_decay_function(decay_function= 444, decay_value=4))
+    expect_error(assign_decay_function(decay_function= 'logistic', decay_value=0.4))
+  })
 
-test_that("assert_decay_function expected behavior", {
-  expect_equal(class(assert_decay_function(decay_function='STEP', decay_value=4)), 'list')
-})
+  test_that("assign_decay_function expected behavior", {
+    expect_equal(class(assign_decay_function(decay_function='step', decay_value=NULL)), 'list')
+  })
 
 
 

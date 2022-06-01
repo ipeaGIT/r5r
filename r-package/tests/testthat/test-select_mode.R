@@ -1,5 +1,5 @@
 tester <- function(mode = "WALK", mode_egress = "WALK", style = "ttm") {
-  select_mode(mode, mode_egress, style)
+  assign_mode(mode, mode_egress, style)
 }
 
 test_that("expects correct modes", {
