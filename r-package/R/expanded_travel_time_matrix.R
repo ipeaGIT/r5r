@@ -112,57 +112,41 @@ expanded_travel_time_matrix <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
+  # check inputs and set r5r options --------------------------------------
 
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
-  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
-
-  # departure time
-  departure <- assign_departure(departure_datetime)
-
-  # max trip duration
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
-  # max_walking_distance, max_bike_distance, and max_street_time
-  max_walk_time <- assign_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration,
-                                       "walk")
-  max_bike_time <- assign_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration,
-                                       "bike")
-
-  # origins and destinations
-  origins      <- assign_points_input(origins, "origins")
+  origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
+  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
+  departure <- assign_departure(departure_datetime)
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
+  max_walk_time <- assign_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration,
+    "walk"
+  )
+  max_bike_time <- assign_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration,
+    "bike"
+  )
 
-  checkmate::assert_subset("id", names(origins))
-  checkmate::assert_subset("id", names(destinations))
-
-  # time window
-  checkmate::assert_numeric(time_window, lower=1)
-  time_window <- as.integer(time_window)
-
-  # montecarlo draws per minute
-  draws <- time_window * draws_per_minute
-  draws <- as.integer(draws)
+  set_time_window(r5r_core, time_window)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+  set_speed(r5r_core, walk_speed, "walk")
+  set_speed(r5r_core, bike_speed, "bike")
+  set_max_rides(r5r_core, max_rides)
+  set_max_lts(r5r_core, max_lts)
+  set_n_threads(r5r_core, n_threads)
+  set_verbose(r5r_core, verbose)
+  set_progress(r5r_core, progress)
+  set_output_dir(r5r_core, output_dir)
 
   # travel times breakdown
   checkmate::assert_logical(breakdown)
-
-  # set r5r_core options ----------------------------------------------------
-
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-
-  # time window
-  r5r_core$setTimeWindowSize(time_window)
-  r5r_core$setNumberOfMonteCarloDraws(draws)
 
   # expanded travel times and breakdown
   r5r_core$setExpandedTravelTimes(TRUE)
@@ -173,73 +157,57 @@ expanded_travel_time_matrix <- function(r5r_core,
     r5r_core$setTravelTimesBreakdown(FALSE)
   })
 
-  # set bike and walk speed
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
+  # call r5r_core method and process result -------------------------------
 
-  # set max transfers
-  set_max_rides(r5r_core, max_rides)
+  travel_times <- r5r_core$travelTimeMatrix(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration
+  )
 
-  # set max lts (level of traffic stress)
-  set_max_lts(r5r_core, max_lts)
-
-  # set number of threads to be used by r5 and data.table
-  set_n_threads(r5r_core, n_threads)
-
-  # set verbose
-  set_verbose(r5r_core, verbose)
-
-  # set progress
-  set_progress(r5r_core, progress)
-
-  # call r5r_core method ----------------------------------------------------
-
-  travel_times <- r5r_core$travelTimeMatrix(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_walk_time,
-                                            max_bike_time,
-                                            max_trip_duration)
-
-
-  # process results ---------------------------------------------------------
-
-  # convert travel_times from java object to data.table
-  if (!verbose & progress) { cat("Preparing final output...") }
+  if (!verbose & progress) cat("Preparing final output...")
 
   travel_times <- java_to_dt(travel_times)
 
-  # only perform following operations when result is not empty
+  # replace travel-times of non-viable trips with NAs
+  # if breakdown is TRUE, there are more columns in the output
+
   if (nrow(travel_times) > 0) {
-    # replace travel-times of non-viable trips with NAs
-    # if breakdown == TRUE, there are more columns in the output
-    if (breakdown == TRUE) {
-      travel_times[total_time > max_trip_duration,
-                   `:=`(access_time = NA_integer_,
-                        wait_time = NA_integer_,
-                        ride_time = NA_integer_,
-                        transfer_time = NA_integer_,
-                        egress_time = NA_integer_,
-                        routes = NA_character_,
-                        n_rides = NA_integer_,
-                        total_time = NA_integer_)]
+    if (breakdown) {
+      travel_times[
+        total_time > max_trip_duration,
+        `:=`(
+          access_time = NA_integer_,
+          wait_time = NA_integer_,
+          ride_time = NA_integer_,
+          transfer_time = NA_integer_,
+          egress_time = NA_integer_,
+          routes = NA_character_,
+          n_rides = NA_integer_,
+          total_time = NA_integer_
+        )
+      ]
     } else {
-      travel_times[total_time > max_trip_duration,
-                   `:=`(routes = NA_character_,
-                        total_time = NA_integer_)]
+      travel_times[
+        total_time > max_trip_duration,
+        `:=`(routes = NA_character_, total_time = NA_integer_)
+      ]
     }
   }
 
-  if (!verbose & progress) { cat(" DONE!\n") }
+  if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
