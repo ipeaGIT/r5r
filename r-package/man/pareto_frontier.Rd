@@ -44,27 +44,31 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check the \code{calendar.txt} within your GTFS feeds for valid
-dates. Please see details for further information on how datetimes are
-parsed.}
+\item{departure_datetime}{A POSIXct object. Please note that the departure
+time only influences public transport legs. When working with public
+transport networks, please check the \code{calendar.txt} within your GTFS feeds
+for valid dates. Please see details for further information on how
+datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table.}
+GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
+vignette for more details on its usage:
+\code{vignette("time_window", package = "r5r")}}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning travel time estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates only (e.g. if the 25th percentile is specified, and the output
-between A and B is 15 minutes and 10 dollars, 25\% of all trips cheaper than
-10 dollars taken between these points are shorter than 15 minutes). Defaults
-to 50, returning the median travel time. If a vector with length bigger than
-1 is passed, the output contains an additional column that specifies the
-percentile of each travel time and monetary cost combination. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see R5 documentation at 'https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+between A and B is 15 minutes and 10 dollars, 25\% of all trips cheaper
+than 10 dollars taken between these points are shorter than 15 minutes).
+Defaults to 50, returning the median travel time. If a vector with length
+bigger than 1 is passed, the output contains an additional column that
+specifies the percentile of each travel time and monetary cost
+combination. Due to upstream restrictions, only 5 percentiles can be
+specified at a time. For more details, please see R5 documentation at
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -98,21 +102,22 @@ Defaults to 120 minutes (2 hours).}
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.}
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
 
 \item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
-should be considered when calculating the Pareto frontier. Most of the time
-you'll want this parameter to be the combination of all possible fares
-listed in you \code{fare_structure}. Choosing a coarse distribution of
+should be considered when calculating the Pareto frontier. Most of the
+time you'll want this parameter to be the combination of all possible
+fares listed in you \code{fare_structure}. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.
 For example, if you have two different routes in your GTFS, one costing $3
-and the other costing $4, and you set this parameter to \code{5}, the output will
-tell you the fastest trips that costed up to $5, but you won't be able to
-identify which route was used to complete such trips. In this case, it would
-be more beneficial to set the parameter as \code{c(3, 4)} (you could also specify
-combinations of such values, such as 6, 7, 8 and so on, because a transit
-user could hypothetically benefit from making transfers between the
-available routes).}
+and the other costing $4, and you set this parameter to \code{5}, the output
+will tell you the fastest trips that costed up to $5, but you won't be
+able to identify which route was used to complete such trips. In this
+case, it would be more beneficial to set the parameter as \code{c(3, 4)} (you
+could also specify combinations of such values, such as 6, 7, 8 and so on,
+because a transit user could hypothetically benefit from making transfers
+between the available routes).}
 
 \item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.}
@@ -159,14 +164,15 @@ because writing the results to disk prevents \code{r5r} from storing them in
 memory.}
 }
 \value{
-A \code{data.table} with the travel time and monetary cost Pareto
-frontier between the specified origins and destinations. An additional
-column identifying the travel time percentile is present if more than one
-value was passed to \code{percentiles}. Origin and destination pairs whose trips
+A \code{data.table} with the travel time and monetary cost Pareto frontier
+between the specified origins and destinations. An additional column
+identifying the travel time percentile is present if more than one value
+was passed to \code{percentiles}. Origin and destination pairs whose trips
 couldn't be completed within the maximum travel time using less money than
 the specified monetary cutoffs are not returned in the \code{data.table}. If
-\code{output_dir} is not \code{NULL}, the function returns the path specified in that
-parameter, in which the \code{.csv} files containing the results are saved.
+\code{output_dir} is not \code{NULL}, the function returns the path specified in
+that parameter, in which the \code{.csv} files containing the results are
+saved.
 }
 \description{
 Fast computation of travel time and monetary cost Pareto frontier between
@@ -210,10 +216,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -254,7 +260,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759â€“1787. \doi{10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 

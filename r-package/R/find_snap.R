@@ -46,7 +46,7 @@ find_snap <- function(r5r_core, points, mode = "WALK") {
     combine = "and"
   )
 
-  points <- assert_points_input(points, "points")
+  points <- assign_points_input(points, "points")
 
   snap_df <- r5r_core$findSnapPoints(points$id, points$lat, points$lon, mode)
   snap_df <- java_to_dt(snap_df)

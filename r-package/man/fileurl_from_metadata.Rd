@@ -18,20 +18,9 @@ Returns the most recent JAR file url from metadata, depending on the version.
 \seealso{
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
-\code{\link{assert_decay_function}()},
-\code{\link{assert_points_input}()},
 \code{\link{check_connection}()},
 \code{\link{get_all_od_combinations}()},
-\code{\link{posix_to_string}()},
-\code{\link{select_mode}()},
-\code{\link{set_max_lts}()},
-\code{\link{set_max_rides}()},
-\code{\link{set_max_street_time}()},
-\code{\link{set_n_threads}()},
-\code{\link{set_progress}()},
-\code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
-\code{\link{set_verbose}()},
 \code{\link{stop_r5}()}
 }
 \concept{support functions}

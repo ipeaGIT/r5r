@@ -28,9 +28,6 @@
 #' @keywords internal
 "_PACKAGE"
 
-# nocov
-
-## quiets concerns of R CMD check re: the .'s that appear in pipelines
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(
     c(
@@ -76,18 +73,12 @@ if (getRversion() >= "2.15.1") {
       "lon_dest",
       "i.lon",
       "i.lat",
-      "total_time"
+      "total_time",
+      "setting",
+      "cutoff"
     )
   )
 }
-
-# .onLoad = function(lib, pkg) {
-#   # rJava::.jpackage(name = "r5r")
-#
-#   requireNamespace("sf")
-#   requireNamespace("rJava")
-#   requireNamespace("data.table")
-# }
 
 .onAttach <- function(lib, pkg) {
   packageStartupMessage(
@@ -97,4 +88,4 @@ if (getRversion() >= "2.15.1") {
     "You should replace '2G' by the amount of memory you'll require. ",
     "Currently, Java memory is set to ", getOption("java.parameters")
   )
-} # nocov end
+}

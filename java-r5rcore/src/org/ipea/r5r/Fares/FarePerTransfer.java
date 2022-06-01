@@ -9,6 +9,27 @@ public class FarePerTransfer {
     @JsonIgnore
     private int integerFare;
 
+    public int getFirstLegFullIntegerFare() {
+        return firstLegFullIntegerFare;
+    }
+
+    public void setFirstLegFullIntegerFare(int firstLegFullIntegerFare) {
+        this.firstLegFullIntegerFare = firstLegFullIntegerFare;
+    }
+
+    public int getSecondLegFullIntegerFare() {
+        return secondLegFullIntegerFare;
+    }
+
+    public void setSecondLegFullIntegerFare(int secondLegFullIntegerFare) {
+        this.secondLegFullIntegerFare = secondLegFullIntegerFare;
+    }
+
+    @JsonIgnore
+    private int firstLegFullIntegerFare;
+    @JsonIgnore
+    private int secondLegFullIntegerFare;
+
     public FarePerTransfer(String firstLeg, String secondLeg, float fare) {
         this.firstLeg = firstLeg;
         this.secondLeg = secondLeg;

@@ -9,6 +9,7 @@ import com.conveyal.r5.transit.TransitLayer;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import org.ipea.r5r.Process.ParetoItineraryPlanner;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -81,6 +82,9 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             int firstModeIndex = indexTransportMode.get(transfer.getFirstLeg());
             int secondModeIndex = indexTransportMode.get(transfer.getSecondLeg());
 
+            transfer.setFirstLegFullIntegerFare(fareStructure.getFaresPerMode().get(firstModeIndex).getIntegerFare());
+            transfer.setSecondLegFullIntegerFare(fareStructure.getFaresPerMode().get(secondModeIndex).getIntegerFare());
+
             faresPerTransfer[firstModeIndex][secondModeIndex] = transfer;
         }
 
@@ -98,35 +102,43 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     public FareBounds calculateFare(McRaptorSuboptimalPathProfileRouter.McRaptorState state, int maxClockTime) {
         // extract and order relevant rides
         TIntList patterns = new TIntArrayList();
+        TIntList boardTimes = new TIntArrayList();
 
         while (state != null) {
             if (state.pattern > -1) {
                 patterns.add(state.pattern);
+                boardTimes.add(state.boardTime);
             }
             state = state.back;
         }
 
         patterns.reverse();
+        boardTimes.reverse();
 
         // start calculating fare
         int fareForState = 0;
 
         int previousPatternIndex = -1;
         int discountsApplied = 0;
+        int previousBoardTime = 0;
 
-        TIntIterator patternIt = patterns.iterator();
-        int currentPatternIndex;
+        int currentPatternIndex = -1;
+        int currentBoardTime = -1;
 
         // first leg of multimodal trip
-        if (patternIt.hasNext()) {
-            currentPatternIndex = patternIt.next();
+        if (patterns.size() > 0) {
+            currentPatternIndex = patterns.get(0);
+            previousBoardTime = boardTimes.get(0);
+
             fareForState = getFullFareForRoute(currentPatternIndex);
+
             previousPatternIndex = currentPatternIndex;
         }
 
         // subsequent legs
-        while (patternIt.hasNext()) {
-            currentPatternIndex = patternIt.next();
+        for (int ride = 1; ride < patterns.size(); ride ++) {
+            currentPatternIndex = patterns.get(ride);
+            currentBoardTime = boardTimes.get(ride);
 
             // get info on each leg
             FarePerRoute firstLegMode = faresPerRoute[previousPatternIndex];
@@ -150,13 +162,19 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
                 fareForState += getFullFareForRoute(currentPatternIndex);
             } else {
                 // check for discounted transfer
-                IntegratedFare integratedFare = getIntegrationFare(previousPatternIndex, currentPatternIndex);
+                IntegratedFare integratedFare = getIntegrationFare(previousPatternIndex, currentPatternIndex, currentBoardTime - previousBoardTime);
 
                 fareForState += integratedFare.fare;
                 if (integratedFare.usedDiscount) discountsApplied++;
             }
 
             previousPatternIndex = currentPatternIndex;
+            previousBoardTime = currentBoardTime;
+        }
+
+        // fares are limited by the maxFare parameter
+        if (fareStructure.getFareCap() > 0) {
+            fareForState = Math.min(fareForState, Math.round(fareStructure.getIntegerFareCap()));
         }
 
         if (debugActive) {
@@ -165,7 +183,54 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             debugOutput.add(tripPattern + "," + debugFare);
         }
 
-        return new FareBounds(fareForState, new TransferAllowance());
+        // initialize transfer allowance
+        // if (discountsApplied >= this.fareStructure.getMaxDiscountedTransfers()) -> NO TRANSFER ALLOWANCE
+        // if (currentBoardTime - previousBoardTime) > fareStructure.getTransferTimeAllowanceSeconds() -> NO TRANSFER ALLOWANCE
+        // if (fareForState >= fareStructure.getIntegerFareCap()) -> MAX TRANSFER ALLOWANCE
+
+        // if transfer allowances are inactive (for debugging purposes), just use and empty transfer allowance and
+        // quit the function
+        if (!ParetoItineraryPlanner.travelAllowanceActive) {
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
+        // pattern is valid?
+        if (currentPatternIndex == -1) {
+            // no public transport patterns - return empty transfer allowance
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
+        // remaining transfers
+        int numberOfRemainingTransfers = fareStructure.getMaxDiscountedTransfers() - discountsApplied;
+        if (numberOfRemainingTransfers <= 0) {
+            // no remaining available transfers - return empty transfer allowance
+            return new FareBounds(fareForState, new TransferAllowance());
+        }
+
+        // get max benefit from possible transfers
+        int fullFare = getFullFareForRoute(currentPatternIndex);
+        int maxAllowanceValue = 0;
+        for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getModeIndex()]) {
+            if (transfer != null) {
+                int fullTransferFare = transfer.getFirstLegFullIntegerFare() + transfer.getSecondLegFullIntegerFare();
+
+                int allowance = fullTransferFare - transfer.getIntegerFare();
+                maxAllowanceValue = Math.max(allowance, maxAllowanceValue);
+            }
+        }
+
+        // if fare cap has been reached, the max remaining allowance may be the mode's full fare
+        if (fareStructure.getFareCap() > 0 && fareForState > fareStructure.getIntegerFareCap() ) {
+            maxAllowanceValue = Math.max(fullFare, maxAllowanceValue);
+        }
+
+        // remaining time available to use discount
+        int expirationTime = currentBoardTime + fareStructure.getTransferTimeAllowanceSeconds();
+
+        // build transfer allowance considering constraints above
+        TransferAllowance transferAllowance = new TransferAllowance(maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
+        return new FareBounds(fareForState, transferAllowance);
+
     }
 
     private int getFullFareForRoute(int patternIndex) {
@@ -174,7 +239,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         return routeInfoData.getIntegerFare();
     }
 
-    private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern) {
+    private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern, int transferTime) {
         FarePerRoute firstLegMode = faresPerRoute[firstPattern];
         FarePerRoute secondLegMode = faresPerRoute[secondPattern];
 
@@ -182,20 +247,29 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         if (transferFare == null) {
             // there is no record in transfers table, return full fare of second route
             int fareSecondLeg = getFullFareForRoute(secondPattern);
-
             return new IntegratedFare(fareSecondLeg, false);
-        } else {
-            // discounted transfer found
-            if (isTransferAllowed(firstLegMode, secondLegMode)) {
-                // transfer is allowed, so discount the fare already considered in first leg
-                int fareFirstLeg = getFullFareForRoute(firstPattern);
-                return new IntegratedFare(transferFare.getIntegerFare() - fareFirstLeg, true);
-            } else {
-                // transfer is not allowed, so return full fare for second leg
-                int fareSecondLeg = getFullFareForRoute(secondPattern);
-                return new IntegratedFare(fareSecondLeg, false);
-            }
         }
+
+        // discounted transfer found
+        // check if transfer is allowed (transfer between same route ids)
+        if (!isTransferAllowed(firstLegMode, secondLegMode)) {
+            // transfer is not allowed, so return full fare for second leg
+            int fareSecondLeg = getFullFareForRoute(secondPattern);
+            return new IntegratedFare(fareSecondLeg, false);
+        }
+
+        // transfer is allowed
+        // check if transfer time is within limits
+        if (transferTime > this.fareStructure.getTransferTimeAllowanceSeconds()) {
+            // transfer time expired, return full fare for second leg
+            int fareSecondLeg = getFullFareForRoute(secondPattern);
+            return new IntegratedFare(fareSecondLeg, false);
+        }
+
+        // all restrictions clear: transfer is allowed
+        // discount the fare already considered in first leg
+        int fareFirstLeg = getFullFareForRoute(firstPattern);
+        return new IntegratedFare(transferFare.getIntegerFare() - fareFirstLeg, true);
     }
 
     private boolean isTransferAllowed(FarePerRoute firstLeg, FarePerRoute secondLeg) {
@@ -205,7 +279,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             FarePerMode modeData = getModeByIndex(firstLeg.getModeIndex());
             if (modeData.isAllowSameRouteTransfer()) return true;
 
-            // if transfers between same route are not allowed, then check if route id's are different
+            // if transfers between same route are not allowed, then check if route ids are different
             return !firstLeg.getRouteId().equals(secondLeg.getRouteId());
         } else {
             // transfer is between routes in different modes, so transfer is allowed

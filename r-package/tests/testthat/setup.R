@@ -6,4 +6,3 @@ if (Sys.getenv("NOT_CRAN") != "false") {
   points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
   pois <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 }
-

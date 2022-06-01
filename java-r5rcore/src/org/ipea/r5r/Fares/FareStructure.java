@@ -26,7 +26,10 @@ public class FareStructure {
     /**
      * Maximum charged fare for any combination of trips.
      */
-    private int fareCap;
+    private float fareCap;
+
+    @JsonIgnore
+    private int integerFareCap;
 
     private final List<FarePerMode> faresPerMode;
     private final List<FarePerTransfer> faresPerTransfer;
@@ -46,16 +49,26 @@ public class FareStructure {
         return transferTimeAllowance;
     }
 
+    @JsonIgnore
+    public int getTransferTimeAllowanceSeconds() {
+        return transferTimeAllowance * 60;
+    }
+
     public void setTransferTimeAllowance(int transferTimeAllowance) {
         this.transferTimeAllowance = transferTimeAllowance;
     }
 
-    public int getFareCap() {
+    public float getFareCap() {
         return fareCap;
     }
 
-    public void setFareCap(int fareCap) {
+    public int getIntegerFareCap() {
+        return integerFareCap;
+    }
+
+    public void setFareCap(float fareCap) {
         this.fareCap = fareCap;
+        this.integerFareCap = Math.round(fareCap * 100.0f);
     }
 
     public List<FarePerMode> getFaresPerMode() {

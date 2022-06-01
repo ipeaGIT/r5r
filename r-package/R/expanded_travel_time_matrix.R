@@ -104,26 +104,27 @@ expanded_travel_time_matrix <- function(r5r_core,
   checkmate::assert_class(r5r_core, "jobjRef")
 
   # modes
-  mode_list <- select_mode(mode, mode_egress)
+  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
 
   # departure time
-  departure <- posix_to_string(departure_datetime)
+  departure <- assign_departure(departure_datetime)
 
   # max trip duration
-  checkmate::assert_numeric(max_trip_duration, lower=1)
-  max_trip_duration <- as.integer(max_trip_duration)
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
 
   # max_walking_distance, max_bike_distance, and max_street_time
-  max_walk_time <- set_max_street_time(max_walk_dist,
+  max_walk_time <- assign_max_street_time(max_walk_dist,
                                        walk_speed,
-                                       max_trip_duration)
-  max_bike_time <- set_max_street_time(max_bike_dist,
+                                       max_trip_duration,
+                                       "walk")
+  max_bike_time <- assign_max_street_time(max_bike_dist,
                                        bike_speed,
-                                       max_trip_duration)
+                                       max_trip_duration,
+                                       "bike")
 
   # origins and destinations
-  origins      <- assert_points_input(origins, "origins")
-  destinations <- assert_points_input(destinations, "destinations")
+  origins      <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
 
   checkmate::assert_subset("id", names(origins))
   checkmate::assert_subset("id", names(destinations))

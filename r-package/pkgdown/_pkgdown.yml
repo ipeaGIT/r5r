@@ -9,6 +9,7 @@ reference:
     - download_r5
     - setup_r5
     - stop_r5
+    - r5r_sitrep
   - title: "Accessibility"
   - contents:
     - accessibility

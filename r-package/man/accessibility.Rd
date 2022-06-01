@@ -15,8 +15,8 @@ accessibility(
   time_window = 1L,
   percentiles = 50L,
   decay_function = "step",
-  cutoffs = 30L,
-  decay_value = 1,
+  cutoffs = NULL,
+  decay_value = NULL,
   fare_structure = NULL,
   max_fare = Inf,
   max_walk_dist = Inf,
@@ -53,29 +53,33 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. If working with public transport
-networks, please check the \code{calendar.txt} within your GTFS feeds for valid
-dates. Please see details for further information on how datetimes are
-parsed.}
+\item{departure_datetime}{A POSIXct object. Please note that the departure
+time only influences public transport legs. When working with public
+transport networks, please check the \code{calendar.txt} within your GTFS feeds
+for valid dates. Please see details for further information on how
+datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table.}
+GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
+vignette for more details on its usage:
+\code{vignette("time_window", package = "r5r")}}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning accessibility estimates within the given
 time window. Please note that this parameter is applied to the travel time
 estimates that generate the accessibility results, and not to the
-accessibility distribution itself (i.e. if the 25th percentile is specified,
-the accessibility is calculated from the 25th percentile travel time, which
-may or may not be equal to the 25th percentile of the accessibility
-distribution itself). Defaults to 50, returning the accessibility calculated
-from the median travel time. If a vector with length bigger than 1 is passed,
-the output contains an additional column that specifies the percentile of
-each accessibility estimate. Due to upstream restrictions, only 5 percentiles
-can be specified at a time. For more details, please see \code{R5} documentation
-at https://docs.conveyal.com/analysis/methodology#accounting-for-variability'.}
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see \code{R5} documentation at
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{decay_function}{A string. Which decay function to use when calculating
 accessibility. One of \code{step}, \code{exponential}, \code{fixed_exponential}, \code{linear}
@@ -85,22 +89,24 @@ alternative works and how they relate to the \code{cutoffs} and \code{decay_valu
 parameters.}
 
 \item{cutoffs}{A numeric vector (maximum length of 12). This parameter has
-different effects for each decay function: it indicates the cutoff times in
-minutes when calculating cumulative opportunities accessibility with the
-\code{step} function, the median (or inflection point) of the decay curves in the
-\code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
-function. It has no effect when using the \code{fixed_exponential} function.}
+different effects for each decay function: it indicates the cutoff times
+in minutes when calculating cumulative opportunities accessibility with
+the \code{step} function, the median (or inflection point) of the decay curves
+in the \code{logistic} and \code{linear} functions, and the half-life in the
+\code{exponential} function. It has no effect when using the
+\code{fixed_exponential} function.}
 
-\item{decay_value}{A numeric. Extra parameter to be passed to the selected
+\item{decay_value}{A number. Extra parameter to be passed to the selected
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
-understand how this object is structured.}
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
 
-\item{max_fare}{A numeric. The maximum value that trips can cost when
+\item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
@@ -280,10 +286,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
+\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
+\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
