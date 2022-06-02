@@ -124,11 +124,6 @@ test_that("adequately raises errors", {
   expect_error(default_tester(r5r_core, percentiles = .3))
   expect_error(default_tester(r5r_core, percentiles = 1:6))
 
-  # error related to non-logical verbose
-  expect_error(default_tester(r5r_core, verbose = "TRUE"))
-  expect_error(default_tester(r5r_core, verbose = 1))
-  expect_error(default_tester(r5r_core, verbose = NULL))
-
 })
 
 test_that("adequately raises warnings - needs java", {
