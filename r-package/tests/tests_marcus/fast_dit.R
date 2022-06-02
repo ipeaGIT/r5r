@@ -24,7 +24,7 @@ r5r_core$setDetailedItinerariesV2(TRUE)
 r5r_core$setDetailedItinerariesV2(FALSE)
 
 system.time(
-  det2 <- detailed_itineraries(r5r_core,
+  det_new <- detailed_itineraries(r5r_core,
                               origins = points[10,],
                               destinations = points[12,],
                               mode = c("WALK", "TRANSIT"),

@@ -275,7 +275,7 @@ public abstract class R5Process {
         secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60);
+        request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60) ;
 
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
         request.suboptimalMinutes = routingProperties.suboptimalMinutes;

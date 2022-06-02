@@ -55,8 +55,7 @@ public class TripPlanner {
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getReachedStops()));
 
             // Build RAPTOR router
-
-            IntFunction<DominatingList> listSupplier = null;
+            IntFunction<DominatingList> listSupplier;
 
             if (request.inRoutingFareCalculator != null) {
                 listSupplier = (departureTime) -> new FareDominatingList(
@@ -66,8 +65,8 @@ public class TripPlanner {
                         // minute does not change
                         // in fact, we have been moving in the opposite direction with leap-second smearing
                         departureTime + request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
-            } else if (request.suboptimalMinutes > 0) {
-                listSupplier = (t) -> new SuboptimalDominatingList(request.suboptimalMinutes);
+            } else {
+                listSupplier = (t) -> new SuboptimalDominatingList(Math.max(request.suboptimalMinutes, 0));
             }
 
             McRaptorSuboptimalPathProfileRouter router = new McRaptorSuboptimalPathProfileRouter(transportNetwork,

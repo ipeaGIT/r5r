@@ -187,6 +187,7 @@ public class TripLeg {
                         StreetPath streetPath = new StreetPath(lastState, network, false);
                         streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
 
+                        this.legDurationSeconds = streetSegment.duration;
                         this.geometry = streetSegment.geometry;
                         this.legDistance = streetSegment.distance;
 

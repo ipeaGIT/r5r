@@ -83,6 +83,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("mode", leg.getMode());
                 travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
                 travelTimesTable.set("segment_duration", leg.getLegDurationSeconds() / 60.0);
+                travelTimesTable.set("wait", leg.getWaitTime() / 60.0);
                 travelTimesTable.set("distance", leg.getGeometry().getLength());
                 travelTimesTable.set("route", leg.getRoute());
 

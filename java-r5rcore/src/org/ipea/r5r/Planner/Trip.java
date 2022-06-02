@@ -235,9 +235,12 @@ public class Trip {
                     RouteInfo route = network.transitLayer.routes.get(pattern.routeIndex);
                     String mode = TransitLayer.getTransitModes(route.route_type).toString();
 
+                    int duration = state.time - state.boardTime;
+                    int wait = state.boardTime - state.back.time;
+
                     int fare = state.fare != null ? state.fare.cumulativeFarePaid : 0;
-                    TripLeg leg = TripLeg.newTransitLeg(mode, state.time - state.boardTime,
-                            fare, 0, boardStopIndex, alightStopIndex, route.route_id);
+                    TripLeg leg = TripLeg.newTransitLeg(mode, duration,
+                            fare, wait, boardStopIndex, alightStopIndex, route.route_id);
 
                     leg.setPatternData(pattern, state.boardStopPosition, state.alightStopPosition);
 
@@ -304,6 +307,7 @@ public class Trip {
                                TransportNetwork network, ProfileRequest request) {
         TripLeg leg = legs.get(legs.size() - 1);
 
+        int cumulativeFare = leg.getCumulativeFare();
         int endStopIndex = leg.getAlightStop(); // currentTransitPath.alightStops[currentTransitPath.length-1];
         int endVertexStopIndex = network.transitLayer.streetVertexForStop.get(endStopIndex);
 
@@ -324,14 +328,14 @@ public class Trip {
                     //This should never happen since stopModeEgressMap is filled from reached stops in egressRouter
 
                     TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                            streetSegment.duration, 0, streetSegment.geometry);
+                            streetSegment.duration, cumulativeFare, streetSegment.geometry);
                     legs.add(egressLeg);
                 } else {
                     LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
                 }
             } else {
                 TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                        streetSegment.duration, 0, streetSegment.geometry);
+                        streetSegment.duration, cumulativeFare, streetSegment.geometry);
                 legs.add(egressLeg);
                 egressPaths.put(endVertexStopIndex, streetSegment);
             }
