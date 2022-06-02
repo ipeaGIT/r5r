@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -54,8 +55,23 @@ public class TripPlanner {
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getReachedStops()));
 
             // Build RAPTOR router
+
+            IntFunction<DominatingList> listSupplier = null;
+
+            if (request.inRoutingFareCalculator != null) {
+                listSupplier = (departureTime) -> new FareDominatingList(
+                        request.inRoutingFareCalculator,
+                        request.maxFare,
+                        // while I appreciate the use of symbolic constants, I certainly hope the number of seconds per
+                        // minute does not change
+                        // in fact, we have been moving in the opposite direction with leap-second smearing
+                        departureTime + request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
+            } else if (request.suboptimalMinutes > 0) {
+                listSupplier = (t) -> new SuboptimalDominatingList(request.suboptimalMinutes);
+            }
+
             McRaptorSuboptimalPathProfileRouter router = new McRaptorSuboptimalPathProfileRouter(transportNetwork,
-                    request, accessTimes, egressTimes, (t)->new SuboptimalDominatingList(request.suboptimalMinutes),
+                    request, accessTimes, egressTimes, listSupplier,
                     null, true);
 
             router.route();

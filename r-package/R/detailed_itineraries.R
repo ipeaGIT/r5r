@@ -62,6 +62,10 @@ detailed_itineraries <- function(r5r_core,
                                  mode = "WALK",
                                  mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
+                                 time_window = 1L,
+                                 suboptimal_minutes = 0L,
+                                 fare_structure = NULL,
+                                 max_fare = Inf,
                                  max_walk_dist = Inf,
                                  max_bike_dist = Inf,
                                  max_trip_duration = 120L,
@@ -71,6 +75,7 @@ detailed_itineraries <- function(r5r_core,
                                  max_lts = 2,
                                  shortest_path = TRUE,
                                  all_to_all = FALSE,
+                                 draws_per_minute = 5L,
                                  n_threads = Inf,
                                  verbose = FALSE,
                                  progress = FALSE,
@@ -174,14 +179,20 @@ detailed_itineraries <- function(r5r_core,
   # max_lts
   set_max_lts(r5r_core, max_lts)
 
+
+  set_time_window(r5r_core, time_window)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+  set_fare_structure(r5r_core, fare_structure)
+  set_max_fare(r5r_core, max_fare)
+  set_suboptimal_minutes(r5r_core, suboptimal_minutes)
   # set suboptimal minutes
   # if only the shortest path is requested, set suboptimal minutes to 0 minutes,
   # else revert back to the 5 minutes default.
-  if (shortest_path) {
-    set_suboptimal_minutes(r5r_core, 0L)
-  } else {
-    set_suboptimal_minutes(r5r_core, 5L)
-  }
+  # if (shortest_path) {
+  #   set_suboptimal_minutes(r5r_core, 0L)
+  # } else {
+  #   set_suboptimal_minutes(r5r_core, 5L)
+  # }
 
   # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)

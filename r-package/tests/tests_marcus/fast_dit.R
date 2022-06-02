@@ -5,9 +5,9 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path)
 
 # load origin/destination points
-# points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv")) %>%
-  dplyr::sample_n(50)
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+# points <- read.csv(file.path(data_path, "poa_hexgrid.csv")) %>%
+  # dplyr::sample_n(50)
 
 # load fare structure object
 fare_structure_path <- system.file(
@@ -25,12 +25,16 @@ r5r_core$setDetailedItinerariesV2(FALSE)
 
 system.time(
   det2 <- detailed_itineraries(r5r_core,
-                              origins = points,
-                              destinations = points,
+                              origins = points[10,],
+                              destinations = points[12,],
                               mode = c("WALK", "TRANSIT"),
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
                               max_trip_duration = 120,
+                              # suboptimal_minutes = 10,
+                              fare_structure = fare_structure,
+                              max_fare = 10,
+                              time_window = 1,
                               all_to_all = T,
                               progress = T,
                               shortest_path = T)
@@ -53,4 +57,15 @@ library("tidyverse")
 
 saveRDS(det, "det_v2.rds")
 saveRDS(det2, "det_v1.rds")
+
+library(sf)
+library(tidyverse)
+
+det2 %>%
+  st_set_geometry(NULL) %>%
+  group_by(option) %>%
+  summarise(mode = paste(mode, collapse = "|"),
+            routes = paste(route, collapse = "|"),
+            total_fare = mean(total_fare))
+
 

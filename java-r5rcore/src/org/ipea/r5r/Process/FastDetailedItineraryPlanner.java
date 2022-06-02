@@ -24,7 +24,9 @@ public class FastDetailedItineraryPlanner extends R5Process {
         super(threadPool, transportNetwork, routingProperties);
     }
 
-    public void dropItineraryGeometry() { dropItineraryGeometry = true; }
+    public void dropItineraryGeometry() {
+        dropItineraryGeometry = true;
+    }
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
@@ -46,7 +48,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
             return travelTimesTable;
         } else {
             return null;
-        }    }
+        }
+    }
 
     @Override
     protected void buildDestinationPointSet() {
