@@ -23,7 +23,7 @@ points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 # dir.create(here::here("csv"))
 
 # r5r_core$setCsvOutput(here::here("csv"))
-system.time(
+a <- capture.output(
   normal_ttm <- travel_time_matrix(r5r_core, origins = points, #[id == "89a9012a3cfffff",],
                                    destinations = points, #[id == "89a901284a3ffff",],
                             mode = c("WALK"),
@@ -35,7 +35,7 @@ system.time(
                             verbose = FALSE,
                             progress = TRUE)
 )
-
+a
 normal_ttm %>%
   select(from_id, to_id) %>%
   distinct() %>%
