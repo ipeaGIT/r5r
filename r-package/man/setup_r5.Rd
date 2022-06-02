@@ -6,7 +6,6 @@
 \usage{
 setup_r5(
   data_path,
-  version = "6.7.0",
   verbose = FALSE,
   temp_dir = FALSE,
   elevation = "TOBLER",
@@ -16,9 +15,6 @@ setup_r5(
 \arguments{
 \item{data_path}{A string pointing to the directory where data inputs are
 stored and where the built \code{network.dat} will be saved.}
-
-\item{version}{A string. The version of \code{R5} to be used. Defaults to the
-latest version.}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
 running the function. Defaults to \code{FALSE} (please note that in such case

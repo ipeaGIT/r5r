@@ -173,9 +173,8 @@ travel_time_matrix <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_output_dir(r5r_core, output_dir)
-
-  # travel times breakdown
-  r5r_core$setExpandedTravelTimes(FALSE)
+  set_expanded_travel_times(r5r_core, FALSE)
+  set_breakdown(r5r_core, FALSE)
 
   # call r5r_core method and process result -------------------------------
 

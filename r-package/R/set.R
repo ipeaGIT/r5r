@@ -251,10 +251,16 @@ set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
 #' @keywords internal
 set_fare_structure <- function(r5r_core, fare_structure) {
   if (!is.null(fare_structure)) {
-    # TODO: assert_fare_structure
+    assert_fare_structure(fare_structure)
 
     if (fare_structure$fare_cap == Inf) {
       fare_structure$fare_cap <- -1
+    }
+    if (fare_structure$transfer_time_allowance == Inf) {
+      fare_structure$transfer_time_allowance <- -1
+    }
+    if (fare_structure$max_discounted_transfers == Inf) {
+      fare_structure$max_discounted_transfers <- -1
     }
 
     fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
@@ -397,6 +403,50 @@ set_monetary_cutoffs <- function(r5r_core, monetary_cutoffs) {
   )
 
   r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cutoffs))
+
+  return(invisible(TRUE))
+}
+
+
+#' Set breakdown
+#'
+#' Sets whether travel time matrices should include detailed trip information or
+#' not.
+#'
+#' @template r5r_core
+#' @param breakdown A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_breakdown <- function(r5r_core, breakdown) {
+  checkmate::assert_logical(breakdown, any.missing = FALSE, len = 1)
+
+  r5r_core$setTravelTimesBreakdown(breakdown)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set expanded travel times
+#'
+#' Sets whether travel time matrices should return results for each minute of
+#' the specified time window.
+#'
+#' @template r5r_core
+#' @param expanded A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_expanded_travel_times <- function(r5r_core, expanded) {
+  checkmate::assert_logical(expanded, any.missing = FALSE, len = 1)
+
+  r5r_core$setExpandedTravelTimes(expanded)
 
   return(invisible(TRUE))
 }

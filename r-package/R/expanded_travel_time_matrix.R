@@ -10,19 +10,28 @@
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template verbose
-#' @param breakdown A logical. If `FALSE` (the default), the function returns a
-#' simple output that lists the total time between each pair in each minute of
-#' the specified time window. If `TRUE`, the output breaks down the trip
-#' information, showing the routes used to complete each trip and their total
-#' access, waiting, in-vehicle and transfer time. Please note that setting this
-#' parameter to `TRUE` makes the function significantly slower.
+#' @param breakdown A logical. Whether to include detailed information about
+#'   each trip in the output. If `FALSE` (the default), the output lists the
+#'   total time between each origin-destination pair and the routes used to
+#'   complete the trip for each minute of the specified time window. If `TRUE`,
+#'   the output includes the total access, waiting, in-vehicle and transfer
+#'   time of each trip. Please note that setting this parameter to `TRUE` makes
+#'   the function significantly slower.
 #'
-#' @return A `data.table` with travel time estimates (in minutes) between
-#' origin and destination pairs for each minute of the specified time window. A
-#' pair is absent from the final output if no trips could be completed in any
-#' of the minutes of the time window. If `output_dir` is not `NULL`, the
-#' function returns the path specified in that parameter, in which the `.csv`
-#' files containing the results are saved.
+#' @return A `data.table` with travel time estimates (in minutes) and the
+#'   routes used in each trip between origin and destination pairs, for each
+#'   minute of the specified time window. Each set of origin, destination and
+#'   departure minute can appear up to N times, where N is the number of Monte
+#'   Carlo draws specified in the function arguments (please note that this
+#'   only applies when the GTFS feeds that describe the transit network include
+#'   a frequencies table, otherwise only a single draw is performed). A pair is
+#'   completely absent from the final output if no trips could be completed in
+#'   any of the minutes of the time window. If for a single pair trips could be
+#'   completed in some of the minutes of the time window, but not for all of
+#'   them, the minutes in which trips couldn't be completed will have `NA`
+#'   travel time and routes used. If `output_dir` is not `NULL`, the function
+#'   returns the path specified in that parameter, in which the `.csv` files
+#'   containing the results are saved.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -41,29 +50,35 @@
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-#'                                  format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
-#' ettm <- expanded_travel_time_matrix(r5r_core,
-#'                                     origins = points,
-#'                                     destinations = points,
-#'                                     mode = c("WALK", "TRANSIT"),
-#'                                     time_window = 20,
-#'                                     departure_datetime = departure_datetime,
-#'                                     max_trip_duration = 60)
+#' ettm <- expanded_travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   time_window = 20,
+#'   departure_datetime = departure_datetime,
+#'   max_trip_duration = 60
+#' )
 #' head(ettm)
 #'
 #' # when breakdown = TRUE the output contains much more information
-#' ettm <- expanded_travel_time_matrix(r5r_core,
-#'                                     origins = points,
-#'                                     destinations = points,
-#'                                     mode = c("WALK", "TRANSIT"),
-#'                                     time_window = 20,
-#'                                     departure_datetime = departure_datetime,
-#'                                     max_trip_duration = 60,
-#'                                     breakdown = TRUE)
+#' ettm <- expanded_travel_time_matrix(
+#'   r5r_core,
+#'   origins = points,
+#'   destinations = points,
+#'   mode = c("WALK", "TRANSIT"),
+#'   time_window = 20,
+#'   departure_datetime = departure_datetime,
+#'   max_trip_duration = 60,
+#'   breakdown = TRUE
+#' )
 #' head(ettm)
 #'
 #' stop_r5(r5r_core)
@@ -97,134 +112,92 @@ expanded_travel_time_matrix <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
+  # check inputs and set r5r options --------------------------------------
 
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
-  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
-
-  # departure time
-  departure <- assign_departure(departure_datetime)
-
-  # max trip duration
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
-  # max_walking_distance, max_bike_distance, and max_street_time
-  max_walk_time <- assign_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration,
-                                       "walk")
-  max_bike_time <- assign_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration,
-                                       "bike")
-
-  # origins and destinations
-  origins      <- assign_points_input(origins, "origins")
+  origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
+  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
+  departure <- assign_departure(departure_datetime)
+  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
+  max_walk_time <- assign_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration,
+    "walk"
+  )
+  max_bike_time <- assign_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration,
+    "bike"
+  )
 
-  checkmate::assert_subset("id", names(origins))
-  checkmate::assert_subset("id", names(destinations))
-
-  # time window
-  checkmate::assert_numeric(time_window, lower=1)
-  time_window <- as.integer(time_window)
-
-  # montecarlo draws per minute
-  draws <- time_window * draws_per_minute
-  draws <- as.integer(draws)
-
-  # travel times breakdown
-  checkmate::assert_logical(breakdown)
-
-  # set r5r_core options ----------------------------------------------------
-
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-
-  # time window
-  r5r_core$setTimeWindowSize(time_window)
-  r5r_core$setNumberOfMonteCarloDraws(draws)
-
-  # expanded travel times and breakdown
-  r5r_core$setExpandedTravelTimes(TRUE)
-  r5r_core$setTravelTimesBreakdown(breakdown)
-
-  on.exit({
-    r5r_core$setExpandedTravelTimes(FALSE)
-    r5r_core$setTravelTimesBreakdown(FALSE)
-  })
-
-  # set bike and walk speed
+  set_time_window(r5r_core, time_window)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
-
-  # set max transfers
   set_max_rides(r5r_core, max_rides)
-
-  # set max lts (level of traffic stress)
   set_max_lts(r5r_core, max_lts)
-
-  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
-
-  # set verbose
   set_verbose(r5r_core, verbose)
-
-  # set progress
   set_progress(r5r_core, progress)
+  set_output_dir(r5r_core, output_dir)
+  set_expanded_travel_times(r5r_core, TRUE)
+  set_breakdown(r5r_core, breakdown)
 
-  # call r5r_core method ----------------------------------------------------
+  # call r5r_core method and process result -------------------------------
 
-  travel_times <- r5r_core$travelTimeMatrix(origins$id,
-                                            origins$lat,
-                                            origins$lon,
-                                            destinations$id,
-                                            destinations$lat,
-                                            destinations$lon,
-                                            mode_list$direct_modes,
-                                            mode_list$transit_mode,
-                                            mode_list$access_mode,
-                                            mode_list$egress_mode,
-                                            departure$date,
-                                            departure$time,
-                                            max_walk_time,
-                                            max_bike_time,
-                                            max_trip_duration)
+  travel_times <- r5r_core$travelTimeMatrix(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration
+  )
 
-
-  # process results ---------------------------------------------------------
-
-  # convert travel_times from java object to data.table
-  if (!verbose & progress) { cat("Preparing final output...") }
+  if (!verbose & progress) cat("Preparing final output...")
 
   travel_times <- java_to_dt(travel_times)
 
-  # only perform following operations when result is not empty
+  # replace travel-times of non-viable trips with NAs
+  # if breakdown is TRUE, there are more columns in the output
+
   if (nrow(travel_times) > 0) {
-    # replace travel-times of non-viable trips with NAs
-    # if breakdown == TRUE, there are more columns in the output
-    if (breakdown == TRUE) {
-      travel_times[total_time > max_trip_duration,
-                   `:=`(access_time = NA_integer_,
-                        wait_time = NA_integer_,
-                        ride_time = NA_integer_,
-                        transfer_time = NA_integer_,
-                        egress_time = NA_integer_,
-                        routes = NA_character_,
-                        n_rides = NA_integer_,
-                        total_time = NA_integer_)]
+    if (breakdown) {
+      travel_times[
+        total_time > max_trip_duration,
+        `:=`(
+          access_time = NA_integer_,
+          wait_time = NA_integer_,
+          ride_time = NA_integer_,
+          transfer_time = NA_integer_,
+          egress_time = NA_integer_,
+          routes = NA_character_,
+          n_rides = NA_integer_,
+          total_time = NA_integer_
+        )
+      ]
     } else {
-      travel_times[total_time > max_trip_duration,
-                   `:=`(routes = NA_character_,
-                        total_time = NA_integer_)]
+      travel_times[
+        total_time > max_trip_duration,
+        `:=`(routes = NA_character_, total_time = NA_integer_)
+      ]
     }
   }
 
-  if (!verbose & progress) { cat(" DONE!\n") }
+  if (!verbose & progress) cat(" DONE!\n")
 
   if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
