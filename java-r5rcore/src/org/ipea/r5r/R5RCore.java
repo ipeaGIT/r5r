@@ -157,29 +157,6 @@ public class R5RCore {
         this.routingProperties.fareCutoffs = new float[]{-1.0f};
     }
 
-    public void setFareCalculatorDebugOutputSettings(String fileName, String tripInfo) {
-        RuleBasedInRoutingFareCalculator.debugFileName = fileName;
-        RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo;
-        RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");
-    }
-
-    public String getFareCalculatorDebugOutputSettings() {
-        Map<String, String> map = new HashMap<>();
-
-        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
-        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = "";
-        try {
-            json = objectMapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return json;
-    }
-
     public String getTravelTimesBreakdownStat() {
         return this.routingProperties.travelTimesBreakdownStat.toString();
     }

@@ -83,22 +83,6 @@ public abstract class R5Process {
 
         RDataFrame results = mergeResults(processResults);
 
-        if (this.routingProperties.fareCalculator != null && this.routingProperties.fareCalculator instanceof RuleBasedInRoutingFareCalculator) {
-            if (RuleBasedInRoutingFareCalculator.debugActive) {
-                Set<String> debugOutput = ((RuleBasedInRoutingFareCalculator) this.routingProperties.fareCalculator).getDebugOutput();
-
-                File debugOutputFile = new File(RuleBasedInRoutingFareCalculator.debugFileName);
-                try (PrintWriter pw = new PrintWriter(debugOutputFile)) {
-
-                    pw.println("pattern,fare");
-                    debugOutput.forEach(pw::println);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         return results;
     }
 

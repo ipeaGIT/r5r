@@ -31,7 +31,7 @@ system.time(
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
                               max_trip_duration = 120,
-                              # suboptimal_minutes = 10,
+                              # suboptimal_minutes = 1,
                               fare_structure = fare_structure,
                               max_fare = 10,
                               time_window = 1,

@@ -19,20 +19,10 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RuleBasedInRoutingFareCalculator.class);
 
-    public static String debugFileName = "";
-    public static String debugTripInfo = "MODE";
-    public static boolean debugActive = false;
-
     private final FareStructure fareStructure;
 
     private FarePerRoute[] faresPerRoute;
     private FarePerTransfer[][] faresPerTransfer;
-
-    private final Set<String> debugOutput;
-
-    public Set<String> getDebugOutput() {
-        return debugOutput;
-    }
 
     public FareStructure getFareStructure() {
         return fareStructure;
@@ -41,8 +31,6 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     public RuleBasedInRoutingFareCalculator(TransitLayer transitLayer, String jsonData) {
         this.transitLayer = transitLayer;
         this.fareStructure = FareStructure.fromJson(jsonData);
-
-        this.debugOutput = new ConcurrentSkipListSet<>();
 
         // fill fare information lookup tables
         loadFareInformation();
@@ -177,12 +165,6 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             fareForState = Math.min(fareForState, Math.round(fareStructure.getIntegerFareCap()));
         }
 
-        if (debugActive) {
-            String tripPattern = buildDebugInformation(patterns);
-            float debugFare = fareForState / 100.0f;
-            debugOutput.add(tripPattern + "," + debugFare);
-        }
-
         // initialize transfer allowance
         // if (discountsApplied >= this.fareStructure.getMaxDiscountedTransfers()) -> NO TRANSFER ALLOWANCE
         // if (currentBoardTime - previousBoardTime) > fareStructure.getTransferTimeAllowanceSeconds() -> NO TRANSFER ALLOWANCE
@@ -285,41 +267,6 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             // transfer is between routes in different modes, so transfer is allowed
             return true;
         }
-    }
-
-    private String buildDebugInformation(TIntList patterns) {
-        StringBuilder debugger = new StringBuilder();
-        String delimiter = "";
-
-        TIntIterator patternIt = patterns.iterator();
-        while (patternIt.hasNext()) {
-            int currentPatternIndex = patternIt.next();
-            FarePerRoute secondLegMode = faresPerRoute[currentPatternIndex];
-
-            switch (RuleBasedInRoutingFareCalculator.debugTripInfo) {
-                case "MODE":
-                    debugger.append(delimiter).append(secondLegMode.getFareType());
-                    break;
-                case "ROUTE":
-                    if (secondLegMode.getRouteShortName() != null && !secondLegMode.getRouteShortName().equals("null")) {
-                        debugger.append(delimiter).append(secondLegMode.getRouteShortName());
-                    } else {
-                        debugger.append(delimiter).append(secondLegMode.getRouteId());
-                    }
-                    break;
-                case "MODE_ROUTE":
-                    if (secondLegMode.getRouteShortName() != null && !secondLegMode.getRouteShortName().equals("null")) {
-                        debugger.append(delimiter).append(secondLegMode.getFareType()).append(" ").append(secondLegMode.getRouteShortName());
-                    } else {
-                        debugger.append(delimiter).append(secondLegMode.getFareType()).append(" ").append(secondLegMode.getRouteId());
-                    }
-                    break;
-            }
-
-            delimiter = "|";
-        }
-
-        return debugger.toString();
     }
 
     @Override

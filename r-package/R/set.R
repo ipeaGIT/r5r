@@ -261,10 +261,6 @@ set_fare_structure <- function(r5r_core, fare_structure) {
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCalculatorDebugOutputSettings(
-      fare_structure$debug_settings$output_file,
-      fare_structure$debug_settings$trip_info
-    )
   } else {
     r5r_core$dropFareCalculator()
   }
