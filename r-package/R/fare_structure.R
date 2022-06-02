@@ -333,6 +333,7 @@ read_fare_structure <- function(file_path, encoding = "UTF-8") {
 #' @keywords internal
 assert_fare_structure <- function(fare_structure) {
   # TODO: all GTFS routes must be in fares_per_route
+  # TODO: fares_per_route$route_id must be unique
   checkmate::assert_list(fare_structure, any.missing = FALSE)
 
   element_names <- c(
