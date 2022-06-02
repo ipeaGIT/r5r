@@ -39,7 +39,7 @@ system.time(
                               all_to_all = T,
                               progress = T,
                               shortest_path = T,
-                              verbose = T)
+                              verbose = F)
   )
 # )
 
@@ -71,4 +71,9 @@ det2 %>%
             routes = paste(route, collapse = "|"),
             total_fare = mean(total_fare))
 
+a <- det_new %>%
+  st_set_geometry(NULL) %>%
+  group_by(option) %>%
+  mutate(sum_dur = sum(segment_duration + wait),
+         is_diff = sum_dur != total_duration)
 

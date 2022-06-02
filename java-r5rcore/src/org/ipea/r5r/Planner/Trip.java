@@ -139,24 +139,15 @@ public class Trip {
             int tripDuration = 0;
 
             // add access and egress legs
-            TripLeg accessLeg = addAccessPath(accessRouter, accessPaths, network, request);
-            if (accessLeg != null)
-                tripDuration = accessLeg.getLegDurationSeconds();
-
-            TripLeg egressLeg = addEgressPath(egressRouter, egressPaths, network, request);
-            if (egressLeg != null)
-                tripDuration += egressLeg.getLegDurationSeconds();
+            addAccessPath(accessRouter, accessPaths, network, request);
+            addEgressPath(egressRouter, egressPaths, network, request);
 
             for (TripLeg leg : legs) {
                 leg.augmentTransitLeg(transferPaths, network, request);
-
-                tripDuration += leg.getLegDurationSeconds() + leg.getWaitTime();
+                tripDuration += (leg.getLegDurationSeconds() + leg.getWaitTime());
             }
 
             this.totalDurationSeconds = tripDuration;
-
-
-//        addTransferPath();
         }
     }
 
@@ -265,7 +256,7 @@ public class Trip {
         }
     }
 
-    private TripLeg addAccessPath(Map<LegMode, StreetRouter> accessRouter, Map<Integer, StreetSegment> accessPaths,
+    private void addAccessPath(Map<LegMode, StreetRouter> accessRouter, Map<Integer, StreetSegment> accessPaths,
                                TransportNetwork network, ProfileRequest request) {
         TripLeg leg = legs.get(0);
 
@@ -298,8 +289,6 @@ public class Trip {
                     legs.add(0, accessLeg);
 
                     accessPaths.put(startVertexStopIndex, streetSegment);
-
-                    return(accessLeg);
                 } else {
                     LOG.warn("Access: Last state not found for mode:{} stop:{}({})", accessMode, startVertexStopIndex, startStopIndex);
                 }
@@ -309,8 +298,6 @@ public class Trip {
                 legs.add(0, accessLeg);
 
                 accessPaths.put(startVertexStopIndex, streetSegment);
-
-                return(accessLeg);
             }
 //                        profileOption.addAccess(streetSegment, accessMode, startVertexStopIndex);
                 //This should never happen since stopModeAccessMap is filled from reached stops in accessRouter
@@ -318,11 +305,9 @@ public class Trip {
         } else {
             LOG.warn("Mode is not in stopModeAccessMap for start stop:{}({})", startVertexStopIndex, startStopIndex);
         }
-
-        return null;
     }
 
-    private TripLeg addEgressPath(Map<LegMode, StreetRouter> egressRouter, Map<Integer, StreetSegment> egressPaths,
+    private void addEgressPath(Map<LegMode, StreetRouter> egressRouter, Map<Integer, StreetSegment> egressPaths,
                                TransportNetwork network, ProfileRequest request) {
         TripLeg leg = legs.get(legs.size() - 1);
 
@@ -349,8 +334,6 @@ public class Trip {
                     TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
                             streetSegment.duration, cumulativeFare, streetSegment.geometry);
                     legs.add(egressLeg);
-
-                    return(egressLeg);
                 } else {
                     LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
                 }
@@ -359,15 +342,11 @@ public class Trip {
                         streetSegment.duration, cumulativeFare, streetSegment.geometry);
                 legs.add(egressLeg);
                 egressPaths.put(endVertexStopIndex, streetSegment);
-
-                return(egressLeg);
             }
 
         } else {
             LOG.warn("Mode is not in stopModeEgressMap for END stop:{}({})", endVertexStopIndex, endStopIndex);
         }
-
-        return null;
     }
 
 }
