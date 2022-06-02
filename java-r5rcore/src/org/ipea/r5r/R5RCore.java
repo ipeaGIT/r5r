@@ -6,8 +6,6 @@ import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
@@ -23,9 +21,7 @@ import java.io.PrintStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -218,7 +214,7 @@ public class R5RCore {
 
     public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
         Rengine r = new Rengine();
-        RConsoleOutputStream rs = new RConsoleOutputStream(r, 0);
+        RConsoleOutputStream rs = new RConsoleOutputStream(r, 1);
         System.setOut(new PrintStream(rs));
 
         if (verbose) {

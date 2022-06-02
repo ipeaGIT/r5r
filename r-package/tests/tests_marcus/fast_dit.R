@@ -23,6 +23,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 r5r_core$setDetailedItinerariesV2(TRUE)
 r5r_core$setDetailedItinerariesV2(FALSE)
 
+# a <- capture.output(
 system.time(
   det_new <- detailed_itineraries(r5r_core,
                               origins = points[10,],
@@ -33,12 +34,14 @@ system.time(
                               max_trip_duration = 120,
                               # suboptimal_minutes = 1,
                               fare_structure = fare_structure,
-                              max_fare = 10,
+                              max_fare = 9,
                               time_window = 1,
                               all_to_all = T,
                               progress = T,
-                              shortest_path = T)
+                              shortest_path = T,
+                              verbose = T)
   )
+# )
 
 mapview::mapview(det2, zcol = "mode")
 mapview::mapview(dplyr::filter(det2, option == 36), zcol = "mode")
