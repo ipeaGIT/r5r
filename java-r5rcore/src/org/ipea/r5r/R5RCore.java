@@ -237,7 +237,7 @@ public class R5RCore {
 
     public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
         Rengine r = new Rengine();
-        RConsoleOutputStream rs = new RConsoleOutputStream(r, 0);
+        RConsoleOutputStream rs = new RConsoleOutputStream(r, 1);
         System.setOut(new PrintStream(rs));
 
         if (verbose) {
