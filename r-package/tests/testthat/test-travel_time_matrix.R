@@ -154,10 +154,6 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(n_threads = c(2, 3)))
   expect_error(tester(n_threads = 0))
 
-  expect_error(tester(verbose = 1))
-  expect_error(tester(verbose = NA))
-  expect_error(tester(verbose = c(TRUE, TRUE)))
-
   expect_error(tester(output_dir = 1))
   expect_error(tester(output_dir = "non_existent_dir"))
 })

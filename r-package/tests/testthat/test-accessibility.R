@@ -135,11 +135,6 @@ test_that("adequately raises errors", {
   expect_error(tester(r5r_core, percentiles = .3))
   expect_error(tester(r5r_core, percentiles = 1:6))
 
-  # error related to non-logical verbose
-  expect_error(tester(r5r_core, verbose = "TRUE"))
-  expect_error(tester(r5r_core, verbose = 1))
-  expect_error(tester(r5r_core, verbose = NULL))
-
   # decay_function
   expect_error(tester(r5r_core, decay_function = "fixed_exponential"))
   expect_error(tester(r5r_core, decay_function = "bananas"))
