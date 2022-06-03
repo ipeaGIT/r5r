@@ -26,25 +26,29 @@ r5r_core$setDetailedItinerariesV2(FALSE)
 # a <- capture.output(
 system.time(
   det_new <- detailed_itineraries(r5r_core,
-                              origins = points[10,],
+                              origins = points[1,],
                               destinations = points[12,],
                               mode = c("WALK", "TRANSIT"),
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
-                              max_trip_duration = 120,
-                              # suboptimal_minutes = 1,
-                              fare_structure = fare_structure,
-                              max_fare = 9,
-                              time_window = 1,
+                              max_trip_duration = 90,
+                              suboptimal_minutes = 5,
+                              # fare_structure = fare_structure,
+                              # max_fare = 15,
+                              time_window = 10,
                               all_to_all = T,
                               progress = T,
-                              shortest_path = T,
-                              verbose = F)
+                              shortest_path = F,
+                              verbose = F,
+                              drop_geometry = F)
   )
 # )
 
-mapview::mapview(det2, zcol = "mode")
-mapview::mapview(dplyr::filter(det2, option == 36), zcol = "mode")
+det_new$dist <- sf::st_length(det_new)
+
+
+mapview::mapview(det_new, zcol = "option")
+mapview::mapview(dplyr::filter(det_new, option == 2), zcol = "route")
 mapview::mapview(dplyr::filter(det2,
                                from_id == "beira_rio_stadium",
                                to_id == "bus_central_station",
@@ -64,7 +68,13 @@ saveRDS(det2, "det_v1.rds")
 library(sf)
 library(tidyverse)
 
-det2 %>%
+det_new %>%
+  st_set_geometry(NULL) %>%
+  group_by(option) %>%
+  summarise(mode = paste(mode, collapse = "|"),
+            routes = paste(route, collapse = "|"))
+
+det_new %>%
   st_set_geometry(NULL) %>%
   group_by(option) %>%
   summarise(mode = paste(mode, collapse = "|"),
@@ -77,3 +87,6 @@ a <- det_new %>%
   mutate(sum_dur = sum(segment_duration + wait),
          is_diff = sum_dur != total_duration)
 
+suppressWarnings()
+
+a <- r5r_core$message("bla")

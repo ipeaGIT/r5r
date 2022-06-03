@@ -246,7 +246,7 @@ public class R5RCore {
     public RDataFrame detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
                                                                    String date, String departureTime, int maxWalkTime, int maxBikeTime,  int maxTripDuration,
-                                                                   boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
+                                                                   boolean dropItineraryGeometry, boolean shortestPath) throws ParseException, ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
@@ -257,7 +257,7 @@ public class R5RCore {
 
         return detailedItineraries(fromIds, fromLats, fromLons, toIds, toLats, toLons,
                 directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration, dropItineraryGeometry);
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration, dropItineraryGeometry, shortestPath);
 
     }
 
@@ -265,7 +265,7 @@ public class R5RCore {
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
-                                                                            boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
+                                                                            boolean dropItineraryGeometry, boolean shortestPath) throws ExecutionException, InterruptedException {
         if (Utils.detailedItinerariesV2) {
             // call regular detailed itineraries, based on PointToPointQuery
             FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
@@ -274,6 +274,7 @@ public class R5RCore {
             detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
             detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
             detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+            if (shortestPath) detailedItineraryPlanner.shortestPathOnly();
             if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
             return detailedItineraryPlanner.run();
@@ -639,5 +640,10 @@ public class R5RCore {
         }
 
         return servicesTable;
+    }
+
+    public void message(String m) {
+        Rengine r = new Rengine();
+        r.eval("message(\"" + m + "\")");
     }
 }

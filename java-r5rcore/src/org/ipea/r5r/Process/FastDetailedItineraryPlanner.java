@@ -19,6 +19,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FastDetailedItineraryPlanner.class);
 
     private boolean dropItineraryGeometry = false;
+    private boolean shortestPath = false;
 
     public FastDetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
@@ -27,6 +28,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
     public void dropItineraryGeometry() {
         dropItineraryGeometry = true;
     }
+    public void shortestPathOnly() { shortestPath = true; }
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
@@ -34,11 +36,12 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
         TripPlanner computer = new TripPlanner(transportNetwork, request);
         computer.setOD(fromIds[index], toIds[index]);
+        computer.setShortestPath(this.shortestPath);
         List<Trip> trips = computer.plan();
 
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         try {
-            populateDataFrame(index, trips, travelTimesTable);
+            populateDataFrame(trips, travelTimesTable);
         } catch (Exception e) {
             LOG.error("error populating itineraries");
             e.printStackTrace();
@@ -56,23 +59,24 @@ public class FastDetailedItineraryPlanner extends R5Process {
         // not needed in this class
     }
 
-    private void populateDataFrame(int index, List<Trip> trips, RDataFrame travelTimesTable) {
+    private void populateDataFrame(List<Trip> trips, RDataFrame travelTimesTable) {
 
         AtomicInteger tripId = new AtomicInteger(0);
         trips.forEach(trip -> {
             travelTimesTable.append();
 
-            travelTimesTable.set("from_id", fromIds[index]);
-            travelTimesTable.set("from_lat", fromLats[index]);
-            travelTimesTable.set("from_lon", fromLons[index]);
+            travelTimesTable.set("from_id", trip.getFromId());
+            travelTimesTable.set("from_lat", trip.getFromLat());
+            travelTimesTable.set("from_lon", trip.getFromLon());
 
-            travelTimesTable.set("to_id", toIds[index]);
-            travelTimesTable.set("to_lat", toLats[index]);
-            travelTimesTable.set("to_lon", toLons[index]);
+            travelTimesTable.set("to_id", trip.getToId());
+            travelTimesTable.set("to_lat", trip.getToLat());
+            travelTimesTable.set("to_lon", trip.getToLon());
 
             travelTimesTable.set("option", tripId.incrementAndGet());
             travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
             travelTimesTable.set("total_duration", trip.getTotalDurationSeconds() / 60.0);
+            travelTimesTable.set("total_distance", trip.getTotalDistance());
             travelTimesTable.set("total_fare", trip.getTotalFare() / 100.0);
 
             AtomicInteger legId = new AtomicInteger(0);
@@ -84,7 +88,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
                 travelTimesTable.set("segment_duration", leg.getLegDurationSeconds() / 60.0);
                 travelTimesTable.set("wait", leg.getWaitTime() / 60.0);
-                travelTimesTable.set("distance", leg.getGeometry().getLength());
+                travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
 
                 if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
@@ -104,6 +108,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addIntegerColumn("option", 0);
         itinerariesDataFrame.addStringColumn("departure_time", "");
         itinerariesDataFrame.addDoubleColumn("total_duration", 0.0);
+        itinerariesDataFrame.addIntegerColumn("total_distance", 0);
         itinerariesDataFrame.addDoubleColumn("total_fare", 0.0);
 
         itinerariesDataFrame.addIntegerColumn("segment", 0);
@@ -111,7 +116,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addDoubleColumn("cumulative_fare", 0.0);
         itinerariesDataFrame.addDoubleColumn("segment_duration", 0.0);
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
-        itinerariesDataFrame.addDoubleColumn("distance", 0.0);
+        itinerariesDataFrame.addIntegerColumn("distance", 0);
         itinerariesDataFrame.addStringColumn("route", "");
         if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
 

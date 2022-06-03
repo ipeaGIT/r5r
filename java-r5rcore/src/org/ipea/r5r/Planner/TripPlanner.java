@@ -22,6 +22,7 @@ public class TripPlanner {
 
     private String fromId;
     private String toId;
+    private boolean shortestPath;
 
     private final TransportNetwork transportNetwork;
     private final ProfileRequest request;
@@ -31,9 +32,14 @@ public class TripPlanner {
         this.toId = toId;
     }
 
+    public void setShortestPath(boolean shortestPath) {
+        this.shortestPath = shortestPath;
+    }
+
     public TripPlanner(TransportNetwork transportNetwork, ProfileRequest request) {
         this.transportNetwork = transportNetwork;
         this.request = request;
+        this.shortestPath = false;
     }
 
     //Does point to point routing with data from request
@@ -44,10 +50,13 @@ public class TripPlanner {
 
         findDirectPaths(request, trips);
 
+        Map<LegMode, StreetRouter> accessRouter = null;
+        Map<LegMode, StreetRouter> egressRouter = null;
+
         if (request.hasTransit()) {
             // Find access paths and times
-            Map<LegMode, StreetRouter> accessRouter = findAccessPaths(request);
-            Map<LegMode, StreetRouter> egressRouter = findEgressPaths(request);
+            accessRouter = findAccessPaths(request);
+            egressRouter = findEgressPaths(request);
 
             Map<LegMode, TIntIntMap> accessTimes = accessRouter.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getReachedStops()));
@@ -92,12 +101,23 @@ public class TripPlanner {
                 }
             }
 
-            for (Trip trip : trips.values()) {
-                trip.augment(accessRouter, egressRouter, transportNetwork, request);
-            }
         }
 
-        return new ArrayList<>(trips.values());
+        List<Trip> tripList = new ArrayList<>(trips.values());
+
+        tripList = tripList.stream()
+                .filter(trip -> trip.getTotalDurationSeconds() <= request.maxTripDurationMinutes * 60 && trip.getTotalFare() <= request.maxFare)
+                .collect(Collectors.toList());
+
+        if (shortestPath && !tripList.isEmpty()) {
+            tripList = List.of(tripList.stream().min(Comparator.comparingInt(Trip::getTotalDurationSeconds)).get());
+        }
+
+        for (Trip trip : trips.values()) {
+            trip.augment(accessRouter, egressRouter, transportNetwork, request);
+        }
+
+        return tripList;
     }
 
 

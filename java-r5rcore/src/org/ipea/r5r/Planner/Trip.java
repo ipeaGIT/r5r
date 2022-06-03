@@ -1,9 +1,7 @@
 package org.ipea.r5r.Planner;
 
 import com.conveyal.r5.api.util.LegMode;
-import com.conveyal.r5.api.util.ProfileOption;
 import com.conveyal.r5.api.util.StreetSegment;
-import com.conveyal.r5.api.util.Transfer;
 import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.profile.ProfileRequest;
@@ -16,6 +14,7 @@ import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.Logger;
@@ -25,8 +24,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.conveyal.r5.transit.TransitLayer.TRANSFER_DISTANCE_LIMIT_METERS;
-
 public class Trip {
     private static final Logger LOG = LoggerFactory.getLogger(Trip.class);
 
@@ -35,6 +32,35 @@ public class Trip {
     // origin-destination
     private String fromId;
     private double fromLat;
+    private double fromLon;
+
+    private String toId;
+    private double toLat;
+    private double toLon;
+
+    public String getFromId() {
+        return fromId;
+    }
+
+    public double getFromLat() {
+        return fromLat;
+    }
+
+    public double getFromLon() {
+        return fromLon;
+    }
+
+    public String getToId() {
+        return toId;
+    }
+
+    public double getToLat() {
+        return toLat;
+    }
+
+    public double getToLon() {
+        return toLon;
+    }
 
     public int getDepartureTime() {
         return departureTime;
@@ -44,7 +70,7 @@ public class Trip {
         return totalDurationSeconds;
     }
 
-    public double getTotalDistance() {
+    public int getTotalDistance() {
         return totalDistance;
     }
 
@@ -55,12 +81,6 @@ public class Trip {
     public List<TripLeg> getLegs() {
         return legs;
     }
-
-    private double fromLon;
-
-    private String toId;
-    private double toLat;
-    private double toLon;
 
     public void setOD(String fromId, String toId, ProfileRequest request) {
         this.fromId = fromId;
@@ -74,7 +94,7 @@ public class Trip {
 
     private int departureTime;
     private int totalDurationSeconds;
-    private double totalDistance;
+    private int totalDistance;
     private int totalFare;
 
     private final List<TripLeg> legs;
@@ -134,9 +154,9 @@ public class Trip {
         Map<Integer, StreetSegment> egressPaths = new HashMap<>();
         MultiKeyMap<Integer, StreetSegment> transferPaths = new MultiKeyMap<>();
 
-
         if (!isDirect) {
             int tripDuration = 0;
+            int tripDistance = 0;
 
             // add access and egress legs
             addAccessPath(accessRouter, accessPaths, network, request);
@@ -145,13 +165,21 @@ public class Trip {
             for (TripLeg leg : legs) {
                 leg.augmentTransitLeg(transferPaths, network, request);
                 tripDuration += (leg.getLegDurationSeconds() + leg.getWaitTime());
+                tripDistance += leg.getLegDistance();
             }
 
+            this.totalDistance = tripDistance;
             this.totalDurationSeconds = tripDuration;
+        } else {
+            int tripDistance = 0;
+
+            for (TripLeg leg : legs) {
+                tripDistance += leg.augmentDirectLeg();
+            }
+
+            this.totalDistance = tripDistance;
         }
     }
-
-
 
     private void loadTransitLegs(McRaptorSuboptimalPathProfileRouter.McRaptorState state,
                                  TransportNetwork network, ProfileRequest request) {
@@ -176,45 +204,7 @@ public class Trip {
                                 new Coordinate(originStopCoord.getX() / VertexStore.FIXED_FACTOR, originStopCoord.getY() / VertexStore.FIXED_FACTOR),
                                 new Coordinate(destStopCoord.getX() / VertexStore.FIXED_FACTOR, destStopCoord.getY() / VertexStore.FIXED_FACTOR),
                         });
-
-
-
-                        //// FIND STREET PATH BETWEEN STOPS
-
-                        //Groups transfers on alight stop so that StreetRouter is called only once per start stop
-/*
-                        //LOG.info("Filling middle paths");
-                        boolean prevReverseSearch = request.reverseSearch;
-                        request.reverseSearch = false;
-                        StreetRouter streetRouter = new StreetRouter(network.streetLayer);
-                        streetRouter.streetMode = StreetMode.WALK;
-                        streetRouter.profileRequest = request;
-                        //TODO: make configurable distanceLimitMeters in middle
-                        streetRouter.distanceLimitMeters = TRANSFER_DISTANCE_LIMIT_METERS;
-
-                        int stopVertexId = network.transitLayer.streetVertexForStop.get(originStopIndex);
-                        streetRouter.setOrigin(stopVertexId);
-
-//                        streetRouter.setOrigin(originStopCoord.getY() / VertexStore.FIXED_FACTOR,
-//                                originStopCoord.getX() / VertexStore.FIXED_FACTOR);
-
-                        streetRouter.setDestination(destStopCoord.getY() / VertexStore.FIXED_FACTOR,
-                                destStopCoord.getX() / VertexStore.FIXED_FACTOR);
-
-                        streetRouter.route();
-
-                        stopVertexId = network.transitLayer.streetVertexForStop.get(destStopIndex);
-
-                        StreetRouter.State lastState = streetRouter.getStateAtVertex(stopVertexId); //streetRouter.getState();
-                        if (lastState != null) {
-                            StreetPath streetPath = new StreetPath(lastState, network, false);
-                            StreetSegment streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
-                            geom = streetSegment.geometry;
-                        }
-
-                        request.reverseSearch = prevReverseSearch; */
                     }
-
 
                     TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom);
 
@@ -227,14 +217,6 @@ public class Trip {
 
                     int boardStopIndex = pattern.stops[state.boardStopPosition];
                     int alightStopIndex = pattern.stops[state.alightStopPosition];
-
-//                    List<Coordinate> coords = new ArrayList<>();
-//                    List<LineString> hops = pattern.getHopGeometries(network.transitLayer);
-//                    for (int i = state.boardStopPosition; i < state.alightStopPosition; i++) { // hop i is from stop i to i + 1, don't include last stop index
-//                        LineString hop = hops.get(i);
-//                        coords.addAll(Arrays.asList(hop.getCoordinates()));
-//                    }
-//                    LineString shape = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
 
                     RouteInfo route = network.transitLayer.routes.get(pattern.routeIndex);
                     String mode = TransitLayer.getTransitModes(route.route_type).toString();
@@ -270,9 +252,6 @@ public class Trip {
 
             StreetSegment streetSegment = accessPaths.get(startVertexStopIndex);
             if (streetSegment == null) {
-//                int accessPathIndex = profileOption.getAccessIndex(accessMode, startVertexStopIndex);
-//                if (accessPathIndex < 0) {
-                //Here accessRouter needs to have this access mode since stopModeAccessMap is filled from accessRouter
                 StreetRouter streetRouter = accessRouter.get(accessMode);
                 //FIXME: Must we really update this on every streetrouter?
                 streetRouter.profileRequest.reverseSearch = false;
@@ -286,6 +265,7 @@ public class Trip {
 
                     TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
                             streetSegment.duration, 0, streetSegment.geometry);
+
                     legs.add(0, accessLeg);
 
                     accessPaths.put(startVertexStopIndex, streetSegment);
@@ -299,9 +279,6 @@ public class Trip {
 
                 accessPaths.put(startVertexStopIndex, streetSegment);
             }
-//                        profileOption.addAccess(streetSegment, accessMode, startVertexStopIndex);
-                //This should never happen since stopModeAccessMap is filled from reached stops in accessRouter
-//                }
         } else {
             LOG.warn("Mode is not in stopModeAccessMap for start stop:{}({})", startVertexStopIndex, startStopIndex);
         }
@@ -328,8 +305,6 @@ public class Trip {
                 if (streetState != null) {
                     StreetPath streetPath = new StreetPath(streetState, network, true);
                     streetSegment = new StreetSegment(streetPath, egressMode, network.streetLayer);
-//                profileOption.addEgress(streetSegment, egressMode, endVertexStopIndex);
-                    //This should never happen since stopModeEgressMap is filled from reached stops in egressRouter
 
                     TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
                             streetSegment.duration, cumulativeFare, streetSegment.geometry);
@@ -348,6 +323,5 @@ public class Trip {
             LOG.warn("Mode is not in stopModeEgressMap for END stop:{}({})", endVertexStopIndex, endStopIndex);
         }
     }
-
 }
 

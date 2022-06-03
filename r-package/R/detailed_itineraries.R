@@ -220,87 +220,33 @@ detailed_itineraries <- function(r5r_core,
                                                max_walk_time,
                                                max_bike_time,
                                                max_trip_duration,
-                                               drop_geometry)
+                                               drop_geometry,
+                                               shortest_path)
 
 
   # process results ---------------------------------------------------------
 
+  # results were exported as csv files, so there's no need for any post-
+  # processing
+  if (!is.null(output_dir)) return(output_dir)
 
   # check if any itineraries have been found - if not, raises an error
   # if there are any results, convert those to a data.frame. if only one pair of
   # origin and destination has been passed, then the result is already a df
 
-  if (is.null(path_options)) {
-    return(data.table::data.table(path_options))
+  path_options <- java_to_dt(path_options)
 
-  } else {
-    path_options <- java_to_dt(path_options)
-
-    if (!is.data.frame(path_options)) {
-      path_options <- data.table::rbindlist(path_options)
-    }
-
-    path_options[, geometry := sf::st_as_sfc(geometry)]
-    path_options <- sf::st_sf(path_options, crs = 4326)
-
-    return(path_options)
-  }
-
-
-
-  # If there is no result, return empty simple feature
-  if (nrow(path_options) == 0) {
-    if (!drop_geometry) {
-      path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]
-      path_options <- sf::st_sf(path_options, crs = 4326)
-    }
-    return(path_options)
-  }
-
-  # return either the fastest or multiple itineraries between an o-d pair (untie
-  # it by the option number, if necessary)
-
-  path_options[, total_duration := sum(segment_duration, wait), by = .(from_id, to_id, option)]
-
-  if (shortest_path) {
-
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(from_id, to_id)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id)]$V1]
-
-  } else {
-
-    # R5 often returns multiple itineraries between an origin and a destination
-    # with the same basic structure, but with minor differences in the walking
-    # segments at the start and end of the trip.
-    # itineraries with the same signature (sequence of routes) are filtered to
-    # keep the one with the shortest duration
-
-    path_options[, temp_route := data.table::fifelse(route == "", mode, route)]
-    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(from_id, to_id, option)]
-
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(from_id, to_id, temp_sign)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id, temp_sign)]$V1]
-
-    # remove temporary columns
-    path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
-
-  }
-
-  # substitute 'option' id assigned by r5 to a run-length id from 1 to number of
-  # options
-  path_options[, option := data.table::rleid(option), by = .(from_id, to_id)]
-
-  # if results include the geometry, convert path_options from data.frame to
-  # data.table with sfc column
   if (!drop_geometry) {
 
-    # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
-    path_options[, geometry := sf::st_as_sfc(geometry)]
-    path_options <- sf::st_sf(path_options, crs = 4326)
+    if (nrow(path_options) > 0) {
+      # If there is no result, return empty simple feature
+      path_options[, geometry := sf::st_as_sfc(geometry)]
+    } else {
+      path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]
+    }
 
+    path_options <- sf::st_sf(path_options, crs = 4326)
   }
 
-  if (!is.null(output_dir)) return(output_dir)
   return(path_options)
-
 }

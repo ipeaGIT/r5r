@@ -11,6 +11,7 @@ import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 
@@ -152,7 +153,7 @@ public class TripLeg {
                 coords.addAll(Arrays.asList(hop.getCoordinates()));
             }
             geometry = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
-            legDistance = (int) geometry.getLength();
+            legDistance = Utils.getLinestringLength(geometry);
         } else {
             // street path between stops
             if (this.fromStop > 0 & this.toStop > 0) {
@@ -178,18 +179,16 @@ public class TripLeg {
 
                     streetRouter.route();
 
-//                stopVertexId = network.transitLayer.streetVertexForStop.get(this.toStop);
-
                     StreetRouter.State lastState = streetRouter.getState(destStopCoord.getY() / VertexStore.FIXED_FACTOR,
                             destStopCoord.getX() / VertexStore.FIXED_FACTOR);
-//                StreetRouter.State lastState = streetRouter.getStateAtVertex(stopVertexId); //streetRouter.getState();
+
                     if (lastState != null) {
                         StreetPath streetPath = new StreetPath(lastState, network, false);
                         streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
 
                         this.legDurationSeconds = streetSegment.duration;
                         this.geometry = streetSegment.geometry;
-                        this.legDistance = streetSegment.distance;
+                        this.legDistance = Utils.getLinestringLength(geometry);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
                     }
@@ -197,11 +196,17 @@ public class TripLeg {
                     request.reverseSearch = prevReverseSearch;
                 } else {
                     this.geometry = streetSegment.geometry;
-                    this.legDistance = streetSegment.distance;
+                    this.legDistance = Utils.getLinestringLength(geometry);
                 }
+            } else {
+                this.legDistance = Utils.getLinestringLength(geometry);
             }
         }
     }
 
+    public int augmentDirectLeg() {
+        this.legDistance = Utils.getLinestringLength(geometry);
+        return this.legDistance;
+    }
 }
 
