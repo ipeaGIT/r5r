@@ -107,6 +107,7 @@ public class TripPlanner {
 
         tripList = tripList.stream()
                 .filter(trip -> trip.getTotalDurationSeconds() <= request.maxTripDurationMinutes * 60 && trip.getTotalFare() <= request.maxFare)
+                .sorted(Comparator.comparingInt(Trip::directFirst).thenComparingInt(Trip::getNumberOfLegs).thenComparingInt(Trip::getTotalDurationSeconds))
                 .collect(Collectors.toList());
 
         if (shortestPath && !tripList.isEmpty()) {

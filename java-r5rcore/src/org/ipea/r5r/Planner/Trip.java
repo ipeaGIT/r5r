@@ -29,6 +29,8 @@ public class Trip {
 
     private boolean isDirect = false;
 
+    public int directFirst() { return isDirect ? 0 : 1; }
+
     // origin-destination
     private String fromId;
     private double fromLat;
@@ -81,6 +83,8 @@ public class Trip {
     public List<TripLeg> getLegs() {
         return legs;
     }
+
+    public int getNumberOfLegs() { return legs.size(); }
 
     public void setOD(String fromId, String toId, ProfileRequest request) {
         this.fromId = fromId;

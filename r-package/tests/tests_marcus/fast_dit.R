@@ -31,7 +31,7 @@ system.time(
                               mode = c("WALK", "TRANSIT"),
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
-                              max_trip_duration = 90,
+                              max_trip_duration = 120,
                               suboptimal_minutes = 5,
                               # fare_structure = fare_structure,
                               # max_fare = 15,
