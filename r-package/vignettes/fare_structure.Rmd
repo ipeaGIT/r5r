@@ -390,7 +390,7 @@ p1 <- ggplot(time_difference, aes(y = travel_time_unl, x = travel_time_500)) +
   theme_light() +
   theme(legend.position = "none") +
   labs(y = "travel time (minutes)\nunestricted monetary cost",
-       x = "travel time (minutes)\nmonetary cost restricted to R$ 5.00"
+       x = "travel time (minutes)\nmonetary cost restricted to BRL 5.00"
        )
 
 # plot of unreachable destinations when the monetary cost limit is too low

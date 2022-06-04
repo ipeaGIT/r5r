@@ -67,7 +67,7 @@ ggplot(data=df, aes(x=cost, y=time, label = modes)) +
   geom_point() +
   geom_text(color='gray30', hjust = -.2, nudge_x = 0.05, angle = 45) +
   labs(title='Pareto frontier of alternative routes from A to B', subtitle = 'Hypotetical example') +
-  scale_x_continuous(name="Travel cost ($)", breaks=seq(0,12,3)) +
+  scale_x_continuous(name="Travel cost (BRL)", breaks=seq(0,12,3)) +
   scale_y_continuous(name="Travel time (minutes)", breaks=seq(0,60,10)) +
   coord_cartesian(xlim = c(0,15), ylim = c(0, 60)) +
   theme_classic()
