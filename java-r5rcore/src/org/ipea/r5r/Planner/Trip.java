@@ -100,16 +100,28 @@ public class Trip {
     private int totalDurationSeconds;
     private int totalDistance;
     private int totalFare;
+    private String key;
 
     private final List<TripLeg> legs;
 
     public String getKey() {
+        return key;
+//        if (isDirect) {
+//            return legs.iterator().next().getMode();
+//        } else {
+//            return legs.stream().map(TripLeg::getRoute).
+//                    filter(Predicate.not(String::isEmpty)).
+//                    collect(Collectors.joining(", "));
+//        }
+    }
+
+    public void buildKey() {
         if (isDirect) {
-            return legs.iterator().next().getMode();
+            this.key = legs.iterator().next().getMode();
         } else {
-            return legs.stream().map(TripLeg::getRoute).
+            this.key = legs.stream().map(TripLeg::getRoute).
                     filter(Predicate.not(String::isEmpty)).
-                    collect(Collectors.joining(", "));
+                    collect(Collectors.joining("|"));
         }
     }
 
@@ -145,6 +157,7 @@ public class Trip {
         try {
             loadTransitLegs(state, network, request);
             Collections.reverse(legs);
+            buildKey();
         } catch (Exception e) {
             LOG.error("error loading legs");
             e.printStackTrace();

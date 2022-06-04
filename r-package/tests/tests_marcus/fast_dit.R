@@ -20,22 +20,22 @@ fare_structure <- read_fare_structure(fare_structure_path)
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
-r5r_core$setDetailedItinerariesV2(TRUE)
-r5r_core$setDetailedItinerariesV2(FALSE)
+# r5r_core$setDetailedItinerariesV2(TRUE)
+# r5r_core$setDetailedItinerariesV2(FALSE)
 
 # a <- capture.output(
 system.time(
   det_new <- detailed_itineraries(r5r_core,
-                              origins = points[1,],
+                              origins = points[10,],
                               destinations = points[12,],
                               mode = c("WALK", "TRANSIT"),
                               departure_datetime = departure_datetime,
                               max_walk_dist = 1000,
-                              max_trip_duration = 120,
-                              suboptimal_minutes = 5,
-                              # fare_structure = fare_structure,
-                              # max_fare = 15,
-                              time_window = 10,
+                              max_trip_duration = 90,
+                              # suboptimal_minutes = 0,
+                              fare_structure = fare_structure,
+                              max_fare = 9,
+                              # time_window = 1,
                               all_to_all = T,
                               progress = T,
                               shortest_path = F,
@@ -90,3 +90,69 @@ a <- det_new %>%
 suppressWarnings()
 
 a <- r5r_core$message("bla")
+
+
+
+
+
+
+
+
+# load libraries
+library("r5r")
+library("data.table")
+library("tidyverse")
+
+# build transport network
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path)
+
+# inputs
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
+                                 format = "%d-%m-%Y %H:%M:%S")
+
+# size <- 15
+compute_paths <- function(sm, tw) {
+  # sample_data <- fread(here::here("data", "sample_15.csv"))
+
+  t <- system.time(
+    dit <- detailed_itineraries(r5r_core,
+                                origins = sample_data[1,],
+                                destinations = sample_data[12,],
+                                mode = c("WALK", "TRANSIT"),
+                                departure_datetime = departure_datetime,
+                                suboptimal_minutes = sm,
+                                time_window = tw,
+                                max_walk_dist = 1000,
+                                max_trip_duration = 120,
+                                progress = T,
+                                shortest_path = F)
+  )
+
+  l <- dit$option |> unique() |> length()
+
+  rm(dit)
+  rJava::.jgc()
+
+  return(data.table(suboptimal_minutes = sm,
+                    time_window = tw,
+                    n_options = l,
+                    time = t[3]))
+}
+
+# compute paths
+# times_old <- lapply(c(15, 25), compute_paths) |> rbindlist()
+
+df <- NULL
+for (sm in 0:15) {
+  for (tw in 1:15) {
+    df1 <- compute_paths(sm, tw)
+
+    if (is.null(df)) {
+      df <- df1
+    } else {
+      df <- rbind(df, df1)
+    }
+  }
+}
+
