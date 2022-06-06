@@ -51,7 +51,7 @@ library(r5r)
 library(sf)
 library(data.table)
 library(ggplot2)
-library(akima)
+library(interp)
 library(dplyr)
 ```
 
@@ -105,13 +105,13 @@ access <- accessibility(r5r_core,
 
 
 head(access)
-#>            from_id percentile cutoff accessibility 
-#> 1: 89a901291abffff         50     21             3 
-#> 2: 89a9012a3cfffff         50     21             0 
-#> 3: 89a901295b7ffff         50     21             6 
-#> 4: 89a901284a3ffff         50     21             1 
-#> 5: 89a9012809bffff         50     21             5 
-#> 6: 89a901285cfffff         50     21             3 
+#>                 id opportunity percentile cutoff accessibility
+#> 1: 89a901291abffff     schools         50     21             3
+#> 2: 89a901291abffff  healthcare         50     21             5
+#> 3: 89a9012a3cfffff     schools         50     21             0
+#> 4: 89a9012a3cfffff  healthcare         50     21             0
+#> 5: 89a901295b7ffff     schools         50     21             5
+#> 6: 89a901295b7ffff  healthcare         50     21             2
 ```
 
 
@@ -128,7 +128,7 @@ below demonstrates how to do that, with some extra steps to produce a prettier m
 access_schools <- access %>% 
   filter(opportunity == "schools") %>%
   inner_join(points, by='id') %>%
-  with(interp(lon, lat, accessibility)) %>%
+  with(interp::interp(lon, lat, accessibility)) %>%
   with(cbind(acc=as.vector(z),  # Column-major order
              x=rep(x, times=length(y)),
              y=rep(y, each=length(x)))) %>% as.data.frame() %>% na.omit() %>%
@@ -137,7 +137,7 @@ access_schools <- access %>%
 access_health <- access %>% 
   filter(opportunity == "healthcare") %>%
   inner_join(points, by='id') %>%
-  with(interp(lon, lat, accessibility)) %>%
+  with(interp::interp(lon, lat, accessibility)) %>%
   with(cbind(acc=as.vector(z),  # Column-major order
              x=rep(x, times=length(y)),
              y=rep(y, each=length(x)))) %>% as.data.frame() %>% na.omit() %>%

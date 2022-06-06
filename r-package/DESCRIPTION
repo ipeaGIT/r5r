@@ -48,12 +48,12 @@ Imports:
     utils,
     zip
 Suggests:
-    akima,
-    covr,
+    covr
     dplyr,
     ggplot2 (>= 3.3.1),
     gtfstools,
     h3jsr,
+    interp,
     knitr,
     mapview,
     patchwork,
