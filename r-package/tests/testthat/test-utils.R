@@ -188,17 +188,6 @@ test_that("assert_breakdown_stat expected behavior", {
   expect_equal(class(assert_breakdown_stat(breakdown_stat='min')), 'character')
 })
 
-# set_n_threads -----------------------------------------------------------
-
-
-test_that("set_n_threads adequately raises warnings and errors", {
-
-  expect_error(set_n_threads("r5r_obj", 2))
-  expect_error(set_n_threads(r5r_obj, "2"))
-
-})
-
-
 # set_speed ---------------------------------------------------------------
 
 

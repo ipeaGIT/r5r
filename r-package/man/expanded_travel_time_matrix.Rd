@@ -55,12 +55,13 @@ GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
 vignette for more details on its usage:
 \code{vignette("time_window", package = "r5r")}}
 
-\item{breakdown}{A logical. If \code{FALSE} (the default), the function returns a
-simple output that lists the total time between each pair in each minute of
-the specified time window. If \code{TRUE}, the output breaks down the trip
-information, showing the routes used to complete each trip and their total
-access, waiting, in-vehicle and transfer time. Please note that setting this
-parameter to \code{TRUE} makes the function significantly slower.}
+\item{breakdown}{A logical. Whether to include detailed information about
+each trip in the output. If \code{FALSE} (the default), the output lists the
+total time between each origin-destination pair and the routes used to
+complete the trip for each minute of the specified time window. If \code{TRUE},
+the output includes the total access, waiting, in-vehicle and transfer
+time of each trip. Please note that setting this parameter to \code{TRUE} makes
+the function significantly slower.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -136,12 +137,20 @@ because writing the results to disk prevents \code{r5r} from storing them in
 memory.}
 }
 \value{
-A \code{data.table} with travel time estimates (in minutes) between
-origin and destination pairs for each minute of the specified time window. A
-pair is absent from the final output if no trips could be completed in any
-of the minutes of the time window. If \code{output_dir} is not \code{NULL}, the
-function returns the path specified in that parameter, in which the \code{.csv}
-files containing the results are saved.
+A \code{data.table} with travel time estimates (in minutes) and the
+routes used in each trip between origin and destination pairs, for each
+minute of the specified time window. Each set of origin, destination and
+departure minute can appear up to N times, where N is the number of Monte
+Carlo draws specified in the function arguments (please note that this
+only applies when the GTFS feeds that describe the transit network include
+a frequencies table, otherwise only a single draw is performed). A pair is
+completely absent from the final output if no trips could be completed in
+any of the minutes of the time window. If for a single pair trips could be
+completed in some of the minutes of the time window, but not for all of
+them, the minutes in which trips couldn't be completed will have \code{NA}
+travel time and routes used. If \code{output_dir} is not \code{NULL}, the function
+returns the path specified in that parameter, in which the \code{.csv} files
+containing the results are saved.
 }
 \description{
 Detailed computation of travel time estimates between one or multiple origin
@@ -241,29 +250,35 @@ r5r_core <- setup_r5(data_path)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
 # by default only returns the total time between each pair in each minute of
 # the specified time window
-ettm <- expanded_travel_time_matrix(r5r_core,
-                                    origins = points,
-                                    destinations = points,
-                                    mode = c("WALK", "TRANSIT"),
-                                    time_window = 20,
-                                    departure_datetime = departure_datetime,
-                                    max_trip_duration = 60)
+ettm <- expanded_travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 20,
+  departure_datetime = departure_datetime,
+  max_trip_duration = 60
+)
 head(ettm)
 
 # when breakdown = TRUE the output contains much more information
-ettm <- expanded_travel_time_matrix(r5r_core,
-                                    origins = points,
-                                    destinations = points,
-                                    mode = c("WALK", "TRANSIT"),
-                                    time_window = 20,
-                                    departure_datetime = departure_datetime,
-                                    max_trip_duration = 60,
-                                    breakdown = TRUE)
+ettm <- expanded_travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 20,
+  departure_datetime = departure_datetime,
+  max_trip_duration = 60,
+  breakdown = TRUE
+)
 head(ettm)
 
 stop_r5(r5r_core)

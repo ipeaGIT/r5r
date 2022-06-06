@@ -56,6 +56,7 @@ Suggests:
     interp,
     knitr,
     mapview,
+    parallel,
     patchwork,
     rmarkdown,
     testthat

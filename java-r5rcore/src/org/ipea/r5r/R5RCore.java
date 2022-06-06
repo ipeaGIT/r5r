@@ -15,8 +15,11 @@ import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
 import org.ipea.r5r.Utils.Utils;
+import org.rosuda.JRI.RConsoleOutputStream;
+import org.rosuda.JRI.Rengine;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -233,6 +236,10 @@ public class R5RCore {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
     public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
+        Rengine r = new Rengine();
+        RConsoleOutputStream rs = new RConsoleOutputStream(r, 1);
+        System.setOut(new PrintStream(rs));
+
         if (verbose) {
             verboseMode();
         } else {

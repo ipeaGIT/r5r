@@ -173,9 +173,8 @@ travel_time_matrix <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_output_dir(r5r_core, output_dir)
-
-  # travel times breakdown
-  r5r_core$setExpandedTravelTimes(FALSE)
+  set_expanded_travel_times(r5r_core, FALSE)
+  set_breakdown(r5r_core, FALSE)
 
   # call r5r_core method and process result -------------------------------
 
@@ -197,7 +196,7 @@ travel_time_matrix <- function(r5r_core,
     max_trip_duration
   )
 
-  if (!verbose & progress) cat("Preparing final output...")
+  if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   travel_times <- java_to_dt(travel_times)
 
@@ -217,7 +216,7 @@ travel_time_matrix <- function(r5r_core,
     }
   }
 
-  if (!verbose & progress) cat(" DONE!\n")
+  if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
