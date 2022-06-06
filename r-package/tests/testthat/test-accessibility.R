@@ -128,9 +128,6 @@ test_that("adequately raises errors", {
   # error related to non-numeric max_rides
   expect_error(tester(r5r_core, max_rides = "3"))
 
-  # error related to non-numeric n_threads
-  expect_error(tester(r5r_core, n_threads = "1"))
-
   # error related to too many or invalid percentiles
   expect_error(tester(r5r_core, percentiles = .3))
   expect_error(tester(r5r_core, percentiles = 1:6))

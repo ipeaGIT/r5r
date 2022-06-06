@@ -56,6 +56,7 @@ Suggests:
     h3jsr,
     knitr,
     mapview,
+    parallel,
     patchwork,
     rmarkdown,
     testthat
