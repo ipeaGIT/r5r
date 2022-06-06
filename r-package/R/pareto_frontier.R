@@ -173,7 +173,7 @@ pareto_frontier <- function(r5r_core,
     max_trip_duration
   )
 
-  if (!verbose & progress) cat("Preparing final output...")
+  if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   frontier <- java_to_dt(frontier)
 
@@ -182,7 +182,7 @@ pareto_frontier <- function(r5r_core,
     frontier[travel_time > max_trip_duration, travel_time := NA_integer_]
   }
 
-  if (!verbose & progress) cat(" DONE!\n")
+  if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
   return(frontier)

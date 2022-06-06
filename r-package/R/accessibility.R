@@ -242,13 +242,13 @@ accessibility <- function(r5r_core,
     max_trip_duration
   )
 
-  if (!verbose & progress) cat("Preparing final output...")
+  if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   accessibility <- java_to_dt(accessibility)
 
   if (decay_function == "fixed_exponential") accessibility[, cutoff := NULL]
 
-  if (!verbose & progress) cat(" DONE!\n")
+  if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
   return(accessibility[])
