@@ -118,9 +118,6 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_core, shortest_path = 1))
   expect_error(default_tester(r5r_core, shortest_path = NULL))
 
-  # error related to non-numeric n_threads
-  expect_error(default_tester(r5r_core, n_threads = "1"))
-
   # error related to non-logical verbose
   expect_error(default_tester(r5r_core, verbose = "TRUE"))
   expect_error(default_tester(r5r_core, verbose = 1))

@@ -40,7 +40,7 @@ set_verbose <- function(r5r_core, verbose) {
 #'
 #' @keywords internal
 set_progress <- function(r5r_core, progress) {
-  checkmate::assert_logical(progress, len = 1)
+  checkmate::assert_logical(progress, len = 1, any.missing = FALSE)
 
   r5r_core$setProgress(progress)
 

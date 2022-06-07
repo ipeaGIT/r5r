@@ -196,7 +196,7 @@ travel_time_matrix <- function(r5r_core,
     max_trip_duration
   )
 
-  if (!verbose & progress) cat("Preparing final output...")
+  if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   travel_times <- java_to_dt(travel_times)
 
@@ -216,7 +216,7 @@ travel_time_matrix <- function(r5r_core,
     }
   }
 
-  if (!verbose & progress) cat(" DONE!\n")
+  if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
   return(travel_times)
