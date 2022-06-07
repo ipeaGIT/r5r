@@ -24,7 +24,6 @@ detailed_itineraries(
   max_lts = 2,
   shortest_path = TRUE,
   all_to_all = FALSE,
-  draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
@@ -54,11 +53,15 @@ for valid dates. Please see details for further information on how
 datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple travel time matrices departing each minute.
-Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
-vignette for more details on its usage:
-\code{vignette("time_window", package = "r5r")}}
+will calculate multiple itineraries departing each minute. Defaults to 1
+minute. If the same sequence of routes appear in different minutes of the
+time window, only the fastest of them will be kept in the output. This
+happens because the result is not aggregated by percentile, as opposed to
+other routing functions in the package. Because of that, the output may
+contain trips departing after the specified \code{departure_datetime}, but
+still within the time window. Please read the time window vignette for
+more details on how this argument affects the results of each routing
+function: \code{vignette("time_window", package = "r5r")}.}
 
 \item{suboptimal_minutes}{A number. The difference in minutes that each
 non-optimal RAPTOR branch can have from the optimal branch without being
@@ -129,11 +132,6 @@ or multiple alternatives.}
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
 on (\code{FALSE}, the default) or to query routes between all origins to all
 destinations (\code{TRUE}).}
-
-\item{draws_per_minute}{An integer. The number of Monte Carlo draws to
-perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60 minutes time window, for example.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}

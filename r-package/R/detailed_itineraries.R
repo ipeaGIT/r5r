@@ -14,7 +14,16 @@
 #' @template verbose
 #' @template fare_structure
 #' @template max_fare
-#' @template time_window_related_args
+#' @param time_window An integer. The time window in minutes for which `r5r`
+#'   will calculate multiple itineraries departing each minute. Defaults to 1
+#'   minute. If the same sequence of routes appear in different minutes of the
+#'   time window, only the fastest of them will be kept in the output. This
+#'   happens because the result is not aggregated by percentile, as opposed to
+#'   other routing functions in the package. Because of that, the output may
+#'   contain trips departing after the specified `departure_datetime`, but
+#'   still within the time window. Please read the time window vignette for
+#'   more details on how this argument affects the results of each routing
+#'   function: `vignette("time_window", package = "r5r")`.
 #' @param suboptimal_minutes A number. The difference in minutes that each
 #'   non-optimal RAPTOR branch can have from the optimal branch without being
 #'   disregarded by the routing algorithm. This argument emulates the real-life
@@ -95,7 +104,6 @@ detailed_itineraries <- function(r5r_core,
                                  max_lts = 2,
                                  shortest_path = TRUE,
                                  all_to_all = FALSE,
-                                 draws_per_minute = 5L,
                                  n_threads = Inf,
                                  verbose = FALSE,
                                  progress = FALSE,
@@ -201,7 +209,7 @@ detailed_itineraries <- function(r5r_core,
 
 
   set_time_window(r5r_core, time_window)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+  set_monte_carlo_draws(r5r_core, 1, time_window)
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_suboptimal_minutes(r5r_core, suboptimal_minutes)
