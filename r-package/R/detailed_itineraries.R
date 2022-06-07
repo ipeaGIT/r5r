@@ -1,21 +1,37 @@
-#' Calculate detailed itineraries between origin destination pairs
+#' Detailed itineraries between origin-destination pairs
 #'
-#' Fast computation of (multiple) detailed itineraries between one or many
-#' origin destination pairs.
+#' Returns detailed trip information between origin-destination pairs. The
+#' output includes the waiting and moving time in each trip leg, as well as some
+#' info such as the distance traveled, the routes used and the geometry of each
+#' leg. Please note that this function was originally conceptualized as a trip
+#' planning functionality, similar to other commercial and non-commercial APIs
+#' and apps (e.g. Moovit, Google's Directions API, OpenTripPlanning's
+#' PlannerResource API). Thus, it consumes much more time and memory than the
+#' other (more analytical) routing functions included in the package.
 #'
 #' @template r5r_core
 #' @template common_arguments
 #' @template verbose
+#' @template fare_structure
+#' @template max_fare
+#' @template time_window_related_args
+#' @param suboptimal_minutes A number. The difference in minutes that each
+#'   non-optimal RAPTOR branch can have from the optimal branch without being
+#'   disregarded by the routing algorithm. This argument emulates the real-life
+#'   behaviour that makes people want to take a path that is technically not
+#'   optimal (in terms of travel time, for example) for some practical reasons
+#'   (e.g. mode preference, safety, etc). In practice, the higher this value,
+#'   the more itineraries will be returned in the final result.
 #' @param shortest_path A logical. Whether the function should only return the
-#' fastest itinerary between each origin and destination pair (the default) or
-#' multiple alternatives.
+#'   fastest itinerary between each origin and destination pair (the default)
+#'   or multiple alternatives.
 #' @param all_to_all A logical. Whether to query routes between the 1st origin
-#' to the 1st destination, then the 2nd origin to the 2nd destination, and so
-#' on (`FALSE`, the default) or to query routes between all origins to all
-#' destinations (`TRUE`).
+#'   to the 1st destination, then the 2nd origin to the 2nd destination, and so
+#'   on (`FALSE`, the default) or to query routes between all origins to all
+#'   destinations (`TRUE`).
 #' @param drop_geometry A logical. Whether the output should include the
-#' geometry of each segment or not. The default value of `FALSE` keeps the
-#' geometry column in the result.
+#'   geometry of each segment or not. The default value of `FALSE` keeps the
+#'   geometry column in the result.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -23,11 +39,11 @@
 #' @template mcraptor_algorithm_section
 #'
 #' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
-#' sf` with detailed information on the itineraries between the specified
-#' origins and destinations. When `TRUE`, the output is a `data.table`. All
-#' distances are in meters and travel times are in minutes. If `output_dir` is
-#' not `NULL`, the function returns the path specified in that parameter, in
-#' which the `.csv` files containing the results are saved.
+#'   sf` with detailed information on the itineraries between the specified
+#'   origins and destinations. When `TRUE`, the output is a `data.table`. All
+#'   distances are in meters and travel times are in minutes. If `output_dir`
+#'   is not `NULL`, the function returns the path specified in that parameter,
+#'   in which the `.csv` files containing the results are saved.
 #'
 #' @family routing
 #'
@@ -42,17 +58,21 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-#'                                  format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#' det <- detailed_itineraries(r5r_core,
-#'                             origins = points[10,],
-#'                             destinations = points[12,],
-#'                             mode = c("WALK", "TRANSIT"),
-#'                             departure_datetime = departure_datetime,
-#'                             max_walk_dist = 1000,
-#'                             max_trip_duration = 60)
-#'head(det)
+#' det <- detailed_itineraries(
+#'   r5r_core,
+#'   origins = points[10,],
+#'   destinations = points[12,],
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   max_walk_dist = 1000,
+#'   max_trip_duration = 60
+#' )
+#' head(det)
 #'
 #' stop_r5(r5r_core)
 #' @export
