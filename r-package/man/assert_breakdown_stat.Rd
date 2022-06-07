@@ -19,7 +19,6 @@ Assert travel times breakdown stat parameter value
 Other support functions: 
 \code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()},
-\code{\link{get_all_od_combinations}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{stop_r5}()}
 }

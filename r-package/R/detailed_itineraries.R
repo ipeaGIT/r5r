@@ -118,30 +118,31 @@ detailed_itineraries <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
+  # check inputs and set r5r options --------------------------------------
 
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
+  origins <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
+  od_list <- expand_od_pairs(origins, destinations, all_to_all)
+  origins <- od_list$origins
+  destinations <- od_list$destinations
+
   mode_list <- assign_mode(mode, mode_egress, style = "dit")
-
-  # departure time
   departure <- assign_departure(departure_datetime)
-
-  # max trip duration
   max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
-  # max_walking_distance and max_street_time
-  max_walk_time <- assign_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration,
-                                       "walk")
-  max_bike_time <- assign_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration,
-                                       "bike")
+  max_walk_time <- assign_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration,
+    "walk"
+  )
+  max_bike_time <- assign_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration,
+    "bike"
+  )
 
   # shortest_path
   checkmate::assert_logical(shortest_path)
@@ -149,47 +150,6 @@ detailed_itineraries <- function(r5r_core,
   # drop_geometry
   checkmate::assert_logical(drop_geometry)
 
-  # origins and destinations
-  # either they have the same number of rows or one of them has only one row,
-  # in which case the smaller dataframe is expanded
-  origins      <- assign_points_input(origins, "origins")
-  destinations <- assign_points_input(destinations, "destinations")
-
-
-  # check if user wants to route all possible combinations of origin-destination pairs
-  if( all_to_all == TRUE){
-    df <- get_all_od_combinations(origins, destinations)
-         origins <- df[, .('id'=id_orig, 'lon'=lon_orig,'lat'=lat_orig)]
-    destinations <- df[, .('id'=id_dest, 'lon'=lon_dest,'lat'=lat_dest)]
-    }
-
-  n_origs <- nrow(origins)
-  n_dests <- nrow(destinations)
-
-  if (n_origs != n_dests) {
-
-    if ((n_origs > 1) && (n_dests > 1)) {
-
-      stop(paste("Origins and destinations dataframes must either have the",
-                 "same size or one of them must have only one entry."))
-
-    } else {
-
-      if (n_origs > n_dests) {
-
-        destinations <- destinations[rep(1, n_origs), ]
-        message("Destinations dataframe expanded to match the number of origins.")
-
-      } else {
-
-        origins <- origins[rep(1, n_dests), ]
-        message("Origins dataframe expanded to match the number of destinations.")
-
-      }
-
-    }
-
-  }
 
 
   # set r5r_core options ----------------------------------------------------
