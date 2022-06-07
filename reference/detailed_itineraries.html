@@ -118,7 +118,6 @@ other (more analytical) routing functions included in the package.</p>
   max_lts <span class="op">=</span> <span class="fl">2</span>,
   shortest_path <span class="op">=</span> <span class="cn">TRUE</span>,
   all_to_all <span class="op">=</span> <span class="cn">FALSE</span>,
-  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,
   n_threads <span class="op">=</span> <span class="cn">Inf</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   progress <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -151,11 +150,15 @@ for valid dates. Please see details for further information on how
 datetimes are parsed.</p></dd>
 <dt>time_window</dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
-will calculate multiple travel time matrices departing each minute.
-Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a <code>frequencies.txt</code> table. Please read the time window
-vignette for more details on its usage:
-<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
+will calculate multiple itineraries departing each minute. Defaults to 1
+minute. If the same sequence of routes appear in different minutes of the
+time window, only the fastest of them will be kept in the output. This
+happens because the result is not aggregated by percentile, as opposed to
+other routing functions in the package. Because of that, the output may
+contain trips departing after the specified <code>departure_datetime</code>, but
+still within the time window. Please read the time window vignette for
+more details on how this argument affects the results of each routing
+function: <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
 <dt>suboptimal_minutes</dt>
 <dd><p>A number. The difference in minutes that each
 non-optimal RAPTOR branch can have from the optimal branch without being
@@ -226,11 +229,6 @@ or multiple alternatives.</p></dd>
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
 on (<code>FALSE</code>, the default) or to query routes between all origins to all
 destinations (<code>TRUE</code>).</p></dd>
-<dt>draws_per_minute</dt>
-<dd><p>An integer. The number of Monte Carlo draws to
-perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60 minutes time window, for example.</p></dd>
 <dt>n_threads</dt>
 <dd><p>An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).</p></dd>
@@ -383,6 +381,7 @@ Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/136588
 <span class="r-in">  max_walk_dist <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">60</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 'origins' was expanded to match the number of destinations.</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 5 features and 18 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: LINESTRING</span>
@@ -396,14 +395,14 @@ Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/136588
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      to_lon option departure_time total_duration total_distance total_fare</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -51.22875      1       14:00:59       44.33333           9460          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -51.22875      1       14:00:59       44.33333           9460          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -51.22875      1       14:00:59       44.33333           9460          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -51.22875      1       14:00:59       44.33333           9460          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -51.22875      1       14:00:59       44.33333           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -51.22875      1       14:00:54       44.41667           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -51.22875      1       14:00:54       44.41667           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -51.22875      1       14:00:54       44.41667           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -51.22875      1       14:00:54       44.41667           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -51.22875      1       14:00:54       44.41667           9460          0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   segment mode cumulative_fare segment_duration     wait distance  route</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       1 WALK               0         4.566667 0.000000      174       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2 RAIL               0         6.583333 9.450000     4796 LINHA1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2 RAIL               0         6.583333 9.533333     4796 LINHA1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       3 WALK               0         5.733333 0.000000      256       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4       4  BUS               0        10.416667 4.416667     4083    188</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       5 WALK               0         3.166667 0.000000      151       </span>

@@ -82,6 +82,9 @@
     <loc>/reference/download_r5.html</loc>
   </url>
   <url>
+    <loc>/reference/expand_od_pairs.html</loc>
+  </url>
+  <url>
     <loc>/reference/expanded_travel_time_matrix.html</loc>
   </url>
   <url>
@@ -89,9 +92,6 @@
   </url>
   <url>
     <loc>/reference/find_snap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_all_od_combinations.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
