@@ -642,6 +642,10 @@ public class R5RCore {
         return servicesTable;
     }
 
+    public boolean hasFrequencies() {
+        return this.transportNetwork.transitLayer.hasFrequencies;
+    }
+
     public void message(String m) {
         Rengine r = new Rengine();
         r.eval("message(\"" + m + "\")");
