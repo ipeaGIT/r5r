@@ -58,6 +58,9 @@
     <loc>/reference/assign_departure.html</loc>
   </url>
   <url>
+    <loc>/reference/assign_drop_geometry.html</loc>
+  </url>
+  <url>
     <loc>/reference/assign_max_street_time.html</loc>
   </url>
   <url>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/assign_points_input.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assign_shortest_path.html</loc>
   </url>
   <url>
     <loc>/reference/check_connection.html</loc>
