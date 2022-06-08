@@ -481,9 +481,3 @@ set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
 
   return(invisible(TRUE))
 }
-set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
-  checkmate::assert_logical(suboptimal_minutes, any.missing = FALSE, len = 1)
-
-  r5r_core$setExpandedTravelTimes(expanded)
-
-}

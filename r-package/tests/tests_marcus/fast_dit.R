@@ -2,7 +2,7 @@ devtools::load_all(".")
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_core <- setup_r5(data_path, elevation = "TOBLER", overwrite = T)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -27,15 +27,16 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
 system.time(
   det_new <- detailed_itineraries(r5r_core,
                               origins = points[1,],
-                              destinations = points[12,],
-                              mode = c("WALK", "TRANSIT"),
+                              destinations = points[3,],
+                              mode = c("BICYCLE", "TRANSIT"),
                               departure_datetime = departure_datetime,
-                              max_walk_dist = 1000,
+                              # max_walk_dist = 1750,
+                              max_bike_dist = 3500,
                               max_trip_duration = 90,
-                              suboptimal_minutes = 15,
+                              suboptimal_minutes = 5,
                               # fare_structure = fare_structure,
                               # max_fare = 9,
-                              time_window = 15,
+                              time_window = 1,
                               all_to_all = T,
                               progress = T,
                               shortest_path = F,
@@ -47,7 +48,9 @@ system.time(
 det_new$dist <- sf::st_length(det_new)
 
 
-mapview::mapview(det_new, zcol = "option")
+mapview::mapview(det_new, zcol = "option") +
+  mapview::mapview(points, xcol="lon", ycol="lat", crs=4326)
+
 mapview::mapview(dplyr::filter(det_new, option == 2), zcol = "route")
 mapview::mapview(dplyr::filter(det2,
                                from_id == "beira_rio_stadium",

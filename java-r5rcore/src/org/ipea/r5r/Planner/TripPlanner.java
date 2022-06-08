@@ -133,7 +133,13 @@ public class TripPlanner {
             StreetPath streetPath;
             streetRouter.profileRequest = request;
             streetRouter.streetMode = StreetMode.valueOf(mode.toString());
-            streetRouter.timeLimitSeconds = request.streetTime * 60;
+
+            int limitSeconds = request.streetTime * 60;
+            if (request.hasTransit()) {
+                limitSeconds = Math.min(limitSeconds, request.getMaxTimeSeconds(mode));
+            }
+            streetRouter.timeLimitSeconds = limitSeconds;
+
             if(streetRouter.setOrigin(request.fromLat, request.fromLon)) {
                 if(!streetRouter.setDestination(request.toLat, request.toLon)) {
                     LOG.warn("Direct mode {} destination wasn't found!", mode);
