@@ -364,3 +364,39 @@ assign_decay_function <- function(decay_function, decay_value) {
 
   return(decay_list)
 }
+
+
+#' Assign shortest path
+#'
+#' Check the shortest path input.
+#'
+#' @param shortest_path A logical.
+#'
+#' @return A logical.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_shortest_path <- function(shortest_path) {
+  checkmate::assert_logical(shortest_path, len = 1, any.missing = FALSE)
+
+  return(shortest_path)
+}
+
+
+#' Assign drop geometry
+#'
+#' Check the drop geometry input.
+#'
+#' @param drop_geometry A logical.
+#'
+#' @return A logical.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_drop_geometry <- function(drop_geometry) {
+  checkmate::assert_logical(drop_geometry, len = 1, any.missing = FALSE)
+
+  return(drop_geometry)
+}

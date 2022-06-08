@@ -143,91 +143,51 @@ detailed_itineraries <- function(r5r_core,
     max_trip_duration,
     "bike"
   )
-
-  # shortest_path
-  checkmate::assert_logical(shortest_path)
-
-  # drop_geometry
-  checkmate::assert_logical(drop_geometry)
-
-
-
-  # set r5r_core options ----------------------------------------------------
-
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-
-  # set bike and walk speed
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-
-  # set max transfers
-  set_max_rides(r5r_core, max_rides)
-
-  # max_lts
-  set_max_lts(r5r_core, max_lts)
-
+  shortest_path <- assign_shortest_path(shortest_path)
+  drop_geometry <- assign_drop_geometry(drop_geometry)
 
   set_time_window(r5r_core, time_window)
   set_monte_carlo_draws(r5r_core, 1, time_window)
+  set_speed(r5r_core, walk_speed, "walk")
+  set_speed(r5r_core, bike_speed, "bike")
+  set_max_rides(r5r_core, max_rides)
+  set_max_lts(r5r_core, max_lts)
+  set_n_threads(r5r_core, n_threads)
+  set_verbose(r5r_core, verbose)
+  set_progress(r5r_core, progress)
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
+  set_output_dir(r5r_core, output_dir)
   set_suboptimal_minutes(r5r_core, suboptimal_minutes)
-  # set suboptimal minutes
-  # if only the shortest path is requested, set suboptimal minutes to 0 minutes,
-  # else revert back to the 5 minutes default.
-  # if (shortest_path) {
-  #   set_suboptimal_minutes(r5r_core, 0L)
-  # } else {
-  #   set_suboptimal_minutes(r5r_core, 5L)
-  # }
 
-  # set number of threads to be used by r5 and data.table
-  set_n_threads(r5r_core, n_threads)
+  # call r5r_core method and process result -------------------------------
 
-  # set verbose
-  set_verbose(r5r_core, verbose)
+  path_options <- r5r_core$detailedItineraries(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration,
+    drop_geometry,
+    shortest_path
+  )
 
-  # set progress
-  set_progress(r5r_core, progress)
-
-  # call r5r_core method ----------------------------------------------------
-
-  path_options <- r5r_core$detailedItineraries(origins$id,
-                                               origins$lat,
-                                               origins$lon,
-                                               destinations$id,
-                                               destinations$lat,
-                                               destinations$lon,
-                                               mode_list$direct_modes,
-                                               mode_list$transit_mode,
-                                               mode_list$access_mode,
-                                               mode_list$egress_mode,
-                                               departure$date,
-                                               departure$time,
-                                               max_walk_time,
-                                               max_bike_time,
-                                               max_trip_duration,
-                                               drop_geometry,
-                                               shortest_path)
-
-
-  # process results ---------------------------------------------------------
-
-  # results were exported as csv files, so there's no need for any post-
-  # processing
   if (!is.null(output_dir)) return(output_dir)
-
-  # check if any itineraries have been found - if not, raises an error
-  # if there are any results, convert those to a data.frame. if only one pair of
-  # origin and destination has been passed, then the result is already a df
 
   path_options <- java_to_dt(path_options)
 
   if (!drop_geometry) {
-
     if (nrow(path_options) > 0) {
-      # If there is no result, return empty simple feature
       path_options[, geometry := sf::st_as_sfc(geometry)]
     } else {
       path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]

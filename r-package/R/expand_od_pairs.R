@@ -9,6 +9,8 @@
 #'
 #' @keywords internal
 expand_od_pairs <- function(origins, destinations, all_to_all) {
+  checkmate::assert_logical(all_to_all, len = 1, any.missing = FALSE)
+
   n_origs <- nrow(origins)
   n_dests <- nrow(destinations)
 
