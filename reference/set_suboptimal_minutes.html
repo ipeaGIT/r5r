@@ -100,7 +100,12 @@ that they don't always run on schedule".</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">set_suboptimal_minutes</span><span class="op">(</span><span class="va">r5r_core</span>, <span class="va">suboptimal_minutes</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">set_suboptimal_minutes</span><span class="op">(</span>
+  <span class="va">r5r_core</span>,
+  <span class="va">suboptimal_minutes</span>,
+  <span class="va">fare_structure</span>,
+  <span class="va">shortest_path</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -109,6 +114,14 @@ that they don't always run on schedule".</p>
 <dd><p>An object to connect with the R5 routing engine, created with
 <code><a href="setup_r5.html">setup_r5()</a></code>.</p></dd>
 <dt>suboptimal_minutes</dt>
+<dd><p>A number.</p></dd>
+<dt>fare_structure</dt>
+<dd><p>A fare structure object, following the convention
+set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
+<dt>shortest_path</dt>
 <dd><p>A logical.</p></dd>
 </dl></div>
     <div id="value">
