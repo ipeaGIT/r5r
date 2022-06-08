@@ -217,7 +217,7 @@ public class TravelTimeMatrixComputer extends R5Process {
         if (this.routingProperties.expandedTravelTimes & pathBreakdown != null) {
             if (!pathBreakdown[destination].isEmpty()) {
                 for (int departure = secondsFromMidnight;
-                     departure <= secondsFromMidnight + (routingProperties.timeWindowSize * 60);
+                     departure < secondsFromMidnight + (routingProperties.timeWindowSize * 60);
                      departure += 60) {
 
                     // get recorded paths
