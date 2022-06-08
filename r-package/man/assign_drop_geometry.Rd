@@ -7,7 +7,7 @@
 assign_drop_geometry(drop_geometry)
 }
 \arguments{
-\item{shortest_path}{A logical.}
+\item{drop_geometry}{A logical.}
 }
 \value{
 A logical.

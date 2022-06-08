@@ -3,6 +3,12 @@
 
 testthat::skip_on_cran()
 
+test_that("all_to_all is of correct type", {
+  expect_error(expand_od_pairs(pois, pois, all_to_all = "FALSE"))
+  expect_error(expand_od_pairs(pois, pois, all_to_all = NA))
+  expect_error(expand_od_pairs(pois, pois, all_to_all = c(FALSE, FALSE)))
+})
+
 test_that("raises errors when !all_to_all and nrow(origs/dests) is diff", {
   origins <- points[1:3]
   destinations <- points[6:7]

@@ -388,7 +388,7 @@ assign_shortest_path <- function(shortest_path) {
 #'
 #' Check the drop geometry input.
 #'
-#' @param shortest_path A logical.
+#' @param drop_geometry A logical.
 #'
 #' @return A logical.
 #'
