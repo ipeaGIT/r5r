@@ -158,7 +158,12 @@ detailed_itineraries <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_output_dir(r5r_core, output_dir)
-  set_suboptimal_minutes(r5r_core, suboptimal_minutes)
+  set_suboptimal_minutes(
+    r5r_core,
+    suboptimal_minutes,
+    fare_structure,
+    shortest_path
+  )
 
   # call r5r_core method and process result -------------------------------
 

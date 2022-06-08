@@ -465,15 +465,34 @@ set_expanded_travel_times <- function(r5r_core, expanded) {
 #' that they don't always run on schedule".
 #'
 #' @template r5r_core
-#' @param suboptimal_minutes A logical.
+#' @param suboptimal_minutes A number.
+#' @template fare_structure
+#' @param shortest_path A logical.
 #'
 #' @return Invisibly returns `TRUE`.
 #'
 #' @family setting functions
 #'
 #' @keywords internal
-set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
+set_suboptimal_minutes <- function(r5r_core,
+                                   suboptimal_minutes,
+                                   fare_structure,
+                                   shortest_path) {
   checkmate::assert_number(suboptimal_minutes, lower = 0, finite = TRUE)
+
+  if (!is.null(fare_structure) && suboptimal_minutes > 0) {
+    stop(
+      "Assertion on 'suboptimal_minutes' failed: Must be 0 when calculating ",
+      "fares with detailed_itineraries()."
+    )
+  }
+
+  if (shortest_path && suboptimal_minutes > 0) {
+    stop(
+      "Assertion on 'suboptimal_minutes' failed: Must be 0 when ",
+      "'shortest_path' is TRUE."
+    )
+  }
 
   suboptimal_minutes <- as.integer(suboptimal_minutes)
 

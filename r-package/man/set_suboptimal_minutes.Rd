@@ -4,13 +4,26 @@
 \alias{set_suboptimal_minutes}
 \title{Set suboptimal minutes}
 \usage{
-set_suboptimal_minutes(r5r_core, suboptimal_minutes)
+set_suboptimal_minutes(
+  r5r_core,
+  suboptimal_minutes,
+  fare_structure,
+  shortest_path
+)
 }
 \arguments{
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
 \code{\link[=setup_r5]{setup_r5()}}.}
 
-\item{suboptimal_minutes}{A logical.}
+\item{suboptimal_minutes}{A number.}
+
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
+
+\item{shortest_path}{A logical.}
 }
 \value{
 Invisibly returns \code{TRUE}.
