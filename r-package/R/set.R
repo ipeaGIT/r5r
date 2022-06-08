@@ -450,3 +450,40 @@ set_expanded_travel_times <- function(r5r_core, expanded) {
 
   return(invisible(TRUE))
 }
+
+
+#' Set suboptimal minutes
+#'
+#' Sets the number of suboptimal minutes considered in [detailed_itineraries()]
+#' routing. From R5 documentation: "This parameter compensates for the fact that
+#' GTFS does not contain information about schedule deviation (lateness). The
+#' min-max travel time range for some trains is zero, since the trips are
+#' reported to always have the same timings in the schedule. Such an option
+#' does not overlap (temporally) its alternatives, and is too easily eliminated
+#' by an alternative that is only marginally better. We want to effectively
+#' push the max travel time of alternatives out a bit to account for the fact
+#' that they don't always run on schedule".
+#'
+#' @template r5r_core
+#' @param suboptimal_minutes A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
+  checkmate::assert_number(suboptimal_minutes, lower = 0, finite = TRUE)
+
+  suboptimal_minutes <- as.integer(suboptimal_minutes)
+
+  r5r_core$setSuboptimalMinutes(suboptimal_minutes)
+
+  return(invisible(TRUE))
+}
+set_suboptimal_minutes <- function(r5r_core, suboptimal_minutes) {
+  checkmate::assert_logical(suboptimal_minutes, any.missing = FALSE, len = 1)
+
+  r5r_core$setExpandedTravelTimes(expanded)
+
+}

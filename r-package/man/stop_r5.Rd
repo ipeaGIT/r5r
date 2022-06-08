@@ -31,7 +31,6 @@ stop_r5(r5r_core)
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
 \code{\link{check_connection}()},
-\code{\link{fileurl_from_metadata}()},
-\code{\link{set_suboptimal_minutes}()}
+\code{\link{fileurl_from_metadata}()}
 }
 \concept{support functions}

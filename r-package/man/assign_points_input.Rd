@@ -21,10 +21,12 @@ Check and convert origin and destination inputs
 Other assigning functions: 
 \code{\link{assign_decay_function}()},
 \code{\link{assign_departure}()},
+\code{\link{assign_drop_geometry}()},
 \code{\link{assign_max_street_time}()},
 \code{\link{assign_max_trip_duration}()},
 \code{\link{assign_mode}()},
-\code{\link{assign_opportunities}()}
+\code{\link{assign_opportunities}()},
+\code{\link{assign_shortest_path}()}
 }
 \concept{assigning functions}
 \keyword{internal}

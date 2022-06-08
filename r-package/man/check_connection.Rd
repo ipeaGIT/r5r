@@ -21,7 +21,6 @@ Checks if there is internet connection to Ipea server to download r5r data.
 Other support functions: 
 \code{\link{assert_breakdown_stat}()},
 \code{\link{fileurl_from_metadata}()},
-\code{\link{set_suboptimal_minutes}()},
 \code{\link{stop_r5}()}
 }
 \concept{support functions}
