@@ -382,14 +382,36 @@ Information Science, 33(9), 1759–1787. <a href="https://doi.org/10.1080/136588
 <span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">60</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 'origins' was expanded to match the number of destinations.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in set_suboptimal_minutes(r5r_core, suboptimal_minutes):</span> Assertion on 'suboptimal_minutes' failed: Must be of type 'logical', not 'integer'.</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 function (x, ...)                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 {                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     z &lt;- determinant(x, logarithm = TRUE, ...)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     c(z$sign * exp(z$modulus))                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 }                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 5 features and 18 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: LINESTRING</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.24094 ymin: -30.05 xmax: -51.19762 ymax: -29.99729</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            from_id  from_lat  from_lon                          to_id    to_lat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      to_lon option departure_time total_duration total_distance total_fare</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -51.22875      1       14:00:54           44.4           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -51.22875      1       14:00:54           44.4           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -51.22875      1       14:00:54           44.4           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -51.22875      1       14:00:54           44.4           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -51.22875      1       14:00:54           44.4           9460          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   segment mode cumulative_fare segment_duration wait distance  route</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1 WALK               0              4.6  0.0      174       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2 RAIL               0              6.6  9.5     4796 LINHA1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3 WALK               0              5.7  0.0      256       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       4  BUS               0             10.4  4.4     4083    188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       5 WALK               0              3.2  0.0      151       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LINESTRING (-51.1981 -29.99...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 LINESTRING (-51.19763 -29.9...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 LINESTRING (-51.22827 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 LINESTRING (-51.22926 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 LINESTRING (-51.22949 -30.0...</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
