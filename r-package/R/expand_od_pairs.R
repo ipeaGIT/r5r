@@ -18,7 +18,7 @@ expand_od_pairs <- function(origins, destinations, all_to_all) {
     origins <- origins[rep(1:n_origs, each = n_dests), ]
     destinations <- destinations[rep(1:n_dests, times = n_origs), ]
 
-    if (!all_to_all) {
+    if (!all_to_all && (n_origs > 1 || n_dests > 1)) {
       if (n_origs == 1) {
         message("'origins' was expanded to match the number of destinations.")
       } else {

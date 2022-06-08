@@ -87,3 +87,11 @@ test_that("doesn't do anything when nrow > 1, equal and all_to_all is FALSE", {
   expect_identical(result$origins, origins)
   expect_identical(result$destinations, destinations)
 })
+
+test_that("is silent when nrow(dests & origs) == 1", {
+  origins <- pois[1]
+  destinations <- pois[1]
+  expect_silent(
+    result <- expand_od_pairs(origins, destinations, all_to_all = FALSE)
+  )
+})
