@@ -133,8 +133,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         request.percentiles = new int[1];
         request.percentiles[0] = 50;
 
-//        request.timeWindowSize = 1; // minutes
-//        request.numberOfMonteCarloDraws = 1; //
+        request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
 
         return request;
     }
