@@ -146,4 +146,9 @@ public class Utils {
 
         return (int) Math.round(accDistance);
     }
+
+    public static double roundTo1Place(double value) {
+        return Math.round(value * 10.0) / 10.0;
+    }
+
 }

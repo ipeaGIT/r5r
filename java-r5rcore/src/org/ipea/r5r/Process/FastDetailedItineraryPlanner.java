@@ -75,7 +75,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
             travelTimesTable.set("option", tripId.incrementAndGet());
             travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
-            travelTimesTable.set("total_duration", trip.getTotalDurationSeconds() / 60.0);
+            travelTimesTable.set("total_duration", Utils.roundTo1Place(trip.getTotalDurationSeconds() / 60.0));
             travelTimesTable.set("total_distance", trip.getTotalDistance());
             travelTimesTable.set("total_fare", trip.getTotalFare() / 100.0);
 
@@ -86,8 +86,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("segment", legId.incrementAndGet());
                 travelTimesTable.set("mode", leg.getMode());
                 travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
-                travelTimesTable.set("segment_duration", leg.getLegDurationSeconds() / 60.0);
-                travelTimesTable.set("wait", leg.getWaitTime() / 60.0);
+                travelTimesTable.set("segment_duration", Utils.roundTo1Place(leg.getLegDurationSeconds() / 60.0));
+                travelTimesTable.set("wait", Utils.roundTo1Place(leg.getWaitTime() / 60.0));
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
 
