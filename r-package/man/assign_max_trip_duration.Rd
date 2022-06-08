@@ -4,7 +4,12 @@
 \alias{assign_max_trip_duration}
 \title{Assign max trip duration}
 \usage{
-assign_max_trip_duration(max_trip_duration)
+assign_max_trip_duration(
+  max_trip_duration,
+  modes,
+  max_walk_time,
+  max_bike_time
+)
 }
 \arguments{
 \item{max_trip_duration}{A number.}

@@ -130,7 +130,6 @@ detailed_itineraries <- function(r5r_core,
 
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   max_walk_time <- assign_max_street_time(
     max_walk_dist,
     walk_speed,
@@ -142,6 +141,12 @@ detailed_itineraries <- function(r5r_core,
     bike_speed,
     max_trip_duration,
     "bike"
+  )
+  max_trip_duration <- assign_max_trip_duration(
+    max_trip_duration,
+    mode_list,
+    max_walk_time,
+    max_bike_time
   )
   shortest_path <- assign_shortest_path(shortest_path)
   drop_geometry <- assign_drop_geometry(drop_geometry)

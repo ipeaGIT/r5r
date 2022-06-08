@@ -180,11 +180,24 @@ assign_departure <- function(datetime) {
 #'
 #' @keywords internal
 assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
-  checkmate::assert_number(max_dist)
-  checkmate::assert_number(speed, finite = TRUE)
+  checkmate::assert(
+    checkmate::check_string(mode),
+    checkmate::check_names(mode, subset.of = c("bike", "walk")),
+    combine = "and"
+  )
+  checkmate::assert_number(max_dist, .var.name = paste0("max_", mode, "_dist"))
+  checkmate::assert_number(
+    speed,
+    finite = TRUE,
+    .var.name = paste0(mode, "_speed")
+  )
+  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if (speed <= 0) {
-    stop("Assertion on speed failed: must have value greater than 0.")
+    stop(
+      "Assertion on '", mode, "_speed' failed: ",
+      "Must have value greater than 0."
+    )
   }
 
   if (is.infinite(max_dist)) return(as.integer(max_trip_duration))
@@ -195,7 +208,7 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
 
   if (max_street_time == 0) {
     stop(
-      "'max_", mode, "_dist' is too low. ",
+      "Assertion on 'max_", mode, "_dist' failed: Value is too low. ",
       "Please make sure distances are in meters, not kilometers."
     )
   }
@@ -220,11 +233,22 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_max_trip_duration <- function(max_trip_duration) {
-  # TODO: adjust max trip duration based on max walk/bike dist if appropriate
+assign_max_trip_duration <- function(max_trip_duration,
+                                     modes,
+                                     max_walk_time,
+                                     max_bike_time) {
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
+
+  if (modes$transit_mode == "") {
+    if (modes$direct_modes == "WALK" & max_walk_time < max_trip_duration) {
+      max_trip_duration <- max_walk_time
+    }
+    if (modes$direct_modes == "BICYCLE" & max_bike_time < max_trip_duration) {
+      max_trip_duration <- max_bike_time
+    }
+  }
 
   return(max_trip_duration)
 }
