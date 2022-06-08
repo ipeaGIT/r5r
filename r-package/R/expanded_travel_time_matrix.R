@@ -146,6 +146,7 @@ expanded_travel_time_matrix <- function(r5r_core,
   set_output_dir(r5r_core, output_dir)
   set_expanded_travel_times(r5r_core, TRUE)
   set_breakdown(r5r_core, breakdown)
+  set_fare_structure(r5r_core, NULL)
 
   # call r5r_core method and process result -------------------------------
 

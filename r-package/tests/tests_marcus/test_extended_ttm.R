@@ -23,7 +23,7 @@ r5r_core$setBenchmark(TRUE)
                             origins = points,
                             destinations = points,
                             departure_datetime = departure_datetime,
-                            breakdown = TRUE,
+                            breakdown = T,
                             mode = c("WALK", "TRANSIT"),
                             max_trip_duration = 60,
                             max_walk_dist = 800,
