@@ -128,7 +128,7 @@ detailed_itineraries <- function(r5r_core,
   origins <- od_list$origins
   destinations <- od_list$destinations
 
-  mode_list <- assign_mode(mode, mode_egress, style = "dit")
+  mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
   max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   max_walk_time <- assign_max_street_time(

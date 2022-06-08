@@ -173,7 +173,7 @@ accessibility <- function(r5r_core,
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   opportunities <- assign_opportunities(destinations, opportunities_colnames)
-  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
+  mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
   max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   max_walk_time <- assign_max_street_time(

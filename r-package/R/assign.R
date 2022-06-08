@@ -52,15 +52,11 @@ assign_points_input <- function(df, name) {
 
 #' Check and select transport modes from user input
 #'
-#' Selects the transport modes used in the routing functions.
+#' Selects the transport modes used in the routing functions. Only one direct
+#' and access/egress modes are allowed at a time.
 #'
 #' @param mode A character vector, passed from routing functions.
 #' @param mode_egress A character vector, passed from routing functions.
-#' @param style Either `"ttm"` or `"dit"`. The first forbids more than one
-#'   direct and access modes, and should be used in [travel_time_matrix()],
-#'   [accessibility()], [expanded_travel_time_matrix()] and [pareto_frontier()].
-#'   The latter allows multiple direct and access modes, and should be used in
-#'   [detailed_itineraries()].
 #'
 #' @return A list with the transport modes to be used in the routing.
 #'
@@ -90,35 +86,21 @@ assign_mode <- function(mode, mode_egress, style) {
   )
 
   mode_egress <- toupper(unique(mode_egress))
-  if (style == "ttm") {
-    checkmate::assert_string(mode_egress)
-  } else {
-    checkmate::assert_character(mode_egress, min.len = 1, any.missing = FALSE)
-  }
+  checkmate::assert_string(mode_egress)
   checkmate::assert_names(
     mode_egress,
     subset.of = setdiff(dr_modes, c("CAR_PARK", "BICYCLE_RENT"))
   )
 
-  checkmate::assert(
-    checkmate::check_string(style),
-    checkmate::check_names(style, subset.of = c("ttm", "dit")),
-    combine = "and"
-  )
-
-  # assign modes accordingly
-
   direct_modes <- mode[which(mode %in% dr_modes)]
   transit_modes <- mode[which(mode %in% tr_modes)]
 
-  if (style == "ttm") {
-    if (length(direct_modes) > 1) {
-      stop(
-        "Please use only 1 of {",
-        paste0("'", direct_modes, "'", collapse = ","),
-        "} when routing."
-      )
-    }
+  if (length(direct_modes) > 1) {
+    stop(
+      "Please use only 1 of {",
+      paste0("'", direct_modes, "'", collapse = ","),
+      "} when routing."
+    )
   }
 
   if (any(c("CAR_PARK", "BICYCLE_RENT") %in% direct_modes)) {

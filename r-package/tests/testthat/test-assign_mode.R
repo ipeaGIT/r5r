@@ -1,5 +1,5 @@
-tester <- function(mode = "WALK", mode_egress = "WALK", style = "ttm") {
-  assign_mode(mode, mode_egress, style)
+tester <- function(mode = "WALK", mode_egress = "WALK") {
+  assign_mode(mode, mode_egress)
 }
 
 test_that("expects correct modes", {
@@ -7,8 +7,6 @@ test_that("expects correct modes", {
   expect_error(tester("oie"))
   expect_error(tester(NA))
   expect_error(tester(mode_egress = c("WALK", "CAR"), style = "ttm"))
-  expect_error(tester(mode_egress = NA, style = "dit"))
-  expect_error(tester(mode_egress = character(), style = "dit"))
   expect_error(tester(mode_egress = "CAR_PARK"))
 })
 
@@ -17,7 +15,7 @@ test_that("raises error when receives either CAR_PARK or BICYCLE_RENT", {
   expect_error(tester("BICYCLE_RENT"))
 })
 
-test_that("raises errors when it cannot disambiguate direct modes (in ttm)", {
+test_that("raises errors when it cannot disambiguate direct modes", {
   expect_error(tester(c("CAR", "WALK")))
   expect_error(tester(c("CAR", "WALK", "TRANSIT")))
 })
@@ -85,40 +83,6 @@ test_that("all pt modes are passed to transit_modes when TRANSIT is present", {
       transit_mode = paste0(tr_modes, collapse = ";"),
       access_mode = "WALK",
       egress_mode = "WALK"
-    )
-  )
-})
-
-test_that("multiple access and direct modes are accepted in detailed_itin", {
-  expect_identical(
-    tester(c("WALK", "CAR", "BICYCLE"), "WALK", style = "dit"),
-    list(
-      direct_modes = paste(c("WALK", "CAR", "BICYCLE"), collapse = ";"),
-      transit_mode = "",
-      access_mode = paste(c("WALK", "CAR", "BICYCLE"), collapse = ";"),
-      egress_mode = ""
-    )
-  )
-
-  expect_identical(
-    tester(c("WALK", "CAR", "BICYCLE", "BUS"), "WALK", style = "dit"),
-    list(
-      direct_modes = paste(c("WALK", "CAR", "BICYCLE"), collapse = ";"),
-      transit_mode = "BUS",
-      access_mode = paste(c("WALK", "CAR", "BICYCLE"), collapse = ";"),
-      egress_mode = "WALK"
-    )
-  )
-})
-
-test_that("multiple egress modes are accepted in detailed_itin", {
-  expect_identical(
-    tester(c("WALK", "BUS"), c("WALK", "CAR"), style = "dit"),
-    list(
-      direct_modes = paste(c("WALK"), collapse = ";"),
-      transit_mode = "BUS",
-      access_mode = paste(c("WALK"), collapse = ";"),
-      egress_mode = paste(c("WALK", "CAR"), collapse = ";")
     )
   )
 })

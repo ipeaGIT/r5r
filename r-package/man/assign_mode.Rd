@@ -10,18 +10,13 @@ assign_mode(mode, mode_egress, style)
 \item{mode}{A character vector, passed from routing functions.}
 
 \item{mode_egress}{A character vector, passed from routing functions.}
-
-\item{style}{Either \code{"ttm"} or \code{"dit"}. The first forbids more than one
-direct and access modes, and should be used in \code{\link[=travel_time_matrix]{travel_time_matrix()}},
-\code{\link[=accessibility]{accessibility()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}.
-The latter allows multiple direct and access modes, and should be used in
-\code{\link[=detailed_itineraries]{detailed_itineraries()}}.}
 }
 \value{
 A list with the transport modes to be used in the routing.
 }
 \description{
-Selects the transport modes used in the routing functions.
+Selects the transport modes used in the routing functions. Only one direct
+and access/egress modes are allowed at a time.
 }
 \seealso{
 Other assigning functions: 
