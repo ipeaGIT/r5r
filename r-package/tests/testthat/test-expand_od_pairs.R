@@ -13,7 +13,6 @@ test_that("raises errors when !all_to_all and nrow(origs/dests) is diff", {
 test_that("works correctly when nrow(origins/destinations) == 1", {
   origins <- as.data.frame(pois)[1, ]
   destinations <- as.data.frame(pois)
-
   expect_message(
     result <- expand_od_pairs(origins, destinations, all_to_all = FALSE)
   )
@@ -23,13 +22,21 @@ test_that("works correctly when nrow(origins/destinations) == 1", {
 
   origins <- as.data.frame(pois)
   destinations <- as.data.frame(pois)[1, ]
-
   expect_message(
     result <- expand_od_pairs(origins, destinations, all_to_all = FALSE)
   )
   expect_true(nrow(result$origins) == nrow(result$destinations))
   expect_true(all(result$destinations$id == destinations$id))
   expect_identical(result$origins, origins)
+
+  origins <- as.data.frame(pois)[1, ]
+  destinations <- as.data.frame(pois)[1, ]
+  expect_silent(
+    result <- expand_od_pairs(origins, destinations, all_to_all = TRUE)
+  )
+  expect_true(nrow(result$origins) == nrow(result$destinations))
+  expect_identical(result$origins, origins)
+  expect_identical(result$destinations, destinations)
 })
 
 test_that("works correctly when all_to_all = TRUE", {
@@ -62,4 +69,15 @@ test_that("works with sf objects", {
     result$destinations$id,
     destinations_sf$id[rep(1:2, times = 3)]
   )
+})
+
+test_that("doesn't do anything when nrow > 1, equal and all_to_all is FALSE", {
+  origins <- pois
+  destinations <- pois
+  expect_silent(
+    result <- expand_od_pairs(origins, destinations, all_to_all = FALSE)
+  )
+  expect_true(nrow(result$origins) == nrow(result$destinations))
+  expect_identical(result$origins, origins)
+  expect_identical(result$destinations, destinations)
 })
