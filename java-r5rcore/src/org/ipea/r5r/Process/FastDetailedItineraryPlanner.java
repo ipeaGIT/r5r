@@ -21,6 +21,10 @@ public class FastDetailedItineraryPlanner extends R5Process {
     private boolean dropItineraryGeometry = false;
     private boolean shortestPath = false;
 
+    private boolean hasFares() {
+        return routingProperties.fareCalculator != null;
+    }
+
     public FastDetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }
@@ -77,7 +81,9 @@ public class FastDetailedItineraryPlanner extends R5Process {
             travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
             travelTimesTable.set("total_duration", Utils.roundTo1Place(trip.getTotalDurationSeconds() / 60.0));
             travelTimesTable.set("total_distance", trip.getTotalDistance());
-            travelTimesTable.set("total_fare", trip.getTotalFare() / 100.0);
+
+            if (hasFares())
+                travelTimesTable.set("total_fare", trip.getTotalFare() / 100.0);
 
             AtomicInteger legId = new AtomicInteger(0);
             trip.getLegs().forEach(leg -> {
@@ -85,7 +91,10 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
                 travelTimesTable.set("segment", legId.incrementAndGet());
                 travelTimesTable.set("mode", leg.getMode());
-                travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
+
+                if (hasFares())
+                    travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
+
                 travelTimesTable.set("segment_duration", Utils.roundTo1Place(leg.getLegDurationSeconds() / 60.0));
                 travelTimesTable.set("wait", Utils.roundTo1Place(leg.getWaitTime() / 60.0));
                 travelTimesTable.set("distance", leg.getLegDistance());
@@ -109,11 +118,16 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addStringColumn("departure_time", "");
         itinerariesDataFrame.addDoubleColumn("total_duration", 0.0);
         itinerariesDataFrame.addIntegerColumn("total_distance", 0);
-        itinerariesDataFrame.addDoubleColumn("total_fare", 0.0);
+
+        if (hasFares())
+            itinerariesDataFrame.addDoubleColumn("total_fare", 0.0);
 
         itinerariesDataFrame.addIntegerColumn("segment", 0);
         itinerariesDataFrame.addStringColumn("mode", "");
-        itinerariesDataFrame.addDoubleColumn("cumulative_fare", 0.0);
+
+        if (hasFares())
+            itinerariesDataFrame.addDoubleColumn("cumulative_fare", 0.0);
+
         itinerariesDataFrame.addDoubleColumn("segment_duration", 0.0);
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
         itinerariesDataFrame.addIntegerColumn("distance", 0);
