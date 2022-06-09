@@ -73,3 +73,40 @@ test_that("max_lts argument works in pareto_frontier()", {
 
   expect_true(all(slow_res$travel_time >= fast_res$travel_time))
 })
+
+test_that("max_lts argument works in detailed_itineraries()", {
+  expr <- "detailed_itineraries(
+    r5r_core,
+    pois[1:5],
+    pois[5:1],
+    mode = 'BICYCLE'
+  )"
+
+  fast_expr <- sub("\\)$", ", max_lts = 4\\)", expr)
+  slow_expr <- sub("\\)$", ", max_lts = 1\\)", expr)
+
+  fast_res <- eval(parse(text = fast_expr))
+  slow_res <- eval(parse(text = slow_expr))
+
+  expect_true(all(slow_res$segment_duration >= fast_res$segment_duration))
+})
+
+test_that("max_lts argument works in accessibility()", {
+  expr <- "accessibility(
+    r5r_core,
+    points[1:15],
+    points[1:15],
+    mode = 'BICYCLE',
+    opportunities_colnames = 'population',
+    decay_function = 'step',
+    cutoffs = 30
+  )"
+
+  fast_expr <- sub("\\)$", ", max_lts = 4\\)", expr)
+  slow_expr <- sub("\\)$", ", max_lts = 1\\)", expr)
+
+  fast_res <- eval(parse(text = fast_expr))
+  slow_res <- eval(parse(text = slow_expr))
+
+  expect_true(all(slow_res$accessibility <= fast_res$accessibility))
+})
