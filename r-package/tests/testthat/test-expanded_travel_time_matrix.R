@@ -108,10 +108,6 @@ test_that("adequately raises errors", {
 
   # error related to non-numeric bike_speed
   expect_error(default_tester(r5r_core, bike_speed = "12"))
-
-  # error related to non-numeric max_rides
-  expect_error(default_tester(r5r_core, max_rides = "3"))
-
 })
 
 test_that("adequately raises warnings - needs java", {

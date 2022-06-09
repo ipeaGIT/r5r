@@ -136,11 +136,6 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(bike_speed = c(12, 15)))
   expect_error(tester(bike_speed = 0))
 
-  expect_error(tester(max_rides = "3"))
-  expect_error(tester(max_rides = c(3, 4)))
-  expect_error(tester(max_rides = -1))
-  expect_error(tester(max_rides = Inf))
-
   expect_error(tester(draws_per_minute = "1"))
   expect_error(tester(draws_per_minute = c(12, 15)))
   expect_error(tester(draws_per_minute = 0))
