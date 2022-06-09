@@ -142,7 +142,18 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'
 #' @keywords internal
 set_speed <- function(r5r_core, speed, mode) {
-  checkmate::assert_number(speed, lower = 0, .var.name = paste0(mode, "_speed"))
+  checkmate::assert(
+    checkmate::check_string(mode),
+    checkmate::check_names(mode, subset.of = c("bike", "walk")),
+    combine = "and"
+  )
+  var_name <- paste0(mode, "_speed")
+  checkmate::assert_number(speed, finite = TRUE, .var.name = var_name)
+  if (speed <= 0) {
+    stop(
+      "Assertion on '", var_name, "' failed: Must have value greater than 0."
+    )
+  }
 
   speed <- speed * 5 / 18
 
