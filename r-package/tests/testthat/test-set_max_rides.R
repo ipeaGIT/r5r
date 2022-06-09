@@ -7,7 +7,7 @@ tester <- function(max_rides) set_max_rides(r5r_core, max_rides)
 
 test_that("input is correct", {
   expect_error(tester("1"))
-  expect_error(tester(-1))
+  expect_error(tester(0))
   expect_error(tester(c(1, 1)))
   expect_error(tester(Inf))
 })
@@ -21,27 +21,11 @@ test_that("max_rides argument works in travel_time_matrix()", {
     departure_datetime = departure_datetime
   )"
 
-  walk_expr <- sub(", \\'TRANSIT\\'", "", expr)
-  no_rides_expr <- sub("\\)$", ", max_rides = 0\\)", expr)
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
   many_rides_expr <- sub("\\)$", ", max_rides = 2\\)", expr)
 
-  walk <- eval(parse(text = walk_expr))
-  no_rides <- eval(parse(text = no_rides_expr))
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
-
-  expect_identical(walk, no_rides)
-
-  expect_true(nrow(one_ride) >= nrow(no_rides))
-  no_rides[
-    one_ride,
-    on = c("from_id", "to_id"),
-    travel_time_one_ride := i.travel_time_p50
-  ]
-  expect_true(
-    all(no_rides$travel_time_p50 >= no_rides$travel_time_one_ride)
-  )
 
   expect_true(nrow(many_rides) >= nrow(one_ride))
   one_ride[
@@ -51,6 +35,9 @@ test_that("max_rides argument works in travel_time_matrix()", {
   ]
   expect_true(
     all(one_ride$travel_time_p50 >= one_ride$travel_time_many_rides)
+  )
+  expect_true(
+    any(one_ride$travel_time_p50 > one_ride$travel_time_many_rides)
   )
 })
 
@@ -65,23 +52,15 @@ test_that("max_rides argument works in accessibility()", {
     cutoffs = 60
   )"
 
-  walk_expr <- sub(", \\'TRANSIT\\'", "", expr)
-  no_rides_expr <- sub("\\)$", ", max_rides = 0\\)", expr)
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
   many_rides_expr <- sub("\\)$", ", max_rides = 2\\)", expr)
 
-  walk <- eval(parse(text = walk_expr))
-  no_rides <- eval(parse(text = no_rides_expr))
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
 
-  expect_identical(walk, no_rides)
-
-  no_rides[one_ride, on = "id", accessibility_one_ride := i.accessibility]
-  expect_true(all(no_rides$accessibility <= no_rides$accessibility_one_ride))
-
   one_ride[many_rides, on = "id", accessibility_many_rides := i.accessibility]
   expect_true(all(one_ride$accessibility <= one_ride$accessibility_many_rides))
+  expect_true(any(one_ride$accessibility < one_ride$accessibility_many_rides))
 })
 
 test_that("max_rides argument works in expanded_travel_time_matrix()", {
@@ -94,15 +73,11 @@ test_that("max_rides argument works in expanded_travel_time_matrix()", {
     draws_per_minute = 1
   )"
 
-  no_rides_expr <- sub("\\)$", ", max_rides = 0\\)", expr)
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
   many_rides_expr <- sub("\\)$", ", max_rides = 2\\)", expr)
 
-  no_rides <- eval(parse(text = no_rides_expr))
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
-
-  expect_true(all(no_rides$routes == "[WALK]"))
 
   count_transit <- function(strings) {
     split_vector <- strsplit(strings, "\\|")
@@ -118,6 +93,7 @@ test_that("max_rides argument works in expanded_travel_time_matrix()", {
     )
     count <- vapply(walkless_vector, length, integer(1))
   }
+
   one_ride[, transit_count := count_transit(routes)]
   expect_true(all(one_ride$transit_count <= 1))
   expect_true(any(one_ride$transit_count > 0))
@@ -139,16 +115,11 @@ test_that("max_rides argument works in pareto_frontier()", {
     monetary_cost_cutoffs = c(0, 5, 10)
   )"
 
-  no_rides_expr <- sub("\\)$", ", max_rides = 0\\)", expr)
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
   many_rides_expr <- sub("\\)$", ", max_rides = 2\\)", expr)
 
-  no_rides <- eval(parse(text = no_rides_expr))
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
-
-  # TODO: should be true, but it currently is not
-  # expect_true(all(no_rides$monetary_cost == 0))
 
   expect_true(all(one_ride$monetary_cost <= 5))
   expect_true(any(one_ride$monetary_cost > 0))
@@ -169,21 +140,17 @@ test_that("max_rides argument works in detailed_itineraries()", {
     shortest_path = FALSE
   )"
 
-  no_rides_expr <- sub("\\)$", ", max_rides = 0\\)", expr)
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
   many_rides_expr <- sub("\\)$", ", max_rides = 2\\)", expr)
 
-  no_rides <- eval(parse(text = no_rides_expr))
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
   
-  # TODO: should be true but currently it's not
-  # expect_true(all(no_rides$route == ""))
-
   count_transit <- function(routes) {
     non_walk_legs <- routes != ""
     sum(non_walk_legs)
   }
+
   one_ride <- one_ride[
     ,
     .(transit_legs = count_transit(route)),

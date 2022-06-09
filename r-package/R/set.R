@@ -118,7 +118,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #'
 #' @keywords internal
 set_max_rides <- function(r5r_core, max_rides) {
-  checkmate::assert_number(max_rides, lower = 0, finite = TRUE)
+  checkmate::assert_number(max_rides, lower = 1, finite = TRUE)
 
   r5r_core$setMaxRides(as.integer(max_rides))
 
