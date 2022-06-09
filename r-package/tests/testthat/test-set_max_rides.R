@@ -3,14 +3,6 @@
 
 testthat::skip_on_cran()
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "%d-%m-%Y %H:%M:%S"
-)
-fare_structure <- read_fare_structure(
-  system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
-)
-
 tester <- function(max_rides) set_max_rides(r5r_core, max_rides)
 
 test_that("input is correct", {
