@@ -112,16 +112,23 @@ used to snap car trips).</p>
     <dl><dt>r5r_core</dt>
 <dd><p>An object to connect with the R5 routing engine, created with
 <code><a href="setup_r5.html">setup_r5()</a></code>.</p></dd>
+
+
 <dt>points</dt>
 <dd><p>Either a <code>POINT sf</code> object with WGS84 CRS, or a <code>data.frame</code>
 containing the columns <code>id</code>, <code>lon</code> and <code>lat</code>.</p></dd>
+
+
 <dt>mode</dt>
 <dd><p>A string. Which mode to consider when trying to snap the points
 to the network. Defaults to <code>WALK</code>, also allows <code>BICYCLE</code> and <code>CAR</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>data.table</code> with the original points, their respective
+    
+
+<p>A <code>data.table</code> with the original points, their respective
 snapped coordinates on the street network and the Euclidean distance between
 the original points and their snapped location. Points that could not
 be snapped show <code>NA</code> coordinates and <code>found = FALSE</code>.</p>
@@ -162,7 +169,7 @@ be snapped show <code>NA</code> coordinates and <code>found = FALSE</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

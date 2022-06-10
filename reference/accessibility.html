@@ -119,28 +119,40 @@
     <dl><dt>r5r_core</dt>
 <dd><p>An object to connect with the R5 routing engine, created with
 <code><a href="setup_r5.html">setup_r5()</a></code>.</p></dd>
+
+
 <dt>origins, destinations</dt>
 <dd><p>Either a <code>POINT sf</code> object with WGS84 CRS, or a
 <code>data.frame</code> containing the columns <code>id</code>, <code>lon</code> and <code>lat</code>.</p></dd>
+
+
 <dt>opportunities_colnames</dt>
 <dd><p>A character vector. The names of the columns
 in the <code>destinations</code> input that tells the number of opportunities in each
 location. Several different column names can be passed, in which case the
 accessibility to each kind of opportunity will be calculated.</p></dd>
+
+
 <dt>mode</dt>
 <dd><p>A character vector. The transport modes allowed for access,
 transfer and vehicle legs of the trips. Defaults to <code>WALK</code>. Please see
 details for other options.</p></dd>
+
+
 <dt>mode_egress</dt>
 <dd><p>A character vector. The transport mode used after egress
 from the last public transport. It can be either <code>WALK</code>, <code>BICYCLE</code> or
 <code>CAR</code>. Defaults to <code>WALK</code>. Ignored when public transport is not used.</p></dd>
+
+
 <dt>departure_datetime</dt>
 <dd><p>A POSIXct object. Please note that the departure
 time only influences public transport legs. When working with public
 transport networks, please check the <code>calendar.txt</code> within your GTFS feeds
 for valid dates. Please see details for further information on how
 datetimes are parsed.</p></dd>
+
+
 <dt>time_window</dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
@@ -148,6 +160,8 @@ Defaults to 1 minute. This parameter only affects the results when the
 GTFS feeds contain a <code>frequencies.txt</code> table. Please read the time window
 vignette for more details on its usage:
 <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
+
+
 <dt>percentiles</dt>
 <dd><p>An integer vector (max length of 5). Specifies the
 percentile to use when returning accessibility estimates within the given
@@ -163,6 +177,8 @@ that specifies the percentile of each accessibility estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see <code>R5</code> documentation at
 <a href="https://docs.conveyal.com/analysis/methodology#accounting-for-variability" class="external-link">https://docs.conveyal.com/analysis/methodology#accounting-for-variability</a>.</p></dd>
+
+
 <dt>decay_function</dt>
 <dd><p>A string. Which decay function to use when calculating
 accessibility. One of <code>step</code>, <code>exponential</code>, <code>fixed_exponential</code>, <code>linear</code>
@@ -170,6 +186,8 @@ or <code>logistic</code>. Defaults to <code>step</code>, which is equivalent to 
 opportunities measure. Please see the details to understand how each
 alternative works and how they relate to the <code>cutoffs</code> and <code>decay_value</code>
 parameters.</p></dd>
+
+
 <dt>cutoffs</dt>
 <dd><p>A numeric vector (maximum length of 12). This parameter has
 different effects for each decay function: it indicates the cutoff times
@@ -178,19 +196,27 @@ the <code>step</code> function, the median (or inflection point) of the decay cu
 in the <code>logistic</code> and <code>linear</code> functions, and the half-life in the
 <code>exponential</code> function. It has no effect when using the
 <code>fixed_exponential</code> function.</p></dd>
+
+
 <dt>decay_value</dt>
 <dd><p>A number. Extra parameter to be passed to the selected
 <code>decay_function</code>. Has no effects when <code>decay_function</code> is either <code>step</code> or
 <code>exponential</code>.</p></dd>
+
+
 <dt>fare_structure</dt>
 <dd><p>A fare structure object, following the convention
 set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
 understand how this object is structured:
 <code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
+
+
 <dt>max_fare</dt>
 <dd><p>A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.</p></dd>
+
+
 <dt>max_walk_dist</dt>
 <dd><p>An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -204,6 +230,8 @@ transfer legs. If you want to set a maximum walking distance for
 walking-only trips you have to use the <code>max_trip_duration</code> parameter (e.g.
 to set a walking-only trip max distance of 1 km, assuming a walking speed
 of 3.6 km/h, you have to set <code>max_trip_duration = 1 / 3.6 * 60</code>).</p></dd>
+
+
 <dt>max_bike_dist</dt>
 <dd><p>An integer. The maximum cycling distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -217,38 +245,56 @@ transfer legs. If you want to set a maximum cycling distance for
 cycling-only trips you have to use the <code>max_trip_duration</code> parameter (e.g.
 to set a walking-only trip max distance of 5 km, assuming a cycling speed
 of 12 km/h, you have to set <code>max_trip_duration = 5 / 12 * 60</code>).</p></dd>
+
+
 <dt>max_trip_duration</dt>
 <dd><p>An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).</p></dd>
+
+
 <dt>walk_speed</dt>
 <dd><p>A numeric. Average walk speed in km/h. Defaults to 3.6
 km/h.</p></dd>
+
+
 <dt>bike_speed</dt>
 <dd><p>A numeric. Average cycling speed in km/h. Defaults to 12
 km/h.</p></dd>
+
+
 <dt>max_rides</dt>
 <dd><p>An integer. The maximum number of public transport rides
 allowed in the same trip. Defaults to 3.</p></dd>
+
+
 <dt>max_lts</dt>
 <dd><p>An integer between 1 and 4. The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
 can travel through any road. Defaults to 2. Please see details for more
 information.</p></dd>
+
+
 <dt>draws_per_minute</dt>
 <dd><p>An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
 when estimating accessibility. Defaults to 5. This would mean 300 draws in
 a 60 minutes time window, for example.</p></dd>
+
+
 <dt>n_threads</dt>
 <dd><p>An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical. Whether to show <code>R5</code> informative messages when
 running the function. Defaults to <code>FALSE</code> (please note that in such case
 <code>R5</code> error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows
 detailed output, which can be useful for debugging issues not caught by
 <code>r5r</code>.</p></dd>
+
+
 <dt>progress</dt>
 <dd><p>A logical. Whether to show a progress counter when running
 the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code> is set to
@@ -256,6 +302,8 @@ the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code>
 messages. Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for
 computation efficiency, because the progress counter must be synchronized
 among all active threads.</p></dd>
+
+
 <dt>output_dir</dt>
 <dd><p>Either <code>NULL</code> or a path to an existing directory. When not
 <code>NULL</code> (the default), the function will write one <code>.csv</code> file with the
@@ -264,10 +312,13 @@ function returns the path specified in this parameter. This parameter is
 particularly useful when running estimates on memory-constrained settings,
 because writing the results to disk prevents <code>r5r</code> from storing them in
 memory.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>data.table</code> with accessibility estimates for all origin points.
+    
+
+<p>A <code>data.table</code> with accessibility estimates for all origin points.
 This <code>data.table</code> contain columns listing the origin id, the type of
 opportunities to which accessibility was calculated, the travel time
 percentile considered in the accessibility estimate and the specified
@@ -509,7 +560,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

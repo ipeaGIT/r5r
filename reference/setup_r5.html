@@ -116,28 +116,39 @@ memory (unless specified not to do so).</p>
     <dl><dt>data_path</dt>
 <dd><p>A string pointing to the directory where data inputs are
 stored and where the built <code>network.dat</code> will be saved.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical. Whether to show <code>R5</code> informative messages when
 running the function. Defaults to <code>FALSE</code> (please note that in such case
 <code>R5</code> error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows
 detailed output, which can be useful for debugging issues not caught by
 <code>r5r</code>.</p></dd>
+
+
 <dt>temp_dir</dt>
 <dd><p>A logical. Whether the <code>R5</code> Jar file should be saved to a
 temporary directory. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>elevation</dt>
 <dd><p>A string. The name of the impedance function to be used to
 calculate impedance for walking and cycling based on street slopes.
 Available options include <code>TOBLER</code> (Default) and <code>MINETTI</code>, or <code>NONE</code> to
 ignore elevation. R5 loads elevation data from <code>.tif</code> files saved inside the
 <code>data_path</code> directory. See more info in the Details below.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>A logical. Whether to overwrite an existing <code>network.dat</code>
 or to use a cached file. Defaults to <code>FALSE</code> (i.e. use a cached network).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An <code>rJava</code> object to connect with <code>R5</code> routing engine.</p>
+    
+
+<p>An <code>rJava</code> object to connect with <code>R5</code> routing engine.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -187,7 +198,7 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
