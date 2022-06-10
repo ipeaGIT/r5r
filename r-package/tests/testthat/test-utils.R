@@ -1,30 +1,4 @@
-context("Support functions")
-
 testthat::skip_on_cran()
-
-
-# set_verbose -------------------------------------------------------------
-
-
-test_that("set_verbose adequately raises warnings and errors", {
-
-  expect_error(set_verbose("r5r_obj", TRUE))
-  expect_error(set_verbose(r5r_obj, "TRUE"))
-  expect_error(set_verbose(r5r_obj, 1))
-
-})
-
-
-# set_progress -------------------------------------------------------------
-
-
-test_that("set_progress adequately raises warnings and errors", {
-
-  expect_error(set_progress("r5r_obj", TRUE))
-  expect_error(set_progress(r5r_obj, "TRUE"))
-  expect_error(set_progress(r5r_obj, 1))
-
-})
 
 # assign_max_street_time -----------------------------------------------------
 
@@ -42,16 +16,6 @@ test_that("assign_max_street_time output is coherent", {
   expect_equal(assign_max_street_time(Inf, 3.6, 60L, "walk"), 60L)
   expect_equal(assign_max_street_time(1800, 3.6, 60L, "walk"), 30L)
   expect_equal(assign_max_street_time(7200, 3.6, 60L, "walk"), 60L)
-
-})
-
-
-# assign_mode -------------------------------------------------------------
-
-
-test_that("assign_mode adequately raises warnings and errors", {
-
-  expect_error(assign_mode("POGOBALL"))
 
 })
 
@@ -173,30 +137,6 @@ test_that("assign_points_input output is coherent", {
   })
 
 
-
-
-# assert_breakdown_stat -----------------------------------------------------
-
-test_that("assert_breakdown_stat adequately raises warnings and errors", {
-
-  expect_error(assert_breakdown_stat(breakdown_stat='bananas'))
-  expect_error(assert_breakdown_stat(breakdown_stat=111))
-  expect_error(assert_breakdown_stat(breakdown_stat=NULL))
-})
-
-test_that("assert_breakdown_stat expected behavior", {
-  expect_equal(class(assert_breakdown_stat(breakdown_stat='min')), 'character')
-})
-
-# set_speed ---------------------------------------------------------------
-
-
-test_that("set_speed adequately raises warnings and errors", {
-
-  expect_error(set_speed("r5r_obj", 3.6, "walk"))
-  expect_error(set_speed(r5r_obj, "3.6", "walk"))
-
-})
 
 
 # fileurl_from_metadata --------------------------------------------------

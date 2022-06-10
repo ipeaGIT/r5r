@@ -95,11 +95,6 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(departure_datetime = unclass(departure_datetime)))
   expect_error(tester(departure_datetime = rep(departure_datetime, 2)))
 
-  expect_error(tester(time_window = "1"))
-  expect_error(tester(time_window = c(12, 15)))
-  expect_error(tester(time_window = 0))
-  expect_error(tester(time_window = Inf))
-
   expect_error(tester(percentiles = "50"))
   expect_error(tester(percentiles = 0))
   expect_error(tester(percentiles = 100))
