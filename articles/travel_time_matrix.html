@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2022-06-10</h4>
+            <h4 data-toc-skip class="date">2022-06-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/travel_time_matrix.Rmd" class="external-link"><code>../vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="hidden name"><code>travel_time_matrix.Rmd</code></div>
@@ -170,15 +170,26 @@
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt;           from_id                          to_id travel_time_p50</span>
+<span class="co">#&gt;  1: public_market                  public_market               0</span>
+<span class="co">#&gt;  2: public_market            bus_central_station              21</span>
+<span class="co">#&gt;  3: public_market               gasometer_museum              26</span>
+<span class="co">#&gt;  4: public_market            santa_casa_hospital              13</span>
+<span class="co">#&gt;  5: public_market                       townhall               3</span>
+<span class="co">#&gt;  6: public_market                piratini_palace              14</span>
+<span class="co">#&gt;  7: public_market         metropolitan_cathedral              15</span>
+<span class="co">#&gt;  8: public_market               farroupilha_park              31</span>
+<span class="co">#&gt;  9: public_market      moinhos_de_vento_hospital              37</span>
+<span class="co">#&gt; 10: public_market praia_de_belas_shopping_center              44</span></code></pre></div>
 <p>Now remember that travel time estimates can vary significantly across the day because of variations in public transport service levels. In order to account for this, you might want to calculate multiple travel time matrices departing at different times.</p>
 <p>This can be done very efficiently by using the <code>time_window</code> and <code>percentile</code> parameters in the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function. When these parameters are set, R<sup>5</sup> will automatically compute multiple travel times estimates considering multiple departures per minute within the <code>time_window</code> selected by the user. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More information about this functionality can found in this vignette</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="the-expaded_travel_time_matrix-function">4. The <code>expaded_travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-expaded_travel_time_matrix-function"></a>
+<h2 id="the-expanded_travel_time_matrix-function">4. The <code>expanded_travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-expanded_travel_time_matrix-function"></a>
 </h2>
-<p>Sometimes, we want to know more than simply the total travel time from A to B. This is when the <code>expaded_travel_time_matrix()</code> function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.</p>
-<p>Nonetheless, you may set the parameter <code>breakdown = TRUE</code> to gather much more info for each trip. In this case, <code>expaded_travel_time_matrix()</code> will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting <code>breakdown = TRUE</code> can make the function slower for large data sets.</p>
+<p>Sometimes, we want to know more than simply the total travel time from A to B. This is when the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.</p>
+<p>Nonetheless, you may set the parameter <code>breakdown = TRUE</code> to gather much more info for each trip. In this case, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting <code>breakdown = TRUE</code> can make the function slower for large data sets.</p>
 <p><em>A general call to expanded_travel_time_matrix()</em></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   
@@ -188,7 +199,29 @@
                                     max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                                     departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt;           from_id                          to_id departure_time draw_number</span>
+<span class="co">#&gt;  1: public_market                  public_market       14:00:00           1</span>
+<span class="co">#&gt;  2: public_market            bus_central_station       14:00:00           1</span>
+<span class="co">#&gt;  3: public_market               gasometer_museum       14:00:00           1</span>
+<span class="co">#&gt;  4: public_market            santa_casa_hospital       14:00:00           1</span>
+<span class="co">#&gt;  5: public_market                       townhall       14:00:00           1</span>
+<span class="co">#&gt;  6: public_market                piratini_palace       14:00:00           1</span>
+<span class="co">#&gt;  7: public_market         metropolitan_cathedral       14:00:00           1</span>
+<span class="co">#&gt;  8: public_market               farroupilha_park       14:00:00           1</span>
+<span class="co">#&gt;  9: public_market      moinhos_de_vento_hospital       14:00:00           1</span>
+<span class="co">#&gt; 10: public_market praia_de_belas_shopping_center       14:00:00           1</span>
+<span class="co">#&gt;     routes total_time</span>
+<span class="co">#&gt;  1: [WALK]          0</span>
+<span class="co">#&gt;  2: [WALK]         21</span>
+<span class="co">#&gt;  3: [WALK]         26</span>
+<span class="co">#&gt;  4: [WALK]         13</span>
+<span class="co">#&gt;  5: [WALK]          3</span>
+<span class="co">#&gt;  6: [WALK]         14</span>
+<span class="co">#&gt;  7: [WALK]         15</span>
+<span class="co">#&gt;  8: [WALK]         31</span>
+<span class="co">#&gt;  9: [WALK]         37</span>
+<span class="co">#&gt; 10: [WALK]         44</span></code></pre></div>
 <p><em>Calling expanded_travel_time_matrix() with <code>breakdown = TRUE</code></em></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ettm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   
@@ -199,7 +232,40 @@
                                     departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                                     breakdown <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm2</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm2</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt;           from_id                          to_id departure_time draw_number</span>
+<span class="co">#&gt;  1: public_market                  public_market       14:00:00           1</span>
+<span class="co">#&gt;  2: public_market            bus_central_station       14:00:00           1</span>
+<span class="co">#&gt;  3: public_market               gasometer_museum       14:00:00           1</span>
+<span class="co">#&gt;  4: public_market            santa_casa_hospital       14:00:00           1</span>
+<span class="co">#&gt;  5: public_market                       townhall       14:00:00           1</span>
+<span class="co">#&gt;  6: public_market                piratini_palace       14:00:00           1</span>
+<span class="co">#&gt;  7: public_market         metropolitan_cathedral       14:00:00           1</span>
+<span class="co">#&gt;  8: public_market               farroupilha_park       14:00:00           1</span>
+<span class="co">#&gt;  9: public_market      moinhos_de_vento_hospital       14:00:00           1</span>
+<span class="co">#&gt; 10: public_market praia_de_belas_shopping_center       14:00:00           1</span>
+<span class="co">#&gt;     access_time wait_time ride_time transfer_time egress_time routes n_rides</span>
+<span class="co">#&gt;  1:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  2:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  3:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  4:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  5:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  6:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  7:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  8:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;  9:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt; 10:           0         0         0             0           0 [WALK]       0</span>
+<span class="co">#&gt;     total_time</span>
+<span class="co">#&gt;  1:          0</span>
+<span class="co">#&gt;  2:         21</span>
+<span class="co">#&gt;  3:         26</span>
+<span class="co">#&gt;  4:         13</span>
+<span class="co">#&gt;  5:          3</span>
+<span class="co">#&gt;  6:         14</span>
+<span class="co">#&gt;  7:         15</span>
+<span class="co">#&gt;  8:         31</span>
+<span class="co">#&gt;  9:         37</span>
+<span class="co">#&gt; 10:         44</span></code></pre></div>
 <p>You will notice in the documentation that the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> also has a <code>time_window</code> parameter. In this case, though, when the user sets a <code>time_window</code> value, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ettm_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   
@@ -211,7 +277,31 @@
                                            breakdown <span class="op">=</span> <span class="cn">TRUE</span>,
                                            time_window <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 
-<span class="va">ettm_window</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">25</span>,<span class="op">]</span></code></pre></div>
+<span class="va">ettm_window</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">25</span>,<span class="op">]</span>
+<span class="co">#&gt;           from_id               to_id departure_time draw_number access_time</span>
+<span class="co">#&gt;  1: public_market bus_central_station       14:04:00           1           0</span>
+<span class="co">#&gt;  2: public_market bus_central_station       14:05:00           1           0</span>
+<span class="co">#&gt;  3: public_market bus_central_station       14:06:00           1           0</span>
+<span class="co">#&gt;  4: public_market bus_central_station       14:07:00           1           0</span>
+<span class="co">#&gt;  5: public_market bus_central_station       14:08:00           1           0</span>
+<span class="co">#&gt;  6: public_market bus_central_station       14:09:00           1           0</span>
+<span class="co">#&gt;  7: public_market    gasometer_museum       14:00:00           1           0</span>
+<span class="co">#&gt;  8: public_market    gasometer_museum       14:01:00           1           0</span>
+<span class="co">#&gt;  9: public_market    gasometer_museum       14:02:00           1           0</span>
+<span class="co">#&gt; 10: public_market    gasometer_museum       14:03:00           1           0</span>
+<span class="co">#&gt; 11: public_market    gasometer_museum       14:04:00           1           0</span>
+<span class="co">#&gt;     wait_time ride_time transfer_time egress_time routes n_rides total_time</span>
+<span class="co">#&gt;  1:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  2:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  3:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  4:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  5:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  6:         0         0             0           0 [WALK]       0         21</span>
+<span class="co">#&gt;  7:         0         0             0           0 [WALK]       0         26</span>
+<span class="co">#&gt;  8:         0         0             0           0 [WALK]       0         26</span>
+<span class="co">#&gt;  9:         0         0             0           0 [WALK]       0         26</span>
+<span class="co">#&gt; 10:         0         0             0           0 [WALK]       0         26</span>
+<span class="co">#&gt; 11:         0         0             0           0 [WALK]       0         26</span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
