@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(percentiles, mode) set_percentiles(r5r_core, percentiles)
+tester <- function(percentiles) set_percentiles(r5r_core, percentiles)
 
 test_that("input is correct", {
   expect_error(tester("1"))

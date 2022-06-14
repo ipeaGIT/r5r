@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(time_window, mode) set_time_window(r5r_core, time_window)
+tester <- function(time_window) set_time_window(r5r_core, time_window)
 
 test_that("input is correct", {
   expect_error(tester("1"))
