@@ -190,5 +190,5 @@ pareto_frontier <- function(r5r_core,
   if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
-  return(frontier)
+  return(frontier[])
 }

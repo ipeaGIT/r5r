@@ -206,5 +206,5 @@ expanded_travel_time_matrix <- function(r5r_core,
   if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
-  return(travel_times)
+  return(travel_times[])
 }
