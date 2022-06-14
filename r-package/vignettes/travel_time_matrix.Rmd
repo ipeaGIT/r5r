@@ -34,7 +34,7 @@ This vignette shows a reproducible example to explain how these two functions wo
 First, let's build the multimodal transport network we'll be using in this vignette. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -73,7 +73,7 @@ The user can also customize many parameters such as:
 - `max_fare`: maximum monetary cost in public transport. [See this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
 
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core,   
                           origins = points,
@@ -93,14 +93,14 @@ This can be done very efficiently by using the `time_window` and `percentile` pa
 
 
 
-# 4. The `expaded_travel_time_matrix()` function
+# 4. The `expanded_travel_time_matrix()` function
 
-Sometimes, we want to know more than simply the total travel time from A to B. This is when the `expaded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.
+Sometimes, we want to know more than simply the total travel time from A to B. This is when the `expanded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.
 
-Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expaded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
+Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more info for each trip. In this case, `expanded_travel_time_matrix()` will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting `breakdown = TRUE` can make the function slower for large data sets.
 
 *A general call to expanded_travel_time_matrix()*
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 ettm <- expanded_travel_time_matrix(r5r_core,   
                                     origins = points,
                                     destinations = points,    
@@ -113,7 +113,7 @@ head(ettm, n = 10)
 
 *Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 ettm2 <- expanded_travel_time_matrix(r5r_core,   
                                     origins = points,
                                     destinations = points,    
@@ -127,7 +127,7 @@ head(ettm2, n = 10)
 
 You will notice in the documentation that the `expanded_travel_time_matrix()` also has a `time_window` parameter. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 ettm_window <- expanded_travel_time_matrix(r5r_core,   
                                            origins = points,
                                            destinations = points,    
