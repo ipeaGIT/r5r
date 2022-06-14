@@ -209,7 +209,8 @@ set_percentiles <- function(r5r_core, percentiles) {
     upper = 99,
     max.len = 5,
     unique = TRUE,
-    any.missing = FALSE
+    any.missing = FALSE,
+    finite = TRUE
   )
 
   percentiles <- as.integer(percentiles)
