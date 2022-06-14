@@ -12,4 +12,10 @@ if (Sys.getenv("NOT_CRAN") != "false") {
   fare_structure <- read_fare_structure(
     system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
   )
+
+  spo_path <- system.file("extdata/spo", package = "r5r")
+  spo_core <- setup_r5(spo_path, verbose = FALSE)
+  spo_points <- data.table::fread(file.path(spo_path, "spo_hexgrid.csv"))
+  spo_fare_struc <- setup_fare_structure(spo_core, 5)
+  spo_fare_struc$fares_per_transfer <- data.table::data.table(NULL)
 }
