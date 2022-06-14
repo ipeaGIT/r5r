@@ -13,45 +13,24 @@ r5r_core <- setup_r5(data_path = data_path, verbose = TRUE, overwrite = FALSE,
 # load origin/destination points
 
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 r5r_core$setBenchmark(TRUE)
 
-# t_ttm_warmup <- system.time(
-#   travel_time_matrix(r5r_core,
-#                      origins = points[1:100, ],
-#                      destinations = points,
-#                      departure_datetime = departure_datetime,
-#                      mode = c("WALK", "TRANSIT"),
-#                      max_trip_duration = 60,
-#                      max_walk_dist = 800,
-#                      time_window = 30,
-#                      # percentiles = c(25),
-#                      percentiles = c(25, 50, 75),
-#                      verbose = FALSE)
-# )
-
-# r5r_core$setCsvOutput(here::here("tests_marcus/data2"))
-# r5r_core$setCsvOutput("")
-
-r5r_core$getOutputCsvFolder()
 
 # r5r_core$setTravelTimesBreakdown(FALSE)
-t_ttm_normal <- system.time(
-  ttm_n <- travel_time_matrix(r5r_core,
+  ttm <- expanded_travel_time_matrix(r5r_core,
                             origins = points,
                             destinations = points,
                             departure_datetime = departure_datetime,
-                            breakdown = FALSE,
+                            breakdown = T,
                             mode = c("WALK", "TRANSIT"),
                             max_trip_duration = 60,
                             max_walk_dist = 800,
-                            time_window = 30,
-                            # percentiles = c(25),
-                            percentiles = c(25, 50, 75),
+                            time_window = 15,
                             verbose = FALSE,
                             progress = TRUE)
-)
+
 
 # r5r_core$setTravelTimesBreakdown(TRUE)
 t_ttm_breakdown <- system.time(

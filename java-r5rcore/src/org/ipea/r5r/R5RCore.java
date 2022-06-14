@@ -6,8 +6,6 @@ import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
@@ -23,9 +21,7 @@ import java.io.PrintStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -160,29 +156,6 @@ public class R5RCore {
         this.routingProperties.fareCutoffs = new float[]{-1.0f};
     }
 
-    public void setFareCalculatorDebugOutputSettings(String fileName, String tripInfo) {
-        RuleBasedInRoutingFareCalculator.debugFileName = fileName;
-        RuleBasedInRoutingFareCalculator.debugTripInfo = tripInfo;
-        RuleBasedInRoutingFareCalculator.debugActive = !fileName.equals("");
-    }
-
-    public String getFareCalculatorDebugOutputSettings() {
-        Map<String, String> map = new HashMap<>();
-
-        map.put("output_file", RuleBasedInRoutingFareCalculator.debugFileName);
-        map.put("trip_info", RuleBasedInRoutingFareCalculator.debugTripInfo);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = "";
-        try {
-            json = objectMapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return json;
-    }
-
     public String getTravelTimesBreakdownStat() {
         return this.routingProperties.travelTimesBreakdownStat.toString();
     }
@@ -231,6 +204,10 @@ public class R5RCore {
         return Utils.outputCsvFolder;
     }
 
+    public void setDetailedItinerariesV2(boolean v2) {
+        Utils.detailedItinerariesV2 = v2;
+    }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
@@ -269,7 +246,7 @@ public class R5RCore {
     public RDataFrame detailedItineraries(String fromId, double fromLat, double fromLon, String toId, double toLat, double toLon,
                                                                    String directModes, String transitModes, String accessModes, String egressModes,
                                                                    String date, String departureTime, int maxWalkTime, int maxBikeTime,  int maxTripDuration,
-                                                                   boolean dropItineraryGeometry) throws ParseException, ExecutionException, InterruptedException {
+                                                                   boolean dropItineraryGeometry, boolean shortestPath) throws ParseException, ExecutionException, InterruptedException {
 
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
@@ -280,7 +257,7 @@ public class R5RCore {
 
         return detailedItineraries(fromIds, fromLats, fromLons, toIds, toLats, toLons,
                 directModes, transitModes, accessModes, egressModes,
-                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration, dropItineraryGeometry);
+                date, departureTime, maxWalkTime, maxBikeTime, maxTripDuration, dropItineraryGeometry, shortestPath);
 
     }
 
@@ -288,17 +265,31 @@ public class R5RCore {
                                                                             String[] toIds, double[] toLats, double[] toLons,
                                                                             String directModes, String transitModes, String accessModes, String egressModes,
                                                                             String date, String departureTime, int maxWalkTime, int maxBikeTime, int maxTripDuration,
-                                                                            boolean dropItineraryGeometry) throws ExecutionException, InterruptedException {
+                                                                            boolean dropItineraryGeometry, boolean shortestPath) throws ExecutionException, InterruptedException {
+        if (Utils.detailedItinerariesV2) {
+            // call regular detailed itineraries, based on PointToPointQuery
+            FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
+            detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
+            detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
+            detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
+            detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+            if (shortestPath) detailedItineraryPlanner.shortestPathOnly();
+            if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
-        DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
-        detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
-        detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
-        detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
-        detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
-        detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
-        if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
+            return detailedItineraryPlanner.run();
+        } else {
+            // call regular detailed itineraries, based on PointToPointQuery
+            DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
+            detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
+            detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
+            detailedItineraryPlanner.setDepartureDateTime(date, departureTime);
+            detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxTripDuration);
+            if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
-        return detailedItineraryPlanner.run();
+            return detailedItineraryPlanner.run();
+        }
     }
 
 
@@ -649,5 +640,14 @@ public class R5RCore {
         }
 
         return servicesTable;
+    }
+
+    public boolean hasFrequencies() {
+        return this.transportNetwork.transitLayer.hasFrequencies;
+    }
+
+    public void message(String m) {
+        Rengine r = new Rengine();
+        r.eval("message(\"" + m + "\")");
     }
 }

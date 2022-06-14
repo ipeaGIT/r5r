@@ -118,7 +118,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #'
 #' @keywords internal
 set_max_rides <- function(r5r_core, max_rides) {
-  checkmate::assert_number(max_rides, lower = 0, finite = TRUE)
+  checkmate::assert_number(max_rides, lower = 1, finite = TRUE)
 
   r5r_core$setMaxRides(as.integer(max_rides))
 
@@ -142,7 +142,18 @@ set_max_rides <- function(r5r_core, max_rides) {
 #'
 #' @keywords internal
 set_speed <- function(r5r_core, speed, mode) {
-  checkmate::assert_number(speed, lower = 0, .var.name = paste0(mode, "_speed"))
+  checkmate::assert(
+    checkmate::check_string(mode),
+    checkmate::check_names(mode, subset.of = c("bike", "walk")),
+    combine = "and"
+  )
+  var_name <- paste0(mode, "_speed")
+  checkmate::assert_number(speed, finite = TRUE, .var.name = var_name)
+  if (speed <= 0) {
+    stop(
+      "Assertion on '", var_name, "' failed: Must have value greater than 0."
+    )
+  }
 
   speed <- speed * 5 / 18
 
@@ -267,10 +278,6 @@ set_fare_structure <- function(r5r_core, fare_structure) {
     json_string <- as.character(fare_settings_json)
 
     r5r_core$setFareCalculator(json_string)
-    r5r_core$setFareCalculatorDebugOutputSettings(
-      fare_structure$debug_settings$output_file,
-      fare_structure$debug_settings$trip_info
-    )
   } else {
     r5r_core$dropFareCalculator()
   }
@@ -451,6 +458,56 @@ set_expanded_travel_times <- function(r5r_core, expanded) {
   checkmate::assert_logical(expanded, any.missing = FALSE, len = 1)
 
   r5r_core$setExpandedTravelTimes(expanded)
+
+  return(invisible(TRUE))
+}
+
+
+#' Set suboptimal minutes
+#'
+#' Sets the number of suboptimal minutes considered in [detailed_itineraries()]
+#' routing. From R5 documentation: "This parameter compensates for the fact that
+#' GTFS does not contain information about schedule deviation (lateness). The
+#' min-max travel time range for some trains is zero, since the trips are
+#' reported to always have the same timings in the schedule. Such an option
+#' does not overlap (temporally) its alternatives, and is too easily eliminated
+#' by an alternative that is only marginally better. We want to effectively
+#' push the max travel time of alternatives out a bit to account for the fact
+#' that they don't always run on schedule".
+#'
+#' @template r5r_core
+#' @param suboptimal_minutes A number.
+#' @template fare_structure
+#' @param shortest_path A logical.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_suboptimal_minutes <- function(r5r_core,
+                                   suboptimal_minutes,
+                                   fare_structure,
+                                   shortest_path) {
+  checkmate::assert_number(suboptimal_minutes, lower = 0, finite = TRUE)
+
+  if (!is.null(fare_structure) && suboptimal_minutes > 0) {
+    stop(
+      "Assertion on 'suboptimal_minutes' failed: Must be 0 when calculating ",
+      "fares with detailed_itineraries()."
+    )
+  }
+
+  if (shortest_path && suboptimal_minutes > 0) {
+    stop(
+      "Assertion on 'suboptimal_minutes' failed: Must be 0 when ",
+      "'shortest_path' is TRUE."
+    )
+  }
+
+  suboptimal_minutes <- as.integer(suboptimal_minutes)
+
+  r5r_core$setSuboptimalMinutes(suboptimal_minutes)
 
   return(invisible(TRUE))
 }

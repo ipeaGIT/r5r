@@ -23,7 +23,6 @@ points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 # dir.create(here::here("csv"))
 
 # r5r_core$setCsvOutput(here::here("csv"))
-# a <- capture.output(
 
   normal_ttm <- travel_time_matrix(r5r_core, origins = points, #[id == "89a9012a3cfffff",],
                                    destinations = points, #[id == "89a901284a3ffff",],
@@ -35,7 +34,7 @@ points <- fread(file.path(data_path, "poa_hexgrid.csv"))
                             percentiles = c(1, 25, 50, 75, 99),
                             verbose = FALSE,
                             progress = TRUE)
-# )
+
 a
 normal_ttm %>%
   select(from_id, to_id) %>%

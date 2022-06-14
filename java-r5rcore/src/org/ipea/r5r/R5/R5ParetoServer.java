@@ -47,25 +47,38 @@ public class R5ParetoServer {
         LOG.info("Performing multiobjective transit routing");
         long startTime = System.currentTimeMillis();
 //        profileRequest.maxTripDurationMinutes = 120; // hack
-        IntFunction<DominatingList> listSupplier =
-                (departureTime) -> new FareDominatingList(
-                        profileRequest.inRoutingFareCalculator,
-                        profileRequest.maxFare,
-                        // while I appreciate the use of symbolic constants, I certainly hope the number of seconds per
-                        // minute does not change
-                        // in fact, we have been moving in the opposite direction with leap-second smearing
-                        departureTime + profileRequest.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
-        McRaptorSuboptimalPathProfileRouter mcraptor = new McRaptorSuboptimalPathProfileRouter(
-                transportNetwork,
-                profileRequest,
-                accessTimes,
-                egressTimes,
-                listSupplier,
-                null,
-                true); // no collator - route will return states at destination
+        IntFunction<DominatingList> listSupplier = (departureTime) -> new FareDominatingList(
+                profileRequest.inRoutingFareCalculator,
+                profileRequest.maxFare,
+                // while I appreciate the use of symbolic constants, I certainly hope the number of seconds per
+                // minute does not change
+                // in fact, we have been moving in the opposite direction with leap-second smearing
+                departureTime + profileRequest.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
+
+        McRaptorSuboptimalPathProfileRouter mcRaptor;
+
+        if (profileRequest.inRoutingFareCalculator == null) {
+            mcRaptor = new McRaptorSuboptimalPathProfileRouter(
+                    transportNetwork,
+                    profileRequest,
+                    accessTimes,
+                    egressTimes,
+                    (t)->new SuboptimalDominatingList(profileRequest.suboptimalMinutes),
+                    null,
+                    true); // no collator - route will return states at destination
+        } else {
+            mcRaptor = new McRaptorSuboptimalPathProfileRouter(
+                    transportNetwork,
+                    profileRequest,
+                    accessTimes,
+                    egressTimes,
+                    listSupplier,
+                    null,
+                    true); // no collator - route will return states at destination
+        }
 
         try {
-            mcraptor.route();
+            mcRaptor.route();
         } catch (NullPointerException e) {
             LOG.error("exception in routing");
             e.printStackTrace();
@@ -75,7 +88,7 @@ public class R5ParetoServer {
         List<R5ParetoServer.ParetoTrip> trips = new ArrayList<>();
 
         for (TIntObjectIterator<Collection<McRaptorSuboptimalPathProfileRouter.McRaptorState>> it =
-             mcraptor.finalStatesByDepartureTime.iterator(); it.hasNext();) {
+             mcRaptor.finalStatesByDepartureTime.iterator(); it.hasNext();) {
             it.advance();
 
             int departureTime = it.key();

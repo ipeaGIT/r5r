@@ -2,7 +2,7 @@
 % Please edit documentation in R/detailed_itineraries.R
 \name{detailed_itineraries}
 \alias{detailed_itineraries}
-\title{Calculate detailed itineraries between origin destination pairs}
+\title{Detailed itineraries between origin-destination pairs}
 \usage{
 detailed_itineraries(
   r5r_core,
@@ -11,6 +11,10 @@ detailed_itineraries(
   mode = "WALK",
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
+  time_window = 1L,
+  suboptimal_minutes = 0L,
+  fare_structure = NULL,
+  max_fare = Inf,
   max_walk_dist = Inf,
   max_bike_dist = Inf,
   max_trip_duration = 120L,
@@ -47,6 +51,34 @@ time only influences public transport legs. When working with public
 transport networks, please check the \code{calendar.txt} within your GTFS feeds
 for valid dates. Please see details for further information on how
 datetimes are parsed.}
+
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple itineraries departing each minute. Defaults to 1
+minute. If the same sequence of routes appear in different minutes of the
+time window, only the fastest of them will be kept in the output. This
+happens because the result is not aggregated by percentile, as opposed to
+other routing functions in the package. Because of that, the output may
+contain trips departing after the specified \code{departure_datetime}, but
+still within the time window. Please read the time window vignette for
+more details on how this argument affects the results of each routing
+function: \code{vignette("time_window", package = "r5r")}.}
+
+\item{suboptimal_minutes}{A number. The difference in minutes that each
+non-optimal RAPTOR branch can have from the optimal branch without being
+disregarded by the routing algorithm. This argument emulates the real-life
+behaviour that makes people want to take a path that is technically not
+optimal (in terms of travel time, for example) for some practical reasons
+(e.g. mode preference, safety, etc). In practice, the higher this value,
+the more itineraries will be returned in the final result.}
+
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
+
+\item{max_fare}{A number. The maximum value that trips can cost when
+calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
 access and egress the transit network, or to make transfers within the
@@ -93,8 +125,8 @@ can travel through any road. Defaults to 2. Please see details for more
 information.}
 
 \item{shortest_path}{A logical. Whether the function should only return the
-fastest itinerary between each origin and destination pair (the default) or
-multiple alternatives.}
+fastest itinerary between each origin and destination pair (the default)
+or multiple alternatives.}
 
 \item{all_to_all}{A logical. Whether to query routes between the 1st origin
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
@@ -132,13 +164,19 @@ memory.}
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
 origins and destinations. When \code{TRUE}, the output is a \code{data.table}. All
-distances are in meters and travel times are in minutes. If \code{output_dir} is
-not \code{NULL}, the function returns the path specified in that parameter, in
-which the \code{.csv} files containing the results are saved.
+distances are in meters and travel times are in minutes. If \code{output_dir}
+is not \code{NULL}, the function returns the path specified in that parameter,
+in which the \code{.csv} files containing the results are saved.
 }
 \description{
-Fast computation of (multiple) detailed itineraries between one or many
-origin destination pairs.
+Returns detailed trip information between origin-destination pairs. The
+output includes the waiting and moving time in each trip leg, as well as some
+info such as the distance traveled, the routes used and the geometry of each
+leg. Please note that this function was originally conceptualized as a trip
+planning functionality, similar to other commercial and non-commercial APIs
+and apps (e.g. Moovit, Google's Directions API, OpenTripPlanning's
+PlannerResource API). Thus, it consumes much more time and memory than the
+other (more analytical) routing functions included in the package.
 }
 \section{Transport modes}{
 
@@ -238,16 +276,20 @@ r5r_core <- setup_r5(data_path)
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
 # inputs
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-                                 format = "\%d-\%m-\%Y \%H:\%M:\%S")
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+)
 
-det <- detailed_itineraries(r5r_core,
-                            origins = points[10,],
-                            destinations = points[12,],
-                            mode = c("WALK", "TRANSIT"),
-                            departure_datetime = departure_datetime,
-                            max_walk_dist = 1000,
-                            max_trip_duration = 60)
+det <- detailed_itineraries(
+  r5r_core,
+  origins = points[10,],
+  destinations = points[12,],
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  max_walk_dist = 1000,
+  max_trip_duration = 60
+)
 head(det)
 
 stop_r5(r5r_core)

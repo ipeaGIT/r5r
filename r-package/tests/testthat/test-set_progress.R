@@ -3,14 +3,6 @@
 
 testthat::skip_on_cran()
 
-departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "%d-%m-%Y %H:%M:%S"
-)
-fare_structure <- read_fare_structure(
-  system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
-)
-
 tester <- function(progress) set_progress(r5r_core, progress)
 
 test_that("input is correct", {

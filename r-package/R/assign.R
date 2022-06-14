@@ -52,15 +52,11 @@ assign_points_input <- function(df, name) {
 
 #' Check and select transport modes from user input
 #'
-#' Selects the transport modes used in the routing functions.
+#' Selects the transport modes used in the routing functions. Only one direct
+#' and access/egress modes are allowed at a time.
 #'
 #' @param mode A character vector, passed from routing functions.
 #' @param mode_egress A character vector, passed from routing functions.
-#' @param style Either `"ttm"` or `"dit"`. The first forbids more than one
-#'   direct and access modes, and should be used in [travel_time_matrix()],
-#'   [accessibility()], [expanded_travel_time_matrix()] and [pareto_frontier()].
-#'   The latter allows multiple direct and access modes, and should be used in
-#'   [detailed_itineraries()].
 #'
 #' @return A list with the transport modes to be used in the routing.
 #'
@@ -90,35 +86,21 @@ assign_mode <- function(mode, mode_egress, style) {
   )
 
   mode_egress <- toupper(unique(mode_egress))
-  if (style == "ttm") {
-    checkmate::assert_string(mode_egress)
-  } else {
-    checkmate::assert_character(mode_egress, min.len = 1, any.missing = FALSE)
-  }
+  checkmate::assert_string(mode_egress)
   checkmate::assert_names(
     mode_egress,
     subset.of = setdiff(dr_modes, c("CAR_PARK", "BICYCLE_RENT"))
   )
 
-  checkmate::assert(
-    checkmate::check_string(style),
-    checkmate::check_names(style, subset.of = c("ttm", "dit")),
-    combine = "and"
-  )
-
-  # assign modes accordingly
-
   direct_modes <- mode[which(mode %in% dr_modes)]
   transit_modes <- mode[which(mode %in% tr_modes)]
 
-  if (style == "ttm") {
-    if (length(direct_modes) > 1) {
-      stop(
-        "Please use only 1 of {",
-        paste0("'", direct_modes, "'", collapse = ","),
-        "} when routing."
-      )
-    }
+  if (length(direct_modes) > 1) {
+    stop(
+      "Please use only 1 of {",
+      paste0("'", direct_modes, "'", collapse = ","),
+      "} when routing."
+    )
   }
 
   if (any(c("CAR_PARK", "BICYCLE_RENT") %in% direct_modes)) {
@@ -198,11 +180,24 @@ assign_departure <- function(datetime) {
 #'
 #' @keywords internal
 assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
-  checkmate::assert_number(max_dist)
-  checkmate::assert_number(speed, finite = TRUE)
+  checkmate::assert(
+    checkmate::check_string(mode),
+    checkmate::check_names(mode, subset.of = c("bike", "walk")),
+    combine = "and"
+  )
+  checkmate::assert_number(max_dist, .var.name = paste0("max_", mode, "_dist"))
+  checkmate::assert_number(
+    speed,
+    finite = TRUE,
+    .var.name = paste0(mode, "_speed")
+  )
+  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if (speed <= 0) {
-    stop("Assertion on speed failed: must have value greater than 0.")
+    stop(
+      "Assertion on '", mode, "_speed' failed: ",
+      "Must have value greater than 0."
+    )
   }
 
   if (is.infinite(max_dist)) return(as.integer(max_trip_duration))
@@ -213,7 +208,7 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
 
   if (max_street_time == 0) {
     stop(
-      "'max_", mode, "_dist' is too low. ",
+      "Assertion on 'max_", mode, "_dist' failed: Value is too low. ",
       "Please make sure distances are in meters, not kilometers."
     )
   }
@@ -238,11 +233,22 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_max_trip_duration <- function(max_trip_duration) {
-  # TODO: adjust max trip duration based on max walk/bike dist if appropriate
+assign_max_trip_duration <- function(max_trip_duration,
+                                     modes,
+                                     max_walk_time,
+                                     max_bike_time) {
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
+
+  if (modes$transit_mode == "") {
+    if (modes$direct_modes == "WALK" & max_walk_time < max_trip_duration) {
+      max_trip_duration <- max_walk_time
+    }
+    if (modes$direct_modes == "BICYCLE" & max_bike_time < max_trip_duration) {
+      max_trip_duration <- max_bike_time
+    }
+  }
 
   return(max_trip_duration)
 }
@@ -363,4 +369,40 @@ assign_decay_function <- function(decay_function, decay_value) {
   decay_list <- list("fun" = decay_function, "value" = decay_value)
 
   return(decay_list)
+}
+
+
+#' Assign shortest path
+#'
+#' Check the shortest path input.
+#'
+#' @param shortest_path A logical.
+#'
+#' @return A logical.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_shortest_path <- function(shortest_path) {
+  checkmate::assert_logical(shortest_path, len = 1, any.missing = FALSE)
+
+  return(shortest_path)
+}
+
+
+#' Assign drop geometry
+#'
+#' Check the drop geometry input.
+#'
+#' @param drop_geometry A logical.
+#'
+#' @return A logical.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_drop_geometry <- function(drop_geometry) {
+  checkmate::assert_logical(drop_geometry, len = 1, any.missing = FALSE)
+
+  return(drop_geometry)
 }

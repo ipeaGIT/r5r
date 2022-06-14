@@ -20,9 +20,6 @@ public class DetailedItineraryPlanner extends R5Process {
 
     public DetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
-
-        routingProperties.timeWindowSize = 1; // minutes
-        routingProperties.numberOfMonteCarloDraws = 1; //
     }
 
     @Override
@@ -106,6 +103,9 @@ public class DetailedItineraryPlanner extends R5Process {
 
         request.percentiles = new int[1];
         request.percentiles[0] = 50;
+
+    //        routingProperties.timeWindowSize = 1; // minutes
+//        routingProperties.numberOfMonteCarloDraws = 1; //
 
 
         return request;

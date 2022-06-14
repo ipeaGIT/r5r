@@ -118,9 +118,8 @@ expanded_travel_time_matrix <- function(r5r_core,
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
-  mode_list <- assign_mode(mode, mode_egress, style = "ttm")
+  mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
   max_walk_time <- assign_max_street_time(
     max_walk_dist,
     walk_speed,
@@ -132,6 +131,12 @@ expanded_travel_time_matrix <- function(r5r_core,
     bike_speed,
     max_trip_duration,
     "bike"
+  )
+  max_trip_duration <- assign_max_trip_duration(
+    max_trip_duration,
+    mode_list,
+    max_walk_time,
+    max_bike_time
   )
 
   set_time_window(r5r_core, time_window)
@@ -146,6 +151,7 @@ expanded_travel_time_matrix <- function(r5r_core,
   set_output_dir(r5r_core, output_dir)
   set_expanded_travel_times(r5r_core, TRUE)
   set_breakdown(r5r_core, breakdown)
+  set_fare_structure(r5r_core, NULL)
 
   # call r5r_core method and process result -------------------------------
 

@@ -39,6 +39,7 @@ Other setting functions:
 \code{\link{set_percentiles}()},
 \code{\link{set_progress}()},
 \code{\link{set_speed}()},
+\code{\link{set_suboptimal_minutes}()},
 \code{\link{set_time_window}()},
 \code{\link{set_verbose}()}
 }

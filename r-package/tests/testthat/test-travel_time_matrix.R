@@ -95,11 +95,6 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(departure_datetime = unclass(departure_datetime)))
   expect_error(tester(departure_datetime = rep(departure_datetime, 2)))
 
-  expect_error(tester(time_window = "1"))
-  expect_error(tester(time_window = c(12, 15)))
-  expect_error(tester(time_window = 0))
-  expect_error(tester(time_window = Inf))
-
   expect_error(tester(percentiles = "50"))
   expect_error(tester(percentiles = 0))
   expect_error(tester(percentiles = 100))
@@ -135,11 +130,6 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(bike_speed = "12"))
   expect_error(tester(bike_speed = c(12, 15)))
   expect_error(tester(bike_speed = 0))
-
-  expect_error(tester(max_rides = "3"))
-  expect_error(tester(max_rides = c(3, 4)))
-  expect_error(tester(max_rides = -1))
-  expect_error(tester(max_rides = Inf))
 
   expect_error(tester(draws_per_minute = "1"))
   expect_error(tester(draws_per_minute = c(12, 15)))

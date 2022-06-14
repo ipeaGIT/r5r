@@ -5,6 +5,9 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
+import com.conveyal.r5.common.GeometryUtils;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
@@ -18,6 +21,8 @@ public class Utils {
     static public boolean verbose = true;
     static public boolean benchmark = false;
     static public boolean progress = true;
+
+    static public boolean detailedItinerariesV2 = true;
 
     static public boolean saveOutputToCsv = false;
     static public String outputCsvFolder = "";
@@ -117,5 +122,33 @@ public class Utils {
         logger = loggerContext.getLogger("org.ipea.r5r.R5.R5ParetoServer");
         logger.setLevel(Level.valueOf(mode));
 
+        logger = loggerContext.getLogger("org.ipea.r5r.Planner.TripPlanner");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.Planner.Trip");
+        logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.Planner.TripLeg");
+        logger.setLevel(Level.valueOf(mode));
     }
+
+    public static int getLinestringLength(LineString geometry) {
+        Coordinate previousCoordinate = null;
+        double accDistance = 0;
+
+        for (Coordinate coordinate : geometry.getCoordinates()) {
+            if (previousCoordinate != null) {
+                accDistance += GeometryUtils.distance(previousCoordinate.y, previousCoordinate.x, coordinate.y, coordinate.x);
+            }
+
+            previousCoordinate = coordinate;
+        }
+
+        return (int) Math.round(accDistance);
+    }
+
+    public static double roundTo1Place(double value) {
+        return Math.round(value * 10.0) / 10.0;
+    }
+
 }

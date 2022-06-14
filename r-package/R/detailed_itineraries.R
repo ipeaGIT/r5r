@@ -1,21 +1,46 @@
-#' Calculate detailed itineraries between origin destination pairs
+#' Detailed itineraries between origin-destination pairs
 #'
-#' Fast computation of (multiple) detailed itineraries between one or many
-#' origin destination pairs.
+#' Returns detailed trip information between origin-destination pairs. The
+#' output includes the waiting and moving time in each trip leg, as well as some
+#' info such as the distance traveled, the routes used and the geometry of each
+#' leg. Please note that this function was originally conceptualized as a trip
+#' planning functionality, similar to other commercial and non-commercial APIs
+#' and apps (e.g. Moovit, Google's Directions API, OpenTripPlanning's
+#' PlannerResource API). Thus, it consumes much more time and memory than the
+#' other (more analytical) routing functions included in the package.
 #'
 #' @template r5r_core
 #' @template common_arguments
 #' @template verbose
+#' @template fare_structure
+#' @template max_fare
+#' @param time_window An integer. The time window in minutes for which `r5r`
+#'   will calculate multiple itineraries departing each minute. Defaults to 1
+#'   minute. If the same sequence of routes appear in different minutes of the
+#'   time window, only the fastest of them will be kept in the output. This
+#'   happens because the result is not aggregated by percentile, as opposed to
+#'   other routing functions in the package. Because of that, the output may
+#'   contain trips departing after the specified `departure_datetime`, but
+#'   still within the time window. Please read the time window vignette for
+#'   more details on how this argument affects the results of each routing
+#'   function: `vignette("time_window", package = "r5r")`.
+#' @param suboptimal_minutes A number. The difference in minutes that each
+#'   non-optimal RAPTOR branch can have from the optimal branch without being
+#'   disregarded by the routing algorithm. This argument emulates the real-life
+#'   behaviour that makes people want to take a path that is technically not
+#'   optimal (in terms of travel time, for example) for some practical reasons
+#'   (e.g. mode preference, safety, etc). In practice, the higher this value,
+#'   the more itineraries will be returned in the final result.
 #' @param shortest_path A logical. Whether the function should only return the
-#' fastest itinerary between each origin and destination pair (the default) or
-#' multiple alternatives.
+#'   fastest itinerary between each origin and destination pair (the default)
+#'   or multiple alternatives.
 #' @param all_to_all A logical. Whether to query routes between the 1st origin
-#' to the 1st destination, then the 2nd origin to the 2nd destination, and so
-#' on (`FALSE`, the default) or to query routes between all origins to all
-#' destinations (`TRUE`).
+#'   to the 1st destination, then the 2nd origin to the 2nd destination, and so
+#'   on (`FALSE`, the default) or to query routes between all origins to all
+#'   destinations (`TRUE`).
 #' @param drop_geometry A logical. Whether the output should include the
-#' geometry of each segment or not. The default value of `FALSE` keeps the
-#' geometry column in the result.
+#'   geometry of each segment or not. The default value of `FALSE` keeps the
+#'   geometry column in the result.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -23,11 +48,11 @@
 #' @template mcraptor_algorithm_section
 #'
 #' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
-#' sf` with detailed information on the itineraries between the specified
-#' origins and destinations. When `TRUE`, the output is a `data.table`. All
-#' distances are in meters and travel times are in minutes. If `output_dir` is
-#' not `NULL`, the function returns the path specified in that parameter, in
-#' which the `.csv` files containing the results are saved.
+#'   sf` with detailed information on the itineraries between the specified
+#'   origins and destinations. When `TRUE`, the output is a `data.table`. All
+#'   distances are in meters and travel times are in minutes. If `output_dir`
+#'   is not `NULL`, the function returns the path specified in that parameter,
+#'   in which the `.csv` files containing the results are saved.
 #'
 #' @family routing
 #'
@@ -42,17 +67,21 @@
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
 #' # inputs
-#' departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
-#'                                  format = "%d-%m-%Y %H:%M:%S")
+#' departure_datetime <- as.POSIXct(
+#'   "13-05-2019 14:00:00",
+#'   format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#' det <- detailed_itineraries(r5r_core,
-#'                             origins = points[10,],
-#'                             destinations = points[12,],
-#'                             mode = c("WALK", "TRANSIT"),
-#'                             departure_datetime = departure_datetime,
-#'                             max_walk_dist = 1000,
-#'                             max_trip_duration = 60)
-#'head(det)
+#' det <- detailed_itineraries(
+#'   r5r_core,
+#'   origins = points[10,],
+#'   destinations = points[12,],
+#'   mode = c("WALK", "TRANSIT"),
+#'   departure_datetime = departure_datetime,
+#'   max_walk_dist = 1000,
+#'   max_trip_duration = 60
+#' )
+#' head(det)
 #'
 #' stop_r5(r5r_core)
 #' @export
@@ -62,6 +91,10 @@ detailed_itineraries <- function(r5r_core,
                                  mode = "WALK",
                                  mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
+                                 time_window = 1L,
+                                 suboptimal_minutes = 0L,
+                                 fare_structure = NULL,
+                                 max_fare = Inf,
                                  max_walk_dist = Inf,
                                  max_bike_dist = Inf,
                                  max_trip_duration = 120L,
@@ -85,204 +118,101 @@ detailed_itineraries <- function(r5r_core,
   data.table::setDTthreads(dt_threads)
   on.exit(data.table::setDTthreads(old_dt_threads), add = TRUE)
 
+  # check inputs and set r5r options --------------------------------------
 
-  # check inputs ------------------------------------------------------------
-
-  # r5r_core
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  # modes
-  mode_list <- assign_mode(mode, mode_egress, style = "dit")
-
-  # departure time
-  departure <- assign_departure(departure_datetime)
-
-  # max trip duration
-  max_trip_duration <- assign_max_trip_duration(max_trip_duration)
-
-  # max_walking_distance and max_street_time
-  max_walk_time <- assign_max_street_time(max_walk_dist,
-                                       walk_speed,
-                                       max_trip_duration,
-                                       "walk")
-  max_bike_time <- assign_max_street_time(max_bike_dist,
-                                       bike_speed,
-                                       max_trip_duration,
-                                       "bike")
-
-  # shortest_path
-  checkmate::assert_logical(shortest_path)
-
-  # drop_geometry
-  checkmate::assert_logical(drop_geometry)
-
-  # origins and destinations
-  # either they have the same number of rows or one of them has only one row,
-  # in which case the smaller dataframe is expanded
-  origins      <- assign_points_input(origins, "origins")
-  destinations <- assign_points_input(destinations, "destinations")
-
-
-  # check if user wants to route all possible combinations of origin-destination pairs
-  if( all_to_all == TRUE){
-    df <- get_all_od_combinations(origins, destinations)
-         origins <- df[, .('id'=id_orig, 'lon'=lon_orig,'lat'=lat_orig)]
-    destinations <- df[, .('id'=id_dest, 'lon'=lon_dest,'lat'=lat_dest)]
-    }
-
-  n_origs <- nrow(origins)
-  n_dests <- nrow(destinations)
-
-  if (n_origs != n_dests) {
-
-    if ((n_origs > 1) && (n_dests > 1)) {
-
-      stop(paste("Origins and destinations dataframes must either have the",
-                 "same size or one of them must have only one entry."))
-
-    } else {
-
-      if (n_origs > n_dests) {
-
-        destinations <- destinations[rep(1, n_origs), ]
-        message("Destinations dataframe expanded to match the number of origins.")
-
-      } else {
-
-        origins <- origins[rep(1, n_dests), ]
-        message("Origins dataframe expanded to match the number of destinations.")
-
-      }
-
-    }
-
+  if (r5r_core$hasFrequencies()) {
+    stop(
+      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
+      "the transit network can contain a 'frequencies' table. Try using ",
+      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
+    )
   }
 
+  origins <- assign_points_input(origins, "origins")
+  destinations <- assign_points_input(destinations, "destinations")
+  od_list <- expand_od_pairs(origins, destinations, all_to_all)
+  origins <- od_list$origins
+  destinations <- od_list$destinations
 
-  # set r5r_core options ----------------------------------------------------
+  mode_list <- assign_mode(mode, mode_egress)
+  departure <- assign_departure(departure_datetime)
+  max_walk_time <- assign_max_street_time(
+    max_walk_dist,
+    walk_speed,
+    max_trip_duration,
+    "walk"
+  )
+  max_bike_time <- assign_max_street_time(
+    max_bike_dist,
+    bike_speed,
+    max_trip_duration,
+    "bike"
+  )
+  max_trip_duration <- assign_max_trip_duration(
+    max_trip_duration,
+    mode_list,
+    max_walk_time,
+    max_bike_time
+  )
+  shortest_path <- assign_shortest_path(shortest_path)
+  drop_geometry <- assign_drop_geometry(drop_geometry)
 
-  if (!is.null(output_dir)) r5r_core$setCsvOutput(output_dir)
-  on.exit(r5r_core$setCsvOutput(""), add = TRUE)
-
-  # set bike and walk speed
+  set_time_window(r5r_core, time_window)
+  set_monte_carlo_draws(r5r_core, 1, time_window)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
-
-  # set max transfers
   set_max_rides(r5r_core, max_rides)
-
-  # max_lts
   set_max_lts(r5r_core, max_lts)
-
-  # set suboptimal minutes
-  # if only the shortest path is requested, set suboptimal minutes to 0 minutes,
-  # else revert back to the 5 minutes default.
-  if (shortest_path) {
-    set_suboptimal_minutes(r5r_core, 0L)
-  } else {
-    set_suboptimal_minutes(r5r_core, 5L)
-  }
-
-  # set number of threads to be used by r5 and data.table
   set_n_threads(r5r_core, n_threads)
-
-  # set verbose
   set_verbose(r5r_core, verbose)
-
-  # set progress
   set_progress(r5r_core, progress)
+  set_fare_structure(r5r_core, fare_structure)
+  set_max_fare(r5r_core, max_fare)
+  set_output_dir(r5r_core, output_dir)
+  set_suboptimal_minutes(
+    r5r_core,
+    suboptimal_minutes,
+    fare_structure,
+    shortest_path
+  )
 
-  # call r5r_core method ----------------------------------------------------
+  # call r5r_core method and process result -------------------------------
 
-  path_options <- r5r_core$detailedItineraries(origins$id,
-                                               origins$lat,
-                                               origins$lon,
-                                               destinations$id,
-                                               destinations$lat,
-                                               destinations$lon,
-                                               mode_list$direct_modes,
-                                               mode_list$transit_mode,
-                                               mode_list$access_mode,
-                                               mode_list$egress_mode,
-                                               departure$date,
-                                               departure$time,
-                                               max_walk_time,
-                                               max_bike_time,
-                                               max_trip_duration,
-                                               drop_geometry)
-
-
-  # process results ---------------------------------------------------------
-
-
-  # check if any itineraries have been found - if not, raises an error
-  # if there are any results, convert those to a data.frame. if only one pair of
-  # origin and destination has been passed, then the result is already a df
-
-  if (is.null(path_options)) {
-    return(data.table::data.table(path_options))
-
-  } else {
-    path_options <- java_to_dt(path_options)
-
-    if (!is.data.frame(path_options)) {
-      path_options <- data.table::rbindlist(path_options)
-    }
-  }
-
-  # If there is no result, return empty simple feature
-  if (nrow(path_options) == 0) {
-    if (!drop_geometry) {
-      path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]
-      path_options <- sf::st_sf(path_options, crs = 4326)
-    }
-    return(path_options)
-  }
-
-  # return either the fastest or multiple itineraries between an o-d pair (untie
-  # it by the option number, if necessary)
-
-  path_options[, total_duration := sum(segment_duration, wait), by = .(from_id, to_id, option)]
-
-  if (shortest_path) {
-
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)], by = .(from_id, to_id)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id)]$V1]
-
-  } else {
-
-    # R5 often returns multiple itineraries between an origin and a destination
-    # with the same basic structure, but with minor differences in the walking
-    # segments at the start and end of the trip.
-    # itineraries with the same signature (sequence of routes) are filtered to
-    # keep the one with the shortest duration
-
-    path_options[, temp_route := data.table::fifelse(route == "", mode, route)]
-    path_options[, temp_sign := paste(temp_route, collapse = "_"), by = .(from_id, to_id, option)]
-
-    path_options <- path_options[path_options[, .I[total_duration == min(total_duration)],by = .(from_id, to_id, temp_sign)]$V1]
-    path_options <- path_options[path_options[, .I[option == min(option)], by = .(from_id, to_id, temp_sign)]$V1]
-
-    # remove temporary columns
-    path_options[, grep("temp_", names(path_options), value = TRUE) := NULL]
-
-  }
-
-  # substitute 'option' id assigned by r5 to a run-length id from 1 to number of
-  # options
-  path_options[, option := data.table::rleid(option), by = .(from_id, to_id)]
-
-  # if results include the geometry, convert path_options from data.frame to
-  # data.table with sfc column
-  if (!drop_geometry) {
-
-    # convert path_options from data.table to sf with CRS WGS 84 (EPSG 4326)
-    path_options[, geometry := sf::st_as_sfc(geometry)]
-    path_options <- sf::st_sf(path_options, crs = 4326)
-
-  }
+  path_options <- r5r_core$detailedItineraries(
+    origins$id,
+    origins$lat,
+    origins$lon,
+    destinations$id,
+    destinations$lat,
+    destinations$lon,
+    mode_list$direct_modes,
+    mode_list$transit_mode,
+    mode_list$access_mode,
+    mode_list$egress_mode,
+    departure$date,
+    departure$time,
+    max_walk_time,
+    max_bike_time,
+    max_trip_duration,
+    drop_geometry,
+    shortest_path
+  )
 
   if (!is.null(output_dir)) return(output_dir)
-  return(path_options)
 
+  path_options <- java_to_dt(path_options)
+
+  if (!drop_geometry) {
+    if (nrow(path_options) > 0) {
+      path_options[, geometry := sf::st_as_sfc(geometry)]
+    } else {
+      path_options[, geometry := sf::st_sfc(sf::st_linestring(), crs = 4326)[0]]
+    }
+
+    path_options <- sf::st_sf(path_options, crs = 4326)
+  }
+
+  return(path_options)
 }
