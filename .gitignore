@@ -32,3 +32,4 @@ r-package/vignettes/*.html
 r-package/vignettes/*.R
 aws.xml
 docs/
+network_settings.json
