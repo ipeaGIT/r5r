@@ -18,8 +18,8 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    percentiles = 50L,
                    fare_structure = NULL,
                    max_fare = Inf,
-                   max_walk_dist = Inf,
-                   max_bike_dist = Inf,
+                   max_walk_time = Inf,
+                   max_bike_time = Inf,
                    max_trip_duration = 120L,
                    walk_speed = 3.6,
                    bike_speed = 12,
@@ -41,8 +41,8 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
     percentiles = percentiles,
     fare_structure = fare_structure,
     max_fare = max_fare,
-    max_walk_dist = max_walk_dist,
-    max_bike_dist = max_bike_dist,
+    max_walk_time = max_walk_time,
+    max_bike_time = max_bike_time,
     max_trip_duration = max_trip_duration,
     walk_speed = walk_speed,
     bike_speed = bike_speed,
@@ -109,15 +109,15 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(max_fare = c(0, 20)))
   expect_error(tester(max_fare = NA))
 
-  expect_error(tester(max_walk_dist = "1000"))
-  expect_error(tester(max_walk_dist = NULL))
-  expect_error(tester(max_walk_dist = c(1000, 2000)))
-  expect_error(tester(max_walk_dist = 1))
+  expect_error(tester(max_walk_time = "1000"))
+  expect_error(tester(max_walk_time = NULL))
+  expect_error(tester(max_walk_time = c(1000, 2000)))
+  expect_error(tester(max_walk_time = 0))
 
-  expect_error(tester(max_bike_dist = "1000"))
-  expect_error(tester(max_bike_dist = NULL))
-  expect_error(tester(max_bike_dist = c(1000, 2000)))
-  expect_error(tester(max_bike_dist = 1))
+  expect_error(tester(max_bike_time = "1000"))
+  expect_error(tester(max_bike_time = NULL))
+  expect_error(tester(max_bike_time = c(1000, 2000)))
+  expect_error(tester(max_bike_time = 0))
 
   expect_error(tester(max_trip_duration = "120"))
   expect_error(tester(max_trip_duration = c(25, 30)))
@@ -208,38 +208,6 @@ test_that("we get more results (and faster trips) when using faster modes", {
   expect_true(all(ttm$only_walk_time >= ttm$with_transit_time))
 })
 
-# # this test is currently working but is taking too long for some reason.
-# # commenting it out for now
-# test_that("we get more and faster results when using faster egress modes", {
-#   ttm_walk_egress <- tester(
-#     max_trip_duration = 30,
-#     mode = c("WALK", "TRANSIT"),
-#     departure_datetime = departure_datetime,
-#     max_walk_dist = 1000
-#   )
-#   data.table::setnames(
-#     ttm_walk_egress,
-#     "travel_time_p50",
-#     new = "egress_walk_time"
-#   )
-#   ttm_bike_egress <- tester(
-#     max_trip_duration = 30,
-#     mode = c("WALK", "TRANSIT"),
-#     mode_egress = "BICYCLE",
-#     departure_datetime = departure_datetime,
-#     max_walk_dist = 1000,
-#     max_bike_dist = 1000
-#   )
-# 
-#   expect_true(nrow(ttm_bike_egress) > nrow(ttm_walk_egress))
-# 
-#   ttm <- ttm_walk_egress[
-#     ttm_bike_egress,
-#     on = c("from_id", "to_id"),
-#     bike_egress_time := i.travel_time_p50
-#   ]
-#   expect_true(all(ttm$only_walk_time >= ttm$bike_egress_time))
-# })
 
 test_that("using transit outside the gtfs dates results in walk only trips", {
   ttm_within_gtfs_date <- tester(
@@ -279,35 +247,7 @@ test_that("walk trips are shorter with higher walk speeds", {
   expect_true(all(ttm$low_speed_time >= ttm$high_speed_time))
 })
 
-# # this test fails, because when mode = "WALK" max_walk_dist is ignored and
-# # only max_trip_duration is taken into account
-# test_that("walk only distances are not higher than max_walk_dist", {
-#   max_walk_dist <- 1000
-#   walk_speed <- 3.6
-#   ttm <- tester(
-#     mode = "WALK",
-#     max_walk_dist = max_walk_dist,
-#     walk_speed = walk_speed
-#   )
-#   ttm[, distances_m := (travel_time_p50 / 60) * (walk_speed * 1000)]
-# 
-#   expect_true(all(ttm$distances_m <= max_walk_dist))
-# })
 
-# # this test fails, because when mode = "BICYCLE" max_bike_dist is ignored and
-# # only max_trip_duration is taken into account
-# test_that("bike only distances are not higher than max_bike_dist", {
-#   max_bike_dist <- 3000
-#   bike_speed <- 12
-#   ttm <- tester(
-#     mode = "BICYCLE",
-#     max_bike_dist = max_bike_dist,
-#     bike_speed = bike_speed
-#   )
-#   ttm[, distances_m := (travel_time_p50 / 60) * (bike_speed * 1000)]
-# 
-#   expect_true(all(ttm$distances_m <= max_bike_dist))
-# })
 
 test_that("bike trips are shorter with higher bike speeds", {
   ttm_low_speed <- tester(mode = "BICYCLE", bike_speed = 12)

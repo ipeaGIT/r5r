@@ -15,8 +15,8 @@ detailed_itineraries(
   suboptimal_minutes = 0L,
   fare_structure = NULL,
   max_fare = Inf,
-  max_walk_dist = Inf,
-  max_bike_dist = Inf,
+  max_walk_time = Inf,
+  max_bike_time = Inf,
   max_trip_duration = 120L,
   walk_speed = 3.6,
   bike_speed = 12,
@@ -80,31 +80,21 @@ understand how this object is structured:
 \item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.}
 
-\item{max_walk_dist}{An integer. The maximum walking distance (in meters) to
+\item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
 network. Defaults to no restrictions, as long as \code{max_trip_duration} is
-respected. The max distance is considered separately for each leg (e.g. if
-you set \code{max_walk_dist} to 1000, you could potentially walk up to 1 km to
-reach transit, and up to \emph{another} 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the
-maximum length of walking-only trips, only walking access, egress and
-transfer legs. If you want to set a maximum walking distance for
-walking-only trips you have to use the \code{max_trip_duration} parameter (e.g.
-to set a walking-only trip max distance of 1 km, assuming a walking speed
-of 3.6 km/h, you have to set \code{max_trip_duration = 1 / 3.6 * 60}).}
+respected. The max time is considered separately for each leg (e.g. if
+you set \code{max_walk_time} to 15, you could potentially walk up to 15 minutes
+to reach transit, and up to \emph{another} 15 minutes to reach the destination
+after leaving transit). Defaults to \code{Inf}, no limit.}
 
-\item{max_bike_dist}{An integer. The maximum cycling distance (in meters) to
+\item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
 access and egress the transit network, or to make transfers within the
 network. Defaults to no restrictions, as long as \code{max_trip_duration} is
-respected. The max distance is considered separately for each leg (e.g. if
-you set \code{max_bike_dist} to 1000, you could potentially cycle up to 1 km to
-reach transit, and up to \emph{another} 1 km to reach the destination after
-leaving transit). Please note that this parameter doesn't affect the
-maximum length of cycling-only trips, only cycling access, egress and
-transfer legs. If you want to set a maximum cycling distance for
-cycling-only trips you have to use the \code{max_trip_duration} parameter (e.g.
-to set a walking-only trip max distance of 5 km, assuming a cycling speed
-of 12 km/h, you have to set \code{max_trip_duration = 5 / 12 * 60}).}
+respected. The max time is considered separately for each leg (e.g. if
+you set \code{max_bike_time} to 15 minutes, you could potentially cycle up to 15
+minutes to reach transit, and up to \emph{another} 15 minutes to reach the
+destination after leaving transit). Defaults to \code{Inf}, no limit.}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
@@ -216,10 +206,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
@@ -260,7 +250,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \item Conway, M. W., & Stewart, A. F. (2019). Getting Charlie off the MTA: a
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
-Information Science, 33(9), 1759–1787. \doi{10.1080/13658816.2019.1605075}
+Information Science, 33(9), 1759â€“1787. \doi{10.1080/13658816.2019.1605075}
 }
 }
 
@@ -287,7 +277,6 @@ det <- detailed_itineraries(
   destinations = points[12,],
   mode = c("WALK", "TRANSIT"),
   departure_datetime = departure_datetime,
-  max_walk_dist = 1000,
   max_trip_duration = 60
 )
 head(det)

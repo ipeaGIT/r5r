@@ -94,8 +94,8 @@ pareto_frontier <- function(r5r_core,
                             departure_datetime = Sys.time(),
                             time_window = 1L,
                             percentiles = 50L,
-                            max_walk_dist = Inf,
-                            max_bike_dist = Inf,
+                            max_walk_time = Inf,
+                            max_bike_time = Inf,
                             max_trip_duration = 120L,
                             fare_structure = NULL,
                             monetary_cost_cutoffs = -1L,
@@ -126,13 +126,13 @@ pareto_frontier <- function(r5r_core,
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
   max_walk_time <- assign_max_street_time(
-    max_walk_dist,
+    max_walk_time,
     walk_speed,
     max_trip_duration,
     "walk"
   )
   max_bike_time <- assign_max_street_time(
-    max_bike_dist,
+    max_bike_time,
     bike_speed,
     max_trip_duration,
     "bike"

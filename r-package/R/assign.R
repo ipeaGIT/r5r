@@ -166,7 +166,7 @@ assign_departure <- function(datetime) {
 #'
 #' Checks the time duration and speed inputs and converts them to distance.
 #'
-#' @param max_dist A numeric of length 1. Maximum walking distance (in
+#' @param max_time A numeric of length 1. Maximum walking distance (in
 #'   meters) for the whole trip. Passed from routing functions.
 #' @param speed A numeric of length 1. Average walk speed in km/h.
 #'   Defaults to 3.6 Km/h. Passed from routing functions.
@@ -179,18 +179,27 @@ assign_departure <- function(datetime) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
+assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
+
   checkmate::assert(
     checkmate::check_string(mode),
     checkmate::check_names(mode, subset.of = c("bike", "walk")),
     combine = "and"
   )
-  checkmate::assert_number(max_dist, .var.name = paste0("max_", mode, "_dist"))
+
+  checkmate::assert_number(
+    max_time,
+    .var.name = paste0("max_", mode, "_time"),
+    lower = 1,
+    finite = FALSE
+  )
+
   checkmate::assert_number(
     speed,
     finite = TRUE,
     .var.name = paste0(mode, "_speed")
   )
+
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if (speed <= 0) {
@@ -200,25 +209,12 @@ assign_max_street_time <- function(max_dist, speed, max_trip_duration, mode) {
     )
   }
 
-  if (is.infinite(max_dist)) return(as.integer(max_trip_duration))
-
-  max_street_time <- as.integer(
-    round(60 * max_dist / (speed * 1000), digits = 0)
-  )
-
-  if (max_street_time == 0) {
-    stop(
-      "Assertion on 'max_", mode, "_dist' failed: Value is too low. ",
-      "Please make sure distances are in meters, not kilometers."
-    )
+  if (is.infinite(max_time)){
+    return(as.integer(max_trip_duration))
   }
-
-  # if max_street_time ends up being higher than max_trip_duration, uses
-  # max_trip_duration as a ceiling
-
-  if (max_street_time > max_trip_duration) max_street_time <- max_trip_duration
-
-  return(as.integer(max_street_time))
+  else {
+    return(as.integer(max_time))
+    }
 }
 
 

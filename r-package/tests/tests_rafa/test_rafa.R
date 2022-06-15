@@ -477,6 +477,7 @@ a <- covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testt
 covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat/test-detailed_itineraries.R"))
 a <- covr::function_coverage(fun=r5r::expanded_travel_time_matrix, test_file("tests/testthat/test-expanded_travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::pareto_frontier, test_file("tests/testthat/test-pareto_frontier.R"))
+a <- covr::function_coverage(fun=r5r::accessibility, test_file("tests/testthat/test-accessibility.R"))
 
 covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
 covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))
@@ -506,8 +507,8 @@ covr::function_coverage(fun=r5r::set_speed, test_file("tests/testthat/test-utils
 
 # the whole package
 Sys.setenv(NOT_CRAN = "true")
-r5r_cov3 <- covr::package_coverage(path = ".", type = "tests")
-r5r_cov2
+r5r_cov <- covr::package_coverage(path = ".", type = "tests")
+r5r_cov
 
 saveRDS(r5r_cov3, file = './tests/tests_rafa/r5r_coverage.rds')
 

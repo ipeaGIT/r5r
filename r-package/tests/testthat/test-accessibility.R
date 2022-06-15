@@ -22,8 +22,8 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    decay_value = NULL,
                    fare_structure = NULL,
                    max_fare = Inf,
-                   max_walk_dist = Inf,
-                   max_bike_dist = Inf,
+                   max_walk_time = Inf,
+                   max_bike_time = Inf,
                    max_trip_duration = 120L,
                    walk_speed = 3.6,
                    bike_speed = 12,
@@ -49,8 +49,8 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
     decay_value = decay_value,
     fare_structure = fare_structure,
     max_fare = max_fare,
-    max_walk_dist = max_walk_dist,
-    max_bike_dist = max_bike_dist,
+    max_walk_time = max_walk_time,
+    max_bike_time = max_bike_time,
     max_trip_duration = max_trip_duration,
     walk_speed = walk_speed,
     bike_speed = bike_speed,
@@ -108,13 +108,13 @@ test_that("adequately raises errors", {
   expect_error(tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(tester(r5r_core, numeric_datetime))
 
-  # errors related to max_walk_dist
-  expect_error(tester(r5r_core, max_walk_dist = "1000"))
-  expect_error(tester(r5r_core, max_walk_dist = NULL))
+  # errors related to max_walk_time
+  expect_error(tester(r5r_core, max_walk_time = "1000"))
+  expect_error(tester(r5r_core, max_walk_time = NULL))
 
-  # errors related to max_bike_dist
-  expect_error(tester(r5r_core, max_bike_dist = "1000"))
-  expect_error(tester(r5r_core, max_bike_dist = NULL))
+  # errors related to max_bike_time
+  expect_error(tester(r5r_core, max_bike_time = "1000"))
+  expect_error(tester(r5r_core, max_bike_time = NULL))
 
     # error/warning related to max_street_time
   expect_error(tester(r5r_core, max_trip_duration = "120"))

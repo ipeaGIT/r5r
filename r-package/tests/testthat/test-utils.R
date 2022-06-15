@@ -7,6 +7,8 @@ test_that("assign_max_street_time adequately raises warnings and errors", {
 
   expect_error(assign_max_walk_distance("1000", 3.6, 60L, "walk"))
   expect_error(assign_max_walk_distance(1000, "3.6", 60L, "walk"))
+  expect_error(assign_max_walk_distance(0, 3.6, 60L, "walk"))
+  expect_error(assign_max_walk_distance(-3, 3.6, 60L, "walk"))
   # expect_error(assign_max_walk_distance(3700, 3.6, "60L")) # should this fail though?
 
 })
@@ -14,8 +16,9 @@ test_that("assign_max_street_time adequately raises warnings and errors", {
 test_that("assign_max_street_time output is coherent", {
 
   expect_equal(assign_max_street_time(Inf, 3.6, 60L, "walk"), 60L)
-  expect_equal(assign_max_street_time(1800, 3.6, 60L, "walk"), 30L)
-  expect_equal(assign_max_street_time(7200, 3.6, 60L, "walk"), 60L)
+  expect_equal(assign_max_street_time(30, 3.6, 60L, "walk"), 30L)
+  expect_equal(assign_max_street_time(Inf, 3.6, 60L, "bike"), 60L)
+  expect_equal(assign_max_street_time(30, 3.6, 60L, "bike"), 30L)
 
 })
 

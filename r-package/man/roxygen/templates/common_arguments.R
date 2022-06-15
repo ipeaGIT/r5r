@@ -11,30 +11,20 @@
 #'   transport networks, please check the `calendar.txt` within your GTFS feeds
 #'   for valid dates. Please see details for further information on how
 #'   datetimes are parsed.
-#' @param max_walk_dist An integer. The maximum walking distance (in meters) to
+#' @param max_walk_time An integer. The maximum walking time (in minutes) to
 #'   access and egress the transit network, or to make transfers within the
 #'   network. Defaults to no restrictions, as long as `max_trip_duration` is
-#'   respected. The max distance is considered separately for each leg (e.g. if
-#'   you set `max_walk_dist` to 1000, you could potentially walk up to 1 km to
-#'   reach transit, and up to _another_ 1 km to reach the destination after
-#'   leaving transit). Please note that this parameter doesn't affect the
-#'   maximum length of walking-only trips, only walking access, egress and
-#'   transfer legs. If you want to set a maximum walking distance for
-#'   walking-only trips you have to use the `max_trip_duration` parameter (e.g.
-#'   to set a walking-only trip max distance of 1 km, assuming a walking speed
-#'   of 3.6 km/h, you have to set `max_trip_duration = 1 / 3.6 * 60`).
-#' @param max_bike_dist An integer. The maximum cycling distance (in meters) to
+#'   respected. The max time is considered separately for each leg (e.g. if
+#'   you set `max_walk_time` to 15, you could potentially walk up to 15 minutes
+#'   to reach transit, and up to _another_ 15 minutes to reach the destination
+#'   after leaving transit). Defaults to `Inf`, no limit.
+#' @param max_bike_time An integer. The maximum cycling time (in minutes) to
 #'   access and egress the transit network, or to make transfers within the
 #'   network. Defaults to no restrictions, as long as `max_trip_duration` is
-#'   respected. The max distance is considered separately for each leg (e.g. if
-#'   you set `max_bike_dist` to 1000, you could potentially cycle up to 1 km to
-#'   reach transit, and up to _another_ 1 km to reach the destination after
-#'   leaving transit). Please note that this parameter doesn't affect the
-#'   maximum length of cycling-only trips, only cycling access, egress and
-#'   transfer legs. If you want to set a maximum cycling distance for
-#'   cycling-only trips you have to use the `max_trip_duration` parameter (e.g.
-#'   to set a walking-only trip max distance of 5 km, assuming a cycling speed
-#'   of 12 km/h, you have to set `max_trip_duration = 5 / 12 * 60`).
+#'   respected. The max time is considered separately for each leg (e.g. if
+#'   you set `max_bike_time` to 15 minutes, you could potentially cycle up to 15
+#'   minutes to reach transit, and up to _another_ 15 minutes to reach the
+#'   destination after leaving transit). Defaults to `Inf`, no limit.
 #' @param max_trip_duration An integer. The maximum trip duration in minutes.
 #'   Defaults to 120 minutes (2 hours).
 #' @param walk_speed A numeric. Average walk speed in km/h. Defaults to 3.6

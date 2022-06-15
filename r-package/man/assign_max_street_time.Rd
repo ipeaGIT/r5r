@@ -4,10 +4,10 @@
 \alias{assign_max_street_time}
 \title{Assign max street time from walk/bike distance and speed}
 \usage{
-assign_max_street_time(max_dist, speed, max_trip_duration, mode)
+assign_max_street_time(max_time, speed, max_trip_duration, mode)
 }
 \arguments{
-\item{max_dist}{A numeric of length 1. Maximum walking distance (in
+\item{max_time}{A numeric of length 1. Maximum walking distance (in
 meters) for the whole trip. Passed from routing functions.}
 
 \item{speed}{A numeric of length 1. Average walk speed in km/h.
