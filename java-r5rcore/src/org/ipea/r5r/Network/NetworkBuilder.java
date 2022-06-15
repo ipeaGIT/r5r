@@ -9,18 +9,24 @@ import com.conveyal.r5.streets.StreetLayer;
 import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
 import org.apache.commons.io.FilenameUtils;
+import org.ipea.r5r.R5RCore;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class NetworkBuilder {
 
     public static boolean useNativeElevation = false;
     public static String elevationCostFunction = "NONE";
+
+    private static List<String> gtfsFiles = new ArrayList<>();
+    private static String osmFilename;
 
     private static OSM osmFile;
     private static Stream<GTFSFeed> gtfsFeeds;
@@ -55,14 +61,48 @@ public class NetworkBuilder {
 
         loadDirectory(dir);
 
-        // create network
         TransportNetwork tn = createNetwork();
+
+        Map<String, String> networkConfig = buildNetworkConfig();
 
         try {
             KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
+            writeNetworkSettings(dataFolder, networkConfig);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void writeNetworkSettings(String dataFolder, Map<String, String> networkConfig) throws IOException {
+        String json = "{" + networkConfig.entrySet().stream()
+                .map(e -> "\""+ e.getKey() + "\":\"" + e.getValue() + "\"")
+                .collect(Collectors.joining(", "))+"}";
+
+        FileWriter fileWriter = new FileWriter(new File(dataFolder, "network_settings.json"));
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(json);
+        printWriter.close();
+    }
+
+    private static Map<String, String> buildNetworkConfig() {
+        Map<String, String> networkConfig = new LinkedHashMap<>();
+
+        networkConfig.put("r5_version", R5RCore.R5_VERSION);
+        networkConfig.put("r5_network_version", KryoNetworkSerializer.NETWORK_FORMAT_VERSION);
+        networkConfig.put("r5r_version", R5RCore.R5R_VERSION);
+        networkConfig.put("creation_date", LocalDateTime.now().toString());
+
+        networkConfig.put("pbf_file_name", osmFilename);
+
+        for (int i = 0; i < gtfsFiles.size(); i++) {
+            networkConfig.put("gtfs_" + (i + 1), gtfsFiles.get(i));
+        }
+
+        networkConfig.put("use_elevation", String.valueOf(useNativeElevation));
+        networkConfig.put("elevation_cost_function", elevationCostFunction);
+        networkConfig.put("tiff_file_name", tiffFile);
+
+        return networkConfig;
     }
 
     private static TransportNetwork createNetwork() {
@@ -127,9 +167,6 @@ public class NetworkBuilder {
     }
 
     public static void loadDirectory(File directory) {
-        List<String> gtfsFiles = new ArrayList<>();
-        String osmFilename;
-
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             String name = file.getName();
 

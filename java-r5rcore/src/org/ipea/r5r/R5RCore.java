@@ -27,6 +27,9 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
+    public static final String R5_VERSION = "6.7";
+    public static final String R5R_VERSION = "1.0.0";
+
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
 
