@@ -81,7 +81,7 @@ points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
 # routing inputs
 mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000 # in meters
+max_walk_time <- 30 # in minutes
 travel_time_cutoff <- 21 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
@@ -98,7 +98,7 @@ access <- accessibility(r5r_core,
                         decay_function = "step",
                         cutoffs = travel_time_cutoff,
                         departure_datetime = departure_datetime,
-                        max_walk_dist = max_walk_dist,
+                        max_walk_time = max_walk_time,
                         time_window = time_window,
                         percentiles = percentiles,
                         progress = FALSE)

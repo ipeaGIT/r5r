@@ -109,7 +109,6 @@ r5r_core <- setup_r5(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
-max_walk_dist <- 1000 # meters
 max_trip_duration <- 90 # minutes
 
 # load origin/destination points of interest

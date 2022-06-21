@@ -68,7 +68,7 @@ The `travel_time_matrix()` function provides a simple and really fast way to cal
 The user can also customize many parameters such as:
 - `max_trip_duration`: maximum trip duration
 - `max_rides`: maximum number of transfer in the public transport system
-- `max_walk_dist` and `max_bike_dist`: maximum walking or cycling distance to and from public transport
+- `max_walk_time` and `max_bike_time`: maximum walking or cycling time to and from public transport
 - `walk_speed` and `bike_speed`: maximum walking or cycling speed
 - `max_fare`: maximum monetary cost in public transport. [See this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
 

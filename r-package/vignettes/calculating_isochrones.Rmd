@@ -70,7 +70,7 @@ central_bus_stn <- points[291,]
 
 # routing inputs
 mode <- c("WALK", "TRANSIT")
-max_walk_dist <- 1000 # in meters
+max_walk_time <- 30 # in minutes
 max_trip_duration <- 120 # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
@@ -84,7 +84,7 @@ ttm <- travel_time_matrix(r5r_core,
                           destinations = points,
                           mode = mode,
                           departure_datetime = departure_datetime,
-                          max_walk_dist = max_walk_dist,
+                          max_walk_time = max_walk_time,
                           max_trip_duration = max_trip_duration,
                           time_window = time_window,
                           percentiles = percentiles,
