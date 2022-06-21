@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2022-06-15</h4>
+            <h4 data-toc-skip class="date">2022-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/travel_time_matrix.Rmd" class="external-link"><code>../vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="hidden name"><code>travel_time_matrix.Rmd</code></div>
@@ -160,7 +160,7 @@
 <h2 id="the-travel_time_matrix-function">3. The <code>travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-travel_time_matrix-function"></a>
 </h2>
 <p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function provides a simple and really fast way to calculate the travel time between all possible origin destination pairs at a given departure time using a given transport mode.</p>
-<p>The user can also customize many parameters such as: - <code>max_trip_duration</code>: maximum trip duration - <code>max_rides</code>: maximum number of transfer in the public transport system - <code>max_walk_dist</code> and <code>max_bike_dist</code>: maximum walking or cycling distance to and from public transport - <code>walk_speed</code> and <code>bike_speed</code>: maximum walking or cycling speed - <code>max_fare</code>: maximum monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">See this vignette</a>.</p>
+<p>The user can also customize many parameters such as: - <code>max_trip_duration</code>: maximum trip duration - <code>max_rides</code>: maximum number of transfer in the public transport system - <code>max_walk_time</code> and <code>max_bike_time</code>: maximum walking or cycling time to and from public transport - <code>walk_speed</code> and <code>bike_speed</code>: maximum walking or cycling speed - <code>max_fare</code>: maximum monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">See this vignette</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># estimate travel time matrix</span>
 <span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   

@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2022-06-15</h4>
+            <h4 data-toc-skip class="date">2022-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -252,12 +252,12 @@
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>
 <span class="co">#&gt;                 id       lon       lat population schools healthcare</span>
-<span class="co">#&gt; 1: 89a90129e9bffff -51.15173 -30.04330       1382       1          0</span>
-<span class="co">#&gt; 2: 89a9012a1a3ffff -51.24858 -30.10575       1407       0          0</span>
-<span class="co">#&gt; 3: 89a90e92453ffff -51.20486 -30.00270        116       0          0</span>
-<span class="co">#&gt; 4: 89a9012a14bffff -51.22719 -30.10342        972       0          0</span>
-<span class="co">#&gt; 5: 89a90129e4fffff -51.14213 -30.03163        573       1          0</span>
-<span class="co">#&gt; 6: 89a90129dc3ffff -51.18801 -30.03744       1490       0          0</span></code></pre></div>
+<span class="co">#&gt; 1: 89a9012b3b7ffff -51.16599 -30.09479          0       0          0</span>
+<span class="co">#&gt; 2: 89a9012864fffff -51.16532 -30.07821       1663       0          0</span>
+<span class="co">#&gt; 3: 89a90129cbbffff -51.17919 -30.04513        836       0          0</span>
+<span class="co">#&gt; 4: 89a90128e03ffff -51.21546 -30.03926        150       0          0</span>
+<span class="co">#&gt; 5: 89a90e934cfffff -51.14388 -29.99955        518       0          0</span>
+<span class="co">#&gt; 6: 89a90129183ffff -51.15549 -30.06101        244       0          1</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -300,8 +300,8 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># set inputs</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">5000</span>
-<span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">120</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># minutes</span>
+<span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">120</span> <span class="co"># minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
@@ -311,7 +311,7 @@
                           destinations <span class="op">=</span> <span class="va">poi</span>,
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></code></pre></div>
@@ -329,7 +329,7 @@
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
                           breakdown <span class="op">=</span> <span class="cn">TRUE</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></code></pre></div>
@@ -344,7 +344,7 @@
 <span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>
 <span class="va">destinations</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">10000</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
@@ -354,7 +354,7 @@
                             destinations <span class="op">=</span> <span class="va">destinations</span>,
                             mode <span class="op">=</span> <span class="va">mode</span>,
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                            max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                             shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></code></pre></div>

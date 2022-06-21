@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating and visualizing Isochrones</h1>
             
-            <h4 data-toc-skip class="date">2022-06-15</h4>
+            <h4 data-toc-skip class="date">2022-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/calculating_isochrones.Rmd" class="external-link"><code>../vignettes/calculating_isochrones.Rmd</code></a></small>
       <div class="hidden name"><code>calculating_isochrones.Rmd</code></div>
@@ -147,7 +147,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">akima</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interp</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
 <p>To build a routable transport network with <code>r5r</code> and load it into memory, the user needs to call <code>setup_r5</code> with the path to the directory where OpenStreetMap and GTFS data are stored.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -171,7 +171,7 @@
 
 <span class="co"># routing inputs</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">1000</span> <span class="co"># in meters</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># in minutes</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">120</span> <span class="co"># in minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
@@ -185,7 +185,7 @@
                           destinations <span class="op">=</span> <span class="va">points</span>,
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                           time_window <span class="op">=</span> <span class="va">time_window</span>,
                           percentiles <span class="op">=</span> <span class="va">percentiles</span>,
@@ -212,7 +212,7 @@
 <span class="va">ttm</span><span class="op">[</span><span class="va">points</span>, on<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'to_id'</span> <span class="op">=</span><span class="st">'id'</span><span class="op">)</span>, <span class="fu">`:=`</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">i.lon</span>, lat <span class="op">=</span> <span class="va">i.lat</span><span class="op">)</span><span class="op">]</span>
 
 <span class="co"># interpolate estimates to get spatially smooth result</span>
-<span class="va">travel_times.interp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/na.omit.data.table.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/akima/man/interp.html" class="external-link">interp</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">travel_time_p50</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+<span class="va">travel_times.interp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/na.omit.data.table.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/interp/man/interp.html" class="external-link">interp</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">travel_time_p50</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
                         <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>travel_time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span>,  <span class="co"># Column-major order</span>
                                    x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">x</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>,
                                    y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">y</span>, each<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>

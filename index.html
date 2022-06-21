@@ -221,7 +221,7 @@
 <span class="co"># 2) load origin/destination points and set arguments</span>
 <span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">3000</span>   <span class="co"># meters</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span>   <span class="co"># minutes</span>
 <span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
@@ -232,7 +232,7 @@
                           destinations <span class="op">=</span> <span class="va">points</span>,
                           mode <span class="op">=</span> <span class="va">mode</span>,
                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span>
 
 <span class="co"># 3.2) or get detailed info on multiple alternative routes</span>
@@ -241,7 +241,7 @@
                             destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">200</span>, <span class="op">]</span>,
                             mode <span class="op">=</span> <span class="va">mode</span>,
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                            max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                             max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
                             shortest_path <span class="op">=</span> <span class="cn">FALSE</span>,
                             drop_geometry <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>

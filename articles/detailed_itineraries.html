@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Planning routes with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2022-06-15</h4>
+            <h4 data-toc-skip class="date">2022-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/detailed_itineraries.Rmd" class="external-link"><code>../vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="hidden name"><code>detailed_itineraries.Rmd</code></div>
@@ -169,7 +169,7 @@
 <span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>
 <span class="va">destinations</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">10000</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
 
@@ -179,7 +179,7 @@
                             destinations <span class="op">=</span> <span class="va">destinations</span>,
                             mode <span class="op">=</span> <span class="va">mode</span>,
                             departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                            max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                             shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></code></pre></div>

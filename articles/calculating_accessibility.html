@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating and visualizing Accessibility</h1>
             
-            <h4 data-toc-skip class="date">2022-06-15</h4>
+            <h4 data-toc-skip class="date">2022-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/calculating_accessibility.Rmd" class="external-link"><code>../vignettes/calculating_accessibility.Rmd</code></a></small>
       <div class="hidden name"><code>calculating_accessibility.Rmd</code></div>
@@ -169,7 +169,7 @@
 
 <span class="co"># routing inputs</span>
 <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_dist</span> <span class="op">&lt;-</span> <span class="fl">1000</span> <span class="co"># in meters</span>
+<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># in minutes</span>
 <span class="va">travel_time_cutoff</span> <span class="op">&lt;-</span> <span class="fl">21</span> <span class="co"># in minutes</span>
 <span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
                                  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
@@ -186,7 +186,7 @@
                         decay_function <span class="op">=</span> <span class="st">"step"</span>,
                         cutoffs <span class="op">=</span> <span class="va">travel_time_cutoff</span>,
                         departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                        max_walk_dist <span class="op">=</span> <span class="va">max_walk_dist</span>,
+                        max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
                         time_window <span class="op">=</span> <span class="va">time_window</span>,
                         percentiles <span class="op">=</span> <span class="va">percentiles</span>,
                         progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
