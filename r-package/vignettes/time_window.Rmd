@@ -68,7 +68,7 @@ r5r_core <- setup_r5(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
-max_walk_dist <- 1000 # meters
+max_walk_time <- 30 # minutes
 max_trip_duration <- 90 # minutes
 
 # load origin/destination points
@@ -94,7 +94,7 @@ acc <- r5r::accessibility(r5r_core = r5r_core,
                           destinations = points, 
                           opportunities_colnames = 'schools',
                           mode = mode,
-                          max_walk_dist = max_walk_dist,
+                          max_walk_time = max_walk_time,
                           decay_function = "step",
                           cutoffs = 45,
                           departure_datetime = departure_datetime,
@@ -148,7 +148,7 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           origins = points,
                           destinations = points,    
                           mode = mode,
-                          max_walk_dist = max_walk_dist,
+                          max_walk_time = max_walk_time,
                           max_trip_duration = max_trip_duration,
                           departure_datetime = departure_datetime,
                           progress = TRUE,
@@ -178,7 +178,7 @@ ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,
                                     origins = points[1:30,],
                                     destinations = points[31:61,],    
                                     mode = mode,
-                                    max_walk_dist = max_walk_dist,
+                                    max_walk_time = max_walk_time,
                                     max_trip_duration = max_trip_duration,
                                     departure_datetime = departure_datetime,
                                     progress = FALSE,
