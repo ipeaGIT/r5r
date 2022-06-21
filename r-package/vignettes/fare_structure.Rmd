@@ -351,7 +351,7 @@ calculate_travel_times <- function(fare) {
                                fare_structure = fare_structure,
                                max_fare = fare,
                                max_trip_duration = 45,
-                               max_walk_dist = 800)
+                               max_walk_time = 30)
 
   return(ttm_df)
 }
