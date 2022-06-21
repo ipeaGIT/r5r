@@ -71,7 +71,7 @@ In this example below, we want to know some alternative routes between a single 
 origins <- poi[10,]
 destinations <- poi[12,]
 mode <- c("WALK", "TRANSIT")
-max_walk_time <- 30
+max_walk_time <- 60
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -82,6 +82,7 @@ det <- detailed_itineraries(r5r_core = r5r_core,
                             mode = mode,
                             departure_datetime = departure_datetime,
                             max_walk_time = max_walk_time,
+                            suboptimal_minutes = 8,
                             shortest_path = FALSE)
 
 head(det)
@@ -106,12 +107,18 @@ street_net <- street_network_to_sf(r5r_core)
 transit_net <- transit_network_to_sf(r5r_core)
 
 # plot
-ggplot() +
-  geom_sf(data = street_net$edges, color='gray85') +
-  geom_sf(data = det, aes(color=mode)) +
-  facet_wrap(.~option) + 
-  theme_void()
+fig <- ggplot() +
+        geom_sf(data = street_net$edges, color='gray85') +
+        geom_sf(data = subset(det, option <4), aes(color=mode)) +
+        facet_wrap(.~option) + 
+        theme_void()
 
+fig
+```
+```{r, message = FALSE, eval = FALSE}
+# SAVE image
+ggsave(plot = fig, filename = 'inst/img/vig_detailed_ggplot.png', 
+       height = 5, width = 15, units='cm', dpi=200)
 ```
 
 ```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE}
