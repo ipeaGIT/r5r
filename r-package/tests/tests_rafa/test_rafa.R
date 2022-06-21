@@ -573,7 +573,6 @@ tictoc::toc()
 
 
 
-
 # CRAN
 tictoc::tic()
 Sys.setenv(NOT_CRAN = "false")

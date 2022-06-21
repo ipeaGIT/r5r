@@ -26,7 +26,6 @@ library(data.table)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
-library(mapview)
 ```
 
 
@@ -118,8 +117,10 @@ r5r_core <- setup_r5(data_path)
 # load transit network as an SF
 transit_network <- transit_network_to_sf(r5r_core)
 
-# make interactive map
-mapview(transit_network$routes, zcol = "mode")
+# map
+ggplot() +
+  geom_sf(data=transit_network$routes, aes(color=mode)) +
+  theme_void()
 ```
 
 According to the fare rules in Porto Alegre, as in most Brazilian cities, the 
