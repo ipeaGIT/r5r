@@ -183,7 +183,7 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
 
   checkmate::assert(
     checkmate::check_string(mode),
-    checkmate::check_names(mode, subset.of = c("bike", "walk")),
+    checkmate::check_names(mode, subset.of = c("bike", "walk", "car")),
     combine = "and"
   )
 

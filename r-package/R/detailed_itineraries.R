@@ -96,6 +96,7 @@ detailed_itineraries <- function(r5r_core,
                                  max_fare = Inf,
                                  max_walk_time = Inf,
                                  max_bike_time = Inf,
+                                 max_car_time = Inf,
                                  max_trip_duration = 120L,
                                  walk_speed = 3.6,
                                  bike_speed = 12,
@@ -149,6 +150,12 @@ detailed_itineraries <- function(r5r_core,
     max_trip_duration,
     "bike"
   )
+  max_car_time <- assign_max_street_time(
+    max_car_time,
+    8, # 8 km/h, R5's default.
+    max_trip_duration,
+    "car"
+  )
   max_trip_duration <- assign_max_trip_duration(
     max_trip_duration,
     mode_list,
@@ -194,6 +201,7 @@ detailed_itineraries <- function(r5r_core,
     departure$time,
     max_walk_time,
     max_bike_time,
+    max_car_time,
     max_trip_duration,
     drop_geometry,
     shortest_path
