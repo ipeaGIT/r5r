@@ -9,6 +9,7 @@ library(tidyverse)
 # build transport network
 # data_path <- system.file("extdata/spo", package = "r5r")
 data_path <- system.file("extdata/poa", package = "r5r")
+data_path <- paste0(data_path, "/../../extdata/poa")
 r5r_core <- setup_r5(data_path = data_path, verbose = FALSE, overwrite = FALSE)
 
 # load origin/destination points
