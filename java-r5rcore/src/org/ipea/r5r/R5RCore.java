@@ -18,6 +18,8 @@ import org.rosuda.JRI.Rengine;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -234,7 +236,8 @@ public class R5RCore {
         NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
         NetworkBuilder.elevationCostFunction = nativeElevationFunction;
 
-        this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(dataFolder);
+        Path path = Paths.get(dataFolder).normalize();
+        this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(path.toString());
 
         this.routingProperties = new RoutingProperties();
         this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
