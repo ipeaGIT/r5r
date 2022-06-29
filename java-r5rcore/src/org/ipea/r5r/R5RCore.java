@@ -236,7 +236,9 @@ public class R5RCore {
         NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
         NetworkBuilder.elevationCostFunction = nativeElevationFunction;
 
+        LOG.error("Original path: {}", dataFolder);
         Path path = Paths.get(dataFolder).normalize();
+        LOG.error("Normalized path: {}", path);
         this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(path.toString());
 
         this.routingProperties = new RoutingProperties();
