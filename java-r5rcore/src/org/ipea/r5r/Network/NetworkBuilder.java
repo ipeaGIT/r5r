@@ -167,6 +167,10 @@ public class NetworkBuilder {
     }
 
     public static void loadDirectory(File directory) {
+        osmFilename = "";
+        tiffFile = "";
+        gtfsFiles.clear();
+
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             String name = file.getName();
 
