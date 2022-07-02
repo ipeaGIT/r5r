@@ -1,6 +1,14 @@
+### TO DO
+# allow users to pass an sf points or polygons as "destination" input
+# update entire documentation based on latest docs of r5r
+# expose to users the same parameters available in travel_time_matrix()
+  # max_trip_duration should be == to max(cutoffs)
+
+
+
 #' Estimate the isochrones from a given location
 #'
-#' @description Fast computation of the isochrones from a given location.
+#' @description Fast computation of isochrones from a given location.
 #'
 #' @param r5r_core a rJava object to connect with R5 routing engine
 #' @param origins,destinations a spatial sf POINT object, or a data.frame
@@ -24,24 +32,10 @@
 #' @param verbose logical. TRUE to show detailed output messages (the default)
 #'                or FALSE to show only eventual ERROR messages.
 #'
-#' @return ????????????????????An  data.table with travel time estimates (in minutes) between origin
-#' destination pairs by a given transport mode.
-#'
-#' @details R5 allows for multiple combinations of transport modes. The options
-#'          include:
-#'
-#'   ## Transit modes
-#'   TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR. The option
-#'   'TRANSIT' automatically considers all public transport modes available.
-#'
-#'   ## Non transit modes
-#'   WALK, BICYCLE, CAR, BICYCLE_RENT, CAR_PARK
+#' @return A `POLYGON  "sf" "data.frame"`
 #'
 #'
-#' # Routing algorithm:
-#' See the documentation of the travel_time_matrix function for details.
-#'
-#' @family routing
+#' @family Isochrone
 #' @examples \donttest{
 #' library(r5r)
 #'
@@ -91,9 +85,16 @@ isochrone <- function(r5r_core,
   # if no 'destinations' are passed, use all network nodes as destination points
   if(is.null(destinations)){
     network <- street_network_to_sf(r5r_core)
-    destinations = network[[1]]
+    destinations = network$vertices
   }
 
+  # choose sample size
+  sample_size <- ifelse(nrow(destinations) < 1000, 1, .33)
+  index_sample <- sample(1:nrow(destinations), size = nrow(destinations) * sample_size, replace = FALSE)
+  destinations <- destinations[index_sample,]
+
+  names(destinations)[1] <- 'id'
+  destinations$id <- as.character(destinations$id)
 
 # estimate travel time matrix ------------------------------------------------------------
 
@@ -102,27 +103,118 @@ ttm <- travel_time_matrix(r5r_core=r5r_core,
                             destinations = destinations,
                             mode = mode,
                             departure_datetime = departure_datetime,
-                            max_walk_dist = max_walk_dist,
+                            # max_walk_dist = max_walk_dist,
                             max_trip_duration = max_trip_duration,
-                            walk_speed = 3.6,
-                            bike_speed = 12,
-                            max_rides = 3,
-                            n_threads = Inf,
-                            verbose = TRUE)
+                            progress = TRUE
+                            # walk_speed = 3.6,
+                            # bike_speed = 12,
+                            # max_rides = max_rides,
+                            # n_threads = n_threads,
+                            # verbose = verbose
+                          )
 
 # aggregate isocrhones ------------------------------------------------------------
 
   # include 0 in cutoffs
-  if(min(cutoffs) >0){cutoffs <- sort(c(0, cutoffs))}
+  if (min(cutoffs) >0) {cutoffs <- sort(c(0, cutoffs))}
 
   # aggregate travel-times
-  ttm[, isocrhones := cut(x=travel_time, breaks=cutoffs)]
+  ttm[, isocrhones := cut(x=travel_time_p50, breaks=cutoffs)]
 
   # join ttm results to destinations
-  dest <- setDT(destinations)[index %in% ttm$toId, ]
-  dest[, index := as.character(index)]
-  dest[ttm, on=c('index' ='toId'), isocrhones := i.isocrhones]
+  dest <- subset(destinations, id %in% ttm$to_id)
+  data.table::setDT(dest)[, id := as.character(id)]
+  dest[ttm, on=c('id' ='to_id'), c('travel_time_p50', 'isocrhones') := list(i.travel_time_p50, i.isocrhones)]
 
-  # return sf
-  return(st_as_sf(dest))
+  dest <-   sf::st_as_sf(dest)
+  # head(dest)
+
+# # points
+# dest[, .(geometry = st_union(geometry)) , by = isocrhones] |>
+#   st_sf() |> st_cast("POLYGON") |>
+#   ggplot(aes(geometry=geometry, color=isocrhones)) +
+#   geom_sf() +
+#   coord_sf(crs=4326)
+
+
+
+# alternative concaveman
+get_poly <- function(cut){ # cut = 45
+
+  temp <- subset(dest, travel_time_p50 <= cut)
+  temp_iso <- concaveman::concaveman(temp)
+  temp_iso$isochrone <- cut
+  return(temp_iso)
 }
+
+iso_list <- lapply(X=cutoffs[cutoffs>0], FUN=get_poly)
+
+iso <- data.table::rbindlist(iso_list)
+iso <- sf::st_sf(iso)
+iso <- iso[ order(-iso$isochrone), ]
+
+# ggplot() +
+#   geom_sf(data=iso, aes(fill=isochrone))
+
+# alternative using isoband
+# https://github.com/riatelab/osrm/blob/master/R/utils.R
+# https://wilkelab.org/isoband/
+
+        # temp <- sfheaders::sf_to_df(dest, fill=TRUE)
+        #
+        # m <- matrix(data = temp$travel_time_p50, nrow=nrow(temp), ncol = nrow(temp))
+        #
+        # b <- isobands(x = temp$x,
+        #               y = temp$y,
+        #               z = m,
+        #               levels_low = head(cutoffs, -1),
+        #               levels_high = cutoffs[-1]
+        #               # levels = cutoffs
+        # )
+        # bands <- iso_to_sfg(b)
+        # data_bands <- st_sf(
+        #   level = 1:length(bands),
+        #   geometry = st_sfc(bands)
+        # )
+        #
+        # ggplot() +
+        #   geom_sf(data=data_bands, aes(fill=level))
+
+# return sf
+return(iso)
+}
+
+
+
+
+# allocate RAM memory to Java
+options(java.parameters = "-Xmx2G")
+
+library(r5r)
+library(ggplot2)
+
+# build transport network
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
+
+# load origin/point of interest
+origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[500,]
+
+departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+
+# estimate travel time matrix
+iso <- isochrone(r5r_core,
+                 origin = origin,
+                 mode = c("transit"),
+                 departure_datetime = departure_datetime,
+                 cutoffs = seq(10, 100, 10)
+)
+
+head(iso)
+
+
+streets <- r5r::street_network_to_sf(r5r_core)
+
+ggplot() +
+  geom_sf(data=streets$edges, color='gray', alpha=.5) +
+  geom_sf(data=iso, aes(fill= isochrone), alpha=.5)
