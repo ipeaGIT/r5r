@@ -35,6 +35,12 @@
 - Fixed bug that `transit_network_to_sf()` generated some routes with invalid geometries. Closes [#256](https://github.com/ipeaGIT/r5r/issues/256).
 - Fixed bug that prevented `setup_r5(path, overwrite = TRUE)` to work.
 
+# r5r 0.7.1
+
+**Minor change**
+
+* Replaced the akima package with interp package in r5r Suggests, as requested by CRAN.
+
 # r5r 0.7.0
 
 **Major changes**
