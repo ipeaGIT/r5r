@@ -28,7 +28,7 @@
 - All functions now use `verbose = FALSE` and `progress = FALSE` by default.
 - Routing functions now require users to be non-ambiguous when specifying the modes, raising errors when it cannot disambiguate them. This new behaviour replaces the old one, in which the functions could end up trying to "guess" which mode was to be used in some edge cases.
 - Information on bicycle 'level of traffic stress' is now added to the output of `street_network_to_sf()`. Closes [#251](https://github.com/ipeaGIT/r5r/issues/251).
-
+- New columns with info on population, schools and jobs in the example data sets for Sao Paulo and Porto Alegre
 
 **Bug fixes**
 
