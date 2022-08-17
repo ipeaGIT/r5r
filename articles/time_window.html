@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2022-07-06</h4>
+            <h4 data-toc-skip class="date">2022-08-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -153,31 +153,31 @@
 </h3>
 <p>First, let’s build the network and create the routing inputs. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># increase Java memory</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
-
-<span class="co"># load libraries</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="co"># build a routable transport network with r5r</span>
-<span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span>
-
-<span class="co"># routing inputs</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span>
-<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># minutes</span>
-<span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span>
-
-<span class="co"># load origin/destination points</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># departure datetime</span>
-<span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, 
-                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># build a routable transport network with r5r</span></span>
+<span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># routing inputs</span></span>
+<span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
+<span><span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># minutes</span></span>
+<span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span></span>
+<span></span>
+<span><span class="co"># load origin/destination points</span></span>
+<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># departure datetime</span></span>
+<span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
+<span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
 <p>ps. Please keep in mind that the <code>time_window</code> only affects the results when the GTFS feeds contain a <code>frequencies.txt</code> table.</p>
 </div>
 <div class="section level3">
@@ -185,42 +185,42 @@
 </h3>
 <p>In this example we calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we’ll be using a cumulative accessibility metric <code>decay_function = "step"</code> with a max time threshold of 45 minutes <code>cutoffs = 45</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># estimate accessibility</span>
-<span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>, 
-                          opportunities_colnames <span class="op">=</span> <span class="st">'schools'</span>,
-                          mode <span class="op">=</span> <span class="va">mode</span>,
-                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
-                          decay_function <span class="op">=</span> <span class="st">"step"</span>,
-                          cutoffs <span class="op">=</span> <span class="fl">45</span>,
-                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          progress <span class="op">=</span> <span class="cn">FALSE</span>,
-                          time_window <span class="op">=</span> <span class="fl">60</span>,
-                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span>
-                          <span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># estimate accessibility</span></span>
+<span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                          destinations <span class="op">=</span> <span class="va">points</span>, </span>
+<span>                          opportunities_colnames <span class="op">=</span> <span class="st">'schools'</span>,</span>
+<span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
+<span>                          decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
+<span>                          cutoffs <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                          progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          time_window <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
+<span>                          <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true" width="100%"></p>
 <p>This output is in long format, so the first 5 rows show the result for the same origin. In this case, we see that in only 10% of the trips departing from that origin between 2pm and 3pm a person would be able to access up to 111 schools. Meanwhile, 50% of the times she would only access 79 schools. By contrast, the accessibility from the other origin shown in the output above is 0, meaning there are no schools accessible from that location given the max travel time of 45 minutes.</p>
 <p>We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># summarize</span>
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="va">acc</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>min_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span>,
-              median <span class="op">=</span> <span class="va">accessibility</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">percentile</span> <span class="op">==</span> <span class="fl">50</span><span class="op">)</span><span class="op">]</span>,
-              max_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">id</span><span class="op">]</span>
-
-<span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">df</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span> , 
-                      y<span class="op">=</span><span class="va">median</span>, ymin<span class="op">=</span><span class="va">min_acc</span>, ymax<span class="op">=</span><span class="va">max_acc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'#0570b0'</span>, size<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span>, y<span class="op">=</span><span class="va">median</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y<span class="op">=</span><span class="st">'N. of schools accessible\nby public transport'</span>, x<span class="op">=</span><span class="st">'Origins sorted by accessibility'</span>,
-       title<span class="op">=</span><span class="st">"Accessibility uncertainty between 2pm and 3pm"</span>,
-       subtitle <span class="op">=</span> <span class="st">'Upper limit 10% and lower limit 80% of the times'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># summarize</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">acc</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>min_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span>,</span>
+<span>              median <span class="op">=</span> <span class="va">accessibility</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">percentile</span> <span class="op">==</span> <span class="fl">50</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>              max_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">id</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">df</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span> , </span>
+<span>                      y<span class="op">=</span><span class="va">median</span>, ymin<span class="op">=</span><span class="va">min_acc</span>, ymax<span class="op">=</span><span class="va">max_acc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">'#0570b0'</span>, size<span class="op">=</span><span class="fl">.5</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">median</span><span class="op">)</span>, y<span class="op">=</span><span class="va">median</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y<span class="op">=</span><span class="st">'N. of schools accessible\nby public transport'</span>, x<span class="op">=</span><span class="st">'Origins sorted by accessibility'</span>,</span>
+<span>       title<span class="op">=</span><span class="st">"Accessibility uncertainty between 2pm and 3pm"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">'Upper limit 10% and lower limit 80% of the times'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true" width="100%"></p>
 </div>
 <div class="section level3">
@@ -228,20 +228,20 @@
 </h3>
 <p>Now let’s calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># estimate travel time matrix</span>
-<span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   
-                          origins <span class="op">=</span> <span class="va">points</span>,
-                          destinations <span class="op">=</span> <span class="va">points</span>,    
-                          mode <span class="op">=</span> <span class="va">mode</span>,
-                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
-                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                          progress <span class="op">=</span> <span class="cn">TRUE</span>,
-                          time_window <span class="op">=</span> <span class="fl">20</span>,
-                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span>
-                          <span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                          destinations <span class="op">=</span> <span class="va">points</span>,    </span>
+<span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
+<span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                          progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          time_window <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
+<span>                          <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_ttm_head.png?raw=true" width="100%"></p>
 <p>Now let’s look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.</p>
 <p>The last row in the result above has a few <code>NA</code>s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the <code>max_trip_duration</code> we have set (90 minutes).</p>
@@ -251,17 +251,17 @@
 </h3>
 <p>Finally, we can also use the <code>time_window</code> in the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. In this case, though, when the user sets a <code>time_window</code> value, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   
-                                    origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,<span class="op">]</span>,
-                                    destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">31</span><span class="op">:</span><span class="fl">61</span>,<span class="op">]</span>,    
-                                    mode <span class="op">=</span> <span class="va">mode</span>,
-                                    max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
-                                    max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,
-                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                                    progress <span class="op">=</span> <span class="cn">FALSE</span>,
-                                    time_window <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<span>                                    origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,<span class="op">]</span>,</span>
+<span>                                    destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">31</span><span class="op">:</span><span class="fl">61</span>,<span class="op">]</span>,    </span>
+<span>                                    mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>                                    max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
+<span>                                    max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                                    progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                                    time_window <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>
@@ -302,7 +302,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

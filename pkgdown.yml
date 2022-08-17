@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 2.0.5
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   calculating_accessibility: calculating_accessibility.html
@@ -10,5 +10,5 @@ articles:
   r5r: r5r.html
   time_window: time_window.html
   travel_time_matrix: travel_time_matrix.html
-last_built: 2022-07-06T13:09Z
+last_built: 2022-08-17T12:27Z
 

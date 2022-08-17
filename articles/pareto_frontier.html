@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Analyzing the trade-offs between travel time and monetary cost</h1>
             
-            <h4 data-toc-skip class="date">2022-07-06</h4>
+            <h4 data-toc-skip class="date">2022-08-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -155,25 +155,25 @@
 </h4>
 <p>First, let’s build the network and create the routing inputs. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># increase Java memory</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
-
-<span class="co"># load libraries</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-
-<span class="co"># build a routable transport network with r5r</span>
-<span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span>
-
-<span class="co"># routing inputs</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span>
-<span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span>
-
-<span class="co"># load origin/destination points of interest</span>
-<span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># build a routable transport network with r5r</span></span>
+<span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># routing inputs</span></span>
+<span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
+<span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span></span>
+<span></span>
+<span><span class="co"># load origin/destination points of interest</span></span>
+<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="set-up-the-fare-structure">3.2 Set up the fare structure<a class="anchor" aria-label="anchor" href="#set-up-the-fare-structure"></a>
@@ -181,61 +181,61 @@
 <p>Now we need to set what are the fare rules of our public transport system. These rules will be used by <code>R5</code> to calculate the monetary cost of alternative routes. In the case of Porto Alegre, the fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a second bus adds <code>$</code> 2.40 to the total cost. Subsequent bus rides cost the full ticket price of $ 4.80. * Each train ticket costs $ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station. * The integrated fare between bus and train has a 10% discount, which totals $ 8.37.</p>
 <p>We can create <code>list</code> object with these fare rules with the support of the <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> function as shown in the code below. A detailed explanation of how to use the fare structure of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">(this other vignette)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># create basic fare structure</span>
-<span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, 
-                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,
-                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span>
-
-<span class="co"># update the cost of bus and train fares</span>
-<span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">4.80</span>,
-                                             <span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="fl">4.50</span><span class="op">)</span><span class="op">]</span>
-
-<span class="co"># update the cost of tranfers</span>
-<span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,
-                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span>
-
-<span class="co"># update transfer_time_allowance to 60 minutes</span>
-<span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span>
-
-<span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span>
-<span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># create basic fare structure</span></span>
+<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
+<span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
+<span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># update the cost of bus and train fares</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">4.80</span>,</span>
+<span>                                             <span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="fl">4.50</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># update the cost of tranfers</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,</span>
+<span>                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># update transfer_time_allowance to 60 minutes</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
+<span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
 <p>For convenience, we can save these fare rules as a <code>zip</code> file and load again for a future application.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># save fare rules to temp file</span>
-<span class="va">temp_fares</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fares_poa"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span>
-<span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/write_fare_structure.html">write_fare_structure</a></span><span class="op">(</span><span class="va">fare_structure</span>, file_path <span class="op">=</span> <span class="va">temp_fares</span><span class="op">)</span>
-
-
-<span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/read_fare_structure.html">read_fare_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"fares/fares_poa.zip"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># save fare rules to temp file</span></span>
+<span><span class="va">temp_fares</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fares_poa"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span>
+<span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/write_fare_structure.html">write_fare_structure</a></span><span class="op">(</span><span class="va">fare_structure</span>, file_path <span class="op">=</span> <span class="va">temp_fares</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/read_fare_structure.html">read_fare_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"fares/fares_poa.zip"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="calculating-a-pareto_frontier-">3.3 Calculating a <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#calculating-a-pareto_frontier-"></a>
 </h4>
 <p>In this example, we calculate the Pareto frontier from all origins to all destinations considering multiple cutoffs of monetary costs: - $1, which would only allow for walking trips - $4.5, which would only allow for rail trips - $4.8, which would allow for a single bus trip - $7.20, which would allow for bus + bus - $8.37, which would allow for walking walking + bus + rail</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
-
-<span class="va">pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,
-                      origins <span class="op">=</span> <span class="va">points</span>,
-                      destinations <span class="op">=</span> <span class="va">points</span>,
-                      mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,
-                      departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                      fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,
-                      monetary_cost_cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4.5</span>, <span class="fl">4.8</span>, <span class="fl">7.20</span>, <span class="fl">8.37</span><span class="op">)</span>,
-                      progress <span class="op">=</span> <span class="cn">TRUE</span>
-                      <span class="op">)</span>
-<span class="co">#&gt; Loading required namespace: testthat</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span>
-<span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span>
-<span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span>
-<span class="co">#&gt; 2: public_market bus_central_station         50          23           1.0</span>
-<span class="co">#&gt; 3: public_market bus_central_station         50          18           4.5</span>
-<span class="co">#&gt; 4: public_market bus_central_station         50          13           4.8</span>
-<span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span>
-<span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span>                      origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                      destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                      mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
+<span>                      departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                      fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
+<span>                      monetary_cost_cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4.5</span>, <span class="fl">4.8</span>, <span class="fl">7.20</span>, <span class="fl">8.37</span><span class="op">)</span>,</span>
+<span>                      progress <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>                      <span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required namespace: testthat</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span></span>
+<span><span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span></span>
+<span><span class="co">#&gt; 2: public_market bus_central_station         50          23           1.0</span></span>
+<span><span class="co">#&gt; 3: public_market bus_central_station         50          18           4.5</span></span>
+<span><span class="co">#&gt; 4: public_market bus_central_station         50          13           4.8</span></span>
+<span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
+<span><span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></span></code></pre></div>
 <p>For the sake of illustration, let’s check the most optimum route alternatives from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the Moinhos hospital.</p>
 <p>One cannot make a faster trip without increasing costs, one cannot make a cheaper trip without increasing travel time.</p>
-<pre><code><span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_text).</span></code></pre>
+<pre><code><span><span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_text).</span></span></code></pre>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 </div>
 </div>
@@ -263,7 +263,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

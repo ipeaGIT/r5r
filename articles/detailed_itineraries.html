@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Planning routes with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2022-07-06</h4>
+            <h4 data-toc-skip class="date">2022-08-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/detailed_itineraries.Rmd" class="external-link"><code>../vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="hidden name"><code>detailed_itineraries.Rmd</code></div>
@@ -133,54 +133,54 @@
 </h2>
 <p>First, let’s load some libraries and build our multimodal transport network. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># increase Java memory</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span>
-
-<span class="co"># load libraries</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
-
-<span class="co"># build a routable transport network with r5r</span>
-<span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
-<span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span>
-
-<span class="co"># routing inputs</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span>
-<span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span>
-
-<span class="co"># departure time</span>
-<span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, 
-                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
-
-<span class="co"># load origin/destination points</span>
-<span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># build a routable transport network with r5r</span></span>
+<span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># routing inputs</span></span>
+<span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
+<span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># minutes</span></span>
+<span></span>
+<span><span class="co"># departure time</span></span>
+<span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
+<span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load origin/destination points</span></span>
+<span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="detailed-info-by-trip-segment-for-multiple-trip-alternatives">3. Detailed info by trip segment for multiple trip alternatives<a class="anchor" aria-label="anchor" href="#detailed-info-by-trip-segment-for-multiple-trip-alternatives"></a>
 </h2>
 <p>In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set <code>shortest_path = FALSE</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># set inputs</span>
-<span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>
-<span class="va">destinations</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>
-<span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>
-<span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">60</span>
-<span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,
-                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>
-
-<span class="co"># calculate detailed itineraries</span>
-<span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,
-                            origins <span class="op">=</span> <span class="va">origins</span>,
-                            destinations <span class="op">=</span> <span class="va">destinations</span>,
-                            mode <span class="op">=</span> <span class="va">mode</span>,
-                            departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,
-                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,
-                            suboptimal_minutes <span class="op">=</span> <span class="fl">8</span>,
-                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># set inputs</span></span>
+<span><span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span></span>
+<span><span class="va">destinations</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span></span>
+<span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span></span>
+<span><span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
+<span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
+<span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># calculate detailed itineraries</span></span>
+<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span>                            origins <span class="op">=</span> <span class="va">origins</span>,</span>
+<span>                            destinations <span class="op">=</span> <span class="va">destinations</span>,</span>
+<span>                            mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>                            departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
+<span>                            suboptimal_minutes <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true" width="100%"></p>
 <p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
 <div class="section level3">
@@ -188,24 +188,24 @@
 </h3>
 <p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf((</code> function to extract the OSM street network used in the routing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># extract OSM network</span>
-<span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
-
-<span class="co"># extract public transport network</span>
-<span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span>
-
-<span class="co"># plot</span>
-<span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">street_net</span><span class="op">$</span><span class="va">edges</span>, color<span class="op">=</span><span class="st">'gray85'</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">det</span>, <span class="va">option</span> <span class="op">&lt;</span><span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span><span class="op">~</span><span class="va">option</span><span class="op">)</span> <span class="op">+</span> 
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">fig</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
+<span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># extract public transport network</span></span>
+<span><span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">street_net</span><span class="op">$</span><span class="va">edges</span>, color<span class="op">=</span><span class="st">'gray85'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">det</span>, <span class="va">option</span> <span class="op">&lt;</span><span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span><span class="op">~</span><span class="va">option</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fig</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># SAVE image</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>plot <span class="op">=</span> <span class="va">fig</span>, filename <span class="op">=</span> <span class="st">'inst/img/vig_detailed_ggplot.png'</span>, 
-       height <span class="op">=</span> <span class="fl">5</span>, width <span class="op">=</span> <span class="fl">15</span>, units<span class="op">=</span><span class="st">'cm'</span>, dpi<span class="op">=</span><span class="fl">200</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># SAVE image</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>plot <span class="op">=</span> <span class="va">fig</span>, filename <span class="op">=</span> <span class="st">'inst/img/vig_detailed_ggplot.png'</span>, </span>
+<span>       height <span class="op">=</span> <span class="fl">5</span>, width <span class="op">=</span> <span class="fl">15</span>, units<span class="op">=</span><span class="st">'cm'</span>, dpi<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true" width="100%"></p>
 </div>
 </div>
@@ -232,20 +232,20 @@
 </h2>
 <p>Please note that the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions does not run on frequency-based GTFS feeds. A simple hack to overcome this problem is to convert your GTFS data from frequencies to time tables. This can be easily done using the <a href="https://ipeagit.github.io/gtfstools/" class="external-link"><code>gtfstools</code> package</a>. Here is how:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ipeagit.github.io/gtfstools/" class="external-link">gtfstools</a></span><span class="op">)</span>
-
-<span class="co"># location of your frequency-based GTFS</span>
-<span class="va">freq_gtfs_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/spo/spo.zip"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span>
-
-<span class="co"># read GTFS data</span>
-<span class="va">freq_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/read_gtfs.html" class="external-link">read_gtfs</a></span><span class="op">(</span><span class="va">freq_gtfs_file</span><span class="op">)</span>
-
-<span class="co"># convert from frequencies to time tables</span>
-<span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">frequencies_to_stop_times</a></span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span>
-
-<span class="co"># save it as a new GTFS.zip file</span>
-<span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,
-                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'stop_times_gtfs'</span>, fileext <span class="op">=</span> <span class="st">'.zip'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ipeagit.github.io/gtfstools/" class="external-link">gtfstools</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># location of your frequency-based GTFS</span></span>
+<span><span class="va">freq_gtfs_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/spo/spo.zip"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read GTFS data</span></span>
+<span><span class="va">freq_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/read_gtfs.html" class="external-link">read_gtfs</a></span><span class="op">(</span><span class="va">freq_gtfs_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># convert from frequencies to time tables</span></span>
+<span><span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">frequencies_to_stop_times</a></span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># save it as a new GTFS.zip file</span></span>
+<span><span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,</span>
+<span>                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'stop_times_gtfs'</span>, fileext <span class="op">=</span> <span class="st">'.zip'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>… and now you can use <code>r5r</code> on this <code>stop_times_gtfs.zip</code>.</p>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
@@ -268,7 +268,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

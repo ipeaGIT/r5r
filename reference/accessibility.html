@@ -84,35 +84,35 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">accessibility</span><span class="op">(</span>
-  <span class="va">r5r_core</span>,
-  <span class="va">origins</span>,
-  <span class="va">destinations</span>,
-  opportunities_colnames <span class="op">=</span> <span class="st">"opportunities"</span>,
-  mode <span class="op">=</span> <span class="st">"WALK"</span>,
-  mode_egress <span class="op">=</span> <span class="st">"WALK"</span>,
-  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,
-  time_window <span class="op">=</span> <span class="fl">1L</span>,
-  percentiles <span class="op">=</span> <span class="fl">50L</span>,
-  decay_function <span class="op">=</span> <span class="st">"step"</span>,
-  cutoffs <span class="op">=</span> <span class="cn">NULL</span>,
-  decay_value <span class="op">=</span> <span class="cn">NULL</span>,
-  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,
-  max_fare <span class="op">=</span> <span class="cn">Inf</span>,
-  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,
-  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,
-  max_car_time <span class="op">=</span> <span class="cn">Inf</span>,
-  max_trip_duration <span class="op">=</span> <span class="fl">120L</span>,
-  walk_speed <span class="op">=</span> <span class="fl">3.6</span>,
-  bike_speed <span class="op">=</span> <span class="fl">12</span>,
-  max_rides <span class="op">=</span> <span class="fl">3</span>,
-  max_lts <span class="op">=</span> <span class="fl">2</span>,
-  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,
-  n_threads <span class="op">=</span> <span class="cn">Inf</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  progress <span class="op">=</span> <span class="cn">FALSE</span>,
-  output_dir <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">accessibility</span><span class="op">(</span></span>
+<span>  <span class="va">r5r_core</span>,</span>
+<span>  <span class="va">origins</span>,</span>
+<span>  <span class="va">destinations</span>,</span>
+<span>  opportunities_colnames <span class="op">=</span> <span class="st">"opportunities"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
+<span>  mode_egress <span class="op">=</span> <span class="st">"WALK"</span>,</span>
+<span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  time_window <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  percentiles <span class="op">=</span> <span class="fl">50L</span>,</span>
+<span>  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
+<span>  cutoffs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  decay_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_fare <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  max_car_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  max_trip_duration <span class="op">=</span> <span class="fl">120L</span>,</span>
+<span>  walk_speed <span class="op">=</span> <span class="fl">3.6</span>,</span>
+<span>  bike_speed <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>  max_rides <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -449,73 +449,73 @@ transit routing. Transportation Science, 49(3), 591-604.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Downloading R5 jar file to /home/runner/work/_temp/Library/r5r/jar/r5-v6.7-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finished building network.dat at /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
-<span class="r-in"><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"13-05-2019 14:00:00"</span>,</span>
-<span class="r-in">  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">r5r_core</span>,</span>
-<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span>
-<span class="r-in">  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
-<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
-<span class="r-in">  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span>
-<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"13-05-2019 14:00:00"</span>,</span></span>
+<span class="r-in"><span>  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  origins <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  destinations <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span></span>
+<span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span></span>
+<span class="r-in"><span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span></span>
+<span class="r-in"><span>  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span></span>
+<span class="r-in"><span>  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a9012a3cfffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a9012809bffff     schools         50     30             0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># using a different decay function</span></span>
-<span class="r-in"><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">r5r_core</span>,</span>
-<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span>
-<span class="r-in">  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
-<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">  decay_function <span class="op">=</span> <span class="st">"logistic"</span>,</span>
-<span class="r-in">  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span>
-<span class="r-in">  decay_value <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># using a different decay function</span></span></span>
+<span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  origins <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  destinations <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span></span>
+<span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span></span>
+<span class="r-in"><span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span></span>
+<span class="r-in"><span>  decay_function <span class="op">=</span> <span class="st">"logistic"</span>,</span></span>
+<span class="r-in"><span>  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>  decay_value <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a9012a3cfffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a9012809bffff     schools         50     30             0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># using several cutoff values</span></span>
-<span class="r-in"><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">r5r_core</span>,</span>
-<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span>
-<span class="r-in">  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
-<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
-<span class="r-in">  cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">30</span><span class="op">)</span>,</span>
-<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># using several cutoff values</span></span></span>
+<span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  origins <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  destinations <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  opportunities_colnames <span class="op">=</span> <span class="st">"schools"</span>,</span></span>
+<span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span></span>
+<span class="r-in"><span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span></span>
+<span class="r-in"><span>  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span></span>
+<span class="r-in"><span>  cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">30</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     25             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff     schools         50     30             0</span>
@@ -523,20 +523,20 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a9012a3cfffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     25             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff     schools         50     30             0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># calculating access to different types of opportunities</span></span>
-<span class="r-in"><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">r5r_core</span>,</span>
-<span class="r-in">  origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span class="r-in">  opportunities_colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"schools"</span>, <span class="st">"healthcare"</span><span class="op">)</span>,</span>
-<span class="r-in">  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
-<span class="r-in">  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span class="r-in">  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
-<span class="r-in">  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span>
-<span class="r-in">  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># calculating access to different types of opportunities</span></span></span>
+<span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  origins <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  destinations <span class="op">=</span> <span class="va">points</span>,</span></span>
+<span class="r-in"><span>  opportunities_colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"schools"</span>, <span class="st">"healthcare"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span></span>
+<span class="r-in"><span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span></span>
+<span class="r-in"><span>  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span></span>
+<span class="r-in"><span>  cutoffs <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff  healthcare         50     30             0</span>
@@ -544,8 +544,8 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a9012a3cfffff  healthcare         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff  healthcare         50     30             1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
 </code></pre></div>
     </div>
@@ -561,7 +561,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
