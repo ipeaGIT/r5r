@@ -1,5 +1,6 @@
 package org.ipea.r5r;
 
+import com.conveyal.r5.labeling.StreetClass;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.VertexStore;
@@ -27,11 +28,18 @@ public class StreetNetwork {
     private void buildEdgesTable(TransportNetwork transportNetwork) {
         // Build edges return table
         edgesTable = new RDataFrame();
+        edgesTable.addIntegerColumn("edge_index", 0);
+        edgesTable.addLongColumn("osm_id", 0L);
+
         edgesTable.addIntegerColumn("from_vertex", 0);
         edgesTable.addIntegerColumn("to_vertex", 0);
+
+        edgesTable.addStringColumn("street_class", "");
+
         edgesTable.addDoubleColumn("length", 0.0);
-        edgesTable.addBooleanColumn("car", false);
         edgesTable.addBooleanColumn("walk", false);
+        edgesTable.addBooleanColumn("car", false);
+        edgesTable.addDoubleColumn("car_speed", 0.0);
         edgesTable.addBooleanColumn("bicycle", false);
         edgesTable.addIntegerColumn("bicycle_lts", 0);
         edgesTable.addStringColumn("geometry", "");
@@ -44,11 +52,37 @@ public class StreetNetwork {
             // so such edges are removed from the return data.frame
             if (!edgeCursor.getFlag(EdgeStore.EdgeFlag.LINK)) {
                 edgesTable.append();
+                edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
+                edgesTable.set("osm_id", edgeCursor.getOSMID());
+
                 edgesTable.set("from_vertex", edgeCursor.getFromVertex());
                 edgesTable.set("to_vertex", edgeCursor.getToVertex());
                 edgesTable.set("length", edgeCursor.getLengthM());
-                edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
                 edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
+
+                byte streetClassCode = edgeCursor.getStreetClassCode();
+                StreetClass streetClass;
+                switch (edgeCursor.getStreetClassCode()) {
+                    case 0:
+                        streetClass = StreetClass.MOTORWAY;
+                        break;
+                    case 1:
+                        streetClass = StreetClass.PRIMARY;
+                        break;
+                    case 2:
+                        streetClass = StreetClass.SECONDARY;
+                        break;
+                    case 3:
+                        streetClass = StreetClass.TERTIARY;
+                        break;
+                    default:
+                        streetClass = StreetClass.OTHER;
+                }
+
+                edgesTable.set("street_class", streetClass.toString());
+
+                edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
+                edgesTable.set("car_speed", (double) edgeCursor.getSpeedKph());
 
                 int lts = 1;
                 if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_2)) lts = 2;
