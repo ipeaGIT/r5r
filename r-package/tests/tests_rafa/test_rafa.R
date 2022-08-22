@@ -359,6 +359,7 @@ library(ggplot2)
 library(dlstats)
 
 x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter', 'flightsbr'))
+x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
 
  if (!is.null(x)) {
          head(x)
@@ -371,7 +372,7 @@ setDT(x)
 
 x[, .(total = sum(downloads)) , by=package][order(total)]
 
-x[ start > as.Date('2021-01-01'), .(total = sum(downloads)) , by=package][order(total)]
+x[ start > as.Date('2022-01-01'), .(total = sum(downloads)) , by=package][order(total)]
 
 x[package=='flightsbr',]
 
