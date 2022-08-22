@@ -594,6 +594,7 @@ r5r_core <- setup_r5(path)
 ### CMD Check ----------------
 # Check package errors
 library(tictoc)
+library(beepr)
 
 
 # LOCAL
@@ -601,7 +602,7 @@ tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
 tictoc::toc()
-
+beepr::beep()
 
 
 # CRAN
