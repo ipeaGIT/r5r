@@ -354,6 +354,36 @@ ttm <- travel_time_matrix(r5r_core,
  mode_list <- select_mode(mode)
 
 
+
+ ##### generate points data ------------------------
+ library(data.table)
+ library(dplyr)
+
+ df <- aopdata::read_landuse(city = 'spo', year = 2019)
+ class(df)
+
+ df <- df[, .(id_hex, P001, T001 , E001, S001 )]
+ df <- unique(df)
+
+ points <- read.csv(system.file("extdata/spo/spo_hexgrid.csv", package = "r5r"))
+ points <- unique(points)
+ head(points)
+
+ points <- left_join(points, df, by=c('id'='id_hex'))
+ head(points)
+
+ points$X <- NULL
+ points$E001 <- NULL
+ points$P001  <- NULL
+ points$T001   <- NULL
+
+ head(points)
+ names(points) <- c('id','lon', 'lat', 'population', 'schools', 'jobs', 'healthcare')
+ head(points)
+
+ write.csv(points,file =   "./inst/extdata/spo/spo_hexgrid.csv")
+
+
 ##### downloads ------------------------
 library(ggplot2)
 library(dlstats)
