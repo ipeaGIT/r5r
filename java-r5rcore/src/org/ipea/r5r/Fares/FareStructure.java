@@ -31,7 +31,7 @@ public class FareStructure {
     @JsonIgnore
     private int integerFareCap;
 
-    private final List<FarePerMode> faresPerMode;
+    private final List<FarePerType> faresPerType;
     private final List<FarePerTransfer> faresPerTransfer;
     private final List <FarePerRoute> faresPerRoute;
 
@@ -71,8 +71,8 @@ public class FareStructure {
         this.integerFareCap = Math.round(fareCap * 100.0f);
     }
 
-    public List<FarePerMode> getFaresPerMode() {
-        return faresPerMode;
+    public List<FarePerType> getFaresPerType() {
+        return faresPerType;
     }
     public List<FarePerTransfer> getFaresPerTransfer() {
         return faresPerTransfer;
@@ -86,7 +86,7 @@ public class FareStructure {
         this.transferTimeAllowance = 120;
         this.fareCap = -1;
 
-        this.faresPerMode = new ArrayList<>();
+        this.faresPerType = new ArrayList<>();
         this.faresPerTransfer = new ArrayList<>();
         this.faresPerRoute = new ArrayList<>();
     }

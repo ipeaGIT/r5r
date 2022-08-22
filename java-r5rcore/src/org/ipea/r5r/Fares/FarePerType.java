@@ -2,8 +2,8 @@ package org.ipea.r5r.Fares;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class FarePerMode {
-    private String mode;
+public class FarePerType {
+    private String type;
     private boolean unlimitedTransfers;
     private boolean allowSameRouteTransfer;
     private boolean useRouteFare;
@@ -11,8 +11,8 @@ public class FarePerMode {
     @JsonIgnore
     private int integerFare;
 
-    public FarePerMode(String mode, boolean unlimitedTransfers, boolean allowSameRouteTransfer, boolean useRouteFare, float fare) {
-        this.mode = mode;
+    public FarePerType(String type, boolean unlimitedTransfers, boolean allowSameRouteTransfer, boolean useRouteFare, float fare) {
+        this.type = type;
         this.unlimitedTransfers = unlimitedTransfers;
         this.allowSameRouteTransfer = allowSameRouteTransfer;
         this.useRouteFare = useRouteFare;
@@ -20,16 +20,16 @@ public class FarePerMode {
         this.integerFare = Math.round(fare * 100.0f);
     }
 
-    public FarePerMode() {
+    public FarePerType() {
         this("BUS", false, false, false, 0.0f);
     }
 
-    public String getMode() {
-        return mode;
+    public String getType() {
+        return type;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public boolean isUnlimitedTransfers() {
@@ -72,7 +72,7 @@ public class FarePerMode {
     @Override
     public String toString() {
         return "FarePerMode{" +
-                "mode='" + mode + '\'' +
+                "mode='" + type + '\'' +
                 ", unlimitedTransfers=" + unlimitedTransfers +
                 ", allowSameRouteTransfer=" + allowSameRouteTransfer +
                 ", useRouteFare=" + useRouteFare +
