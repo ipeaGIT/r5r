@@ -101,6 +101,7 @@
 <li>All functions now use <code>verbose = FALSE</code> and <code>progress = FALSE</code> by default.</li>
 <li>Routing functions now require users to be non-ambiguous when specifying the modes, raising errors when it cannot disambiguate them. This new behaviour replaces the old one, in which the functions could end up trying to “guess” which mode was to be used in some edge cases.</li>
 <li>Information on bicycle ‘level of traffic stress’ is now added to the output of <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/251" class="external-link">#251</a>.</li>
+<li>New columns with info on population, schools and jobs in the example data sets for Sao Paulo and Porto Alegre</li>
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li>Fixed bug that <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> generated some routes with invalid geometries. Closes <a href="https://github.com/ipeaGIT/r5r/issues/256" class="external-link">#256</a>.</li>
 <li>Fixed bug that prevented <code>setup_r5(path, overwrite = TRUE)</code> to work.</li>

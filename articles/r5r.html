@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2022-08-17</h4>
+            <h4 data-toc-skip class="date">2022-08-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -249,13 +249,13 @@
 <span><span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                 id       lon       lat population schools healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a9012a36bffff -51.21142 -30.08953        425       0          1</span></span>
-<span><span class="co">#&gt; 2: 89a9012830bffff -51.19155 -30.04962       1268       0          0</span></span>
-<span><span class="co">#&gt; 3: 89a90128e63ffff -51.21215 -30.03261       3036       1          0</span></span>
-<span><span class="co">#&gt; 4: 89a901280bbffff -51.20159 -30.07235        369       0          0</span></span>
-<span><span class="co">#&gt; 5: 89a90129a53ffff -51.14157 -30.01779        433       0          0</span></span>
-<span><span class="co">#&gt; 6: 89a90129b3bffff -51.17431 -29.99975          0       0          0</span></span></code></pre></div>
+<span><span class="co">#&gt;                 id       lon       lat population schools healthcare jobs</span></span>
+<span><span class="co">#&gt; 1: 89a90129e1bffff -51.14842 -30.03664        343       0          0   55</span></span>
+<span><span class="co">#&gt; 2: 89a90e93487ffff -51.15612 -30.00129        541       0          0    6</span></span>
+<span><span class="co">#&gt; 3: 89a901295a7ffff -51.16509 -30.07268       2289       0          0    1</span></span>
+<span><span class="co">#&gt; 4: 89a9012912bffff -51.15493 -30.04719       1434       1          0    2</span></span>
+<span><span class="co">#&gt; 5: 89a901280afffff -51.20446 -30.06794        551       0          0  103</span></span>
+<span><span class="co">#&gt; 6: 89a901286d3ffff -51.16885 -30.09038         79       0          0    0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>

@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2022-08-17</h4>
+            <h4 data-toc-skip class="date">2022-08-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -161,7 +161,7 @@
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">transit_network</span><span class="op">$</span><span class="va">routes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="fare_structure_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
 <p>According to the fare rules in Porto Alegre, as in most Brazilian cities, the cost a a journey depends on a combination of number of subsequent trips and/or transport modes. In the case of Porto Alegre, the fare rules are as follows:</p>
 <ul>
 <li>Each bus ticket costs R$ 4.80.</li>
@@ -200,8 +200,8 @@
 <span><span class="co">#&gt; $fare_cap</span></span>
 <span><span class="co">#&gt; [1] Inf</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fares_per_mode</span></span>
-<span><span class="co">#&gt;    mode unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
+<span><span class="co">#&gt; $fares_per_type</span></span>
+<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -289,7 +289,7 @@
 <div class="section level3">
 <h3 id="configure-fares-by-transport-mode">3.2 Configure fares by transport mode<a class="anchor" aria-label="anchor" href="#configure-fares-by-transport-mode"></a>
 </h3>
-<p>To configure mode-, transfer-, and route-specific properties, we can use the three <code>data.frames</code> inside our <code>fare_structure</code> list. Let’s configure the modes first. Below, we can see that the <code>fares_per_mode</code> data.frame contains five columns:</p>
+<p>To configure mode-, transfer-, and route-specific properties, we can use the three <code>data.frames</code> inside our <code>fare_structure</code> list. Let’s configure the modes first. Below, we can see that the <code>fares_per_type</code> data.frame contains five columns:</p>
 <ul>
 <li>
 <code>mode</code>: the transport mode to which rules on each row refer to;</li>
@@ -303,19 +303,19 @@
 <code>fare</code>: the full fare price of this mode.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span></span>
-<span><span class="co">#&gt;    mode unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
+<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span></code></pre></div>
-<p>We need to do a few small changes in the <code>fares_per_mode</code> table to accomodate the fare rules of Porto Alegre. In the <code>"RAIL"</code> mode, we need to set <code>unlimited_transfers</code> and <code>allow_same_route_transfer</code> to <code>TRUE</code>, and update <code>fare</code> to 4.50. In the <code>"BUS"</code> mode, we can let the <code>allow_same_route_transfer</code> set to its default <code>FALSE</code> value, because even though there is a discount for transfers between buses (which is set in the following section), that discount is not valid when transferring between buses within the same route (for example, from bus route T1 to another T1). We’ll do those changes below, using <code>data.table</code> notation.</p>
+<p>We need to do a few small changes in the <code>fares_per_type</code> table to accomodate the fare rules of Porto Alegre. In the <code>"RAIL"</code> mode, we need to set <code>unlimited_transfers</code> and <code>allow_same_route_transfer</code> to <code>TRUE</code>, and update <code>fare</code> to 4.50. In the <code>"BUS"</code> mode, we can let the <code>allow_same_route_transfer</code> set to its default <code>FALSE</code> value, because even though there is a discount for transfers between buses (which is set in the following section), that discount is not valid when transferring between buses within the same route (for example, from bus route T1 to another T1). We’ll do those changes below, using <code>data.table</code> notation.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">4.50</span><span class="op">]</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span><span class="op">[</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">4.50</span><span class="op">]</span></span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
 <p>Checking the results below, everything looks OK:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_mode</span></span>
-<span><span class="co">#&gt;    mode unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
+<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; 2: RAIL                TRUE                      TRUE          FALSE  4.5</span></span></code></pre></div>
 </div>
@@ -390,10 +390,10 @@
 <span><span class="co">#&gt; 6:      RAIL</span></span></code></pre></div>
 <p>Basic route information is taken directly from the GTFS data (agency, route id and names, mode, etc), but the <code>route_fare</code> and <code>fare_type</code> columns were added specifically for the <code>r5r</code> fare structure.</p>
 <ul>
-<li><p><code>route_fare</code>: is used to set a specific fare for each route. This field can be used to represent services that have many unique fares, such as metropolitan / suburban trains and buses. This is used together with the <code>use_route_fare</code> column in the <code>fares_per_mode</code> table: the <code>route_fare</code> field is only considered by the <code>r5r</code> fare structure when <code>use_route_fare</code> of that mode is set to <code>TRUE</code>.</p></li>
-<li><p><code>fare_type</code>: is used to link each route with information in the <code>fares_per_mode</code> and <code>fares_per_transfer</code> tables. In this example, <code>fare_type</code> is always the same as <code>mode</code>, because that was what we chose in the <code>by</code> parameter when calling <code>setup_fare_structure</code> earlier (we could have chosen to discriminate fares by agency, for example).</p></li>
+<li><p><code>route_fare</code>: is used to set a specific fare for each route. This field can be used to represent services that have many unique fares, such as metropolitan / suburban trains and buses. This is used together with the <code>use_route_fare</code> column in the <code>fares_per_type</code> table: the <code>route_fare</code> field is only considered by the <code>r5r</code> fare structure when <code>use_route_fare</code> of that mode is set to <code>TRUE</code>.</p></li>
+<li><p><code>fare_type</code>: is used to link each route with information in the <code>fares_per_type</code> and <code>fares_per_transfer</code> tables. In this example, <code>fare_type</code> is always the same as <code>mode</code>, because that was what we chose in the <code>by</code> parameter when calling <code>setup_fare_structure</code> earlier (we could have chosen to discriminate fares by agency, for example).</p></li>
 </ul>
-<p>We actually don’t have any change do to in the <code>fares_per_route</code> table, in this example. It does not matter that the <code>route_fare</code> value is wrong for the “RAIL” lines, because we are using the fares set in <code>fares_per_mode</code> and <code>fares_per_transfer</code> which we already set up correctly before.</p>
+<p>We actually don’t have any change do to in the <code>fares_per_route</code> table, in this example. It does not matter that the <code>route_fare</code> value is wrong for the “RAIL” lines, because we are using the fares set in <code>fares_per_type</code> and <code>fares_per_transfer</code> which we already set up correctly before.</p>
 <p>Now that our <code>fare_structure</code> is complete, we can use it to calculate travel time matrices and accessibility while accounting for monetary cost cutoffs. Let’s see how it’s done in the next sections.</p>
 </div>
 </div>
@@ -491,7 +491,7 @@
 <span></span>
 <span><span class="co"># combine both plots using patchwork</span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu">plot_annotation</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Comparing travel times with and without monetary cost restriction"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="fare_structure_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="calculating-accessibility-with-monetary-cost">4.2 Calculating accessibility with monetary cost<a class="anchor" aria-label="anchor" href="#calculating-accessibility-with-monetary-cost"></a>
@@ -540,7 +540,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><img src="fare_structure_files/figure-html/unnamed-chunk-20-1.png" width="100%"></p>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>
