@@ -51,10 +51,10 @@ datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
-Defaults to 1 minute. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table. Please read the time window
-vignette for more details on its usage:
-\code{vignette("time_window", package = "r5r")}}
+Defaults to 1 minute. By default, the function returns the result based on
+median travel times, but the user can set the \code{percentiles} parameter to
+extract more results.Please read the time window vignette for more details
+on its usage \code{vignette("time_window", package = "r5r")}}
 
 \item{breakdown}{A logical. Whether to include detailed information about
 each trip in the output. If \code{FALSE} (the default), the output lists the
@@ -109,7 +109,8 @@ information.}
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
 when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60 minutes time window, for example.}
+a 60-minute time window, for example. This parameter only affects the
+results when the GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}
@@ -196,10 +197,10 @@ parking-protected lanes or cycle tracks).
 \item \strong{LTS 2}: Tolerable for the mainstream adult population. This includes
 streets where cyclists have dedicated lanes and only have to interact with
 traffic at formal crossing.
-\item \strong{LTS 3}: Tolerable for “enthused and confident” cyclists. This includes
+\item \strong{LTS 3}: Tolerable for â€œenthused and confidentâ€ cyclists. This includes
 streets which may involve close proximity to moderate- or high-speed
 vehicular traffic.
-\item \strong{LTS 4}: Tolerable only for “strong and fearless” cyclists. This
+\item \strong{LTS 4}: Tolerable only for â€œstrong and fearlessâ€ cyclists. This
 includes streets where cyclists are required to mix with moderate- to
 high-speed vehicular traffic.
 }
