@@ -66,7 +66,7 @@ test_that("outputs a list with correct elements", {
       "max_discounted_transfers",
       "transfer_time_allowance",
       "fare_cap",
-      "fares_per_mode",
+      "fares_per_type",
       "fares_per_transfer",
       "fares_per_route",
       "debug_settings"
@@ -77,12 +77,12 @@ test_that("outputs a list with correct elements", {
   expect_type(struc$transfer_time_allowance, "integer")
   expect_type(struc$fare_cap, "double")
 
-  expect_s3_class(struc$fares_per_mode, "data.table")
-  expect_type(struc$fares_per_mode$mode, "character")
-  expect_type(struc$fares_per_mode$unlimited_transfers, "logical")
-  expect_type(struc$fares_per_mode$allow_same_route_transfer, "logical")
-  expect_type(struc$fares_per_mode$use_route_fare, "logical")
-  expect_type(struc$fares_per_mode$fare, "double")
+  expect_s3_class(struc$fares_per_type, "data.table")
+  expect_type(struc$fares_per_type$type, "character")
+  expect_type(struc$fares_per_type$unlimited_transfers, "logical")
+  expect_type(struc$fares_per_type$allow_same_route_transfer, "logical")
+  expect_type(struc$fares_per_type$use_route_fare, "logical")
+  expect_type(struc$fares_per_type$fare, "double")
 
   expect_s3_class(struc$fares_per_transfer, "data.table")
   expect_type(struc$fares_per_transfer$first_leg, "character")
@@ -111,7 +111,7 @@ test_that("output includes all routes from the gtfs", {
 
 test_that("uses the parameter 'by' to fill the structure", {
   struc <- tester(by = "AGENCY_ID")
-  expect_true(all(gtfs$agency$agency_id %in% struc$fares_per_mode$mode))
+  expect_true(all(gtfs$agency$agency_id %in% struc$fares_per_type$type))
   expect_true(
     all(gtfs$agency$agency_id %in% struc$fares_per_transfer$first_leg)
   )
@@ -120,7 +120,7 @@ test_that("uses the parameter 'by' to fill the structure", {
   )
 
   struc <- tester(by = "AGENCY_NAME")
-  expect_true(all(gtfs$agency$agency_name %in% struc$fares_per_mode$mode))
+  expect_true(all(gtfs$agency$agency_name %in% struc$fares_per_type$type))
   expect_true(
     all(gtfs$agency$agency_name %in% struc$fares_per_transfer$first_leg)
   )
@@ -131,12 +131,12 @@ test_that("uses the parameter 'by' to fill the structure", {
   gtfs_modes <- gtfs$routes$route_type
   gtfs_modes <- ifelse(gtfs_modes == 3, "BUS", "RAIL")
   struc <- tester(by = "MODE")
-  expect_true(all(gtfs_modes %in% struc$fares_per_mode$mode))
+  expect_true(all(gtfs_modes %in% struc$fares_per_type$type))
   expect_true(all(gtfs_modes %in% struc$fares_per_transfer$first_leg))
   expect_true(all(gtfs_modes %in% struc$fares_per_transfer$second_leg))
 
   struc <- tester(by = "GENERIC")
-  expect_true(struc$fares_per_mode$mode == "GENERIC")
+  expect_true(struc$fares_per_type$type == "GENERIC")
   expect_true(struc$fares_per_transfer$first_leg == "GENERIC")
   expect_true(struc$fares_per_transfer$second_leg == "GENERIC")
 })
