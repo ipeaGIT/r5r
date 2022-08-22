@@ -242,6 +242,43 @@ ggplot(decays_df, aes(x=seconds, y=decay, color=decay_function)) +
 
 street_net <- street_network_to_sf(r5r_core)
 View(street_net$vertices)
-View(street_net$edges)
+View(street_net$edges |> head(1000))
 
-mapview::mapview(street_net$edges, zcol = "bicycle_lts")
+mapview::mapview(street_net$edges, zcol = "car_speed")
+
+speeds <- unique(street_net$edges$car_speed) |> sort()
+
+street_net$edges$car_speed_f <- factor(street_net$edges$car_speed,
+                                       levels = speeds,
+                                       labels = scales::comma(speeds, accuracy = 0.01))
+
+street_net$edges$car_speed_f <- cut(street_net$edges$car_speed, include.lowest = TRUE,
+                                       breaks = seq(0, 80, 20))
+
+street_net$edges$street_class <- factor(street_net$edges$street_class,
+                                        levels = c("MOTORWAY", "PRIMARY", "SECONDARY", "TERTIARY", "OTHER"))
+
+library(viridis)
+street_net$edges |>
+  arrange(car_speed) |>
+  ggplot() +
+  geom_sf(aes(color=car_speed_f)) +
+  coord_sf(datum = NA) +
+  scale_color_discrete(type = heat.colors(4, rev=T)) +
+  # scale_color_viridis_d(direction = -1) +
+  theme_minimal() +
+  labs(color = "car speed")
+
+
+street_net$edges |>
+  arrange(desc(street_class)) |>
+  filter(street_class != "OTHER") |>
+  ggplot() +
+  geom_sf(data = filter(street_net$edges, street_class == "OTHER"), color = "grey90", size = 0.5) +
+  geom_sf(aes(color=street_class)) +
+  coord_sf(datum = NA) +
+  scale_color_manual(values = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "grey90"), drop = FALSE) +
+  theme_minimal() +
+  labs(color = "class")
+
+RColorBrewer::brewer.pal(5, "Set1")

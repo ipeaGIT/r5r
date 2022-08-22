@@ -139,8 +139,8 @@ fare_structure <- setup_fare_structure(r5r_core,
                                        by = "MODE")
 
 # update the cost of bus and train fares
-fare_structure$fares_per_mode[, fare := fcase(mode == "BUS", 4.80,
-                                             mode == "RAIL", 4.50)]
+fare_structure$fares_per_type[, fare := fcase(type == "BUS", 4.80,
+                                             type == "RAIL", 4.50)]
 
 # update the cost of tranfers
 fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
@@ -149,8 +149,8 @@ fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_le
 # update transfer_time_allowance to 60 minutes
 fare_structure$transfer_time_allowance <- 60
 
-fare_structure$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
-fare_structure$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
+fare_structure$fares_per_type[type == "RAIL", unlimited_transfers := TRUE]
+fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 
 ```
 

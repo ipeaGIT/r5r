@@ -76,10 +76,10 @@ public class FareStructureBuilder {
             }
         }
 
-        List<FarePerMode> faresPerMode = this.fareStructure.getFaresPerMode();
+        List<FarePerType> faresPerMode = this.fareStructure.getFaresPerType();
         for (String mode : modes) {
-            FarePerMode newMode = new FarePerMode();
-            newMode.setMode(mode);
+            FarePerType newMode = new FarePerType();
+            newMode.setType(mode);
             newMode.setFare(fare);
 
             faresPerMode.add(newMode);

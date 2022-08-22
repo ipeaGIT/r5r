@@ -88,56 +88,56 @@ test_that("fare_cap is right", {
   expect_true(assert_fare_structure(struc_copy))
 })
 
-test_that("fares_per_mode is right", {
+test_that("fares_per_type is right", {
   struc_copy <- struc
-  struc_copy$fares_per_mode <- "1"
+  struc_copy$fares_per_type <- "1"
   expect_error(assert_fare_structure(struc_copy))
 
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[, mode := as.factor(mode)]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[, type := as.factor(type)]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[1, mode := NA]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[1, type := NA]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy$fares_per_mode[1, mode := "RAIL"]
+  struc_copy$fares_per_type[1, type := "RAIL"]
   expect_error(assert_fare_structure(struc_copy))
 
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[
     ,
     unlimited_transfers := as.factor(unlimited_transfers)
   ]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[1, unlimited_transfers := NA]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[1, unlimited_transfers := NA]
   expect_error(assert_fare_structure(struc_copy))
 
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[
     ,
     allow_same_route_transfer := as.factor(allow_same_route_transfer)
   ]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[1, allow_same_route_transfer := NA]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[1, allow_same_route_transfer := NA]
   expect_error(assert_fare_structure(struc_copy))
 
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[, use_route_fare := as.factor(use_route_fare)]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[, use_route_fare := as.factor(use_route_fare)]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[1, use_route_fare := NA]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[1, use_route_fare := NA]
   expect_error(assert_fare_structure(struc_copy))
 
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[, fare := as.factor(fare)]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[, fare := as.factor(fare)]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy <- copied_element("fares_per_mode")
-  struc_copy$fares_per_mode[1, fare := NA]
+  struc_copy <- copied_element("fares_per_type")
+  struc_copy$fares_per_type[1, fare := NA]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy$fares_per_mode[1, fare := -1]
+  struc_copy$fares_per_type[1, fare := -1]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy$fares_per_mode[1, fare := Inf]
+  struc_copy$fares_per_type[1, fare := Inf]
   expect_error(assert_fare_structure(struc_copy))
 })
 

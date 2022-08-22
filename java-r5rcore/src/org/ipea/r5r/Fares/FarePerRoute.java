@@ -16,7 +16,7 @@ public class FarePerRoute {
     private int integerFare;
 
     @JsonIgnore
-    private int modeIndex;
+    private int typeIndex;
 
     public FarePerRoute(String agencyId, String agencyName, String routeId, String routeShortName, String routeLongName,
                         String mode, float routeFare, String fareType) {
@@ -104,12 +104,12 @@ public class FarePerRoute {
         this.fareType = fareType;
     }
 
-    public void setModeIndex(int modeIndex) {
-        this.modeIndex = modeIndex;
+    public void setTypeIndex(int typeIndex) {
+        this.typeIndex = typeIndex;
     }
 
-    public int getModeIndex() {
-        return modeIndex;
+    public int getTypeIndex() {
+        return typeIndex;
     }
 
     @Override

@@ -200,7 +200,7 @@ fare_structure$fare_cap
 ## 3.2 Configure fares by transport mode
 
 To configure mode-, transfer-, and route-specific properties, we can use the three `data.frames` inside our `fare_structure` list. Let's configure the modes first. 
-Below, we can see that the `fares_per_mode` data.frame contains five columns:
+Below, we can see that the `fares_per_type` data.frame contains five columns:
 
 -   `mode`: the transport mode to which rules on each row refer to;
 -   `unlimited_transfers`: a logical value `TRUE` or `FALSE` that indicates if that transport mode allows unlimited transfers between trips of the same mode, such as a metro/subway system where the passenger pays a fare to access a station and then can use as many services as she wants as long as she doesn't exit the system;
@@ -209,10 +209,10 @@ Below, we can see that the `fares_per_mode` data.frame contains five columns:
 -   `fare`: the full fare price of this mode.
 
 ```{r}
-fare_structure$fares_per_mode
+fare_structure$fares_per_type
 ```
 
-We need to do a few small changes in the `fares_per_mode` table to accomodate the
+We need to do a few small changes in the `fares_per_type` table to accomodate the
 fare rules of Porto Alegre. In the `"RAIL"` mode, we need to set `unlimited_transfers`
 and `allow_same_route_transfer` to `TRUE`, and update `fare` to 4.50. In the `"BUS"` 
 mode, we can let the `allow_same_route_transfer` set to its default `FALSE` value, 
@@ -222,15 +222,15 @@ buses within the same route (for example, from bus route T1 to another T1). We'l
 do those changes below, using `data.table` notation.
 
 ```{r}
-fare_structure$fares_per_mode[mode == "RAIL", unlimited_transfers := TRUE]
-fare_structure$fares_per_mode[mode == "RAIL", fare := 4.50]
-fare_structure$fares_per_mode[mode == "RAIL", allow_same_route_transfer := TRUE]
+fare_structure$fares_per_type[type == "RAIL", unlimited_transfers := TRUE]
+fare_structure$fares_per_type[type == "RAIL", fare := 4.50]
+fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 ```
 
 Checking the results below, everything looks OK:
 
 ```{r}
-fare_structure$fares_per_mode
+fare_structure$fares_per_type
 ```
 
 ## 3.3 Configure fares by transfers
@@ -305,17 +305,17 @@ specifically for the `r5r` fare structure.
 -   `route_fare`: is used to set a specific fare for each route. This field can 
 be used to represent services that have many unique fares, such as metropolitan 
 / suburban trains and buses. This is used together with the `use_route_fare` 
-column in the `fares_per_mode` table: the `route_fare` field is only considered 
+column in the `fares_per_type` table: the `route_fare` field is only considered 
 by the `r5r` fare structure when `use_route_fare` of that mode is set to `TRUE`.
 
--   `fare_type`: is used to link each route with information in the `fares_per_mode` 
+-   `fare_type`: is used to link each route with information in the `fares_per_type` 
 and `fares_per_transfer` tables. In this example, `fare_type` is always the same 
 as `mode`, because that was what we chose in the `by` parameter when calling `setup_fare_structure` earlier (we could have chosen to discriminate fares by 
 agency, for example).
 
 We actually don't have any change do to in the `fares_per_route` table, in this 
 example. It does not matter that the `route_fare` value is wrong for the "RAIL" 
-lines, because we are using the fares set in `fares_per_mode` and `fares_per_transfer` 
+lines, because we are using the fares set in `fares_per_type` and `fares_per_transfer` 
 which we already set up correctly before.
 
 Now that our `fare_structure` is complete, we can use it to calculate travel time 

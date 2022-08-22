@@ -6,14 +6,12 @@ import com.conveyal.r5.analyst.fare.TransferAllowance;
 import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
-import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import org.ipea.r5r.Process.ParetoItineraryPlanner;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
@@ -42,10 +40,10 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         for (FarePerRoute route : fareStructure.getFaresPerRoute()) {
             indexRouteInfo.put(route.getRouteId(), route);
         }
-        // index for transport modes
-        Map<String, Integer> indexTransportMode = new HashMap<>();
-        for (int i = 0; i < fareStructure.getFaresPerMode().size(); i++) {
-            indexTransportMode.put(fareStructure.getFaresPerMode().get(i).getMode(), i);
+        // index for transport types
+        Map<String, Integer> indexTransportType = new HashMap<>();
+        for (int i = 0; i < fareStructure.getFaresPerType().size(); i++) {
+            indexTransportType.put(fareStructure.getFaresPerType().get(i).getType(), i);
         }
 
         // load route info (fare per route)
@@ -54,36 +52,36 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(i).routeIndex);
 
             this.faresPerRoute[i] = indexRouteInfo.get(ri.route_id);
-            int modeIndex = indexTransportMode.get(faresPerRoute[i].getFareType());
-            faresPerRoute[i].setModeIndex(modeIndex);
+            int typeIndex = indexTransportType.get(faresPerRoute[i].getFareType());
+            faresPerRoute[i].setTypeIndex(typeIndex);
 
-            FarePerMode modeOfRoute = fareStructure.getFaresPerMode().get(modeIndex);
-            if (!modeOfRoute.isUseRouteFare())
-                faresPerRoute[i].setRouteFare(modeOfRoute.getFare());
+            FarePerType typeOfRoute = fareStructure.getFaresPerType().get(typeIndex);
+            if (!typeOfRoute.isUseRouteFare())
+                faresPerRoute[i].setRouteFare(typeOfRoute.getFare());
         }
 
         // load fare per transfer as a two-dimensional array
-        int nModes = fareStructure.getFaresPerMode().size();
-        this.faresPerTransfer = new FarePerTransfer[nModes][nModes];
+        int nTypes = fareStructure.getFaresPerType().size();
+        this.faresPerTransfer = new FarePerTransfer[nTypes][nTypes];
 
         for (FarePerTransfer transfer : fareStructure.getFaresPerTransfer()) {
-            int firstModeIndex = indexTransportMode.get(transfer.getFirstLeg());
-            int secondModeIndex = indexTransportMode.get(transfer.getSecondLeg());
+            int firstTypeIndex = indexTransportType.get(transfer.getFirstLeg());
+            int secondTypeIndex = indexTransportType.get(transfer.getSecondLeg());
 
-            transfer.setFirstLegFullIntegerFare(fareStructure.getFaresPerMode().get(firstModeIndex).getIntegerFare());
-            transfer.setSecondLegFullIntegerFare(fareStructure.getFaresPerMode().get(secondModeIndex).getIntegerFare());
+            transfer.setFirstLegFullIntegerFare(fareStructure.getFaresPerType().get(firstTypeIndex).getIntegerFare());
+            transfer.setSecondLegFullIntegerFare(fareStructure.getFaresPerType().get(secondTypeIndex).getIntegerFare());
 
-            faresPerTransfer[firstModeIndex][secondModeIndex] = transfer;
+            faresPerTransfer[firstTypeIndex][secondTypeIndex] = transfer;
         }
 
     }
 
-    private FarePerMode getModeByIndex(int index) {
-        return this.fareStructure.getFaresPerMode().get(index);
+    private FarePerType getTypeByIndex(int index) {
+        return this.fareStructure.getFaresPerType().get(index);
     }
 
-    private FarePerTransfer getTransferByIndex(int firstModeIndex, int secondModeIndex) {
-        return faresPerTransfer[firstModeIndex][secondModeIndex];
+    private FarePerTransfer getTransferByIndex(int firstTypeIndex, int secondTypeIndex) {
+        return faresPerTransfer[firstTypeIndex][secondTypeIndex];
     }
 
     @Override
@@ -129,21 +127,21 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             currentBoardTime = boardTimes.get(ride);
 
             // get info on each leg
-            FarePerRoute firstLegMode = faresPerRoute[previousPatternIndex];
-            FarePerRoute secondLegMode = faresPerRoute[currentPatternIndex];
+            FarePerRoute firstLegType = faresPerRoute[previousPatternIndex];
+            FarePerRoute secondLegType = faresPerRoute[currentPatternIndex];
 
-            // check if transfer is in same mode with unlimited transfers
-            if (firstLegMode.getModeIndex() == secondLegMode.getModeIndex()) {
-                FarePerMode modeData = getModeByIndex(firstLegMode.getModeIndex());
+            // check if transfer is in same type with unlimited transfers
+            if (firstLegType.getTypeIndex() == secondLegType.getTypeIndex()) {
+                FarePerType typeData = getTypeByIndex(firstLegType.getTypeIndex());
 
                 // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
-                if (modeData.isUnlimitedTransfers()) {
+                if (typeData.isUnlimitedTransfers()) {
                     previousPatternIndex = currentPatternIndex;
                     continue;
                 }
             }
 
-            // first and second legs modes are different, or there are no unlimited transfer
+            // first and second legs types are different, or there are no unlimited transfer
             // test if discount for subsequent legs is applicable
             if (discountsApplied >= this.fareStructure.getMaxDiscountedTransfers()) {
                 // all discounts have been used. get full fare
@@ -192,7 +190,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // get max benefit from possible transfers
         int fullFare = getFullFareForRoute(currentPatternIndex);
         int maxAllowanceValue = 0;
-        for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getModeIndex()]) {
+        for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getTypeIndex()]) {
             if (transfer != null) {
                 int fullTransferFare = transfer.getFirstLegFullIntegerFare() + transfer.getSecondLegFullIntegerFare();
 
@@ -201,7 +199,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             }
         }
 
-        // if fare cap has been reached, the max remaining allowance may be the mode's full fare
+        // if fare cap has been reached, the max remaining allowance may be the type's full fare
         if (fareStructure.getFareCap() > 0 && fareForState > fareStructure.getIntegerFareCap() ) {
             maxAllowanceValue = Math.max(fullFare, maxAllowanceValue);
         }
@@ -222,10 +220,10 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern, int transferTime) {
-        FarePerRoute firstLegMode = faresPerRoute[firstPattern];
-        FarePerRoute secondLegMode = faresPerRoute[secondPattern];
+        FarePerRoute firstLeg = faresPerRoute[firstPattern];
+        FarePerRoute secondLeg = faresPerRoute[secondPattern];
 
-        FarePerTransfer transferFare = getTransferByIndex(firstLegMode.getModeIndex(), secondLegMode.getModeIndex());
+        FarePerTransfer transferFare = getTransferByIndex(firstLeg.getTypeIndex(), secondLeg.getTypeIndex());
         if (transferFare == null) {
             // there is no record in transfers table, return full fare of second route
             int fareSecondLeg = getFullFareForRoute(secondPattern);
@@ -234,7 +232,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
         // discounted transfer found
         // check if transfer is allowed (transfer between same route ids)
-        if (!isTransferAllowed(firstLegMode, secondLegMode)) {
+        if (!isTransferAllowed(firstLeg, secondLeg)) {
             // transfer is not allowed, so return full fare for second leg
             int fareSecondLeg = getFullFareForRoute(secondPattern);
             return new IntegratedFare(fareSecondLeg, false);
@@ -255,16 +253,16 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private boolean isTransferAllowed(FarePerRoute firstLeg, FarePerRoute secondLeg) {
-        // if transfer is between routes in the same mode, the condition 'allow-same-route-transfer' also applies
-        if (firstLeg.getModeIndex() == secondLeg.getModeIndex()) {
-            // if mode allows transfers between same route, return true
-            FarePerMode modeData = getModeByIndex(firstLeg.getModeIndex());
-            if (modeData.isAllowSameRouteTransfer()) return true;
+        // if transfer is between routes in the same type, the condition 'allow-same-route-transfer' also applies
+        if (firstLeg.getTypeIndex() == secondLeg.getTypeIndex()) {
+            // if type allows transfers between same route, return true
+            FarePerType typeData = getTypeByIndex(firstLeg.getTypeIndex());
+            if (typeData.isAllowSameRouteTransfer()) return true;
 
             // if transfers between same route are not allowed, then check if route ids are different
             return !firstLeg.getRouteId().equals(secondLeg.getRouteId());
         } else {
-            // transfer is between routes in different modes, so transfer is allowed
+            // transfer is between routes in different types, so transfer is allowed
             return true;
         }
     }

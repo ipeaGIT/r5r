@@ -128,7 +128,7 @@ setup_fare_structure <- function(r5r_core,
   }
   fare_structure$debug_settings <- debug
 
-  data.table::setDT(fare_structure$fares_per_mode)
+  data.table::setDT(fare_structure$fares_per_type)
   data.table::setDT(fare_structure$fares_per_transfer)
   data.table::setDT(fare_structure$fares_per_route)
 
@@ -191,8 +191,8 @@ write_fare_structure <- function(fare_structure, file_path) {
 
   data.table::fwrite(fare_global_settings, tmpfile("global_settings.csv"))
   data.table::fwrite(
-    fare_structure$fares_per_mode,
-    tmpfile("fares_per_mode.csv")
+    fare_structure$fares_per_type,
+    tmpfile("fares_per_type.csv")
   )
   data.table::fwrite(
     fare_structure$fares_per_transfer,
@@ -208,7 +208,7 @@ write_fare_structure <- function(fare_structure, file_path) {
     zipfile = file_path,
     files = c(
       normalizePath(tmpfile("global_settings.csv")),
-      normalizePath(tmpfile("fares_per_mode.csv")),
+      normalizePath(tmpfile("fares_per_type.csv")),
       normalizePath(tmpfile("fares_per_transfer.csv")),
       normalizePath(tmpfile("fares_per_route.csv")),
       normalizePath(tmpfile("debug_settings.csv"))
@@ -270,10 +270,10 @@ read_fare_structure <- function(file_path, encoding = "UTF-8") {
     global_settings[setting == "fare_cap"]$value
   )
 
-  fare_structure$fares_per_mode <- data.table::fread(
-    tmpfile("fares_per_mode.csv"),
+  fare_structure$fares_per_type <- data.table::fread(
+    tmpfile("fares_per_type.csv"),
     select = c(
-      mode = "character",
+      type = "character",
       unlimited_transfers = "logical",
       allow_same_route_transfer = "logical",
       use_route_fare = "logical",
@@ -340,7 +340,7 @@ assert_fare_structure <- function(fare_structure) {
     "max_discounted_transfers",
     "transfer_time_allowance",
     "fare_cap",
-    "fares_per_mode",
+    "fares_per_type",
     "fares_per_transfer",
     "fares_per_route",
     "debug_settings"
@@ -356,26 +356,26 @@ assert_fare_structure <- function(fare_structure) {
   checkmate::assert_number(fare_structure$transfer_time_allowance, lower = 0)
   checkmate::assert_number(fare_structure$fare_cap, lower = 0)
 
-  checkmate::expect_data_frame(fare_structure$fares_per_mode)
+  checkmate::expect_data_frame(fare_structure$fares_per_type)
   checkmate::expect_character(
-    fare_structure$fares_per_mode$mode,
+    fare_structure$fares_per_type$type,
     any.missing = FALSE,
     unique = TRUE
   )
   checkmate::expect_logical(
-    fare_structure$fares_per_mode$unlimited_transfers,
+    fare_structure$fares_per_type$unlimited_transfers,
     any.missing = FALSE
   )
   checkmate::expect_logical(
-    fare_structure$fares_per_mode$allow_same_route_transfer,
+    fare_structure$fares_per_type$allow_same_route_transfer,
     any.missing = FALSE
   )
   checkmate::expect_logical(
-    fare_structure$fares_per_mode$use_route_fare,
+    fare_structure$fares_per_type$use_route_fare,
     any.missing = FALSE
   )
   checkmate::expect_numeric(
-    fare_structure$fares_per_mode$fare,
+    fare_structure$fares_per_type$fare,
     any.missing = FALSE,
     lower = 0,
     finite = TRUE
@@ -389,7 +389,7 @@ assert_fare_structure <- function(fare_structure) {
     )
     checkmate::assert_names(
       fare_structure$fares_per_transfer$first_leg,
-      subset.of = unique(fare_structure$fares_per_mode$mode)
+      subset.of = unique(fare_structure$fares_per_type$type)
     )
     checkmate::expect_character(
       fare_structure$fares_per_transfer$second_leg,
@@ -397,7 +397,7 @@ assert_fare_structure <- function(fare_structure) {
     )
     checkmate::assert_names(
       fare_structure$fares_per_transfer$second_leg,
-      subset.of = unique(fare_structure$fares_per_mode$mode)
+      subset.of = unique(fare_structure$fares_per_type$type)
     )
     checkmate::expect_numeric(
       fare_structure$fares_per_transfer$fare,
@@ -444,7 +444,7 @@ assert_fare_structure <- function(fare_structure) {
   )
   checkmate::assert_names(
     fare_structure$fares_per_route$fare_type,
-    subset.of = unique(fare_structure$fares_per_mode$mode)
+    subset.of = unique(fare_structure$fares_per_type$type)
   )
 
   debug_elements <- c("output_file", "trip_info")
