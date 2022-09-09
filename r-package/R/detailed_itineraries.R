@@ -122,14 +122,6 @@ detailed_itineraries <- function(r5r_core,
 
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  if (r5r_core$hasFrequencies()) {
-    stop(
-      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
-      "the transit network can contain a 'frequencies' table. Try using ",
-      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
-    )
-  }
-
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   od_list <- expand_od_pairs(origins, destinations, all_to_all)
@@ -137,6 +129,16 @@ detailed_itineraries <- function(r5r_core,
   destinations <- od_list$destinations
 
   mode_list <- assign_mode(mode, mode_egress)
+
+  # detailed itineraries via public transport cannot be computed on frequencies-based GTFS
+  if (mode_list$transit_mode != "" & r5r_core$hasFrequencies()) {
+    stop(
+      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
+      "the transit network can contain a 'frequencies' table. Try using ",
+      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
+    )
+  }
+
   departure <- assign_departure(departure_datetime)
   max_walk_time <- assign_max_street_time(
     max_walk_time,
