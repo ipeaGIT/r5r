@@ -141,8 +141,19 @@
 <div class="section level2">
 <h2 id="reprex-the-public-transport-system-of-porto-alegre">2. Reprex: the public transport system of Porto Alegre<a class="anchor" aria-label="anchor" href="#reprex-the-public-transport-system-of-porto-alegre"></a>
 </h2>
-<p>In this vignette, we will be using the sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>. Porto Alegre has a relatively straightforward public transport system, where the vast majority of the population that rely on transit ride buses. The city also has a metropolitan rail service that connects the city center to the neighboring northbound municipalities. That system can be seen in the map below.</p>
+<p>In this vignette, we will be using the sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>. Before we start, we need to increase the memory available to Java and load the packages used in this vignette</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://obrl-soil.github.io/h3jsr/" class="external-link">h3jsr</a></span><span class="op">)</span></span></code></pre></div>
+<p>Porto Alegre has a relatively straightforward public transport system, where the vast majority of the population that rely on transit ride buses. The city also has a metropolitan rail service that connects the city center to the neighboring northbound municipalities. That system can be seen in the map below.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># setup and load Porto Alegre multimodal network into memory</span></span>
 <span></span>
 <span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
@@ -184,12 +195,12 @@
 </ul>
 <p>First, we need to call <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code>, providing three parameters: the current <code>r5r_core</code> object, a <code>base_fare</code> used to populate the fare structure, and the <code>by</code> parameters that identifies what is the main property of the route that defines the different fares.</p>
 <p>In the example below, the <code>base_fare</code> is the standard bus ticket price of R$ 4.80. We are also stating that <code>by = "MODE"</code>, so that each transport mode has its own fares and integration rules. Users can also create a fare structure where fare rules of routes differ by <code>"AGENCY_ID"</code> or <code>"AGENCY_NAME"</code>, or simply set <code>by = "GENERIC"</code> when the entire system follows the same rules.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
 <span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
 <span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span></code></pre></div>
 <p>Now let’s check the contents of the <code>fare_structure</code> object. We can see below that it is simply a <code>list</code> with a few properties and data.frames.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fare_structure</span>, n<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $max_discounted_transfers</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
@@ -278,7 +289,7 @@
 </h4>
 <p>Finally, the <code>fare_cap</code> setting indicates if there is a maximum value that can be charged in a trip, beyond which all subsequent rides are free of charge. In this example, we can leave <code>fare_cap</code> set to its default <code>Inf</code> value because this feature is not applicable to Porto Alegre.</p>
 <p>Here is how we can check or update the values of these components:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">max_discounted_transfers</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># update transfer_time_allowance</span></span>
@@ -302,18 +313,18 @@
 <li>
 <code>fare</code>: the full fare price of this mode.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
 <span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span></code></pre></div>
 <p>We need to do a few small changes in the <code>fares_per_type</code> table to accomodate the fare rules of Porto Alegre. In the <code>"RAIL"</code> mode, we need to set <code>unlimited_transfers</code> and <code>allow_same_route_transfer</code> to <code>TRUE</code>, and update <code>fare</code> to 4.50. In the <code>"BUS"</code> mode, we can let the <code>allow_same_route_transfer</code> set to its default <code>FALSE</code> value, because even though there is a discount for transfers between buses (which is set in the following section), that discount is not valid when transferring between buses within the same route (for example, from bus route T1 to another T1). We’ll do those changes below, using <code>data.table</code> notation.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">4.50</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
 <p>Checking the results below, everything looks OK:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
 <span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
@@ -323,7 +334,7 @@
 <h3 id="configure-fares-by-transfers">3.3 Configure fares by transfers<a class="anchor" aria-label="anchor" href="#configure-fares-by-transfers"></a>
 </h3>
 <p>The fare rules for transfer are stored in the <code>fares_per_transfer</code> data.frame, which is shown below. Each row contains the fare prices for transfers between the modes specified in <code>first_leg</code> and <code>second_leg</code> columns.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg fare</span></span>
 <span><span class="co">#&gt; 1:       BUS        BUS  4.8</span></span>
@@ -334,13 +345,13 @@
 <ul>
 <li>The fare for “BUS” to “BUS” integration is composed of 4.80 for the first leg plus 2.40 for the second leg, which equals to a total fare of 7.20.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">7.2</span><span class="op">]</span></span></code></pre></div>
 <ul>
 <li>Transfers between “BUS” and “RAIL” (in any direction) cost 8.37, once the 10% discount is applied. Let’s make a final update in the data.frame to account for that.</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">8.37</span><span class="op">]</span></span>
 <span></span>
@@ -350,11 +361,11 @@
 <ul>
 <li>Transfers between “RAIL” and “RAIL” are free and unlimited, which is already accounted for in the field <code>unlimited_transfers</code> of the <code>fare_per_mode</code> table. Thus, the equivalent row of the <code>fare_per_transfer</code> data.frame needs to be removed. If we leave the that row in <code>fare_per_transfer</code>, transfers between “RAIL” and “RAIL” will count to the global <code>max_discounted_transfers</code> allowance.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove row</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span> <span class="op">&lt;-</span> <span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>Once all changes are applied, the <code>fare_per_transfer</code> data.frame should look like this:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg fare</span></span>
 <span><span class="co">#&gt; 1:       BUS        BUS 7.20</span></span>
@@ -365,7 +376,7 @@
 <h3 id="routes-configuration">3.4 Routes configuration<a class="anchor" aria-label="anchor" href="#routes-configuration"></a>
 </h3>
 <p>The information on the fare price for each route is stored in the <code>fares_per_route</code> data.frame. Below, we can see a sample of the bus and train routes in Porto Alegre. In case there a few special routes (e.g. express services) with specific fares, these values can be updated in this <code>fares_per_route</code> data.frame.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    agency_id                                 agency_name  route_id</span></span>
 <span><span class="co">#&gt; 1:      EPTC Empresa Publica de Transportes e Circulação        T8</span></span>
@@ -411,7 +422,7 @@
 <h3 id="travel-time-with-monetary-cost">4.1 Travel time with monetary cost<a class="anchor" aria-label="anchor" href="#travel-time-with-monetary-cost"></a>
 </h3>
 <p>The following example shows travel time differences when monetary costs are accounted for, using the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## load input data</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -443,7 +454,7 @@
 <span><span class="va">ttm</span><span class="op">[</span>, <span class="va">travel_time_unl</span> <span class="op">:=</span> <span class="va">travel_time_p50</span><span class="op">]</span></span>
 <span><span class="va">ttm</span><span class="op">[</span>, <span class="va">travel_time_p50</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span></span></code></pre></div>
 <p>Below, we can see a sample of the travel time differences with and without monetary cost restriction. We can see that some trips are not affected at all (<code>travel_time_unl == travel_time_500</code>), some trips take a little longer to complete (<code>travel_time_500 &gt; travel_time_unl</code>), and other trips cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
 <span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129c2bffff              38              36</span></span>
@@ -457,7 +468,7 @@
 <span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              19              19</span></span>
 <span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
 <p>The plots below show the overall distribution of the travel time differences and unreachable destinations:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot of overall travel time differences between limited and unlimited cost travel time matrices </span></span>
 <span><span class="va">time_difference</span> <span class="op">=</span> <span class="va">ttm</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">travel_time_500</span><span class="op">)</span>, <span class="fu">.</span><span class="op">(</span>count <span class="op">=</span> <span class="va">.N</span><span class="op">)</span>, </span>
 <span>                      by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">travel_time_unl</span>, <span class="va">travel_time_500</span><span class="op">)</span><span class="op">]</span></span>
@@ -490,14 +501,14 @@
 <span>       y <span class="op">=</span> <span class="st">"% of unreachable destinations\nconsidering a R$ 5.00 monetary cost limit"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># combine both plots using patchwork</span></span>
-<span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu">plot_annotation</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Comparing travel times with and without monetary cost restriction"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Comparing travel times with and without monetary cost restriction"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fare_structure_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="calculating-accessibility-with-monetary-cost">4.2 Calculating accessibility with monetary cost<a class="anchor" aria-label="anchor" href="#calculating-accessibility-with-monetary-cost"></a>
 </h3>
 <p>Now, we can answer questions like “how many health care facilities one can access in 60 minutes using public transport, on a R$5.00 budget?”. We’ll do that below, and compare the results the accessibility unconstrained by monetary costs:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility function</span></span>
 <span><span class="va">calculate_accessibility</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span>, <span class="va">fare_string</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
@@ -531,7 +542,7 @@
 <span><span class="va">access</span><span class="op">$</span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://obrl-soil.github.io/h3jsr/reference/cell_to_polygon.html" class="external-link">cell_to_polygon</a></span><span class="op">(</span><span class="va">access</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we can plot the results and see how accessibility levels can differ quite substantially when we account for monetary costs.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot accessibility maps</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">access</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">accessibility</span><span class="op">)</span>, color<span class="op">=</span><span class="cn">NA</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
