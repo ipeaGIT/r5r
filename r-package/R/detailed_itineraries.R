@@ -39,7 +39,7 @@
 #'   on (`FALSE`, the default) or to query routes between all origins to all
 #'   destinations (`TRUE`).
 #' @param drop_geometry A logical. Whether the output should include the
-#'   geometry of each segment or not. The default value of `FALSE` keeps the
+#'   geometry of each trip leg or not. The default value of `FALSE` keeps the
 #'   geometry column in the result.
 #'
 #' @template transport_modes_section

@@ -149,7 +149,7 @@ computation efficiency, because the progress counter must be synchronized
 among all active threads.}
 
 \item{drop_geometry}{A logical. Whether the output should include the
-geometry of each segment or not. The default value of \code{FALSE} keeps the
+geometry of each trip leg or not. The default value of \code{FALSE} keeps the
 geometry column in the result.}
 
 \item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
