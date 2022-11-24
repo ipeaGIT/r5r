@@ -116,7 +116,7 @@ Here are a few places from where you can download these data sets:
 
 ### Demonstration on sample data
 
-See a detailed demonstration of `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/intro_to_r5r.html). To illustrate
+See a detailed demonstration of `r5r` in this [intro Vignette](https://ipeagit.github.io/r5r/articles/r5r.html). To illustrate
 functionality, the package includes a small sample data set of the public transport
 and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to 
 use `r5r`, as follows.
