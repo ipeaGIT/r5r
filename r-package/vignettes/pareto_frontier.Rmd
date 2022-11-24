@@ -194,13 +194,10 @@ head(pf)
 ```
 
 
-For the sake of illustration, let's check the most optimum route alternatives 
-from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) 
-the Moinhos hospital.
-
-
-One cannot make a faster trip without increasing costs, 
-one cannot make a cheaper trip without increasing travel time.
+For the sake of illustration, let's check the optimum route alternatives from 
+the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the 
+Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without 
+increasing costs, and one cannot make a cheaper trip without increasing travel time.
 
 
 ```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
