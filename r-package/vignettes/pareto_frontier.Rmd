@@ -53,7 +53,7 @@ other words, it shows the most optimal set of route alternatives between A and B
 There are certainly other route options, but there is no other option that is both 
 faster and cheaper at the same time.
 
-```{r, echo = FALSE, fig.width=7, fig.height=4}
+```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
 library(ggplot2)
 
 # data.frame
@@ -101,7 +101,6 @@ options(java.parameters = "-Xmx2G")
 
 # load libraries
 library(r5r)
-library(sf)
 library(data.table)
 library(ggplot2)
 
