@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2022-09-09</h4>
+            <h4 data-toc-skip class="date">2022-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -527,7 +527,8 @@
 <span></span>
 <span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">access_500</span>, <span class="va">access_unl</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">access</span><span class="op">$</span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h3jsr/man/h3_to_polygon.html" class="external-link">h3_to_polygon</a></span><span class="op">(</span><span class="va">access</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="co"># bring geometry</span></span>
+<span><span class="va">access</span><span class="op">$</span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://obrl-soil.github.io/h3jsr/reference/cell_to_polygon.html" class="external-link">cell_to_polygon</a></span><span class="op">(</span><span class="va">access</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we can plot the results and see how accessibility levels can differ quite substantially when we account for monetary costs.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">

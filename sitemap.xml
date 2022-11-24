@@ -124,6 +124,9 @@
     <loc>/reference/set_expanded_travel_times.html</loc>
   </url>
   <url>
+    <loc>/reference/set_fare_cutoffs.html</loc>
+  </url>
+  <url>
     <loc>/reference/set_fare_structure.html</loc>
   </url>
   <url>
@@ -134,9 +137,6 @@
   </url>
   <url>
     <loc>/reference/set_max_rides.html</loc>
-  </url>
-  <url>
-    <loc>/reference/set_monetary_cutoffs.html</loc>
   </url>
   <url>
     <loc>/reference/set_monte_carlo_draws.html</loc>
