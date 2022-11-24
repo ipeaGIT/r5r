@@ -19,18 +19,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r message=FALSE, include=FALSE}
-options(java.parameters = "-Xmx2G")
-
-library(r5r)
-library(sf)
-library(data.table)
-library(ggplot2)
-library(patchwork)
-library(dplyr)
-```
-
-
 # 1. Introduction
 
 Considering the monetary costs of public transport trips in the calculation of 
@@ -101,11 +89,21 @@ GTFS feeds with full fare information.
 # 2. Reprex: the public transport system of Porto Alegre
 
 In this vignette, we will be using the sample data set for the city of Porto 
-Alegre (Brazil) included in `r5r`. Porto Alegre has a relatively straightforward 
-public transport system, where the vast majority of the population that rely on 
-transit ride buses. The city also has a metropolitan rail service that connects 
-the city center to the neighboring northbound municipalities. That system can be 
-seen in the map below.
+Alegre (Brazil) included in `r5r`.  Before we start, we need to increase the memory available to Java and load the packages used in this vignette
+
+```{r, message = FALSE, eval = FALSE}
+options(java.parameters = "-Xmx2G")
+
+library(r5r)
+library(sf)
+library(data.table)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(h3jsr)
+```
+
+Porto Alegre has a relatively straightforward public transport system, where the vast majority of the population that rely on transit ride buses. The city also has a metropolitan rail service that connects the city center to the neighboring northbound municipalities. That system can be seen in the map below.
 
 ```{r}
 # setup and load Porto Alegre multimodal network into memory
