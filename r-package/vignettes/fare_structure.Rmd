@@ -91,7 +91,7 @@ GTFS feeds with full fare information.
 In this vignette, we will be using the sample data set for the city of Porto 
 Alegre (Brazil) included in `r5r`.  Before we start, we need to increase the memory available to Java and load the packages used in this vignette
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 options(java.parameters = "-Xmx2G")
 
 library(r5r)

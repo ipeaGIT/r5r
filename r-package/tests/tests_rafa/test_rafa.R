@@ -348,10 +348,7 @@ ttm <- travel_time_matrix(r5r_core,
  mode <- c('car', 'BUS')
  mode <- c('car', 'BUS', 'walk', 'BICYCLE')
 
- bu kike === walk
- se só tem direct mode, outros vazios
 
- mode_list <- select_mode(mode)
 
 
 
@@ -554,8 +551,7 @@ zeroCov <- covr::zero_coverage(a)
 x <- as.data.frame(r5r_cov)
 covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
 
-Error (test-street_network_to_sf.R:14:3): street_network_to_sf - expected behavior
-Error (test-detailed_itineraries.R:169:3): detailed_itineraries output is correct
+
 
 
 
@@ -583,16 +579,6 @@ system("R CMD Rd2pdf --title=Package gtfs2gps --output=./gtfs2gps/manual.pdf")
 
 
 
-1. Failure: detailed_itineraries output is correct (@test-detailed_itineraries.R#182)
-2. Failure: detailed_itineraries output is correct (@test-detailed_itineraries.R#202)
-
-pdflatex
-
-
-
-path <- 'E:/Dropbox/other_projects/0_jean_capability/opentripplanner/otp_got'
-options(java.parameters = "-Xmx16G")
-r5r_core <- setup_r5(path)
 
 ### CMD Check ----------------
 # Check package errors
