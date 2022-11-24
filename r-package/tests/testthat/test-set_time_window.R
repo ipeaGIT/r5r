@@ -148,7 +148,7 @@ test_that("set_time_window argument works in pareto_frontier()", {
     draws_per_minute = 1,
     percentiles = percentiles,
     fare_structure = fare_structure,
-    monetary_cost_cutoffs = c(0, 5, 10),
+    fare_cutoffs = c(0, 5, 10),
     max_trip_duration = 60
   )
 

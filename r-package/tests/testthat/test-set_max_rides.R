@@ -89,7 +89,7 @@ test_that("max_rides argument works in expanded_travel_time_matrix()", {
         } else {
           s
         }
-      } 
+      }
     )
     count <- vapply(walkless_vector, length, integer(1))
   }
@@ -112,7 +112,7 @@ test_that("max_rides argument works in pareto_frontier()", {
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime,
     fare_structure = fare_structure,
-    monetary_cost_cutoffs = c(0, 5, 10)
+    fare_cutoffs  = c(0, 5, 10)
   )"
 
   one_ride_expr <- sub("\\)$", ", max_rides = 1\\)", expr)
@@ -145,7 +145,7 @@ test_that("max_rides argument works in detailed_itineraries()", {
 
   one_ride <- eval(parse(text = one_ride_expr))
   many_rides <- eval(parse(text = many_rides_expr))
-  
+
   count_transit <- function(routes) {
     non_walk_legs <- routes != ""
     sum(non_walk_legs)

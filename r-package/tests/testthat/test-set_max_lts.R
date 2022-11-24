@@ -54,7 +54,7 @@ test_that("max_lts argument works in pareto_frontier()", {
     mode = \"BICYCLE\",
     departure_datetime = departure_datetime,
     fare_structure = fare_structure,
-    monetary_cost_cutoffs = 0
+    fare_cutoffs = 0
   )"
 
   fast_expr <- sub("\\)$", ", max_lts = 4\\)", expr)

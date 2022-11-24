@@ -26,7 +26,7 @@ test_that("progress argument works in routing functions", {
         pois[1:5],
         departure_datetime = departure_datetime,
         fare_structure = fare_structure,
-        monetary_cost_cutoffs = c(0, 5, 10),
+        fare_cutoffs = c(0, 5, 10),
         max_trip_duration = 60
       )"
     } else if (identical(f, accessibility)) {

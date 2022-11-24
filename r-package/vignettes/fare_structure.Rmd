@@ -455,7 +455,8 @@ access_unl <- calculate_accessibility(fare=Inf, fare_string="Unlimited budget")
 
 access <- rbind(access_500, access_unl)
 
-access$geometry <- h3jsr::h3_to_polygon(access$id)
+# bring geometry
+access$geometry <- h3jsr::cell_to_polygon(access$id)
 access <- st_as_sf(access)
 
 ```

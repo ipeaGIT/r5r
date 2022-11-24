@@ -187,7 +187,7 @@ pf <- pareto_frontier(r5r_core,
                       mode = c("WALK", "TRANSIT"),
                       departure_datetime = departure_datetime,
                       fare_structure = fare_structure,
-                      monetary_cost_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
+                      fare_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
                       progress = TRUE
                       )
 head(pf)

@@ -20,7 +20,7 @@
 #'   combination. Due to upstream restrictions, only 5 percentiles can be
 #'   specified at a time. For more details, please see R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
-#' @param monetary_cost_cutoffs A numeric vector. The monetary cutoffs that
+#' @param fare_cutoffs A numeric vector. The monetary cutoffs that
 #'   should be considered when calculating the Pareto frontier. Most of the
 #'   time you'll want this parameter to be the combination of all possible
 #'   fares listed in you `fare_structure`. Choosing a coarse distribution of
@@ -80,7 +80,7 @@
 #'   mode = c("WALK", "TRANSIT"),
 #'   departure_datetime = departure_datetime,
 #'   fare_structure = fare_structure,
-#'   monetary_cost_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
+#'   fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
 #' )
 #' head(pf)
 #'
@@ -99,7 +99,7 @@ pareto_frontier <- function(r5r_core,
                             max_car_time = Inf,
                             max_trip_duration = 120L,
                             fare_structure = NULL,
-                            monetary_cost_cutoffs = -1L,
+                            fare_cutoffs = -1L,
                             walk_speed = 3.6,
                             bike_speed = 12,
                             max_rides = 3,
@@ -163,7 +163,7 @@ pareto_frontier <- function(r5r_core,
   set_progress(r5r_core, progress)
   set_fare_structure(r5r_core, fare_structure)
   set_output_dir(r5r_core, output_dir)
-  set_monetary_cutoffs(r5r_core, monetary_cost_cutoffs)
+  set_fare_cutoffs(r5r_core, fare_cutoffs)
 
   # call r5r_core method and process result -------------------------------
 

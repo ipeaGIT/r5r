@@ -271,7 +271,7 @@ test_that("draws_per_minute arg works in pareto_frontier() - poa", {
     time_window = 30,
     percentiles = c(1, 50, 99),
     fare_structure = fare_structure,
-    monetary_cost_cutoffs = c(0, 5, 10)
+    fare_cutoffs = c(0, 5, 10)
   )
 
   small_draws_expr <- big_draws_expr <- basic_expr
@@ -296,7 +296,7 @@ test_that("draws_per_minute arg works in pareto_frontier() - poa", {
 #     time_window = 30,
 #     percentiles = c(1, 50, 99),
 #     fare_structure = spo_fare_struc,
-#     monetary_cost_cutoffs = c(0, 5, 10, 15, Inf)
+#     fare_cutoffs = c(0, 5, 10, 15, Inf)
 #   )
 #
 #   small_draws_expr <- big_draws_expr <- basic_expr

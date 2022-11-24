@@ -261,7 +261,7 @@ cat(speeds_js)
 # export json to path file
 jsonlite::write_json(speeds_js, path = paste0('build-configsssss.json'))
 
-}
+
 
 
 
@@ -509,6 +509,9 @@ covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat
 a <- covr::function_coverage(fun=r5r::expanded_travel_time_matrix, test_file("tests/testthat/test-expanded_travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::pareto_frontier, test_file("tests/testthat/test-pareto_frontier.R"))
 a <- covr::function_coverage(fun=r5r::accessibility, test_file("tests/testthat/test-accessibility.R"))
+
+a <- covr::function_coverage(fun=r5r:::set_verbose, test_file("tests/testthat/test-set_verbose.R"))
+
 
 covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
 covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))

@@ -398,23 +398,23 @@ set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
 #' Pareto frontier.
 #'
 #' @template r5r_core
-#' @param monetary_cutoffs A path.
+#' @param fare_cutoffs A path.
 #'
 #' @return Invisibly returns `TRUE`.
 #'
 #' @family setting functions
 #'
 #' @keywords internal
-set_monetary_cutoffs <- function(r5r_core, monetary_cutoffs) {
+set_fare_cutoffs <- function(r5r_core, fare_cutoffs) {
   checkmate::assert_numeric(
-    monetary_cutoffs,
+    fare_cutoffs,
     lower = 0,
     any.missing = FALSE,
     min.len = 1,
     unique = TRUE
   )
 
-  r5r_core$setFareCutoffs(rJava::.jfloat(monetary_cutoffs))
+  r5r_core$setFareCutoffs(rJava::.jfloat(fare_cutoffs))
 
   return(invisible(TRUE))
 }

@@ -143,7 +143,7 @@ test_that("set_speed argument works in pareto_frontier()", {
     points[1:5],
     mode = "WALK",
     fare_structure = fare_structure,
-    monetary_cost_cutoffs = 0
+    fare_cutoffs = 0
   )
 
   slow_walk_expr <- fast_walk_expr <- walk_expr

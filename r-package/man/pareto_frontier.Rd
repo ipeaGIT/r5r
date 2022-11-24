@@ -18,7 +18,7 @@ pareto_frontier(
   max_car_time = Inf,
   max_trip_duration = 120L,
   fare_structure = NULL,
-  monetary_cost_cutoffs = -1L,
+  fare_cutoffs = -1L,
   walk_speed = 3.6,
   bike_speed = 12,
   max_rides = 3,
@@ -104,7 +104,7 @@ should be calculated. Please see the fare structure vignette to
 understand how this object is structured:
 \code{vignette("fare_structure", package = "r5r")}.}
 
-\item{monetary_cost_cutoffs}{A numeric vector. The monetary cutoffs that
+\item{fare_cutoffs}{A numeric vector. The monetary cutoffs that
 should be considered when calculating the Pareto frontier. Most of the
 time you'll want this parameter to be the combination of all possible
 fares listed in you \code{fare_structure}. Choosing a coarse distribution of
@@ -294,7 +294,7 @@ pf <- pareto_frontier(
   mode = c("WALK", "TRANSIT"),
   departure_datetime = departure_datetime,
   fare_structure = fare_structure,
-  monetary_cost_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
+  fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6)
 )
 head(pf)
 

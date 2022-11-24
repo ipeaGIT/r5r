@@ -23,11 +23,11 @@ the specified time window.
 Other setting functions: 
 \code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},
+\code{\link{set_fare_cutoffs}()},
 \code{\link{set_fare_structure}()},
 \code{\link{set_max_fare}()},
 \code{\link{set_max_lts}()},
 \code{\link{set_max_rides}()},
-\code{\link{set_monetary_cutoffs}()},
 \code{\link{set_monte_carlo_draws}()},
 \code{\link{set_n_threads}()},
 \code{\link{set_output_dir}()},
