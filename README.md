@@ -16,8 +16,8 @@ generate detailed routing analysis or calculate travel time matrices and
 accessibility using seamless parallel computing. See a detailed demonstration of
 `r5r` in the [intro Vignette](https://ipeagit.github.io/r5r/articles/r5r.html).
 More details about **r5r** can be found on the [package webpage](https://ipeagit.github.io/r5r/index.html) or on this [paper](
-https://doi.org/10.32866/001c.21262). Over time, `r5r` migth be expanded to 
-incorporate other functionalities from R<sup>5</sup>
+https://doi.org/10.32866/001c.21262). Over time, `r5r` might be expanded to 
+incorporate other functionality from R<sup>5</sup>
 
 This repository contains the `R` code (r-package folder) and the Java code 
 (java-api folder) that provides the interface to R<sup>5</sup>.
@@ -105,7 +105,7 @@ Here are a few places from where you can download these data sets:
   - [BBBike.org](https://extract.bbbike.org/) website
 
 - GTFS
-  - [tidytransit](http://tidytransit.r-transit.org/) R package
+  - [tidytransit](https://r-transit.github.io/tidytransit/) R package
   - [transitland](https://www.transit.land/) website
   
 - Elevation
