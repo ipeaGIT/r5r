@@ -262,6 +262,14 @@
 <span>                                    time_window <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
+</h3>
+<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>

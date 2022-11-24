@@ -249,13 +249,13 @@
 <span><span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     V1              id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 168 89a90129dabffff -51.19991 -30.03088       1438       0  215          0</span></span>
-<span><span class="co">#&gt; 2:  58 89a90128293ffff -51.17722 -30.07165       1617       1   19          1</span></span>
-<span><span class="co">#&gt; 3: 785 89a90129e3bffff -51.15426 -30.03060        623       0   63          0</span></span>
-<span><span class="co">#&gt; 4: 931 89a9012aa57ffff -51.23180 -30.06699        279       0   52          0</span></span>
-<span><span class="co">#&gt; 5: 155 89a901283d7ffff -51.19188 -30.05792        964       1   97          0</span></span>
-<span><span class="co">#&gt; 6: 416 89a90129917ffff -51.19615 -30.01316       1158       0  702          0</span></span></code></pre></div>
+<span><span class="co">#&gt;      V1              id       lon       lat population schools jobs healthcare</span></span>
+<span><span class="co">#&gt; 1: 1191 89a9012a36bffff -51.21142 -30.08953        425       0   98          1</span></span>
+<span><span class="co">#&gt; 2:  937 89a901282d3ffff -51.16807 -30.07104        794       1   15          0</span></span>
+<span><span class="co">#&gt; 3:  606 89a90129507ffff -51.15594 -30.07207        331       0    0          0</span></span>
+<span><span class="co">#&gt; 4:  797 89a90128663ffff -51.17127 -30.07493       2645       0  127          0</span></span>
+<span><span class="co">#&gt; 5:  217 89a90129d4bffff -51.18161 -30.02966        703       0  765          0</span></span>
+<span><span class="co">#&gt; 6:  596 89a90129ad7ffff -51.14786 -30.02281        754       1   50          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -383,7 +383,7 @@
 </h4>
 <p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
