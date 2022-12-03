@@ -162,6 +162,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># build a routable transport network with r5r</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
@@ -233,7 +234,16 @@
 <span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
 <span><span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></span></code></pre></div>
 <p>For the sake of illustration, let’s check the optimum route alternatives from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without increasing costs, and one cannot make a cheaper trip without increasing travel time.</p>
-<pre><code><span><span class="co">#&gt; Warning: Removed 4 rows containing missing values (`geom_text()`).</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk", :</span></span>
+<span><span class="co">#&gt; Invalid .internal.selfref detected and fixed by taking a (shallow) copy of the</span></span>
+<span><span class="co">#&gt; data.table so that := can add this new column by reference. At an earlier point,</span></span>
+<span><span class="co">#&gt; this data.table has been copied by R (or was created manually using structure()</span></span>
+<span><span class="co">#&gt; or similar). Avoid names&lt;- and attr&lt;- which in R currently (and oddly) may copy</span></span>
+<span><span class="co">#&gt; the whole data.table. Use set* syntax instead to avoid copying: ?set, ?setnames</span></span>
+<span><span class="co">#&gt; and ?setattr. If this message doesn't help, please report your use case to</span></span>
+<span><span class="co">#&gt; the data.table issue tracker so the root cause can be fixed or this message</span></span>
+<span><span class="co">#&gt; improved.</span></span>
+<span><span class="co">#&gt; Warning: Removed 4 rows containing missing values (`geom_text()`).</span></span></code></pre>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div class="section level4">
