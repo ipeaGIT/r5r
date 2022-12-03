@@ -181,7 +181,7 @@ destinations considering multiple cutoffs of monetary costs:
 ```{r}
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-pf <- pareto_frontier(r5r_core,
+prtf <- pareto_frontier(r5r_core,
                       origins = points,
                       destinations = points,
                       mode = c("WALK", "TRANSIT"),
@@ -190,7 +190,7 @@ pf <- pareto_frontier(r5r_core,
                       fare_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
                       progress = TRUE
                       )
-head(pf)
+head(prtf)
 
 ```
 
@@ -203,7 +203,7 @@ increasing costs, and one cannot make a cheaper trip without increasing travel t
 
 ```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
 # select origin and destinations
-pf2 <- dplyr::filter(pf, to_id == 'farrapos_station'  &
+pf2 <- dplyr::filter(prtf, to_id == 'farrapos_station'  &
                        from_id %in% c('moinhos_de_vento_hospital', 
                                       'praia_de_belas_shopping_center'))
 
