@@ -249,13 +249,13 @@
 <span><span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      V1              id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 1148 89a9012820fffff -51.17369 -30.05947          0       0    0          0</span></span>
-<span><span class="co">#&gt; 2:  330 89a90128193ffff -51.21967 -30.06803        133       0    0          0</span></span>
-<span><span class="co">#&gt; 3:  790 89a9012a02bffff -51.22135 -30.10947        657       0   32          0</span></span>
-<span><span class="co">#&gt; 4: 1189 89a9012991bffff -51.19009 -30.01367       1944       0  139          0</span></span>
-<span><span class="co">#&gt; 5:  412 89a9012a1afffff -51.24847 -30.10299        502       0   44          0</span></span>
-<span><span class="co">#&gt; 6:  104 89a901299cfffff -51.18711 -30.01531        572       0 1159          0</span></span></code></pre></div>
+<span><span class="co">#&gt;     V1              id       lon       lat population schools jobs healthcare</span></span>
+<span><span class="co">#&gt; 1: 640 89a9012aa4fffff -51.22860 -30.06311        625       1  219          0</span></span>
+<span><span class="co">#&gt; 2: 385 89a9012808bffff -51.19564 -30.07563        456       0  294          0</span></span>
+<span><span class="co">#&gt; 3: 301 89a901282afffff -51.18284 -30.06008          9       0    0          0</span></span>
+<span><span class="co">#&gt; 4: 334 89a90128373ffff -51.19143 -30.04686       2316       0  108          0</span></span>
+<span><span class="co">#&gt; 5: 376 89a901299bbffff -51.19924 -30.01428        634       0 2460          0</span></span>
+<span><span class="co">#&gt; 6: 696 89a9012990fffff -51.19295 -30.00927        844       0  742          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
