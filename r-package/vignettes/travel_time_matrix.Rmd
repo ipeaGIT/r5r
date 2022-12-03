@@ -19,17 +19,17 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-# removes files created by 'setup_r5()'
-data_path <- system.file("extdata/poa", package = "r5r")
-existing_files <- list.files(data_path)
-files_to_keep <- c(
-  "poa_hexgrid.csv",
-  "poa_osm.pbf",
-  "poa_points_of_interest.csv",
-  "poa.zip"
-)
-files_to_remove <- existing_files[! existing_files %in% files_to_keep]
-invisible(file.remove(file.path(data_path, files_to_remove)))
+# # removes files created by 'setup_r5()'
+# data_path <- system.file("extdata/poa", package = "r5r")
+# existing_files <- list.files(data_path)
+# files_to_keep <- c(
+#   "poa_hexgrid.csv",
+#   "poa_osm.pbf",
+#   "poa_points_of_interest.csv",
+#   "poa.zip"
+# )
+# files_to_remove <- existing_files[! existing_files %in% files_to_keep]
+# invisible(file.remove(file.path(data_path, files_to_remove)))
 
 ```
 

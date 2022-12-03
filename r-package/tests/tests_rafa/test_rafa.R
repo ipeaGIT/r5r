@@ -26,31 +26,198 @@ mapviewOptions(platform = 'leafgl')
 
 
 
-##### INPUT  ------------------------
+############## issue 281 - fare calculator not working with Sao Paulo example ------------------------------
 
-utils::remove.packages('r5r')
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+# https://github.com/ipeaGIT/r5r/blob/8101578e5178333cceb969ab5efd040755c48afa/r-package/R/detailed_itineraries.R#L134
 
 
+
+##################################################### POA
+library(data.table)
+library(r5r)
+library(dplyr)
 
 # build transport network
-path <- system.file("extdata/poa", package = "r5r")
-list.files(path)
-spo <- system.file("extdata/spo", package = "r5r")
-
-# r5r::download_r5(force_update = T)
-r5r::download_r5()
-r5r_core <- setup_r5(data_path = path, verbose = F)
+data_path <- system.file("extdata/poa", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/destination points
-points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
-points_sf <- sfheaders::sf_multipoint(points, x='lon', y='lat', multipoint_id = 'id')
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
 
-# remove files
-# file.remove( file.path(path, "network.dat") )
-# file.remove( file.path(.libPaths()[1], "r5r", "jar", "r5r_v4.9.0.jar") )
-# list.files(path)
-# list.files(file.path(.libPaths()[1], "r5r", "jar"))
+# load fare structure object
+fare_structure_path <- system.file(
+  "extdata/poa/fares/fares_poa.zip",
+  package = "r5r"
+)
+fare_structure <- read_fare_structure(fare_structure_path)
+
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "%d-%m-%Y %H:%M:%S"
+)
+
+pf_10 <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 30,
+  departure_datetime = departure_datetime,
+  fare_structure = fare_structure,
+  fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6),
+  progress = T,
+  draws_per_minute = 10
+)
+
+pf_05 <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 30,
+  departure_datetime = departure_datetime,
+  fare_structure = fare_structure,
+  fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6),
+  progress = T,
+  draws_per_minute = 5
+)
+stop_r5(r5r_core)
+
+head(pf_10)
+head(pf_05)
+
+
+identical(pf_10$from_id, pf_05$from_id)
+identical(pf_10$to_id, pf_05$to_id)
+identical(pf_10$travel_time, pf_05$travel_time)
+
+pf_10$travel_time - pf_05$travel_time
+
+dplyr::all_equal(pf_10, pf_05)
+
+pf_10[, id := paste(from_id, to_id)]
+pf_05[, id := paste(from_id, to_id)]
+
+df <- left_join(pf_10[,.(id, travel_time,monetary_cost)],
+                pf_05[,.(id, travel_time,monetary_cost)], by=c('id', 'travel_time', 'monetary_cost'))
+
+setDT(df)
+df[, diff_time := travel_time.x - travel_time.y]
+df[, diff_cost := monetary_cost.x - monetary_cost.y]
+
+
+
+
+##################################################### SPO
+
+library(r5r)
+
+# build transport network
+data_path <- system.file("extdata/spo", package = "r5r")
+r5r_core <- setup_r5(data_path = data_path)
+
+# load origin/destination points
+points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
+
+# load fare structure object
+fare_structure_path <- system.file(
+  "extdata/poa/fares/fares_poa.zip",
+  package = "r5r"
+)
+fare_structure <- read_fare_structure(fare_structure_path)
+
+departure_datetime <- as.POSIXct(
+  "13-05-2019 14:00:00",
+  format = "%d-%m-%Y %H:%M:%S"
+)
+
+detailed_itineraries(r5r_core = r5r_core,
+                            origins = points,
+                            destinations = points,
+                     mode = c("WALK", "TRANSIT"),
+                     departure_datetime = departure_datetime,
+                            suboptimal_minutes = 8,
+                            shortest_path = FALSE)
+
+
+pf_10 <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 30,
+  departure_datetime = departure_datetime,
+  fare_structure = fare_structure,
+  fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6),
+  progress = T,
+  draws_per_minute = 10
+)
+
+pf_05 <- pareto_frontier(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  time_window = 30,
+  departure_datetime = departure_datetime,
+  fare_structure = fare_structure,
+  fare_cutoffs = c(4.5, 4.8, 9, 9.3, 9.6),
+  progress = T,
+  draws_per_minute = 5
+)
+stop_r5(r5r_core)
+
+head(pf_10)
+head(pf_05)
+
+
+identical(pf_10$from_id, pf_05$from_id)
+identical(pf_10$to_id, pf_05$to_id)
+identical(pf_10$travel_time, pf_05$travel_time)
+
+pf_10$travel_time - pf_05$travel_time
+
+dplyr::all_equal(pf_10, pf_05)
+
+pf_10[, id := paste(from_id, to_id)]
+pf_05[, id := paste(from_id, to_id)]
+
+df <- left_join(pf_10[,.(id, travel_time,monetary_cost)],
+                pf_05[,.(id, travel_time,monetary_cost)], by=c('id', 'travel_time', 'monetary_cost'))
+
+setDT(df)
+df[, diff_time := travel_time.x - travel_time.y]
+df[, diff_cost := monetary_cost.x - monetary_cost.y]
+
+
+
+
+
+
+
+
+
+
+identical(small_draws$from_id, big_draws$from_id)
+identical(small_draws$to_id, big_draws$to_id)
+identical(small_draws$percentile, big_draws$percentile)
+identical(small_draws$travel_time, big_draws$travel_time)
+identical(small_draws$monetary_cost, big_draws$monetary_cost)
+
+v$travel_time - big_draws$travel_time
+
+dplyr::all_equal(small_draws, big_draws)
+
+small_draws[, id := paste(from_id, to_id)]
+big_draws[, id := paste(from_id, to_id)]
+
+df <- left_join(small_draws[,.(id, travel_time,monetary_cost)],
+                big_draws[,.(id, travel_time,monetary_cost)], by=c('id', 'travel_time', 'monetary_cost'))
+
+setDT(df)
+df[, diff_time := travel_time.x - travel_time.y]
+df[, diff_cost := monetary_cost.x - monetary_cost.y]
+
 
 
 ############## get_all_od_combinations ------------------------------
@@ -276,27 +443,6 @@ jsonlite::write_json(cat(a), path = 'build-config2.json')
 
 writeLines(a,con  = 'build-config3.json')
 
-##### TESTS detailed_itineraries ------------------------
-
-origins <- points
-destinations <- points
-
- mode = c("WALK", "BUS")
- max_walk_dist <- 10000
- departure_datetime <- as.POSIXct("13-03-2019 14:00:00",
-                                  format = "%d-%m-%Y %H:%M:%S")
-
-
-system.time(
-df <- detailed_itineraries(r5r_core,
-                           origins,
-                           destinations,
-                           departure_datetime,
-                           max_walk_dist,
-                           mode,
-                           shortest_path = T,
-                           n_threads= Inf)
-)
 
 
 
@@ -304,81 +450,6 @@ df <- detailed_itineraries(r5r_core,
 
 
 
-
-
-
-
-
-
-##### TESTS travel_time_matrix ------------------------
-library(r5r)
-
-# set up
-data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
-
-# input
-points <- read.csv(file.path(data_path, "spo_hexgrid.csv"))[1:5,]
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
-
-#' # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core,
-                   origins = points,
-                   destinations = points,
-                   mode = c("WALK", "TRANSIT"),
-                   departure_datetime = departure_datetime,
-                   max_walk_dist = Inf,
-                   max_trip_duration = 120L)
-
-
-
-
-
-
-
-
-
- ##### TESTS select_mode ------------------------
-
- # mode = c('car')
- mode = c('BUS') !!!!!!!!!!!!!!!!!!!!!
-         # mode = c('BICYCLE')  !!!!!!!!!!!!!!!!!!!!!
-         mode <- c('BICYCLE', 'BUS')
- mode <- c('BICYCLE', 'car') ### WALK
- mode <- c('car', 'BUS')
- mode <- c('car', 'BUS', 'walk', 'BICYCLE')
-
-
-
-
-
- ##### generate points data ------------------------
- library(data.table)
- library(dplyr)
-
- df <- aopdata::read_landuse(city = 'spo', year = 2019)
- class(df)
-
- df <- df[, .(id_hex, P001, T001 , E001, S001 )]
- df <- unique(df)
-
- points <- read.csv(system.file("extdata/spo/spo_hexgrid.csv", package = "r5r"))
- points <- unique(points)
- head(points)
-
- points <- left_join(points, df, by=c('id'='id_hex'))
- head(points)
-
- points$X <- NULL
- points$E001 <- NULL
- points$P001  <- NULL
- points$T001   <- NULL
-
- head(points)
- names(points) <- c('id','lon', 'lat', 'population', 'schools', 'jobs', 'healthcare')
- head(points)
-
- write.csv(points,file =   "./inst/extdata/spo/spo_hexgrid.csv")
 
 
 ##### downloads ------------------------
