@@ -213,9 +213,10 @@
 </h4>
 <p>In this example, we calculate the Pareto frontier from all origins to all destinations considering multiple cutoffs of monetary costs: - $1, which would only allow for walking trips - $4.5, which would only allow for rail trips - $4.8, which would allow for a single bus trip - $7.20, which would allow for bus + bus - $8.37, which would allow for walking walking + bus + rail</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
+<span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span><span class="va">prtf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
 <span>                      origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                      destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                      mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
@@ -225,7 +226,7 @@
 <span>                      progress <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>                      <span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required namespace: testthat</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prtf</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span></span>
 <span><span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span></span>
 <span><span class="co">#&gt; 2: public_market bus_central_station         50          23           1.0</span></span>
