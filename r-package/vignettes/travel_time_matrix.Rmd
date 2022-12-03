@@ -19,18 +19,18 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-# # removes files created by 'setup_r5()'
+# # removes files previously created by 'setup_r5()'
 # data_path <- system.file("extdata/poa", package = "r5r")
 # existing_files <- list.files(data_path)
 # files_to_keep <- c(
 #   "poa_hexgrid.csv",
 #   "poa_osm.pbf",
 #   "poa_points_of_interest.csv",
-#   "poa.zip"
+#   "poa.zip",
+#   'fares'
 # )
 # files_to_remove <- existing_files[! existing_files %in% files_to_keep]
 # invisible(file.remove(file.path(data_path, files_to_remove)))
-
 ```
 
 # 1. Introduction 
@@ -154,7 +154,14 @@ ettm_window <- expanded_travel_time_matrix(r5r_core,
 
 ettm_window[15:25,]
 ```
+### Cleaning up after usage
 
+`r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
+
+```{r, message = FALSE}
+r5r::stop_r5(r5r_core)
+rJava::.jgc(R.gc = TRUE)
+```
 
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
