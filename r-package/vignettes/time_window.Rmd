@@ -53,7 +53,7 @@ Let's see a couple concrete examples now.
 First, let's build the network and create the routing inputs. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -89,7 +89,7 @@ ps. Please keep in mind that the `time_window` only affects the results when the
 
 In this example we calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we'll be using a cumulative accessibility metric `decay_function = "step"` with a max time threshold of 45 minutes `cutoffs = 45`.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # estimate accessibility
 acc <- r5r::accessibility(r5r_core = r5r_core,   
                           origins = points,
@@ -116,7 +116,7 @@ This output is in long format, so the first 5 rows show the result for the same 
 
 We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # summarize
 df <- acc[, .(min_acc = min(accessibility),
               median = accessibility[which(percentile == 50)],
@@ -144,7 +144,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 Now let's calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # estimate travel time matrix
 ttm <- travel_time_matrix(r5r_core = r5r_core,   
                           origins = points,
@@ -175,7 +175,7 @@ The last row in the result above has a few `NA`s. This tell us that at least 50%
 
 Finally, we can also use the `time_window` in the `expanded_travel_time_matrix()` function. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,   
                                     origins = points[1:30,],
                                     destinations = points[31:61,],    
@@ -195,7 +195,7 @@ head(ettm, n = 10)
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```
