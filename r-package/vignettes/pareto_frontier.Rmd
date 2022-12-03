@@ -103,6 +103,7 @@ options(java.parameters = "-Xmx2G")
 library(r5r)
 library(data.table)
 library(ggplot2)
+library(dplyr)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -202,8 +203,9 @@ increasing costs, and one cannot make a cheaper trip without increasing travel t
 
 ```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
 # select origin and destinations
-pf2 <- subset(pf, to_id == 'farrapos_station'  &
-               from_id %in% c('moinhos_de_vento_hospital', 'praia_de_belas_shopping_center'))
+pf2 <- dplyr::filter(pf, to_id == 'farrapos_station'  &
+                       from_id %in% c('moinhos_de_vento_hospital', 
+                                      'praia_de_belas_shopping_center'))
 
 # recode modes
 pf2[, modes := fcase(monetary_cost == 1,   'Walk',
