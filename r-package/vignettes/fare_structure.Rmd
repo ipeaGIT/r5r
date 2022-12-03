@@ -263,7 +263,7 @@ fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_le
 
 ```
 
--   Transfers between "RAIL" and "RAIL" are free and unlimited, which is already 
+- Transfers between "RAIL" and "RAIL" are free and unlimited, which is already 
 accounted for in the field `unlimited_transfers` of the `fare_per_mode` table. 
 Thus, the equivalent row of the `fare_per_transfer` data.frame needs to be removed. 
 If we leave the that row in `fare_per_transfer`, transfers between "RAIL" and "RAIL" 

@@ -177,7 +177,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```
