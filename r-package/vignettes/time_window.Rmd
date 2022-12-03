@@ -19,8 +19,6 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-
-rJava::.jgc(R.gc = TRUE)
 ```
 
 ## 1. Introduction 
