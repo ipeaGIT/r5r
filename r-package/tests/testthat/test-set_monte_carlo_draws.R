@@ -1,7 +1,7 @@
 # # if running manually, please run the following line first:
 # # source("tests/testthat/setup.R")
 #
-# testthat::skip_on_cran()
+testthat::skip_on_cran()
 #
 # tester <- function(draws_per_minute) {
 #   set_monte_carlo_draws(r5r_core, draws_per_minute, time_window = 30)
