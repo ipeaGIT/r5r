@@ -56,6 +56,7 @@ public class FarePerRoute {
         return routeId;
     }
 
+    @JsonIgnore
     public String getUniqueId() {
         return agencyId + ":" + routeId;
     }
