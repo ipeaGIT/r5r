@@ -44,7 +44,6 @@ Imports:
     jsonlite,
     rJava (>= 0.9-10),
     sf (>= 0.9-3),
-    s2 (>= 1.1.0),
     sfheaders,
     utils,
     zip
