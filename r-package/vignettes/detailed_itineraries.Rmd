@@ -105,7 +105,7 @@ for the visualization of the results in `ggplot2`, you can also use the `street_
 street_net <- street_network_to_sf(r5r_core)
 
 # extract public transport network
-transit_net <- transit_network_to_sf(r5r_core)
+transit_net <- r5r::transit_network_to_sf(r5r_core)
 
 # plot
 fig <- ggplot() +
@@ -116,7 +116,7 @@ fig <- ggplot() +
 
 fig
 ```
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE, eval = FALSE}
 # SAVE image
 ggsave(plot = fig, filename = 'inst/img/vig_detailed_ggplot.png', 
        height = 5, width = 15, units='cm', dpi=200)
