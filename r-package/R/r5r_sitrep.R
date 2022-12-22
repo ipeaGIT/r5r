@@ -1,15 +1,16 @@
 #' Generate an r5r situation report
 #'
 #' @description
-#' The function reports:
+#' The function reports a list with the following information:
 #'
-#' - The version of `{r5r}` in use. Is it the most up to date?
-#' - The installed version of `r5r.jar`.
+#' - The package version of `{r5r}` in use.
 #' - The installed version of `R5.jar`.
 #' - The Java version in use.
 #' - The amount of memory set to Java through the `java.parameters` option.
+#' - The user's Session Info.
 #'
-#' @return Invisibly returns `TRUE`.
+#' @return A `list` with information of the versions of the r5r package, Java
+#' and R5 Jar in use, the memory set to Java and user's Session Info.
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' r5r_sitrep()
@@ -45,5 +46,25 @@ r5r_sitrep <- function() {
 
   set_memory <- getOption("java.parameters")
 
-  return(invisible(TRUE))
+  output_list <- list(r5r_package_version,
+                      r5_jar_version,
+                      java_version,
+                      # r5_jar_path,
+                      # r5r_jar_path,
+                      set_memory,
+                     # jar_dir_files_full_names,
+                      sessionInfo())
+
+  names(output_list) <- c('r5r_package_version',
+                          'r5_jar_version',
+                          'java_version',
+                         # 'r5_jar_path',
+                         # 'r5r_jar_path',
+                          'set_memory',
+                         # 'jar_dir_files_full_names',
+                          'session_info'
+                          )
+
+
+  return(output_list)
 }

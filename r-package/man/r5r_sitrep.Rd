@@ -7,16 +7,17 @@
 r5r_sitrep()
 }
 \value{
-Invisibly returns \code{TRUE}.
+A \code{list} with information of the versions of the r5r package, Java
+and R5 Jar in use, the memory set to Java and user's Session Info.
 }
 \description{
-The function reports:
+The function reports a list with the following information:
 \itemize{
-\item The version of \code{{r5r}} in use. Is it the most up to date?
-\item The installed version of \code{r5r.jar}.
+\item The package version of \code{{r5r}} in use.
 \item The installed version of \code{R5.jar}.
 \item The Java version in use.
 \item The amount of memory set to Java through the \code{java.parameters} option.
+\item The user's Session Info.
 }
 }
 \examples{
