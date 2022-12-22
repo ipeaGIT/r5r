@@ -60,7 +60,7 @@ library(ggplot2)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path, overwrite = TRUE)
+r5r_core <- setup_r5(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')

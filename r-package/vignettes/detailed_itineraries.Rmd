@@ -35,7 +35,7 @@ This is where the `detailed_itineraries()` function comes in. This function outp
 
 First, let's load some libraries and build our multimodal transport network. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -67,7 +67,7 @@ poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set `shortest_path = FALSE`.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # set inputs
 origins <- poi[10,]
 destinations <- poi[12,]
@@ -88,7 +88,7 @@ det <- detailed_itineraries(r5r_core = r5r_core,
 
 head(det)
 ```
-```{r detailed head, echo = FALSE, out.width='100%', message = FALSE}
+```{r detailed head, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
 ```
 
@@ -100,7 +100,7 @@ The output is a `data.frame sf` object, so we can easily visualize the results.
 **Static visualization** with `ggplot2` package: To provide a geographic context 
 for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf((` function to  extract the OSM street network used in the routing.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 
@@ -116,13 +116,13 @@ fig <- ggplot() +
 
 fig
 ```
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # SAVE image
 ggsave(plot = fig, filename = 'inst/img/vig_detailed_ggplot.png', 
        height = 5, width = 15, units='cm', dpi=200)
 ```
 
-```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE}
+```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
 ```
 
@@ -142,7 +142,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 Please note that the `detailed_itineraries()` functions does not run on frequency-based GTFS feeds. A simple hack to overcome this problem is to convert your GTFS data from frequencies to time tables. This can be easily done using the [`gtfstools` package](https://ipeagit.github.io/gtfstools/). Here is how:
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 library(gtfstools)
 
 # location of your frequency-based GTFS
@@ -167,7 +167,7 @@ gtfstools::write_gtfs(gtfs = stop_times_gtfs,
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```
