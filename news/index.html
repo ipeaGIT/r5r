@@ -86,10 +86,19 @@
 <code>r5r</code> now uses <code>R5</code>’s native elevation weighting for walking and cycling impedance functions. As a result <code>r5r</code> does not have raster or rgdal package dependencies anymore. Closes <a href="https://github.com/ipeaGIT/r5r/issues/243" class="external-link">#243</a> and <a href="https://github.com/ipeaGIT/r5r/issues/233" class="external-link">#233</a>.</li>
 <li>Parameters <code>breakdown</code> and <code>breakdown_stat</code> in <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> were removed. New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> should be used to retrieve detailed information of travel time matrices.</li>
 <li>Function <code><a href="../reference/setup_r5.html">setup_r5()</a></code> no longer has a <code>version</code> parameter.</li>
+</ul><p><strong>New functions</strong></p>
+<ul><li>New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> to calculate minute-by-minute travel times between origin destination pairs and get additional information on public transport routes, number of transfers, and total access, waiting, in-vehicle and transfer times.</li>
+<li>New function <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> to compute of travel time and monetary cost Pareto frontier.</li>
+<li>New function <code><a href="../reference/r5r_sitrep.html">r5r_sitrep()</a></code> to generate an <code>r5r</code> situation report to help debug code errors</li>
+<li>New functions to account for monetary costs:<ul><li>
+<code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> to setup a fare structure to calculate the monetary costs of trips</li>
+<li>
+<code><a href="../reference/read_fare_structure.html">read_fare_structure()</a></code> to read a fare structure object from a file</li>
+<li>
+<code><a href="../reference/write_fare_structure.html">write_fare_structure()</a></code> to write a fare structure object to disk</li>
+</ul></li>
 </ul><p><strong>Major changes</strong></p>
-<ul><li>New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>.</li>
-<li>New function <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>.</li>
-<li>New parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
+<ul><li>New parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
 <li>New parameter <code>output_dir</code> to all routing functions, which can be used to specify a directory in which the results should be saved as <code>.csv</code> files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents <code>R5</code> from storing them in memory.</li>
 <li>The accessibility estimates from <code><a href="../reference/accessibility.html">accessibility()</a></code> are now of returned as doubles / class <code>numeric</code>, except when using a <code>step</code> decay function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/235" class="external-link">#235</a>.</li>
 <li>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function has a new parameter <code>all_to_all</code>, which allows users to set whether they want to query routes between all origins to all destinations (<code>all_to_all = TRUE</code>) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (<code>all_to_all = FALSE</code>, the default). Closes <a href="https://github.com/ipeaGIT/r5r/issues/224" class="external-link">#224</a>.</li>
