@@ -250,12 +250,12 @@
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90128157ffff -51.21018 -30.05913        709       0   35          0</span></span>
-<span><span class="co">#&gt; 2: 89a9012884bffff -51.22405 -30.02604         90       0 4152          1</span></span>
-<span><span class="co">#&gt; 3: 89a90129da7ffff -51.20598 -30.03036       1693       0  247          0</span></span>
-<span><span class="co">#&gt; 4: 89a9012b1b7ffff -51.18761 -30.10265         95       0    0          0</span></span>
-<span><span class="co">#&gt; 5: 89a901285a3ffff -51.22618 -30.07856        966       0   15          0</span></span>
-<span><span class="co">#&gt; 6: 89a90129c63ffff -51.16970 -30.03622        192       0  513          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128603ffff -51.17458 -30.08158        690       0    0          0</span></span>
+<span><span class="co">#&gt; 2: 89a90128363ffff -51.19132 -30.04410        979       0  243          0</span></span>
+<span><span class="co">#&gt; 3: 89a9012a067ffff -51.21827 -30.10834        362       0   16          1</span></span>
+<span><span class="co">#&gt; 4: 89a90128233ffff -51.17975 -30.05895        318       0  202          0</span></span>
+<span><span class="co">#&gt; 5: 89a90128357ffff -51.18857 -30.05127       1279       0  187          0</span></span>
+<span><span class="co">#&gt; 6: 89a90e93453ffff -51.14079 -29.99843          9       0 1912          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -284,7 +284,14 @@
 <span>                        decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
 <span>                        cutoffs <span class="op">=</span> <span class="fl">60</span></span>
 <span>                        <span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
+<span><span class="co">#&gt; 1: 89a90128603ffff     schools         50     60             4</span></span>
+<span><span class="co">#&gt; 2: 89a90128603ffff  healthcare         50     60             5</span></span>
+<span><span class="co">#&gt; 3: 89a90128363ffff     schools         50     60             7</span></span>
+<span><span class="co">#&gt; 4: 89a90128363ffff  healthcare         50     60             6</span></span>
+<span><span class="co">#&gt; 5: 89a9012a067ffff     schools         50     60             1</span></span>
+<span><span class="co">#&gt; 6: 89a9012a067ffff  healthcare         50     60             1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
@@ -312,8 +319,14 @@
 <span>                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_ttm.png?raw=true" width="100%"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          from_id               to_id travel_time_p50</span></span>
+<span><span class="co">#&gt; 1: public_market       public_market               0</span></span>
+<span><span class="co">#&gt; 2: public_market bus_central_station              21</span></span>
+<span><span class="co">#&gt; 3: public_market    gasometer_museum              26</span></span>
+<span><span class="co">#&gt; 4: public_market santa_casa_hospital              13</span></span>
+<span><span class="co">#&gt; 5: public_market            townhall               3</span></span>
+<span><span class="co">#&gt; 6: public_market     piratini_palace              14</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="expanded-travel-time-matrix-with-minute-by-minute-estimates">Expanded travel time matrix with minute-by-minute estimates<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-minute-by-minute-estimates"></a>
@@ -330,7 +343,21 @@
 <span>                          max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          from_id               to_id departure_time draw_number access_time</span></span>
+<span><span class="co">#&gt; 1: public_market       public_market       14:00:00           1           0</span></span>
+<span><span class="co">#&gt; 2: public_market bus_central_station       14:00:00           1           0</span></span>
+<span><span class="co">#&gt; 3: public_market    gasometer_museum       14:00:00           1           0</span></span>
+<span><span class="co">#&gt; 4: public_market santa_casa_hospital       14:00:00           1           0</span></span>
+<span><span class="co">#&gt; 5: public_market            townhall       14:00:00           1           0</span></span>
+<span><span class="co">#&gt; 6: public_market     piratini_palace       14:00:00           1           0</span></span>
+<span><span class="co">#&gt;    wait_time ride_time transfer_time egress_time routes n_rides total_time</span></span>
+<span><span class="co">#&gt; 1:         0         0             0           0 [WALK]       0          0</span></span>
+<span><span class="co">#&gt; 2:         0         0             0           0 [WALK]       0         21</span></span>
+<span><span class="co">#&gt; 3:         0         0             0           0 [WALK]       0         26</span></span>
+<span><span class="co">#&gt; 4:         0         0             0           0 [WALK]       0         13</span></span>
+<span><span class="co">#&gt; 5:         0         0             0           0 [WALK]       0          3</span></span>
+<span><span class="co">#&gt; 6:         0         0             0           0 [WALK]       0         14</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="detailed-itineraries">Detailed itineraries<a class="anchor" aria-label="anchor" href="#detailed-itineraries"></a>
@@ -355,8 +382,16 @@
 <span>                            max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
 <span>                            shortest_path <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true" width="100%"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">det</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Simple feature collection with 0 features and 16 fields</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: NA ymin: NA xmax: NA ymax: NA</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span><span class="co">#&gt;  [1] from_id          from_lat         from_lon         to_id           </span></span>
+<span><span class="co">#&gt;  [5] to_lat           to_lon           option           departure_time  </span></span>
+<span><span class="co">#&gt;  [9] total_duration   total_distance   segment          mode            </span></span>
+<span><span class="co">#&gt; [13] segment_duration wait             distance         route           </span></span>
+<span><span class="co">#&gt; [17] geometry        </span></span>
+<span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre></div>
 <p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
 <div class="section level5">
 <h5 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
@@ -367,7 +402,7 @@
 <span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># extract public transport network</span></span>
-<span><span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -375,7 +410,6 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">det</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span><span class="op">~</span><span class="va">option</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true" width="100%"></p>
 </div>
 </div>
 <div class="section level4">

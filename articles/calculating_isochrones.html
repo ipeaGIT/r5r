@@ -192,13 +192,13 @@
 <span>                          progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             fromId            toId travel_time</span></span>
-<span><span class="co">#&gt; 1: 89a90128a8fffff 89a901291abffff          59</span></span>
-<span><span class="co">#&gt; 2: 89a90128a8fffff 89a901295b7ffff          62</span></span>
-<span><span class="co">#&gt; 3: 89a90128a8fffff 89a9012809bffff          52</span></span>
-<span><span class="co">#&gt; 4: 89a90128a8fffff 89a901285cfffff          44</span></span>
-<span><span class="co">#&gt; 5: 89a90128a8fffff 89a90e934d7ffff          49</span></span>
-<span><span class="co">#&gt; 6: 89a90128a8fffff 89a90129b47ffff          36</span></span></code></pre></div>
+<span><span class="co">#&gt;            from_id           to_id travel_time_p50</span></span>
+<span><span class="co">#&gt; 1: 89a90128a8fffff 89a901291abffff              61</span></span>
+<span><span class="co">#&gt; 2: 89a90128a8fffff 89a9012a3cfffff              84</span></span>
+<span><span class="co">#&gt; 3: 89a90128a8fffff 89a901295b7ffff              63</span></span>
+<span><span class="co">#&gt; 4: 89a90128a8fffff 89a901284a3ffff              66</span></span>
+<span><span class="co">#&gt; 5: 89a90128a8fffff 89a9012809bffff              55</span></span>
+<span><span class="co">#&gt; 6: 89a90128a8fffff 89a901285cfffff              45</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="map-isochrones">4. Map Isochrones<a class="anchor" aria-label="anchor" href="#map-isochrones"></a>
@@ -236,7 +236,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"travel time (minutes)"</span>, color<span class="op">=</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_isochrone.png?raw=true" width="100%"></p>
+<p><img src="calculating_isochrones_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
