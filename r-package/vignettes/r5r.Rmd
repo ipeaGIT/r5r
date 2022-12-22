@@ -85,7 +85,7 @@ library(data.table)
 library(ggplot2)
 ```
 
-The `r5r` package has five fundamental functions:
+The `r5r` package has six **fundamental functions**:
 
 1. `setup_r5()` to initialize an instance of `r5r`, that also builds a routable
 transport network;
@@ -99,9 +99,21 @@ a selected decay function;
 
 5. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
 
+6. `pareto_frontier()` for analyzing the trade-off between the travel time and monetary costs of multiple route alternatives between origin/destination pairs.
+
+
 Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info about
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+
+
+The package also includes a few **support functions**.
+
+1. `street_network_to_sf()` to extract OpenStreetMap network in sf format from a `network.dat` file.
+
+2. `transit_network_to_sf()` to extract transit network in sf format from a `network.dat` file.
+
+3. `find_snap()` to find snapped locations of input points on street network.
 
 
 ## 3.1 Data requirements:
@@ -146,21 +158,21 @@ To illustrate the functionalities of `r5r`, the package includes a small sample 
 * A `fares_poa.zip` file with the fare rules of the city's public transport system.
 
 
-```{r}
+```{r, eval = TRUE}
 data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)
 ```
 
 The points of interest data can be seen below.  In this example, we will be looking at transport alternatives between some of those places.
 
-```{r}
+```{r, eval = TRUE}
 poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 head(poi)
 ```
 
 The data with origin destination pairs is shown below. In this example, we will be using  200 points randomly selected from this data set.
 
-```{r}
+```{r, eval = TRUE}
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
 # sample points
@@ -319,7 +331,7 @@ The output is a `data.frame sf` object, so we can easily visualize the results.
 **Static visualization** with `ggplot2` package: To provide a geographic context 
 for the visualization of the results in `ggplot2`, you can also use the `street_network_to_sf()` function to  extract the OSM street network used in the routing.
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 # extract OSM network
 street_net <- street_network_to_sf(r5r_core)
 

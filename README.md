@@ -86,8 +86,8 @@ The package has six **fundamental functions**:
    each trip segment.
 
 6. `pareto_frontier()`
-   * Returns a `data.table` with the travel time and monetary cost for multiple 
-   route alternatives for the  specified origin-destination pairs.
+   * Returns a `data.table` with the travel time and monetary cost of multiple
+   route alternatives for specified origin-destination pairs.
 
    
 obs. Most of these functions also allow users to account for monetary travel costs 
