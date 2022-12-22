@@ -118,7 +118,7 @@ head(access)
 The final step is mapping the accessibility results calculated earlier. The code
 below demonstrates how to do that, with some extra steps to produce a prettier map by doing a spatial interpolation of accessibility estimates.
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE, out.width='100%', eval = TRUE}
 # interpolate estimates to get spatially smooth result
 access_schools <- access %>% 
   filter(opportunity == "schools") %>%
@@ -149,8 +149,8 @@ street_net <- street_network_to_sf(r5r_core)
 
 # plot
 ggplot(na.omit(access.interp)) +
-  geom_sf(data = street_net$edges, color = "gray55", size=0.01, alpha = 0.9) +
-  geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.8) +
+  geom_sf(data = street_net$edges, color = "gray55", size=0.01, alpha = 0.7) +
+  geom_contour_filled(aes(x=x, y=y, z=acc), alpha=.7) +
   scale_fill_viridis_d(direction = -1, option = 'B') +
   scale_x_continuous(expand=c(0,0)) +
   scale_y_continuous(expand=c(0,0)) +
@@ -159,10 +159,6 @@ ggplot(na.omit(access.interp)) +
   theme_minimal() +
   theme(axis.title = element_blank()) +
   facet_wrap(~opportunity)
-```
-
-```{r detailed head, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_accessibility.gif?raw=true")
 ```
 
 

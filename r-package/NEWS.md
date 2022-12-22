@@ -20,6 +20,7 @@
 
 **Major changes**
 
+- Now using R5 latest version `6.7`.
 - New parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
 - New parameter `output_dir` to all routing functions, which can be used to specify a directory in which the results should be saved as `.csv` files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents `R5` from storing them in memory.
 - The accessibility estimates from `accessibility()` are now of returned as doubles / class `numeric`, except when using a `step` decay function. Closes [#235](https://github.com/ipeaGIT/r5r/issues/235).
