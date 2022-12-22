@@ -2,7 +2,7 @@
 % Please edit documentation in R/r5r_sitrep.R
 \name{r5r_sitrep}
 \alias{r5r_sitrep}
-\title{Generate an r5r situation report}
+\title{Generate an r5r situation report to help debug errors}
 \usage{
 r5r_sitrep()
 }

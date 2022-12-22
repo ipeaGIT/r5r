@@ -15,8 +15,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   eval = identical(tolower(Sys.getenv("NOT_CRAN")), "true"),
-  out.width = "100%",
-  dev = "ragg_png"
+  out.width = "100%"
 )
 ```
 
@@ -121,8 +120,8 @@ bb_y <- c(min(travel_times.interp$y), max(travel_times.interp$y))
 
 # plot
 ggplot(travel_times.interp) +
-  geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.8) +
   geom_sf(data = street_net$edges, color = "gray55", size=0.01, alpha = 0.7) +
+  geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.8) +
   geom_point(aes(x=lon, y=lat, color='Central bus\nstation'),
              data=central_bus_stn) +
   scale_fill_viridis_d(direction = -1, option = 'B') +

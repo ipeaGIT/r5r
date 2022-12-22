@@ -283,7 +283,7 @@ test_that("draws_per_minute arg works in pareto_frontier() - poa", {
   expect_false(identical(small_draws, big_draws))
 })
 
-# this test is currently failing
+# # this test is currently failing
 # test_that("draws_per_minute arg works in pareto_frontier() - spo", {
 #   basic_expr <- call(
 #     "pareto_frontier",
