@@ -38,7 +38,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // index for route info route_id
         Map<String, FarePerRoute> indexRouteInfo = new HashMap<>();
         for (FarePerRoute route : fareStructure.getFaresPerRoute()) {
-            indexRouteInfo.put(route.getRouteId(), route);
+            indexRouteInfo.put(route.getUniqueId(), route);
         }
         // index for transport types
         Map<String, Integer> indexTransportType = new HashMap<>();
@@ -51,7 +51,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         for (int i = 0; i < transitLayer.tripPatterns.size(); i++) {
             RouteInfo ri = transitLayer.routes.get(transitLayer.tripPatterns.get(i).routeIndex);
 
-            this.faresPerRoute[i] = indexRouteInfo.get(ri.route_id);
+            this.faresPerRoute[i] = indexRouteInfo.get(FarePerRoute.getUniqueId(ri));
             int typeIndex = indexTransportType.get(faresPerRoute[i].getFareType());
             faresPerRoute[i].setTypeIndex(typeIndex);
 

@@ -1,5 +1,6 @@
 package org.ipea.r5r.Fares;
 
+import com.conveyal.r5.transit.RouteInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FarePerRoute {
@@ -53,6 +54,16 @@ public class FarePerRoute {
 
     public String getRouteId() {
         return routeId;
+    }
+
+    @JsonIgnore
+    public String getUniqueId() {
+        return agencyId + ":" + routeId;
+    }
+
+    @JsonIgnore
+    public static String getUniqueId(RouteInfo ri) {
+        return ri.agency_id + ":" + ri.route_id;
     }
 
     public void setRouteId(String routeId) {

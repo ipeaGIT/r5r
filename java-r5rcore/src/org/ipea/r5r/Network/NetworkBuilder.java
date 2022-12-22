@@ -111,6 +111,7 @@ public class NetworkBuilder {
         network.scenarioId = "r5r";
         network.streetLayer = new StreetLayer();
         network.streetLayer.loadFromOsm(osmFile);
+        osmFile.close();
 
         network.streetLayer.parentNetwork = network;
         network.streetLayer.indexStreets();
