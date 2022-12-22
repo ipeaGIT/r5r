@@ -47,7 +47,7 @@ You can install `r5r` from CRAN, or the development version from github.
 # CRAN
 install.packages('r5r')
 
-# github
+# dev version on github
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
