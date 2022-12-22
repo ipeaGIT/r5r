@@ -262,12 +262,12 @@
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a901280a3ffff -51.20457 -30.07070        759       0  167          0</span></span>
-<span><span class="co">#&gt; 2: 89a90128e03ffff -51.21546 -30.03926        150       0  179          0</span></span>
-<span><span class="co">#&gt; 3: 89a90128e43ffff -51.20631 -30.03865        736       1   83          1</span></span>
-<span><span class="co">#&gt; 4: 89a9012834fffff -51.18537 -30.04738       1662       0  128          0</span></span>
-<span><span class="co">#&gt; 5: 89a90128563ffff -51.21372 -30.07131        986       0    4          0</span></span>
-<span><span class="co">#&gt; 6: 89a9012b2afffff -51.14195 -30.10237        389       0  107          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128a17ffff -51.21777 -30.02103          0       0    0          0</span></span>
+<span><span class="co">#&gt; 2: 89a9012ae37ffff -51.24757 -30.08089        101       0   60          0</span></span>
+<span><span class="co">#&gt; 3: 89a9012830bffff -51.19155 -30.04962       1268       0  105          0</span></span>
+<span><span class="co">#&gt; 4: 89a90129c13ffff -51.17313 -30.04564        319       0   10          0</span></span>
+<span><span class="co">#&gt; 5: 89a90e93487ffff -51.15612 -30.00129        541       0    6          0</span></span>
+<span><span class="co">#&gt; 6: 89a9012a1a3ffff -51.24858 -30.10575       1407       0  129          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -298,12 +298,12 @@
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a901280a3ffff     schools         50     60            30</span></span>
-<span><span class="co">#&gt; 2: 89a901280a3ffff  healthcare         50     60            20</span></span>
-<span><span class="co">#&gt; 3: 89a90128e03ffff     schools         50     60            30</span></span>
-<span><span class="co">#&gt; 4: 89a90128e03ffff  healthcare         50     60            20</span></span>
-<span><span class="co">#&gt; 5: 89a90128e43ffff     schools         50     60            30</span></span>
-<span><span class="co">#&gt; 6: 89a90128e43ffff  healthcare         50     60            20</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128a17ffff     schools         50     60            19</span></span>
+<span><span class="co">#&gt; 2: 89a90128a17ffff  healthcare         50     60            20</span></span>
+<span><span class="co">#&gt; 3: 89a9012ae37ffff     schools         50     60            12</span></span>
+<span><span class="co">#&gt; 4: 89a9012ae37ffff  healthcare         50     60            12</span></span>
+<span><span class="co">#&gt; 5: 89a9012830bffff     schools         50     60            22</span></span>
+<span><span class="co">#&gt; 6: 89a9012830bffff  healthcare         50     60            25</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
