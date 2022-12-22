@@ -54,12 +54,12 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 ## Usage
 
-The package has five fundamental functions.
+The package has six **fundamental functions**:
 
 1. `setup_r5()`
-   * Downloads and stores locally an R5 Jar file (Jar file is downloaded only 
+   * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
    once per installation)
-   * Builds a multimodal transport network given (1) a street network in `.pbf`
+   * Builds a multimodal transport network given (1) a OpenStreetMap street network in `.pbf`
    format (*mandatory*), (2) one or more public transport networks in `GTFS.zip`
    format  (optional), and (3) elevation data in `raster.tif` (optional).
 
@@ -77,17 +77,35 @@ The package has five fundamental functions.
 4. `expanded_travel_time_matrix()`
    * Calculates travel time matrices between origin destination pairs with 
    additional information such routes used and total time disaggregated by access, 
-   waiting, in-vehicle and transfer times
+   waiting, in-vehicle and transfer times.
 
 5. `detailed_itineraries()`
    * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
    between one or multiple origin destination pairs. The data output brings 
    detailed information on transport mode, travel time, walk distance etc for 
-   each trip section
+   each trip segment.
 
+6. `pareto_frontier()`
+   * Returns a `data.table` with the travel time and monetary cost for multiple 
+   route alternatives for the  specified origin-destination pairs.
+
+   
 obs. Most of these functions also allow users to account for monetary travel costs 
-when generating travel time matrices and accessibility estimates. More info about
+when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+
+
+The package also includes a few **support functions**.
+
+1. `street_network_to_sf()`
+   * Extract OpenStreetMap network in sf format from a `network.dat` file.
+
+2. `transit_network_to_sf()`
+   * Extract transit network in sf format from a `network.dat` file.
+
+3. `find_snap()`
+   * Find snapped locations of input points on street network.
+
 
 ### Data requirements:
 
@@ -169,7 +187,7 @@ access <- accessibility(r5r_core = r5r_core,
                         verbose = FALSE)
 ```
 
-#### **Related R packages**
+#### **Related packages**
 
 There is a growing number of `R` packages with functionalities for transport
 routing, analysis and planning more broadly. Here are few of theses packages.
@@ -184,6 +202,8 @@ The **r5r** package is particularly focused on fast multimodal transport routing
 and accessibility. A key advantage of `r5r` is that is provides a simple and 
 friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing
 engines available.
+
+For ***Python*** users, you might want to check our sister package: [**r5py**](https://r5py.readthedocs.io/en/stable/)!
 
 -----
 
