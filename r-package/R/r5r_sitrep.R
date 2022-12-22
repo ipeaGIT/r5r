@@ -1,4 +1,4 @@
-#' Generate an r5r situation report
+#' Generate an r5r situation report to help debug errors
 #'
 #' @description
 #' The function reports a list with the following information:

@@ -115,6 +115,7 @@ The package also includes a few **support functions**.
 
 3. `find_snap()` to find snapped locations of input points on street network.
 
+4. `r5r_sitrep()` to generate a situation report to help debug eventual errors.
 
 ## 3.1 Data requirements:
 

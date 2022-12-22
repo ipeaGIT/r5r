@@ -8,10 +8,18 @@
 - Parameters `breakdown` and `breakdown_stat` in `travel_time_matrix()` were removed. New function `expanded_travel_time_matrix()` should be used to retrieve detailed information of travel time matrices.
 - Function `setup_r5()` no longer has a `version` parameter.
 
+**New functions**
+
+- New function `expanded_travel_time_matrix()` to calculate minute-by-minute travel times between origin destination pairs and get additional information on public transport routes, number of transfers, and total access, waiting, in-vehicle and transfer times.
+- New function `pareto_frontier()` to compute of travel time and monetary cost Pareto frontier.
+- New function `r5r_sitrep()` to generate an `r5r` situation report to help debug code errors
+- New functions to account for monetary costs:
+  - `setup_fare_structure()` to setup a fare structure to calculate the monetary costs of trips
+  - `read_fare_structure()` to read a fare structure object from a file
+  - `write_fare_structure()` to write a fare structure object to disk
+
 **Major changes**
 
-- New function `expanded_travel_time_matrix()`.
-- New function `pareto_frontier()`.
 - New parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
 - New parameter `output_dir` to all routing functions, which can be used to specify a directory in which the results should be saved as `.csv` files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents `R5` from storing them in memory.
 - The accessibility estimates from `accessibility()` are now of returned as doubles / class `numeric`, except when using a `step` decay function. Closes [#235](https://github.com/ipeaGIT/r5r/issues/235).
