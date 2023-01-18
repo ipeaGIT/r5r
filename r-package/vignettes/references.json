@@ -487,7 +487,7 @@
     "URL": "http://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
     "volume": "62"
   },
-  
+
   {
 		"id": "pereiramtup2019",
 		"type": "article-journal",
@@ -526,6 +526,50 @@
 				]
 			]
 		}
+	},
+	{
+		"id": "stewart2022half",
+		"type": "article-journal",
+		"abstract": "Various methods have been developed to account for travel time variability and uncertainty when analyzing public transport networks and computing related accessibility indicators. In this paper, we establish some convergence characteristics of one such method, implemented in the R5 routing engine, yielding guidelines for the minimum number of randomized schedules. This parameter has implications for result stability, analysis turnaround time, and computation costs. We also confirm that for travel time and accessibility results, there are spatially varying differences between our method and the conventional method relying on the assumption of half-headway waiting times. The conventional method appears to understate the benefits of transit in certain locations, particularly those served by multiple lines. Researchers and planning practitioners may find the R5 method preferable when analyzing complex networks or comparing transit scenarios where routes are specified in terms of headways or frequencies, rather than complete schedules with exact departure times for each trip.",
+		"container-title": "Environment and Planning B: Urban Analytics and City Science",
+		"DOI": "10.1177/23998083221137077",
+		"ISSN": "2399-8083",
+		"language": "en",
+		"note": "publisher: SAGE Publications Ltd STM",
+		"page": "23998083221137077",
+		"source": "SAGE Journals",
+		"title": "Half-(head)way there: Comparing two methods to account for public transport waiting time in accessibility indicators",
+		"title-short": "Half-(head)way there",
+		"URL": "https://doi.org/10.1177/23998083221137077",
+		"author": [
+			{
+				"family": "Stewart",
+				"given": "Anson F"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew M"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2023",
+					1,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2022",
+					11,
+					30
+				]
+			]
+		}
 	}
+
 
 ]

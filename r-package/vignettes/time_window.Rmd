@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 ### The problem
 To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day [@stepniak2019impact]. Even a small difference, say leaving at `10:00am` or `10:04am` might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) [@pereiramtup2019; @levinson2020manual].
 
-This problem gets even more complicated when public transport GTFS feeds have a `frequencies.txt` table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates [@conway2018accounting].
+This problem gets even more complicated when public transport GTFS feeds have a `frequencies.txt` table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates [@conway2018accounting; @stewart2022half].
 
 
 ### The solution
@@ -40,7 +40,7 @@ This vignette shows a reproducible example to explain how one can use the `time_
 
 ## 2. How the `time_window` works and how to interpret the results.
 
-As mentioned above, when `time_window` is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified `departure_datetime` and within the `time_window` selected by the user.  By default, `r5r` will generate one estimate per minute. Nonetheless, users can set a number to the `draws_per_minute` parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of `draws_per_minute` is 5, which mean 300 draws in a 60 minutes time window, for example.
+As mentioned above, when `time_window` is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified `departure_datetime` and within the `time_window` selected by the user.  By default, `r5r` will generate one estimate per minute. Nonetheless, users can set a number to the `draws_per_minute` parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of `draws_per_minute` is 5, which mean 300 draws in a 60 minutes time window, for example. For a detailed discussion on the effect of number of draws on result stability, see Stewart et al [-@stewart2022half].
 
 In this case, there isn't a single estimate of travel time / accessibility, but a distribution of several estimates that reflect the travel time / accessibility uncertainties in the specified time window. To get our heads around so many estimates, we can use the `percentiles` parameter to specify the percentiles of the distribution we are interested in. For example, if we select the 25th travel time percentile and the results show that the travel time estimate between A and B is 15 minutes, this means that 25% of all trips taken between these points within the specified time window are shorter than 15 minutes.
 

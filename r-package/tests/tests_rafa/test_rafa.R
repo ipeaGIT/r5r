@@ -455,6 +455,7 @@ writeLines(a,con  = 'build-config3.json')
 ##### downloads ------------------------
 library(ggplot2)
 library(dlstats)
+library(data.table)
 
 x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter', 'flightsbr'))
 x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
@@ -465,7 +466,6 @@ x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
                  geom_line() + geom_point(aes(shape=package))
  }
 
-library(data.table)
 setDT(x)
 
 x[, .(total = sum(downloads)) , by=package][order(total)]
@@ -473,6 +473,11 @@ x[, .(total = sum(downloads)) , by=package][order(total)]
 x[ start > as.Date('2022-01-01'), .(total = sum(downloads)) , by=package][order(total)]
 
 x[package=='flightsbr',]
+
+ggplot() +
+  geom_line(data=x, aes(x=end, y=downloads, color=package))
+
+
 
 ##### HEX sticker ------------------------
 
