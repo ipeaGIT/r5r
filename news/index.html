@@ -98,7 +98,7 @@
 <code><a href="../reference/write_fare_structure.html">write_fare_structure()</a></code> to write a fare structure object to disk</li>
 </ul></li>
 </ul><p><strong>Major changes</strong></p>
-<ul><li>Now using R5 latest version <code>6.7</code>.</li>
+<ul><li>Now using R5 latest version <code>6.8</code>.</li>
 <li>New parameter <code>draws_per_minute</code> to <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/r5r/issues/230" class="external-link">#230</a>.</li>
 <li>New parameter <code>output_dir</code> to all routing functions, which can be used to specify a directory in which the results should be saved as <code>.csv</code> files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents <code>R5</code> from storing them in memory.</li>
 <li>The accessibility estimates from <code><a href="../reference/accessibility.html">accessibility()</a></code> are now of returned as doubles / class <code>numeric</code>, except when using a <code>step</code> decay function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/235" class="external-link">#235</a>.</li>

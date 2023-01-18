@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2023-01-10</h4>
+            <h4 data-toc-skip class="date">2023-01-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -128,7 +128,7 @@
 <h3 id="the-problem">The problem<a class="anchor" aria-label="anchor" href="#the-problem"></a>
 </h3>
 <p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stępniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019; Levinson and et al. 2020)</span>.</p>
-<p>This problem gets even more complicated when public transport GTFS feeds have a <code>frequencies.txt</code> table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018)</span>.</p>
+<p>This problem gets even more complicated when public transport GTFS feeds have a <code>frequencies.txt</code> table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018; Stewart and Byrd 2022)</span>.</p>
 </div>
 <div class="section level3">
 <h3 id="the-solution">The solution<a class="anchor" aria-label="anchor" href="#the-solution"></a>
@@ -141,7 +141,7 @@
 <div class="section level2">
 <h2 id="how-the-time_window-works-and-how-to-interpret-the-results-">2. How the <code>time_window</code> works and how to interpret the results.<a class="anchor" aria-label="anchor" href="#how-the-time_window-works-and-how-to-interpret-the-results-"></a>
 </h2>
-<p>As mentioned above, when <code>time_window</code> is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified <code>departure_datetime</code> and within the <code>time_window</code> selected by the user. By default, <code>r5r</code> will generate one estimate per minute. Nonetheless, users can set a number to the <code>draws_per_minute</code> parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of <code>draws_per_minute</code> is 5, which mean 300 draws in a 60 minutes time window, for example.</p>
+<p>As mentioned above, when <code>time_window</code> is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified <code>departure_datetime</code> and within the <code>time_window</code> selected by the user. By default, <code>r5r</code> will generate one estimate per minute. Nonetheless, users can set a number to the <code>draws_per_minute</code> parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of <code>draws_per_minute</code> is 5, which mean 300 draws in a 60 minutes time window, for example. For a detailed discussion on the effect of number of draws on result stability, see Stewart et al <span class="citation">(2022)</span>.</p>
 <p>In this case, there isn’t a single estimate of travel time / accessibility, but a distribution of several estimates that reflect the travel time / accessibility uncertainties in the specified time window. To get our heads around so many estimates, we can use the <code>percentiles</code> parameter to specify the percentiles of the distribution we are interested in. For example, if we select the 25th travel time percentile and the results show that the travel time estimate between A and B is 15 minutes, this means that 25% of all trips taken between these points within the specified time window are shorter than 15 minutes.</p>
 <p>Let’s see a couple concrete examples now.</p>
 </div>
@@ -307,16 +307,16 @@
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       47.3</span></span>
-<span><span class="co">#&gt;  2:       47.2</span></span>
-<span><span class="co">#&gt;  3:       50.1</span></span>
-<span><span class="co">#&gt;  4:       40.3</span></span>
-<span><span class="co">#&gt;  5:       46.4</span></span>
-<span><span class="co">#&gt;  6:       48.7</span></span>
-<span><span class="co">#&gt;  7:       43.8</span></span>
-<span><span class="co">#&gt;  8:       42.7</span></span>
-<span><span class="co">#&gt;  9:       43.7</span></span>
-<span><span class="co">#&gt; 10:       46.5</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       51.8</span></span>
+<span><span class="co">#&gt;  2:       51.8</span></span>
+<span><span class="co">#&gt;  3:       49.4</span></span>
+<span><span class="co">#&gt;  4:       46.3</span></span>
+<span><span class="co">#&gt;  5:       42.2</span></span>
+<span><span class="co">#&gt;  6:       34.5</span></span>
+<span><span class="co">#&gt;  7:       45.5</span></span>
+<span><span class="co">#&gt;  8:       41.3</span></span>
+<span><span class="co">#&gt;  9:       42.3</span></span>
+<span><span class="co">#&gt; 10:       39.5</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
@@ -340,6 +340,9 @@
 </div>
 <div id="ref-pereiramtup2019">
 <p>Pereira, Rafael H. M. 2019. “Future Accessibility Impacts of Transport Policy Scenarios: Equity and Sensitivity to Travel Time Thresholds for Bus Rapid Transit Expansion in Rio de Janeiro.” <em>Journal of Transport Geography</em> 74 (January): 321–32. <a href="https://doi.org/10.1016/j.jtrangeo.2018.12.005" class="external-link">https://doi.org/10.1016/j.jtrangeo.2018.12.005</a>.</p>
+</div>
+<div id="ref-stewart2022half">
+<p>Stewart, Anson F, and Andrew M Byrd. 2022. “Half-(Head)way There: Comparing Two Methods to Account for Public Transport Waiting Time in Accessibility Indicators.” <em>Environment and Planning B: Urban Analytics and City Science</em>, November, 23998083221137077. <a href="https://doi.org/10.1177/23998083221137077" class="external-link">https://doi.org/10.1177/23998083221137077</a>.</p>
 </div>
 <div id="ref-stepniak2019impact">
 <p>Stępniak, Marcin, John P. Pritchard, Karst T. Geurs, and Sławomir Goliszek. 2019. “The Impact of Temporal Resolution on Public Transport Accessibility Measurement: Review and Case Study in Poland.” <em>Journal of Transport Geography</em> 75 (February): 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.</p>
