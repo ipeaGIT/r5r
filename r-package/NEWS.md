@@ -21,7 +21,13 @@
 **Major changes**
 
 - Now using R5 latest version `6.8`.
-- New parameter `draws_per_minute` to `travel_time_matrix()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
+
+- The `detailed_itineraries()` has been substantially improved. The new vesion is faster than  previous ones. It also includes new parameters listed below. Closes [#265](https://github.com/ipeaGIT/r5r/issues/265).
+  - New `time_window` parameter
+  - New `suboptimal_minutes` parameter, which extends the search space and returns a larger number of trips beyond the fastest ones;
+  - Support for fare calculator and new `max_fare` parameter;
+  - Routing in frequencies GFTS, including support for Monte Carlo draws
+- New parameter `draws_per_minute` to `travel_time_matrix()`, `accessibility()` and `pareto_frontier()` functions. Closes [#230](https://github.com/ipeaGIT/r5r/issues/230).
 - New parameter `output_dir` to all routing functions, which can be used to specify a directory in which the results should be saved as `.csv` files (one file for each origin). This parameter is particularly useful when running estimates on memory-constrained settings, because writing the results to disk prevents `R5` from storing them in memory.
 - The accessibility estimates from `accessibility()` are now of returned as doubles / class `numeric`, except when using a `step` decay function. Closes [#235](https://github.com/ipeaGIT/r5r/issues/235).
 - The `detailed_itineraries()` function has a new parameter `all_to_all`, which allows users to set whether they want to query routes between all origins to all destinations (`all_to_all = TRUE`) or to query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on (`all_to_all = FALSE`, the default). Closes [#224](https://github.com/ipeaGIT/r5r/issues/224).
