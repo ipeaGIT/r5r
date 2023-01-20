@@ -435,11 +435,14 @@ ignoring the timezone attribute.</p>
     
 
 
-<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code> and <code>accessibility()</code> functions use an
-<code>R5</code>-specific extension to the RAPTOR routing algorithm (see Conway et al.,
-2017). This RAPTOR extension uses a systematic sample of one departure per
-minute over the time window set by the user in the 'time_window' parameter.
-A detailed description of base RAPTOR can be found in Delling et al (2015).</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
+<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and
+<code>accessibility()</code> functions use an <code>R5</code>-specific extension to the RAPTOR
+routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
+systematic sample of one departure per minute over the time window set by the
+user in the 'time_window' parameter. A detailed description of base RAPTOR
+can be found in Delling et al (2015). However, whenever the user includes
+transit fares inputs to these functions, they automatically switch to use an
+<code>R5</code>-specific extension to the McRAPTOR routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
 on combined schedule and headway-based networks. Transportation Research
 Record, 2653(1), 45-53. <a href="https://doi.org/10.3141/2653-06" class="external-link">doi:10.3141/2653-06</a></p></li>
