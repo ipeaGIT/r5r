@@ -11,6 +11,8 @@ When opening an issue, please mind the 3 steps below:
 3) Run the `r5r::r5r_sitrep()` function to generate a situation report, and paste the output along with your issue. This will help us find eventual bugs.
 
 ### Brief description of the problem:
+...
+
 
 ### Reproducible example here
 ```r
@@ -25,7 +27,7 @@ r5r_core <- setup_r5(data_path = data_path, temp_dir = TRUE)
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
-...
+
 
 ```
 
@@ -37,11 +39,8 @@ points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 
 ### Situation report here
 ```r
-# insert reproducible example here
-
 r5r::r5r_sitrep()
 
-...
 
 ```
 

@@ -223,11 +223,14 @@ ignoring the timezone attribute.
 \section{Routing algorithm}{
 
 
-The \code{\link[=travel_time_matrix]{travel_time_matrix()}} and \code{\link[=accessibility]{accessibility()}} functions use an
-\code{R5}-specific extension to the RAPTOR routing algorithm (see Conway et al.,
-2017). This RAPTOR extension uses a systematic sample of one departure per
-minute over the time window set by the user in the 'time_window' parameter.
-A detailed description of base RAPTOR can be found in Delling et al (2015).
+The \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}} and
+\code{\link[=accessibility]{accessibility()}} functions use an \code{R5}-specific extension to the RAPTOR
+routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
+systematic sample of one departure per minute over the time window set by the
+user in the 'time_window' parameter. A detailed description of base RAPTOR
+can be found in Delling et al (2015). However, whenever the user includes
+transit fares inputs to these functions, they automatically switch to use an
+\code{R5}-specific extension to the McRAPTOR routing algorithm.
 \itemize{
 \item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
