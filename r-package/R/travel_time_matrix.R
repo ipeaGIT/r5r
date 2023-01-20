@@ -6,6 +6,7 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
+#' @template draws_per_minute
 #' @template fare_structure
 #' @template max_fare
 #' @template verbose
