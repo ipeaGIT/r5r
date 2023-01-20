@@ -104,7 +104,6 @@ pareto_frontier <- function(r5r_core,
                             bike_speed = 12,
                             max_rides = 3,
                             max_lts = 2,
-                            draws_per_minute = 5L,
                             n_threads = Inf,
                             verbose = FALSE,
                             progress = FALSE,
@@ -153,7 +152,7 @@ pareto_frontier <- function(r5r_core,
 
   set_time_window(r5r_core, time_window)
   set_percentiles(r5r_core, percentiles)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+  set_monte_carlo_draws(r5r_core, 1, time_window)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
   set_max_rides(r5r_core, max_rides)
@@ -164,6 +163,15 @@ pareto_frontier <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_output_dir(r5r_core, output_dir)
   set_fare_cutoffs(r5r_core, fare_cutoffs)
+
+  # pareto frontiers cannot be computed on frequencies-based GTFS, because it uses McRaptor
+  if (!is.null(fare_structure) & r5r_core$hasFrequencies()) {
+    stop(
+      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
+      "the transit network can contain a 'frequencies' table. Try using ",
+      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
+    )
+  }
 
   # call r5r_core method and process result -------------------------------
 

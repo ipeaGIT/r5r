@@ -217,6 +217,16 @@ accessibility <- function(r5r_core,
   set_output_dir(r5r_core, output_dir)
   set_cutoffs(r5r_core, cutoffs, decay_function)
 
+  # accessibility cannot be computed on frequencies-based GTFS when a
+  # Fare Structure is set, because it uses McRaptor
+  if (!is.null(fare_structure) & r5r_core$hasFrequencies()) {
+    stop(
+      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
+      "the transit network can contain a 'frequencies' table. Try using ",
+      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
+    )
+  }
+
   # call r5r_core method and process results ------------------------------
 
   # wrap r5r_core inputs in arrays (this helps to simplify the Java code)
