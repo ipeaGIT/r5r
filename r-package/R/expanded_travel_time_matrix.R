@@ -9,6 +9,7 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
+#' @template draws_per_minute
 #' @template verbose
 #' @param breakdown A logical. Whether to include detailed information about
 #'   each trip in the output. If `FALSE` (the default), the output lists the

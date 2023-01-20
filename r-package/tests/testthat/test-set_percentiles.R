@@ -115,7 +115,6 @@ test_that("set_percentiles argument works in pareto_frontier()", {
     departure_datetime = departure_datetime,
     fare_structure = fare_structure,
     fare_cutoffs = c(0, 5, 10),
-    draws_per_minute = 1,
     time_window = 30,
     max_trip_duration = 60
   )

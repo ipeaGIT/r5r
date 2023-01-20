@@ -259,7 +259,7 @@ test_that("works in accessibility() - spo", {
   expect_false(identical(big_draws, big_draws2))
 })
 
-test_that("draws_per_minute arg works in pareto_frontier() - poa", {
+test_that("poa draws_per_minute should fail in pareto_frontier() issue #281", {
   basic_expr <- call(
     "pareto_frontier",
     r5r_core = r5r_core,
@@ -278,32 +278,30 @@ test_that("draws_per_minute arg works in pareto_frontier() - poa", {
   small_draws_expr$draws_per_minute <- 1
   big_draws_expr$draws_per_minute <- 5
 
-  small_draws <- eval(small_draws_expr)
-  big_draws <- eval(big_draws_expr)
-  expect_false(identical(small_draws, big_draws))
+  expect_error( eval(small_draws_expr) )
+  expect_error( eval(big_draws_expr) )
+
 })
 
-# # this test is currently failing
-# test_that("draws_per_minute arg works in pareto_frontier() - spo", {
-#   basic_expr <- call(
-#     "pareto_frontier",
-#     r5r_core = spo_core,
-#     origins = spo_points[51:80],
-#     destinations = spo_points[51:80],
-#     mode = c("TRANSIT", "WALK"),
-#     departure_datetime = departure_datetime,
-#     max_trip_duration = 60,
-#     time_window = 30,
-#     percentiles = c(1, 50, 99),
-#     fare_structure = spo_fare_struc,
-#     fare_cutoffs = c(0, 5, 10, 15, Inf)
-#   )
-#
-#   small_draws_expr <- big_draws_expr <- basic_expr
-#   small_draws_expr$draws_per_minute <- 1
-#   big_draws_expr$draws_per_minute <- 5
-#
-#   small_draws <- eval(small_draws_expr)
-#   big_draws <- eval(big_draws_expr)
-#   expect_false(identical(small_draws, big_draws))
-# })
+test_that("spo draws_per_minute should fail in pareto_frontier() issue #281", {
+  basic_expr <- call(
+    "pareto_frontier",
+    r5r_core = spo_core,
+    origins = spo_points[51:80],
+    destinations = spo_points[51:80],
+    mode = c("TRANSIT", "WALK"),
+    departure_datetime = departure_datetime,
+    max_trip_duration = 60,
+    time_window = 30,
+    percentiles = c(1, 50, 99),
+    fare_structure = spo_fare_struc,
+    fare_cutoffs = c(0, 5, 10, 15, Inf)
+  )
+
+  small_draws_expr <- big_draws_expr <- basic_expr
+  small_draws_expr$draws_per_minute <- 1
+  big_draws_expr$draws_per_minute <- 5
+
+  expect_error( eval(small_draws_expr) )
+  expect_error( eval(big_draws_expr) )
+})

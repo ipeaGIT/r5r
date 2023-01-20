@@ -145,7 +145,6 @@ test_that("set_time_window argument works in pareto_frontier()", {
     points[1:5],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
-    draws_per_minute = 1,
     percentiles = percentiles,
     fare_structure = fare_structure,
     fare_cutoffs = c(0, 5, 10),

@@ -53,7 +53,7 @@ r5r_sitrep <- function() {
                       # r5r_jar_path,
                       set_memory,
                      # jar_dir_files_full_names,
-                      sessionInfo())
+                      utils::sessionInfo())
 
   names(output_list) <- c('r5r_package_version',
                           'r5_jar_version',
