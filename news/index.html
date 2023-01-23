@@ -85,6 +85,8 @@
 <li>
 <code>r5r</code> now uses <code>R5</code>’s native elevation weighting for walking and cycling impedance functions. As a result <code>r5r</code> does not have raster or rgdal package dependencies anymore. Closes <a href="https://github.com/ipeaGIT/r5r/issues/243" class="external-link">#243</a> and <a href="https://github.com/ipeaGIT/r5r/issues/233" class="external-link">#233</a>.</li>
 <li>Parameters <code>breakdown</code> and <code>breakdown_stat</code> in <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> were removed. New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> should be used to retrieve detailed information of travel time matrices.</li>
+<li>
+<code>r5r</code>now throws an error if users simultaneously pass more than one of the following modes <code>c('WALK','CAR','BICYCLE')</code> to the <code>transport_mode</code> parameter. This is because these modes are understood as mutually exclusive.</li>
 <li>Function <code><a href="../reference/setup_r5.html">setup_r5()</a></code> no longer has a <code>version</code> parameter.</li>
 </ul><p><strong>New functions</strong></p>
 <ul><li>New function <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> to calculate minute-by-minute travel times between origin destination pairs and get additional information on public transport routes, number of transfers, and total access, waiting, in-vehicle and transfer times.</li>
