@@ -18,9 +18,9 @@ to the network. Defaults to \code{WALK}, also allows \code{BICYCLE} and \code{CA
 }
 \value{
 A \code{data.table} with the original points, their respective
-snapped coordinates on the street network and the Euclidean distance between
-the original points and their snapped location. Points that could not
-be snapped show \code{NA} coordinates and \code{found = FALSE}.
+snapped coordinates on the street network and the Euclidean distance ( in
+meters) between the original points and their snapped location. Points that
+could not be snapped show \code{NA} coordinates and \code{found = FALSE}.
 }
 \description{
 Finds the snapped location of points on \code{R5} network. Snapping is a very

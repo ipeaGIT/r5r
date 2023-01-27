@@ -19,9 +19,9 @@
 #' to the network. Defaults to `WALK`, also allows `BICYCLE` and `CAR`.
 #'
 #' @return A `data.table` with the original points, their respective
-#' snapped coordinates on the street network and the Euclidean distance between
-#' the original points and their snapped location. Points that could not
-#' be snapped show `NA` coordinates and `found = FALSE`.
+#' snapped coordinates on the street network and the Euclidean distance ( in
+#' meters) between the original points and their snapped location. Points that
+#' could not be snapped show `NA` coordinates and `found = FALSE`.
 #'
 #' @family network functions
 #'
