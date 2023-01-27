@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.90000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-01-23</h4>
+            <h4 data-toc-skip class="date">2023-01-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -169,7 +169,7 @@
 <li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information on one or multiple alternative routes between origin/destination pairs.</p></li>
 <li><p><code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> for analyzing the trade-off between the travel time and monetary costs of multiple route alternatives between origin/destination pairs.</p></li>
 </ol>
-<p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
+<p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">this vignette</a>.</p>
 <p>The package also includes a few <strong>support functions</strong>.</p>
 <ol style="list-style-type: decimal">
 <li><p><code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> to extract OpenStreetMap network in sf format from a <code>network.dat</code> file.</p></li>
@@ -207,8 +207,7 @@
 <ul>
 <li>
 <a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R package</li>
-<li>
-<a href="https://lpdaac.usgs.gov/products/srtmgl1v003/" class="external-link">Nasa’s SRTMGL1</a> website</li>
+<li>Nasa’s SRTMGL1 website</li>
 </ul>
 </li>
 </ul>
@@ -262,12 +261,12 @@
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90128103ffff -51.21625 -30.05861        823       0  201          0</span></span>
-<span><span class="co">#&gt; 2: 89a90128adbffff -51.20586 -30.02760        407       1 1313          0</span></span>
-<span><span class="co">#&gt; 3: 89a90128173ffff -51.21305 -30.05473        374       0  346          0</span></span>
-<span><span class="co">#&gt; 4: 89a90129ed7ffff -51.14864 -30.04217        142       0  405          0</span></span>
-<span><span class="co">#&gt; 5: 89a90128113ffff -51.21636 -30.06138       1086       0  441          0</span></span>
-<span><span class="co">#&gt; 6: 89a90128467ffff -51.19587 -30.08115        404       0    7          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90129863ffff -51.16892 -30.01686        358       0  266          0</span></span>
+<span><span class="co">#&gt; 2: 89a90129cb7ffff -51.18526 -30.04461        960       0  473          0</span></span>
+<span><span class="co">#&gt; 3: 89a90129db3ffff -51.20311 -30.03477        794       0  454          0</span></span>
+<span><span class="co">#&gt; 4: 89a9012956fffff -51.14954 -30.06429        453       0   96          0</span></span>
+<span><span class="co">#&gt; 5: 89a9012918bffff -51.15240 -30.05989        537       0  218          0</span></span>
+<span><span class="co">#&gt; 6: 89a90129903ffff -51.19306 -30.01203        372       0  513          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -298,12 +297,12 @@
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a90128103ffff     schools         50     60            27</span></span>
-<span><span class="co">#&gt; 2: 89a90128103ffff  healthcare         50     60            22</span></span>
-<span><span class="co">#&gt; 3: 89a90128adbffff     schools         50     60            21</span></span>
-<span><span class="co">#&gt; 4: 89a90128adbffff  healthcare         50     60            14</span></span>
-<span><span class="co">#&gt; 5: 89a90128173ffff     schools         50     60            27</span></span>
-<span><span class="co">#&gt; 6: 89a90128173ffff  healthcare         50     60            22</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90129863ffff     schools         50     60            17</span></span>
+<span><span class="co">#&gt; 2: 89a90129863ffff  healthcare         50     60            13</span></span>
+<span><span class="co">#&gt; 3: 89a90129cb7ffff     schools         50     60            29</span></span>
+<span><span class="co">#&gt; 4: 89a90129cb7ffff  healthcare         50     60            23</span></span>
+<span><span class="co">#&gt; 5: 89a90129db3ffff     schools         50     60            29</span></span>
+<span><span class="co">#&gt; 6: 89a90129db3ffff  healthcare         50     60            25</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>

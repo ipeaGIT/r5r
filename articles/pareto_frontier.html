@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.90000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Analyzing the trade-offs between travel time and monetary cost</h1>
             
-            <h4 data-toc-skip class="date">2023-01-23</h4>
+            <h4 data-toc-skip class="date">2023-01-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -235,15 +235,15 @@
 <span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
 <span><span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></span></code></pre></div>
 <p>For the sake of illustration, let’s check the optimum route alternatives from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without increasing costs, and one cannot make a cheaper trip without increasing travel time.</p>
-<pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk", :</span></span>
-<span><span class="co">#&gt; Invalid .internal.selfref detected and fixed by taking a (shallow) copy of the</span></span>
-<span><span class="co">#&gt; data.table so that := can add this new column by reference. At an earlier point,</span></span>
-<span><span class="co">#&gt; this data.table has been copied by R (or was created manually using structure()</span></span>
-<span><span class="co">#&gt; or similar). Avoid names&lt;- and attr&lt;- which in R currently (and oddly) may copy</span></span>
-<span><span class="co">#&gt; the whole data.table. Use set* syntax instead to avoid copying: ?set, ?setnames</span></span>
-<span><span class="co">#&gt; and ?setattr. If this message doesn't help, please report your use case to</span></span>
-<span><span class="co">#&gt; the data.table issue tracker so the root cause can be fixed or this message</span></span>
-<span><span class="co">#&gt; improved.</span></span>
+<pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk",</span></span>
+<span><span class="co">#&gt; : Invalid .internal.selfref detected and fixed by taking a (shallow) copy of</span></span>
+<span><span class="co">#&gt; the data.table so that := can add this new column by reference. At an earlier</span></span>
+<span><span class="co">#&gt; point, this data.table has been copied by R (or was created manually using</span></span>
+<span><span class="co">#&gt; structure() or similar). Avoid names&lt;- and attr&lt;- which in R currently (and</span></span>
+<span><span class="co">#&gt; oddly) may copy the whole data.table. Use set* syntax instead to avoid copying:</span></span>
+<span><span class="co">#&gt; ?set, ?setnames and ?setattr. If this message doesn't help, please report your</span></span>
+<span><span class="co">#&gt; use case to the data.table issue tracker so the root cause can be fixed or this</span></span>
+<span><span class="co">#&gt; message improved.</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_text()`).</span></span></code></pre>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>

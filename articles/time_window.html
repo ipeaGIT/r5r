@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.90000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2023-01-23</h4>
+            <h4 data-toc-skip class="date">2023-01-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -127,7 +127,7 @@
 <div class="section level3">
 <h3 id="the-problem">The problem<a class="anchor" aria-label="anchor" href="#the-problem"></a>
 </h3>
-<p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stępniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019; Levinson and et al. 2020)</span>.</p>
+<p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stepniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019; Levinson and et al. 2020)</span>.</p>
 <p>This problem gets even more complicated when public transport GTFS feeds have a <code>frequencies.txt</code> table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018; Stewart and Byrd 2022)</span>.</p>
 </div>
 <div class="section level3">
@@ -204,11 +204,11 @@
 <span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
 <span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
 <span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
@@ -307,16 +307,16 @@
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       45.1</span></span>
-<span><span class="co">#&gt;  2:       36.4</span></span>
-<span><span class="co">#&gt;  3:       44.9</span></span>
-<span><span class="co">#&gt;  4:       38.0</span></span>
-<span><span class="co">#&gt;  5:       42.5</span></span>
-<span><span class="co">#&gt;  6:       51.7</span></span>
-<span><span class="co">#&gt;  7:       48.2</span></span>
-<span><span class="co">#&gt;  8:       52.7</span></span>
-<span><span class="co">#&gt;  9:       43.7</span></span>
-<span><span class="co">#&gt; 10:       41.5</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       53.1</span></span>
+<span><span class="co">#&gt;  2:       50.9</span></span>
+<span><span class="co">#&gt;  3:       48.7</span></span>
+<span><span class="co">#&gt;  4:       50.9</span></span>
+<span><span class="co">#&gt;  5:       52.0</span></span>
+<span><span class="co">#&gt;  6:       41.8</span></span>
+<span><span class="co">#&gt;  7:       44.2</span></span>
+<span><span class="co">#&gt;  8:       38.7</span></span>
+<span><span class="co">#&gt;  9:       45.9</span></span>
+<span><span class="co">#&gt; 10:       50.0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
@@ -341,11 +341,11 @@
 <div id="ref-pereiramtup2019">
 <p>Pereira, Rafael H. M. 2019. “Future Accessibility Impacts of Transport Policy Scenarios: Equity and Sensitivity to Travel Time Thresholds for Bus Rapid Transit Expansion in Rio de Janeiro.” <em>Journal of Transport Geography</em> 74 (January): 321–32. <a href="https://doi.org/10.1016/j.jtrangeo.2018.12.005" class="external-link">https://doi.org/10.1016/j.jtrangeo.2018.12.005</a>.</p>
 </div>
+<div id="ref-stepniak2019impact">
+<p>Stepniak, Marcin, John P. Pritchard, Karst T. Geurs, and Slawomir Goliszek. 2019. “The Impact of Temporal Resolution on Public Transport Accessibility Measurement: Review and Case Study in Poland.” <em>Journal of Transport Geography</em> 75 (February): 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.</p>
+</div>
 <div id="ref-stewart2022half">
 <p>Stewart, Anson F, and Andrew M Byrd. 2022. “Half-(Head)way There: Comparing Two Methods to Account for Public Transport Waiting Time in Accessibility Indicators.” <em>Environment and Planning B: Urban Analytics and City Science</em>, November, 23998083221137077. <a href="https://doi.org/10.1177/23998083221137077" class="external-link">https://doi.org/10.1177/23998083221137077</a>.</p>
-</div>
-<div id="ref-stepniak2019impact">
-<p>Stępniak, Marcin, John P. Pritchard, Karst T. Geurs, and Sławomir Goliszek. 2019. “The Impact of Temporal Resolution on Public Transport Accessibility Measurement: Review and Case Study in Poland.” <em>Journal of Transport Geography</em> 75 (February): 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.</p>
 </div>
 </div>
 </div>
