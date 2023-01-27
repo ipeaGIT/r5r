@@ -6,6 +6,7 @@
 - Replaced `max_walk_dist` and `max_bike_dist` parameters with `max_walk_time` and `max_bike_time` to better align with R5 inputs. Closes [#273](https://github.com/ipeaGIT/r5r/issues/273).
 - `r5r` now uses `R5`'s native elevation weighting for walking and cycling impedance functions. As a result `r5r` does not have raster or rgdal package dependencies anymore. Closes [#243](https://github.com/ipeaGIT/r5r/issues/243) and [#233](https://github.com/ipeaGIT/r5r/issues/233).
 - Parameters `breakdown` and `breakdown_stat` in `travel_time_matrix()` were removed. New function `expanded_travel_time_matrix()` should be used to retrieve detailed information of travel time matrices.
+- `r5r`now throws an error if users simultaneously pass more than one of the following modes `c('WALK','CAR','BICYCLE')` to the `transport_mode` parameter. This is because these modes are understood as mutually exclusive.
 - Function `setup_r5()` no longer has a `version` parameter.
 
 **New functions**
