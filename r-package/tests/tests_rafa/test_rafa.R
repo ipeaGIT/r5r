@@ -709,6 +709,7 @@ usethis::use_cran_comments('teste 2222, , asdadsad')
 urlchecker::url_check()
 devtools::check(remote = TRUE, manual = TRUE)
 devtools::check_win_release()
+devtools::check_mac_release()
 rhub::check_for_cran(show_status = FALSE)
 
 
