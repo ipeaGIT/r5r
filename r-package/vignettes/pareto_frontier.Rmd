@@ -53,7 +53,7 @@ other words, it shows the most optimal set of route alternatives between A and B
 There are certainly other route options, but there is no other option that is both 
 faster and cheaper at the same time.
 
-```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
+```{r, echo = FALSE, fig.width=7, fig.height=4}
 library(ggplot2)
 
 # data.frame
@@ -95,7 +95,7 @@ First, let's build the network and create the routing inputs. In this example
 we'll be using the a sample data set for the city of Porto Alegre (Brazil) 
 included in `r5r`.
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -132,7 +132,7 @@ In the case of Porto Alegre, the fare rules are as follows:
 We can create `list` object with these fare rules with the support of the `setup_fare_structure()` function as shown in the code below. A detailed explanation of how to use the fare structure of `5r5` can be found in [(this other vignette)](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 
-```{r, eval = TRUE}
+```{r}
 # create basic fare structure
 fare_structure <- setup_fare_structure(r5r_core, 
                                        base_fare = 4.8,
@@ -158,7 +158,7 @@ For convenience, we can save these fare rules as a `zip` file and load again for
 a future application.
 
 
-```{r, eval = TRUE}
+```{r}
 # save fare rules to temp file
 temp_fares <- tempfile(pattern = "fares_poa", fileext = ".zip")
 r5r::write_fare_structure(fare_structure, file_path = temp_fares)
@@ -178,7 +178,7 @@ destinations considering multiple cutoffs of monetary costs:
 - $7.20, which would allow for bus + bus
 - $8.37, which would allow for walking walking + bus + rail
 
-```{r, eval = TRUE}
+```{r}
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -202,7 +202,7 @@ Moinhos hospital. An optimum route alternative means that one cannot make a fast
 increasing costs, and one cannot make a cheaper trip without increasing travel time.
 
 
-```{r, eval = TRUE, echo = FALSE, fig.width=7, fig.height=4}
+```{r, echo = FALSE, fig.width=7, fig.height=4}
 # select origin and destinations
 pf2 <- dplyr::filter(prtf, to_id == 'farrapos_station'  &
                        from_id %in% c('moinhos_de_vento_hospital', 
@@ -233,7 +233,7 @@ ggplot(data=pf2, aes(x=monetary_cost, y=travel_time, color=from_id, label = mode
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```

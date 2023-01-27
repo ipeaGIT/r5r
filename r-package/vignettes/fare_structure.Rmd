@@ -91,7 +91,7 @@ GTFS feeds with full fare information.
 In this vignette, we will be using the sample data set for the city of Porto 
 Alegre (Brazil) included in `r5r`.  Before we start, we need to increase the memory available to Java and load the packages used in this vignette
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -105,7 +105,7 @@ library(h3jsr)
 
 Porto Alegre has a relatively straightforward public transport system, where the vast majority of the population that rely on transit ride buses. The city also has a metropolitan rail service that connects the city center to the neighboring northbound municipalities. That system can be seen in the map below.
 
-```{r, eval = TRUE}
+```{r}
 # setup and load Porto Alegre multimodal network into memory
 
 # system.file returns the directory with example data inside the r5r package
@@ -479,7 +479,7 @@ ggplot(data = access) +
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```

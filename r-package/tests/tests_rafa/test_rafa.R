@@ -653,7 +653,17 @@ system("R CMD Rd2pdf --title=Package gtfs2gps --output=./gtfs2gps/manual.pdf")
 # system("R CMD Rd2pdf gtfs2gps")
 
 
+# find unicode errors
+tools::showNonASCIIfile(file = './man/accessibility.Rd')
+tools::showNonASCIIfile(file = './man/roxygen/templates/mcraptor_algorithm_section.R')
+tools::showNonASCIIfile(file = './man/roxygen/templates/raptor_algorithm_section.R')
+tools::showNonASCIIfile(file = './vignettes/references.json')
 
+functions <- list.files(path = './R', all.files = T, recursive = T, full.names = T)
+lapply(X=functions, FUN = tools::showNonASCIIfile)
+
+docs <- list.files(path = './man', all.files = T, recursive = T, full.names = T)
+lapply(X=docs, FUN = tools::showNonASCIIfile)
 
 
 ### CMD Check ----------------
@@ -693,6 +703,16 @@ tictoc::toc()
 
 
 
+# submit to CRAN -----------------
+usethis::use_cran_comments('teste 2222, , asdadsad')
+
+urlchecker::url_check()
+devtools::check(remote = TRUE, manual = TRUE)
+devtools::check_win_release()
+rhub::check_for_cran(show_status = FALSE)
+
+
+devtools::submit_cran()
 
 
 # build binary -----------------

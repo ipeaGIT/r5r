@@ -1,5 +1,4 @@
-# r5r (development version)
-
+# r5r 1.0.0
 
 **Breaking changes**
 
@@ -22,7 +21,6 @@
 **Major changes**
 
 - Now using R5 latest version `6.8`.
-
 - The `detailed_itineraries()` has been substantially improved. The new vesion is faster than  previous ones. It also includes new parameters listed below. Closes [#265](https://github.com/ipeaGIT/r5r/issues/265).
   - New `time_window` parameter
   - New `suboptimal_minutes` parameter, which extends the search space and returns a larger number of trips beyond the fastest ones;

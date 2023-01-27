@@ -21,10 +21,10 @@
 #' - **LTS 2**: Tolerable for the mainstream adult population. This includes
 #' streets where cyclists have dedicated lanes and only have to interact with
 #' traffic at formal crossing.
-#' - **LTS 3**: Tolerable for “enthused and confident” cyclists. This includes
+#' - **LTS 3**: Tolerable for "enthused and confident" cyclists. This includes
 #' streets which may involve close proximity to moderate- or high-speed
 #' vehicular traffic.
-#' - **LTS 4**: Tolerable only for “strong and fearless” cyclists. This
+#' - **LTS 4**: Tolerable only for "strong and fearless" cyclists. This
 #' includes streets where cyclists are required to mix with moderate- to
 #' high-speed vehicular traffic.
 #'

@@ -15,3 +15,4 @@
 ^inst/img
 ^inst/jar/r5-.*\.jar$
 ^man/figures
+^cran-comments\.md$

@@ -46,7 +46,7 @@ steps:
 Before we start, we need to increase the memory available to Java and load the 
 packages used in this vignette
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -61,7 +61,7 @@ To build a routable transport network with r5r and load it into memory, the user
 needs to call `setup_r5` with the path to the directory where OpenStreetMap and 
 GTFS data are stored.
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -77,7 +77,7 @@ In this example, we will be calculating the number of schools and public healthc
 With the code below we compute the number of schools and healthcare accessible considering median of multiple travel time estimates departing every minute over a 60-minute time window, between 2pm and 3pm. The `accessibility()` function can calculate access to multiple opportunities in a single call, which is much more efficient and convenient than producing a travel time matrix of the study area and manually computing accessibility.
 
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 # read all points in the city
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
@@ -118,7 +118,7 @@ head(access)
 The final step is mapping the accessibility results calculated earlier. The code
 below demonstrates how to do that, with some extra steps to produce a prettier map by doing a spatial interpolation of accessibility estimates.
 
-```{r, message = FALSE, out.width='100%', eval = TRUE}
+```{r, message = FALSE, out.width='100%'}
 # interpolate estimates to get spatially smooth result
 access_schools <- access %>% 
   filter(opportunity == "schools") %>%
@@ -166,7 +166,7 @@ ggplot(na.omit(access.interp)) +
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```
