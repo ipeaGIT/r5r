@@ -108,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Analyzing the trade-offs between travel time and monetary cost</h1>
             
-            <h4 data-toc-skip class="date">2023-01-27</h4>
+            <h4 data-toc-skip class="date">2023-01-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -124,7 +124,7 @@
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In most cases, transport routing models find either the fastest or the lowest-cost routes that connect places in a given transport network. Sometimes, though, we might want a more sophisticated analysis that considers both the time and monetary costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge for routing models because of the trade-offs between the objectives of minimizing trip duration and cost <a href="https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075" class="external-link">(ref ‘Getting Charlie off the MTA’)</a>.</p>
+<p>In most cases, transport routing models find either the fastest or the lowest-cost routes that connect places in a given transport network. Sometimes, though, we might want a more sophisticated analysis that considers both the time and monetary costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge for routing models because of the trade-offs between the objectives of minimizing trip duration and cost <span class="citation">(Conway and Stewart 2019)</span>.</p>
 <p>To address this problem, <code>r5r</code> has a function called <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette uses a reproducible example to demonstrate how to use <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
 <div class="section level3">
 <h3 id="what-the-pareto_frontier-means-">2. What the <code>pareto_frontier</code> means.<a class="anchor" aria-label="anchor" href="#what-the-pareto_frontier-means-"></a>
@@ -260,6 +260,11 @@
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
+<div id="refs" class="references">
+<div id="ref-conway2019getting">
+<p>Conway, Matthew Wigginton, and Anson F. Stewart. 2019. “Getting Charlie Off the MTA: A Multiobjective Optimization Method to Account for Cost Constraints in Public Transit Accessibility Metrics.” <em>International Journal of Geographical Information Science</em> 33 (9): 1759–87. <a href="https://doi.org/10.1080/13658816.2019.1605075" class="external-link">https://doi.org/10.1080/13658816.2019.1605075</a>.</p>
+</div>
+</div>
 </div>
 </div>
   </div>
