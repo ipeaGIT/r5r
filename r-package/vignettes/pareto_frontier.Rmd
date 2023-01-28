@@ -27,7 +27,7 @@ routes that connect places in a given transport network. Sometimes, though, we
 might want a more sophisticated analysis that considers both the time and monetary 
 costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge 
 for routing models because of the trade-offs between the objectives of minimizing 
-trip duration and cost [(ref 'Getting Charlie off the MTA')](https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1605075).
+trip duration and cost [@conway2019getting].
 
 To address this problem, `r5r` has a function called `pareto_frontier()`, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette 
 uses a reproducible example to demonstrate how to use `pareto_frontier()` and 
