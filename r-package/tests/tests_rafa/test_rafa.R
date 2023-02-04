@@ -258,8 +258,13 @@ df <- get_all_od_combinations(origins, destinations)
 
 ##### TESTS isochrone ------------------------
 
+# allocate RAM memory to Java
+options(java.parameters = "-Xmx8G")
+
 library(r5r)
 library(ggplot2)
+library(mapview)
+mapviewOptions(platform = 'leafgl')
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -270,24 +275,64 @@ origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[500,]
 
 departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
-# estimate travel time matrix
+
+###### with no destinations input
+
 iso <- isochrone(r5r_core,
                  origin = origin,
-                 mode = c("WALK"),
+                 mode = c("transit"),
                  departure_datetime = departure_datetime,
-                 cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120),
-                 max_walk_dist = Inf)
+                 cutoffs = seq(10, 100, 10)
+                 )
+
+head(iso)
 
 
-network <- street_network_to_sf(r5r_core)
-road_network = network[[2]]
-
+# streets <- r5r::street_network_to_sf(r5r_core)
 
 ggplot() +
-        geom_sf(data=road_network, color='gray60') +
-        geom_sf(data=iso, aes(color=isocrhones), alpha=.2) +
-        geom_point(data=origin, color='red', aes(x=lon, y=lat)) +
-        theme_minimal()
+  #  geom_sf(data=streets$edges, color='gray', alpha=.5) +
+  geom_sf(data=iso, aes(fill= isochrone), alpha=.5) +
+  scale_fill_viridis_c(direction = -1)
+
+mapview(iso, z = 'isochrone')
+
+
+##### with polygons
+
+# prep grid with destinations
+dest_points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+grid <- h3jsr::cell_to_polygon(input = dest_points$id, simple = FALSE)
+grid$id <- dest_points$id
+
+
+iso2 <- isochrone(r5r_core,
+                 origin = origin,
+                 destinations = grid,
+                 mode = c("transit"),
+                 departure_datetime = departure_datetime,
+                 cutoffs = seq(10, 100, 10)
+                 )
+
+head(iso2)
+
+isocrhone
+
+ggplot() +
+  #  geom_sf(data=streets$edges, color='gray', alpha=.5) +
+  geom_sf(data=iso2, aes(fill= isochrone), alpha=.5) +
+  scale_fill_viridis_d(direction = -1)
+
+mapview(iso2, z = 'isochrone')
+
+
+
+
+
+
+
+
+
 
 
 ##### set_road_speed ------------------------
@@ -457,8 +502,9 @@ library(ggplot2)
 library(dlstats)
 library(data.table)
 
-x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter', 'flightsbr'))
-x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
+
+x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter','dodgr'))
+#x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
 
  if (!is.null(x)) {
          head(x)
@@ -472,12 +518,48 @@ x[, .(total = sum(downloads)) , by=package][order(total)]
 
 x[ start > as.Date('2022-01-01'), .(total = sum(downloads)) , by=package][order(total)]
 
-x[package=='flightsbr',]
+xx <- x[package=='r5r',]
 
 ggplot() +
   geom_line(data=x, aes(x=end, y=downloads, color=package))
 
 
+library(cranlogs)
+
+a <- cran_downloads( package = c("r5r"), from = "2020-01-01", to = "last-day")
+
+a
+ggplot() +
+  geom_line(data=a, aes(x=date, y=count, color=package))
+
+
+
+
+
+
+
+library(ggplot2)
+library(dlstats)
+library(cranlogs)
+
+
+dl <- cran_stats(c('r5r'))
+cl <- cran_downloads( package = c("r5r", "opentripplanner"), from = "2020-01-01", to = "2023-02-01")
+
+sum(dl$downloads)
+sum(cl$count)
+
+
+
+
+ggplot() +
+ # geom_line(data=dl, aes(x=end, y=downloads), color='blue') +
+  geom_line(data=cl, aes(x=date, y=count), color='red')
+
+
+ggplot() +
+  # geom_line(data=dl, aes(x=end, y=downloads), color='blue') +
+  geom_line(data=cl, aes(x=date, y=count, color=package))
 
 ##### HEX sticker ------------------------
 
