@@ -18,9 +18,9 @@
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
-#' download_r5(version = "6.8.0", temp_dir = TRUE)
+#' download_r5(version = "6.9.0", temp_dir = TRUE)
 #' @export
-download_r5 <- function(version = "6.8.0",
+download_r5 <- function(version = "6.9.0",
                         quiet = FALSE,
                         force_update = FALSE,
                         temp_dir = FALSE) {

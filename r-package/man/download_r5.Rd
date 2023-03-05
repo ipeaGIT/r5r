@@ -5,7 +5,7 @@
 \title{Download \code{R5.jar}}
 \usage{
 download_r5(
-  version = "6.8.0",
+  version = "6.9.0",
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
@@ -34,7 +34,7 @@ Downloads \code{R5.jar} and saves it locally, inside the package directory.
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
-download_r5(version = "6.8.0", temp_dir = TRUE)
+download_r5(version = "6.9.0", temp_dir = TRUE)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

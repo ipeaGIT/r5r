@@ -57,7 +57,7 @@ setup_r5 <- function(data_path,
                      overwrite = FALSE) {
 
   # R5 version
-  version = "6.8.0"
+  version = "6.9.0"
 
   # check inputs ------------------------------------------------------------
 
