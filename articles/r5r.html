@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-02-04</h4>
+            <h4 data-toc-skip class="date">2023-03-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -261,12 +261,12 @@
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90129da3ffff -51.20300 -30.03200        632       0  380          1</span></span>
-<span><span class="co">#&gt; 2: 89a9012912bffff -51.15493 -30.04719       1434       1    2          0</span></span>
-<span><span class="co">#&gt; 3: 89a9012a343ffff -51.20867 -30.09669          0       0    0          0</span></span>
-<span><span class="co">#&gt; 4: 89a90128247ffff -51.16762 -30.05998       2026       0    9          0</span></span>
-<span><span class="co">#&gt; 5: 89a9012864bffff -51.16234 -30.07985        727       0    0          0</span></span>
-<span><span class="co">#&gt; 6: 89a9012a377ffff -51.21759 -30.09177        429       0    0          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90129d53ffff -51.18481 -30.03355        824       0  116          0</span></span>
+<span><span class="co">#&gt; 2: 89a90129d7bffff -51.18756 -30.02638       1970       1  637          0</span></span>
+<span><span class="co">#&gt; 3: 89a9012839bffff -51.19497 -30.05904        863       2  215          2</span></span>
+<span><span class="co">#&gt; 4: 89a9012810bffff -51.21316 -30.05749        422       0  185          1</span></span>
+<span><span class="co">#&gt; 5: 89a9012b11bffff -51.17239 -30.10256        109       0   21          0</span></span>
+<span><span class="co">#&gt; 6: 89a90129d37ffff -51.20278 -30.02647        680       0 1456          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
@@ -297,12 +297,12 @@
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a90129da3ffff     schools         50     60            33</span></span>
-<span><span class="co">#&gt; 2: 89a90129da3ffff  healthcare         50     60            19</span></span>
-<span><span class="co">#&gt; 3: 89a9012912bffff     schools         50     60            27</span></span>
-<span><span class="co">#&gt; 4: 89a9012912bffff  healthcare         50     60            12</span></span>
-<span><span class="co">#&gt; 5: 89a9012a343ffff     schools         50     60             0</span></span>
-<span><span class="co">#&gt; 6: 89a9012a343ffff  healthcare         50     60             3</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90129d53ffff     schools         50     60            33</span></span>
+<span><span class="co">#&gt; 2: 89a90129d53ffff  healthcare         50     60            20</span></span>
+<span><span class="co">#&gt; 3: 89a90129d7bffff     schools         50     60            33</span></span>
+<span><span class="co">#&gt; 4: 89a90129d7bffff  healthcare         50     60            20</span></span>
+<span><span class="co">#&gt; 5: 89a9012839bffff     schools         50     60            33</span></span>
+<span><span class="co">#&gt; 6: 89a9012839bffff  healthcare         50     60            18</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
