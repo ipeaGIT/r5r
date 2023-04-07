@@ -2,7 +2,7 @@
 #'
 #' Builds a multimodal transport network used for routing in `R5`, combining
 #' multiple data inputs present in the directory where the network should be
-#' saved to. The directory must contain at least one street network file (in
+#' saved to. The directory must contain only one street network file (in
 #' `.osm.pbf` format). It may optionally contain one or more public transport
 #' GTFS feeds (in `GTFS.zip` format, where `GTFS` is the name of your feed),
 #' when used for public transport routing, and a `.tif` file describing the
