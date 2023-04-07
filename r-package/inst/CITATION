@@ -1,18 +1,12 @@
 citHeader("To cite r5r in publications use:")
 
-citEntry(
-  entry    = "Article",
+bibentry(
+  bibtype  = "Article",
   title    = "r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R",
-  author = c(
-  person("Rafael H. M. Pereira"),
-  person("Marcus Saraiva"),
-  person("Daniel Herszenhut"),
-  person("Carlos Kaue Vieira Braga"),
-  person("Matthew Wigginton Conway")),
+  author = "Rafael H. M. Pereira [aut, cre], Marcus Saraiva [aut], Daniel Herszenhut [aut], Carlos Kaue Vieira Braga [aut], Matthew Wigginton Conway [aut]",
   journal  = "Findings",
   year     = "2021",
   doi      = "10.32866/001c.21262",
-  textVersion = paste(
-  "Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., & Conway, M. W. (2021). r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R. Findings, 21262. https://doi.org/10.32866/001c.21262"
-  )
+  url      = "https://doi.org/10.32866/001c.21262",
+  textVersion = "Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., & Conway, M. W. (2021). r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R. Findings, 21262. https://doi.org/10.32866/001c.21262"
 )
