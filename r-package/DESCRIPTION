@@ -44,7 +44,7 @@ Imports:
     httr,
     jsonlite,
     rJava (>= 0.9-10),
-    sf (>= 1.0-6),
+    sf (>= 1.0-12),
     sfheaders,
     utils,
     zip
