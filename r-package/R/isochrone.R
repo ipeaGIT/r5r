@@ -1,25 +1,19 @@
-### TO DO
-# allow users to pass an sf points or polygons as "destination" input
-# update entire documentation based on latest docs of r5r
-# expose to users the same parameters available in travel_time_matrix()
-  # max_trip_duration should be == to max(cutoffs)
-#'# prep grid with destinations
-#'dest_points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
-#'grid <- h3jsr::cell_to_polygon(input = dest_points$id, simple = FALSE)
-#'grid$id <- dest_points$id
-#'
-
-
-
 #' Estimate isochrones from a given location
 #'
-#' @description Fast computation of isochrones from a given location.
+#' @description Fast computation of isochrones from a given location. The
+#' function estimates isochrones based on the travel times from the trip origin
+#' to all nodes in the road network.
+#'
 #'
 #' @template r5r_core
 #' @param origins Either a `POINT sf` object with WGS84 CRS, or a
 #'   `data.frame` containing the columns `id`, `lon` and `lat`.
 #' @param cutoffs numeric vector. Number of minutes to define time span of each
 #'                each Isochrone. Defaults to `c(0, 15, 30)`.
+#' @param sample_size numeric. Sample size of nodes in the road network used to
+#'                    estimate isochrones. Defaults to `0.8`. Value can range
+#'                    between `0.2` and `1`. Smaller values increase computation
+#'                    speed but return results with lower precision.
 #' @param mode A character vector. The transport modes allowed for access,
 #'   transfer and vehicle legs of the trips. Defaults to `WALK`. Please see
 #'   details for other options.
@@ -73,15 +67,18 @@
 #'   messages. Setting `progress` to `TRUE` may impose a small penalty for
 #'   computation efficiency, because the progress counter must be synchronized
 #'   among all active threads.
-#' @template time_window_related_args
-#' @template draws_per_minute
 #' @template verbose
 #'
-#' @return A `POLYGON  "sf" "data.frame"`
+#' @return A `POLYGON  "sf" "data.frame"` for each origin.
 #'
+#' @template transport_modes_section
+#' @template lts_section
+#' @template datetime_parsing_section
+#' @template raptor_algorithm_section
 #'
 #' @family Isochrone
-#' @examples \donttest{
+#'
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #'
 #' # build transport network
@@ -89,7 +86,7 @@
 #' r5r_core <- setup_r5(data_path = data_path)
 #'
 #' # load origin/point of interest
-#' origins <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[c(700,936),]
+#' origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[c(700,936),]
 #'
 #' departure_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
@@ -101,9 +98,11 @@
 #'                 origin = origin,
 #'                 mode = c("WALK", "TRANSIT"),
 #'                 departure_datetime = departure_datetime,
-#'                 cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120),
-#'                 max_walk_dist = Inf)
-#'                 }'
+#'                 cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120)
+#'                 )
+#'head(iso)
+#'
+#'stop_r5(r5r_core)
 #'
 #' @export
 isochrone <- function(r5r_core,
@@ -111,9 +110,8 @@ isochrone <- function(r5r_core,
                       mode = "transit",
                       mode_egress = "WALK",
                       cutoffs = c(0, 15, 30),
+                      sample_size = 0.8,
                       departure_datetime = Sys.time(),
-                      time_window = 1L,
-                      percentiles = 50L,
                       max_walk_time = Inf,
                       max_bike_time = Inf,
                       max_car_time = Inf,
@@ -122,7 +120,6 @@ isochrone <- function(r5r_core,
                       bike_speed = 12,
                       max_rides = 3,
                       max_lts = 2,
-                      draws_per_minute = 5L,
                       n_threads = Inf,
                       verbose = FALSE,
                       progress = TRUE){
@@ -132,6 +129,10 @@ isochrone <- function(r5r_core,
 
   # check cutoffs
   checkmate::assert_numeric(cutoffs, lower = 0)
+
+  # check sample_size
+  checkmate::assert_numeric(sample_size, lower = 0.2, upper = 1, max.len = 1)
+
 
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
@@ -146,10 +147,14 @@ isochrone <- function(r5r_core,
     network <- r5r::street_network_to_sf(r5r_core)
     destinations = network$vertices
 
-    # # sample proportion of nodes to reduce computation ?
-    # sample_size <- ifelse(nrow(destinations) < 10000, 1, .33) #
-    # index_sample <- sample(1:nrow(destinations), size = nrow(destinations) * sample_size, replace = FALSE)
-    # destinations <- destinations[index_sample,]
+    # sample size: proportion of nodes to be considered
+    set.seed(42)
+    index_sample <- sample(1:nrow(destinations),
+                           size = nrow(destinations) * sample_size,
+                           replace = FALSE)
+    destinations <- destinations[index_sample,]
+    on.exit(rm(.Random.seed, envir=globalenv()))
+
 
     names(destinations)[1] <- 'id'
     destinations$id <- as.character(destinations$id)
@@ -162,8 +167,8 @@ isochrone <- function(r5r_core,
                               mode = mode,
                               mode_egress = mode_egress,
                               departure_datetime = departure_datetime,
-                              time_window = time_window,
-                              percentiles = percentiles,
+                              # time_window = time_window,
+                              # percentiles = percentiles,
                               max_walk_time = max_walk_time,
                               max_bike_time = max_bike_time,
                               max_car_time = max_car_time,
@@ -172,7 +177,7 @@ isochrone <- function(r5r_core,
                               bike_speed = bike_speed,
                               max_rides = max_rides,
                               max_lts = max_lts,
-                              draws_per_minute = draws_per_minute,
+                              # draws_per_minute = draws_per_minute,
                               n_threads = n_threads,
                               verbose = verbose,
                               progress = progress
@@ -219,81 +224,8 @@ isochrone <- function(r5r_core,
     # put output together
     iso <- data.table::rbindlist(iso_list)
     iso <- sf::st_sf(iso)
-    #plot(iso)
-    return(iso)
-
-    # ggplot() +
-    #   geom_sf(data=subset(iso, id==unique(iso$id)[1]), aes(fill=isochrone))
-    # ggplot() +
-    #   geom_sf(data=subset(iso, id==unique(iso$id)[2]), aes(fill=isochrone))
-
-        # # join ttm results to destinations
-    # dest <- subset(destinations, id %in% ttm$to_id)
-    # data.table::setDT(dest)[, id := as.character(id)]
-    # dest[ttm, on=c('id' ='to_id'), c('travel_time_p50', 'isochrone') := list(i.travel_time_p50, i.isochrone)]
-    #
-    #
-    # # build polygons with {concaveman}
-    # # obs. {isoband} is much slower
-    # dest <- sf::st_as_sf(dest)
-    #
-    # get_poly <- function(cut){ # cut = 30
-    #   temp <- subset(dest, travel_time_p50 <= cut)
-    #   temp_iso <- concaveman::concaveman(temp)
-    #   temp_iso$isochrone <- cut
-    #   return(temp_iso)
-    # }
-    #
-    # iso_list <- lapply(X=cutoffs[cutoffs>0], FUN=get_poly)
-    # iso <- data.table::rbindlist(iso_list)
-    # iso <- sf::st_sf(iso)
-    # iso <- iso[ order(-iso$isochrone), ]
-    # # plot(iso)
 
     return(iso)
-
-
-# # IF destinations input are polygons ------------------------------------------------------------
-#
-#   if(!is.null(destinations)){
-#
-#     # check input
-#     if (!any(class(destinations) %like% 'sf')) {stop("'destinations' must be of class 'sf' or 'sfc'")}
-#     if (!any(sf::st_geometry_type(destinations) %like% 'POLYGON')) {stop("'destinations' must have geometry type 'POLYGON'")}
-#     if (!'id' %in% names(destinations)) {stop("'destinations' must have an 'id' colum")}
-#
-#     centroids <- sf::st_centroid(destinations)
-#
-#     # estimate travel time matrix
-#     ttm <- travel_time_matrix(r5r_core=r5r_core,
-#                               origins = origin,
-#                               destinations = centroids,
-#                               mode = mode,
-#                               departure_datetime = departure_datetime,
-#                               # max_walk_dist = max_walk_dist,
-#                               max_trip_duration = max_trip_duration,
-#                               progress = TRUE
-#                               # walk_speed = 3.6,
-#                               # bike_speed = 12,
-#                               # max_rides = max_rides,
-#                               # n_threads = n_threads,
-#                               # verbose = verbose
-#                               )
-#
-#     # aggregate travel-times
-#     ttm[, isochrone := cut(x=travel_time_p50, breaks=cutoffs)]
-#
-#     # add isochrone cat to polygon of origin
-#
-#     # join ttm results to destinations
-#     data.table::setDT(destinations)
-#     destinations[ttm, on=c('id' ='to_id'), c('travel_time_p50', 'isochrone') := list(i.travel_time_p50, i.isochrone)]
-#
-#     destinations <- sf::st_as_sf(destinations)
-#     # ggplot() + geom_sf(data=destinations, aes(fill=isochrone), color=NA)
-#
-#     return(destinations)
-#   }
 
 }
 

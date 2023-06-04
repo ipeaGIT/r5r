@@ -258,6 +258,9 @@ df <- get_all_od_combinations(origins, destinations)
 
 ##### TESTS isochrone ------------------------
 
+library(profvis)
+
+
 # allocate RAM memory to Java
 options(java.parameters = "-Xmx8G")
 
@@ -271,22 +274,32 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/point of interest
-origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[500,]
+origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[700,]
 
-departure_datetime <- as.POSIXct("13-03-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S")
 
 
 ###### with no destinations input
 
 iso <- isochrone(r5r_core,
                  origin = origin,
-                 mode = c("transit"),
+                 mode = c("WALK", "TRANSIT"),
                  departure_datetime = departure_datetime,
-                 cutoffs = seq(10, 100, 10)
+                 cutoffs = c(0, 15, 30, 45, 60)
+                 #, sample_size = .8
                  )
-
+plot(iso['isochrone'])
 head(iso)
 
+
+profvis({
+  iso <- isochrone(r5r_core,
+                   origin = origin,
+                   mode = c("WALK", "TRANSIT"),
+                   departure_datetime = departure_datetime,
+                   cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120)
+  )
+})
 
 # streets <- r5r::street_network_to_sf(r5r_core)
 

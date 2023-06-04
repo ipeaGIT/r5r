@@ -38,6 +38,7 @@ Depends:
     R (>= 3.6)
 Imports:
     checkmate,
+    concaveman,
     curl,
     data.table,
     httr,

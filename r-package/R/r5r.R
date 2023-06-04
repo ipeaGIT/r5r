@@ -75,7 +75,11 @@ if (getRversion() >= "2.15.1") {
       "i.lat",
       "total_time",
       "setting",
-      "cutoff"
+      "cutoff",
+      'travel_time_p50',
+      'id',
+      'i.travel_time_p50',
+      'i.isochrone'
     )
   )
 }
