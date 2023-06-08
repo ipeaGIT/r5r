@@ -1,0 +1,68 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'java'
+}
+
+group 'org.ipea'
+version '1.0.2-SNAPSHOT'
+
+// JRI is not in Maven but is distributed as part of rJava
+// https://stackoverflow.com/questions/11093223
+def baos = new ByteArrayOutputStream()
+exec {
+    commandLine 'R', '--no-save', '-q', '-s', '-e', 'cat(system.file("jri", package="rJava"))'
+    standardOutput = baos
+}
+def jriPath = baos.toString()
+
+println(jriPath)
+
+repositories {
+    // putting OSGEO before Central as in R5. Comment from R5 source:
+    // Put Open Source Geospatial before Maven Central to get JAI core, see https://stackoverflow.com/a/26993223
+    maven { url 'https://repo.osgeo.org/repository/release/' }
+
+    mavenCentral()
+
+    // Polyline Encoder is in Conveyal repo
+    maven {
+        name = "Conveyal"
+        url = "https://maven.conveyal.com"
+    }
+
+    // R5 is in Github Packages
+    maven {
+        name = "R5"
+        url = "https://maven.pkg.github.com/conveyal/r5"
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
+
+    // JRI inside rJava package
+//    flatDir{
+//        dirs(jriPath)
+//    }
+}
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+dependencies {
+    implementation 'com.conveyal:r5:v6.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'org.locationtech.jts:jts-core:1.19.0'
+    implementation 'org.mapdb:mapdb:1.0.8'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'net.sf.trove4j:trove4j:3.0.3'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'com.conveyal:kryo-tools:1.3.0'
+    implementation 'commons-io:commons-io:2.6'
+    implementation fileTree(dir: jriPath, include: '*.jar')
+}
