@@ -39,12 +39,8 @@ repositories {
             password = System.getenv("GITHUB_TOKEN")
         }
     }
-
-    // JRI inside rJava package
-//    flatDir{
-//        dirs(jriPath)
-//    }
 }
+
 sourceSets {
     main {
         java {
@@ -52,6 +48,7 @@ sourceSets {
         }
     }
 }
+
 dependencies {
     implementation 'com.conveyal:r5:v6.8'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
@@ -64,5 +61,5 @@ dependencies {
     implementation 'com.google.guava:guava:28.2-jre'
     implementation 'com.conveyal:kryo-tools:1.3.0'
     implementation 'commons-io:commons-io:2.6'
-    implementation fileTree(dir: jriPath, include: '*.jar')
+    implementation files('../r-package/inst/jar/JRI.jar') // JRI jar bundled with r5r
 }
