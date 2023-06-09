@@ -54,11 +54,9 @@ jobs:
       - name: Create pull request
         # https://github.com/actions/checkout/pull/1184
         run: |
-          git switch -c jar-update-${GITHUB_SHA}
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
           git add r-package/inst/jar/r5r.jar
           git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
-          git push origin jar-update-${GITHUB_SHA}
-          gh pr create -a "${GITHUB_ACTOR}" -B "${GITHUB_REF}" -t "Update JAR for branch ${GITHUB_REF}" -b "Update JAR for branch ${GITHUB_REF}, commit ${GITHUB_SHA}"
+          git push
