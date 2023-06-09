@@ -129,14 +129,8 @@ setup_r5 <- function(data_path,
 
   # start r5r and R5 JAR
   existing_files <- list.files(system.file("jar", package = "r5r"))
-  r5r_jar <- file.path(
-    system.file("jar", package = "r5r"),
-    existing_files[grepl("r5r", existing_files)]
-  )
-  jri_jar <- file.path(
-    system.file("jar", package = "r5r"),
-    existing_files[grepl("JRI", existing_files)]
-  )
+  r5r_jar <- system.file("jar/r5r.jar", package = "r5r"),
+  jri_jar <- system.file("jar/JRI.jar", package = "r5r")
 
   # r5r jar
   rJava::.jaddClassPath(path = r5r_jar)
@@ -169,7 +163,12 @@ setup_r5 <- function(data_path,
     )
 
     # build new r5r_core
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation, check=F)
+    ex = rJava::.jgetEx(clear=T)
+    if (!is.null(NULL)) {
+      ex$printStackTrace()
+      return(NULL)
+    }
 
     # display a message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
