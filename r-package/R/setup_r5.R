@@ -127,16 +127,15 @@ setup_r5 <- function(data_path,
   if (is.null(check)) {  return(invisible(NULL)) }
   }
 
-  # start r5r and R5 JAR
-  existing_files <- list.files(system.file("jar", package = "r5r"))
-  r5r_jar <- system.file("jar/r5r.jar", package = "r5r"),
-  jri_jar <- system.file("jar/JRI.jar", package = "r5r")
-
   # r5r jar
+  r5r_jar <- system.file("jar/r5r.jar", package = "r5r")
   rJava::.jaddClassPath(path = r5r_jar)
+
   # R5 jar
   rJava::.jaddClassPath(path = jar_file)
+
   # JRI jar
+  jri_jar <- system.file("jri/JRI.jar", package="rJava")
   rJava::.jaddClassPath(path = jri_jar)
 
   # check if data_path already has a network.dat file

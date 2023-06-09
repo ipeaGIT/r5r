@@ -10,10 +10,19 @@ version '1.0.2-SNAPSHOT'
 // grab
 def baos = new ByteArrayOutputStream()
 exec {
-    commandLine 'R', '--no-save', '-q', '-s', '-e', 'setwd("../r-package"); library(sf); devtools::load_all(quiet=T); cat(download_r5());'
+    commandLine 'R', '--no-save', '-q', '-s', '-e', 'setwd("../r-package"); devtools::load_all(quiet=T); cat(download_r5());'
     standardOutput = baos
 }
 def r5Path = baos.toString()
+
+def rjava_baos = new ByteArrayOutputStream()
+exec {
+    commandLine 'R', '--no-save', '-q', '-s', '-e', 'cat(system.file("jri/JRI.jar", package="rJava"))'
+    standardOutput = rjava_baos
+}
+def rJavaPath = rjava_baos.toString()
+
+println(rJavaPath)
 
 sourceSets {
     main {
@@ -25,5 +34,5 @@ sourceSets {
 
 dependencies {
     implementation files(r5Path)
-    implementation files('../r-package/inst/jar/JRI.jar') // JRI jar bundled with r5r
+    implementation files(rJavaPath)
 }
