@@ -265,14 +265,17 @@ set_fare_structure <- function(r5r_core, fare_structure) {
   if (!is.null(fare_structure)) {
     assert_fare_structure(fare_structure)
 
-    if (fare_structure$fare_cap == Inf) {
-      fare_structure$fare_cap <- -1
-    }
-    if (fare_structure$transfer_time_allowance == Inf) {
-      fare_structure$transfer_time_allowance <- -1
-    }
-    if (fare_structure$max_discounted_transfers == Inf) {
-      fare_structure$max_discounted_transfers <- -1
+    if (!("type" %in% names(fare_structure))) {
+      # this is an R5R fare structure object
+      if (fare_structure$fare_cap == Inf) {
+        fare_structure$fare_cap <- -1
+      }
+      if (fare_structure$transfer_time_allowance == Inf) {
+        fare_structure$transfer_time_allowance <- -1
+      }
+      if (fare_structure$max_discounted_transfers == Inf) {
+        fare_structure$max_discounted_transfers <- -1
+      }
     }
 
     fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
