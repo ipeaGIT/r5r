@@ -665,7 +665,7 @@ mapview(street_net) + points_sf
 ##### Coverage ------------------------
 library(covr)
 library(testthat)
-library(r5r)
+# library(r5r)
 Sys.setenv(NOT_CRAN = "true")
 
 
@@ -712,15 +712,10 @@ Sys.setenv(NOT_CRAN = "true")
 r5r_cov <- covr::package_coverage(path = ".", type = "tests")
 r5r_cov
 
-saveRDS(r5r_cov3, file = './tests/tests_rafa/r5r_coverage.rds')
-
-as.data.frame(r5r_cov3)[, c(1:3, 5, 11)]
+covr::report()
 
 zeroCov <- covr::zero_coverage(a)
 
-
-x <- as.data.frame(r5r_cov)
-covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
 
 
 
