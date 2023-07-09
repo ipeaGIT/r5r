@@ -103,13 +103,15 @@
 
       
 
-      </header><script src="r5r_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in R</h1>
-                        <h4 data-toc-skip class="author">Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
+      <h1 data-toc-skip>Intro to r5r: Rapid Realistic Routing with R5 in
+R</h1>
+                        <h4 data-toc-skip class="author">Rafael H. M.
+Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -119,30 +121,48 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <code>r5r</code> is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R<sup>5</sup>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R<sup>5</sup> Java machine <a href="https://github.com/conveyal/r5" class="external-link uri">https://github.com/conveyal/r5</a>
+      <code>r5r</code> is an R package for rapid realistic routing on
+      multimodal transport networks (walk, bike, public transport and
+      car) using R<sup>5</sup>. The package allows users to generate
+      detailed routing analysis or calculate travel time matrices using
+      seamless parallel computing on top of the R<sup>5</sup> Java
+      machine <a href="https://github.com/conveyal/r5" class="external-link uri">https://github.com/conveyal/r5</a>
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r" class="external-link">R package for rapid realistic routing on multimodal transport networks</a> (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by <a href="https://www.conveyal.com/" class="external-link">Conveyal</a>. R<sup>5</sup> stands for <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>.</p>
+<p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r" class="external-link">R
+package for rapid realistic routing on multimodal transport networks</a>
+(walk, bike, public transport and car). It provides a simple and
+friendly interface to R<sup>5</sup>, a really fast and open source
+Java-based routing engine developed separately by <a href="https://www.conveyal.com/" class="external-link">Conveyal</a>. R<sup>5</sup> stands for
+<a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on
+Real-world and Reimagined networks</a>. More details about
+<strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or
+on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">2. Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>r5r</code> from CRAN, or the development version from github.</p>
+<p>You can install <code>r5r</code> from CRAN, or the development
+version from github.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># CRAN</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># dev version on github</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span></span></code></pre></div>
-<p>Please bear in mind that you need to have <em>Java SE Development Kit 11</em> installed on your computer to use <code>r5r</code>. No worries, you don’t have to pay for it. The jdk 11 is freely available from the options below:</p>
+<p>Please bear in mind that you need to have <em>Java SE Development Kit
+11</em> installed on your computer to use <code>r5r</code>. No worries,
+you don’t have to pay for it. The jdk 11 is freely available from the
+options below:</p>
 <ul>
 <li><p><a href="https://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a></p></li>
 <li><p><a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p></li>
 </ul>
-<p>If you don’t know what version of Java you have installed on your computer, you can check it by running this on R console.</p>
+<p>If you don’t know what version of Java you have installed on your
+computer, you can check it by running this on R console.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jinit.html" class="external-link">.jinit</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">.jcall</a></span><span class="op">(</span><span class="st">"java.lang.System"</span>, <span class="st">"S"</span>, <span class="st">"getProperty"</span>, <span class="st">"java.version"</span><span class="op">)</span></span></code></pre></div>
@@ -150,47 +170,85 @@
 <div class="section level2">
 <h2 id="usage">3. Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Before we start, we need to increase the memory available to Java. This is necessary because, by default, <code>R</code> allocates only 512MB of memory for Java processes, which is not enough for large queries using <code>r5r</code>. To increase available memory to 2GB, for example, we need to set the <code>java.parameters</code> option at the beginning of the script, as follows:</p>
+<p>Before we start, we need to increase the memory available to Java.
+This is necessary because, by default, <code>R</code> allocates only
+512MB of memory for Java processes, which is not enough for large
+queries using <code>r5r</code>. To increase available memory to 2GB, for
+example, we need to set the <code>java.parameters</code> option at the
+beginning of the script, as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span></code></pre></div>
-<p>Note: It’s very important to allocate enough memory before loading <code>r5r</code> or any other Java-based package, since <code>rJava</code> starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven’t succeeded in your previous attempts.</p>
+<p>Note: It’s very important to allocate enough memory before loading
+<code>r5r</code> or any other Java-based package, since
+<code>rJava</code> starts a Java Virtual Machine only once for each R
+session. It might be useful to restart your R session and execute the
+code above right after, if you notice that you haven’t succeeded in your
+previous attempts.</p>
 <p>Then we can load the packages used in this vignette:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p>The <code>r5r</code> package has six <strong>fundamental functions</strong>:</p>
+<p>The <code>r5r</code> package has six <strong>fundamental
+functions</strong>:</p>
 <ol style="list-style-type: decimal">
-<li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of <code>r5r</code>, that also builds a routable transport network;</p></li>
-<li><p><code><a href="../reference/accessibility.html">accessibility()</a></code> for fast computation of access to opportunities considering a selected decay function;</p></li>
-<li><p><code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> for fast computation of travel time estimates between origin/destination pairs;</p></li>
-<li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating travel matrices between origin destination pairs with additional information such routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</p></li>
-<li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information on one or multiple alternative routes between origin/destination pairs.</p></li>
-<li><p><code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> for analyzing the trade-off between the travel time and monetary costs of multiple route alternatives between origin/destination pairs.</p></li>
+<li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of
+<code>r5r</code>, that also builds a routable transport
+network;</p></li>
+<li><p><code><a href="../reference/accessibility.html">accessibility()</a></code> for fast computation of access to
+opportunities considering a selected decay function;</p></li>
+<li><p><code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> for fast computation of travel
+time estimates between origin/destination pairs;</p></li>
+<li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating travel
+matrices between origin destination pairs with additional information
+such routes used and total time disaggregated by access, waiting,
+in-vehicle and transfer times.</p></li>
+<li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information
+on one or multiple alternative routes between origin/destination
+pairs.</p></li>
+<li><p><code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> for analyzing the trade-off
+between the travel time and monetary costs of multiple route
+alternatives between origin/destination pairs.</p></li>
 </ol>
-<p>Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info about how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">this vignette</a>.</p>
-<p>The package also includes a few <strong>support functions</strong>.</p>
+<p>Most of these functions also allow users to account for monetary
+travel costs when generating travel time matrices and accessibility
+estimates. More info about how to consider monetary costs can be found
+in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">this
+vignette</a>.</p>
+<p>The package also includes a few <strong>support
+functions</strong>.</p>
 <ol style="list-style-type: decimal">
-<li><p><code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> to extract OpenStreetMap network in sf format from a <code>network.dat</code> file.</p></li>
-<li><p><code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> to extract transit network in sf format from a <code>network.dat</code> file.</p></li>
-<li><p><code><a href="../reference/find_snap.html">find_snap()</a></code> to find snapped locations of input points on street network.</p></li>
-<li><p><code><a href="../reference/r5r_sitrep.html">r5r_sitrep()</a></code> to generate a situation report to help debug eventual errors.</p></li>
+<li><p><code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> to extract OpenStreetMap
+network in sf format from a <code>network.dat</code> file.</p></li>
+<li><p><code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> to extract transit network
+in sf format from a <code>network.dat</code> file.</p></li>
+<li><p><code><a href="../reference/find_snap.html">find_snap()</a></code> to find snapped locations of input
+points on street network.</p></li>
+<li><p><code><a href="../reference/r5r_sitrep.html">r5r_sitrep()</a></code> to generate a situation report to help
+debug eventual errors.</p></li>
 </ol>
 <div class="section level3">
 <h3 id="data-requirements">3.1 Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
 </h3>
-<p>To use <code>r5r</code>, you will need: - A road network data set from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A public transport feed in <code>GTFS.zip</code> format (optional) - A raster file of Digital Elevation Model data in <code>.tif</code> format (optional)</p>
-<p>Here are a few places from where you can download these data sets:</p>
+<p>To use <code>r5r</code>, you will need: - A road network data set
+from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A
+public transport feed in <code>GTFS.zip</code> format (optional) - A
+raster file of Digital Elevation Model data in <code>.tif</code> format
+(optional)</p>
+<p>Here are a few places from where you can download these data
+sets:</p>
 <ul>
 <li>OpenStreetMap
 <ul>
 <li>
-<a href="https://docs.ropensci.org/osmextract/" class="external-link">osmextract</a> R package</li>
+<a href="https://docs.ropensci.org/osmextract/" class="external-link">osmextract</a> R
+package</li>
 <li>
 <a href="https://download.geofabrik.de/" class="external-link">geofabrik</a> website</li>
 <li>
-<a href="https://export.hotosm.org/" class="external-link">hot export tool</a> website</li>
+<a href="https://export.hotosm.org/" class="external-link">hot export tool</a>
+website</li>
 <li>
 <a href="https://extract.bbbike.org/" class="external-link">BBBike.org</a> website</li>
 </ul>
@@ -198,7 +256,8 @@
 <li>GTFS
 <ul>
 <li>
-<a href="http://tidytransit.r-transit.org/" class="external-link">tidytransit</a> R package</li>
+<a href="http://tidytransit.r-transit.org/" class="external-link">tidytransit</a> R
+package</li>
 <li>
 <a href="https://www.transit.land/" class="external-link">transitland</a> website</li>
 </ul>
@@ -206,12 +265,14 @@
 <li>Elevation
 <ul>
 <li>
-<a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R package</li>
+<a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R
+package</li>
 <li>Nasa’s SRTMGL1 website</li>
 </ul>
 </li>
 </ul>
-<p>Let’s have a quick look at how <code>r5r</code> works using a sample data set.</p>
+<p>Let’s have a quick look at how <code>r5r</code> works using a sample
+data set.</p>
 </div>
 </div>
 <div class="section level2">
@@ -220,17 +281,24 @@
 <div class="section level3">
 <h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h3>
-<p>To illustrate the functionalities of <code>r5r</code>, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes seven files:</p>
+<p>To illustrate the functionalities of <code>r5r</code>, the package
+includes a small sample data for the city of Porto Alegre (Brazil). It
+includes seven files:</p>
 <ul>
 <li>An OpenStreetMap network: <code>poa_osm.pbf</code>
 </li>
-<li>Two public transport feeds: <code>poa_eptc.zip</code> and <code>poa_trensurb.zip</code>
+<li>Two public transport feeds: <code>poa_eptc.zip</code> and
+<code>poa_trensurb.zip</code>
 </li>
 <li>A raster elevation data: <code>poa_elevation.tif</code>
 </li>
-<li>A <code>poa_hexgrid.csv</code> file with spatial coordinates of a regular hexagonal grid covering the sample area, which can be used as origin/destination pairs in a travel time matrix calculation.</li>
-<li>A <code>poa_points_of_interest.csv</code> file containing the names and spatial coordinates of 15 places within Porto Alegre</li>
-<li>A <code>fares_poa.zip</code> file with the fare rules of the city’s public transport system.</li>
+<li>A <code>poa_hexgrid.csv</code> file with spatial coordinates of a
+regular hexagonal grid covering the sample area, which can be used as
+origin/destination pairs in a travel time matrix calculation.</li>
+<li>A <code>poa_points_of_interest.csv</code> file containing the names
+and spatial coordinates of 15 places within Porto Alegre</li>
+<li>A <code>fares_poa.zip</code> file with the fare rules of the city’s
+public transport system.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
@@ -241,7 +309,9 @@
 <span><span class="co">#&gt;  [7] "poa_osm.pbf"                "poa_osm.pbf.mapdb"         </span></span>
 <span><span class="co">#&gt;  [9] "poa_osm.pbf.mapdb.p"        "poa_points_of_interest.csv"</span></span>
 <span><span class="co">#&gt; [11] "poa_trensurb.zip"</span></span></code></pre></div>
-<p>The points of interest data can be seen below. In this example, we will be looking at transport alternatives between some of those places.</p>
+<p>The points of interest data can be seen below. In this example, we
+will be looking at transport alternatives between some of those
+places.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poi</span><span class="op">)</span></span>
@@ -252,7 +322,9 @@
 <span><span class="co">#&gt; 4: santa_casa_hospital -30.03043 -51.22240</span></span>
 <span><span class="co">#&gt; 5:            townhall -30.02800 -51.22865</span></span>
 <span><span class="co">#&gt; 6:     piratini_palace -30.03363 -51.23068</span></span></code></pre></div>
-<p>The data with origin destination pairs is shown below. In this example, we will be using 200 points randomly selected from this data set.</p>
+<p>The data with origin destination pairs is shown below. In this
+example, we will be using 200 points randomly selected from this data
+set.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -261,17 +333,23 @@
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90129d53ffff -51.18481 -30.03355        824       0  116          0</span></span>
-<span><span class="co">#&gt; 2: 89a9012a307ffff -51.22079 -30.09566        443       0    7          0</span></span>
-<span><span class="co">#&gt; 3: 89a90129cd7ffff -51.17026 -30.05005        289       0   24          0</span></span>
-<span><span class="co">#&gt; 4: 89a9012a383ffff -51.22113 -30.10394        366       0   24          0</span></span>
-<span><span class="co">#&gt; 5: 89a9012a34bffff -51.20558 -30.09557          3       0    0          0</span></span>
-<span><span class="co">#&gt; 6: 89a9012916bffff -51.14578 -30.04658       1388       0   17          1</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128a47ffff -51.20850 -30.01766       1025       0  461          0</span></span>
+<span><span class="co">#&gt; 2: 89a90129c83ffff -51.17633 -30.04953        348       0    0          0</span></span>
+<span><span class="co">#&gt; 3: 89a90129e6bffff -51.14500 -30.02722        630       0   16          0</span></span>
+<span><span class="co">#&gt; 4: 89a90129963ffff -51.18975 -30.00537        456       0  388          0</span></span>
+<span><span class="co">#&gt; 5: 89a9012a35bffff -51.20569 -30.09833          0       0    0          0</span></span>
+<span><span class="co">#&gt; 6: 89a90128a97ffff -51.22108 -30.02768       1476       0 3770          1</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
+<h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with
+<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#building-routable-transport-network-with-setup_r5"></a>
 </h3>
-<p>The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the <code>setup_r5</code> function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the <code>r5r</code> package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.</p>
+<p>The first step is to build the multimodal transport network used for
+routing in R<sup>5</sup>. This is done with the <code>setup_r5</code>
+function. This function does two things: (1) downloads/updates a
+compiled JAR file of R<sup>5</sup> and stores it locally in the
+<code>r5r</code> package directory for future use; and (2) combines the
+osm.pbf and gtfs.zip data sets to build a routable network object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Indicate the path where OSM and GTFS data are stored</span></span>
 <span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></span></code></pre></div>
@@ -279,7 +357,12 @@
 <div class="section level3">
 <h3 id="accessibility-analysis">4.2 Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
 </h3>
-<p>The faster way to calculate accessibility estimates is using the <code><a href="../reference/accessibility.html">accessibility()</a></code> function. In this example, we calculate the number of schools and health care facilities accessible in less than 60 minutes by public transport and walking. More details in this vignette on <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html" class="external-link">Calculating and visualizing Accessibility</a>.</p>
+<p>The faster way to calculate accessibility estimates is using the
+<code><a href="../reference/accessibility.html">accessibility()</a></code> function. In this example, we calculate the
+number of schools and health care facilities accessible in less than 60
+minutes by public transport and walking. More details in this vignette
+on <a href="https://ipeagit.github.io/r5r/articles/calculating_accessibility.html" class="external-link">Calculating
+and visualizing Accessibility</a>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set departure datetime input</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
@@ -297,22 +380,35 @@
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a90129d53ffff     schools         50     60            19</span></span>
-<span><span class="co">#&gt; 2: 89a90129d53ffff  healthcare         50     60            18</span></span>
-<span><span class="co">#&gt; 3: 89a9012a307ffff     schools         50     60             8</span></span>
-<span><span class="co">#&gt; 4: 89a9012a307ffff  healthcare         50     60            11</span></span>
-<span><span class="co">#&gt; 5: 89a90129cd7ffff     schools         50     60            19</span></span>
-<span><span class="co">#&gt; 6: 89a90129cd7ffff  healthcare         50     60            18</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128a47ffff     schools         50     60            24</span></span>
+<span><span class="co">#&gt; 2: 89a90128a47ffff  healthcare         50     60            16</span></span>
+<span><span class="co">#&gt; 3: 89a90129c83ffff     schools         50     60            27</span></span>
+<span><span class="co">#&gt; 4: 89a90129c83ffff  healthcare         50     60            19</span></span>
+<span><span class="co">#&gt; 5: 89a90129e6bffff     schools         50     60            19</span></span>
+<span><span class="co">#&gt; 6: 89a90129e6bffff  healthcare         50     60            13</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
 </h3>
-<p>For fast routing analysis, <strong>r5r</strong> currently has three core functions: <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>.</p>
+<p>For fast routing analysis, <strong>r5r</strong> currently has three
+core functions: <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>,
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and
+<code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>.</p>
 <div class="section level4">
 <h4 id="fast-many-to-many-travel-time-matrix">Fast many to many travel time matrix<a class="anchor" aria-label="anchor" href="#fast-many-to-many-travel-time-matrix"></a>
 </h4>
-<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function is a really simple and fast function to compute travel time estimates between one or multiple origin/destination pairs. The origin/destination input can be either a spatial <code>sf POINT</code> object, or a <code>data.frame</code> containing the columns <code>id, lon, lat</code>. The function also receives as inputs the <em>max walking distance</em>, in meters, and the <em>max trip duration</em>, in minutes. Resulting travel times are also output in minutes.</p>
-<p>This function also allows users to very efficiently capture the travel time uncertainties inside a given time window considering multiple departure times. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More info on this vignette</a>.</p>
+<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function is a really simple and
+fast function to compute travel time estimates between one or multiple
+origin/destination pairs. The origin/destination input can be either a
+spatial <code>sf POINT</code> object, or a <code>data.frame</code>
+containing the columns <code>id, lon, lat</code>. The function also
+receives as inputs the <em>max walking distance</em>, in meters, and the
+<em>max trip duration</em>, in minutes. Resulting travel times are also
+output in minutes.</p>
+<p>This function also allows users to very efficiently capture the
+travel time uncertainties inside a given time window considering
+multiple departure times. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More info
+on this vignette</a>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span></span>
@@ -342,7 +438,13 @@
 <div class="section level4">
 <h4 id="expanded-travel-time-matrix-with-minute-by-minute-estimates">Expanded travel time matrix with minute-by-minute estimates<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-minute-by-minute-estimates"></a>
 </h4>
-<p>For those interested in more detailed outputs, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> works very similarly with <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> but it brings much more information. It estimates for each origin destination pair the routes used and total time disaggregated by access, waiting, in-vehicle and transfer times. Please note this function can be very memory intensive for large data sets.</p>
+<p>For those interested in more detailed outputs, the
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> works very similarly with
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> but it brings much more information.
+It estimates for each origin destination pair the routes used and total
+time disaggregated by access, waiting, in-vehicle and transfer times.
+Please note this function can be very memory intensive for large data
+sets.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate a travel time matrix</span></span>
 <span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
@@ -373,8 +475,15 @@
 <div class="section level4">
 <h4 id="detailed-itineraries">Detailed itineraries<a class="anchor" aria-label="anchor" href="#detailed-itineraries"></a>
 </h4>
-<p>Most routing packages only return the fastest route. A key advantage of the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function is that is allows for fast routing analysis while providing multiple alternative routes between origin destination pairs. The output also brings detailed information for each route alternative at the trip segment level, including the transport mode, waiting times, travel time and distance of each trip segment.</p>
-<p>In this example below, we want to know some alternative routes between one origin/destination pair only.</p>
+<p>Most routing packages only return the fastest route. A key advantage
+of the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function is that is allows
+for fast routing analysis while providing multiple alternative routes
+between origin destination pairs. The output also brings detailed
+information for each route alternative at the trip segment level,
+including the transport mode, waiting times, travel time and distance of
+each trip segment.</p>
+<p>In this example below, we want to know some alternative routes
+between one origin/destination pair only.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set inputs</span></span>
 <span><span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span></span>
@@ -417,11 +526,16 @@
 <span><span class="co">#&gt; 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
 <span><span class="co">#&gt; 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span></span>
 <span><span class="co">#&gt; 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span></span></code></pre></div>
-<p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
+<p>The output is a <code>data.frame sf</code> object, so we can easily
+visualize the results.</p>
 <div class="section level5">
 <h5 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
 </h5>
-<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> function to extract the OSM street network used in the routing.</p>
+<p><strong>Static visualization</strong> with <code>ggplot2</code>
+package: To provide a geographic context for the visualization of the
+results in <code>ggplot2</code>, you can also use the
+<code><a href="../reference/street_network_to_sf.html">street_network_to_sf()</a></code> function to extract the OSM street
+network used in the routing.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
 <span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
@@ -441,11 +555,17 @@
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 </div>
 </div>

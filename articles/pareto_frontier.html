@@ -103,12 +103,13 @@
 
       
 
-      </header><script src="pareto_frontier_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Analyzing the trade-offs between travel time and monetary cost</h1>
+      <h1 data-toc-skip>Analyzing the trade-offs between travel time and
+monetary cost</h1>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -118,21 +119,41 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to use the <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r.
+      This vignette shows how to use the <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>
+      function to examine the trade-offs between travel time and
+      monetary cost in travel time matrices in r5r.
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In most cases, transport routing models find either the fastest or the lowest-cost routes that connect places in a given transport network. Sometimes, though, we might want a more sophisticated analysis that considers both the time and monetary costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge for routing models because of the trade-offs between the objectives of minimizing trip duration and cost <span class="citation">(Conway and Stewart 2019)</span>.</p>
-<p>To address this problem, <code>r5r</code> has a function called <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette uses a reproducible example to demonstrate how to use <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
+<p>In most cases, transport routing models find either the fastest or
+the lowest-cost routes that connect places in a given transport network.
+Sometimes, though, we might want a more sophisticated analysis that
+considers both the time and monetary costs that public transport
+passengers have to face. The problem here is that simultaneously
+accounting for both time and monetary costs is a major challenge for
+routing models because of the trade-offs between the objectives of
+minimizing trip duration and cost <span class="citation">(Conway and
+Stewart 2019)</span>.</p>
+<p>To address this problem, <code>r5r</code> has a function called
+<code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient
+route possibilities between origin destination pairs considering
+multiple combinations of travel time and monetary costs. This vignette
+uses a reproducible example to demonstrate how to use
+<code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
 <div class="section level3">
 <h3 id="what-the-pareto_frontier-means-">2. What the <code>pareto_frontier</code> means.<a class="anchor" aria-label="anchor" href="#what-the-pareto_frontier-means-"></a>
 </h3>
-<p>Imagine a hypothetical journey from A to B. There are multiple route alternatives between this origin and destination with varying combinations of travel time and cost (figure below).</p>
+<p>Imagine a hypothetical journey from A to B. There are multiple route
+alternatives between this origin and destination with varying
+combinations of travel time and cost (figure below).</p>
 <ul>
-<li>Walking from A to B would be the <strong>cheapest</strong> option but it would take 50 minutes.</li>
-<li>The <strong>fastest</strong> option would be to take a bus to a subway station and transfer to the subway. This option would only take 15 minutes, but it would cost $8.</li>
+<li>Walking from A to B would be the <strong>cheapest</strong> option
+but it would take 50 minutes.</li>
+<li>The <strong>fastest</strong> option would be to take a bus to a
+subway station and transfer to the subway. This option would only take
+15 minutes, but it would cost $8.</li>
 <li>There are some intermediary alternatives, such as taking:
 <ul>
 <li>a single bus, $3 for 35 min.</li>
@@ -141,19 +162,32 @@
 </ul>
 </li>
 </ul>
-<p>This figure illustrates the Pareto frontier of alternative routes from A to B. In other words, it shows the most optimal set of route alternatives between A and B. There are certainly other route options, but there is no other option that is both faster and cheaper at the same time.</p>
+<p>This figure illustrates the Pareto frontier of alternative routes
+from A to B. In other words, it shows the most optimal set of route
+alternatives between A and B. There are certainly other route options,
+but there is no other option that is both faster and cheaper at the same
+time.</p>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p><br></p>
-<p>This kind of abstraction allows us to have a better grasp of the trade-offs between travel time and monetary cost passengers face when using public transport. It also allows us to calculate cumulative-opportunity accessibility metrics with cutoffs for both time and cost (e.g. the number of jobs reachable from a given origin with limits of 40 minutes and $5) (ref paper by Matt and Anson).</p>
-<p>Let’s see a couple concrete examples showing how <code>r5r</code> can calculate the Pareto frontier for multiple origins.</p>
+<p>This kind of abstraction allows us to have a better grasp of the
+trade-offs between travel time and monetary cost passengers face when
+using public transport. It also allows us to calculate
+cumulative-opportunity accessibility metrics with cutoffs for both time
+and cost (e.g. the number of jobs reachable from a given origin with
+limits of 40 minutes and $5) (ref paper by Matt and Anson).</p>
+<p>Let’s see a couple concrete examples showing how <code>r5r</code> can
+calculate the Pareto frontier for multiple origins.</p>
 </div>
 <div class="section level3">
 <h3 id="demonstration-of-pareto_frontier-">3. Demonstration of <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-pareto_frontier-"></a>
 </h3>
 <div class="section level4">
-<h4 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h4 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with
+<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h4>
-<p>First, let’s build the network and create the routing inputs. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
+<p>First, let’s build the network and create the routing inputs. In this
+example we’ll be using the a sample data set for the city of Porto
+Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -178,8 +212,21 @@
 <div class="section level4">
 <h4 id="set-up-the-fare-structure">3.2 Set up the fare structure<a class="anchor" aria-label="anchor" href="#set-up-the-fare-structure"></a>
 </h4>
-<p>Now we need to set what are the fare rules of our public transport system. These rules will be used by <code>R5</code> to calculate the monetary cost of alternative routes. In the case of Porto Alegre, the fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a second bus adds <code>$</code> 2.40 to the total cost. Subsequent bus rides cost the full ticket price of $ 4.80. * Each train ticket costs $ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station. * The integrated fare between bus and train has a 10% discount, which totals $ 8.37.</p>
-<p>We can create <code>list</code> object with these fare rules with the support of the <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> function as shown in the code below. A detailed explanation of how to use the fare structure of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">(this other vignette)</a>.</p>
+<p>Now we need to set what are the fare rules of our public transport
+system. These rules will be used by <code>R5</code> to calculate the
+monetary cost of alternative routes. In the case of Porto Alegre, the
+fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a
+second bus adds <code>$</code> 2.40 to the total cost. Subsequent bus
+rides cost the full ticket price of $ 4.80. * Each train ticket costs $
+4.50. Once a passenger enters a train station, she can take an unlimited
+amount of train trips as long as she doesn’t leave a station. * The
+integrated fare between bus and train has a 10% discount, which totals $
+8.37.</p>
+<p>We can create <code>list</code> object with these fare rules with the
+support of the <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> function as shown in
+the code below. A detailed explanation of how to use the fare structure
+of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">(this
+other vignette)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create basic fare structure</span></span>
 <span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
@@ -199,7 +246,8 @@
 <span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
-<p>For convenience, we can save these fare rules as a <code>zip</code> file and load again for a future application.</p>
+<p>For convenience, we can save these fare rules as a <code>zip</code>
+file and load again for a future application.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># save fare rules to temp file</span></span>
 <span><span class="va">temp_fares</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fares_poa"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span>
@@ -211,7 +259,12 @@
 <div class="section level4">
 <h4 id="calculating-a-pareto_frontier-">3.3 Calculating a <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#calculating-a-pareto_frontier-"></a>
 </h4>
-<p>In this example, we calculate the Pareto frontier from all origins to all destinations considering multiple cutoffs of monetary costs: - $1, which would only allow for walking trips - $4.5, which would only allow for rail trips - $4.8, which would allow for a single bus trip - $7.20, which would allow for bus + bus - $8.37, which would allow for walking walking + bus + rail</p>
+<p>In this example, we calculate the Pareto frontier from all origins to
+all destinations considering multiple cutoffs of monetary costs: - $1,
+which would only allow for walking trips - $4.5, which would only allow
+for rail trips - $4.8, which would allow for a single bus trip - $7.20,
+which would allow for bus + bus - $8.37, which would allow for walking
+walking + bus + rail</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
@@ -234,7 +287,11 @@
 <span><span class="co">#&gt; 4: public_market bus_central_station         50          12           4.8</span></span>
 <span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
 <span><span class="co">#&gt; 6: public_market    gasometer_museum         50          15           4.8</span></span></code></pre></div>
-<p>For the sake of illustration, let’s check the optimum route alternatives from the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without increasing costs, and one cannot make a cheaper trip without increasing travel time.</p>
+<p>For the sake of illustration, let’s check the optimum route
+alternatives from the Farrapos train station to (a) the Praia de Belas
+shopping mall and (b) the Moinhos hospital. An optimum route alternative
+means that one cannot make a faster trip without increasing costs, and
+one cannot make a cheaper trip without increasing travel time.</p>
 <pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk",</span></span>
 <span><span class="co">#&gt; : Invalid .internal.selfref detected and fixed by taking a (shallow) copy of</span></span>
 <span><span class="co">#&gt; the data.table so that := can add this new column by reference. At an earlier</span></span>
@@ -250,19 +307,29 @@
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<div id="refs" class="references">
-<div id="ref-conway2019getting">
-<p>Conway, Matthew Wigginton, and Anson F. Stewart. 2019. “Getting Charlie Off the MTA: A Multiobjective Optimization Method to Account for Cost Constraints in Public Transit Accessibility Metrics.” <em>International Journal of Geographical Information Science</em> 33 (9): 1759–87. <a href="https://doi.org/10.1080/13658816.2019.1605075" class="external-link">https://doi.org/10.1080/13658816.2019.1605075</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-conway2019getting" class="csl-entry">
+Conway, Matthew Wigginton, and Anson F. Stewart. 2019. <span>“Getting
+Charlie Off the MTA: A Multiobjective Optimization Method to Account for
+Cost Constraints in Public Transit Accessibility Metrics.”</span>
+<em>International Journal of Geographical Information Science</em> 33
+(9): 1759–87. <a href="https://doi.org/10.1080/13658816.2019.1605075" class="external-link">https://doi.org/10.1080/13658816.2019.1605075</a>.
 </div>
 </div>
 </div>

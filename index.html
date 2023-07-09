@@ -153,41 +153,69 @@
 <p>The package has six <strong>fundamental functions</strong>:</p>
 <ol style="list-style-type: decimal">
 <li>
-<code><a href="reference/setup_r5.html">setup_r5()</a></code><ul>
+<code><a href="reference/setup_r5.html">setup_r5()</a></code>
+<ul>
 <li>Downloads and stores locally an R5 Jar file (the Jar file is downloaded only once per installation)</li>
 <li>Builds a multimodal transport network given (1) a OpenStreetMap street network in <code>.pbf</code> format (<em>mandatory</em>), (2) one or more public transport networks in <code>GTFS.zip</code> format (optional), and (3) elevation data in <code>raster.tif</code> (optional).</li>
 </ul>
 </li>
 <li>
-<code><a href="reference/accessibility.html">accessibility()</a></code><ul><li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed exponential and linear.</li></ul>
+<code><a href="reference/accessibility.html">accessibility()</a></code>
+<ul>
+<li>Fast computation of access to opportunities. The function returns a <code>data.table</code> with accessibility estimates for all origin points by transport mode given a selected decay function. Multiple decay functions are available, including step (cumulative opportunities), logistic, fixed exponential and linear.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/travel_time_matrix.html">travel_time_matrix()</a></code><ul><li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs.</li></ul>
+<code><a href="reference/travel_time_matrix.html">travel_time_matrix()</a></code>
+<ul>
+<li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code><ul><li>Calculates travel time matrices between origin destination pairs with additional information such routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</li></ul>
+<code><a href="reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>
+<ul>
+<li>Calculates travel time matrices between origin destination pairs with additional information such routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/detailed_itineraries.html">detailed_itineraries()</a></code><ul><li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip segment.</li></ul>
+<code><a href="reference/detailed_itineraries.html">detailed_itineraries()</a></code>
+<ul>
+<li>Returns a <code>data.frame sf LINESTRINGs</code> with one or multiple alternative routes between one or multiple origin destination pairs. The data output brings detailed information on transport mode, travel time, walk distance etc for each trip segment.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/pareto_frontier.html">pareto_frontier()</a></code><ul><li>Returns a <code>data.table</code> with the travel time and monetary cost of multiple route alternatives for specified origin-destination pairs.</li></ul>
+<code><a href="reference/pareto_frontier.html">pareto_frontier()</a></code>
+<ul>
+<li>Returns a <code>data.table</code> with the travel time and monetary cost of multiple route alternatives for specified origin-destination pairs.</li>
+</ul>
 </li>
 </ol>
 <p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info on how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_calculator.html" class="external-link">this vignette</a>.</p>
 <p>The package also includes a few <strong>support functions</strong>.</p>
 <ol style="list-style-type: decimal">
 <li>
-<code><a href="reference/street_network_to_sf.html">street_network_to_sf()</a></code><ul><li>Extract OpenStreetMap network in sf format from a <code>network.dat</code> file.</li></ul>
+<code><a href="reference/street_network_to_sf.html">street_network_to_sf()</a></code>
+<ul>
+<li>Extract OpenStreetMap network in sf format from a <code>network.dat</code> file.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/transit_network_to_sf.html">transit_network_to_sf()</a></code><ul><li>Extract transit network in sf format from a <code>network.dat</code> file.</li></ul>
+<code><a href="reference/transit_network_to_sf.html">transit_network_to_sf()</a></code>
+<ul>
+<li>Extract transit network in sf format from a <code>network.dat</code> file.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/find_snap.html">find_snap()</a></code><ul><li>Find snapped locations of input points on street network.</li></ul>
+<code><a href="reference/find_snap.html">find_snap()</a></code>
+<ul>
+<li>Find snapped locations of input points on street network.</li>
+</ul>
 </li>
 <li>
-<code><a href="reference/r5r_sitrep.html">r5r_sitrep()</a></code><ul><li>Generate a situation report to help debug eventual errors.</li></ul>
+<code><a href="reference/r5r_sitrep.html">r5r_sitrep()</a></code>
+<ul>
+<li>Generate a situation report to help debug eventual errors.</li>
+</ul>
 </li>
 </ol>
 <div class="section level3">
@@ -196,7 +224,8 @@
 <p>To use <code>r5r</code>, you will need: - A road network data set from OpenStreetMap in <code>.pbf</code> format (<em>mandatory</em>) - A public transport feed in <code>GTFS.zip</code> format (optional) - A raster file of Digital Elevation Model data in <code>.tif</code> format (optional)</p>
 <p>Here are a few places from where you can download these data sets:</p>
 <ul>
-<li>OpenStreetMap<ul>
+<li>OpenStreetMap
+<ul>
 <li>
 <a href="https://docs.ropensci.org/osmextract/" class="external-link">osmextract</a> R package</li>
 <li>
@@ -207,14 +236,16 @@
 <a href="https://extract.bbbike.org/" class="external-link">BBBike.org</a> website</li>
 </ul>
 </li>
-<li>GTFS<ul>
+<li>GTFS
+<ul>
 <li>
 <a href="https://r-transit.github.io/tidytransit/" class="external-link">tidytransit</a> R package</li>
 <li>
 <a href="https://www.transit.land/" class="external-link">transitland</a> website</li>
 </ul>
 </li>
-<li>Elevation<ul>
+<li>Elevation
+<ul>
 <li>
 <a href="https://github.com/jhollist/elevatr" class="external-link">elevatr</a> R package</li>
 <li>
@@ -306,8 +337,10 @@
 <h1 id="citation-">Citation <img align="right" src="reference/figures/ipea_logo.png" alt="ipea" width="300"><a class="anchor" aria-label="anchor" href="#citation-"></a>
 </h1>
 <p>The R package <strong>r5r</strong> is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:</p>
-<ul><li>Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &amp; Conway, M. W. (2021). <strong>r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R</strong>. <em>Findings</em>, 21262. <a href="https://doi.org/10.32866/001c.21262" class="external-link">https://doi.org/10.32866/001c.21262</a>
-</li></ul>
+<ul>
+<li>Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &amp; Conway, M. W. (2021). <strong>r5r: Rapid Realistic Routing on Multimodal Transport Networks with R5 in R</strong>. <em>Findings</em>, 21262. <a href="https://doi.org/10.32866/001c.21262" class="external-link">https://doi.org/10.32866/001c.21262</a>
+</li>
+</ul>
 <p>BibTeX:</p>
 <pre><code>@article{pereira_r5r_2021,
     title = {r5r: Rapid Realistic Routing on Multimodal Transport Networks with {R}$^{\textrm{5}}$ in R},

@@ -103,12 +103,12 @@
 
       
 
-      </header><script src="fare_structure_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -118,30 +118,89 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to configure and use custom fare rules in order to account for monetary travel costs when generating travel time matrices and accessibility estimates with the <code>r5r</code> package.
+      This vignette shows how to configure and use custom fare rules in
+      order to account for monetary travel costs when generating travel
+      time matrices and accessibility estimates with the
+      <code>r5r</code> package.
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Considering the monetary costs of public transport trips in the calculation of travel time matrices and accessibility estimates is a major challenge faced by researchers and planning practitioners. Each public transport system can have its own set of rules for calculating fares, with varying levels of complexity. Moreover, there are important trade offs between travel time and monetary costs across multiple trip alternatives and are currently not captured by any multimodal routing engine, except for R5.</p>
-<p>R5 has native capabilities and an open architecture for creating and including fare structures in routing models, making it possible to estimate travel time matrices and accessibility estimates simultaneously considering different combinations of time and monetary cost cutoffs. The main challenge, however, is that a specific fare structure for each city needs to be programmed in Java and tightly integrated into R5, making this functionality out of reach for those who do not know how to code in Java (i.e. most of us!).</p>
-<p>To help tackle this challenge, <code>r5r</code> has a simple generic rule-based fare structure that can be configured via a predefined set of properties and rules that can be set directly from R or using external tools such as text editors and spreadsheets. This approach currently available in <code>r5r</code> is able to account for the monetary costs of public transport systems that follow a simple set of fare rules according to which the cost of a journey depends on combinations of modes (see details below).</p>
-<p><strong>This vignette shows the features of <code>r5r</code>s fare structure. It also uses a reproducible example to demonstrate how to configure the fare structure to account for monetary costs when generating travel time matrices and accessibility estimates with <code>r5r</code></strong>.</p>
+<p>Considering the monetary costs of public transport trips in the
+calculation of travel time matrices and accessibility estimates is a
+major challenge faced by researchers and planning practitioners. Each
+public transport system can have its own set of rules for calculating
+fares, with varying levels of complexity. Moreover, there are important
+trade offs between travel time and monetary costs across multiple trip
+alternatives and are currently not captured by any multimodal routing
+engine, except for R5.</p>
+<p>R5 has native capabilities and an open architecture for creating and
+including fare structures in routing models, making it possible to
+estimate travel time matrices and accessibility estimates simultaneously
+considering different combinations of time and monetary cost cutoffs.
+The main challenge, however, is that a specific fare structure for each
+city needs to be programmed in Java and tightly integrated into R5,
+making this functionality out of reach for those who do not know how to
+code in Java (i.e. most of us!).</p>
+<p>To help tackle this challenge, <code>r5r</code> has a simple generic
+rule-based fare structure that can be configured via a predefined set of
+properties and rules that can be set directly from R or using external
+tools such as text editors and spreadsheets. This approach currently
+available in <code>r5r</code> is able to account for the monetary costs
+of public transport systems that follow a simple set of fare rules
+according to which the cost of a journey depends on combinations of
+modes (see details below).</p>
+<p><strong>This vignette shows the features of <code>r5r</code>s fare
+structure. It also uses a reproducible example to demonstrate how to
+configure the fare structure to account for monetary costs when
+generating travel time matrices and accessibility estimates with
+<code>r5r</code></strong>.</p>
 <div class="section level3">
 <h3 id="details">1.1 Details<a class="anchor" aria-label="anchor" href="#details"></a>
 </h3>
-<p>A common feature among many public transport services is the possibility of discounted transfers, when passengers can use a single ticket for a trip composed of multiple rides sometimes combining different transport modes. Such trips usually come with a discount in the second or subsequent fares, as well as a limit on the number of discounted transfers the user can make and/or a time limit for using that discount. This is the type of fare structure currently covered by <code>r5r</code>.</p>
-<p>We acknowledge that there are several types fare rules that vary from one public transport system to another. According to these rules, the cost of a journey can differ, for example, depending on: different costs for each trip leg, transport mode or route; distance- or zone-based fares; different fares for types of riders (e.g elderly people or students) or time of the day (e.g. peak and off-peak hours); among many others rules. As such, taking all of these possible rules into consideration when calculating the monetary cost of multimodal can be quite difficult. <code>r5r</code> currently does not cover these more complex fare rules.</p>
-<p>The fare calculator currently available in <code>r5r</code> is not intended to be a robust solution that can take into consideration all public transport systems and their specific fare rules. That would be a Herculean task. The features included in <code>r5r</code>’s fare calculator are inspired by our empirical observations of Brazilian public transport systems, and is meant to be used mainly in the <a href="https://www.ipea.gov.br/acessooportunidades/en/" class="external-link">Access to Opportunities project</a>. Everyone else is welcome to use it, if the current features suit their needs.</p>
-<p>obs. The GTFS format has some features for specifying public transport fares, but those features are quite limited and are not enough for adequately representing many use cases. A new version of that specification is currently being developed <a href="https://github.com/google/transit/issues/252" class="external-link">Fares V2</a>, but it may take some time for it to be approved and for transport agencies actually start providing GTFS feeds with full fare information.</p>
+<p>A common feature among many public transport services is the
+possibility of discounted transfers, when passengers can use a single
+ticket for a trip composed of multiple rides sometimes combining
+different transport modes. Such trips usually come with a discount in
+the second or subsequent fares, as well as a limit on the number of
+discounted transfers the user can make and/or a time limit for using
+that discount. This is the type of fare structure currently covered by
+<code>r5r</code>.</p>
+<p>We acknowledge that there are several types fare rules that vary from
+one public transport system to another. According to these rules, the
+cost of a journey can differ, for example, depending on: different costs
+for each trip leg, transport mode or route; distance- or zone-based
+fares; different fares for types of riders (e.g elderly people or
+students) or time of the day (e.g. peak and off-peak hours); among many
+others rules. As such, taking all of these possible rules into
+consideration when calculating the monetary cost of multimodal can be
+quite difficult. <code>r5r</code> currently does not cover these more
+complex fare rules.</p>
+<p>The fare calculator currently available in <code>r5r</code> is not
+intended to be a robust solution that can take into consideration all
+public transport systems and their specific fare rules. That would be a
+Herculean task. The features included in <code>r5r</code>’s fare
+calculator are inspired by our empirical observations of Brazilian
+public transport systems, and is meant to be used mainly in the <a href="https://www.ipea.gov.br/acessooportunidades/en/" class="external-link">Access to
+Opportunities project</a>. Everyone else is welcome to use it, if the
+current features suit their needs.</p>
+<p>obs. The GTFS format has some features for specifying public
+transport fares, but those features are quite limited and are not enough
+for adequately representing many use cases. A new version of that
+specification is currently being developed <a href="https://github.com/google/transit/issues/252" class="external-link">Fares V2</a>, but it
+may take some time for it to be approved and for transport agencies
+actually start providing GTFS feeds with full fare information.</p>
 <p><br></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="reprex-the-public-transport-system-of-porto-alegre">2. Reprex: the public transport system of Porto Alegre<a class="anchor" aria-label="anchor" href="#reprex-the-public-transport-system-of-porto-alegre"></a>
 </h2>
-<p>In this vignette, we will be using the sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>. Before we start, we need to increase the memory available to Java and load the packages used in this vignette</p>
+<p>In this vignette, we will be using the sample data set for the city
+of Porto Alegre (Brazil) included in <code>r5r</code>. Before we start,
+we need to increase the memory available to Java and load the packages
+used in this vignette</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
@@ -152,7 +211,11 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://obrl-soil.github.io/h3jsr/" class="external-link">h3jsr</a></span><span class="op">)</span></span></code></pre></div>
-<p>Porto Alegre has a relatively straightforward public transport system, where the vast majority of the population that rely on transit ride buses. The city also has a metropolitan rail service that connects the city center to the neighboring northbound municipalities. That system can be seen in the map below.</p>
+<p>Porto Alegre has a relatively straightforward public transport
+system, where the vast majority of the population that rely on transit
+ride buses. The city also has a metropolitan rail service that connects
+the city center to the neighboring northbound municipalities. That
+system can be seen in the map below.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># setup and load Porto Alegre multimodal network into memory</span></span>
 <span></span>
@@ -173,33 +236,61 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">transit_network</span><span class="op">$</span><span class="va">routes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fare_structure_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
-<p>According to the fare rules in Porto Alegre, as in most Brazilian cities, the cost a a journey depends on a combination of number of subsequent trips and/or transport modes. In the case of Porto Alegre, the fare rules are as follows:</p>
+<p>According to the fare rules in Porto Alegre, as in most Brazilian
+cities, the cost a a journey depends on a combination of number of
+subsequent trips and/or transport modes. In the case of Porto Alegre,
+the fare rules are as follows:</p>
 <ul>
 <li>Each bus ticket costs R$ 4.80.</li>
-<li>Riding a second bus adds R$ 2.40 to the total cost. Subsequent bus rides cost the full ticket price of R$ 4.80.</li>
-<li>Each train ticket costs R$ 4.50. Once a passenger enters a train station, she can take an unlimited amount of train trips as long as she doesn’t leave a station.</li>
-<li>The integrated fare between bus and train has a 10% discount, which totals R$ 8.37.</li>
+<li>Riding a second bus adds R$ 2.40 to the total cost. Subsequent bus
+rides cost the full ticket price of R$ 4.80.</li>
+<li>Each train ticket costs R$ 4.50. Once a passenger enters a train
+station, she can take an unlimited amount of train trips as long as she
+doesn’t leave a station.</li>
+<li>The integrated fare between bus and train has a 10% discount, which
+totals R$ 8.37.</li>
 </ul>
-<p>In the following sections, we will demonstrate how to implement those rules within r5r’s fare calculator.</p>
+<p>In the following sections, we will demonstrate how to implement those
+rules within r5r’s fare calculator.</p>
 <p><br></p>
 </div>
 <div class="section level2">
 <h2 id="setting-up-the-fare-structure">3. Setting up the fare structure<a class="anchor" aria-label="anchor" href="#setting-up-the-fare-structure"></a>
 </h2>
-<p>There are three support functions in <code>r5r</code> to help users configure the fare structure:</p>
+<p>There are three support functions in <code>r5r</code> to help users
+configure the fare structure:</p>
 <ul>
 <li>
-<code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> analyses the study area’s GTFS and builds a ‘skeleton’ fare structure structure with the parameters that need to be set;</li>
+<code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> analyses the study area’s GTFS
+and builds a ‘skeleton’ fare structure structure with the parameters
+that need to be set;</li>
 <li>
-<code><a href="../reference/write_fare_structure.html">write_fare_structure()</a></code> and <code><a href="../reference/read_fare_structure.html">read_fare_structure()</a></code> allow saving the current fare structure settings to disk, and reading them back into memory. The settings are saved as standard <code>.csv</code> files inside a zipped folder. These files can be edited outside the R session using external text editors and spreadsheet software, for user’s convenience.</li>
+<code><a href="../reference/write_fare_structure.html">write_fare_structure()</a></code> and
+<code><a href="../reference/read_fare_structure.html">read_fare_structure()</a></code> allow saving the current fare
+structure settings to disk, and reading them back into memory. The
+settings are saved as standard <code>.csv</code> files inside a zipped
+folder. These files can be edited outside the R session using external
+text editors and spreadsheet software, for user’s convenience.</li>
 </ul>
-<p>First, we need to call <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code>, providing three parameters: the current <code>r5r_core</code> object, a <code>base_fare</code> used to populate the fare structure, and the <code>by</code> parameters that identifies what is the main property of the route that defines the different fares.</p>
-<p>In the example below, the <code>base_fare</code> is the standard bus ticket price of R$ 4.80. We are also stating that <code>by = "MODE"</code>, so that each transport mode has its own fares and integration rules. Users can also create a fare structure where fare rules of routes differ by <code>"AGENCY_ID"</code> or <code>"AGENCY_NAME"</code>, or simply set <code>by = "GENERIC"</code> when the entire system follows the same rules.</p>
+<p>First, we need to call <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code>, providing
+three parameters: the current <code>r5r_core</code> object, a
+<code>base_fare</code> used to populate the fare structure, and the
+<code>by</code> parameters that identifies what is the main property of
+the route that defines the different fares.</p>
+<p>In the example below, the <code>base_fare</code> is the standard bus
+ticket price of R$ 4.80. We are also stating that
+<code>by = "MODE"</code>, so that each transport mode has its own fares
+and integration rules. Users can also create a fare structure where fare
+rules of routes differ by <code>"AGENCY_ID"</code> or
+<code>"AGENCY_NAME"</code>, or simply set <code>by = "GENERIC"</code>
+when the entire system follows the same rules.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
 <span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
 <span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span></code></pre></div>
-<p>Now let’s check the contents of the <code>fare_structure</code> object. We can see below that it is simply a <code>list</code> with a few properties and data.frames.</p>
+<p>Now let’s check the contents of the <code>fare_structure</code>
+object. We can see below that it is simply a <code>list</code> with a
+few properties and data.frames.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fare_structure</span>, n<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $max_discounted_transfers</span></span>
@@ -270,25 +361,37 @@
 <div class="section level3">
 <h3 id="global-properties">3.1 Global Properties<a class="anchor" aria-label="anchor" href="#global-properties"></a>
 </h3>
-<p>Let’s configure the global properties first, which are the ones that are applied to the entire system.</p>
+<p>Let’s configure the global properties first, which are the ones that
+are applied to the entire system.</p>
 <div class="section level4">
 <h4 id="max_discounted_transfers">
 <code>max_discounted_transfers</code><a class="anchor" aria-label="anchor" href="#max_discounted_transfers"></a>
 </h4>
-<p>Note that <code>max_discounted_transfers</code> is set to 1 by default. This means that the passenger gets a fare discount in the first transfer between buses, but she would pay the full fare price in subsequent transfers.</p>
+<p>Note that <code>max_discounted_transfers</code> is set to 1 by
+default. This means that the passenger gets a fare discount in the first
+transfer between buses, but she would pay the full fare price in
+subsequent transfers.</p>
 </div>
 <div class="section level4">
 <h4 id="transfer_time_allowance">
 <code>transfer_time_allowance</code><a class="anchor" aria-label="anchor" href="#transfer_time_allowance"></a>
 </h4>
-<p>By default, <code>transfer_time_allowance</code> is set to 120 minutes. We have to set it to 60 minutes to fit our use case (passengers have 60 minutes to take the second bus on a discounted fare, otherwise a full fare is charged).</p>
+<p>By default, <code>transfer_time_allowance</code> is set to 120
+minutes. We have to set it to 60 minutes to fit our use case (passengers
+have 60 minutes to take the second bus on a discounted fare, otherwise a
+full fare is charged).</p>
 </div>
 <div class="section level4">
 <h4 id="fare_cap">
 <code>fare_cap</code><a class="anchor" aria-label="anchor" href="#fare_cap"></a>
 </h4>
-<p>Finally, the <code>fare_cap</code> setting indicates if there is a maximum value that can be charged in a trip, beyond which all subsequent rides are free of charge. In this example, we can leave <code>fare_cap</code> set to its default <code>Inf</code> value because this feature is not applicable to Porto Alegre.</p>
-<p>Here is how we can check or update the values of these components:</p>
+<p>Finally, the <code>fare_cap</code> setting indicates if there is a
+maximum value that can be charged in a trip, beyond which all subsequent
+rides are free of charge. In this example, we can leave
+<code>fare_cap</code> set to its default <code>Inf</code> value because
+this feature is not applicable to Porto Alegre.</p>
+<p>Here is how we can check or update the values of these
+components:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">max_discounted_transfers</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
@@ -300,16 +403,30 @@
 <div class="section level3">
 <h3 id="configure-fares-by-transport-mode">3.2 Configure fares by transport mode<a class="anchor" aria-label="anchor" href="#configure-fares-by-transport-mode"></a>
 </h3>
-<p>To configure mode-, transfer-, and route-specific properties, we can use the three <code>data.frames</code> inside our <code>fare_structure</code> list. Let’s configure the modes first. Below, we can see that the <code>fares_per_type</code> data.frame contains five columns:</p>
+<p>To configure mode-, transfer-, and route-specific properties, we can
+use the three <code>data.frames</code> inside our
+<code>fare_structure</code> list. Let’s configure the modes first.
+Below, we can see that the <code>fares_per_type</code> data.frame
+contains five columns:</p>
 <ul>
 <li>
-<code>mode</code>: the transport mode to which rules on each row refer to;</li>
+<code>mode</code>: the transport mode to which rules on each row
+refer to;</li>
 <li>
-<code>unlimited_transfers</code>: a logical value <code>TRUE</code> or <code>FALSE</code> that indicates if that transport mode allows unlimited transfers between trips of the same mode, such as a metro/subway system where the passenger pays a fare to access a station and then can use as many services as she wants as long as she doesn’t exit the system;</li>
+<code>unlimited_transfers</code>: a logical value <code>TRUE</code>
+or <code>FALSE</code> that indicates if that transport mode allows
+unlimited transfers between trips of the same mode, such as a
+metro/subway system where the passenger pays a fare to access a station
+and then can use as many services as she wants as long as she doesn’t
+exit the system;</li>
 <li>
-<code>allow_same_route_transfer</code>: a logical value indicating if a discounted transfer can be done between vehicles ??? of the same route;</li>
+<code>allow_same_route_transfer</code>: a logical value indicating
+if a discounted transfer can be done between vehicles ??? of the same
+route;</li>
 <li>
-<code>use_route_fare</code>: another logical value that indicates if each route will have its own fare, or if all routes in this mode will use the fare indicated in this table;</li>
+<code>use_route_fare</code>: another logical value that indicates if
+each route will have its own fare, or if all routes in this mode will
+use the fare indicated in this table;</li>
 <li>
 <code>fare</code>: the full fare price of this mode.</li>
 </ul>
@@ -318,7 +435,18 @@
 <span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
 <span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
 <span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span></code></pre></div>
-<p>We need to do a few small changes in the <code>fares_per_type</code> table to accomodate the fare rules of Porto Alegre. In the <code>"RAIL"</code> mode, we need to set <code>unlimited_transfers</code> and <code>allow_same_route_transfer</code> to <code>TRUE</code>, and update <code>fare</code> to 4.50. In the <code>"BUS"</code> mode, we can let the <code>allow_same_route_transfer</code> set to its default <code>FALSE</code> value, because even though there is a discount for transfers between buses (which is set in the following section), that discount is not valid when transferring between buses within the same route (for example, from bus route T1 to another T1). We’ll do those changes below, using <code>data.table</code> notation.</p>
+<p>We need to do a few small changes in the <code>fares_per_type</code>
+table to accomodate the fare rules of Porto Alegre. In the
+<code>"RAIL"</code> mode, we need to set
+<code>unlimited_transfers</code> and
+<code>allow_same_route_transfer</code> to <code>TRUE</code>, and update
+<code>fare</code> to 4.50. In the <code>"BUS"</code> mode, we can let
+the <code>allow_same_route_transfer</code> set to its default
+<code>FALSE</code> value, because even though there is a discount for
+transfers between buses (which is set in the following section), that
+discount is not valid when transferring between buses within the same
+route (for example, from bus route T1 to another T1). We’ll do those
+changes below, using <code>data.table</code> notation.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">4.50</span><span class="op">]</span></span>
@@ -333,7 +461,10 @@
 <div class="section level3">
 <h3 id="configure-fares-by-transfers">3.3 Configure fares by transfers<a class="anchor" aria-label="anchor" href="#configure-fares-by-transfers"></a>
 </h3>
-<p>The fare rules for transfer are stored in the <code>fares_per_transfer</code> data.frame, which is shown below. Each row contains the fare prices for transfers between the modes specified in <code>first_leg</code> and <code>second_leg</code> columns.</p>
+<p>The fare rules for transfer are stored in the
+<code>fares_per_transfer</code> data.frame, which is shown below. Each
+row contains the fare prices for transfers between the modes specified
+in <code>first_leg</code> and <code>second_leg</code> columns.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg fare</span></span>
@@ -341,15 +472,20 @@
 <span><span class="co">#&gt; 2:      RAIL        BUS  4.8</span></span>
 <span><span class="co">#&gt; 3:       BUS       RAIL  4.8</span></span>
 <span><span class="co">#&gt; 4:      RAIL       RAIL  4.8</span></span></code></pre></div>
-<p>Let’s update <code>fare_per_transfer</code> to account for the actual integration rules in Porto Alegre.</p>
+<p>Let’s update <code>fare_per_transfer</code> to account for the actual
+integration rules in Porto Alegre.</p>
 <ul>
-<li>The fare for “BUS” to “BUS” integration is composed of 4.80 for the first leg plus 2.40 for the second leg, which equals to a total fare of 7.20.</li>
+<li>The fare for “BUS” to “BUS” integration is composed of 4.80 for the
+first leg plus 2.40 for the second leg, which equals to a total fare of
+7.20.</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">7.2</span><span class="op">]</span></span></code></pre></div>
 <ul>
-<li>Transfers between “BUS” and “RAIL” (in any direction) cost 8.37, once the 10% discount is applied. Let’s make a final update in the data.frame to account for that.</li>
+<li>Transfers between “BUS” and “RAIL” (in any direction) cost 8.37,
+once the 10% discount is applied. Let’s make a final update in the
+data.frame to account for that.</li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
@@ -359,12 +495,19 @@
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,</span>
 <span>                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <ul>
-<li>Transfers between “RAIL” and “RAIL” are free and unlimited, which is already accounted for in the field <code>unlimited_transfers</code> of the <code>fare_per_mode</code> table. Thus, the equivalent row of the <code>fare_per_transfer</code> data.frame needs to be removed. If we leave the that row in <code>fare_per_transfer</code>, transfers between “RAIL” and “RAIL” will count to the global <code>max_discounted_transfers</code> allowance.</li>
+<li>Transfers between “RAIL” and “RAIL” are free and unlimited, which is
+already accounted for in the field <code>unlimited_transfers</code> of
+the <code>fare_per_mode</code> table. Thus, the equivalent row of the
+<code>fare_per_transfer</code> data.frame needs to be removed. If we
+leave the that row in <code>fare_per_transfer</code>, transfers between
+“RAIL” and “RAIL” will count to the global
+<code>max_discounted_transfers</code> allowance.</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove row</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span> <span class="op">&lt;-</span> <span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<p>Once all changes are applied, the <code>fare_per_transfer</code> data.frame should look like this:</p>
+<p>Once all changes are applied, the <code>fare_per_transfer</code>
+data.frame should look like this:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg fare</span></span>
@@ -375,7 +518,11 @@
 <div class="section level3">
 <h3 id="routes-configuration">3.4 Routes configuration<a class="anchor" aria-label="anchor" href="#routes-configuration"></a>
 </h3>
-<p>The information on the fare price for each route is stored in the <code>fares_per_route</code> data.frame. Below, we can see a sample of the bus and train routes in Porto Alegre. In case there a few special routes (e.g. express services) with specific fares, these values can be updated in this <code>fares_per_route</code> data.frame.</p>
+<p>The information on the fare price for each route is stored in the
+<code>fares_per_route</code> data.frame. Below, we can see a sample of
+the bus and train routes in Porto Alegre. In case there a few special
+routes (e.g. express services) with specific fares, these values can be
+updated in this <code>fares_per_route</code> data.frame.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    agency_id                                 agency_name  route_id</span></span>
@@ -399,29 +546,59 @@
 <span><span class="co">#&gt; 4:       BUS</span></span>
 <span><span class="co">#&gt; 5:      RAIL</span></span>
 <span><span class="co">#&gt; 6:      RAIL</span></span></code></pre></div>
-<p>Basic route information is taken directly from the GTFS data (agency, route id and names, mode, etc), but the <code>route_fare</code> and <code>fare_type</code> columns were added specifically for the <code>r5r</code> fare structure.</p>
+<p>Basic route information is taken directly from the GTFS data (agency,
+route id and names, mode, etc), but the <code>route_fare</code> and
+<code>fare_type</code> columns were added specifically for the
+<code>r5r</code> fare structure.</p>
 <ul>
-<li><p><code>route_fare</code>: is used to set a specific fare for each route. This field can be used to represent services that have many unique fares, such as metropolitan / suburban trains and buses. This is used together with the <code>use_route_fare</code> column in the <code>fares_per_type</code> table: the <code>route_fare</code> field is only considered by the <code>r5r</code> fare structure when <code>use_route_fare</code> of that mode is set to <code>TRUE</code>.</p></li>
-<li><p><code>fare_type</code>: is used to link each route with information in the <code>fares_per_type</code> and <code>fares_per_transfer</code> tables. In this example, <code>fare_type</code> is always the same as <code>mode</code>, because that was what we chose in the <code>by</code> parameter when calling <code>setup_fare_structure</code> earlier (we could have chosen to discriminate fares by agency, for example).</p></li>
+<li><p><code>route_fare</code>: is used to set a specific fare for each
+route. This field can be used to represent services that have many
+unique fares, such as metropolitan / suburban trains and buses. This is
+used together with the <code>use_route_fare</code> column in the
+<code>fares_per_type</code> table: the <code>route_fare</code> field is
+only considered by the <code>r5r</code> fare structure when
+<code>use_route_fare</code> of that mode is set to
+<code>TRUE</code>.</p></li>
+<li><p><code>fare_type</code>: is used to link each route with
+information in the <code>fares_per_type</code> and
+<code>fares_per_transfer</code> tables. In this example,
+<code>fare_type</code> is always the same as <code>mode</code>, because
+that was what we chose in the <code>by</code> parameter when calling
+<code>setup_fare_structure</code> earlier (we could have chosen to
+discriminate fares by agency, for example).</p></li>
 </ul>
-<p>We actually don’t have any change do to in the <code>fares_per_route</code> table, in this example. It does not matter that the <code>route_fare</code> value is wrong for the “RAIL” lines, because we are using the fares set in <code>fares_per_type</code> and <code>fares_per_transfer</code> which we already set up correctly before.</p>
-<p>Now that our <code>fare_structure</code> is complete, we can use it to calculate travel time matrices and accessibility while accounting for monetary cost cutoffs. Let’s see how it’s done in the next sections.</p>
+<p>We actually don’t have any change do to in the
+<code>fares_per_route</code> table, in this example. It does not matter
+that the <code>route_fare</code> value is wrong for the “RAIL” lines,
+because we are using the fares set in <code>fares_per_type</code> and
+<code>fares_per_transfer</code> which we already set up correctly
+before.</p>
+<p>Now that our <code>fare_structure</code> is complete, we can use it
+to calculate travel time matrices and accessibility while accounting for
+monetary cost cutoffs. Let’s see how it’s done in the next sections.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="calculating-travel-time-and-accessibiilty-accounting-for-monetary-costs">4. Calculating travel time and accessibiilty accounting for monetary costs<a class="anchor" aria-label="anchor" href="#calculating-travel-time-and-accessibiilty-accounting-for-monetary-costs"></a>
+<h2 id="calculating-travel-time-and-accessibiilty-accounting-for-monetary-costs">4. Calculating travel time and accessibiilty accounting for monetary
+costs<a class="anchor" aria-label="anchor" href="#calculating-travel-time-and-accessibiilty-accounting-for-monetary-costs"></a>
 </h2>
-<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/accessibility.html">accessibility()</a></code> functions have two new parameters to account for monetary costs thresholds:</p>
+<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and
+<code><a href="../reference/accessibility.html">accessibility()</a></code> functions have two new parameters to
+account for monetary costs thresholds:</p>
 <ul>
 <li>
-<code>fare_structure</code>: the settings object that we’ve been working on.</li>
+<code>fare_structure</code>: the settings object that we’ve been
+working on.</li>
 <li>
-<code>max_fare</code>: the maximum total fare that can be used in the trip.</li>
+<code>max_fare</code>: the maximum total fare that can be used in
+the trip.</li>
 </ul>
 <div class="section level3">
 <h3 id="travel-time-with-monetary-cost">4.1 Travel time with monetary cost<a class="anchor" aria-label="anchor" href="#travel-time-with-monetary-cost"></a>
 </h3>
-<p>The following example shows travel time differences when monetary costs are accounted for, using the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function.</p>
+<p>The following example shows travel time differences when monetary
+costs are accounted for, using the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>
+function.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## load input data</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span></span>
@@ -453,7 +630,12 @@
 <span><span class="va">ttm</span><span class="op">[</span><span class="va">ttm_500</span>, on <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">from_id</span>, <span class="va">to_id</span><span class="op">)</span>, <span class="va">travel_time_500</span> <span class="op">:=</span> <span class="va">i.travel_time_p50</span><span class="op">]</span></span>
 <span><span class="va">ttm</span><span class="op">[</span>, <span class="va">travel_time_unl</span> <span class="op">:=</span> <span class="va">travel_time_p50</span><span class="op">]</span></span>
 <span><span class="va">ttm</span><span class="op">[</span>, <span class="va">travel_time_p50</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span></span></code></pre></div>
-<p>Below, we can see a sample of the travel time differences with and without monetary cost restriction. We can see that some trips are not affected at all (<code>travel_time_unl == travel_time_500</code>), some trips take a little longer to complete (<code>travel_time_500 &gt; travel_time_unl</code>), and other trips cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
+<p>Below, we can see a sample of the travel time differences with and
+without monetary cost restriction. We can see that some trips are not
+affected at all (<code>travel_time_unl == travel_time_500</code>), some
+trips take a little longer to complete
+(<code>travel_time_500 &gt; travel_time_unl</code>), and other trips
+cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
@@ -467,7 +649,8 @@
 <span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              26              26</span></span>
 <span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              19              19</span></span>
 <span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
-<p>The plots below show the overall distribution of the travel time differences and unreachable destinations:</p>
+<p>The plots below show the overall distribution of the travel time
+differences and unreachable destinations:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot of overall travel time differences between limited and unlimited cost travel time matrices </span></span>
 <span><span class="va">time_difference</span> <span class="op">=</span> <span class="va">ttm</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">travel_time_500</span><span class="op">)</span>, <span class="fu">.</span><span class="op">(</span>count <span class="op">=</span> <span class="va">.N</span><span class="op">)</span>, </span>
@@ -507,7 +690,10 @@
 <div class="section level3">
 <h3 id="calculating-accessibility-with-monetary-cost">4.2 Calculating accessibility with monetary cost<a class="anchor" aria-label="anchor" href="#calculating-accessibility-with-monetary-cost"></a>
 </h3>
-<p>Now, we can answer questions like “how many health care facilities one can access in 60 minutes using public transport, on a R$5.00 budget?”. We’ll do that below, and compare the results the accessibility unconstrained by monetary costs:</p>
+<p>Now, we can answer questions like “how many health care facilities
+one can access in 60 minutes using public transport, on a R$5.00
+budget?”. We’ll do that below, and compare the results the accessibility
+unconstrained by monetary costs:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility function</span></span>
 <span><span class="va">calculate_accessibility</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span>, <span class="va">fare_string</span><span class="op">)</span> <span class="op">{</span></span>
@@ -541,7 +727,8 @@
 <span><span class="co"># bring geometry</span></span>
 <span><span class="va">access</span><span class="op">$</span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://obrl-soil.github.io/h3jsr/reference/cell_to_polygon.html" class="external-link">cell_to_polygon</a></span><span class="op">(</span><span class="va">access</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></code></pre></div>
-<p>Finally, we can plot the results and see how accessibility levels can differ quite substantially when we account for monetary costs.</p>
+<p>Finally, we can plot the results and see how accessibility levels can
+differ quite substantially when we account for monetary costs.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot accessibility maps</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">access</span><span class="op">)</span> <span class="op">+</span></span>
@@ -556,11 +743,17 @@
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 </div>
 </div>

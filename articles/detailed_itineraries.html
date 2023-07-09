@@ -103,12 +103,12 @@
 
       
 
-      </header><script src="detailed_itineraries_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Planning routes with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/detailed_itineraries.Rmd" class="external-link"><code>../vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="hidden name"><code>detailed_itineraries.Rmd</code></div>
@@ -118,20 +118,49 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to do route planning using the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function in r5r.
+      This vignette shows how to do route planning using the
+      <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function in r5r.
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><strong>r5r</strong> has some extremely efficient functions to run multimodal routing and accessibility analysis. In general, though, these functions output only the essential information required by most transport planning applications and simulation models. Moreover, the algorithms behind these function return only the optimal route in terms of minimizing travel times and/or monetary costs. Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too.</p>
-<p>This is where the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function comes in. This function outputs for each origin destination pair a detailed route plan with information per leg, meaning a route taken by a single mode such as a walk to the bus stop. In R5’s documentation these legs are referred to as ‘segments’, a word more usually used to describe small sections on the transport network. Results contain information on the mode, waiting times, travel times and distances for each leg (or ‘segment’ in R5 documentation) and the trip geometry. Moreover, the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function can also return results for multiple route alternatives. Let’s see how this function works using a reproducible example.</p>
-<p><strong>obs.</strong> We only recommend using <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> in case you are interested in finding suboptimal alternative routes and/or need the geometry information of the outputs. If you only want to have route information detailed by trip segments, then we would strongly encourage you to use the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. More info here.</p>
+<p><strong>r5r</strong> has some extremely efficient functions to run
+multimodal routing and accessibility analysis. In general, though, these
+functions output only the essential information required by most
+transport planning applications and simulation models. Moreover, the
+algorithms behind these function return only the optimal route in terms
+of minimizing travel times and/or monetary costs. Sometimes, though, we
+would like to do more simple route planning analysis and extract more
+information for each route. Also, we might be interested in finding not
+only the fastest route but some other suboptimal route alternatives
+too.</p>
+<p>This is where the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function comes
+in. This function outputs for each origin destination pair a detailed
+route plan with information per leg, meaning a route taken by a single
+mode such as a walk to the bus stop. In R5’s documentation these legs
+are referred to as ‘segments’, a word more usually used to describe
+small sections on the transport network. Results contain information on
+the mode, waiting times, travel times and distances for each leg (or
+‘segment’ in R5 documentation) and the trip geometry. Moreover, the
+<code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function can also return results for
+multiple route alternatives. Let’s see how this function works using a
+reproducible example.</p>
+<p><strong>obs.</strong> We only recommend using
+<code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> in case you are interested in
+finding suboptimal alternative routes and/or need the geometry
+information of the outputs. If you only want to have route information
+detailed by trip segments, then we would strongly encourage you to use
+the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. More info
+here.</p>
 </div>
 <div class="section level2">
-<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with
+<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h2>
-<p>First, let’s load some libraries and build our multimodal transport network. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
+<p>First, let’s load some libraries and build our multimodal transport
+network. In this example we’ll be using the a sample data set for the
+city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -160,7 +189,9 @@
 <div class="section level2">
 <h2 id="detailed-info-by-trip-segment-for-multiple-trip-alternatives">3. Detailed info by trip segment for multiple trip alternatives<a class="anchor" aria-label="anchor" href="#detailed-info-by-trip-segment-for-multiple-trip-alternatives"></a>
 </h2>
-<p>In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set <code>shortest_path = FALSE</code>.</p>
+<p>In this example below, we want to know some alternative routes
+between a single origin/destination pair. To get multiple route
+alternatives, we need to set <code>shortest_path = FALSE</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set inputs</span></span>
 <span><span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span></span>
@@ -207,11 +238,16 @@
 <span><span class="co">#&gt; 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span></span>
 <span><span class="co">#&gt; 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
 <span><span class="co">#&gt; 6              8.0  0.0      347        LINESTRING (-51.19807 -29.9...</span></span></code></pre></div>
-<p>The output is a <code>data.frame sf</code> object, so we can easily visualize the results.</p>
+<p>The output is a <code>data.frame sf</code> object, so we can easily
+visualize the results.</p>
 <div class="section level3">
 <h3 id="visualize-results">3.1 Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
 </h3>
-<p><strong>Static visualization</strong> with <code>ggplot2</code> package: To provide a geographic context for the visualization of the results in <code>ggplot2</code>, you can also use the <code>street_network_to_sf((</code> function to extract the OSM street network used in the routing.</p>
+<p><strong>Static visualization</strong> with <code>ggplot2</code>
+package: To provide a geographic context for the visualization of the
+results in <code>ggplot2</code>, you can also use the
+<code>street_network_to_sf((</code> function to extract the OSM street
+network used in the routing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
 <span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
@@ -241,21 +277,31 @@
 <h4 id="combining-orings-and-destinations">4.1 Combining orings and destinations<a class="anchor" aria-label="anchor" href="#combining-orings-and-destinations"></a>
 </h4>
 <ul>
-<li>By default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will query routes between the 1st origin to the 1st destination, then the 2nd origin to the 2nd destination, and so on. If you would like to query routes between all origins to all destinations you can simply set <code>all_to_all = TRUE</code>.</li>
+<li>By default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will query routes
+between the 1st origin to the 1st destination, then the 2nd origin to
+the 2nd destination, and so on. If you would like to query routes
+between all origins to all destinations you can simply set
+<code>all_to_all = TRUE</code>.</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="keep-geometry-data-in-the-output">4.2 Keep geometry data in the output<a class="anchor" aria-label="anchor" href="#keep-geometry-data-in-the-output"></a>
 </h4>
 <ul>
-<li>Be default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will not return the spatial geometry of results. To retrieve this information you can simply set <code>geometry = TRUE</code>.</li>
+<li>Be default, <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> will not return the
+spatial geometry of results. To retrieve this information you can simply
+set <code>geometry = TRUE</code>.</li>
 </ul>
 </div>
 </div>
 <div class="section level2">
 <h2 id="hack-for-frequency-based-gtfs-feeds">5. Hack for frequency-based GTFS feeds<a class="anchor" aria-label="anchor" href="#hack-for-frequency-based-gtfs-feeds"></a>
 </h2>
-<p>Please note that the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions does not run on frequency-based GTFS feeds. A simple hack to overcome this problem is to convert your GTFS data from frequencies to time tables. This can be easily done using the <a href="https://ipeagit.github.io/gtfstools/" class="external-link"><code>gtfstools</code> package</a>. Here is how:</p>
+<p>Please note that the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions
+does not run on frequency-based GTFS feeds. A simple hack to overcome
+this problem is to convert your GTFS data from frequencies to time
+tables. This can be easily done using the <a href="https://ipeagit.github.io/gtfstools/" class="external-link"><code>gtfstools</code>
+package</a>. Here is how:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ipeagit.github.io/gtfstools/" class="external-link">gtfstools</a></span><span class="op">)</span></span>
 <span></span>
@@ -271,15 +317,22 @@
 <span><span class="co"># save it as a new GTFS.zip file</span></span>
 <span><span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,</span>
 <span>                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'stop_times_gtfs'</span>, fileext <span class="op">=</span> <span class="st">'.zip'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>… and now you can use <code>r5r</code> on this <code>stop_times_gtfs.zip</code>.</p>
+<p>… and now you can use <code>r5r</code> on this
+<code>stop_times_gtfs.zip</code>.</p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 </div>
   </div>

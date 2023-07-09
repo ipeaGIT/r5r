@@ -103,12 +103,12 @@
 
       
 
-      </header><script src="travel_time_matrix_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculating travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/travel_time_matrix.Rmd" class="external-link"><code>../vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="hidden name"><code>travel_time_matrix.Rmd</code></div>
@@ -118,20 +118,32 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to use the travel_time_matrix() and expanded_travel_time_matrix() functions in r5r.
+      This vignette shows how to use the travel_time_matrix() and
+      expanded_travel_time_matrix() functions in r5r.
     </div>
     
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Some of the most common tasks in transport planning and modeling involve require having good quality data with travel time estimates between origins and destinations. <code>R5</code> is incredibly fast in generating realistic door-to-door travel time estimates in multimodal transport systems.</p>
-<p>The <code>r5r</code> packages has two functions that allow users to leverage the computing power of <code>R5</code>: - <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> - <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code></p>
-<p>This vignette shows a reproducible example to explain how these two functions work and the differences between them.</p>
+<p>Some of the most common tasks in transport planning and modeling
+involve require having good quality data with travel time estimates
+between origins and destinations. <code>R5</code> is incredibly fast in
+generating realistic door-to-door travel time estimates in multimodal
+transport systems.</p>
+<p>The <code>r5r</code> packages has two functions that allow users to
+leverage the computing power of <code>R5</code>: -
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> -
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code></p>
+<p>This vignette shows a reproducible example to explain how these two
+functions work and the differences between them.</p>
 </div>
 <div class="section level2">
-<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with
+<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h2>
-<p>First, let’s build the multimodal transport network we’ll be using in this vignette. In this example we’ll be using the a sample data set for the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
+<p>First, let’s build the multimodal transport network we’ll be using in
+this vignette. In this example we’ll be using the a sample data set for
+the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -159,8 +171,19 @@
 <div class="section level2">
 <h2 id="the-travel_time_matrix-function">3. The <code>travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-travel_time_matrix-function"></a>
 </h2>
-<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function provides a simple and really fast way to calculate the travel time between all possible origin destination pairs at a given departure time using a given transport mode.</p>
-<p>The user can also customize many parameters such as: - <code>max_trip_duration</code>: maximum trip duration - <code>max_rides</code>: maximum number of transfer in the public transport system - <code>max_walk_time</code> and <code>max_bike_time</code>: maximum walking or cycling time to and from public transport - <code>walk_speed</code> and <code>bike_speed</code>: maximum walking or cycling speed - <code>max_fare</code>: maximum monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">See this vignette</a>.</p>
+<p>The <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function provides a simple and
+really fast way to calculate the travel time between all possible origin
+destination pairs at a given departure time using a given transport
+mode.</p>
+<p>The user can also customize many parameters such as: -
+<code>max_trip_duration</code>: maximum trip duration -
+<code>max_rides</code>: maximum number of transfer in the public
+transport system - <code>max_walk_time</code> and
+<code>max_bike_time</code>: maximum walking or cycling time to and from
+public transport - <code>walk_speed</code> and <code>bike_speed</code>:
+maximum walking or cycling speed - <code>max_fare</code>: maximum
+monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">See
+this vignette</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   </span>
@@ -182,14 +205,33 @@
 <span><span class="co">#&gt;  8: public_market          farroupilha_park              16</span></span>
 <span><span class="co">#&gt;  9: public_market moinhos_de_vento_hospital              20</span></span>
 <span><span class="co">#&gt; 10: public_market          farrapos_station              22</span></span></code></pre></div>
-<p>Now remember that travel time estimates can vary significantly across the day because of variations in public transport service levels. In order to account for this, you might want to calculate multiple travel time matrices departing at different times.</p>
-<p>This can be done very efficiently by using the <code>time_window</code> and <code>percentile</code> parameters in the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function. When these parameters are set, R<sup>5</sup> will automatically compute multiple travel times estimates considering multiple departures per minute within the <code>time_window</code> selected by the user. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More information about this functionality can found in this vignette</a>.</p>
+<p>Now remember that travel time estimates can vary significantly across
+the day because of variations in public transport service levels. In
+order to account for this, you might want to calculate multiple travel
+time matrices departing at different times.</p>
+<p>This can be done very efficiently by using the
+<code>time_window</code> and <code>percentile</code> parameters in the
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function. When these parameters are
+set, R<sup>5</sup> will automatically compute multiple travel times
+estimates considering multiple departures per minute within the
+<code>time_window</code> selected by the user. <a href="https://ipeagit.github.io/r5r/articles/time_window.html" class="external-link">More
+information about this functionality can found in this vignette</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="the-expanded_travel_time_matrix-function">4. The <code>expanded_travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-expanded_travel_time_matrix-function"></a>
 </h2>
-<p>Sometimes, we want to know more than simply the total travel time from A to B. This is when the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.</p>
-<p>Nonetheless, you may set the parameter <code>breakdown = TRUE</code> to gather much more info for each trip. In this case, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will tell the number of transfers used to complete each trip and their total access, waiting, in-vehicle and transfer times. Please note that setting <code>breakdown = TRUE</code> can make the function slower for large data sets.</p>
+<p>Sometimes, we want to know more than simply the total travel time
+from A to B. This is when the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>
+function comes in. By default, the output of this function will also
+tell which public transport routes were taken between each origin
+destination pair.</p>
+<p>Nonetheless, you may set the parameter <code>breakdown = TRUE</code>
+to gather much more info for each trip. In this case,
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will tell the number of
+transfers used to complete each trip and their total access, waiting,
+in-vehicle and transfer times. Please note that setting
+<code>breakdown = TRUE</code> can make the function slower for large
+data sets.</p>
 <p><em>A general call to expanded_travel_time_matrix()</em></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   </span>
@@ -222,7 +264,8 @@
 <span><span class="co">#&gt;  8:       16.5</span></span>
 <span><span class="co">#&gt;  9:       21.0</span></span>
 <span><span class="co">#&gt; 10:       22.5</span></span></code></pre></div>
-<p><em>Calling expanded_travel_time_matrix() with <code>breakdown = TRUE</code></em></p>
+<p><em>Calling expanded_travel_time_matrix() with
+<code>breakdown = TRUE</code></em></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ettm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   </span>
 <span>                                    origins <span class="op">=</span> <span class="va">points</span>,</span>
@@ -266,7 +309,14 @@
 <span><span class="co">#&gt;  8:       16.5</span></span>
 <span><span class="co">#&gt;  9:       21.0</span></span>
 <span><span class="co">#&gt; 10:       22.5</span></span></code></pre></div>
-<p>You will notice in the documentation that the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> also has a <code>time_window</code> parameter. In this case, though, when the user sets a <code>time_window</code> value, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
+<p>You will notice in the documentation that the
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> also has a
+<code>time_window</code> parameter. In this case, though, when the user
+sets a <code>time_window</code> value, the
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route
+alternative departing each minute within the specified time window.
+Please note this function can be very memory intensive for large data
+sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ettm_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,   </span>
 <span>                                           origins <span class="op">=</span> <span class="va">points</span>,</span>
@@ -305,11 +355,17 @@
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

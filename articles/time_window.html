@@ -103,12 +103,12 @@
 
       
 
-      </header><script src="time_window_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2023-04-07</h4>
+            <h4 data-toc-skip class="date">2023-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -118,7 +118,8 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      This vignette shows how to use and interpret the <code>time_window</code> parameter in r5r.
+      This vignette shows how to use and interpret the
+      <code>time_window</code> parameter in r5r.
     </div>
     
 <div class="section level2">
@@ -127,31 +128,80 @@
 <div class="section level3">
 <h3 id="the-problem">The problem<a class="anchor" aria-label="anchor" href="#the-problem"></a>
 </h3>
-<p>To calculate the travel time from A to B, or to calculate the accessibility level at a given location, one has to select a departure time. However, travel time and accessibility estimates can differ significantly at different departure times because of how public transport service levels vary across the day <span class="citation">(Stepniak et al. 2019)</span>. Even a small difference, say leaving at <code>10:00am</code> or <code>10:04am</code> might importantly change travel time and accessibility estimates depending on when a person departs relative to when a public transport vehicle arrives, and how well transfers are coordinated given a service timetable. This is a very common issue related to the modifiable temporal unit problem (MTUP) <span class="citation">(Pereira 2019; Levinson and et al. 2020)</span>.</p>
-<p>This problem gets even more complicated when public transport GTFS feeds have a <code>frequencies.txt</code> table. In these cases, we cannot know the exact departure time of vehicles, what creates greater uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018; Stewart and Byrd 2022)</span>.</p>
+<p>To calculate the travel time from A to B, or to calculate the
+accessibility level at a given location, one has to select a departure
+time. However, travel time and accessibility estimates can differ
+significantly at different departure times because of how public
+transport service levels vary across the day <span class="citation">(Stepniak et al. 2019)</span>. Even a small difference,
+say leaving at <code>10:00am</code> or <code>10:04am</code> might
+importantly change travel time and accessibility estimates depending on
+when a person departs relative to when a public transport vehicle
+arrives, and how well transfers are coordinated given a service
+timetable. This is a very common issue related to the modifiable
+temporal unit problem (MTUP) <span class="citation">(Pereira 2019;
+Levinson and et al. 2020)</span>.</p>
+<p>This problem gets even more complicated when public transport GTFS
+feeds have a <code>frequencies.txt</code> table. In these cases, we
+cannot know the exact departure time of vehicles, what creates greater
+uncertainty for our travel time and accessibility estimates <span class="citation">(Conway, Byrd, and van Eggermond 2018; Stewart and Byrd
+2022)</span>.</p>
 </div>
 <div class="section level3">
 <h3 id="the-solution">The solution<a class="anchor" aria-label="anchor" href="#the-solution"></a>
 </h3>
-<p>A common strategy to overcome this problem is to calculate travel times and accessibilities at multiple departure times sampled over a time window, and then take the average or median value. Now you may ask, but how many departure times should I use? You might also be thinking that doing multiple repeated routing analysis can be cumbersome and take a lot of time. Right?</p>
-<p>Here is where <code>r5r</code> comes in. Both the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>and <code><a href="../reference/accessibility.html">accessibility()</a></code> functions have a parameter called <code>time_window</code>. When this parameter is set, R<sup>5</sup> will automatically compute multiple travel times / accessibility estimates considering multiple departures per minute within the <code>time_window</code> selected by the user.</p>
-<p>This vignette shows a reproducible example to explain how one can use the <code>time_window</code> and interpret the results.</p>
+<p>A common strategy to overcome this problem is to calculate travel
+times and accessibilities at multiple departure times sampled over a
+time window, and then take the average or median value. Now you may ask,
+but how many departure times should I use? You might also be thinking
+that doing multiple repeated routing analysis can be cumbersome and take
+a lot of time. Right?</p>
+<p>Here is where <code>r5r</code> comes in. Both the
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>and <code><a href="../reference/accessibility.html">accessibility()</a></code>
+functions have a parameter called <code>time_window</code>. When this
+parameter is set, R<sup>5</sup> will automatically compute multiple
+travel times / accessibility estimates considering multiple departures
+per minute within the <code>time_window</code> selected by the user.</p>
+<p>This vignette shows a reproducible example to explain how one can use
+the <code>time_window</code> and interpret the results.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="how-the-time_window-works-and-how-to-interpret-the-results-">2. How the <code>time_window</code> works and how to interpret the results.<a class="anchor" aria-label="anchor" href="#how-the-time_window-works-and-how-to-interpret-the-results-"></a>
+<h2 id="how-the-time_window-works-and-how-to-interpret-the-results-">2. How the <code>time_window</code> works and how to interpret the
+results.<a class="anchor" aria-label="anchor" href="#how-the-time_window-works-and-how-to-interpret-the-results-"></a>
 </h2>
-<p>As mentioned above, when <code>time_window</code> is set, R<sup>5</sup> computes multiple travel times / accessibility estimates starting at the specified <code>departure_datetime</code> and within the <code>time_window</code> selected by the user. By default, <code>r5r</code> will generate one estimate per minute. Nonetheless, users can set a number to the <code>draws_per_minute</code> parameter that will change the number of Monte Carlo draws to perform per time window minute. The default value of <code>draws_per_minute</code> is 5, which mean 300 draws in a 60 minutes time window, for example. For a detailed discussion on the effect of number of draws on result stability, see Stewart et al <span class="citation">(2022)</span>.</p>
-<p>In this case, there isn’t a single estimate of travel time / accessibility, but a distribution of several estimates that reflect the travel time / accessibility uncertainties in the specified time window. To get our heads around so many estimates, we can use the <code>percentiles</code> parameter to specify the percentiles of the distribution we are interested in. For example, if we select the 25th travel time percentile and the results show that the travel time estimate between A and B is 15 minutes, this means that 25% of all trips taken between these points within the specified time window are shorter than 15 minutes.</p>
+<p>As mentioned above, when <code>time_window</code> is set,
+R<sup>5</sup> computes multiple travel times / accessibility estimates
+starting at the specified <code>departure_datetime</code> and within the
+<code>time_window</code> selected by the user. By default,
+<code>r5r</code> will generate one estimate per minute. Nonetheless,
+users can set a number to the <code>draws_per_minute</code> parameter
+that will change the number of Monte Carlo draws to perform per time
+window minute. The default value of <code>draws_per_minute</code> is 5,
+which mean 300 draws in a 60 minutes time window, for example. For a
+detailed discussion on the effect of number of draws on result
+stability, see Stewart et al <span class="citation">(2022)</span>.</p>
+<p>In this case, there isn’t a single estimate of travel time /
+accessibility, but a distribution of several estimates that reflect the
+travel time / accessibility uncertainties in the specified time window.
+To get our heads around so many estimates, we can use the
+<code>percentiles</code> parameter to specify the percentiles of the
+distribution we are interested in. For example, if we select the 25th
+travel time percentile and the results show that the travel time
+estimate between A and B is 15 minutes, this means that 25% of all trips
+taken between these points within the specified time window are shorter
+than 15 minutes.</p>
 <p>Let’s see a couple concrete examples now.</p>
 </div>
 <div class="section level2">
 <h2 id="demonstration-of-time_window-">3. Demonstration of <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-time_window-"></a>
 </h2>
 <div class="section level3">
-<h3 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with <code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h3 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with
+<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
 </h3>
-<p>First, let’s build the network and create the routing inputs. In this example we’ll be using the a sample data set for the city of São Paulo (Brazil) included in <code>r5r</code>.</p>
+<p>First, let’s build the network and create the routing inputs. In this
+example we’ll be using the a sample data set for the city of São Paulo
+(Brazil) included in <code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -178,12 +228,18 @@
 <span><span class="co"># departure datetime</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
-<p>ps. Please keep in mind that the <code>time_window</code> only affects the results when the GTFS feeds contain a <code>frequencies.txt</code> table.</p>
+<p>ps. Please keep in mind that the <code>time_window</code> only
+affects the results when the GTFS feeds contain a
+<code>frequencies.txt</code> table.</p>
 </div>
 <div class="section level3">
 <h3 id="accessibility-with-time_window-">3.2 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
 </h3>
-<p>In this example we calculate the number of schools accessible from each location within a 60-minute time window departing between 2pm and 3pm. In this example we’ll be using a cumulative accessibility metric <code>decay_function = "step"</code> with a max time threshold of 45 minutes <code>cutoffs = 45</code>.</p>
+<p>In this example we calculate the number of schools accessible from
+each location within a 60-minute time window departing between 2pm and
+3pm. In this example we’ll be using a cumulative accessibility metric
+<code>decay_function = "step"</code> with a max time threshold of 45
+minutes <code>cutoffs = 45</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate accessibility</span></span>
 <span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
@@ -204,17 +260,24 @@
 <span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
-<p>#&gt;<code>{r detailed head of acc, echo = FALSE, out.width='100%', message = FALSE} #&gt;knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true") #&gt;</code></p>
-<p>This output is in long format, so the first 5 rows show the result for the same origin. In this case, we see that in only 10% of the trips departing from that origin between 2pm and 3pm a person would be able to access up to 111 schools. Meanwhile, 50% of the times she would only access 79 schools. By contrast, the accessibility from the other origin shown in the output above is 0, meaning there are no schools accessible from that location given the max travel time of 45 minutes.</p>
-<p>We can use a plot like the one below to visualize this uncertainty in how accessibility levels might vary between 2pm and 3pm depending on the departure time within that 60-minute time window.</p>
+<p>This output is in long format, so the first 5 rows show the result
+for the same origin. In this case, we see that in only 10% of the trips
+departing from that origin between 2pm and 3pm a person would be able to
+access up to 111 schools. Meanwhile, 50% of the times she would only
+access 79 schools. By contrast, the accessibility from the other origin
+shown in the output above is 0, meaning there are no schools accessible
+from that location given the max travel time of 45 minutes.</p>
+<p>We can use a plot like the one below to visualize this uncertainty in
+how accessibility levels might vary between 2pm and 3pm depending on the
+departure time within that 60-minute time window.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># summarize</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">acc</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>min_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span>,</span>
@@ -232,12 +295,14 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="time_window_files/figure-html/unnamed-chunk-4-1.png" width="100%"> #&gt;<code>{r acc_uncertainty figure, echo = FALSE, out.width='100%', message = FALSE} #&gt;knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true") #&gt;</code></p>
+<p><img src="time_window_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="travel-time-matrix-with-time_window-">3.3 Travel time matrix with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#travel-time-matrix-with-time_window-"></a>
 </h3>
-<p>Now let’s calculate all-to-all travel time estimates within a 60-minute time window departing between 2pm and 3pm and see how the output looks like.</p>
+<p>Now let’s calculate all-to-all travel time estimates within a
+60-minute time window departing between 2pm and 3pm and see how the
+output looks like.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
@@ -275,14 +340,27 @@
 <span><span class="co">#&gt;  8:              14              14              14</span></span>
 <span><span class="co">#&gt;  9:              16              16              16</span></span>
 <span><span class="co">#&gt; 10:              24              24              24</span></span></code></pre></div>
-<p>#&gt;<code>{r detailed head of ttm, echo = FALSE, out.width='100%', message = FALSE} #&gt;knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window#&gt;_ttm_head.png?raw=true") #&gt;</code></p>
-<p>Now let’s look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.</p>
-<p>The last row in the result above has a few <code>NA</code>s. This tell us that at least 50% of all simulated trips between 2pm and 3pm for that origin-destination pair could not be completed because they took longer than the <code>max_trip_duration</code> we have set (90 minutes).</p>
+<p>Now let’s look at the 2nd row of the output above. This output tell
+us that only 10% of the trips between 2pm and 3pm for that
+origin-destination pair took 39 minutes or less. Meanwhile, 50% of those
+trips took up tp 45 minutes and 80% of them were 48-minute long or
+shorter.</p>
+<p>The last row in the result above has a few <code>NA</code>s. This
+tell us that at least 50% of all simulated trips between 2pm and 3pm for
+that origin-destination pair could not be completed because they took
+longer than the <code>max_trip_duration</code> we have set (90
+minutes).</p>
 </div>
 <div class="section level3">
 <h3 id="expanded-travel-time-matrix-with-time_window-">3.4 Expanded travel time matrix with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-time_window-"></a>
 </h3>
-<p>Finally, we can also use the <code>time_window</code> in the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. In this case, though, when the user sets a <code>time_window</code> value, the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.</p>
+<p>Finally, we can also use the <code>time_window</code> in the
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. In this case,
+though, when the user sets a <code>time_window</code> value, the
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route
+alternative departing each minute within the specified time window.
+Please note this function can be very memory intensive for large data
+sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
 <span>                                    origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,<span class="op">]</span>,</span>
@@ -307,45 +385,66 @@
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       45.8</span></span>
-<span><span class="co">#&gt;  2:       49.8</span></span>
-<span><span class="co">#&gt;  3:       53.1</span></span>
-<span><span class="co">#&gt;  4:       51.0</span></span>
-<span><span class="co">#&gt;  5:       44.2</span></span>
-<span><span class="co">#&gt;  6:       35.4</span></span>
-<span><span class="co">#&gt;  7:       49.0</span></span>
-<span><span class="co">#&gt;  8:       50.3</span></span>
-<span><span class="co">#&gt;  9:       53.4</span></span>
-<span><span class="co">#&gt; 10:       35.8</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       46.3</span></span>
+<span><span class="co">#&gt;  2:       35.0</span></span>
+<span><span class="co">#&gt;  3:       52.5</span></span>
+<span><span class="co">#&gt;  4:       51.5</span></span>
+<span><span class="co">#&gt;  5:       37.6</span></span>
+<span><span class="co">#&gt;  6:       46.0</span></span>
+<span><span class="co">#&gt;  7:       53.6</span></span>
+<span><span class="co">#&gt;  8:       43.8</span></span>
+<span><span class="co">#&gt;  9:       42.5</span></span>
+<span><span class="co">#&gt; 10:       42.8</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h3>
-<p><code>r5r</code> objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing <code>r5r</code> object and reallocate the memory it had been using, we use the <code>stop_r5</code> function followed by a call to Java’s garbage collector, as follows:</p>
+<p><code>r5r</code> objects are still allocated to any amount of memory
+previously set after they are done with their calculations. In order to
+remove an existing <code>r5r</code> object and reallocate the memory it
+had been using, we use the <code>stop_r5</code> function followed by a
+call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>If you have any suggestions or want to report an error, please visit <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub page</a>.</p>
+<p>If you have any suggestions or want to report an error, please visit
+<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
+page</a>.</p>
 </div>
 </div>
 <div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-conway2018accounting">
-<p>Conway, Matthew Wigginton, Andrew Byrd, and Michael van Eggermond. 2018. “Accounting for Uncertainty and Variation in Accessibility Metrics for Public Transport Sketch Planning.” <em>Journal of Transport and Land Use</em> 11 (1). <a href="https://doi.org/10.5198/jtlu.2018.1074" class="external-link">https://doi.org/10.5198/jtlu.2018.1074</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-conway2018accounting" class="csl-entry">
+Conway, Matthew Wigginton, Andrew Byrd, and Michael van Eggermond. 2018.
+<span>“Accounting for Uncertainty and Variation in Accessibility Metrics
+for Public Transport Sketch Planning.”</span> <em>Journal of Transport
+and Land Use</em> 11 (1). <a href="https://doi.org/10.5198/jtlu.2018.1074" class="external-link">https://doi.org/10.5198/jtlu.2018.1074</a>.
 </div>
-<div id="ref-levinson2020manual">
-<p>Levinson, David, and et al. 2020. “Transport Access Manual: A Guide for Measuring Connection Between People and Places,” January. <a href="https://ses.library.usyd.edu.au/handle/2123/23733" class="external-link">https://ses.library.usyd.edu.au/handle/2123/23733</a>.</p>
+<div id="ref-levinson2020manual" class="csl-entry">
+Levinson, David, and et al. 2020. <span>“Transport Access Manual: A
+Guide for Measuring Connection Between People and Places,”</span>
+January. <a href="https://ses.library.usyd.edu.au/handle/2123/23733" class="external-link">https://ses.library.usyd.edu.au/handle/2123/23733</a>.
 </div>
-<div id="ref-pereiramtup2019">
-<p>Pereira, Rafael H. M. 2019. “Future Accessibility Impacts of Transport Policy Scenarios: Equity and Sensitivity to Travel Time Thresholds for Bus Rapid Transit Expansion in Rio de Janeiro.” <em>Journal of Transport Geography</em> 74 (January): 321–32. <a href="https://doi.org/10.1016/j.jtrangeo.2018.12.005" class="external-link">https://doi.org/10.1016/j.jtrangeo.2018.12.005</a>.</p>
+<div id="ref-pereiramtup2019" class="csl-entry">
+Pereira, Rafael H. M. 2019. <span>“Future Accessibility Impacts of
+Transport Policy Scenarios: Equity and Sensitivity to Travel Time
+Thresholds for Bus Rapid Transit Expansion in Rio de Janeiro.”</span>
+<em>Journal of Transport Geography</em> 74 (January): 321–32. <a href="https://doi.org/10.1016/j.jtrangeo.2018.12.005" class="external-link">https://doi.org/10.1016/j.jtrangeo.2018.12.005</a>.
 </div>
-<div id="ref-stepniak2019impact">
-<p>Stepniak, Marcin, John P. Pritchard, Karst T. Geurs, and Slawomir Goliszek. 2019. “The Impact of Temporal Resolution on Public Transport Accessibility Measurement: Review and Case Study in Poland.” <em>Journal of Transport Geography</em> 75 (February): 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.</p>
+<div id="ref-stepniak2019impact" class="csl-entry">
+Stepniak, Marcin, John P. Pritchard, Karst T. Geurs, and Slawomir
+Goliszek. 2019. <span>“The Impact of Temporal Resolution on Public
+Transport Accessibility Measurement: Review and Case Study in
+Poland.”</span> <em>Journal of Transport Geography</em> 75 (February):
+8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.
 </div>
-<div id="ref-stewart2022half">
-<p>Stewart, Anson F, and Andrew M Byrd. 2022. “Half-(Head)way There: Comparing Two Methods to Account for Public Transport Waiting Time in Accessibility Indicators.” <em>Environment and Planning B: Urban Analytics and City Science</em>, November, 23998083221137077. <a href="https://doi.org/10.1177/23998083221137077" class="external-link">https://doi.org/10.1177/23998083221137077</a>.</p>
+<div id="ref-stewart2022half" class="csl-entry">
+Stewart, Anson F, and Andrew M Byrd. 2022. <span>“Half-(Head)way There:
+Comparing Two Methods to Account for Public Transport Waiting Time in
+Accessibility Indicators.”</span> <em>Environment and Planning B: Urban
+Analytics and City Science</em>, November, 23998083221137077. <a href="https://doi.org/10.1177/23998083221137077" class="external-link">https://doi.org/10.1177/23998083221137077</a>.
 </div>
 </div>
 </div>
