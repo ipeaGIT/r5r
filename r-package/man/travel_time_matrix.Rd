@@ -11,7 +11,7 @@ travel_time_matrix(
   mode = "WALK",
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
-  time_window = 1L,
+  time_window = 10L,
   percentiles = 50L,
   fare_structure = NULL,
   max_fare = Inf,
@@ -53,8 +53,8 @@ datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
-Defaults to 1 minute. By default, the function returns the result based on
-median travel times, but the user can set the \code{percentiles} parameter to
+Defaults to 10 minutes. By default, the function returns the result based
+on median travel times, but the user can set the \code{percentiles} parameter to
 extract more results. Please read the time window vignette for more details
 on its usage \code{vignette("time_window", package = "r5r")}}
 

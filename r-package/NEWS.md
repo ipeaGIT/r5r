@@ -1,5 +1,9 @@
 # r5r 1.0.1
 
+**Minor changes**
+
+- The default value of `time_window` is not set to 10 minutes in all functions to avoid weird results reported upstream in R5. Closes [#342](https://github.com/ipeaGIT/r5r/issues/342).
+
 **Bug fixes**
 
 * Updated to R5 version 6.9. This fixed a few bugs upstream, one of which often prevented users to build a network using cropped OSM data. Closes [#325](https://github.com/ipeaGIT/r5r/issues/325).
