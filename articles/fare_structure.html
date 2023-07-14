@@ -111,7 +111,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2023-07-09</h4>
+            <h4 data-toc-skip class="date">2023-07-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -642,15 +642,15 @@ cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
-<span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129c2bffff              38              36</span></span>
-<span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129aa7ffff              33              30</span></span>
-<span><span class="co">#&gt;  3: 89a90166da7ffff 89a90e93497ffff              32              32</span></span>
-<span><span class="co">#&gt;  4: 89a90166da7ffff 89a90129807ffff              39              38</span></span>
-<span><span class="co">#&gt;  5: 89a90166da7ffff 89a90129b5bffff              34              34</span></span>
-<span><span class="co">#&gt;  6: 89a90166da7ffff 89a90129dd7ffff              37              37</span></span>
-<span><span class="co">#&gt;  7: 89a90166da7ffff 89a90129bbbffff              33              33</span></span>
-<span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              26              26</span></span>
-<span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              19              19</span></span>
+<span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129c2bffff              35              35</span></span>
+<span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129aa7ffff              34              33</span></span>
+<span><span class="co">#&gt;  3: 89a90166da7ffff 89a90e93497ffff              39              37</span></span>
+<span><span class="co">#&gt;  4: 89a90166da7ffff 89a90129807ffff              36              35</span></span>
+<span><span class="co">#&gt;  5: 89a90166da7ffff 89a90129b5bffff              40              39</span></span>
+<span><span class="co">#&gt;  6: 89a90166da7ffff 89a90129dd7ffff              41              40</span></span>
+<span><span class="co">#&gt;  7: 89a90166da7ffff 89a90129bbbffff              39              38</span></span>
+<span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              32              30</span></span>
+<span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              22              22</span></span>
 <span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
 <p>The plots below show the overall distribution of the travel time
 differences and unreachable destinations:</p>

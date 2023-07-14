@@ -102,7 +102,7 @@ windows.</p>
 <span>  mode <span class="op">=</span> <span class="st">"WALK"</span>,</span>
 <span>  mode_egress <span class="op">=</span> <span class="st">"WALK"</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  time_window <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  time_window <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>  breakdown <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -155,8 +155,8 @@ datetimes are parsed.</p></dd>
 <dt>time_window</dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
-Defaults to 1 minute. By default, the function returns the result based on
-median travel times, but the user can set the <code>percentiles</code> parameter to
+Defaults to 10 minutes. By default, the function returns the result based
+on median travel times, but the user can set the <code>percentiles</code> parameter to
 extract more results. Please read the time window vignette for more details
 on its usage <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 
