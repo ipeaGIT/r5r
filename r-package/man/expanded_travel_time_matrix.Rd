@@ -51,10 +51,9 @@ datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
-Defaults to 10 minutes. By default, the function returns the result based
-on median travel times, but the user can set the \code{percentiles} parameter to
-extract more results. Please read the time window vignette for more details
-on its usage \code{vignette("time_window", package = "r5r")}}
+Defaults to 10 minutes. The function returns the result based on median
+travel times. Please read the time window vignette for more details on its
+usage \code{vignette("time_window", package = "r5r")}}
 
 \item{breakdown}{A logical. Whether to include detailed information about
 each trip in the output. If \code{FALSE} (the default), the output lists the

@@ -8,7 +8,11 @@
 #'
 #' @template r5r_core
 #' @template common_arguments
-#' @template time_window_related_args
+#' @param time_window An integer. The time window in minutes for which `r5r`
+#'   will calculate multiple travel time matrices departing each minute.
+#'   Defaults to 10 minutes. The function returns the result based on median
+#'   travel times. Please read the time window vignette for more details on its
+#'   usage `vignette("time_window", package = "r5r")`
 #' @template draws_per_minute
 #' @template verbose
 #' @param breakdown A logical. Whether to include detailed information about
