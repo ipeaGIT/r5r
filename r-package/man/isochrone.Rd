@@ -12,6 +12,7 @@ isochrone(
   cutoffs = c(0, 15, 30),
   sample_size = 0.8,
   departure_datetime = Sys.time(),
+  time_window = 10L,
   max_walk_time = Inf,
   max_bike_time = Inf,
   max_car_time = Inf,
@@ -20,6 +21,7 @@ isochrone(
   bike_speed = 12,
   max_rides = 3,
   max_lts = 2,
+  draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE
@@ -54,6 +56,12 @@ time only influences public transport legs. When working with public
 transport networks, please check the \code{calendar.txt} within your GTFS
 feeds for valid dates. Please see details for further information on
 how datetimes are parsed.}
+
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple travel time matrices departing each minute.
+Defaults to 10 minutes. The function returns the result based on
+median travel times. Please read the time window vignette for more
+details on its usage \code{vignette("time_window", package = "r5r")}}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
@@ -94,6 +102,12 @@ stress that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4 indicates
 cyclists can travel through any road. Defaults to 2. Please see
 details for more information.}
+
+\item{draws_per_minute}{An integer. The number of Monte Carlo draws to
+perform per time window minute when calculating travel time matrices and
+when estimating accessibility. Defaults to 5. This would mean 300 draws in
+a 60-minute time window, for example. This parameter only affects the
+results when the GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}

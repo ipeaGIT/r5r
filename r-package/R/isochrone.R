@@ -26,6 +26,11 @@
 #'        transport networks, please check the `calendar.txt` within your GTFS
 #'        feeds for valid dates. Please see details for further information on
 #'        how datetimes are parsed.
+#' @param time_window An integer. The time window in minutes for which `r5r`
+#'        will calculate multiple travel time matrices departing each minute.
+#'        Defaults to 10 minutes. The function returns the result based on
+#'        median travel times. Please read the time window vignette for more
+#'        details on its usage `vignette("time_window", package = "r5r")`
 #' @param max_walk_time An integer. The maximum walking time (in minutes) to
 #'        access and egress the transit network, or to make transfers within the
 #'        network. Defaults to no restrictions, as long as `max_trip_duration`
@@ -58,14 +63,15 @@
 #'        only travel through the quietest streets, while a value of 4 indicates
 #'        cyclists can travel through any road. Defaults to 2. Please see
 #'        details for more information.
+#' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
 #' @param progress A logical. Whether to show a progress counter when running
 #'        the router. Defaults to `FALSE`. Only works when `verbose` is set to
 #'        `FALSE`, so the progress counter does not interfere with `R5`'s output
-#'         messages. Setting `progress` to `TRUE` may impose a small penalty for
-#'         computation efficiency, because the progress counter must be
-#'         synchronized among all active threads.
+#'        messages. Setting `progress` to `TRUE` may impose a small penalty for
+#'        computation efficiency, because the progress counter must be
+#'        synchronized among all active threads.
 #' @template verbose
 #'
 #' @return A `POLYGON  "sf" "data.frame"` for each isochrone of each origin.
@@ -117,6 +123,7 @@ isochrone <- function(r5r_core,
                       cutoffs = c(0, 15, 30),
                       sample_size = 0.8,
                       departure_datetime = Sys.time(),
+                      time_window = 10L,
                       max_walk_time = Inf,
                       max_bike_time = Inf,
                       max_car_time = Inf,
@@ -125,6 +132,7 @@ isochrone <- function(r5r_core,
                       bike_speed = 12,
                       max_rides = 3,
                       max_lts = 2,
+                      draws_per_minute = 5L,
                       n_threads = Inf,
                       verbose = FALSE,
                       progress = TRUE){
@@ -171,7 +179,7 @@ isochrone <- function(r5r_core,
                               mode = mode,
                               mode_egress = mode_egress,
                               departure_datetime = departure_datetime,
-                              # time_window = time_window,
+                              time_window = time_window,
                               # percentiles = percentiles,
                               max_walk_time = max_walk_time,
                               max_bike_time = max_bike_time,
@@ -181,7 +189,7 @@ isochrone <- function(r5r_core,
                               bike_speed = bike_speed,
                               max_rides = max_rides,
                               max_lts = max_lts,
-                              # draws_per_minute = draws_per_minute,
+                              draws_per_minute = draws_per_minute,
                               n_threads = n_threads,
                               verbose = verbose,
                               progress = progress
