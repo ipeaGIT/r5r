@@ -1,11 +1,11 @@
 ---
-title: 'Calculating and visualizing Accessibility'
+title: 'Accessibility'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to calculate and visualize accessibility in R using the `r5r` package."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Calculating and visualizing Accessibility} 
+  %\VignetteIndexEntry{Accessibility} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json

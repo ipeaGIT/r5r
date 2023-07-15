@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 abstract: "A short list of responses and clarifications about Frequently Asked Questions from r5r users."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{FAQ} 
+  %\VignetteIndexEntry{FAQ - Frequently Asked Questions} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 ---

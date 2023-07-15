@@ -1,11 +1,11 @@
 ---
-title: 'Analyzing the trade-offs between travel time and monetary cost'
+title: 'Trade-offs between travel time and monetary cost'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Analyzing the trade-offs between travel time and monetary cost} 
+  %\VignetteIndexEntry{Trade-offs between travel time and monetary cost} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json
