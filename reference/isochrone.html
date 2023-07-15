@@ -138,53 +138,54 @@ from the last public transport. It can be either <code>WALK</code>, <code>BICYCL
 
 
 <dt>cutoffs</dt>
-<dd><p>numeric vector. Number of minutes to define time span of each
+<dd><p>numeric vector. Number of minutes to define the time span of
 each Isochrone. Defaults to <code>c(0, 15, 30)</code>.</p></dd>
 
 
 <dt>sample_size</dt>
 <dd><p>numeric. Sample size of nodes in the road network used to
-estimate isochrones. Defaults to <code>0.8</code>. Value can range
-between <code>0.2</code> and <code>1</code>. Smaller values increase computation
-speed but return results with lower precision.</p></dd>
+estimate isochrones. Defaults to <code>0.8</code> (80% of all nodes in the
+transport network). Value can range between <code>0.2</code> and <code>1</code>. Smaller
+values increase computation speed but return results with lower
+precision.</p></dd>
 
 
 <dt>departure_datetime</dt>
 <dd><p>A POSIXct object. Please note that the departure
 time only influences public transport legs. When working with public
-transport networks, please check the <code>calendar.txt</code> within your GTFS feeds
-for valid dates. Please see details for further information on how
-datetimes are parsed.</p></dd>
+transport networks, please check the <code>calendar.txt</code> within your GTFS
+feeds for valid dates. Please see details for further information on
+how datetimes are parsed.</p></dd>
 
 
 <dt>max_walk_time</dt>
 <dd><p>An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
-network. Defaults to no restrictions, as long as <code>max_trip_duration</code> is
-respected. The max time is considered separately for each leg (e.g. if
-you set <code>max_walk_time</code> to 15, you could potentially walk up to 15 minutes
-to reach transit, and up to <em>another</em> 15 minutes to reach the destination
-after leaving transit). Defaults to <code>Inf</code>, no limit.</p></dd>
+network. Defaults to no restrictions, as long as <code>max_trip_duration</code>
+is respected. The max time is considered separately for each leg (e.g.
+if you set <code>max_walk_time</code> to 15, you could potentially walk up to 15
+minutes to reach transit, and up to <em>another</em> 15 minutes to reach the
+destination after leaving transit). Defaults to <code>Inf</code>, no limit.</p></dd>
 
 
 <dt>max_bike_time</dt>
 <dd><p>An integer. The maximum cycling time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as <code>max_trip_duration</code> is respected. The max time is considered separately
-for each leg (e.g. if you set <code>max_bike_time</code> to 15 minutes, you could
-potentially cycle up to 15 minutes to reach transit, and up to <em>another</em> 15
-minutes to reach the destination after leaving transit). Defaults to <code>Inf</code>,
-no limit.</p></dd>
+access and egress the transit network. Defaults to no restrictions, as
+long as <code>max_trip_duration</code> is respected. The max time is considered
+separately for each leg (e.g. if you set <code>max_bike_time</code> to 15 minutes,
+you could potentially cycle up to 15 minutes to reach transit, and up
+to <em>another</em> 15 minutes to reach the destination after leaving
+transit). Defaults to <code>Inf</code>, no limit.</p></dd>
 
 
 <dt>max_car_time</dt>
 <dd><p>An integer. The maximum driving time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as <code>max_trip_duration</code> is respected. The max time is considered separately
-for each leg (e.g. if you set <code>max_car_time</code> to 15 minutes, you could
-potentially drive up to 15 minutes to reach transit, and up to <em>another</em> 15
-minutes to reach the destination after leaving transit). Defaults to <code>Inf</code>,
-no limit.</p></dd>
+access and egress the transit network. Defaults to no restrictions, as
+long as <code>max_trip_duration</code> is respected. The max time is considered
+separately for each leg (e.g. if you set <code>max_car_time</code> to 15 minutes,
+you could potentially drive up to 15 minutes to reach transit, and up
+to <em>another</em> 15 minutes to reach the destination after leaving transit).
+Defaults to <code>Inf</code>, no limit.</p></dd>
 
 
 <dt>max_trip_duration</dt>
@@ -193,13 +194,11 @@ Defaults to 120 minutes (2 hours).</p></dd>
 
 
 <dt>walk_speed</dt>
-<dd><p>A numeric. Average walk speed in km/h. Defaults to 3.6
-km/h.</p></dd>
+<dd><p>A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.</p></dd>
 
 
 <dt>bike_speed</dt>
-<dd><p>A numeric. Average cycling speed in km/h. Defaults to 12
-km/h.</p></dd>
+<dd><p>A numeric. Average cycling speed in km/h. Defaults to 12 km/h.</p></dd>
 
 
 <dt>max_rides</dt>
@@ -209,15 +208,15 @@ allowed in the same trip. Defaults to 3.</p></dd>
 
 <dt>max_lts</dt>
 <dd><p>An integer between 1 and 4. The maximum level of traffic
-stress that cyclists will tolerate. A value of 1 means cyclists will only
-travel through the quietest streets, while a value of 4 indicates cyclists
-can travel through any road. Defaults to 2. Please see details for more
-information.</p></dd>
+stress that cyclists will tolerate. A value of 1 means cyclists will
+only travel through the quietest streets, while a value of 4 indicates
+cyclists can travel through any road. Defaults to 2. Please see
+details for more information.</p></dd>
 
 
 <dt>n_threads</dt>
 <dd><p>An integer. The number of threads to use when running the
-router in parallel. Defaults to use all available threads (Inf).</p></dd>
+router in parallel. Defaults to use all available threads (<code>Inf</code>).</p></dd>
 
 
 <dt>verbose</dt>
@@ -233,15 +232,15 @@ detailed output, which can be useful for debugging issues not caught by
 the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code> is set to
 <code>FALSE</code>, so the progress counter does not interfere with <code>R5</code>'s output
 messages. Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for
-computation efficiency, because the progress counter must be synchronized
-among all active threads.</p></dd>
+computation efficiency, because the progress counter must be
+synchronized among all active threads.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A <code>POLYGON  "sf" "data.frame"</code> for each origin.</p>
+<p>A <code>POLYGON  "sf" "data.frame"</code> for each isochrone of each origin.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>
@@ -322,7 +321,8 @@ transit routing. Transportation Science, 49(3), 591-604.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># build transport network</span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
@@ -332,33 +332,39 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># load origin/point of interest</span></span></span>
-<span class="r-in"><span><span class="va">origin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">700</span>,<span class="fl">936</span><span class="op">)</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">origin_1</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span><span class="fl">936</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"13-05-2019 14:00:00"</span>,</span></span>
 <span class="r-in"><span>  format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># estimate travel time matrix</span></span></span>
-<span class="r-in"><span><span class="va">iso</span> <span class="op">&lt;-</span> <span class="fu">isochrone</span><span class="op">(</span><span class="va">r5r_core</span>,</span></span>
-<span class="r-in"><span>                origin <span class="op">=</span> <span class="va">origin</span>,</span></span>
-<span class="r-in"><span>                mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="co"># estimate isochrone from origin_1</span></span></span>
+<span class="r-in"><span><span class="va">iso1</span> <span class="op">&lt;-</span> <span class="fu">isochrone</span><span class="op">(</span><span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>                origin <span class="op">=</span> <span class="va">origin_1</span>,</span></span>
+<span class="r-in"><span>                mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"walk"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span></span>
-<span class="r-in"><span>                cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">30</span>, <span class="fl">45</span>, <span class="fl">60</span>, <span class="fl">75</span>, <span class="fl">90</span>, <span class="fl">120</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span>                <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iso</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iso1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 2 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2648 ymin: -30.1133 xmax: -51.1322 ymax: -29.9966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2488 ymin: -30.0972 xmax: -51.1743 ymax: -30.0155</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                id isochrone                       polygons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 89a90129a0bffff       120 POLYGON ((-51.2572 -30.111,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 89a90129a0bffff        90 POLYGON ((-51.2639 -30.1, -...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 89a90129a0bffff        75 POLYGON ((-51.2452 -30.0814...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 89a90129a0bffff        60 POLYGON ((-51.2387 -30.037,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 89a90129a0bffff        45 POLYGON ((-51.1507 -30.0645...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 89a90129a0bffff        30 POLYGON ((-51.154 -30.0416,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 89a90128107ffff       100 POLYGON ((-51.2486 -30.0908...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 89a90128107ffff        90 POLYGON ((-51.2476 -30.086,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 89a90128107ffff        80 POLYGON ((-51.2434 -30.0824...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 89a90128107ffff        70 POLYGON ((-51.2435 -30.078,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 89a90128107ffff        60 POLYGON ((-51.2311 -30.0793...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 89a90128107ffff        50 POLYGON ((-51.2393 -30.0701...</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#ffe0a5'</span>,<span class="st">'#ffcb69'</span>,<span class="st">'#ffa600'</span>,<span class="st">'#ff7c43'</span>,<span class="st">'#f95d6a'</span>,</span></span>
+<span class="r-in"><span>           <span class="st">'#d45087'</span>,<span class="st">'#a05195'</span>,<span class="st">'#665191'</span>,<span class="st">'#2f4b7c'</span>,<span class="st">'#003f5c'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">iso1</span><span class="op">[</span><span class="st">'isochrone'</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">colors</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="isochrone-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
