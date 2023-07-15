@@ -153,7 +153,6 @@ isochrone <- function(r5r_core,
     destinations = network$vertices
 
     # sample size: proportion of nodes to be considered
-    set.seed(42)
     index_sample <- sample(1:nrow(destinations),
                            size = nrow(destinations) * sample_size,
                            replace = FALSE)
