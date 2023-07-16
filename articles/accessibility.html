@@ -130,23 +130,22 @@
 </h2>
 <p>Accessibility indicators measure the ease with which opportunities,
 such as jobs, can be reached by a traveler from a particular location
-<span class="citation">(Levinson and et al. 2020)</span>. One of the
-simplest forms of accessibility metrics is the cumulative-opportunities,
-which counts all of the opportunities accessible from each location in
-less than a cutoff time. Using a travel time matrix and information on
-the number of opportunities available at each location, we can calculate
-and map accessibility. This vignette shows how to do that in R using the
-<a href="https://ipeagit.github.io/r5r/index.html" class="external-link"><code>r5r</code>
-package</a>.</p>
-<p>In this reproducible example, we will be using a sample data set for
-the city of Porto Alegre (Brazil) included in <code>r5r</code>. We can
-compute accessibility in 5 quick steps:</p>
-<ol style="list-style-type: decimal">
-<li>Increase Java memory and load libraries</li>
-<li>Build routable transport network</li>
-<li>Calculate Accessibility</li>
-<li>Map Accessibility</li>
-</ol>
+<span class="citation">(Levinson and et al. 2020)</span>. This vignette
+shows how to calculate and visualize accessibility in R using the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link"><code>r5r</code>
+package</a> using a reproducible example. In this example, we will be
+using a sample data set for the city of Porto Alegre (Brazil) included
+in <code>r5r</code>.</p>
+<p>There are two ways to calculate / visualize accessibility using
+<code>r5r</code>. The quick and easy option is using the
+<code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> function. The other alternative
+requires one to first calculate a travel time matrix, and then to use
+the <a href="https://ipeagit.github.io/accessibility/" class="external-link">{accessibility}
+package</a>. This is a more flexible options because the
+<a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package provides a wider range of options
+of accessibility metrics. We will cover both approaches in this
+vignette.</p>
+<p>Before we start, we need to increase Java memory + load a few
+libraries, and to build routable transport network.</p>
 </div>
 <div class="section level2">
 <h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with
@@ -155,31 +154,39 @@ compute accessibility in 5 quick steps:</p>
 <div class="section level4">
 <h4 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
 </h4>
-<p>Before we start, we need to increase the memory available to Java and
-load the packages used in this vignette</p>
+<p>First, we need to increase the memory available to Java and load the
+packages used in this vignette. Please note we allocate RAM memory to
+Java <em>before</em> loading our libraries.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interp</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://obrl-soil.github.io/h3jsr/" class="external-link">h3jsr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p>To build a routable transport network with r5r and load it into
-memory, the user needs to call <code>setup_r5</code> with the path to
-the directory where OpenStreetMap and GTFS data are stored.</p>
+<p>To build a routable transport network with <code>r5r</code>, the user
+needs to call <code><a href="../reference/setup_r5.html">setup_r5()</a></code> with the path to the directory
+where OpenStreetMap and GTFS data are stored.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
-<span><span class="co"># set data path to directory containing your own data if not using the examples</span></span>
+<span><span class="co"># set data path to directory containing your own data if not running this example</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="calculate-accessibility">3. Calculate Accessibility<a class="anchor" aria-label="anchor" href="#calculate-accessibility"></a>
+<h2 id="accessibility-quick-and-easy-approach">3. Accessibility: quick and easy approach<a class="anchor" aria-label="anchor" href="#accessibility-quick-and-easy-approach"></a>
 </h2>
+<p>There are different types of accessibility metrics. One of the
+simplest ones is the cumulative-opportunity metric, which counts the
+number of opportunities accessible from each location considering a
+maximum travel time cutoff. This is what we’ll be calculating in this
+vignette using the parameter <code>decay_function = "step"</code>.</p>
 <p>In this example, we will be calculating the number of schools and
 public healthcare facilities accessible by public transport within a
 travel time of up to 20 minutes. The sample data provided contains
@@ -199,16 +206,14 @@ manually computing accessibility.</p>
 <span></span>
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span></span>
-<span><span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span> <span class="co"># in minutes</span></span>
-<span><span class="va">travel_time_cutoff</span> <span class="op">&lt;-</span> <span class="fl">21</span> <span class="co"># in minutes</span></span>
+<span><span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span>      <span class="co"># in minutes</span></span>
+<span><span class="va">travel_time_cutoff</span> <span class="op">&lt;-</span> <span class="fl">20</span> <span class="co"># in minutes</span></span>
+<span><span class="va">time_window</span> <span class="op">&lt;-</span> <span class="fl">60</span>        <span class="co"># in minutes</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">time_window</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># in minutes</span></span>
-<span><span class="va">percentiles</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
-<span></span>
-<span><span class="co"># calculate travel time matrix</span></span>
-<span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span><span class="co"># calculate accessibility</span></span>
+<span><span class="va">access1</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
 <span>                        origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -218,29 +223,127 @@ manually computing accessibility.</p>
 <span>                        departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>                        max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
 <span>                        time_window <span class="op">=</span> <span class="va">time_window</span>,</span>
-<span>                        percentiles <span class="op">=</span> <span class="va">percentiles</span>,</span>
 <span>                        progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     21             3</span></span>
-<span><span class="co">#&gt; 2: 89a901291abffff  healthcare         50     21             6</span></span>
-<span><span class="co">#&gt; 3: 89a9012a3cfffff     schools         50     21             0</span></span>
-<span><span class="co">#&gt; 4: 89a9012a3cfffff  healthcare         50     21             0</span></span>
-<span><span class="co">#&gt; 5: 89a901295b7ffff     schools         50     21             6</span></span>
-<span><span class="co">#&gt; 6: 89a901295b7ffff  healthcare         50     21             4</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             3</span></span>
+<span><span class="co">#&gt; 2: 89a901291abffff  healthcare         50     20             6</span></span>
+<span><span class="co">#&gt; 3: 89a9012a3cfffff     schools         50     20             0</span></span>
+<span><span class="co">#&gt; 4: 89a9012a3cfffff  healthcare         50     20             0</span></span>
+<span><span class="co">#&gt; 5: 89a901295b7ffff     schools         50     20             6</span></span>
+<span><span class="co">#&gt; 6: 89a901295b7ffff  healthcare         50     20             4</span></span></code></pre></div>
+<p>Mind you that the <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> also allow users
+to calculate gravity-based accessibility metrics, which can be
+calculated by setting the <code>decay_function</code> to one of the
+following: <code>"exponential"</code> <code>"fixed_exponential"</code>,
+<code>"linear"</code> or <code>"logistic"</code>. Nonetheless, there are
+several other types of accessibility metrics not implemented in R5,
+including floating catchment area metrics, travel cost to closest N
+opportunities, time interval based cumulative opportunity, etc. This is
+where the <a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package comes in.</p>
 </div>
 <div class="section level2">
-<h2 id="map-accessibility">4. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>
+<h2 id="accessibility-flexible-approach">4. Accessibility: flexible approach<a class="anchor" aria-label="anchor" href="#accessibility-flexible-approach"></a>
+</h2>
+<p>The <a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package provides a much more
+flexible approach to calculate accessibility estimates. A key input here
+is a <a href="https://ipeagit.github.io/r5r/articles/travel_time_matrix.html" class="external-link">travel
+time matrix</a>, which we calculate using <code>r5r</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># calculate travel time matrix</span></span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span>                        origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                        destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                        mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>                        departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>                        max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
+<span>                        time_window <span class="op">=</span> <span class="va">time_window</span>,</span>
+<span>                        progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            from_id           to_id travel_time_p50</span></span>
+<span><span class="co">#&gt; 1: 89a901291abffff 89a901291abffff               1</span></span>
+<span><span class="co">#&gt; 2: 89a901291abffff 89a9012a3cfffff              78</span></span>
+<span><span class="co">#&gt; 3: 89a901291abffff 89a901295b7ffff              45</span></span>
+<span><span class="co">#&gt; 4: 89a901291abffff 89a901284a3ffff              60</span></span>
+<span><span class="co">#&gt; 5: 89a901291abffff 89a9012809bffff              47</span></span>
+<span><span class="co">#&gt; 6: 89a901291abffff 89a901285cfffff              38</span></span></code></pre></div>
+<p>Now to calculate a traditional cumulative opportunity metric like we
+did above, we just need to call the
+<code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> function, and pass our
+travel time matrix and land use data as input:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># calculate accessibility</span></span>
+<span><span class="va">access_edu</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
+<span>                                        land_use_data <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                                        opportunity <span class="op">=</span> <span class="st">'schools'</span>,</span>
+<span>                                        travel_cost <span class="op">=</span> <span class="st">'travel_time_p50'</span>,</span>
+<span>                                        cutoff <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">access_health</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
+<span>                                        land_use_data <span class="op">=</span> <span class="va">points</span>,</span>
+<span>                                        opportunity <span class="op">=</span> <span class="st">'healthcare'</span>,</span>
+<span>                                        travel_cost <span class="op">=</span> <span class="st">'travel_time_p50'</span>,</span>
+<span>                                        cutoff <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_edu</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 id schools</span></span>
+<span><span class="co">#&gt; 1: 89a9012124fffff       1</span></span>
+<span><span class="co">#&gt; 2: 89a9012126bffff       4</span></span>
+<span><span class="co">#&gt; 3: 89a9012127bffff       2</span></span>
+<span><span class="co">#&gt; 4: 89a90128003ffff       8</span></span>
+<span><span class="co">#&gt; 5: 89a90128007ffff       5</span></span>
+<span><span class="co">#&gt; 6: 89a9012800bffff       8</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_health</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 id healthcare</span></span>
+<span><span class="co">#&gt; 1: 89a9012124fffff          0</span></span>
+<span><span class="co">#&gt; 2: 89a9012126bffff          1</span></span>
+<span><span class="co">#&gt; 3: 89a9012127bffff          1</span></span>
+<span><span class="co">#&gt; 4: 89a90128003ffff          3</span></span>
+<span><span class="co">#&gt; 5: 89a90128007ffff          1</span></span>
+<span><span class="co">#&gt; 6: 89a9012800bffff          3</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="map-accessibility">5. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>
 </h2>
 <p>The final step is mapping the accessibility results calculated
-earlier. The code below demonstrates how to do that, with some extra
-steps to produce a prettier map by doing a spatial interpolation of
+earlier. We can use at least two different approaches to map our
 accessibility estimates.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="choropleth-maps">5.1 Choropleth maps<a class="anchor" aria-label="anchor" href="#choropleth-maps"></a>
+</h3>
+<p>The first approach is to use choropleth maps. In our example, each
+point of reference is the centroid of a H3 hexagonal grid at a fine
+spatial resolution. In this case, we basically need to retrieve the
+polygons of the spatial grid, and merge it with our accessibility
+estimates.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># retrieve polygons of H3 spatial grid</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://obrl-soil.github.io/h3jsr/reference/cell_to_polygon.html" class="external-link">cell_to_polygon</a></span><span class="op">(</span><span class="va">points</span><span class="op">$</span><span class="va">id</span>, simple <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># merge accessibility estimates</span></span>
+<span><span class="va">access_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">grid</span>, <span class="va">access1</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'h3_address'</span><span class="op">=</span><span class="st">'id'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">access_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">accessibility</span><span class="op">)</span>, color<span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, option <span class="op">=</span> <span class="st">'B'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Number of\nfacilities within\n20 minutes"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">opportunity</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="accessibility_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="spatial-interpolation">5.2 Spatial interpolation<a class="anchor" aria-label="anchor" href="#spatial-interpolation"></a>
+</h3>
+<p>An alternative approach is to use our accessibility estimates for
+each reference point and do some spatial interpolation so we can have a
+smoother spatial distribution. The code below demonstrates how to do
+that, producing a prettier map.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interpolate estimates to get spatially smooth result</span></span>
-<span><span class="va">access_schools</span> <span class="op">&lt;-</span> <span class="va">access</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">access_schools</span> <span class="op">&lt;-</span> <span class="va">access1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">opportunity</span> <span class="op">==</span> <span class="st">"schools"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">points</span>, by<span class="op">=</span><span class="st">'id'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu">interp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/interp/man/interp.html" class="external-link">interp</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">accessibility</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -249,7 +352,7 @@ accessibility estimates.</p>
 <span>             y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">y</span>, each<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>opportunity <span class="op">=</span> <span class="st">"schools"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">access_health</span> <span class="op">&lt;-</span> <span class="va">access</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">access_health</span> <span class="op">&lt;-</span> <span class="va">access1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">opportunity</span> <span class="op">==</span> <span class="st">"healthcare"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">points</span>, by<span class="op">=</span><span class="st">'id'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu">interp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/interp/man/interp.html" class="external-link">interp</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">accessibility</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -275,11 +378,10 @@ accessibility estimates.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>expand<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>expand<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="va">bb_x</span>, ylim <span class="op">=</span> <span class="va">bb_y</span>, datum <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Facilities within\n20 minutes\n(median travel time)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Number of\nfacilities within\n20 minutes"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">opportunity</span><span class="op">)</span></span></code></pre></div>
-<p><img src="accessibility_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="accessibility_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
@@ -288,12 +390,13 @@ previously set after they are done with their calculations. In order to
 remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
 page</a>.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

@@ -133,13 +133,13 @@ within a certain amount of time. In other other words, it shows all the
 areas reachable from that place within a maximum travel time. This
 vignette shows how to calculate and visualize isochrones in R using the
 <a href="https://ipeagit.github.io/r5r/index.html" class="external-link"><code>r5r</code>
-package</a> using a reproducible example. In this reproducible example,
-we will be using a sample data set for the city of Porto Alegre (Brazil)
-included in <code>r5r</code>. Our aim here is to calculate several
-isochrones departing from the central bus station given different travel
-time thresholds.</p>
+package</a> using a reproducible example. In this example, we will be
+using a sample data set for the city of Porto Alegre (Brazil) included
+in <code>r5r</code>. Our aim here is to calculate several isochrones
+departing from the central bus station given different travel time
+thresholds.</p>
 <p>There are two ways to calculate / visualize isochrones using
-<code>r5r</code>. The quick and easy option them is using the
+<code>r5r</code>. The quick and easy option is using the
 <code><a href="../reference/isochrone.html">r5r::isochrone()</a></code> function. The other alternative requires
 one to first calculate travel time estimates, and then to do some
 spatial interpolation operations. We will cover both approaches in this
@@ -172,8 +172,8 @@ Java <em>before</em> loading our libraries.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interp</span><span class="op">)</span></span></code></pre></div>
 <p>To build a routable transport network with <code>r5r</code>, the user
-needs to call <code>setup_r5</code> with the path to the directory where
-OpenStreetMap and GTFS data are stored.</p>
+needs to call <code><a href="../reference/setup_r5.html">setup_r5()</a></code> with the path to the directory
+where OpenStreetMap and GTFS data are stored.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
 <span><span class="co"># set data path to directory containing your own data if not running this example</span></span>
