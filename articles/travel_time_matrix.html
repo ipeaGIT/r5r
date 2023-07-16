@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculating travel time matrices • r5r</title>
+<title>Travel time matrices • r5r</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Calculating travel time matrices">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Travel time matrices">
 <meta property="og:description" content="r5r">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -60,13 +60,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/calculating_accessibility.html">Calculating and visualizing Accessibility</a>
+      <a href="../articles/accessibility.html">Accessibility</a>
     </li>
     <li>
-      <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
-    </li>
-    <li>
-      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
+      <a href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a>
     </li>
     <li>
       <a href="../articles/faq.html">FAQ - Frequently Asked Questions</a>
@@ -75,13 +72,16 @@
       <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/isochrones.html">Isochrones</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
     </li>
     <li>
-      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
+      <a href="../articles/travel_time_matrix.html">Travel time matrices</a>
     </li>
   </ul>
 </li>
@@ -109,9 +109,9 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Calculating travel time matrices</h1>
+      <h1 data-toc-skip>Travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2023-07-15</h4>
+            <h4 data-toc-skip class="date">2023-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/travel_time_matrix.Rmd" class="external-link"><code>../vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="hidden name"><code>travel_time_matrix.Rmd</code></div>
@@ -169,7 +169,7 @@ the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load origin/destination points</span></span>
-<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="the-travel_time_matrix-function">3. The <code>travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-travel_time_matrix-function"></a>

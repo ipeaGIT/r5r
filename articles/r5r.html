@@ -60,13 +60,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/calculating_accessibility.html">Calculating and visualizing Accessibility</a>
+      <a href="../articles/accessibility.html">Accessibility</a>
     </li>
     <li>
-      <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
-    </li>
-    <li>
-      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
+      <a href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a>
     </li>
     <li>
       <a href="../articles/faq.html">FAQ - Frequently Asked Questions</a>
@@ -75,13 +72,16 @@
       <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/isochrones.html">Isochrones</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
     </li>
     <li>
-      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
+      <a href="../articles/travel_time_matrix.html">Travel time matrices</a>
     </li>
   </ul>
 </li>
@@ -114,7 +114,7 @@ R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-07-15</h4>
+            <h4 data-toc-skip class="date">2023-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -316,7 +316,7 @@ public transport system.</li>
 will be looking at transport alternatives between some of those
 places.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poi</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     id       lat       lon</span></span>
 <span><span class="co">#&gt; 1:       public_market -30.02756 -51.22781</span></span>
@@ -329,19 +329,19 @@ places.</p>
 example, we will be using 200 points randomly selected from this data
 set.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># sample points</span></span>
 <span><span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a9012a1c7ffff -51.23657 -30.10955       1161       0   36          1</span></span>
-<span><span class="co">#&gt; 2: 89a90e934dbffff -51.14101 -30.00396          0       0 1855          0</span></span>
-<span><span class="co">#&gt; 3: 89a9012a027ffff -51.22742 -30.10895        150       0  792          0</span></span>
-<span><span class="co">#&gt; 4: 89a90128517ffff -51.22012 -30.07908        310       0   75          1</span></span>
-<span><span class="co">#&gt; 5: 89a9012a1a3ffff -51.24858 -30.10575       1407       0  129          0</span></span>
-<span><span class="co">#&gt; 6: 89a9012b2a7ffff -51.14504 -30.10350        115       0    0          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128223ffff -51.17964 -30.05619       1010       0   43          0</span></span>
+<span><span class="co">#&gt; 2: 89a90128a67ffff -51.21434 -30.01161          0       0    0          0</span></span>
+<span><span class="co">#&gt; 3: 89a9012984bffff -51.15999 -30.02178       1137       0   40          0</span></span>
+<span><span class="co">#&gt; 4: 89a9012a143ffff -51.23028 -30.10455        770       0  129          0</span></span>
+<span><span class="co">#&gt; 5: 89a901289c7ffff -51.25425 -30.02068          0       0    1          0</span></span>
+<span><span class="co">#&gt; 6: 89a90129e33ffff -51.15735 -30.03172       1177       0   19          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with
@@ -383,12 +383,12 @@ and visualizing Accessibility</a>.</p>
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a9012a1c7ffff     schools         50     60            20</span></span>
-<span><span class="co">#&gt; 2: 89a9012a1c7ffff  healthcare         50     60            13</span></span>
-<span><span class="co">#&gt; 3: 89a90e934dbffff     schools         50     60            15</span></span>
-<span><span class="co">#&gt; 4: 89a90e934dbffff  healthcare         50     60            11</span></span>
-<span><span class="co">#&gt; 5: 89a9012a027ffff     schools         50     60            26</span></span>
-<span><span class="co">#&gt; 6: 89a9012a027ffff  healthcare         50     60            17</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128223ffff     schools         50     60            37</span></span>
+<span><span class="co">#&gt; 2: 89a90128223ffff  healthcare         50     60            18</span></span>
+<span><span class="co">#&gt; 3: 89a90128a67ffff     schools         50     60            15</span></span>
+<span><span class="co">#&gt; 4: 89a90128a67ffff  healthcare         50     60            10</span></span>
+<span><span class="co">#&gt; 5: 89a9012984bffff     schools         50     60            29</span></span>
+<span><span class="co">#&gt; 6: 89a9012984bffff  healthcare         50     60            15</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>

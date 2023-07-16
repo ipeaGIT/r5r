@@ -37,13 +37,10 @@ to all nodes in the road network."><meta property="og:image" content="/logo.png"
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/calculating_accessibility.html">Calculating and visualizing Accessibility</a>
+      <a href="../articles/accessibility.html">Accessibility</a>
     </li>
     <li>
-      <a href="../articles/calculating_isochrones.html">Calculating and visualizing Isochrones</a>
-    </li>
-    <li>
-      <a href="../articles/detailed_itineraries.html">Planning routes with detailed_itineraries()</a>
+      <a href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a>
     </li>
     <li>
       <a href="../articles/faq.html">FAQ - Frequently Asked Questions</a>
@@ -52,13 +49,16 @@ to all nodes in the road network."><meta property="og:image" content="/logo.png"
       <a href="../articles/fare_structure.html">Accounting for monetary costs</a>
     </li>
     <li>
-      <a href="../articles/pareto_frontier.html">Analyzing the trade-offs between travel time and monetary cost</a>
+      <a href="../articles/isochrones.html">Isochrones</a>
+    </li>
+    <li>
+      <a href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a>
     </li>
     <li>
       <a href="../articles/time_window.html">Using the time_window parameter</a>
     </li>
     <li>
-      <a href="../articles/travel_time_matrix.html">Calculating travel time matrices</a>
+      <a href="../articles/travel_time_matrix.html">Travel time matrices</a>
     </li>
   </ul></li>
 <li>
@@ -99,6 +99,7 @@ to all nodes in the road network.</p>
 <span>  cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">30</span><span class="op">)</span>,</span>
 <span>  sample_size <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  time_window <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_car_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -107,6 +108,7 @@ to all nodes in the road network.</p>
 <span>  bike_speed <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  max_rides <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -156,6 +158,14 @@ time only influences public transport legs. When working with public
 transport networks, please check the <code>calendar.txt</code> within your GTFS
 feeds for valid dates. Please see details for further information on
 how datetimes are parsed.</p></dd>
+
+
+<dt>time_window</dt>
+<dd><p>An integer. The time window in minutes for which <code>r5r</code>
+will calculate multiple travel time matrices departing each minute.
+Defaults to 10 minutes. The function returns the result based on
+median travel times. Please read the time window vignette for more
+details on its usage <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 
 
 <dt>max_walk_time</dt>
@@ -212,6 +222,14 @@ stress that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4 indicates
 cyclists can travel through any road. Defaults to 2. Please see
 details for more information.</p></dd>
+
+
+<dt>draws_per_minute</dt>
+<dd><p>An integer. The number of Monte Carlo draws to
+perform per time window minute when calculating travel time matrices and
+when estimating accessibility. Defaults to 5. This would mean 300 draws in
+a 60-minute time window, for example. This parameter only affects the
+results when the GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
 
 
 <dt>n_threads</dt>
@@ -351,12 +369,12 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 2 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2488 ymin: -30.0972 xmax: -51.1743 ymax: -30.0155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2488 ymin: -30.0972 xmax: -51.1743 ymax: -30.0161</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                id isochrone                       polygons</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 89a90128107ffff       100 POLYGON ((-51.2486 -30.0908...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 89a90128107ffff        90 POLYGON ((-51.2476 -30.086,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 89a90128107ffff        80 POLYGON ((-51.2434 -30.0824...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 89a90128107ffff        80 POLYGON ((-51.2464 -30.081,...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 89a90128107ffff        70 POLYGON ((-51.2435 -30.078,...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 89a90128107ffff        60 POLYGON ((-51.2311 -30.0793...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 89a90128107ffff        50 POLYGON ((-51.2393 -30.0701...</span>
