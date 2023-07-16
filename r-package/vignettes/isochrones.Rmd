@@ -29,7 +29,7 @@ Before we start, we need to increase Java memory + load a few libraries, and to 
 
 
 
-***Warning:*** If you want to calculate how many opportunities (e.g. jobs, or schools or hospitals) are located inside each isochrone, we strongly recommend you NOT to use the `isochrone()` function. You will find much more efficient ways to do this in the [Accessibility vignette](https://ipeagit.github.io/r5r/articles/calculating_accessibility.html).
+***Warning:*** If you want to calculate how many opportunities (e.g. jobs, or schools or hospitals) are located inside each isochrone, we strongly recommend you NOT to use the `isochrone()` function. You will find much more efficient ways to do this in the [Accessibility vignette](https://ipeagit.github.io/r5r/articles/accessibility.html).
 
 
 # 2. Build routable transport network with `setup_r5()`
