@@ -1,5 +1,10 @@
 # r5r 1.0.1
 
+**Major changes**
+
+- New `isochrone()`function. Closes [#123](https://github.com/ipeaGIT/r5r/issues/123), and addresses requrests in issues [#164](https://github.com/ipeaGIT/r5r/issues/164) and [#328](https://github.com/ipeaGIT/r5r/issues/328).
+
+
 **Minor changes**
 
 - The default value of `time_window` is not set to 10 minutes in all functions to avoid weird results reported upstream in R5. Closes [#342](https://github.com/ipeaGIT/r5r/issues/342).

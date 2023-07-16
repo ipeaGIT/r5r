@@ -116,7 +116,7 @@ colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
             '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
 
 ggplot() +
-  geom_sf(data = iso1, aes(fill=factor(isochrone)), alpha = 1) +
+  geom_sf(data = iso1, aes(fill=factor(isochrone)), color = NA, alpha = .7) +
   geom_sf(data = main_roads, color = "gray55", size=0.01, alpha = 0.2) +
   geom_point(data = central_bus_stn, aes(x=lon, y=lat, color='Central bus\nstation')) +
   # scale_fill_viridis_d(direction = -1, option = 'B') +
