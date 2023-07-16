@@ -49,6 +49,7 @@ Imports:
     utils,
     zip
 Suggests:
+    accessibility,
     covr,
     dplyr,
     ggplot2 (>= 3.3.1),
