@@ -144,7 +144,7 @@ The final step is mapping the accessibility results calculated earlier. We can u
 
 The first approach is to use choropleth maps. In our example, each point of reference is the centroid of a H3 hexagonal grid at a fine spatial resolution. In this case, we basically need to retrieve the polygons of the spatial grid, and merge it with our accessibility estimates.
 
-```{r, message = FALSE}
+```{r, message = FALSE, out.width='100%'}
 # retrieve polygons of H3 spatial grid
 grid <- h3jsr::cell_to_polygon(points$id, simple = FALSE)
 
