@@ -111,7 +111,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>FAQ - Frequently Asked Questions</h1>
             
-            <h4 data-toc-skip class="date">2023-07-18</h4>
+            <h4 data-toc-skip class="date">2023-08-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/faq.Rmd" class="external-link"><code>../vignettes/faq.Rmd</code></a></small>
       <div class="hidden name"><code>faq.Rmd</code></div>
@@ -125,23 +125,29 @@
       Asked Questions from r5r users.
     </div>
     
-<details><summary><h2>
-<ol style="list-style-type: decimal"><li>Why do some trips from/to the same ID have travel times larger than
-zero?
-</li></ol>
-</h2></summary><blockquote>
+<div class="section level2">
+<h2 id="why-do-some-trips-fromto-the-same-id-have-travel-times-larger-than-zero">1. Why do some trips from/to the same ID have travel times larger
+than zero?<a class="anchor" aria-label="anchor" href="#why-do-some-trips-fromto-the-same-id-have-travel-times-larger-than-zero"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
 <p>This can happen when the input point is distant to any routable road
-segment. In this case, R5 will snap the point to the closes road segment
-that can be traversed with the selected transport mode, and it will
-consider that the person would walk in Euclidean distance from the input
-point to the snapped location. So R5 is accounting for this walking time
-“as the crow flies” in the routing.</p>
+segment. In this case, R5 will snap the point to the closest road
+segment that can be traversed with the selected transport mode, and it
+will consider that the person would walk in Euclidean distance from the
+input point to the snapped location. So R5 is accounting for this
+walking time “as the crow flies” in the routing.</p>
 </blockquote>
-</details><details><summary><h2>
-<ol start="2" style="list-style-type: decimal"><li>Is it possible to run <code>r5r</code> with custom modifications to
-street nework data?
-</li></ol>
-</h2></summary><blockquote>
+</details>
+</div>
+<div class="section level2">
+<h2 id="is-it-possible-to-run-r5r-with-custom-modifications-to-street-nework-data">2. Is it possible to run <code>r5r</code> with custom modifications
+to street nework data?<a class="anchor" aria-label="anchor" href="#is-it-possible-to-run-r5r-with-custom-modifications-to-street-nework-data"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
 <p>It is possible to edit the OpenStreetMap <code>.pbf</code> file
 before using it in <code>r5r</code> for example to remove or add roads,
 change speeds etc etc. To to this, you can edit the <code>.pbf</code>
@@ -150,22 +156,30 @@ file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-lin
 OpenStreetMap tags can be changed but they cannot be removed from the
 data.</p>
 </blockquote>
-</details><details><summary><h2>
-<ol start="3" style="list-style-type: decimal"><li>Why are the output results of <code>time_travel_matrix()</code> and
-<code>detailed_itineraries()</code> different?
-</li></ol>
-</h2></summary><blockquote>
+</details>
+</div>
+<div class="section level2">
+<h2 id="why-are-the-output-results-of-time_travel_matrix-and-detailed_itineraries-different">3. Why are the output results of <code>time_travel_matrix()</code>
+and <code>detailed_itineraries()</code> different?<a class="anchor" aria-label="anchor" href="#why-are-the-output-results-of-time_travel_matrix-and-detailed_itineraries-different"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
 <p>The functions <code>time_travel_matrix()</code> (and
 <code>expanded_time_travel_matrix</code>) and
 <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> use different routing algorithms, as
 explained in the documentation of these functions. As such, we advise
 not to use or combine the output of these functions.</p>
 </blockquote>
-</details><details><summary><h2>
-<ol start="4" style="list-style-type: decimal"><li>What does the ERROR “Geographic extent of street layer exceeds
-limit” mean? and what to do about it?
-</li></ol>
-</h2></summary><blockquote>
+</details>
+</div>
+<div class="section level2">
+<h2 id="what-does-the-error-geographic-extent-of-street-layer-exceeds-limit-mean-and-what-to-do-about-it">4. What does the ERROR “Geographic extent of street layer exceeds
+limit” mean? and what to do about it?<a class="anchor" aria-label="anchor" href="#what-does-the-error-geographic-extent-of-street-layer-exceeds-limit-mean-and-what-to-do-about-it"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
 <p>If you an error message says something like: <em>“Geographic extent
 of street layer (5315196 km2) exceeds limit of 975000 km2”</em>. This
 means the your study area is too large. Unfortunately, this is a limit
@@ -173,10 +187,10 @@ hardcoded upstream in R5 so we cannot change it in r5r. The advised
 <strong>solution</strong> here would be to reduce the extent of the
 <code>OpenStreetMap.pbf</code> to a smaller area of interest. One can do
 this using the <a href="https://wiki.openstreetmap.org/wiki/Osmosis" class="external-link">Osmosis</a> software.
-The code below illustrates how to do this by calling Osmisis from within
-R. You need to donwload the <code>osmosis</code> to your computer. The
-latest releases can be downloaded from <a href="https://github.com/openstreetmap/osmosis/releases" class="external-link">here</a>. Next,
-you can use this step-by-step below:</p>
+The code below illustrates how to do this by calling Osmosis from within
+R. You need to donwload the Osmosis program to your computer. The latest
+releases can be downloaded from <a href="https://github.com/openstreetmap/osmosis/releases" class="external-link">here</a>. Next,
+you can use this step-by-step illustrated in the example below:</p>
 </blockquote>
 <pre><code><span><span class="co"># get the bounding box of your study area</span></span>
 <span><span class="va">study_area_polygon</span> <span class="op">&lt;-</span> <span class="fu">geobr</span><span class="fu">::</span><span class="fu">read_state</span><span class="op">(</span>code_state <span class="op">=</span> <span class="st">"ES"</span><span class="op">)</span></span>
@@ -197,36 +211,48 @@ you can use this step-by-step below:</p>
 <span></span>
 <span><span class="co"># call to osmosis</span></span>
 <span><span class="fu">shell</span><span class="op">(</span><span class="va">osmosis_cmd</span>, translate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-</details><details><summary><h2>
-<ol start="5" style="list-style-type: decimal"><li>Is it possible to use custom car speed data with r5r?
-</li></ol>
-</h2></summary><blockquote>
+</details>
+</div>
+<div class="section level2">
+<h2 id="is-it-possible-to-use-custom-car-speed-data-with-r5r">5. Is it possible to use custom car speed data with r5r?<a class="anchor" aria-label="anchor" href="#is-it-possible-to-use-custom-car-speed-data-with-r5r"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
 <p>By default, R5 considers the max speed limit of each road as set in
 OpenStreetMap data. Unfortunately, there is currently no easy way to
 change the car speeds of road segments from within R. Although you could
 probably do that by editing the osm.pbf file using other programs. See
 issue <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>.</p>
 </blockquote>
-</details><details><summary><h2>
-<ol start="6" style="list-style-type: decimal"><li>Why do I get identical results by public transport and walking?
-</li></ol>
-</h2></summary><blockquote>
-<p>If your travel time / accessibility results that are identical for
-public transport and walking, it is probably because R5 did not detect
-the public transport network for your requested trip. This is likely to
-occur in case you set a <code>departure_datetime</code> outside the
-calendar of public transport operations in your GTFS data. Check the
-<code>calendar.txt</code> file in your gtfs.zip feed. Alternatively,
-this could occur because there is no public transport trip option that
-would be faster than walking for the given origin-destination pair you
-queried.</p>
+</details>
+</div>
+<div class="section level2">
+<h2 id="why-do-i-get-identical-results-by-public-transport-and-walking">6. Why do I get identical results by public transport and
+walking?<a class="anchor" aria-label="anchor" href="#why-do-i-get-identical-results-by-public-transport-and-walking"></a>
+</h2>
+<details><summary>
+click to expand
+</summary><blockquote>
+<p>If your travel time / accessibility results are identical for public
+transport and walking, it is probably because R5 did not detect that the
+public transport network is available for your requested trips. This is
+likely to occur in case you set a <code>departure_datetime</code>
+outside the calendar of public transport operations in your GTFS data.
+Check the <code>calendar.txt</code> file in your gtfs.zip feed.
+Alternatively, this could occur because there is no public transport
+trip option that would be faster than walking for the given
+origin-destination pair you queried.</p>
 </blockquote>
 </details>
 </div>
+  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
