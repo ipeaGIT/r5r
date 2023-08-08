@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@ R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-08-01</h4>
+            <h4 data-toc-skip class="date">2023-08-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -193,7 +193,7 @@ previous attempts.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p>The <code>r5r</code> package has six <strong>fundamental
+<p>The <code>r5r</code> package has seven <strong>fundamental
 functions</strong>:</p>
 <ol style="list-style-type: decimal">
 <li><p><code><a href="../reference/setup_r5.html">setup_r5()</a></code> to initialize an instance of
@@ -213,6 +213,9 @@ pairs.</p></li>
 <li><p><code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> for analyzing the trade-off
 between the travel time and monetary costs of multiple route
 alternatives between origin/destination pairs.</p></li>
+<li><p><code><a href="../reference/isochrone.html">isochrone()</a></code> to estimate the polygons of the areas
+that can be reached from an origin point at different travel time
+limits.</p></li>
 </ol>
 <p>Most of these functions also allow users to account for monetary
 travel costs when generating travel time matrices and accessibility
@@ -336,12 +339,12 @@ set.</p>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a901281b3ffff -51.22551 -30.06198        567       0  168          0</span></span>
-<span><span class="co">#&gt; 2: 89a9012a353ffff -51.20878 -30.09946          2       0    0          0</span></span>
-<span><span class="co">#&gt; 3: 89a9012b16bffff -51.16897 -30.09315          0       0    0          0</span></span>
-<span><span class="co">#&gt; 4: 89a9012a143ffff -51.23028 -30.10455        770       0  129          0</span></span>
-<span><span class="co">#&gt; 5: 89a90128323ffff -51.20047 -30.04470         99       1   89          0</span></span>
-<span><span class="co">#&gt; 6: 89a90129ecfffff -51.14544 -30.03828        783       0    6          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a901298afffff -51.18127 -30.02136        410       0 1948          1</span></span>
+<span><span class="co">#&gt; 2: 89a90129b83ffff -51.17476 -30.01081        402       1   58          0</span></span>
+<span><span class="co">#&gt; 3: 89a9012816bffff -51.20985 -30.05084       1852       0  214          0</span></span>
+<span><span class="co">#&gt; 4: 89a90129db7ffff -51.20609 -30.03313       1168       0  269          0</span></span>
+<span><span class="co">#&gt; 5: 89a90128ab3ffff -51.22394 -30.02327         52       0   14          0</span></span>
+<span><span class="co">#&gt; 6: 89a90129e77ffff -51.15117 -30.02947        846       1  115          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with
@@ -383,12 +386,12 @@ and visualizing Accessibility</a>.</p>
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a901281b3ffff     schools         50     60            24</span></span>
-<span><span class="co">#&gt; 2: 89a901281b3ffff  healthcare         50     60            19</span></span>
-<span><span class="co">#&gt; 3: 89a9012a353ffff     schools         50     60             2</span></span>
-<span><span class="co">#&gt; 4: 89a9012a353ffff  healthcare         50     60             0</span></span>
-<span><span class="co">#&gt; 5: 89a9012b16bffff     schools         50     60            10</span></span>
-<span><span class="co">#&gt; 6: 89a9012b16bffff  healthcare         50     60            10</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a901298afffff     schools         50     60            25</span></span>
+<span><span class="co">#&gt; 2: 89a901298afffff  healthcare         50     60            15</span></span>
+<span><span class="co">#&gt; 3: 89a90129b83ffff     schools         50     60            20</span></span>
+<span><span class="co">#&gt; 4: 89a90129b83ffff  healthcare         50     60            12</span></span>
+<span><span class="co">#&gt; 5: 89a9012816bffff     schools         50     60            31</span></span>
+<span><span class="co">#&gt; 6: 89a9012816bffff  healthcare         50     60            16</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
