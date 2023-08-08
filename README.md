@@ -54,7 +54,7 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 ## Usage
 
-The package has six **fundamental functions**:
+The package has seven **fundamental functions**:
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
@@ -88,8 +88,10 @@ The package has six **fundamental functions**:
 6. `pareto_frontier()`
    * Returns a `data.table` with the travel time and monetary cost of multiple
    route alternatives for specified origin-destination pairs.
-
    
+7. `isochrone()`
+   * Returns a `A ⁠POLYGON  "sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).

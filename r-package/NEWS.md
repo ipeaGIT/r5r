@@ -1,9 +1,10 @@
-# r5r 1.0.19999 dev
+# r5r 1.1.0
 
 **Major changes**
 
 - New `isochrone()`function. Closes [#123](https://github.com/ipeaGIT/r5r/issues/123), and addresses requrests in issues [#164](https://github.com/ipeaGIT/r5r/issues/164) and [#328](https://github.com/ipeaGIT/r5r/issues/328).
 - New vignette about calculating / visualizing isochrones with `r5r`.
+- New vignette with responses to frequently asked questions (FAQ) from `r5r` users.
 
 **Minor changes**
 
