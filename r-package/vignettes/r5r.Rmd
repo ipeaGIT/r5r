@@ -132,11 +132,13 @@ Here are a few places from where you can download these data sets:
   - [geofabrik](https://download.geofabrik.de/) website
   - [hot export tool](https://export.hotosm.org/) website
   - [BBBike.org](https://extract.bbbike.org/) website
+  - [Protomaps](https://protomaps.com/downloads/osm) website
 
 - GTFS
-  - [tidytransit](http://tidytransit.r-transit.org/) R package
+  - [tidytransit](https://github.com/r-transit/tidytransit) R package
   - [transitland](https://www.transit.land/) website
-  
+  - [Mobility Database](https://database.mobilitydata.org/) website
+
 - Elevation
   - [elevatr](https://github.com/jhollist/elevatr) R package
   - Nasa's SRTMGL1 website
