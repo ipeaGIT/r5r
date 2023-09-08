@@ -125,10 +125,12 @@ Here are a few places from where you can download these data sets:
   - [geofabrik](https://download.geofabrik.de/) website
   - [hot export tool](https://export.hotosm.org/) website
   - [BBBike.org](https://extract.bbbike.org/) website
+  - [Protomaps](https://protomaps.com/downloads/osm) website
 
 - GTFS
   - [tidytransit](https://r-transit.github.io/tidytransit/) R package
   - [transitland](https://www.transit.land/) website
+  - [Mobility Database](https://database.mobilitydata.org/) website
   
 - Elevation
   - [elevatr](https://github.com/jhollist/elevatr) R package
@@ -240,3 +242,11 @@ BibTeX:
 	note = {Publisher: Network Design Lab}
 }
 ```
+
+Please also cite the relevant publications relating to the R⁵ engine on which *r5r* builds up:
+
+- Conway, M. W., Byrd, A., & van der Linden, M. (2017): **Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks**. *Transportation Research Record*, 2653(1), 45–53. [DOI:10.3141/2653-06](https://doi.org/10.3141/2653-06)
+- Conway, M. W., Byrd, A., & Van Eggermond, M. (2018): **Accounting for uncertainty and variation in accessibility metrics for public transport sketch planning**. *Journal of Transport and Land Use*, 11(1). [DOI:10.5198/jtlu.2018.1074](https://doi.org/10.5198/jtlu.2018.1074)
+- Conway, M. W. & Stewart, A. F. (2019): **Getting Charlie off the MTA: a multiobjective optimization method to account for cost constraints in public transit accessibility metrics**. *International Journal of Geographical Information Science*, 33(9), 1759–1787. [DOI:10.1080/13658816.2019.1605075](https://doi.org/10.1080/13658816.2019.1605075)
+
+
