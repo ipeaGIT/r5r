@@ -76,7 +76,7 @@ The package has seven **fundamental functions**:
 
 4. `expanded_travel_time_matrix()`
    * Calculates travel time matrices between origin destination pairs with 
-   additional information such routes used and total time disaggregated by access, 
+   additional information such as routes used and total time disaggregated by access, 
    waiting, in-vehicle and transfer times.
 
 5. `detailed_itineraries()`
@@ -94,7 +94,7 @@ The package has seven **fundamental functions**:
 
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
-how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 
 The package also includes a few **support functions**.
