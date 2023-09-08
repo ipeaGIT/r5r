@@ -177,6 +177,14 @@ accessibility <- function(r5r_core,
   opportunities <- assign_opportunities(destinations, opportunities_colnames)
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
+
+  # cap trip duration with cutoffs
+  if(!is.null(cutoffs)){
+    max_trip_duration <- ifelse(max_trip_duration > max(cutoffs), max(cutoffs), max_trip_duration)
+
+    if(max_trip_duration < max(cutoffs)){stop("'max_trip_duration' cannot be shorter than 'max(cutoffs)'")}
+  }
+
   max_walk_time <- assign_max_street_time(
     max_walk_time,
     walk_speed,
@@ -201,6 +209,10 @@ accessibility <- function(r5r_core,
     max_walk_time,
     max_bike_time
   )
+
+
+
+
   decay_list <- assign_decay_function(decay_function, decay_value)
 
   set_time_window(r5r_core, time_window)

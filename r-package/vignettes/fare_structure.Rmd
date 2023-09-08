@@ -434,7 +434,7 @@ calculate_accessibility <- function(fare, fare_string) {
                                                              format = "%d-%m-%Y %H:%M:%S"),
                              opportunities_colname = "healthcare",
                              mode = c("WALK", "TRANSIT"),
-                             cutoffs = c(60),
+                             cutoffs = 45,
                              fare_structure = fare_structure,
                              max_fare = fare,
                              max_trip_duration = 45,
