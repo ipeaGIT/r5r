@@ -114,7 +114,7 @@ R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2023-08-12</h4>
+            <h4 data-toc-skip class="date">2023-09-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -159,11 +159,7 @@ version from github.</p>
 <p>Please bear in mind that you need to have <em>Java SE Development Kit
 11</em> installed on your computer to use <code>r5r</code>. No worries,
 you don’t have to pay for it. The jdk 11 is freely available from the
-options below:</p>
-<ul>
-<li><p><a href="https://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a></p></li>
-<li><p><a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p></li>
-</ul>
+options below: - <a href="https://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a> - <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p>
 <p>If you don’t know what version of Java you have installed on your
 computer, you can check it by running this on R console.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -205,7 +201,7 @@ opportunities considering a selected decay function;</p></li>
 time estimates between origin/destination pairs;</p></li>
 <li><p><code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> for calculating travel
 matrices between origin destination pairs with additional information
-such routes used and total time disaggregated by access, waiting,
+such as routes used and total time disaggregated by access, waiting,
 in-vehicle and transfer times.</p></li>
 <li><p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> to get detailed information
 on one or multiple alternative routes between origin/destination
@@ -265,7 +261,7 @@ website</li>
 <li>GTFS
 <ul>
 <li>
-<a href="https://github.com/r-transit/tidytransit" class="external-link">tidytransit</a> R
+<a href="https://r-transit.github.io/tidytransit/" class="external-link">tidytransit</a> R
 package</li>
 <li>
 <a href="https://www.transit.land/" class="external-link">transitland</a> website</li>
@@ -345,12 +341,12 @@ set.</p>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90128123ffff -51.22209 -30.05257        665       0  557          0</span></span>
-<span><span class="co">#&gt; 2: 89a90128d6fffff -51.25448 -30.02622        277       0   16          0</span></span>
-<span><span class="co">#&gt; 3: 89a90128c77ffff -51.23685 -30.04159          0       0    0          0</span></span>
-<span><span class="co">#&gt; 4: 89a9012b1cfffff -51.16941 -30.10420        189       1   15          0</span></span>
-<span><span class="co">#&gt; 5: 89a901283c7ffff -51.19177 -30.05516       1367       0  122          0</span></span>
-<span><span class="co">#&gt; 6: 89a9012a02fffff -51.22433 -30.10782        357       1   35          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a9012846bffff -51.18980 -30.08167         93       0    1          0</span></span>
+<span><span class="co">#&gt; 2: 89a90128377ffff -51.19441 -30.04522       1333       0   83          0</span></span>
+<span><span class="co">#&gt; 3: 89a90128a43ffff -51.20553 -30.01930       1525       0  678          0</span></span>
+<span><span class="co">#&gt; 4: 89a90129b7bffff -51.16516 -29.99914          0       0   78          0</span></span>
+<span><span class="co">#&gt; 5: 89a90129d03ffff -51.19385 -30.03139        602       0  207          0</span></span>
+<span><span class="co">#&gt; 6: 89a90128ccbffff -51.22815 -30.05205       1026       0  293          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with
@@ -369,7 +365,7 @@ osm.pbf and gtfs.zip data sets to build a routable network object.</p>
 <div class="section level3">
 <h3 id="accessibility-analysis">4.2 Accessibility analysis<a class="anchor" aria-label="anchor" href="#accessibility-analysis"></a>
 </h3>
-<p>The faster way to calculate accessibility estimates is using the
+<p>The fastest way to calculate accessibility estimates is using the
 <code><a href="../reference/accessibility.html">accessibility()</a></code> function. In this example, we calculate the
 number of schools and health care facilities accessible in less than 60
 minutes by public transport and walking. More details in this vignette
@@ -392,12 +388,12 @@ and visualizing Accessibility</a>.</p>
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a90128123ffff     schools         50     60            22</span></span>
-<span><span class="co">#&gt; 2: 89a90128123ffff  healthcare         50     60            21</span></span>
-<span><span class="co">#&gt; 3: 89a90128d6fffff     schools         50     60             0</span></span>
-<span><span class="co">#&gt; 4: 89a90128d6fffff  healthcare         50     60             0</span></span>
-<span><span class="co">#&gt; 5: 89a90128c77ffff     schools         50     60            20</span></span>
-<span><span class="co">#&gt; 6: 89a90128c77ffff  healthcare         50     60            21</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a9012846bffff     schools         50     60            16</span></span>
+<span><span class="co">#&gt; 2: 89a9012846bffff  healthcare         50     60            13</span></span>
+<span><span class="co">#&gt; 3: 89a90128377ffff     schools         50     60            32</span></span>
+<span><span class="co">#&gt; 4: 89a90128377ffff  healthcare         50     60            24</span></span>
+<span><span class="co">#&gt; 5: 89a90128a43ffff     schools         50     60            27</span></span>
+<span><span class="co">#&gt; 6: 89a90128a43ffff  healthcare         50     60            21</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
