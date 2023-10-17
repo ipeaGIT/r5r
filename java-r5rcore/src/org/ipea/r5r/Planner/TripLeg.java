@@ -1,6 +1,7 @@
 package org.ipea.r5r.Planner;
 
 import com.conveyal.r5.api.util.LegMode;
+import com.conveyal.r5.api.util.StreetEdgeInfo;
 import com.conveyal.r5.api.util.StreetSegment;
 import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.profile.ProfileRequest;
@@ -55,6 +56,7 @@ public class TripLeg {
     private String route;
 
     private LineString geometry;
+    private List<StreetEdgeInfo> streetEdges;
 
     public String getMode() {
         return mode;
@@ -88,6 +90,10 @@ public class TripLeg {
         return route;
     }
 
+    public List getListofStopID() {
+        return 
+    }
+
     public LineString getGeometry() {
         return geometry;
     }
@@ -101,6 +107,8 @@ public class TripLeg {
         newLeg.cumulativeFare = 0;
         newLeg.route = "";
         newLeg.geometry = streetSegment.geometry;
+        
+        newLeg.streetEdges = streetSegment.streetEdges;
 
         return newLeg;
     }
