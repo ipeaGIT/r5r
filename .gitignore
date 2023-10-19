@@ -33,3 +33,6 @@ r-package/vignettes/*.R
 aws.xml
 docs/
 network_settings.json
+java-r5rcore/src/src.jar
+java-r5rcore/src/src.jar
+*.jar

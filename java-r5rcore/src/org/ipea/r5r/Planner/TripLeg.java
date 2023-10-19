@@ -11,7 +11,11 @@ import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.TripPattern;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -19,6 +23,7 @@ import org.locationtech.jts.geom.LineString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.conveyal.r5.transit.TransitLayer.TRANSFER_DISTANCE_LIMIT_METERS;
 
@@ -90,8 +95,14 @@ public class TripLeg {
         return route;
     }
 
-    public List getListofStopID() {
-        return 
+    public String getEdgeIDList() {
+        String listEdgeId = "";
+        try {
+            listEdgeId = streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(","));
+        } catch (Exception e) {
+        }
+        // List<Integer> listEdgeId;
+        return listEdgeId;
     }
 
     public LineString getGeometry() {
@@ -107,7 +118,7 @@ public class TripLeg {
         newLeg.cumulativeFare = 0;
         newLeg.route = "";
         newLeg.geometry = streetSegment.geometry;
-        
+
         newLeg.streetEdges = streetSegment.streetEdges;
 
         return newLeg;
@@ -128,7 +139,7 @@ public class TripLeg {
     }
 
     public static TripLeg newTransitLeg(String mode, int duration, int fare, int waitTime,
-                                        int boardStop, int alightStop, String route) {
+            int boardStop, int alightStop, String route) {
         TripLeg newLeg = new TripLeg();
 
         newLeg.mode = mode;
@@ -140,23 +151,24 @@ public class TripLeg {
         newLeg.alightStop = alightStop;
         newLeg.route = route;
 
-//        newLeg.legDistance = (int) geometry.getLength();
-//        newLeg.geometry = geometry;
+        // newLeg.legDistance = (int) geometry.getLength();
+        // newLeg.geometry = geometry;
 
         return newLeg;
     }
 
     public void augmentTransitLeg(MultiKeyMap<Integer, StreetSegment> transferPaths,
-                                  TransportNetwork network, ProfileRequest request) {
-//        TripPattern pattern = network.transitLayer.tripPatterns.get(state.pattern);
-//
-//        int boardStopIndex = pattern.stops[state.boardStopPosition];
-//        int alightStopIndex = pattern.stops[state.alightStopPosition];
+            TransportNetwork network, ProfileRequest request) {
+        // TripPattern pattern = network.transitLayer.tripPatterns.get(state.pattern);
+        //
+        // int boardStopIndex = pattern.stops[state.boardStopPosition];
+        // int alightStopIndex = pattern.stops[state.alightStopPosition];
 
         if (isTransit) {
             List<Coordinate> coords = new ArrayList<>();
             List<LineString> hops = pattern.getHopGeometries(network.transitLayer);
-            for (int i = boardStopPosition; i < alightStopPosition; i++) { // hop i is from stop i to i + 1, don't include last stop index
+            for (int i = boardStopPosition; i < alightStopPosition; i++) { // hop i is from stop i to i + 1, don't
+                                                                           // include last stop index
                 LineString hop = hops.get(i);
                 coords.addAll(Arrays.asList(hop.getCoordinates()));
             }
@@ -171,11 +183,11 @@ public class TripLeg {
                     boolean prevReverseSearch = request.reverseSearch;
                     request.reverseSearch = false;
 
-                    //LOG.info("Filling middle paths");
+                    // LOG.info("Filling middle paths");
                     StreetRouter streetRouter = new StreetRouter(network.streetLayer);
                     streetRouter.streetMode = StreetMode.WALK;
                     streetRouter.profileRequest = request;
-                    //TODO: make configurable distanceLimitMeters in middle
+                    // TODO: make configurable distanceLimitMeters in middle
                     streetRouter.distanceLimitMeters = TRANSFER_DISTANCE_LIMIT_METERS;
 
                     int stopVertexId = network.transitLayer.streetVertexForStop.get(this.fromStop);
@@ -187,7 +199,8 @@ public class TripLeg {
 
                     streetRouter.route();
 
-                    StreetRouter.State lastState = streetRouter.getState(destStopCoord.getY() / VertexStore.FIXED_FACTOR,
+                    StreetRouter.State lastState = streetRouter.getState(
+                            destStopCoord.getY() / VertexStore.FIXED_FACTOR,
                             destStopCoord.getX() / VertexStore.FIXED_FACTOR);
 
                     if (lastState != null) {
@@ -217,4 +230,3 @@ public class TripLeg {
         return this.legDistance;
     }
 }
-

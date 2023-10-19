@@ -99,6 +99,9 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("wait", Utils.roundTo1Place(leg.getWaitTime() / 60.0));
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
+                travelTimesTable.set("edge_id_list", leg.getEdgeIDList());
+                travelTimesTable.set("board_stop_id", leg.getBoardStop());
+                travelTimesTable.set("alight_stop_id", leg.getAlightStop());
 
                 if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
             });
@@ -132,6 +135,9 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
         itinerariesDataFrame.addIntegerColumn("distance", 0);
         itinerariesDataFrame.addStringColumn("route", "");
+        itinerariesDataFrame.addStringColumn("edge_id_list", "");
+        itinerariesDataFrame.addIntegerColumn("board_stop_id", 0);
+        itinerariesDataFrame.addIntegerColumn("alight_stop_id", 0);
         if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
 
         return itinerariesDataFrame;
