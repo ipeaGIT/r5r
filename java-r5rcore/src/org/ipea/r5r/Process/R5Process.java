@@ -189,7 +189,7 @@ public abstract class R5Process {
             }
 
             if (Utils.saveOutputToCsv & results != null) {
-                String filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + ".csv";
+                String filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + "_" + toIds[index] +  ".csv";
                 results.saveToCsv(filename);
                 results.clear();
             }
