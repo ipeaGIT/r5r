@@ -122,7 +122,7 @@ public class TripLeg {
         newLeg.geometry = streetSegment.geometry;
 
         newLeg.streetEdges = streetSegment.streetEdges;
-        newLeg.listEdgeId = newLeg.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(","));
+        newLeg.listEdgeId = newLeg.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";"));
 
         return newLeg;
     }
@@ -213,7 +213,7 @@ public class TripLeg {
                         this.legDurationSeconds = streetSegment.duration;
                         this.geometry = streetSegment.geometry;
                         this.streetEdges = streetSegment.streetEdges;
-                        this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(",")) + "]";
+                        this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
                         this.legDistance = Utils.getLinestringLength(geometry);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
@@ -223,11 +223,10 @@ public class TripLeg {
                 } else {
                     this.geometry = streetSegment.geometry;
                     this.streetEdges = streetSegment.streetEdges;
-                    this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(",")) + "]";
+                    this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
                     this.legDistance = Utils.getLinestringLength(geometry);
                 }
             } else {
-                this.listEdgeId = "first/last_mile";
                 this.legDistance = Utils.getLinestringLength(geometry);
             }
         }

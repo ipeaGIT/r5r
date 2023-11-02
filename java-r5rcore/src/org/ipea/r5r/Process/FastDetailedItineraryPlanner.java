@@ -100,8 +100,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
                 travelTimesTable.set("edge_id_list", leg.getEdgeIDList());
-                travelTimesTable.set("board_stop_id", leg.getBoardStop());
-                travelTimesTable.set("alight_stop_id", leg.getAlightStop());
+                travelTimesTable.set("board_stop_index", leg.getBoardStop()); // Important: this integer number is not the actual id of the stop, but the index of the bus in the list of stop in GTFS stops.txt. 
+                travelTimesTable.set("alight_stop_index", leg.getAlightStop());
 
                 if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
             });
@@ -136,8 +136,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addIntegerColumn("distance", 0);
         itinerariesDataFrame.addStringColumn("route", "");
         itinerariesDataFrame.addStringColumn("edge_id_list", "");
-        itinerariesDataFrame.addIntegerColumn("board_stop_id", 0);
-        itinerariesDataFrame.addIntegerColumn("alight_stop_id", 0);
+        itinerariesDataFrame.addIntegerColumn("board_stop_index", 0);
+        itinerariesDataFrame.addIntegerColumn("alight_stop_index", 0);
         if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
 
         return itinerariesDataFrame;
