@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "src/r5-v6.9-all.jar",
+        "src/jri-0.8-8-linux-amd-x64.jar"
+    ]
+}

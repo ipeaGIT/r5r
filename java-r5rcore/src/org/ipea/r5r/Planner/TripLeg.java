@@ -62,6 +62,7 @@ public class TripLeg {
 
     private LineString geometry;
     private List<StreetEdgeInfo> streetEdges;
+    private String listEdgeId;
 
     public String getMode() {
         return mode;
@@ -96,11 +97,12 @@ public class TripLeg {
     }
 
     public String getEdgeIDList() {
-        String listEdgeId = "";
-        try {
-            listEdgeId = streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(","));
-        } catch (Exception e) {
-        }
+        // private List<Integer> = new ArrayList<>();
+        // for (Integer ind = 0; ind < streetEdges.size(); ind++){
+
+        // }
+        
+        // String listEdgeId = streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(","));
         // List<Integer> listEdgeId;
         return listEdgeId;
     }
@@ -120,6 +122,7 @@ public class TripLeg {
         newLeg.geometry = streetSegment.geometry;
 
         newLeg.streetEdges = streetSegment.streetEdges;
+        newLeg.listEdgeId = newLeg.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(","));
 
         return newLeg;
     }
@@ -209,6 +212,8 @@ public class TripLeg {
 
                         this.legDurationSeconds = streetSegment.duration;
                         this.geometry = streetSegment.geometry;
+                        this.streetEdges = streetSegment.streetEdges;
+                        this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(",")) + "]";
                         this.legDistance = Utils.getLinestringLength(geometry);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
@@ -217,9 +222,12 @@ public class TripLeg {
                     request.reverseSearch = prevReverseSearch;
                 } else {
                     this.geometry = streetSegment.geometry;
+                    this.streetEdges = streetSegment.streetEdges;
+                    this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(",")) + "]";
                     this.legDistance = Utils.getLinestringLength(geometry);
                 }
             } else {
+                this.listEdgeId = "first/last_mile";
                 this.legDistance = Utils.getLinestringLength(geometry);
             }
         }
