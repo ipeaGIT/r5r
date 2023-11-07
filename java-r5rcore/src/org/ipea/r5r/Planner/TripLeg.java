@@ -127,7 +127,7 @@ public class TripLeg {
         return newLeg;
     }
 
-    public static TripLeg newTransferLeg(String mode, int duration, int fare, LineString geometry) {
+    public static TripLeg newTransferLeg(String mode, int duration, int fare, LineString geometry, StreetSegment streetSegment) {
         TripLeg newLeg = new TripLeg();
 
         newLeg.mode = mode;
@@ -136,6 +136,9 @@ public class TripLeg {
         newLeg.legDurationSeconds = duration;
         newLeg.cumulativeFare = fare;
         newLeg.route = "";
+        if (streetSegment != null){
+            newLeg.listEdgeId = "[" + streetSegment.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
+        }
         newLeg.geometry = geometry;
 
         return newLeg;
@@ -227,6 +230,7 @@ public class TripLeg {
                     this.legDistance = Utils.getLinestringLength(geometry);
                 }
             } else {
+                // this.listEdgeId = "[" + this.streetSegment.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
                 this.legDistance = Utils.getLinestringLength(geometry);
             }
         }

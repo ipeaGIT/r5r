@@ -223,7 +223,7 @@ public class Trip {
                         });
                     }
 
-                    TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom);
+                    TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom, null);
 
                     leg.setODStops(originStopIndex, destStopIndex);
 
@@ -281,7 +281,7 @@ public class Trip {
                     streetSegment = new StreetSegment(streetPath, accessMode, network.streetLayer);
 
                     TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
-                            streetSegment.duration, 0, streetSegment.geometry);
+                            streetSegment.duration, 0, streetSegment.geometry, streetSegment);
 
                     legs.add(0, accessLeg);
 
@@ -291,7 +291,7 @@ public class Trip {
                 }
             } else {
                 TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
-                        streetSegment.duration, 0, streetSegment.geometry);
+                        streetSegment.duration, 0, streetSegment.geometry, streetSegment);
                 legs.add(0, accessLeg);
 
                 accessPaths.put(startVertexStopIndex, streetSegment);
@@ -324,14 +324,14 @@ public class Trip {
                     streetSegment = new StreetSegment(streetPath, egressMode, network.streetLayer);
 
                     TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                            streetSegment.duration, cumulativeFare, streetSegment.geometry);
+                            streetSegment.duration, cumulativeFare, streetSegment.geometry, streetSegment);
                     legs.add(egressLeg);
                 } else {
                     LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
                 }
             } else {
                 TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                        streetSegment.duration, cumulativeFare, streetSegment.geometry);
+                        streetSegment.duration, cumulativeFare, streetSegment.geometry, streetSegment);
                 legs.add(egressLeg);
                 egressPaths.put(endVertexStopIndex, streetSegment);
             }
