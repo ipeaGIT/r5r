@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="r5-v6.8-all">
+  <library name="r5-v6.9-all">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/r5-v6.8-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/r5-v6.9-all.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
