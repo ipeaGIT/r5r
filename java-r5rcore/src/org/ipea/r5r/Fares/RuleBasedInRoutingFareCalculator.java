@@ -112,7 +112,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int currentBoardTime = -1;
 
         // first leg of multimodal trip
-        if (patterns.size() > 0) {
+        if (!patterns.isEmpty()) {
             currentPatternIndex = patterns.get(0);
             previousBoardTime = boardTimes.get(0);
 
