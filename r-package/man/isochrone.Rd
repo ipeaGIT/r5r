@@ -12,6 +12,7 @@ isochrone(
   cutoffs = c(0, 15, 30),
   sample_size = 0.8,
   departure_datetime = Sys.time(),
+  time_window = 10L,
   max_walk_time = Inf,
   max_bike_time = Inf,
   max_car_time = Inf,
@@ -20,6 +21,7 @@ isochrone(
   bike_speed = 12,
   max_rides = 3,
   max_lts = 2,
+  draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE
@@ -40,64 +42,75 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{cutoffs}{numeric vector. Number of minutes to define time span of each
+\item{cutoffs}{numeric vector. Number of minutes to define the time span of
 each Isochrone. Defaults to \code{c(0, 15, 30)}.}
 
 \item{sample_size}{numeric. Sample size of nodes in the road network used to
-estimate isochrones. Defaults to \code{0.8}. Value can range
-between \code{0.2} and \code{1}. Smaller values increase computation
-speed but return results with lower precision.}
+estimate isochrones. Defaults to \code{0.8} (80\% of all nodes in the
+transport network). Value can range between \code{0.2} and \code{1}. Smaller
+values increase computation speed but return results with lower
+precision.}
 
 \item{departure_datetime}{A POSIXct object. Please note that the departure
 time only influences public transport legs. When working with public
-transport networks, please check the \code{calendar.txt} within your GTFS feeds
-for valid dates. Please see details for further information on how
-datetimes are parsed.}
+transport networks, please check the \code{calendar.txt} within your GTFS
+feeds for valid dates. Please see details for further information on
+how datetimes are parsed.}
+
+\item{time_window}{An integer. The time window in minutes for which \code{r5r}
+will calculate multiple travel time matrices departing each minute.
+Defaults to 10 minutes. The function returns the result based on
+median travel times. Please read the time window vignette for more
+details on its usage \code{vignette("time_window", package = "r5r")}}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
-network. Defaults to no restrictions, as long as \code{max_trip_duration} is
-respected. The max time is considered separately for each leg (e.g. if
-you set \code{max_walk_time} to 15, you could potentially walk up to 15 minutes
-to reach transit, and up to \emph{another} 15 minutes to reach the destination
-after leaving transit). Defaults to \code{Inf}, no limit.}
+network. Defaults to no restrictions, as long as \code{max_trip_duration}
+is respected. The max time is considered separately for each leg (e.g.
+if you set \code{max_walk_time} to 15, you could potentially walk up to 15
+minutes to reach transit, and up to \emph{another} 15 minutes to reach the
+destination after leaving transit). Defaults to \code{Inf}, no limit.}
 
 \item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as \code{max_trip_duration} is respected. The max time is considered separately
-for each leg (e.g. if you set \code{max_bike_time} to 15 minutes, you could
-potentially cycle up to 15 minutes to reach transit, and up to \emph{another} 15
-minutes to reach the destination after leaving transit). Defaults to \code{Inf},
-no limit.}
+access and egress the transit network. Defaults to no restrictions, as
+long as \code{max_trip_duration} is respected. The max time is considered
+separately for each leg (e.g. if you set \code{max_bike_time} to 15 minutes,
+you could potentially cycle up to 15 minutes to reach transit, and up
+to \emph{another} 15 minutes to reach the destination after leaving
+transit). Defaults to \code{Inf}, no limit.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as \code{max_trip_duration} is respected. The max time is considered separately
-for each leg (e.g. if you set \code{max_car_time} to 15 minutes, you could
-potentially drive up to 15 minutes to reach transit, and up to \emph{another} 15
-minutes to reach the destination after leaving transit). Defaults to \code{Inf},
-no limit.}
+access and egress the transit network. Defaults to no restrictions, as
+long as \code{max_trip_duration} is respected. The max time is considered
+separately for each leg (e.g. if you set \code{max_car_time} to 15 minutes,
+you could potentially drive up to 15 minutes to reach transit, and up
+to \emph{another} 15 minutes to reach the destination after leaving transit).
+Defaults to \code{Inf}, no limit.}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
 
-\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
-km/h.}
+\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.}
 
-\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12
-km/h.}
+\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12 km/h.}
 
 \item{max_rides}{An integer. The maximum number of public transport rides
 allowed in the same trip. Defaults to 3.}
 
 \item{max_lts}{An integer between 1 and 4. The maximum level of traffic
-stress that cyclists will tolerate. A value of 1 means cyclists will only
-travel through the quietest streets, while a value of 4 indicates cyclists
-can travel through any road. Defaults to 2. Please see details for more
-information.}
+stress that cyclists will tolerate. A value of 1 means cyclists will
+only travel through the quietest streets, while a value of 4 indicates
+cyclists can travel through any road. Defaults to 2. Please see
+details for more information.}
+
+\item{draws_per_minute}{An integer. The number of Monte Carlo draws to
+perform per time window minute when calculating travel time matrices and
+when estimating accessibility. Defaults to 5. This would mean 300 draws in
+a 60-minute time window, for example. This parameter only affects the
+results when the GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
-router in parallel. Defaults to use all available threads (Inf).}
+router in parallel. Defaults to use all available threads (\code{Inf}).}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
 running the function. Defaults to \code{FALSE} (please note that in such case
@@ -109,11 +122,11 @@ detailed output, which can be useful for debugging issues not caught by
 the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
 \code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
 messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
-computation efficiency, because the progress counter must be synchronized
-among all active threads.}
+computation efficiency, because the progress counter must be
+synchronized among all active threads.}
 }
 \value{
-A \verb{POLYGON  "sf" "data.frame"} for each origin.
+A \verb{POLYGON  "sf" "data.frame"} for each isochrone of each origin.
 }
 \description{
 Fast computation of isochrones from a given location. The
@@ -205,6 +218,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+options(java.parameters = "-Xmx2G")
 library(r5r)
 
 # build transport network
@@ -212,21 +226,26 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/point of interest
-origin <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[c(700,936),]
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
+origin_1 <- points[936,]
 
 departure_datetime <- as.POSIXct(
   "13-05-2019 14:00:00",
   format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate travel time matrix
-iso <- isochrone(r5r_core,
-                origin = origin,
-                mode = c("WALK", "TRANSIT"),
+# estimate isochrone from origin_1
+iso1 <- isochrone(r5r_core,
+                origin = origin_1,
+                mode = c("walk"),
                 departure_datetime = departure_datetime,
-                cutoffs = c(0, 15, 30, 45, 60, 75, 90, 120)
+                cutoffs = seq(0, 100, 10)
                 )
-head(iso)
+head(iso1)
+
+colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
+           '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+plot(iso1['isochrone'], col = colors)
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

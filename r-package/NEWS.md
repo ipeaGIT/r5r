@@ -1,3 +1,18 @@
+# r5r 1.1.0
+
+**Major changes**
+
+- New `isochrone()`function. Closes [#123](https://github.com/ipeaGIT/r5r/issues/123), and addresses requrests in issues [#164](https://github.com/ipeaGIT/r5r/issues/164) and [#328](https://github.com/ipeaGIT/r5r/issues/328).
+- New vignette about calculating / visualizing isochrones with `r5r`.
+- New vignette with responses to frequently asked questions (FAQ) from `r5r` users.
+
+**Minor changes**
+
+- The default value of `time_window` is not set to `10` minutes in all functions to avoid weird results reported upstream in R5. Closes [#342](https://github.com/ipeaGIT/r5r/issues/342).
+- Removed any mention to `percentiles` parameter in the `expanded_travel_time_matrix()` because this function does not expose this parameter to users. Closes [#343](https://github.com/ipeaGIT/r5r/issues/343).
+- Updated vignette on calculating / visualizing accessibility with `r5r`.
+
+
 # r5r 1.0.1
 
 **Bug fixes**
@@ -149,8 +164,8 @@ download files from Ipea server.
 
 **Major changes**
 
-* New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/calculating_isochrones.html).
-* New vignette to [calculate and visualize accessibility](https://ipeagit.github.io/r5r/articles/calculating_accessibility.html).
+* New vignette to [calculate and visualize isochrones](https://ipeagit.github.io/r5r/articles/isochrones.html).
+* New vignette to [calculate and visualize accessibility](https://ipeagit.github.io/r5r/articles/accessibility.html).
 * Significant performance increase in `detailed_itineraries()` when 
 `shortest_path = TRUE`. Closes [#153](https://github.com/ipeaGIT/r5r/issues/153).
 * [Paper on the r5r package published on **Findings**](https://doi.org/10.32866/001c.21262). Closes [#108](https://github.com/ipeaGIT/r5r/issues/108).

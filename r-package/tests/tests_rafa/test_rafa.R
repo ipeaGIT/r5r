@@ -665,7 +665,7 @@ mapview(street_net) + points_sf
 ##### Coverage ------------------------
 library(covr)
 library(testthat)
-library(r5r)
+# library(r5r)
 Sys.setenv(NOT_CRAN = "true")
 
 
@@ -673,6 +673,7 @@ Sys.setenv(NOT_CRAN = "true")
 covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
 a <- covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
+a <- covr::function_coverage(fun=r5r::isochrone, test_file("tests/testthat/test-isochrone.R"))
 covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat/test-detailed_itineraries.R"))
 a <- covr::function_coverage(fun=r5r::expanded_travel_time_matrix, test_file("tests/testthat/test-expanded_travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::pareto_frontier, test_file("tests/testthat/test-pareto_frontier.R"))
@@ -712,15 +713,10 @@ Sys.setenv(NOT_CRAN = "true")
 r5r_cov <- covr::package_coverage(path = ".", type = "tests")
 r5r_cov
 
-saveRDS(r5r_cov3, file = './tests/tests_rafa/r5r_coverage.rds')
-
-as.data.frame(r5r_cov3)[, c(1:3, 5, 11)]
+covr::report()
 
 zeroCov <- covr::zero_coverage(a)
 
-
-x <- as.data.frame(r5r_cov)
-covr::codecov( coverage = r5r_cov, token ='2a7013e9-6562-4011-beb9-168e922c4c84' )
 
 
 

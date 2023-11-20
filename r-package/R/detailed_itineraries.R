@@ -15,8 +15,8 @@
 #' @template fare_structure
 #' @template max_fare
 #' @param time_window An integer. The time window in minutes for which `r5r`
-#'   will calculate multiple itineraries departing each minute. Defaults to 1
-#'   minute. If the same sequence of routes appear in different minutes of the
+#'   will calculate multiple itineraries departing each minute. Defaults to 10
+#'   minutes. If the same sequence of routes appear in different minutes of the
 #'   time window, only the fastest of them will be kept in the output. This
 #'   happens because the result is not aggregated by percentile, as opposed to
 #'   other routing functions in the package. Because of that, the output may
@@ -90,7 +90,7 @@ detailed_itineraries <- function(r5r_core,
                                  mode = "WALK",
                                  mode_egress = "WALK",
                                  departure_datetime = Sys.time(),
-                                 time_window = 1L,
+                                 time_window = 10L,
                                  suboptimal_minutes = 0L,
                                  fare_structure = NULL,
                                  max_fare = Inf,

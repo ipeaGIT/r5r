@@ -1,11 +1,11 @@
 ---
-title: 'Planning routes with detailed_itineraries()'
+title: 'Trip planning with detailed_itineraries()'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 abstract: "This vignette shows how to do route planning using the `detailed_itineraries()` function in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Planning routes with detailed_itineraries()} 
+  %\VignetteIndexEntry{Trip planning with detailed_itineraries()} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 ---

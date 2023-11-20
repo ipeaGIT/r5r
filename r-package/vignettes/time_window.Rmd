@@ -109,9 +109,6 @@ acc <- r5r::accessibility(r5r_core = r5r_core,
 head(acc, n = 10)
 
 ```
-#>```{r detailed head of acc, echo = FALSE, out.width='100%', message = FALSE}
-#>knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_head.png?raw=true")
-#>```
 
 This output is in long format, so the first 5 rows show the result for the same origin. In this case, we see that in only 10% of the trips departing from that origin between 2pm and 3pm a person would be able to access up to 111 schools. Meanwhile, 50% of the times she would only access 79 schools. By contrast, the accessibility from the other origin shown in the output above is 0, meaning there are no schools accessible from that location given the max travel time of 45 minutes.
 
@@ -135,9 +132,6 @@ ggplot(data=df) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
 ```
-#>```{r acc_uncertainty figure, echo = FALSE, out.width='100%', message = FALSE}
-#>knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window_acc_uncertainty.png?raw=true")
-#>```
 
 
 
@@ -162,9 +156,6 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
 head(ttm, n = 10)
 
 ```
-#>```{r detailed head of ttm, echo = FALSE, out.width='100%', message = FALSE}
-#>knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_time_window#>_ttm_head.png?raw=true")
-#>```
 
 Now let's look at the 2nd row of the output above. This output tell us that only 10% of the trips between 2pm and 3pm for that origin-destination pair took 39 minutes or less. Meanwhile, 50% of those trips took up tp 45 minutes and 80% of them were 48-minute long or shorter.
 

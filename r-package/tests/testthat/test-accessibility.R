@@ -108,6 +108,12 @@ test_that("adequately raises errors", {
   expect_error(tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(tester(r5r_core, numeric_datetime))
 
+
+  # errors related to max_trip_duration
+  expect_error(tester(r5r_core, cutoffs = 10, max_trip_duration = 5))
+  expect_error(tester(r5r_core, max_trip_duration = "1000"))
+  expect_error(tester(r5r_core, max_trip_duration = NULL))
+
   # errors related to max_walk_time
   expect_error(tester(r5r_core, max_walk_time = "1000"))
   expect_error(tester(r5r_core, max_walk_time = NULL))

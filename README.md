@@ -54,7 +54,7 @@ rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
 
 ## Usage
 
-The package has six **fundamental functions**:
+The package has seven **fundamental functions**:
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
@@ -76,7 +76,7 @@ The package has six **fundamental functions**:
 
 4. `expanded_travel_time_matrix()`
    * Calculates travel time matrices between origin destination pairs with 
-   additional information such routes used and total time disaggregated by access, 
+   additional information such as routes used and total time disaggregated by access, 
    waiting, in-vehicle and transfer times.
 
 5. `detailed_itineraries()`
@@ -88,11 +88,13 @@ The package has six **fundamental functions**:
 6. `pareto_frontier()`
    * Returns a `data.table` with the travel time and monetary cost of multiple
    route alternatives for specified origin-destination pairs.
-
    
+7. `isochrone()`
+   * Returns a `A ⁠POLYGON  "sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
-how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_calculator.html).
+how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 
 The package also includes a few **support functions**.
@@ -123,10 +125,12 @@ Here are a few places from where you can download these data sets:
   - [geofabrik](https://download.geofabrik.de/) website
   - [hot export tool](https://export.hotosm.org/) website
   - [BBBike.org](https://extract.bbbike.org/) website
+  - [Protomaps](https://protomaps.com/downloads/osm) website
 
 - GTFS
   - [tidytransit](https://r-transit.github.io/tidytransit/) R package
   - [transitland](https://www.transit.land/) website
+  - [Mobility Database](https://database.mobilitydata.org/) website
   
 - Elevation
   - [elevatr](https://github.com/jhollist/elevatr) R package
@@ -238,3 +242,11 @@ BibTeX:
 	note = {Publisher: Network Design Lab}
 }
 ```
+
+Please also cite the relevant publications relating to the R⁵ engine on which *r5r* builds up:
+
+- Conway, M. W., Byrd, A., & van der Linden, M. (2017): **Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks**. *Transportation Research Record*, 2653(1), 45–53. [DOI:10.3141/2653-06](https://doi.org/10.3141/2653-06)
+- Conway, M. W., Byrd, A., & Van Eggermond, M. (2018): **Accounting for uncertainty and variation in accessibility metrics for public transport sketch planning**. *Journal of Transport and Land Use*, 11(1). [DOI:10.5198/jtlu.2018.1074](https://doi.org/10.5198/jtlu.2018.1074)
+- Conway, M. W. & Stewart, A. F. (2019): **Getting Charlie off the MTA: a multiobjective optimization method to account for cost constraints in public transit accessibility metrics**. *International Journal of Geographical Information Science*, 33(9), 1759–1787. [DOI:10.1080/13658816.2019.1605075](https://doi.org/10.1080/13658816.2019.1605075)
+
+
