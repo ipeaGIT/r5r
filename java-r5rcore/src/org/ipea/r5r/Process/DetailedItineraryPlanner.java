@@ -18,6 +18,11 @@ public class DetailedItineraryPlanner extends R5Process {
     private boolean dropItineraryGeometry = false;
     public void dropItineraryGeometry() { dropItineraryGeometry = true; }
 
+    @Override
+    protected boolean isOneToOne() {
+        return true;
+    }
+
     public DetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }

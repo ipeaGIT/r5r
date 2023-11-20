@@ -37,6 +37,11 @@ public class AccessibilityEstimator extends R5Process {
         this.decayFunction.prepare();
     }
 
+    @Override
+    protected boolean isOneToOne() {
+        return false;
+    }
+
     public AccessibilityEstimator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }
