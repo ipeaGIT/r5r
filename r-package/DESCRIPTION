@@ -11,7 +11,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-8066-1105")),
     person("Carlos Kaue Vieira", "Braga", , "kaue@kauebraga.dev", role = "aut",
            comment = c(ORCID = "0000-0002-6104-7297")),
-    person("Matthew Wigginton", "Conway", , "mwconway@asu.edu", role = "aut",
+    person("Matthew Wigginton", "Bhagat-Conway", , "mwbc@unc.edu", role = "aut",
            comment = c(ORCID = "0000-0002-1210-2982")),
     person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd"))
   )

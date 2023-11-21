@@ -16,6 +16,11 @@ public class ParetoItineraryPlanner extends R5Process {
 
     public static boolean travelAllowanceActive = true;
 
+    @Override
+    protected boolean isOneToOne() {
+        return true;
+    }
+
     public ParetoItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }

@@ -15,6 +15,11 @@ import java.util.concurrent.ForkJoinPool;
 
 public class ParetoFrontierCalculator  extends R5Process {
 
+    @Override
+    protected boolean isOneToOne() {
+        return false;
+    }
+
     public ParetoFrontierCalculator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }

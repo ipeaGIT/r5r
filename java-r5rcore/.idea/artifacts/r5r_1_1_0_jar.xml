@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="r5r_1_0_0:jar">
+  <artifact type="jar" name="r5r_1_1_0:jar">
     <output-path>$PROJECT_DIR$/../r-package/inst/jar</output-path>
-    <root id="archive" name="r5r_1_0_0.jar">
+    <root id="archive" name="r5r_1_1_0.jar">
       <element id="module-output" name="r5r" />
     </root>
   </artifact>
