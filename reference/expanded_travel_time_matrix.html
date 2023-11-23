@@ -172,22 +172,28 @@ the function significantly slower.</p></dd>
 
 <dt>max_walk_time</dt>
 <dd><p>An integer. The maximum walking time (in minutes) to
-access and egress the transit network, or to make transfers within the
-network. Defaults to no restrictions, as long as <code>max_trip_duration</code> is
-respected. The max time is considered separately for each leg (e.g. if
-you set <code>max_walk_time</code> to 15, you could potentially walk up to 15 minutes
-to reach transit, and up to <em>another</em> 15 minutes to reach the destination
-after leaving transit). Defaults to <code>Inf</code>, no limit.</p></dd>
+access and egress the transit network, to make transfers within the network
+or to complete walk-only trips. Defaults to no restrictions (numeric value
+of <code>Inf</code>), as long as <code>max_trip_duration</code> is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set <code>max_walk_time</code> to 15, you could get trips with an up to 15 minutes
+walk leg to reach transit and another up to 15 minutes walk leg to reach
+the destination after leaving transit. In walk-only trips, whenever
+<code>max_walk_time</code> differs from <code>max_trip_duration</code>, the lowest value is
+considered.</p></dd>
 
 
 <dt>max_bike_time</dt>
 <dd><p>An integer. The maximum cycling time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as <code>max_trip_duration</code> is respected. The max time is considered separately
-for each leg (e.g. if you set <code>max_bike_time</code> to 15 minutes, you could
-potentially cycle up to 15 minutes to reach transit, and up to <em>another</em> 15
-minutes to reach the destination after leaving transit). Defaults to <code>Inf</code>,
-no limit.</p></dd>
+access and egress the transit network, to make transfers within the network
+or to complete bicycle-only trips. Defaults to no restrictions (numeric
+value of <code>Inf</code>), as long as <code>max_trip_duration</code> is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set <code>max_bike_time</code> to 15, you could get trips with an up to 15 minutes
+cycle leg to reach transit and another up to 15 minutes cycle leg to reach
+the destination after leaving transit. In bicycle-only trips, whenever
+<code>max_bike_time</code> differs from <code>max_trip_duration</code>, the lowest value is
+considered.</p></dd>
 
 
 <dt>max_car_time</dt>

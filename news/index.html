@@ -82,6 +82,15 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.0999" id="r5r-110999-dev">r5r 1.1.0999 dev<a class="anchor" aria-label="anchor" href="#r5r-110999-dev"></a></h2>
+<p><strong>Minor changes</strong></p>
+<ul><li>In the <code><a href="../reference/accessibility.html">accessibility()</a></code> function, the value of <code>max_trip_duration</code> is now capped by the max value passed to the <code>cutoffs</code> parameter. Closes <a href="https://github.com/ipeaGIT/r5r/issues/348" class="external-link">#342</a>.</li>
+<li>Updated documentation of parameter <code>max_walk_time</code> to make it clear that in walk-only trips, whenever <code>max_walk_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
+</li>
+<li>Updated documentation of parameter <code>max_bike_time</code> to make it clear that in bicycle-only trips, whenever <code>max_bike_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
+</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="r5r-110">r5r 1.1.0<small>2023-08-08</small><a class="anchor" aria-label="anchor" href="#r5r-110"></a></h2>
 <p><strong>Major changes</strong></p>
 <ul><li>New <code><a href="../reference/isochrone.html">isochrone()</a></code>function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/123" class="external-link">#123</a>, and addresses requrests in issues <a href="https://github.com/ipeaGIT/r5r/issues/164" class="external-link">#164</a> and <a href="https://github.com/ipeaGIT/r5r/issues/328" class="external-link">#328</a>.</li>
