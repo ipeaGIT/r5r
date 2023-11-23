@@ -3,6 +3,8 @@
 **Minor changes**
 
 - In the `accessibility()` function, the value of `max_trip_duration` is now capped by the max value passed to the `cutoffs` parameter. Closes [#342](https://github.com/ipeaGIT/r5r/issues/348).
+- Updated documentation of parameter `max_walk_time` to make it clear that in walk-only trips, whenever `max_walk_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
+- Updated documentation of parameter `max_bike_time` to make it clear that in bicycle-only trips, whenever `max_bike_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
 
 
 # r5r 1.1.0
