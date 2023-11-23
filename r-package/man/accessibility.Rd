@@ -184,9 +184,9 @@ among all active threads.}
 \code{NULL} (the default), the function will write one \code{.csv} file with the
 results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
-particularly useful when running estimates on memory-constrained settings,
-because writing the results to disk prevents \code{r5r} from storing them in
-memory.}
+particularly useful when running on memory-constrained settings because
+writing the results directly to disk prevents \code{r5r} from loading them to
+RAM memory.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.

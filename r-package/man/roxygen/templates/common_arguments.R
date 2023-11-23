@@ -63,6 +63,6 @@
 #'   `NULL` (the default), the function will write one `.csv` file with the
 #'   results for each origin in the specified directory. In such case, the
 #'   function returns the path specified in this parameter. This parameter is
-#'   particularly useful when running estimates on memory-constrained settings,
-#'   because writing the results to disk prevents `r5r` from storing them in
-#'   memory.
+#'   particularly useful when running on memory-constrained settings because
+#'   writing the results directly to disk prevents `r5r` from loading them to
+#'   RAM memory.
