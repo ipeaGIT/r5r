@@ -102,7 +102,7 @@ acc <- r5r::accessibility(r5r_core = r5r_core,
                           cutoffs = 45,
                           departure_datetime = departure_datetime,
                           progress = FALSE,
-                          time_window = 30,
+                          time_window = 60,
                           percentiles = c(10, 20, 50, 70, 80)
                           )
 
@@ -149,7 +149,7 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           max_trip_duration = max_trip_duration,
                           departure_datetime = departure_datetime,
                           progress = TRUE,
-                          time_window = 20,
+                          time_window = 60,
                           percentiles = c(10, 20, 50, 70, 80)
                           )
 
