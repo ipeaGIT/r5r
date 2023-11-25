@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
       </span>
     </div>
 
@@ -111,7 +111,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Trip planning with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2023-11-24</h4>
+            <h4 data-toc-skip class="date">2023-11-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/detailed_itineraries.Rmd" class="external-link"><code>../vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="hidden name"><code>detailed_itineraries.Rmd</code></div>
@@ -195,6 +195,10 @@ city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <p>In this example below, we want to know some alternative routes
 between a single origin/destination pair. To get multiple route
 alternatives, we need to set <code>shortest_path = FALSE</code>.</p>
+<p>Note that in the example below we set
+<code>suboptimal_minutes = 8</code>. In this case, <code>r5r</code> will
+consider sub-optimal routes that arrive up to 10 minutes after the
+arrival of the optimal route.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set inputs</span></span>
 <span><span class="va">origins</span> <span class="op">&lt;-</span> <span class="va">poi</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span></span>

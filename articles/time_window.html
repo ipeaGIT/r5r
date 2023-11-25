@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
       </span>
     </div>
 
@@ -111,7 +111,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2023-11-24</h4>
+            <h4 data-toc-skip class="date">2023-11-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -231,9 +231,9 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span><span class="co"># departure datetime</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
-<p>ps. Please keep in mind that the <code>time_window</code> only
-affects the results when the GTFS feeds contain a
-<code>frequencies.txt</code> table.</p>
+<p>ps. Please keep in mind that the Monte Carlo draws in
+<code>time_window</code> only affects the results when the GTFS feeds
+contain a <code>frequencies.txt</code> table.</p>
 </div>
 <div class="section level3">
 <h3 id="accessibility-with-time_window-">3.2 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
@@ -255,21 +255,21 @@ minutes <code>cutoffs = 45</code>.</p>
 <span>                          cutoffs <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>                          progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                          time_window <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>                          time_window <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
 <span>                          <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
-<span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            11</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
+<span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
-<span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
+<span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            15</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -316,7 +316,7 @@ output looks like.</p>
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
 <span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>                          progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                          time_window <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>                          time_window <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
 <span>                          <span class="op">)</span></span>
 <span></span>
@@ -388,16 +388,45 @@ sets and time windows.</p>
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       53.8</span></span>
-<span><span class="co">#&gt;  2:       37.3</span></span>
-<span><span class="co">#&gt;  3:       38.1</span></span>
-<span><span class="co">#&gt;  4:       42.2</span></span>
-<span><span class="co">#&gt;  5:       34.7</span></span>
-<span><span class="co">#&gt;  6:       45.8</span></span>
-<span><span class="co">#&gt;  7:       43.6</span></span>
-<span><span class="co">#&gt;  8:       37.2</span></span>
-<span><span class="co">#&gt;  9:       40.5</span></span>
-<span><span class="co">#&gt; 10:       43.8</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       41.4</span></span>
+<span><span class="co">#&gt;  2:       38.3</span></span>
+<span><span class="co">#&gt;  3:       45.4</span></span>
+<span><span class="co">#&gt;  4:       46.5</span></span>
+<span><span class="co">#&gt;  5:       51.1</span></span>
+<span><span class="co">#&gt;  6:       38.4</span></span>
+<span><span class="co">#&gt;  7:       45.4</span></span>
+<span><span class="co">#&gt;  8:       35.0</span></span>
+<span><span class="co">#&gt;  9:       50.6</span></span>
+<span><span class="co">#&gt; 10:       48.7</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
+</h3>
+<p>In the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function, the number of
+Monte Carlo draws per minute is hardcoded to 1. This means that the
+function simulates only one departure per minute within the
+<code>time_window</code>. So if you set a <code>time_window</code> of 10
+minutes, it would simulate 10 departures, one in each minute. This is
+largely because the <code>time_window</code> behaves slightly
+differently here.</p>
+<p>See, functions like <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> or
+<code><a href="../reference/accessibility.html">accessibility()</a></code>, for example, return estimates of travel
+times or accessibility. In these cases, when we use the
+<code>time_window</code> parameter, these functions output selected
+percentiles of those values generated based on the distribution of all
+estimates that result from the multiple trip simulations.</p>
+<p>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>, on the other hand, does not
+return travel times or accessibility estimates. It returns alternatives
+of trip journeys. In this case, when we use the <code>time_window</code>
+parameter, the function will return the optimal trip itinerary found
+within the time window. It can also return the optimal route along with
+multiple sub-optimal journey alternatives found within the time window
+if the the user sets <code>shortest_path = FALSE</code>.</p>
+<p><em>obs.</em> Mind you that <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>
+cannot be computed for public transport trips if the the network uses a
+frequencies-based GTFS feed. In these cases, we suggest using
+<code><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">gtfstools::frequencies_to_stop_times()</a></code> to create a suitable
+feed.</p>
 </div>
 <div class="section level3">
 <h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>

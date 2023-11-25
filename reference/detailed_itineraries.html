@@ -24,7 +24,7 @@ other (more analytical) routing functions included in the package."><meta proper
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
       </span>
     </div>
 
@@ -178,11 +178,14 @@ function: <code><a href="../articles/time_window.html">vignette("time_window", p
 <dt>suboptimal_minutes</dt>
 <dd><p>A number. The difference in minutes that each
 non-optimal RAPTOR branch can have from the optimal branch without being
-disregarded by the routing algorithm. This argument emulates the real-life
-behaviour that makes people want to take a path that is technically not
-optimal (in terms of travel time, for example) for some practical reasons
-(e.g. mode preference, safety, etc). In practice, the higher this value,
-the more itineraries will be returned in the final result.</p></dd>
+disregarded by the routing algorithm. If, for example, users set
+<code>suboptimal_minutes = 10</code>, the routing algorithm will consider sub-optimal
+routes that arrive up to 10 minutes after the arrival of the optimal one.
+This argument emulates the real-life behaviour that makes people want to
+take a path that is technically not optimal in terms of travel time, for
+example, for some practical reasons (e.g. mode preference, safety, etc).
+In practice, the higher this value, the more itineraries will be returned
+in the final result.</p></dd>
 
 
 <dt>fare_structure</dt>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
       </span>
     </div>
 
@@ -89,7 +89,9 @@
 </li>
 <li>Updated documentation of parameter <code>max_bike_time</code> to make it clear that in bicycle-only trips, whenever <code>max_bike_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
 </li>
-</ul><p><strong>Bug Fixes</strong> - Fixed bug that prevented the using the <code>output_dir</code>parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR #354</a>) from Luyu Liu.</p>
+<li>Improved documentation of parameter <code>suboptimal_minutes</code> in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
+<li>Updated the vignette on time window to explain how this parameter behaves when used in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
+</ul><p><strong>Bug Fixes</strong> - Fixed bug that prevented the using the <code>output_dir</code> parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR #354</a>) from Luyu Liu. - Fixed bug that prevented <code>detailed_itineraries</code> from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.</p>
 <p><strong>New contributors to r5r</strong> - <a href="https://github.com/luyuliu" class="external-link">Luyu Liu</a></p>
 </div>
     <div class="section level2">
