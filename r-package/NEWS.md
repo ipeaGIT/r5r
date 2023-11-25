@@ -5,6 +5,8 @@
 - In the `accessibility()` function, the value of `max_trip_duration` is now capped by the max value passed to the `cutoffs` parameter. Closes [#342](https://github.com/ipeaGIT/r5r/issues/348).
 - Updated documentation of parameter `max_walk_time` to make it clear that in walk-only trips, whenever `max_walk_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
 - Updated documentation of parameter `max_bike_time` to make it clear that in bicycle-only trips, whenever `max_bike_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
+- Improved documentation of parameter `suboptimal_minutes` in the `detailed_itineraries()` function.
+- Updated the vignette on time window to explain how this parameter behaves when used in the `detailed_itineraries()` function.
 
 **Bug Fixes**
 - Fixed bug that prevented the using the `output_dir` parameter in the `detailed_itineraries(all_to_all = TRUE)` function. Closes [#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution ([PR #354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
