@@ -131,7 +131,7 @@ detailed_itineraries <- function(r5r_core,
   mode_list <- assign_mode(mode, mode_egress)
 
   # detailed itineraries via public transport cannot be computed on frequencies-based GTFS
-  if (mode_list$transit_mode != "" & r5r_core$hasFrequencies()) {
+  if (!(mode_list$transit_mode != "" & r5r_core$hasFrequencies())) {
     stop(
       "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
       "the transit network can contain a 'frequencies' table. Try using ",
