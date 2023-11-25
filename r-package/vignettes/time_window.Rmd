@@ -82,7 +82,7 @@ departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                 format = "%d-%m-%Y %H:%M:%S")
 ```
 
-ps. Please keep in mind that the `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table.
+ps. Please keep in mind that the Monte Carlo draws in `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table.
 
 
 
@@ -186,9 +186,14 @@ head(ettm, n = 10)
 
 In the `detailed_itineraries()` function, the number of Monte Carlo draws per minute is hardcoded to 1. This means that the function simulates only one departure per minute within the `time_window`. So if you set a `time_window` of 10 minutes, it would simulate 10 departures, one in each minute. This is largely because the `time_window` behaves slightly differently here.
 
-See, functions like `travel_time_matrix()` or `accessibility()`, for example, return estimates of travel times or accessibility. In these cases, when we use the `time_window` parameter, these functions output selected percentiles of those estimates generated based on the distribution of all estimates that result from the multiple trip simulations.
+See, functions like `travel_time_matrix()` or `accessibility()`, for example, return estimates of travel times or accessibility. In these cases, when we use the `time_window` parameter, these functions output selected percentiles of those values generated based on the distribution of all estimates that result from the multiple trip simulations.
 
 The `detailed_itineraries()`, on the other hand, does not return travel times or accessibility estimates. It returns alternatives of trip journeys. In this case, when we use the `time_window` parameter, the function will return the optimal trip itinerary found within the time window. It can also return the optimal route along with multiple sub-optimal journey alternatives found within the time window if the the user sets `shortest_path = FALSE`.
+
+*obs.* Mind you that `detailed_itineraries()` cannot be computed for public transport trips if the the network uses a frequencies-based GTFS feed. In these cases, we suggest using `gtfstools::frequencies_to_stop_times()` to create a suitable feed.
+
+
+
 
 
 ### Cleaning up after usage
