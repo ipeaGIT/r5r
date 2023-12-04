@@ -26,11 +26,14 @@
 #'   function: `vignette("time_window", package = "r5r")`.
 #' @param suboptimal_minutes A number. The difference in minutes that each
 #'   non-optimal RAPTOR branch can have from the optimal branch without being
-#'   disregarded by the routing algorithm. This argument emulates the real-life
-#'   behaviour that makes people want to take a path that is technically not
-#'   optimal (in terms of travel time, for example) for some practical reasons
-#'   (e.g. mode preference, safety, etc). In practice, the higher this value,
-#'   the more itineraries will be returned in the final result.
+#'   disregarded by the routing algorithm. If, for example, users set
+#'   `suboptimal_minutes = 10`, the routing algorithm will consider sub-optimal
+#'   routes that arrive up to 10 minutes after the arrival of the optimal one.
+#'   This argument emulates the real-life behaviour that makes people want to
+#'   take a path that is technically not optimal in terms of travel time, for
+#'   example, for some practical reasons (e.g. mode preference, safety, etc).
+#'   In practice, the higher this value, the more itineraries will be returned
+#'   in the final result.
 #' @param shortest_path A logical. Whether the function should only return the
 #'   fastest itinerary between each origin and destination pair (the default)
 #'   or multiple alternatives.

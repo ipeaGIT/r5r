@@ -1,8 +1,13 @@
 destination: ../docs
+
+development:
+  mode: auto
+
 repo:
   url:
     home: https://github.com/ipeaGIT/r5r/
     source: https://github.com/ipeaGIT/r5r/tree/master/r-package/
+
 reference:
   - title: "Setup"
   - contents:

@@ -67,6 +67,8 @@ poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set `shortest_path = FALSE`.
 
+Note that in the example below we set `suboptimal_minutes = 8`. In this case, `r5r` will consider sub-optimal routes that arrive up to 10 minutes after the arrival of the optimal route.
+
 ```{r, message = FALSE}
 # set inputs
 origins <- poi[10,]

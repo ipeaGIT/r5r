@@ -111,20 +111,26 @@ understand how this object is structured:
 calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
-access and egress the transit network, or to make transfers within the
-network. Defaults to no restrictions, as long as \code{max_trip_duration} is
-respected. The max time is considered separately for each leg (e.g. if
-you set \code{max_walk_time} to 15, you could potentially walk up to 15 minutes
-to reach transit, and up to \emph{another} 15 minutes to reach the destination
-after leaving transit). Defaults to \code{Inf}, no limit.}
+access and egress the transit network, to make transfers within the network
+or to complete walk-only trips. Defaults to no restrictions (numeric value
+of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set \code{max_walk_time} to 15, you could get trips with an up to 15 minutes
+walk leg to reach transit and another up to 15 minutes walk leg to reach
+the destination after leaving transit. In walk-only trips, whenever
+\code{max_walk_time} differs from \code{max_trip_duration}, the lowest value is
+considered.}
 
 \item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as \code{max_trip_duration} is respected. The max time is considered separately
-for each leg (e.g. if you set \code{max_bike_time} to 15 minutes, you could
-potentially cycle up to 15 minutes to reach transit, and up to \emph{another} 15
-minutes to reach the destination after leaving transit). Defaults to \code{Inf},
-no limit.}
+access and egress the transit network, to make transfers within the network
+or to complete bicycle-only trips. Defaults to no restrictions (numeric
+value of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set \code{max_bike_time} to 15, you could get trips with an up to 15 minutes
+cycle leg to reach transit and another up to 15 minutes cycle leg to reach
+the destination after leaving transit. In bicycle-only trips, whenever
+\code{max_bike_time} differs from \code{max_trip_duration}, the lowest value is
+considered.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
 access and egress the transit network. Defaults to no restrictions, as long
@@ -178,9 +184,9 @@ among all active threads.}
 \code{NULL} (the default), the function will write one \code{.csv} file with the
 results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
-particularly useful when running estimates on memory-constrained settings,
-because writing the results to disk prevents \code{r5r} from storing them in
-memory.}
+particularly useful when running on memory-constrained settings because
+writing the results directly to disk prevents \code{r5r} from loading them to
+RAM memory.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.

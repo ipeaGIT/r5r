@@ -66,11 +66,14 @@ function: \code{vignette("time_window", package = "r5r")}.}
 
 \item{suboptimal_minutes}{A number. The difference in minutes that each
 non-optimal RAPTOR branch can have from the optimal branch without being
-disregarded by the routing algorithm. This argument emulates the real-life
-behaviour that makes people want to take a path that is technically not
-optimal (in terms of travel time, for example) for some practical reasons
-(e.g. mode preference, safety, etc). In practice, the higher this value,
-the more itineraries will be returned in the final result.}
+disregarded by the routing algorithm. If, for example, users set
+\code{suboptimal_minutes = 10}, the routing algorithm will consider sub-optimal
+routes that arrive up to 10 minutes after the arrival of the optimal one.
+This argument emulates the real-life behaviour that makes people want to
+take a path that is technically not optimal in terms of travel time, for
+example, for some practical reasons (e.g. mode preference, safety, etc).
+In practice, the higher this value, the more itineraries will be returned
+in the final result.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
@@ -82,20 +85,26 @@ understand how this object is structured:
 calculating the fastest journey between each origin and destination pair.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
-access and egress the transit network, or to make transfers within the
-network. Defaults to no restrictions, as long as \code{max_trip_duration} is
-respected. The max time is considered separately for each leg (e.g. if
-you set \code{max_walk_time} to 15, you could potentially walk up to 15 minutes
-to reach transit, and up to \emph{another} 15 minutes to reach the destination
-after leaving transit). Defaults to \code{Inf}, no limit.}
+access and egress the transit network, to make transfers within the network
+or to complete walk-only trips. Defaults to no restrictions (numeric value
+of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set \code{max_walk_time} to 15, you could get trips with an up to 15 minutes
+walk leg to reach transit and another up to 15 minutes walk leg to reach
+the destination after leaving transit. In walk-only trips, whenever
+\code{max_walk_time} differs from \code{max_trip_duration}, the lowest value is
+considered.}
 
 \item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as \code{max_trip_duration} is respected. The max time is considered separately
-for each leg (e.g. if you set \code{max_bike_time} to 15 minutes, you could
-potentially cycle up to 15 minutes to reach transit, and up to \emph{another} 15
-minutes to reach the destination after leaving transit). Defaults to \code{Inf},
-no limit.}
+access and egress the transit network, to make transfers within the network
+or to complete bicycle-only trips. Defaults to no restrictions (numeric
+value of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
+transit trips, the max time is considered separately for each leg (e.g. if
+you set \code{max_bike_time} to 15, you could get trips with an up to 15 minutes
+cycle leg to reach transit and another up to 15 minutes cycle leg to reach
+the destination after leaving transit. In bicycle-only trips, whenever
+\code{max_bike_time} differs from \code{max_trip_duration}, the lowest value is
+considered.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
 access and egress the transit network. Defaults to no restrictions, as long
@@ -156,9 +165,9 @@ geometry column in the result.}
 \code{NULL} (the default), the function will write one \code{.csv} file with the
 results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
-particularly useful when running estimates on memory-constrained settings,
-because writing the results to disk prevents \code{r5r} from storing them in
-memory.}
+particularly useful when running on memory-constrained settings because
+writing the results directly to disk prevents \code{r5r} from loading them to
+RAM memory.}
 }
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
