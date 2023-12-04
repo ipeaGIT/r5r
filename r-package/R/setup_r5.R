@@ -82,7 +82,7 @@ setup_r5 <- function(data_path,
     stop(
       "This package requires the Java SE Development Kit 21.\n",
       "Please update your Java installation. ",
-      "The jdk 11 can be downloaded from either:\n",
+      "The jdk 21 can be downloaded from either:\n",
       "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
       "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
     )
