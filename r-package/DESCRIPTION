@@ -68,4 +68,4 @@ VignetteBuilder:
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-SystemRequirements: Java JDK (>= 11.0)
+SystemRequirements: Java JDK (>= 21.0)
