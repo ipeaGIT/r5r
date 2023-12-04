@@ -1,11 +1,13 @@
 package org.ipea.r5r.Network;
 
+import com.conveyal.kryo.InstanceCountingClassResolver;
 import com.conveyal.kryo.TIntArrayListSerializer;
 import com.conveyal.kryo.TIntIntHashMapSerializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import gnu.trove.impl.hash.TPrimitiveHash;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -23,9 +25,12 @@ public class NetworkChecker {
      * This string should be changed to a new value each time the network storage format changes.
      * I considered using an ISO date string but that could get confusing when seen in filenames.
      */
-    public static final String NETWORK_FORMAT_VERSION = "nv2";
+    public static final String NETWORK_FORMAT_VERSION = "nv3";
 
     public static final byte[] HEADER = "R5NETWORK".getBytes();
+
+    /** Set this to true to count instances and print a report including which serializer is handling each class. */
+    private static final boolean COUNT_CLASS_INSTANCES = false;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NetworkChecker.class);
 
@@ -61,7 +66,12 @@ public class NetworkChecker {
      * Registration is more important for small network messages.
      */
     private static Kryo makeKryo () {
-        Kryo kryo = new Kryo();
+        Kryo kryo;
+        if (COUNT_CLASS_INSTANCES) {
+            kryo = new Kryo(new InstanceCountingClassResolver(), null);
+        } else {
+            kryo = new Kryo();
+        }
         // Auto-associate classes with default serializers the first time each class is encountered.
         kryo.setRegistrationRequired(false);
         // Handle references and loops in the object graph, do not repeatedly serialize the same instance.
@@ -85,7 +95,7 @@ public class NetworkChecker {
         // The default strategy requires every class you serialize, even in your dependencies, to have a zero-arg
         // constructor (which can be private). The setInstantiatorStrategy method completely replaces that default
         // strategy. The nesting below specifies the Java approach as a fallback strategy to the default strategy.
-        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
+        kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
         return kryo;
     }
 

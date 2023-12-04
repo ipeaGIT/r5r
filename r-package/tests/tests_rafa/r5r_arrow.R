@@ -25,8 +25,8 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           mode = mode,
                           departure_datetime = departure_datetime,
                           max_walk_time = max_walk_time,
-                          max_trip_duration = max_trip_duration,
-                          output_dir = './aaaa')
+                          max_trip_duration = max_trip_duration)#,
+                          # output_dir = './aaaa')
 
 
 
