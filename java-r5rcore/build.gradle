@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.ipea'
-version '1.0.2-SNAPSHOT'
+version '1.1.0999-SNAPSHOT'
 
 // Build against the version of R5 that the current r5r download_r5 function will
 // grab

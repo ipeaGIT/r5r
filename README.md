@@ -38,11 +38,11 @@ You can install `r5r`:
 
 ```
 
-Please bear in mind that you need to have *Java SE Development Kit 11* installed 
+Please bear in mind that you need to have *Java SE Development Kit 21* installed 
 on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 
-11 is freely available from the options below:
-- [OpenJDK](http://jdk.java.net/java-se-ri/11)
-- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+21 is freely available from the options below:
+- [OpenJDK](https://jdk.java.net/java-se-ri/21)
+- [Oracle](https://docs.oracle.com/en/java/javase/21/install/index.html)
 
 If you don't know what version of Java you have installed on your computer, you 
 can check it by running this on R console.

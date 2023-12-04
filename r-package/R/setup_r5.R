@@ -57,7 +57,7 @@ setup_r5 <- function(data_path,
                      overwrite = FALSE) {
 
   # R5 version
-  version = "6.9.0"
+  version = "7.0.0"
 
   # check inputs ------------------------------------------------------------
 
@@ -78,13 +78,13 @@ setup_r5 <- function(data_path,
   rJava::.jinit()
   ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
   ver <- as.numeric(gsub("\\..*", "", ver))
-  if (ver != 11) {
+  if (ver != 21) {
     stop(
-      "This package requires the Java SE Development Kit 11.\n",
+      "This package requires the Java SE Development Kit 21.\n",
       "Please update your Java installation. ",
-      "The jdk 11 can be downloaded from either:\n",
-      "  - openjdk: https://jdk.java.net/java-se-ri/11\n",
-      "  - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html"
+      "The jdk 21 can be downloaded from either:\n",
+      "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
+      "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
     )
   }
 
