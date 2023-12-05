@@ -32,4 +32,5 @@ test_that("written structure is identical to original", {
 
 # clean cache
 jar_dir <- tools::R_user_dir("r5r", which = "cache")
-list.files(jar_dir, full.names = TRUE) |> file.remove()
+f <- list.files(jar_dir, full.names = TRUE)
+unlink(f, recursive = TRUE)

@@ -4,11 +4,12 @@
 **Breaking changes**
 
 - r5r uses the latest V7 of R5. Closed [#350](https://github.com/ipeaGIT/r5r/issues/350)
-- r5r uses JDK 21 or higher (Breaking changes). Closed [#350](https://github.com/ipeaGIT/r5r/issues/350)
+- r5r uses JDK 21 or higher (Breaking changes). Closed [#350](https://github.com/ipeaGIT/r5r/issues/350).
 
 **Major changes**
 
 - r5r now stores R5 Jar file at `tools::R_user_dir("r5r", which = "cache")`
+- By using the JDK 21, this version of r5r also fixed an incompatibility with MAC ARM processors. Closed [#315](https://github.com/ipeaGIT/r5r/issues/315)
 
 **Minor changes**
 
