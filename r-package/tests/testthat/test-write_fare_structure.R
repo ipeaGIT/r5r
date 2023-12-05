@@ -29,3 +29,7 @@ test_that("written structure is identical to original", {
   written_struc <- read_fare_structure(tmpfile)
   expect_identical(struc, written_struc)
 })
+
+# clean cache
+jar_dir <- tools::R_user_dir("r5r", which = "cache")
+list.files(jar_dir, full.names = TRUE) |> file.remove()

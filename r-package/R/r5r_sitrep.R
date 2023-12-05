@@ -19,7 +19,7 @@
 r5r_sitrep <- function() {
   r5r_package_version <- utils::packageVersion("r5r")
 
-  jar_dir <- system.file("jar", package = "r5r")
+  jar_dir <- tools::R_user_dir("r5r", which = "cache")
   jar_dir_files <- list.files(jar_dir)
   jar_dir_files_full_names <- list.files(jar_dir, full.names = TRUE)
 

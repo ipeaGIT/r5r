@@ -1,5 +1,12 @@
 # r5r 1.1.0999 dev
 
+
+**Major changes**
+
+- r5r uses the latest V7 of R5. Closed [#350](https://github.com/ipeaGIT/r5r/issues/350)
+- r5r uses JDK 21 or higher (Breaking changes). Closed [#350](https://github.com/ipeaGIT/r5r/issues/350)
+
+
 **Minor changes**
 
 - In the `accessibility()` function, the value of `max_trip_duration` is now capped by the max value passed to the `cutoffs` parameter. Closes [#342](https://github.com/ipeaGIT/r5r/issues/348).

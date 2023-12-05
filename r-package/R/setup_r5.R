@@ -116,7 +116,7 @@ setup_r5 <- function(data_path,
   jar_file <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
-    file.path(system.file("jar", package = "r5r"), filename)
+    file.path(tools::R_user_dir("r5r", which = "cache"), filename)
   )
 
   # If there isn't a JAR already, download it

@@ -48,8 +48,9 @@ download_r5 <- function(version = "7.0.0",
   destfile <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
-    file.path(system.file("jar", package = "r5r"), filename)
+    file.path(tools::R_user_dir("r5r", which = "cache"), filename)
   )
+
 
   # check if the file exists, and returns its path if it does. otherwise,
   # download it from IPEA's server - if there's no internet connection "fail
@@ -70,7 +71,7 @@ download_r5 <- function(version = "7.0.0",
   }
 
   # create dir
-  jar_dir <- system.file("jar", package = "r5r")
+  jar_dir <- tools::R_user_dir("r5r", which = "cache")
   if (!dir.exists(jar_dir)) dir.create(jar_dir)
 
   # download JAR
