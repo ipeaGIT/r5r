@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - r-package/**
+      - .github/workflows/R-CMD-check.yaml
     branches:
       - main
       - master
@@ -93,6 +94,10 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
         working-directory: r-package
+
+      - name: Hop into with SSH (Linux)
+        if: runner.os == 'Linux'
+        uses: lhotari/action-upterm@v1
 
       - name: Check
         env:
