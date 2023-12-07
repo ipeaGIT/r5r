@@ -72,7 +72,7 @@ download_r5 <- function(version = "7.0.0",
 
   # create dir
   jar_dir <- tools::R_user_dir("r5r", which = "cache")
-  if (!dir.exists(jar_dir)) dir.create(jar_dir)
+  if (!dir.exists(jar_dir)) dir.create(jar_dir, recursive = TRUE)
 
   # download JAR
   message("Downloading R5 jar file to ", destfile)
