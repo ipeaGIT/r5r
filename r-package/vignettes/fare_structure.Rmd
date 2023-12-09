@@ -351,8 +351,8 @@ calculate_travel_times <- function(fare) {
                                mode = c("WALK", "TRANSIT"),
                                fare_structure = fare_structure,
                                max_fare = fare,
-                               max_trip_duration = 45,
-                               max_walk_time = 30)
+                               max_trip_duration = 40,
+                               max_walk_time = 20)
 
   return(ttm_df)
 }
@@ -434,11 +434,11 @@ calculate_accessibility <- function(fare, fare_string) {
                                                              format = "%d-%m-%Y %H:%M:%S"),
                              opportunities_colname = "healthcare",
                              mode = c("WALK", "TRANSIT"),
-                             cutoffs = 45,
+                             cutoffs = 40,
                              fare_structure = fare_structure,
                              max_fare = fare,
-                             max_trip_duration = 45,
-                             max_walk_time = 30,
+                             max_trip_duration = 40,
+                             max_walk_time = 20,
                              progress = FALSE)
 
   access_df$max_fare <- fare_string
@@ -472,6 +472,7 @@ ggplot(data = access) +
   theme_minimal() +
   theme(legend.position = "bottom",
         axis.text = element_blank())
+
 ```
 
 
