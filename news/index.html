@@ -83,7 +83,16 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0999" id="r5r-110999-dev">r5r 1.1.0999 dev<a class="anchor" aria-label="anchor" href="#r5r-110999-dev"></a></h2>
-<p><strong>Minor changes</strong></p>
+<p><strong>Breaking changes</strong></p>
+<ul><li>r5r uses the latest V7 of R5. Closed <a href="https://github.com/ipeaGIT/r5r/issues/350" class="external-link">#350</a>
+</li>
+<li>r5r uses JDK 21 or higher (Breaking changes). Closed <a href="https://github.com/ipeaGIT/r5r/issues/350" class="external-link">#350</a>.</li>
+</ul><p><strong>Major changes</strong></p>
+<ul><li>r5r now stores R5 Jar file at <code>tools::R_user_dir("r5r", which = "cache")</code>
+</li>
+<li>By using the JDK 21, this version of r5r also fixed an incompatibility with MAC ARM processors. Closed <a href="https://github.com/ipeaGIT/r5r/issues/315" class="external-link">#315</a>
+</li>
+</ul><p><strong>Minor changes</strong></p>
 <ul><li>In the <code><a href="../reference/accessibility.html">accessibility()</a></code> function, the value of <code>max_trip_duration</code> is now capped by the max value passed to the <code>cutoffs</code> parameter. Closes <a href="https://github.com/ipeaGIT/r5r/issues/348" class="external-link">#342</a>.</li>
 <li>Updated documentation of parameter <code>max_walk_time</code> to make it clear that in walk-only trips, whenever <code>max_walk_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
 </li>
