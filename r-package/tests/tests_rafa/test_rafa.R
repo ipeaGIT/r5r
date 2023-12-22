@@ -764,6 +764,10 @@ library(beepr)
 
 
 # LOCAL
+utils::remove.packages('r5r')
+jar_dir <- tools::R_user_dir("r5r", which = "cache")
+unlink(jar_dir, recursive = TRUE)
+
 tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))

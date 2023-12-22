@@ -92,4 +92,9 @@ if (getRversion() >= "2.15.1") {
     "You should replace '2G' by the amount of memory you'll require. ",
     "Currently, Java memory is set to ", getOption("java.parameters")
   )
+
+  # create dir to store R5 Jar
+  jar_dir <- tools::R_user_dir("r5r", which = "cache")
+  if (!dir.exists(jar_dir)) dir.create(jar_dir, recursive = TRUE)
+
 }

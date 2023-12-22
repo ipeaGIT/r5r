@@ -45,7 +45,7 @@ download_r5 <- function(version = "7.0.0",
   file_url <- fileurl_from_metadata(version)
   filename <- basename(file_url)
 
-  destfile <- data.table::fifelse(
+  jar_file <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
     file.path(tools::R_user_dir("r5r", which = "cache"), filename)
@@ -56,9 +56,9 @@ download_r5 <- function(version = "7.0.0",
   # download it from IPEA's server - if there's no internet connection "fail
   # gracefully" (i.e invisibly returns NULL and outputs a informative message)"
 
-  if (file.exists(destfile) && (force_update == FALSE)) {
-    if (!quiet) message("Using cached R5 version from ", destfile)
-    return(destfile)
+  if (file.exists(jar_file) && (force_update == FALSE)) {
+    if (!quiet) message("Using cached R5 version from ", jar_file)
+    return(jar_file)
   }
 
   if (isFALSE(check_connection(file_url))) {
@@ -70,21 +70,17 @@ download_r5 <- function(version = "7.0.0",
     return(invisible(NULL))
   }
 
-  # create dir
-  jar_dir <- tools::R_user_dir("r5r", which = "cache")
-  if (!dir.exists(jar_dir)) dir.create(jar_dir, recursive = TRUE)
-
   # download JAR
-  message("Downloading R5 jar file to ", destfile)
+  message("Downloading R5 jar file to ", jar_file)
   utils::download.file(
     url = file_url,
-    destfile = destfile,
+    destfile = jar_file,
     mode = "wb",
     # method = "curl",
     # extra = "--insecure",
     quiet = quiet
   )
 
-  return(destfile)
+  return(jar_file)
 
 }
