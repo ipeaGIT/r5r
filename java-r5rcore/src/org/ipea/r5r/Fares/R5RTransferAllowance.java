@@ -34,7 +34,8 @@ public class R5RTransferAllowance extends TransferAllowance  {
      * comparable.
      */
     public boolean atLeastAsGoodForAllFutureRedemptions(R5RTransferAllowance other){
-        return fareType == other.fareType && value >= other.value && expirationTime >= other.expirationTime && number >= other.number;
+        if (fareType != other.fareType) return false;
+        return value >= other.value && expirationTime >= other.expirationTime && number >= other.number;
     }
 
 
