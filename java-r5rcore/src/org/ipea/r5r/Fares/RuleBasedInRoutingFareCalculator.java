@@ -110,6 +110,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
         int currentPatternIndex = -1;
         int currentBoardTime = -1;
+        int lastFareType = -1;
 
         // first leg of multimodal trip
         if (!patterns.isEmpty()) {
@@ -129,6 +130,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             // get info on each leg
             FarePerRoute firstLegType = faresPerRoute[previousPatternIndex];
             FarePerRoute secondLegType = faresPerRoute[currentPatternIndex];
+            lastFareType = secondLegType.getTypeIndex();
 
             // check if transfer is in same type with unlimited transfers
             if (firstLegType.getTypeIndex() == secondLegType.getTypeIndex()) {
@@ -208,7 +210,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int expirationTime = currentBoardTime + fareStructure.getTransferTimeAllowanceSeconds();
 
         // build transfer allowance considering constraints above
-        TransferAllowance transferAllowance = new TransferAllowance(maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
+        TransferAllowance transferAllowance = new R5RTransferAllowance(lastFareType, maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
         return new FareBounds(fareForState, transferAllowance);
 
     }
