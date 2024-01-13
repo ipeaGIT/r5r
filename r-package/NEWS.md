@@ -8,7 +8,7 @@
 
 **Major changes**
 
-- r5r now stores R5 Jar file at `tools::R_user_dir("r5r", which = "cache")`
+- r5r now stores R5 Jar file at user dir using `tools::R_user_dir()`
 - By using the JDK 21, this version of r5r also fixed an incompatibility with MAC ARM processors. Closed [#315](https://github.com/ipeaGIT/r5r/issues/315)
 
 **Minor changes**

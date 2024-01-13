@@ -762,6 +762,9 @@ lapply(X=docs, FUN = tools::showNonASCIIfile)
 library(tictoc)
 library(beepr)
 
+# run only the tests
+testthat::test_local()
+
 
 # LOCAL
 utils::remove.packages('r5r')
@@ -780,6 +783,7 @@ tictoc::tic()
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
+beepr::beep()
 
 
 devtools::check_win_release(pkg = ".")
@@ -795,6 +799,14 @@ beepr::beep()
 tictoc::tic()
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
+
+
+# extrachecks -----------------
+#' https://github.com/JosiahParry/extrachecks
+#' remotes::install_github("JosiahParry/extrachecks")
+
+library(extrachecks)
+extrachecks::extrachecks()
 
 
 

@@ -40,7 +40,9 @@ download_r5 <- function(version = "7.0.0",
   options(timeout = max(600, getOption("timeout")))
 
 
-  # download R5's jar -----------------------------------------------------
+  # download R5 jar -----------------------------------------------------
+
+  if (!dir.exists(r5r_env$cache_dir)) dir.create(r5r_env$cache_dir, recursive = TRUE)
 
   file_url <- fileurl_from_metadata(version)
   filename <- basename(file_url)
@@ -48,7 +50,7 @@ download_r5 <- function(version = "7.0.0",
   jar_file <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
-    file.path(tools::R_user_dir("r5r", which = "cache"), filename)
+    file.path( r5r_env$cache_dir , filename)
   )
 
 

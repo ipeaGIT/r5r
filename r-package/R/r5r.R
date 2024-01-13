@@ -83,18 +83,3 @@ if (getRversion() >= "2.15.1") {
     )
   )
 }
-
-.onAttach <- function(lib, pkg) {
-  packageStartupMessage(
-    "Please make sure you have already allocated ",
-    "some memory to Java by running:\n",
-    "  options(java.parameters = '-Xmx2G').\n",
-    "You should replace '2G' by the amount of memory you'll require. ",
-    "Currently, Java memory is set to ", getOption("java.parameters")
-  )
-
-  # create dir to store R5 Jar
-  jar_dir <- tools::R_user_dir("r5r", which = "cache")
-  if (!dir.exists(jar_dir)) dir.create(jar_dir, recursive = TRUE)
-
-}
