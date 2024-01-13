@@ -15,6 +15,7 @@ reference:
     - setup_r5
     - stop_r5
     - r5r_sitrep
+    - r5r_cache
   - title: "Accessibility"
   - contents:
     - accessibility
