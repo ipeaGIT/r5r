@@ -2,6 +2,7 @@ package org.ipea.r5r.R5;
 
 import com.conveyal.r5.SoftwareVersion;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
+import com.conveyal.r5.analyst.fare.BostonInRoutingFareCalculator;
 import com.conveyal.r5.analyst.fare.TransferAllowance;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.common.GeometryUtils;
@@ -100,7 +101,11 @@ public class R5ParetoServer {
 
         ParetoReturn ret = null;
         try {
-            ret = new ParetoReturn(trips, totalTime);
+            ProfileRequest newReq = (ProfileRequest) profileRequest.clone();
+            // don't serialize the whole R5R fare calculator. HACK fareto requires something here
+            // so we just return a BostonInRoutingFareCalculator.
+            newReq.inRoutingFareCalculator = new BostonInRoutingFareCalculator();
+            ret = new ParetoReturn(trips, totalTime, newReq);
         } catch (NullPointerException e){
             LOG.error("exception in building return");
             e.printStackTrace();
@@ -139,10 +144,12 @@ public class R5ParetoServer {
         /** save backend version in JSON output - useful for JSON that's being pushed to fareto-examples */
         public SoftwareVersion backendVersion = SoftwareVersion.instance;
         public String generationTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+        public ProfileRequest request;
 
-        public ParetoReturn(Collection<R5ParetoServer.ParetoTrip> trips, long computeTimeMillis) {
+        public ParetoReturn(Collection<R5ParetoServer.ParetoTrip> trips, long computeTimeMillis, ProfileRequest request) {
             this.trips = trips;
             this.computeTimeMillis = computeTimeMillis;
+            this.request = request;
         }
     }
 
