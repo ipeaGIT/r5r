@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2024-01-13</h4>
+            <h4 data-toc-skip class="date">2024-01-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -262,14 +262,15 @@ minutes <code>cutoffs = 45</code>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            12</span></span>
 <span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
@@ -323,6 +324,7 @@ output looks like.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_p10 travel_time_p20</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c603ffff               0               0</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c617ffff              13              13</span></span>
 <span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c60fffff               6               6</span></span>
@@ -334,6 +336,7 @@ output looks like.</p>
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c633ffff              16              16</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c6afffff              24              24</span></span>
 <span><span class="co">#&gt;     travel_time_p50 travel_time_p70 travel_time_p80</span></span>
+<span><span class="co">#&gt;               &lt;int&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt;  1:               0               0               0</span></span>
 <span><span class="co">#&gt;  2:              13              13              13</span></span>
 <span><span class="co">#&gt;  3:               6               6               6</span></span>
@@ -378,6 +381,7 @@ sets and time windows.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id departure_time draw_number  routes</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;         &lt;char&gt;       &lt;int&gt;  &lt;char&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c28bffff       14:00:00           1 4491-10</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c28bffff       14:00:00           2 4491-10</span></span>
 <span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c28bffff       14:00:00           3 4491-10</span></span>
@@ -389,16 +393,17 @@ sets and time windows.</p>
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       51.9</span></span>
-<span><span class="co">#&gt;  2:       50.0</span></span>
-<span><span class="co">#&gt;  3:       47.8</span></span>
-<span><span class="co">#&gt;  4:       42.7</span></span>
-<span><span class="co">#&gt;  5:       42.5</span></span>
-<span><span class="co">#&gt;  6:       50.4</span></span>
-<span><span class="co">#&gt;  7:       51.0</span></span>
-<span><span class="co">#&gt;  8:       41.5</span></span>
-<span><span class="co">#&gt;  9:       42.3</span></span>
-<span><span class="co">#&gt; 10:       43.4</span></span></code></pre></div>
+<span><span class="co">#&gt;          &lt;num&gt;</span></span>
+<span><span class="co">#&gt;  1:       53.3</span></span>
+<span><span class="co">#&gt;  2:       51.6</span></span>
+<span><span class="co">#&gt;  3:       45.2</span></span>
+<span><span class="co">#&gt;  4:       44.5</span></span>
+<span><span class="co">#&gt;  5:       38.1</span></span>
+<span><span class="co">#&gt;  6:       53.9</span></span>
+<span><span class="co">#&gt;  7:       48.4</span></span>
+<span><span class="co">#&gt;  8:       52.4</span></span>
+<span><span class="co">#&gt;  9:       39.5</span></span>
+<span><span class="co">#&gt; 10:       37.0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>

@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2024-01-13</h4>
+            <h4 data-toc-skip class="date">2024-01-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -307,19 +307,22 @@ few properties and data.frames.</p>
 <span><span class="co">#&gt; [1] Inf</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $fares_per_type</span></span>
-<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
-<span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
-<span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span>
+<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
+<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
+<span><span class="co">#&gt; 2:   RAIL               FALSE                     FALSE          FALSE   4.8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg fare</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS  4.8</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS  4.8</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL  4.8</span></span>
-<span><span class="co">#&gt; 4:      RAIL       RAIL  4.8</span></span>
+<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:       BUS        BUS   4.8</span></span>
+<span><span class="co">#&gt; 2:      RAIL        BUS   4.8</span></span>
+<span><span class="co">#&gt; 3:       BUS       RAIL   4.8</span></span>
+<span><span class="co">#&gt; 4:      RAIL       RAIL   4.8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $fares_per_route</span></span>
 <span><span class="co">#&gt;      agency_id                                 agency_name  route_id</span></span>
+<span><span class="co">#&gt;         &lt;char&gt;                                      &lt;char&gt;    &lt;char&gt;</span></span>
 <span><span class="co">#&gt;   1:     TRENS                                    TRENSURB    LINHA1</span></span>
 <span><span class="co">#&gt;   2:     TRENS                                    TRENSURB LINHAAERO</span></span>
 <span><span class="co">#&gt;   3:      EPTC Empresa Publica de Transportes e Circulação      1112</span></span>
@@ -331,30 +334,32 @@ few properties and data.frames.</p>
 <span><span class="co">#&gt; 115:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
 <span><span class="co">#&gt; 116:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
 <span><span class="co">#&gt; 117:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
-<span><span class="co">#&gt;      route_short_name                           route_long_name mode route_fare</span></span>
-<span><span class="co">#&gt;   1:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO RAIL        4.8</span></span>
-<span><span class="co">#&gt;   2:             AREO                        AEROMOVEL TRENSURB RAIL        4.8</span></span>
-<span><span class="co">#&gt;   3:             1112                         HIPICA / TRISTEZA  BUS        4.8</span></span>
-<span><span class="co">#&gt;   4:              149                                    ICARAI  BUS        4.8</span></span>
-<span><span class="co">#&gt;   5:              165                                     COHAB  BUS        4.8</span></span>
-<span><span class="co">#&gt;  ---                                                                           </span></span>
-<span><span class="co">#&gt; 113:               T7                     NILO / PRAIA DE BELAS  BUS        4.8</span></span>
-<span><span class="co">#&gt; 114:               T8                       CAMPUS  /  FARRAPOS  BUS        4.8</span></span>
-<span><span class="co">#&gt; 115:               T9                                       PUC  BUS        4.8</span></span>
-<span><span class="co">#&gt; 116:             TR60                         TRONCAL TRI‘NGULO  BUS        4.8</span></span>
-<span><span class="co">#&gt; 117:             TR62                          TRONCAL BALTAZAR  BUS        4.8</span></span>
-<span><span class="co">#&gt;      fare_type</span></span>
-<span><span class="co">#&gt;   1:      RAIL</span></span>
-<span><span class="co">#&gt;   2:      RAIL</span></span>
-<span><span class="co">#&gt;   3:       BUS</span></span>
-<span><span class="co">#&gt;   4:       BUS</span></span>
-<span><span class="co">#&gt;   5:       BUS</span></span>
-<span><span class="co">#&gt;  ---          </span></span>
-<span><span class="co">#&gt; 113:       BUS</span></span>
-<span><span class="co">#&gt; 114:       BUS</span></span>
-<span><span class="co">#&gt; 115:       BUS</span></span>
-<span><span class="co">#&gt; 116:       BUS</span></span>
-<span><span class="co">#&gt; 117:       BUS</span></span>
+<span><span class="co">#&gt;      route_short_name                           route_long_name   mode</span></span>
+<span><span class="co">#&gt;                &lt;char&gt;                                    &lt;char&gt; &lt;char&gt;</span></span>
+<span><span class="co">#&gt;   1:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL</span></span>
+<span><span class="co">#&gt;   2:             AREO                        AEROMOVEL TRENSURB   RAIL</span></span>
+<span><span class="co">#&gt;   3:             1112                         HIPICA / TRISTEZA    BUS</span></span>
+<span><span class="co">#&gt;   4:              149                                    ICARAI    BUS</span></span>
+<span><span class="co">#&gt;   5:              165                                     COHAB    BUS</span></span>
+<span><span class="co">#&gt;  ---                                                                  </span></span>
+<span><span class="co">#&gt; 113:               T7                     NILO / PRAIA DE BELAS    BUS</span></span>
+<span><span class="co">#&gt; 114:               T8                       CAMPUS  /  FARRAPOS    BUS</span></span>
+<span><span class="co">#&gt; 115:               T9                                       PUC    BUS</span></span>
+<span><span class="co">#&gt; 116:             TR60                         TRONCAL TRI‘NGULO    BUS</span></span>
+<span><span class="co">#&gt; 117:             TR62                          TRONCAL BALTAZAR    BUS</span></span>
+<span><span class="co">#&gt;      route_fare fare_type</span></span>
+<span><span class="co">#&gt;           &lt;num&gt;    &lt;char&gt;</span></span>
+<span><span class="co">#&gt;   1:        4.8      RAIL</span></span>
+<span><span class="co">#&gt;   2:        4.8      RAIL</span></span>
+<span><span class="co">#&gt;   3:        4.8       BUS</span></span>
+<span><span class="co">#&gt;   4:        4.8       BUS</span></span>
+<span><span class="co">#&gt;   5:        4.8       BUS</span></span>
+<span><span class="co">#&gt;  ---                     </span></span>
+<span><span class="co">#&gt; 113:        4.8       BUS</span></span>
+<span><span class="co">#&gt; 114:        4.8       BUS</span></span>
+<span><span class="co">#&gt; 115:        4.8       BUS</span></span>
+<span><span class="co">#&gt; 116:        4.8       BUS</span></span>
+<span><span class="co">#&gt; 117:        4.8       BUS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $debug_settings</span></span>
 <span><span class="co">#&gt; $debug_settings$output_file</span></span>
@@ -436,9 +441,10 @@ use the fare indicated in this table;</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
-<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
-<span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
-<span><span class="co">#&gt; 2: RAIL               FALSE                     FALSE          FALSE  4.8</span></span></code></pre></div>
+<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
+<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
+<span><span class="co">#&gt; 2:   RAIL               FALSE                     FALSE          FALSE   4.8</span></span></code></pre></div>
 <p>We need to do a few small changes in the <code>fares_per_type</code>
 table to accomodate the fare rules of Porto Alegre. In the
 <code>"RAIL"</code> mode, we need to set
@@ -458,9 +464,11 @@ changes below, using <code>data.table</code> notation.</p>
 <p>Checking the results below, everything looks OK:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
-<span><span class="co">#&gt;    type unlimited_transfers allow_same_route_transfer use_route_fare fare</span></span>
-<span><span class="co">#&gt; 1:  BUS               FALSE                     FALSE          FALSE  4.8</span></span>
-<span><span class="co">#&gt; 2: RAIL                TRUE                      TRUE          FALSE  4.5</span></span></code></pre></div>
+<span><span class="co">#&gt; Index: &lt;type&gt;</span></span>
+<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
+<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
+<span><span class="co">#&gt; 2:   RAIL                TRUE                      TRUE          FALSE   4.5</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="configure-fares-by-transfers">3.3 Configure fares by transfers<a class="anchor" aria-label="anchor" href="#configure-fares-by-transfers"></a>
@@ -471,11 +479,12 @@ row contains the fare prices for transfers between the modes specified
 in <code>first_leg</code> and <code>second_leg</code> columns.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg fare</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS  4.8</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS  4.8</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL  4.8</span></span>
-<span><span class="co">#&gt; 4:      RAIL       RAIL  4.8</span></span></code></pre></div>
+<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:       BUS        BUS   4.8</span></span>
+<span><span class="co">#&gt; 2:      RAIL        BUS   4.8</span></span>
+<span><span class="co">#&gt; 3:       BUS       RAIL   4.8</span></span>
+<span><span class="co">#&gt; 4:      RAIL       RAIL   4.8</span></span></code></pre></div>
 <p>Let’s update <code>fare_per_transfer</code> to account for the actual
 integration rules in Porto Alegre.</p>
 <ul>
@@ -514,10 +523,11 @@ leave the that row in <code>fare_per_transfer</code>, transfers between
 data.frame should look like this:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg fare</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS 7.20</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS 8.37</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL 8.37</span></span></code></pre></div>
+<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:       BUS        BUS  7.20</span></span>
+<span><span class="co">#&gt; 2:      RAIL        BUS  8.37</span></span>
+<span><span class="co">#&gt; 3:       BUS       RAIL  8.37</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routes-configuration">3.4 Routes configuration<a class="anchor" aria-label="anchor" href="#routes-configuration"></a>
@@ -530,19 +540,21 @@ updated in this <code>fares_per_route</code> data.frame.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    agency_id                                 agency_name route_id</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;                                      &lt;char&gt;   &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:      EPTC Empresa Publica de Transportes e Circulação       T6</span></span>
 <span><span class="co">#&gt; 2:      EPTC Empresa Publica de Transportes e Circulação       T7</span></span>
 <span><span class="co">#&gt; 3:      EPTC Empresa Publica de Transportes e Circulação       T8</span></span>
 <span><span class="co">#&gt; 4:      EPTC Empresa Publica de Transportes e Circulação       T9</span></span>
 <span><span class="co">#&gt; 5:      EPTC Empresa Publica de Transportes e Circulação     TR60</span></span>
 <span><span class="co">#&gt; 6:      EPTC Empresa Publica de Transportes e Circulação     TR62</span></span>
-<span><span class="co">#&gt;    route_short_name       route_long_name mode route_fare fare_type</span></span>
-<span><span class="co">#&gt; 1:               T6         TRANSVERSAL 6  BUS        4.8       BUS</span></span>
-<span><span class="co">#&gt; 2:               T7 NILO / PRAIA DE BELAS  BUS        4.8       BUS</span></span>
-<span><span class="co">#&gt; 3:               T8   CAMPUS  /  FARRAPOS  BUS        4.8       BUS</span></span>
-<span><span class="co">#&gt; 4:               T9                   PUC  BUS        4.8       BUS</span></span>
-<span><span class="co">#&gt; 5:             TR60     TRONCAL TRI‘NGULO  BUS        4.8       BUS</span></span>
-<span><span class="co">#&gt; 6:             TR62      TRONCAL BALTAZAR  BUS        4.8       BUS</span></span></code></pre></div>
+<span><span class="co">#&gt;    route_short_name       route_long_name   mode route_fare fare_type</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;                &lt;char&gt; &lt;char&gt;      &lt;num&gt;    &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:               T6         TRANSVERSAL 6    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 2:               T7 NILO / PRAIA DE BELAS    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 3:               T8   CAMPUS  /  FARRAPOS    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 4:               T9                   PUC    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 5:             TR60     TRONCAL TRI‘NGULO    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 6:             TR62      TRONCAL BALTAZAR    BUS        4.8       BUS</span></span></code></pre></div>
 <p>Basic route information is taken directly from the GTFS data (agency,
 route id and names, mode, etc), but the <code>route_fare</code> and
 <code>fare_type</code> columns were added specifically for the
@@ -636,6 +648,7 @@ cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129863ffff              37              37</span></span>
 <span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129c2bffff              35              35</span></span>
 <span><span class="co">#&gt;  3: 89a90166da7ffff 89a90129aa7ffff              34              33</span></span>

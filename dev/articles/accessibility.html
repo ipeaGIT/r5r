@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accessibility</h1>
             
-            <h4 data-toc-skip class="date">2024-01-13</h4>
+            <h4 data-toc-skip class="date">2024-01-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/accessibility.Rmd" class="external-link"><code>../vignettes/accessibility.Rmd</code></a></small>
       <div class="hidden name"><code>accessibility.Rmd</code></div>
@@ -228,6 +228,7 @@ manually computing accessibility.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             3</span></span>
 <span><span class="co">#&gt; 2: 89a901291abffff  healthcare         50     20             6</span></span>
 <span><span class="co">#&gt; 3: 89a9012a3cfffff     schools         50     20             0</span></span>
@@ -263,6 +264,7 @@ time matrix</a>, which we calculate using <code>r5r</code>:</p>
 <span>                        progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            from_id           to_id travel_time_p50</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;          &lt;char&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a901291abffff 89a901291abffff               1</span></span>
 <span><span class="co">#&gt; 2: 89a901291abffff 89a9012a3cfffff              78</span></span>
 <span><span class="co">#&gt; 3: 89a901291abffff 89a901295b7ffff              45</span></span>
@@ -290,6 +292,7 @@ travel time matrix and land use data as input:</p>
 <span><span class="co">#&gt; in the final output.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_edu</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id schools</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;   &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a9012124fffff       1</span></span>
 <span><span class="co">#&gt; 2: 89a9012126bffff       4</span></span>
 <span><span class="co">#&gt; 3: 89a9012127bffff       2</span></span>
@@ -298,6 +301,7 @@ travel time matrix and land use data as input:</p>
 <span><span class="co">#&gt; 6: 89a9012800bffff       8</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_health</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id healthcare</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;      &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a9012124fffff          0</span></span>
 <span><span class="co">#&gt; 2: 89a9012126bffff          1</span></span>
 <span><span class="co">#&gt; 3: 89a9012127bffff          1</span></span>
