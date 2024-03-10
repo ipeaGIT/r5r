@@ -56,9 +56,6 @@ setup_r5 <- function(data_path,
                      elevation = "TOBLER",
                      overwrite = FALSE) {
 
-  # R5 version
-  version = "7.0.0"
-
   # check inputs ------------------------------------------------------------
 
   checkmate::assert_directory_exists(data_path)
@@ -109,8 +106,7 @@ setup_r5 <- function(data_path,
     }
 
   # check if the most recent JAR release is stored already.
-
-  fileurl <- fileurl_from_metadata(version)
+  fileurl <- fileurl_from_metadata( r5r_env$r5_jar_version )
   filename <- basename(fileurl)
 
   jar_file <- data.table::fifelse(
@@ -119,12 +115,12 @@ setup_r5 <- function(data_path,
     file.path( r5r_env$cache_dir, filename)
   )
 
-  # If there isn't a JAR already, download it
-  if (checkmate::test_file_exists(jar_file)) {
+  # If there isn't a JAR already larger than 60MB, download it
+  if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
     if (!verbose) message("Using cached R5 version from ", jar_file)
   } else {
-  check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
-  if (is.null(check)) {  return(invisible(NULL)) }
+  check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
+  if (is.null(check)) { return(invisible(NULL)) }
   }
 
   # r5r jar
