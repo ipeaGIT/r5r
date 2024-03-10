@@ -236,7 +236,7 @@ departure_datetime <- as.POSIXct(
 
 # estimate isochrone from origin_1
 iso1 <- isochrone(r5r_core,
-                origin = origin_1,
+                origins = origin_1,
                 mode = c("walk"),
                 departure_datetime = departure_datetime,
                 cutoffs = seq(0, 100, 10)
