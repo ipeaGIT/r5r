@@ -10,6 +10,11 @@ public class R5RTransferAllowance extends TransferAllowance  {
         this.fareType = fareType;
     }
 
+    public R5RTransferAllowance() {
+        super();
+        this.fareType = -1;
+    }
+
     public R5RTransferAllowance tightenExpiration(int maxClockTime){
         // cap expiration time of transfer at max clock time of search, so that transfer slips that technically have more time
         // remaining, but that time cannot be used within the constraints of this search, can be pruned.
@@ -34,7 +39,11 @@ public class R5RTransferAllowance extends TransferAllowance  {
      * comparable.
      */
     public boolean atLeastAsGoodForAllFutureRedemptions(R5RTransferAllowance other){
+        // for empty transfer allowances, this is always true
+        if (other.fareType == -1) return true;
+        // if this transfer allowance is for a different fare type, it is not comparable
         if (fareType != other.fareType) return false;
+        // otherwise, compare value, expiration time, and number of transfers remaining
         return value >= other.value && expirationTime >= other.expirationTime && number >= other.number;
     }
 
