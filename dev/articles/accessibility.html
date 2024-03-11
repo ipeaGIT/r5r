@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accessibility</h1>
             
-            <h4 data-toc-skip class="date">2024-01-30</h4>
+            <h4 data-toc-skip class="date">2024-03-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/accessibility.Rmd" class="external-link"><code>../vignettes/accessibility.Rmd</code></a></small>
       <div class="hidden name"><code>accessibility.Rmd</code></div>
@@ -273,17 +273,17 @@ time matrix</a>, which we calculate using <code>r5r</code>:</p>
 <span><span class="co">#&gt; 6: 89a901291abffff 89a901285cfffff              38</span></span></code></pre></div>
 <p>Now to calculate a traditional cumulative opportunity metric like we
 did above, we just need to call the
-<code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> function, and pass our
+<code><a href="https://ipeagit.github.io/accessibility/reference/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> function, and pass our
 travel time matrix and land use data as input:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility</span></span>
-<span><span class="va">access_edu</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
+<span><span class="va">access_edu</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/accessibility/reference/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
 <span>                                        land_use_data <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                                        opportunity <span class="op">=</span> <span class="st">'schools'</span>,</span>
 <span>                                        travel_cost <span class="op">=</span> <span class="st">'travel_time_p50'</span>,</span>
 <span>                                        cutoff <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">access_health</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
+<span><span class="va">access_health</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/accessibility/reference/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span>travel_matrix <span class="op">=</span> <span class="va">ttm</span>, </span>
 <span>                                        land_use_data <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                                        opportunity <span class="op">=</span> <span class="st">'healthcare'</span>,</span>
 <span>                                        travel_cost <span class="op">=</span> <span class="st">'travel_time_p50'</span>,</span>
@@ -408,7 +408,7 @@ page</a>.</p>
 <div class="section level3">
 <h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-levinson2020manual" class="csl-entry">
 Levinson, David, and et al. 2020. <span>“Transport Access Manual: A
 Guide for Measuring Connection Between People and Places,”</span>

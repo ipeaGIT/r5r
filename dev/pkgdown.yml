@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -11,5 +11,5 @@ articles:
   r5r: r5r.html
   time_window: time_window.html
   travel_time_matrix: travel_time_matrix.html
-last_built: 2024-01-30T14:03Z
+last_built: 2024-03-11T18:02Z
 
