@@ -3,7 +3,6 @@
 \docType{package}
 \name{r5r}
 \alias{r5r}
-\alias{_PACKAGE}
 \alias{r5r-package}
 \title{r5r: Rapid Realistic Routing with 'R5'}
 \description{
