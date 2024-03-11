@@ -29,10 +29,10 @@ r5r_cache <- function(list_files = TRUE,
   if (!dir.exists(r5r_env$cache_dir)) { dir.create(r5r_env$cache_dir, recursive=TRUE) }
 
   # list cached files
-  files <- list.files(dirname(r5r_env$cache_dir), full.names = TRUE)
+  files <- list.files(dirname(r5r_env$cache_dir), full.names = TRUE, recursive = TRUE)
 
   # if wants to delete file
-  # delete_file = "2_families.parquet"
+  # delete_file = "r5-v7.0-all.jar"
   if (!is.null(delete_file)) {
 
     # IF file does not exist, print message
@@ -43,7 +43,7 @@ r5r_cache <- function(list_files = TRUE,
     # IF file exists, delete file
     if (any(grepl(delete_file, files))) {
       f <- files[grepl(delete_file, files)]
-      unlink(f, recursive = TRUE)
+      unlink(f, recursive = TRUE, force = TRUE)
       message(paste0("The file '", delete_file, "' has been removed."))
     }
 
@@ -52,7 +52,7 @@ r5r_cache <- function(list_files = TRUE,
 
       # delete any files from censobr, current and old data releases
       dir_above <- dirname(r5r_env$cache_dir)
-      unlink(dir_above, recursive = TRUE)
+      unlink(dir_above, recursive = TRUE, force = TRUE)
       message(paste0("All files have been removed."))
 
     }

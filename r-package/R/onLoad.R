@@ -18,9 +18,6 @@ r5r_env <- new.env(parent = emptyenv()) # nocov start
   r5r_env$r5_jar_version <- "7.0.0"
   r5r_env$r5_jar_size <- 63493992
 
-
-
-
   # create dir to store R5 Jar
   cache_d <- paste0('r5r/r5_jar_v', r5r_env$r5_jar_version)
   r5r_env$cache_dir <- tools::R_user_dir(cache_d, which = 'cache')

@@ -1,3 +1,26 @@
+
+
+link <- 'https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/2023/PNADC_032023.zip'
+file <- basename(link)
+
+
+tic()
+httr::GET(url = link,
+          # httr::timeout(10),
+          httr::progress(),
+          httr::write_disk(file, overwrite = T))
+toc()
+
+
+tic()
+link |>
+  httr2::request() |>
+  httr2::req_progress() |>
+  httr2::req_perform(path = file)
+toc()
+
+
+
 # devtools::install_github("ipeaGIT/r5r", subdir = "r-package", force=T)
 options(java.parameters = '-Xmx10G')
 library(sf)
@@ -686,6 +709,7 @@ covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat
 covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))
 
 
+a <- covr::function_coverage(fun=r5r::r5r_cache, test_file("tests/testthat/test-z_r5r_cache.R"))
 
 
 covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testthat/test-utils.R"))

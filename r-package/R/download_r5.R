@@ -74,11 +74,23 @@ download_r5 <- function(version = NULL,
   message("Downloading R5 jar file to ", jar_file)
 
   try(silent = TRUE,
-      httr::GET(url=file_url,
-                if(isFALSE(quiet)){ httr::progress()},
-                httr::write_disk(jar_file, overwrite = TRUE),
-                config = httr::config(ssl_verifypeer = FALSE))
+      utils::download.file(
+        url = file_url,
+        destfile = jar_file,
+        mode = "wb",
+        # method = "curl",
+        # extra = "--insecure",
+        quiet = quiet
+      )
   )
+
+  # try(silent = TRUE,
+  #     httr::GET(url=file_url,
+  #               if(isFALSE(quiet)){ httr::progress()},
+  #               httr::write_disk(jar_file, overwrite = TRUE),
+  #               config = httr::config(ssl_verifypeer = FALSE))
+  # )
+
 
 # Halt function if download failed (file must exist and be larger than 60 MB)
 if (!file.exists(jar_file) | file.info(jar_file)$size < r5r_env$r5_jar_size) {

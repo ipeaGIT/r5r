@@ -41,9 +41,7 @@ Depends:
 Imports:
     checkmate,
     concaveman,
-    curl,
     data.table,
-    httr,
     jsonlite,
     rJava (>= 0.9-10),
     sf (>= 1.0-12),
