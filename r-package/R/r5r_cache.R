@@ -12,11 +12,14 @@
 #' @export
 #' @family Cache data
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+#' # download r5 JAR
+#' r5r::download_r5()
+#'
 #' # list all files cached
 #' r5r_cache(list_files = TRUE)
 #'
-#' # delete particular file
-#' r5r_cache(delete_file = '2010_deaths')
+#' # delete r5 JAR
+#' r5r_cache(delete_file = 'r5-v7.0')
 #'
 r5r_cache <- function(list_files = TRUE,
                       delete_file = NULL){

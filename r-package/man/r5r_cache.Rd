@@ -24,11 +24,14 @@ Manage cached files from the r5r package
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# download r5 JAR
+r5r::download_r5()
+
 # list all files cached
 r5r_cache(list_files = TRUE)
 
-# delete particular file
-r5r_cache(delete_file = '2010_deaths')
+# delete r5 JAR
+r5r_cache(delete_file = 'r5-v7.0')
 \dontshow{\}) # examplesIf}
 }
 \concept{Cache data}
