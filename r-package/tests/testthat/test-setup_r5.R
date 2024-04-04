@@ -65,6 +65,10 @@ test_that("'overwrite' parameter works correctly", {
 })
 
 test_that("throws error if write access to given dir is denied", {
+  # this test only works correctly with unix OSes. not sure how to change
+  # permissions from inside R in windows
+  skip_if_not(.Platform$OS.type == "unix")
+
   invisible(file.copy(path, tempdir(), recursive = TRUE))
 
   tmpdir <- file.path(tempdir(), "poa")
