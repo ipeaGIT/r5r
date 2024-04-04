@@ -40,10 +40,12 @@ Depends:
     R (>= 3.6)
 Imports:
     checkmate,
+    cli,
     concaveman,
     data.table,
     jsonlite,
     rJava (>= 0.9-10),
+    rlang,
     sf (>= 1.0-12),
     sfheaders,
     utils,

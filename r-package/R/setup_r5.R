@@ -144,6 +144,10 @@ setup_r5 <- function(data_path,
     message("\nUsing cached network.dat from ", dat_file)
 
   } else {
+    # check if the user has permission to write to the data directory. if not,
+    # R5 won't be able to create the required files and will fail with a
+    # not-that-enlightening error
+    error_if_no_write_permission(data_path)
 
     # stop r5 in case it is already running
     suppressMessages( r5r::stop_r5() )
@@ -177,4 +181,26 @@ setup_r5 <- function(data_path,
 
   return(r5r_core)
 
+}
+
+error_if_no_write_permission <- function(data_path) {
+  write_permission <- file.access(data_path, mode = 2)
+
+  normalized_path <- normalizePath(data_path)
+
+  if (write_permission == -1) {
+    cli::cli_abort(
+      c(
+        "Permission to write to {.path {normalized_path}} denied.",
+        i = paste0(
+          "{.pkg r5r} needs write privilege to create the network files. ",
+          "Please make sure you have this privilege in the provided directory."
+        )
+      ),
+      class = "dir_permission_denied",
+      call = rlang::caller_env()
+    )
+  }
+
+  return(invisible(TRUE))
 }
