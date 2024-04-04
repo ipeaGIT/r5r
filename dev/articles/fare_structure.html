@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2024-04-03</h4>
+            <h4 data-toc-skip class="date">2024-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -614,17 +614,21 @@ function.</p>
 <span></span>
 <span><span class="co"># calculate travel times function</span></span>
 <span><span class="va">calculate_travel_times</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span>  <span class="va">ttm_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
-<span>                               origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                               destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                               departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
-<span>                                                               format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>,</span>
-<span>                               mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
-<span>                               fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
-<span>                               max_fare <span class="op">=</span> <span class="va">fare</span>,</span>
-<span>                               max_trip_duration <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>                               max_walk_time <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span>  <span class="va">ttm_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
+<span>    <span class="va">r5r_core</span>,</span>
+<span>    origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>    destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span>    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
+<span>    departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
+<span>      <span class="st">"13-05-2019 14:00:00"</span>,</span>
+<span>      format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    time_window <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
+<span>    max_fare <span class="op">=</span> <span class="va">fare</span>,</span>
+<span>    max_trip_duration <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>    max_walk_time <span class="op">=</span> <span class="fl">20</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">ttm_df</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -649,15 +653,15 @@ cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
 <span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129863ffff              37              37</span></span>
-<span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129c2bffff              35              35</span></span>
-<span><span class="co">#&gt;  3: 89a90166da7ffff 89a90129aa7ffff              34              33</span></span>
-<span><span class="co">#&gt;  4: 89a90166da7ffff 89a90e93497ffff              39              37</span></span>
-<span><span class="co">#&gt;  5: 89a90166da7ffff 89a90129807ffff              36              35</span></span>
-<span><span class="co">#&gt;  6: 89a90166da7ffff 89a90129b5bffff              NA              39</span></span>
-<span><span class="co">#&gt;  7: 89a90166da7ffff 89a90129bbbffff              39              38</span></span>
-<span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              32              30</span></span>
-<span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              22              22</span></span>
+<span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129c2bffff              38              36</span></span>
+<span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129aa7ffff              33              30</span></span>
+<span><span class="co">#&gt;  3: 89a90166da7ffff 89a90e93497ffff              32              32</span></span>
+<span><span class="co">#&gt;  4: 89a90166da7ffff 89a90129807ffff              39              38</span></span>
+<span><span class="co">#&gt;  5: 89a90166da7ffff 89a90129b5bffff              34              34</span></span>
+<span><span class="co">#&gt;  6: 89a90166da7ffff 89a90129dd7ffff              37              37</span></span>
+<span><span class="co">#&gt;  7: 89a90166da7ffff 89a90129bbbffff              33              33</span></span>
+<span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              26              26</span></span>
+<span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              19              19</span></span>
 <span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
 <p>The plots below show the overall distribution of the travel time
 differences and unreachable destinations:</p>
@@ -707,23 +711,25 @@ unconstrained by monetary costs:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility function</span></span>
 <span><span class="va">calculate_accessibility</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span>, <span class="va">fare_string</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span>  <span class="va">access_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
-<span>                             origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                             destinations <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                             departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
-<span>                                                             format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span>,</span>
-<span>                             opportunities_colname <span class="op">=</span> <span class="st">"healthcare"</span>,</span>
-<span>                             mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
-<span>                             cutoffs <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>                             fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
-<span>                             max_fare <span class="op">=</span> <span class="va">fare</span>,</span>
-<span>                             max_trip_duration <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>                             max_walk_time <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>                             progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">access_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span></span>
+<span>    <span class="va">r5r_core</span>,</span>
+<span>    origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>    destinations <span class="op">=</span> <span class="va">points</span>,</span>
+<span>    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
+<span>    departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
+<span>      <span class="st">"13-05-2019 14:00:00"</span>,</span>
+<span>      format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    time_window <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    opportunities_colname <span class="op">=</span> <span class="st">"healthcare"</span>,</span>
+<span>    cutoffs <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>    fare_structure <span class="op">=</span> <span class="va">fare_structure</span>,</span>
+<span>    max_fare <span class="op">=</span> <span class="va">fare</span>,</span>
+<span>    max_trip_duration <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>    max_walk_time <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">access_df</span><span class="op">$</span><span class="va">max_fare</span> <span class="op">&lt;-</span> <span class="va">fare_string</span></span>
-<span></span>
 <span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">access_df</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
