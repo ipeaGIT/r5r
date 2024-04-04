@@ -10,7 +10,7 @@
   }
 
 # package global variables
-r5r_env <- new.env(parent = emptyenv()) # nocov start
+r5r_env <- new.env(parent = emptyenv())
 
 .onLoad <- function(lib, pkg) {
 
