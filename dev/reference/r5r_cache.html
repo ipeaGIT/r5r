@@ -116,19 +116,19 @@ deleted from local cache directory.</p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># download r5 JAR</span></span></span>
 <span class="r-in"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="download_r5.html">download_r5</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.0.0/r5-v7.0-all.jar</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/.cache/R/r5r/r5_jar_v7.0.0/r5-v7.0-all.jar"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># list all files cached</span></span></span>
 <span class="r-in"><span><span class="fu">r5r_cache</span><span class="op">(</span>list_files <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Files currently chached:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /home/runner/.cache/R/r5r/r5_jar_v7.0.0/r5-v7.0-all.jar</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># delete r5 JAR</span></span></span>
 <span class="r-in"><span><span class="fu">r5r_cache</span><span class="op">(</span>delete_file <span class="op">=</span> <span class="st">'r5-v7.0'</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The file 'r5-v7.0' has been removed.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The file 'r5-v7.0' is not cached.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Files currently chached:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar</span>
 </code></pre></div>
     </div>
   </div>
