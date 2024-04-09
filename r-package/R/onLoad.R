@@ -15,7 +15,7 @@ r5r_env <- new.env(parent = emptyenv()) # nocov start
 .onLoad <- function(lib, pkg) {
 
   # JAR version
-  r5r_env$r5_jar_version <- "7.0.0"
+  r5r_env$r5_jar_version <- "7.1.0"
   r5r_env$r5_jar_size <- 63493992
 
   # create dir to store R5 Jar
