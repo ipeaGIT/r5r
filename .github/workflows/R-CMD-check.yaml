@@ -56,8 +56,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'gradle'
-
 
       - name: Query dependencies
         run: |
