@@ -149,7 +149,8 @@ public abstract class R5Process {
         this.nDestinations = toIds.length;
 
         // set maxDestinations in R5 for detailed path information retrieval
-        PathResult.maxDestinations = this.nDestinations;
+        // PathResult.maxDestinations does not exist in R5 anymore
+        //PathResult.maxDestinations = this.nDestinations;
     }
 
     public void setOrigins(String[] fromIds, double[] fromLats, double[] fromLons) {
