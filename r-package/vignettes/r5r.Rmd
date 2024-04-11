@@ -51,9 +51,15 @@ install.packages('r5r')
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
-Please bear in mind that you need to have *Java SE Development Kit 11* installed on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 11 is freely available from the options below:
-- [OpenJDK](https://jdk.java.net/java-se-ri/11)
-- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+
+Please bear in mind that you need to have *Java Development Kit (JDK) 21* installed 
+on your computer to use `r5r`. No worries, you don't have to pay for it. There are
+numerous open-source JDK implementations, and you only need to install one JDK. Here are a few options:
+
+- [Adoptium/Eclipse Temurin](https://adoptium.net/) (our preferred option)
+- [Amazon Corretto](https://aws.amazon.com/corretto/)
+- [Oracle OpenJDK](https://jdk.java.net/21/). 
+
 
 If you don't know what version of Java you have installed on your computer, you can check it by running this on R console.
 ```{r, eval = FALSE}
