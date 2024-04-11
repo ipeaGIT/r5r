@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -111,7 +111,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2024-01-12</h4>
+            <h4 data-toc-skip class="date">2024-04-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/time_window.Rmd" class="external-link"><code>../vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -261,15 +261,16 @@ minutes <code>cutoffs = 45</code>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -322,6 +323,7 @@ output looks like.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_p10 travel_time_p20</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c603ffff               0               0</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c617ffff              13              13</span></span>
 <span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c60fffff               6               6</span></span>
@@ -333,6 +335,7 @@ output looks like.</p>
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c633ffff              16              16</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c6afffff              24              24</span></span>
 <span><span class="co">#&gt;     travel_time_p50 travel_time_p70 travel_time_p80</span></span>
+<span><span class="co">#&gt;               &lt;int&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt;  1:               0               0               0</span></span>
 <span><span class="co">#&gt;  2:              13              13              13</span></span>
 <span><span class="co">#&gt;  3:               6               6               6</span></span>
@@ -377,6 +380,7 @@ sets and time windows.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id departure_time draw_number  routes</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;         &lt;char&gt;       &lt;int&gt;  &lt;char&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c28bffff       14:00:00           1 4491-10</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c28bffff       14:00:00           2 4491-10</span></span>
 <span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c28bffff       14:00:00           3 4491-10</span></span>
@@ -388,16 +392,17 @@ sets and time windows.</p>
 <span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;  1:       45.6</span></span>
-<span><span class="co">#&gt;  2:       49.1</span></span>
-<span><span class="co">#&gt;  3:       51.2</span></span>
-<span><span class="co">#&gt;  4:       52.6</span></span>
-<span><span class="co">#&gt;  5:       42.0</span></span>
-<span><span class="co">#&gt;  6:       45.5</span></span>
-<span><span class="co">#&gt;  7:       50.5</span></span>
-<span><span class="co">#&gt;  8:       47.9</span></span>
-<span><span class="co">#&gt;  9:       37.1</span></span>
-<span><span class="co">#&gt; 10:       42.8</span></span></code></pre></div>
+<span><span class="co">#&gt;          &lt;num&gt;</span></span>
+<span><span class="co">#&gt;  1:       43.5</span></span>
+<span><span class="co">#&gt;  2:       37.2</span></span>
+<span><span class="co">#&gt;  3:       37.2</span></span>
+<span><span class="co">#&gt;  4:       42.4</span></span>
+<span><span class="co">#&gt;  5:       49.5</span></span>
+<span><span class="co">#&gt;  6:       42.4</span></span>
+<span><span class="co">#&gt;  7:       35.8</span></span>
+<span><span class="co">#&gt;  8:       49.7</span></span>
+<span><span class="co">#&gt;  9:       50.0</span></span>
+<span><span class="co">#&gt; 10:       52.6</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
@@ -447,7 +452,7 @@ page</a>.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-conway2018accounting" class="csl-entry">
 Conway, Matthew Wigginton, Andrew Byrd, and Michael van Eggermond. 2018.
 <span>“Accounting for Uncertainty and Variation in Accessibility Metrics
@@ -473,7 +478,7 @@ Poland.”</span> <em>Journal of Transport Geography</em> 75 (February):
 8–24. <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.007" class="external-link">https://doi.org/10.1016/j.jtrangeo.2019.01.007</a>.
 </div>
 <div id="ref-stewart2022half" class="csl-entry">
-Stewart, Anson F, and Andrew M Byrd. 2022. <span>“Half-(Head)way There:
+Stewart, Anson F, and Andrew M Byrd. 2022. <span>“Half-(head)way There:
 Comparing Two Methods to Account for Public Transport Waiting Time in
 Accessibility Indicators.”</span> <em>Environment and Planning B: Urban
 Analytics and City Science</em>, November, 23998083221137077. <a href="https://doi.org/10.1177/23998083221137077" class="external-link">https://doi.org/10.1177/23998083221137077</a>.
@@ -499,7 +504,7 @@ Analytics and City Science</em>, November, 23998083221137077. <a href="https://d
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

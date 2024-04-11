@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -112,7 +112,7 @@
       <h1 data-toc-skip>Trade-offs between travel time and monetary
 cost</h1>
             
-            <h4 data-toc-skip class="date">2024-01-12</h4>
+            <h4 data-toc-skip class="date">2024-04-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -284,6 +284,7 @@ walking + bus + rail</p>
 <span><span class="co">#&gt; Loading required namespace: testthat</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prtf</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span></span>
+<span><span class="co">#&gt;           &lt;char&gt;              &lt;char&gt;      &lt;int&gt;       &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span></span>
 <span><span class="co">#&gt; 2: public_market bus_central_station         50          23           1.0</span></span>
 <span><span class="co">#&gt; 3: public_market bus_central_station         50          19           4.5</span></span>
@@ -295,16 +296,22 @@ alternatives from the Farrapos train station to (a) the Praia de Belas
 shopping mall and (b) the Moinhos hospital. An optimum route alternative
 means that one cannot make a faster trip without increasing costs, and
 one cannot make a cheaper trip without increasing travel time.</p>
-<pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk",</span></span>
-<span><span class="co">#&gt; : Invalid .internal.selfref detected and fixed by taking a (shallow) copy of</span></span>
-<span><span class="co">#&gt; the data.table so that := can add this new column by reference. At an earlier</span></span>
-<span><span class="co">#&gt; point, this data.table has been copied by R (or was created manually using</span></span>
-<span><span class="co">#&gt; structure() or similar). Avoid names&lt;- and attr&lt;- which in R currently (and</span></span>
-<span><span class="co">#&gt; oddly) may copy the whole data.table. Use set* syntax instead to avoid copying:</span></span>
-<span><span class="co">#&gt; ?set, ?setnames and ?setattr. If this message doesn't help, please report your</span></span>
-<span><span class="co">#&gt; use case to the data.table issue tracker so the root cause can be fixed or this</span></span>
-<span><span class="co">#&gt; message improved.</span></span>
-<span><span class="co">#&gt; Warning: Removed 6 rows containing missing values (`geom_text()`).</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Warning: Invalid .internal.selfref detected and fixed by taking a (shallow)</span></span>
+<span><span class="co">#&gt; copy of the data.table so that := can add this new column by reference. At an</span></span>
+<span><span class="co">#&gt; earlier point, this data.table has been copied by R (or was created manually</span></span>
+<span><span class="co">#&gt; using structure() or similar). Avoid names&lt;- and attr&lt;- which in R currently</span></span>
+<span><span class="co">#&gt; (and oddly) may copy the whole data.table. Use set* syntax instead to avoid</span></span>
+<span><span class="co">#&gt; copying: ?set, ?setnames and ?setattr. If this message doesn't help, please</span></span>
+<span><span class="co">#&gt; report your use case to the data.table issue tracker so the root cause can be</span></span>
+<span><span class="co">#&gt; fixed or this message improved.</span></span>
+<span><span class="co">#&gt; Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2</span></span>
+<span><span class="co">#&gt; 3.5.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `legend.position.inside` argument of `theme()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
+<span><span class="co">#&gt; Warning: Removed 6 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_text()`).</span></span></code></pre>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div class="section level4">
@@ -326,7 +333,7 @@ page</a>.</p>
 <div class="section level3">
 <h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-conway2019getting" class="csl-entry">
 Conway, Matthew Wigginton, and Anson F. Stewart. 2019. <span>“Getting
 Charlie Off the MTA: A Multiobjective Optimization Method to Account for
@@ -356,7 +363,7 @@ Cost Constraints in Public Transit Accessibility Metrics.”</span>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

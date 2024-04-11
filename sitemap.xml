@@ -79,9 +79,6 @@
     <loc>/reference/assign_shortest_path.html</loc>
   </url>
   <url>
-    <loc>/reference/check_connection.html</loc>
-  </url>
-  <url>
     <loc>/reference/detailed_itineraries.html</loc>
   </url>
   <url>
@@ -113,6 +110,9 @@
   </url>
   <url>
     <loc>/reference/r5r.html</loc>
+  </url>
+  <url>
+    <loc>/reference/r5r_cache.html</loc>
   </url>
   <url>
     <loc>/reference/r5r_sitrep.html</loc>

@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@ R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2024-01-12</h4>
+            <h4 data-toc-skip class="date">2024-04-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/r5r.Rmd" class="external-link"><code>../vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -156,10 +156,19 @@ version from github.</p>
 <span></span>
 <span><span class="co"># dev version on github</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span></span></code></pre></div>
-<p>Please bear in mind that you need to have <em>Java SE Development Kit
-11</em> installed on your computer to use <code>r5r</code>. No worries,
-you don’t have to pay for it. The jdk 11 is freely available from the
-options below: - <a href="https://jdk.java.net/java-se-ri/11" class="external-link">OpenJDK</a> - <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" class="external-link">Oracle</a></p>
+<p>Please bear in mind that you need to have <em>Java Development Kit
+(JDK) 21</em> installed on your computer to use <code>r5r</code>. No
+worries, you don’t have to pay for it. There are numerous open-source
+JDK implementations, and you only need to install one JDK. Here are a
+few options:</p>
+<ul>
+<li>
+<a href="https://adoptium.net/" class="external-link">Adoptium/Eclipse Temurin</a> (our
+preferred option)</li>
+<li><a href="https://aws.amazon.com/corretto/" class="external-link">Amazon Corretto</a></li>
+<li>
+<a href="https://jdk.java.net/21/" class="external-link">Oracle OpenJDK</a>.</li>
+</ul>
 <p>If you don’t know what version of Java you have installed on your
 computer, you can check it by running this on R console.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -324,6 +333,7 @@ places.</p>
 <code class="sourceCode R"><span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poi</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     id       lat       lon</span></span>
+<span><span class="co">#&gt;                 &lt;char&gt;     &lt;num&gt;     &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:       public_market -30.02756 -51.22781</span></span>
 <span><span class="co">#&gt; 2: bus_central_station -30.02329 -51.21886</span></span>
 <span><span class="co">#&gt; 3:    gasometer_museum -30.03404 -51.24095</span></span>
@@ -340,13 +350,14 @@ set.</p>
 <span><span class="va">sampled_rows</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                 id       lon       lat population schools jobs healthcare</span></span>
-<span><span class="co">#&gt; 1: 89a90128293ffff -51.17722 -30.07165       1617       1   19          1</span></span>
-<span><span class="co">#&gt; 2: 89a9012b16fffff -51.17194 -30.09151         40       0    0          0</span></span>
-<span><span class="co">#&gt; 3: 89a90129533ffff -51.15892 -30.07043        302       0    0          0</span></span>
-<span><span class="co">#&gt; 4: 89a9012a3cfffff -51.21187 -30.10058        159       0    0          0</span></span>
-<span><span class="co">#&gt; 5: 89a90128657ffff -51.16852 -30.08209        678       0    0          0</span></span>
-<span><span class="co">#&gt; 6: 89a901283c3ffff -51.18879 -30.05679        663       0 1898          0</span></span></code></pre></div>
+<span><span class="co">#&gt;                 id       lon       lat population schools  jobs healthcare</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;     &lt;num&gt;     &lt;num&gt;      &lt;int&gt;   &lt;int&gt; &lt;int&gt;      &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1: 89a90128427ffff -51.20502 -30.08176        709       0     7          0</span></span>
+<span><span class="co">#&gt; 2: 89a9012980fffff -51.17212 -30.02075       2073       0   127          0</span></span>
+<span><span class="co">#&gt; 3: 89a90128043ffff -51.18627 -30.06949         21       1   100          0</span></span>
+<span><span class="co">#&gt; 4: 89a9012828fffff -51.17700 -30.06612        965       0   219          0</span></span>
+<span><span class="co">#&gt; 5: 89a90128657ffff -51.16852 -30.08209        678       0     0          0</span></span>
+<span><span class="co">#&gt; 6: 89a9012826bffff -51.16740 -30.05445        240       1   180          0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="building-routable-transport-network-with-setup_r5">4.1 Building routable transport network with
@@ -388,12 +399,13 @@ and visualizing Accessibility</a>.</p>
 <span>                        <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt; 1: 89a90128293ffff     schools         50     60            29</span></span>
-<span><span class="co">#&gt; 2: 89a90128293ffff  healthcare         50     60            24</span></span>
-<span><span class="co">#&gt; 3: 89a9012b16fffff     schools         50     60            14</span></span>
-<span><span class="co">#&gt; 4: 89a9012b16fffff  healthcare         50     60            10</span></span>
-<span><span class="co">#&gt; 5: 89a90129533ffff     schools         50     60            20</span></span>
-<span><span class="co">#&gt; 6: 89a90129533ffff  healthcare         50     60            18</span></span></code></pre></div>
+<span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 89a90128427ffff     schools         50     60            26</span></span>
+<span><span class="co">#&gt; 2: 89a90128427ffff  healthcare         50     60            34</span></span>
+<span><span class="co">#&gt; 3: 89a9012980fffff     schools         50     60            23</span></span>
+<span><span class="co">#&gt; 4: 89a9012980fffff  healthcare         50     60            28</span></span>
+<span><span class="co">#&gt; 5: 89a90128043ffff     schools         50     60            30</span></span>
+<span><span class="co">#&gt; 6: 89a90128043ffff  healthcare         50     60            37</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>
@@ -436,6 +448,7 @@ on this vignette</a>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          from_id               to_id travel_time_p50</span></span>
+<span><span class="co">#&gt;           &lt;char&gt;              &lt;char&gt;           &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: public_market       public_market               0</span></span>
 <span><span class="co">#&gt; 2: public_market bus_central_station              14</span></span>
 <span><span class="co">#&gt; 3: public_market    gasometer_museum              12</span></span>
@@ -466,6 +479,7 @@ sets.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          from_id         to_id departure_time draw_number access_time wait_time</span></span>
+<span><span class="co">#&gt;           &lt;char&gt;        &lt;char&gt;         &lt;char&gt;       &lt;int&gt;       &lt;num&gt;     &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: public_market public_market       14:00:00           1           0         0</span></span>
 <span><span class="co">#&gt; 2: public_market public_market       14:01:00           1           0         0</span></span>
 <span><span class="co">#&gt; 3: public_market public_market       14:02:00           1           0         0</span></span>
@@ -473,6 +487,7 @@ sets.</p>
 <span><span class="co">#&gt; 5: public_market public_market       14:04:00           1           0         0</span></span>
 <span><span class="co">#&gt; 6: public_market public_market       14:05:00           1           0         0</span></span>
 <span><span class="co">#&gt;    ride_time transfer_time egress_time routes n_rides total_time</span></span>
+<span><span class="co">#&gt;        &lt;num&gt;         &lt;num&gt;       &lt;num&gt; &lt;char&gt;   &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:         0             0           0 [WALK]       0          0</span></span>
 <span><span class="co">#&gt; 2:         0             0           0 [WALK]       0          0</span></span>
 <span><span class="co">#&gt; 3:         0             0           0 [WALK]       0          0</span></span>
@@ -599,7 +614,7 @@ page</a>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>
