@@ -79,7 +79,8 @@ if (getRversion() >= "2.15.1") {
       'travel_time_p50',
       'id',
       'i.travel_time_p50',
-      'i.isochrone'
+      'i.isochrone',
+      'edge_index'
     )
   )
 }
