@@ -4,7 +4,7 @@
 #' function can return either polygon-based or line-based isochrones.
 #' Polygon-based isochrones are generated as concave polygons based on the
 #' travel times from the trip origin to all nodes in the transport network.
-#' Meanwhile, line-based isocrhones are based on travel times from each origin
+#' Meanwhile, line-based isochronesare based on travel times from each origin
 #' to the centroids of all segments in the transport network.
 #'
 #' @template r5r_core
@@ -32,7 +32,7 @@
 #'        polygon-based isochrones (the default) based on travel times from each
 #'        origin to a sample of a random  sample nodes in the transport network
 #'        (see parameter `sample_size`). If `FALSE`, the function outputs
-#'        line-based isocrhones based on travel times from each origin to the
+#'        line-based isochronesbased on travel times from each origin to the
 #'        centroids of all segments in the transport network.
 #' @param time_window An integer. The time window in minutes for which `r5r`
 #'        will calculate multiple travel time matrices departing each minute.
@@ -265,7 +265,7 @@ isochrone <- function(r5r_core,
       get_poly <- function(cut){ # cut = 30
         temp <- subset(dest, travel_time_p50 <= cut)
 
-        if(nrow(temp)<=4){stop("Your origin point is probably located in an area where the road density is too low to create proper isochrone polygons. In this case, we strongly recommend setting `polygon_output = FALSE`")}
+        if(nrow(temp)<=4){stop(paste0("Your origin point ", orig," is probably located in an area where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))}
 
         temp_iso <- concaveman::concaveman(temp)
         temp_iso$isochrone <- cut
