@@ -2,11 +2,8 @@
 #' 
 #' This is primarily intended for debugging the fare system code. Fareto is an external tool
 #' that provides visualization for R5's McRAPTOR fare calculator. To use this,
-#' run faretoJson(...) as if you were running paretoFrontier(...). The return value is a JSON-formatted
-#' string. Clone the fareto-examples repository (https://github.com/mattwigway/fareto-examples) and put
-#' that output into the results/ directory. Serve the repository over http (e.g. python -m http.server),
-#' and browse to http://localhost:post/?load=file-name-without-dot-json. So for instance if you called it
-#' r5r.json, you would browse to http://localhost:port/?load=r5r
+#' run fareto_debug(...) as if you were running paretoFrontier(...). The return value is a JSON-formatted
+#' string. Use [rfareto](https://github.com/mattwigway/rfareto) to visualize the results.
 fareto_debug <- function(r5r_core,
                             origins,
                             destinations,
