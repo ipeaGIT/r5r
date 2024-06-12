@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2024-04-26</h4>
+            <h4 data-toc-skip class="date">2024-06-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/fare_structure.Rmd" class="external-link"><code>../vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -230,8 +230,9 @@ system can be seen in the map below.</p>
 <span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span></span>
-<span></span>
+<span><span class="co">#&gt; Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># load transit network as an SF</span></span>
 <span><span class="va">transit_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span></span>
@@ -288,14 +289,14 @@ and integration rules. Users can also create a fare structure where fare
 rules of routes differ by <code>"AGENCY_ID"</code> or
 <code>"AGENCY_NAME"</code>, or simply set <code>by = "GENERIC"</code>
 when the entire system follows the same rules.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
 <span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
 <span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span></code></pre></div>
 <p>Now let’s check the contents of the <code>fare_structure</code>
 object. We can see below that it is simply a <code>list</code> with a
 few properties and data.frames.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fare_structure</span>, n<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $max_discounted_transfers</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
@@ -401,10 +402,11 @@ rides are free of charge. In this example, we can leave
 this feature is not applicable to Porto Alegre.</p>
 <p>Here is how we can check or update the values of these
 components:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">max_discounted_transfers</span></span>
-<span><span class="co">#&gt; [1] 1</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># update transfer_time_allowance</span></span>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># update transfer_time_allowance</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fare_cap</span></span>
 <span><span class="co">#&gt; [1] Inf</span></span></code></pre></div>
 </div>
@@ -439,7 +441,7 @@ use the fare indicated in this table;</li>
 <li>
 <code>fare</code>: the full fare price of this mode.</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
 <span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
@@ -457,12 +459,12 @@ transfers between buses (which is set in the following section), that
 discount is not valid when transferring between buses within the same
 route (for example, from bus route T1 to another T1). We’ll do those
 changes below, using <code>data.table</code> notation.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">4.50</span><span class="op">]</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
 <p>Checking the results below, everything looks OK:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
 <span><span class="co">#&gt; Index: &lt;type&gt;</span></span>
 <span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
@@ -477,7 +479,7 @@ changes below, using <code>data.table</code> notation.</p>
 <code>fares_per_transfer</code> data.frame, which is shown below. Each
 row contains the fare prices for transfers between the modes specified
 in <code>first_leg</code> and <code>second_leg</code> columns.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
 <span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
@@ -492,7 +494,7 @@ integration rules in Porto Alegre.</p>
 first leg plus 2.40 for the second leg, which equals to a total fare of
 7.20.</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">7.2</span><span class="op">]</span></span></code></pre></div>
 <ul>
@@ -500,7 +502,7 @@ first leg plus 2.40 for the second leg, which equals to a total fare of
 once the 10% discount is applied. Let’s make a final update in the
 data.frame to account for that.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># conditional update fare value</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">8.37</span><span class="op">]</span></span>
 <span></span>
@@ -516,12 +518,12 @@ leave the that row in <code>fare_per_transfer</code>, transfers between
 “RAIL” and “RAIL” will count to the global
 <code>max_discounted_transfers</code> allowance.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove row</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span> <span class="op">&lt;-</span> <span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"RAIL"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>Once all changes are applied, the <code>fare_per_transfer</code>
 data.frame should look like this:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
 <span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
 <span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
@@ -537,7 +539,7 @@ data.frame should look like this:</p>
 the bus and train routes in Porto Alegre. In case there a few special
 routes (e.g. express services) with specific fares, these values can be
 updated in this <code>fares_per_route</code> data.frame.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    agency_id                                 agency_name route_id</span></span>
 <span><span class="co">#&gt;       &lt;char&gt;                                      &lt;char&gt;   &lt;char&gt;</span></span>
@@ -608,7 +610,7 @@ the trip.</li>
 <p>The following example shows travel time differences when monetary
 costs are accounted for, using the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>
 function.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## load input data</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -636,8 +638,9 @@ function.</p>
 <span></span>
 <span><span class="co"># calculate travel times, and combine results</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">calculate_travel_times</span><span class="op">(</span>fare <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: testthat</span></span>
-<span><span class="va">ttm_500</span> <span class="op">&lt;-</span> <span class="fu">calculate_travel_times</span><span class="op">(</span>fare <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required namespace: testthat</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ttm_500</span> <span class="op">&lt;-</span> <span class="fu">calculate_travel_times</span><span class="op">(</span>fare <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># merge results</span></span>
 <span><span class="va">ttm</span><span class="op">[</span><span class="va">ttm_500</span>, on <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">from_id</span>, <span class="va">to_id</span><span class="op">)</span>, <span class="va">travel_time_500</span> <span class="op">:=</span> <span class="va">i.travel_time_p50</span><span class="op">]</span></span>
@@ -649,7 +652,7 @@ affected at all (<code>travel_time_unl == travel_time_500</code>), some
 trips take a little longer to complete
 (<code>travel_time_500 &gt; travel_time_unl</code>), and other trips
 cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
 <span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
@@ -665,7 +668,7 @@ cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
 <p>The plots below show the overall distribution of the travel time
 differences and unreachable destinations:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot of overall travel time differences between limited and unlimited cost travel time matrices </span></span>
 <span><span class="va">time_difference</span> <span class="op">=</span> <span class="va">ttm</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">travel_time_500</span><span class="op">)</span>, <span class="fu">.</span><span class="op">(</span>count <span class="op">=</span> <span class="va">.N</span><span class="op">)</span>, </span>
 <span>                      by <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">travel_time_unl</span>, <span class="va">travel_time_500</span><span class="op">)</span><span class="op">]</span></span>
@@ -708,7 +711,7 @@ differences and unreachable destinations:</p>
 one can access in 60 minutes using public transport, on a R$5.00
 budget?”. We’ll do that below, and compare the results the accessibility
 unconstrained by monetary costs:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility function</span></span>
 <span><span class="va">calculate_accessibility</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span>, <span class="va">fare_string</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">access_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span></span>
@@ -745,7 +748,7 @@ unconstrained by monetary costs:</p>
 <span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we can plot the results and see how accessibility levels can
 differ quite substantially when we account for monetary costs.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot accessibility maps</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">access</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">accessibility</span><span class="op">)</span>, color<span class="op">=</span><span class="cn">NA</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -764,7 +767,7 @@ previously set after they are done with their calculations. In order to
 remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit

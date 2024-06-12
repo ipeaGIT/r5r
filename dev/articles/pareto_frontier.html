@@ -113,7 +113,7 @@
       <h1 data-toc-skip>Trade-offs between travel time and monetary
 cost</h1>
             
-            <h4 data-toc-skip class="date">2024-04-26</h4>
+            <h4 data-toc-skip class="date">2024-06-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/../vignettes/pareto_frontier.Rmd" class="external-link"><code>../vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -282,8 +282,9 @@ walking + bus + rail</p>
 <span>                      fare_cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4.5</span>, <span class="fl">4.8</span>, <span class="fl">7.20</span>, <span class="fl">8.37</span><span class="op">)</span>,</span>
 <span>                      progress <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>                      <span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: testthat</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prtf</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required namespace: testthat</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prtf</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span></span>
 <span><span class="co">#&gt;           &lt;char&gt;              &lt;char&gt;      &lt;int&gt;       &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span></span>
@@ -323,7 +324,7 @@ previously set after they are done with their calculations. In order to
 remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
