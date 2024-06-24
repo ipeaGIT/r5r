@@ -62,7 +62,7 @@ how datetimes are parsed.}
 polygon-based isochrones (the default) based on travel times from each
 origin to a sample of a random  sample nodes in the transport network
 (see parameter \code{sample_size}). If \code{FALSE}, the function outputs
-line-based isocrhones based on travel times from each origin to the
+line-based isochronesbased on travel times from each origin to the
 centroids of all segments in the transport network.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
@@ -115,7 +115,9 @@ details for more information.}
 perform per time window minute when calculating travel time matrices and
 when estimating accessibility. Defaults to 5. This would mean 300 draws in
 a 60-minute time window, for example. This parameter only affects the
-results when the GTFS feeds contain a \code{frequencies.txt} table.}
+results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
+feed does not have a frequency table, r5r still allow for multiple runs
+over the set \code{time_window} but in a deterministic way.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
@@ -141,7 +143,7 @@ Fast computation of isochrones from a given location. The
 function can return either polygon-based or line-based isochrones.
 Polygon-based isochrones are generated as concave polygons based on the
 travel times from the trip origin to all nodes in the transport network.
-Meanwhile, line-based isocrhones are based on travel times from each origin
+Meanwhile, line-based isochronesare based on travel times from each origin
 to the centroids of all segments in the transport network.
 }
 \section{Transport modes}{
