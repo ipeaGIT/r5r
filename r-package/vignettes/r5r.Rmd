@@ -124,6 +124,7 @@ The package also includes a few **support functions**.
 ## 3.1 Data requirements:
 
 To use `r5r`, you will need:
+
 - A road network data set from OpenStreetMap in `.pbf` format (*mandatory*)
 - A public transport feed in `GTFS.zip` format (optional)
 - A raster file of Digital Elevation Model data in `.tif` format (optional)

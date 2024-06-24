@@ -82,8 +82,7 @@ departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                 format = "%d-%m-%Y %H:%M:%S")
 ```
 
-ps. Please keep in mind that the Monte Carlo draws in `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table.
-
+ps. Please keep in mind that the Monte Carlo draws in `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed does not have a frequency table, r5r still allow for multiple runs over the set `time_window` in a deterministic way.
 
 
 ### 3.2 Accessibility with `time_window`.

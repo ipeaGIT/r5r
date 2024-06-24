@@ -38,12 +38,7 @@ You can install `r5r`:
 
 ```
 
-Please bear in mind that you need to have *Java Development Kit (JDK) 21* installed 
-on your computer to use `r5r`. No worries, you don't have to pay for it. There are
-numerous open-source JDK implementations, any of which should work with `r5r`. If you don't
-already have a preferred JDK, we recommend [Adoptium/Eclipse Temurin](https://adoptium.net/).
-Other open-source JDK implementations include [Amazon Corretto](https://aws.amazon.com/corretto/),
-and [Oracle OpenJDK](https://jdk.java.net/21/). You only need to install one JDK.
+Please bear in mind that you need to have *Java Development Kit (JDK) 21* installed on your computer to use `r5r`. No worries, you don't have to pay for it. There are numerous open-source JDK implementations, any of which should work with `r5r`. If you don't already have a preferred JDK, we recommend [Adoptium/Eclipse Temurin](https://adoptium.net/). Other open-source JDK implementations include [Amazon Corretto](https://aws.amazon.com/corretto/), and [Oracle OpenJDK](https://jdk.java.net/21/). You only need to install one JDK.
 
 If you don't know what version of Java you have installed on your computer,
 can check it by running this on R console.
