@@ -34,7 +34,7 @@ Description: Rapid realistic routing on multimodal transport networks
     <https://docs.conveyal.com/changelog>) corresponds with the R5 version
     that r5r depends on. This version of r5r depends on R5 v7.1.
 License: MIT + file LICENSE
-URL: https://github.com/ipeaGIT/r5r
+URL: https://github.com/ipeaGIT/r5r, https://ipeagit.github.io/r5r/
 BugReports: https://github.com/ipeaGIT/r5r/issues
 Depends:
     R (>= 3.6)
