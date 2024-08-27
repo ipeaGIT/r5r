@@ -27,14 +27,12 @@ This repository contains the `R` code (r-package folder) and the Java code
 You can install `r5r`:
 
 ```R
-# From CRAN
-  install.packages("r5r")
-  library(r5r)
+# from CRAN
+install.packages("r5r")
 
-# or use the development version with latest features
-  utils::remove.packages('r5r')
-  devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
-  library(r5r)
+# dev version with latest features
+utils::remove.packages('r5r')
+devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 
 ```
 
@@ -147,11 +145,12 @@ and Open Street Map networks of Porto Alegre (Brazil). Three steps are required 
 use `r5r`, as follows.
 
 ```R
-# allocate RAM memory to Java
+# allocate RAM memory to Java **before** loading the {r5r} library
 options(java.parameters = "-Xmx2G")
 
-# 1) build transport network, pointing to the path where OSM and GTFS data are stored
 library(r5r)
+
+# 1) build transport network, pointing to the path where OSM and GTFS data are stored
 path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 

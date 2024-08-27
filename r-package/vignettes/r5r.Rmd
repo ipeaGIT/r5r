@@ -3,7 +3,7 @@ title: 'Intro to r5r: Rapid Realistic Routing with R5 in R'
 author: "Rafael H. M. Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-abstract: "`r5r` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R<sup>5</sup>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R<sup>5</sup> Java machine <https://github.com/conveyal/r5>"
+abstract: "`{r5r}` is an R package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R<sup>5</sup>. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R<sup>5</sup> Java machine <https://github.com/conveyal/r5>"
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Intro to r5r: Rapid Realistic Routing with R5 in R} 
@@ -41,19 +41,19 @@ https://doi.org/10.32866/001c.21262).
 
 # 2. Installation
 
-You can install `r5r` from CRAN, or the development version from github.
+You can install `{r5r}` from CRAN, or the development version from github.
 
 ```{r, eval = FALSE}
-# CRAN
+# from CRAN
 install.packages('r5r')
 
-# dev version on github
+# dev version with latest features
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
 
 Please bear in mind that you need to have *Java Development Kit (JDK) 21* installed 
-on your computer to use `r5r`. No worries, you don't have to pay for it. There are
+on your computer to use `{r5r}`. No worries, you don't have to pay for it. There are
 numerous open-source JDK implementations, and you only need to install one JDK. Here are a few options:
 
 - [Adoptium/Eclipse Temurin](https://adoptium.net/) (our preferred option)
@@ -84,13 +84,13 @@ rJavaEnv::java_check_version_rjava()
 
 # 3. Usage
 
-Before we start, we need to increase the memory available to Java. This is necessary because, by default, `R` allocates only 512MB of memory for Java processes, which is not enough for large queries using `r5r`. To increase available memory to 2GB, for example, we need to set the `java.parameters` option at the beginning of the script, as follows:
+First, we need to increase the memory available to Java. This has to be done **before** loading the `{r5r}` library because, by default, `R` allocates only 512MB of memory for Java processes, which is not enough for large queries using `{r5r}`. To increase available memory to 2GB, for example, we need to set the `java.parameters` option at the beginning of the script, as follows:
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
 ```
 
-Note: It's very important to allocate enough memory before loading `r5r` or any other Java-based package, since `rJava` starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven't succeeded in your previous attempts. 
+Note: It's very important to allocate enough memory before loading `{r5r}` or any other Java-based package, since `rJava` starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven't succeeded in your previous attempts. 
 
 Then we can load the packages used in this vignette:
 
@@ -101,9 +101,9 @@ library(data.table)
 library(ggplot2)
 ```
 
-The `r5r` package has seven **fundamental functions**:
+The `{r5r}` package has seven **fundamental functions**:
 
-1. `setup_r5()` to initialize an instance of `r5r`, that also builds a routable
+1. `setup_r5()` to initialize an instance of `{r5r}`, that also builds a routable
 transport network;
 
 2. `accessibility()` for fast computation of access to opportunities considering
@@ -136,7 +136,7 @@ The package also includes a few **support functions**.
 
 ## 3.1 Data requirements:
 
-To use `r5r`, you will need:
+To use `{r5r}`, you will need:
 
 - A road network data set from OpenStreetMap in `.pbf` format (*mandatory*)
 - A public transport feed in `GTFS.zip` format (optional)
@@ -161,7 +161,7 @@ Here are a few places from where you can download these data sets:
   - Nasa's SRTMGL1 website
 
 
-Let's have a quick look at how `r5r` works using a sample data set.
+Let's have a quick look at how `{r5r}` works using a sample data set.
 
 
 
@@ -169,7 +169,7 @@ Let's have a quick look at how `r5r` works using a sample data set.
 
 ## Data
 
-To illustrate the functionalities of `r5r`, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes seven files:
+To illustrate the functionalities of `{r5r}`, the package includes a small sample data for the city of Porto Alegre (Brazil). It includes seven files:
 
 * An OpenStreetMap network: `poa_osm.pbf`
 * Two public transport feeds: `poa_eptc.zip` and `poa_trensurb.zip`
@@ -206,7 +206,7 @@ head(points)
 
 ## 4.1 Building routable transport network with `setup_r5()`
 
-The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the `setup_r5` function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the `r5r` package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.
+The first step is to build the multimodal transport network used for routing in R<sup>5</sup>. This is done with the `setup_r5` function. This function does two things: (1) downloads/updates a compiled JAR file of R<sup>5</sup> and stores it locally in the `{r5r}` package directory for future use; and (2) combines the osm.pbf and gtfs.zip data sets to build a routable network object.
 
 ```{r, message = FALSE}
 # Indicate the path where OSM and GTFS data are stored
@@ -375,7 +375,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 ### Cleaning up after usage
 
-`r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
+`{r5r}` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `{r5r}` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
 r5r::stop_r5(r5r_core)
