@@ -60,11 +60,24 @@ numerous open-source JDK implementations, and you only need to install one JDK. 
 - [Amazon Corretto](https://aws.amazon.com/corretto/)
 - [Oracle OpenJDK](https://jdk.java.net/21/). 
 
+The easiest way to install JDK is using the new [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
-If you don't know what version of Java you have installed on your computer, you can check it by running this on R console.
 ```{r, eval = FALSE}
-  rJava::.jinit()
-  rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
+# install {rJavaEnv} from CRAN
+install.packages("rJavaEnv")
+
+# check version of Java currently installed (if any) 
+rJavaEnv::java_check_version_rjava()
+
+## if this is the first time you use {rJavaEnv}, you might need to run this code
+## below to consent the installation of Java.
+# rJavaEnv::rje_consent(provided = TRUE)
+
+# install Java 21
+rJavaEnv::java_quick_install(version = 21)
+
+# check if Java was successfully installed
+rJavaEnv::java_check_version_rjava()
 
 ```
 

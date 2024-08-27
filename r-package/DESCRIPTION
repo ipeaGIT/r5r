@@ -61,6 +61,7 @@ Suggests:
     knitr,
     parallel,
     patchwork,
+    rJavaEnv,
     rmarkdown,
     testthat
 VignetteBuilder: 
