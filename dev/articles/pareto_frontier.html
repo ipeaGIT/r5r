@@ -111,7 +111,7 @@
       <h1 data-toc-skip>Trade-offs between travel time and monetary
 cost</h1>
             
-            <h4 data-toc-skip class="date">2024-07-19</h4>
+            <h4 data-toc-skip class="date">2024-08-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/pareto_frontier.Rmd" class="external-link"><code>vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="hidden name"><code>pareto_frontier.Rmd</code></div>
@@ -295,14 +295,15 @@ alternatives from the Farrapos train station to (a) the Praia de Belas
 shopping mall and (b) the Moinhos hospital. An optimum route alternative
 means that one cannot make a faster trip without increasing costs, and
 one cannot make a cheaper trip without increasing travel time.</p>
-<pre><code><span><span class="co">#&gt; Warning: Invalid .internal.selfref detected and fixed by taking a (shallow)</span></span>
-<span><span class="co">#&gt; copy of the data.table so that := can add this new column by reference. At an</span></span>
-<span><span class="co">#&gt; earlier point, this data.table has been copied by R (or was created manually</span></span>
-<span><span class="co">#&gt; using structure() or similar). Avoid names&lt;- and attr&lt;- which in R currently</span></span>
-<span><span class="co">#&gt; (and oddly) may copy the whole data.table. Use set* syntax instead to avoid</span></span>
-<span><span class="co">#&gt; copying: ?set, ?setnames and ?setattr. If this message doesn't help, please</span></span>
-<span><span class="co">#&gt; report your use case to the data.table issue tracker so the root cause can be</span></span>
-<span><span class="co">#&gt; fixed or this message improved.</span></span>
+<pre><code><span><span class="co">#&gt; Warning in `[.data.table`(pf2, , `:=`(modes, fcase(monetary_cost == 1, "Walk",</span></span>
+<span><span class="co">#&gt; : Invalid .internal.selfref detected and fixed by taking a (shallow) copy of</span></span>
+<span><span class="co">#&gt; the data.table so that := can add this new column by reference. At an earlier</span></span>
+<span><span class="co">#&gt; point, this data.table has been copied by R (or was created manually using</span></span>
+<span><span class="co">#&gt; structure() or similar). Avoid names&lt;- and attr&lt;- which in R currently (and</span></span>
+<span><span class="co">#&gt; oddly) may copy the whole data.table. Use set* syntax instead to avoid copying:</span></span>
+<span><span class="co">#&gt; ?set, ?setnames and ?setattr. If this message doesn't help, please report your</span></span>
+<span><span class="co">#&gt; use case to the data.table issue tracker so the root cause can be fixed or this</span></span>
+<span><span class="co">#&gt; message improved.</span></span>
 <span><span class="co">#&gt; Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2</span></span>
 <span><span class="co">#&gt; 3.5.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `legend.position.inside` argument of `theme()` instead.</span></span>

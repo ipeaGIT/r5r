@@ -131,10 +131,15 @@
 <span>  <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></code></pre></div>
 <p>Please bear in mind that you need to have <em>Java Development Kit (JDK) 21</em> installed on your computer to use <code>r5r</code>. No worries, you don’t have to pay for it. There are numerous open-source JDK implementations, any of which should work with <code>r5r</code>. If you don’t already have a preferred JDK, we recommend <a href="https://adoptium.net/" class="external-link">Adoptium/Eclipse Temurin</a>. Other open-source JDK implementations include <a href="https://aws.amazon.com/corretto/" class="external-link">Amazon Corretto</a>, and <a href="https://jdk.java.net/21/" class="external-link">Oracle OpenJDK</a>. You only need to install one JDK.</p>
-<p>If you don’t know what version of Java you have installed on your computer, can check it by running this on R console.</p>
+<p>The easiest way to install JDK is using the new <a href="https://www.ekotov.pro/rJavaEnv/" class="external-link">{rJavaEnv}</a> package in R:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jinit.html" class="external-link">.jinit</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">.jcall</a></span><span class="op">(</span><span class="st">"java.lang.System"</span>, <span class="st">"S"</span>, <span class="st">"getProperty"</span>, <span class="st">"java.version"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages('rJavaEnv')</span></span>
+<span></span>
+<span><span class="co"># check version of Java currently installed (if any) </span></span>
+<span><span class="fu">rJavaEnv</span><span class="fu">::</span><span class="fu"><a href="https://www.ekotov.pro/rJavaEnv/reference/java_check_version_rjava.html" class="external-link">java_check_version_rjava</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># install Java 21</span></span>
+<span><span class="fu">rJavaEnv</span><span class="fu">::</span><span class="fu"><a href="https://www.ekotov.pro/rJavaEnv/reference/java_quick_install.html" class="external-link">java_quick_install</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">21</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
