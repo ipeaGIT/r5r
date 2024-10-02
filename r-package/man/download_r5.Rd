@@ -5,15 +5,15 @@
 \title{Download \code{R5.jar}}
 \usage{
 download_r5(
-  version = "6.9.0",
+  version = NULL,
   quiet = FALSE,
   force_update = FALSE,
   temp_dir = FALSE
 )
 }
 \arguments{
-\item{version}{A string. The version of R5 to be downloaded. Defaults to the
-latest version.}
+\item{version}{A string. The version of R5 to be downloaded. When \code{NULL}, it
+defaults to the latest version.}
 
 \item{quiet}{A logical. Whether to show informative messages when downloading
 the file. Defaults to \code{FALSE}.}
@@ -34,7 +34,7 @@ Downloads \code{R5.jar} and saves it locally, inside the package directory.
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
-download_r5(version = "6.9.0", temp_dir = TRUE)
+download_r5(temp_dir = TRUE)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

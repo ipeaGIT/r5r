@@ -3,10 +3,10 @@ package org.ipea.r5r.Fares;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.ipea.r5r.JsonUtil.OBJECT_MAPPER;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FareStructure {
@@ -92,10 +92,8 @@ public class FareStructure {
     }
 
     public static FareStructure fromJson(String data) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            return objectMapper.readValue(data, FareStructure.class);
+            return OBJECT_MAPPER.readValue(data, FareStructure.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
@@ -103,10 +101,8 @@ public class FareStructure {
     }
 
     public String toJson() {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            return objectMapper.writeValueAsString(this);
+            return OBJECT_MAPPER.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

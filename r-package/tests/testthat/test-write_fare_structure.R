@@ -29,3 +29,6 @@ test_that("written structure is identical to original", {
   written_struc <- read_fare_structure(tmpfile)
   expect_identical(struc, written_struc)
 })
+
+# clean cache
+r5r::r5r_cache(delete_file = 'all')

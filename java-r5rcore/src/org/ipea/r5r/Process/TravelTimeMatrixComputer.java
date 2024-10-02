@@ -87,6 +87,11 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     private static final Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
+    @Override
+    protected boolean isOneToOne() {
+        return false;
+    }
+
     public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }

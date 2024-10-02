@@ -1,7 +1,7 @@
 # r5r: Rapid Realistic Routing with R5 in R <img align="right" src="r-package/man/figures/r5r_blue.png" alt="logo" width="180">
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/package=r5r)
-[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
+[![CRAN/METACRAN Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
 [![R build status](https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/r5r/actions)
 [![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ipeaGIT/r5r?branch=master)
 [![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg)](https://lifecycle.r-lib.org/articles/stages.html)
@@ -29,29 +29,28 @@ This repository contains the `R` code (r-package folder) and the Java code
 You can install `r5r`:
 
 ```R
-# From CRAN
-  install.packages("r5r")
-  library(r5r)
+# from CRAN
+install.packages("r5r")
 
-# or use the development version with latest features
-  utils::remove.packages('r5r')
-  devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
-  library(r5r)
+# dev version with latest features
+utils::remove.packages('r5r')
+devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 
 ```
 
-Please bear in mind that you need to have *Java SE Development Kit 11* installed 
-on your computer to use `r5r`. No worries, you don't have to pay for it. The jdk 
-11 is freely available from the options below:
-- [OpenJDK](http://jdk.java.net/java-se-ri/11)
-- [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+Please bear in mind that you need to have *Java Development Kit (JDK) 21* installed on your computer to use `r5r`. No worries, you don't have to pay for it. There are numerous open-source JDK implementations, any of which should work with `r5r`. If you don't already have a preferred JDK, we recommend [Adoptium/Eclipse Temurin](https://adoptium.net/). Other open-source JDK implementations include [Amazon Corretto](https://aws.amazon.com/corretto/), and [Oracle OpenJDK](https://jdk.java.net/21/). You only need to install one JDK.
 
-If you don't know what version of Java you have installed on your computer, you 
-can check it by running this on R console.
+The easiest way to install JDK is using the new [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
 ```R
-rJava::.jinit()
-rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
+# install.packages('rJavaEnv')
+
+# check version of Java currently installed (if any) 
+rJavaEnv::java_check_version_rjava()
+
+# install Java 21
+rJavaEnv::java_quick_install(version = 21)
+
 ```
 
 ## Usage
@@ -148,11 +147,12 @@ and Open Street Map networks of Porto Alegre (Brazil). Three steps are required 
 use `r5r`, as follows.
 
 ```R
-# allocate RAM memory to Java
+# allocate RAM memory to Java **before** loading the {r5r} library
 options(java.parameters = "-Xmx2G")
 
-# 1) build transport network, pointing to the path where OSM and GTFS data are stored
 library(r5r)
+
+# 1) build transport network, pointing to the path where OSM and GTFS data are stored
 path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = path, verbose = FALSE)
 
@@ -234,7 +234,6 @@ BibTeX:
 	shorttitle = {r5r},
 	url = {https://findingspress.org/article/21262-r5r-rapid-realistic-routing-on-multimodal-transport-networks-with-r-5-in-r},
 	doi = {10.32866/001c.21262},
-	abstract = {Routing is a key step in transport planning and research. Nonetheless, researchers and practitioners often face challenges when performing this task due to long computation times and the cost of licensed software. R{\textasciicircum}5{\textasciicircum} is a multimodal transport network router that offers multiple routing features, such as calculating travel times over a time window and returning multiple itineraries for origin/destination pairs. This paper describes r5r, an open-source R package that leverages R{\textasciicircum}5{\textasciicircum} to efficiently compute travel time matrices and generate detailed itineraries between sets of origins and destinations at no expense using seamless parallel computing.},
 	language = {en},
 	urldate = {2021-03-04},
 	journal = {Findings},

@@ -336,127 +336,134 @@ assert_fare_structure <- function(fare_structure) {
   # TODO: fares_per_route$route_id must be unique
   checkmate::assert_list(fare_structure, any.missing = FALSE)
 
-  element_names <- c(
-    "max_discounted_transfers",
-    "transfer_time_allowance",
-    "fare_cap",
-    "fares_per_type",
-    "fares_per_transfer",
-    "fares_per_route",
-    "debug_settings"
-  )
-  checkmate::assert_names(
-    names(fare_structure),
-    type = "unique",
-    must.include = element_names,
-    subset.of = element_names
-  )
-
-  checkmate::assert_number(fare_structure$max_discounted_transfers, lower = 0)
-  checkmate::assert_number(fare_structure$transfer_time_allowance, lower = 0)
-  checkmate::assert_number(fare_structure$fare_cap, lower = 0)
-
-  checkmate::expect_data_frame(fare_structure$fares_per_type)
-  checkmate::expect_character(
-    fare_structure$fares_per_type$type,
-    any.missing = FALSE,
-    unique = TRUE
-  )
-  checkmate::expect_logical(
-    fare_structure$fares_per_type$unlimited_transfers,
-    any.missing = FALSE
-  )
-  checkmate::expect_logical(
-    fare_structure$fares_per_type$allow_same_route_transfer,
-    any.missing = FALSE
-  )
-  checkmate::expect_logical(
-    fare_structure$fares_per_type$use_route_fare,
-    any.missing = FALSE
-  )
-  checkmate::expect_numeric(
-    fare_structure$fares_per_type$fare,
-    any.missing = FALSE,
-    lower = 0,
-    finite = TRUE
-  )
-
-  checkmate::expect_data_frame(fare_structure$fares_per_transfer)
-  if (length(names(fare_structure$fares_per_transfer)) > 0) {
-    checkmate::expect_character(
-      fare_structure$fares_per_transfer$first_leg,
-      any.missing = FALSE
+  if ("type" %in% names(fare_structure)) {
+    # this is an R5 built-in fare structure
+    return(invisible(TRUE))
+  } else {
+    # This is an R5R fare structure object
+    
+    element_names <- c(
+      "max_discounted_transfers",
+      "transfer_time_allowance",
+      "fare_cap",
+      "fares_per_type",
+      "fares_per_transfer",
+      "fares_per_route",
+      "debug_settings"
     )
     checkmate::assert_names(
-      fare_structure$fares_per_transfer$first_leg,
-      subset.of = unique(fare_structure$fares_per_type$type)
+      names(fare_structure),
+      type = "unique",
+      must.include = element_names,
+      subset.of = element_names
     )
+
+    checkmate::assert_number(fare_structure$max_discounted_transfers, lower = 0)
+    checkmate::assert_number(fare_structure$transfer_time_allowance, lower = 0)
+    checkmate::assert_number(fare_structure$fare_cap, lower = 0)
+
+    checkmate::expect_data_frame(fare_structure$fares_per_type)
     checkmate::expect_character(
-      fare_structure$fares_per_transfer$second_leg,
+      fare_structure$fares_per_type$type,
+      any.missing = FALSE,
+      unique = TRUE
+    )
+    checkmate::expect_logical(
+      fare_structure$fares_per_type$unlimited_transfers,
       any.missing = FALSE
     )
-    checkmate::assert_names(
-      fare_structure$fares_per_transfer$second_leg,
-      subset.of = unique(fare_structure$fares_per_type$type)
+    checkmate::expect_logical(
+      fare_structure$fares_per_type$allow_same_route_transfer,
+      any.missing = FALSE
+    )
+    checkmate::expect_logical(
+      fare_structure$fares_per_type$use_route_fare,
+      any.missing = FALSE
     )
     checkmate::expect_numeric(
-      fare_structure$fares_per_transfer$fare,
+      fare_structure$fares_per_type$fare,
       any.missing = FALSE,
       lower = 0,
       finite = TRUE
     )
+
+    checkmate::expect_data_frame(fare_structure$fares_per_transfer)
+    if (length(names(fare_structure$fares_per_transfer)) > 0) {
+      checkmate::expect_character(
+        fare_structure$fares_per_transfer$first_leg,
+        any.missing = FALSE
+      )
+      checkmate::assert_names(
+        fare_structure$fares_per_transfer$first_leg,
+        subset.of = unique(fare_structure$fares_per_type$type)
+      )
+      checkmate::expect_character(
+        fare_structure$fares_per_transfer$second_leg,
+        any.missing = FALSE
+      )
+      checkmate::assert_names(
+        fare_structure$fares_per_transfer$second_leg,
+        subset.of = unique(fare_structure$fares_per_type$type)
+      )
+      checkmate::expect_numeric(
+        fare_structure$fares_per_transfer$fare,
+        any.missing = FALSE,
+        lower = 0,
+        finite = TRUE
+      )
+    }
+
+    checkmate::expect_data_frame(fare_structure$fares_per_route)
+    checkmate::expect_character(
+      fare_structure$fares_per_route$agency_id,
+      any.missing = FALSE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$agency_name,
+      any.missing = FALSE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$route_id,
+      any.missing = FALSE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$route_short_name,
+      any.missing = FALSE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$route_long_name,
+      any.missing = FALSE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$mode,
+      any.missing = FALSE
+    )
+    checkmate::expect_numeric(
+      fare_structure$fares_per_route$route_fare,
+      any.missing = FALSE,
+      lower = 0,
+      finite = TRUE
+    )
+    checkmate::expect_character(
+      fare_structure$fares_per_route$fare_type,
+      any.missing = FALSE
+    )
+    checkmate::assert_names(
+      fare_structure$fares_per_route$fare_type,
+      subset.of = unique(fare_structure$fares_per_type$type)
+    )
+
+    debug_elements <- c("output_file", "trip_info")
+    checkmate::assert_list(fare_structure$debug_settings)
+    checkmate::assert_names(
+      names(fare_structure$debug_settings),
+      type = "unique",
+      must.include = debug_elements,
+      subset.of = debug_elements
+    )
+    checkmate::assert_string(fare_structure$debug_settings$output_file)
+    checkmate::assert_string(fare_structure$debug_settings$trip_info)
+
+    return(invisible(TRUE))
   }
-
-  checkmate::expect_data_frame(fare_structure$fares_per_route)
-  checkmate::expect_character(
-    fare_structure$fares_per_route$agency_id,
-    any.missing = FALSE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$agency_name,
-    any.missing = FALSE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$route_id,
-    any.missing = FALSE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$route_short_name,
-    any.missing = FALSE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$route_long_name,
-    any.missing = FALSE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$mode,
-    any.missing = FALSE
-  )
-  checkmate::expect_numeric(
-    fare_structure$fares_per_route$route_fare,
-    any.missing = FALSE,
-    lower = 0,
-    finite = TRUE
-  )
-  checkmate::expect_character(
-    fare_structure$fares_per_route$fare_type,
-    any.missing = FALSE
-  )
-  checkmate::assert_names(
-    fare_structure$fares_per_route$fare_type,
-    subset.of = unique(fare_structure$fares_per_type$type)
-  )
-
-  debug_elements <- c("output_file", "trip_info")
-  checkmate::assert_list(fare_structure$debug_settings)
-  checkmate::assert_names(
-    names(fare_structure$debug_settings),
-    type = "unique",
-    must.include = debug_elements,
-    subset.of = debug_elements
-  )
-  checkmate::assert_string(fare_structure$debug_settings$output_file)
-  checkmate::assert_string(fare_structure$debug_settings$trip_info)
-
-  return(invisible(TRUE))
 }

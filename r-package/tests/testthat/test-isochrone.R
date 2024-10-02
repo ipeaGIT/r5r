@@ -15,6 +15,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    mode = "WALK",
                    mode_egress = "WALK",
                    departure_datetime = Sys.time(),
+                   polygon_output = TRUE,
                    max_walk_time = Inf,
                    max_bike_time = Inf,
                    max_trip_duration = 120L,
@@ -34,6 +35,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
     mode = mode,
     mode_egress = mode_egress,
     departure_datetime = departure_datetime,
+    polygon_output = polygon_output,
     max_walk_time = max_walk_time,
     max_bike_time = max_bike_time,
     max_trip_duration = max_trip_duration,
@@ -81,6 +83,7 @@ test_that("errors due to incorrect input types - other inputs", {
 
   expect_error(tester(cutoffs = "50"))
   expect_error(tester(cutoffs = -5))
+  expect_error(tester(polygon_output = 'banana'))
   expect_error(tester(sample_size = "50"))
   expect_error(tester(sample_size = 2))
   expect_error(tester(sample_size = .1))
@@ -88,7 +91,7 @@ test_that("errors due to incorrect input types - other inputs", {
 })
 
 
-
+# test polygon-based output
 test_that("output is an sf with correct columns", {
   iso <- tester()
   expect_s3_class(iso, "sf")
@@ -96,6 +99,7 @@ test_that("output is an sf with correct columns", {
   expect_type(iso$id, "character")
   expect_type(iso$isochrone, "double")
   expect_type(iso$polygons, "list")
+  expect_true("sfc_POLYGON" %in% class(iso$polygons[1]))
 
   # more cutoffs means more rows
 
@@ -105,3 +109,13 @@ test_that("output is an sf with correct columns", {
   )
 })
 
+
+# test line-based output
+test_that("output is an sf with correct columns", {
+  iso <- tester(polygon_output = FALSE)
+  expect_s3_class(iso, "sf")
+
+  expect_type(iso$edge_index, "character")
+  expect_type(iso$isochrone, "double")
+  expect_true("sfc_LINESTRING" %in% class(iso$geometry[1]))
+})

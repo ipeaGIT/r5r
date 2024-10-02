@@ -3,7 +3,12 @@ package org.ipea.r5r;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
 import com.conveyal.r5.transit.TransitLayer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
+
+import static org.ipea.r5r.JsonUtil.OBJECT_MAPPER;
+
 
 public class RoutingProperties {
 
@@ -26,7 +31,19 @@ public class RoutingProperties {
     public TransitLayer transitLayer;
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
-        this.fareCalculator = new RuleBasedInRoutingFareCalculator(transitLayer, fareCalculatorJson);
+        // first, check to see if this is a built-in R5 fare calculator JSON representation
+        try {
+            ObjectNode node = OBJECT_MAPPER.readValue(fareCalculatorJson, ObjectNode.class);
+            // https://stackoverflow.com/questions/26190851
+            if (node.has("type")) {
+                this.fareCalculator = OBJECT_MAPPER.readValue(fareCalculatorJson, InRoutingFareCalculator.class);
+            } else {
+                this.fareCalculator = new RuleBasedInRoutingFareCalculator(transitLayer, fareCalculatorJson);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public RoutingProperties() {

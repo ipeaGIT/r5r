@@ -25,6 +25,11 @@ public class FastDetailedItineraryPlanner extends R5Process {
         return routingProperties.fareCalculator != null;
     }
 
+    @Override
+    protected boolean isOneToOne() {
+        return true;
+    }
+
     public FastDetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
     }

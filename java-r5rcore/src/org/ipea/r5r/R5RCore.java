@@ -6,6 +6,8 @@ import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
@@ -29,8 +31,8 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
-    public static final String R5_VERSION = "6.7";
-    public static final String R5R_VERSION = "1.0.0";
+    public static final String R5_VERSION = "7.0";
+    public static final String R5R_VERSION = "1.1.0";
 
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
@@ -438,6 +440,29 @@ public class R5RCore {
         paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
         return paretoFrontierCalculator.run();
+    }
+
+    /**
+     * This functions returns the Pareto frontier as raw R5 JSON (for visualization with Fareto)
+     * @throws JsonProcessingException 
+     */
+    public String faretoJson(String fromId, double fromLat, double fromLon,
+                                String toId, double toLat, double toLon,
+                                String directModes, String transitModes, String accessModes, String egressModes,
+                                String date, String departureTime,
+                                int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException, JsonProcessingException {
+        FaretoDebug calculator = new FaretoDebug(r5rThreadPool, transportNetwork, routingProperties);
+        calculator.setOrigins(new String[] {fromId}, new double[] {fromLat}, new double[] {fromLon});
+        calculator.setDestinations(new String[] {toId}, new double[] {toLat}, new double[] {toLon});
+        calculator.setModes(directModes, accessModes, transitModes, egressModes);
+        calculator.setDepartureDateTime(date, departureTime);
+        calculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
+
+        calculator.run();
+
+        // we use the conveyal objectmapper, because it is already configured to properly serialize pareto returns
+        // notably, it can handle GeoJson and names the properties the way fareto expects (camelCase rather than snake_case)
+        return com.conveyal.analysis.util.JsonUtil.objectMapper.writeValueAsString(calculator.pathResults);
     }
 
     // --------------------------------------  ACCESSIBILITY  ----------------------------------------------

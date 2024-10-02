@@ -59,6 +59,8 @@ public abstract class R5Process {
     protected int maxCarTime;
     protected int maxTripDuration;
 
+    protected abstract boolean isOneToOne();
+
     public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = transportNetwork;
@@ -147,7 +149,8 @@ public abstract class R5Process {
         this.nDestinations = toIds.length;
 
         // set maxDestinations in R5 for detailed path information retrieval
-        PathResult.maxDestinations = this.nDestinations;
+        // PathResult.maxDestinations does not exist in R5 anymore
+        //PathResult.maxDestinations = this.nDestinations;
     }
 
     public void setOrigins(String[] fromIds, double[] fromLats, double[] fromLons) {
@@ -189,7 +192,7 @@ public abstract class R5Process {
             }
 
             if (Utils.saveOutputToCsv & results != null) {
-                String filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + "_" + toIds[index] +  ".csv";
+                String filename = getCsvFilename(index);
                 results.saveToCsv(filename);
                 results.clear();
             }
@@ -202,6 +205,20 @@ public abstract class R5Process {
         }
 
         return Utils.saveOutputToCsv ? null : results;
+    }
+
+    private String getCsvFilename(int index) {
+        String filename;
+        if (this.isOneToOne()) {
+            // one-to-one functions, such as detailed itineraries
+            // save one file per origin-destination pair
+            filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + "_to_" + toIds[index] +  ".csv";
+        } else {
+            // one-to-many functions, such as travel time matrix
+            // save one file per origin
+            filename = Utils.outputCsvFolder + "/from_" + fromIds[index] +  ".csv";
+        }
+        return filename;
     }
 
     protected abstract RDataFrame runProcess(int index) throws ParseException;

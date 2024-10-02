@@ -19,13 +19,13 @@
 r5r_sitrep <- function() {
   r5r_package_version <- utils::packageVersion("r5r")
 
-  jar_dir <- system.file("jar", package = "r5r")
+  jar_dir <- r5r_env$cache_dir
   jar_dir_files <- list.files(jar_dir)
   jar_dir_files_full_names <- list.files(jar_dir, full.names = TRUE)
 
   r5r_jar <- jar_dir_files[grepl("r5r_\\d_\\d_\\d.*\\.jar", jar_dir_files)]
-  r5r_jar_version <- sub("\\.jar", "", sub("r5r_", "", r5r_jar))
-  r5r_jar_version <- gsub("_", "\\.", r5r_jar_version)
+
+  r5r_jar_version <- r5r_env$r5_jar_version
   r5r_jar_path <- jar_dir_files_full_names[
     grepl("\\/r5r_\\d_\\d_\\d*\\.jar", jar_dir_files_full_names)
   ]

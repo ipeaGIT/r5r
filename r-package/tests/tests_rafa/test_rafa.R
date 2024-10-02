@@ -1,3 +1,26 @@
+
+
+link <- 'https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/2023/PNADC_032023.zip'
+file <- basename(link)
+
+
+tic()
+httr::GET(url = link,
+          # httr::timeout(10),
+          httr::progress(),
+          httr::write_disk(file, overwrite = T))
+toc()
+
+
+tic()
+link |>
+  httr2::request() |>
+  httr2::req_progress() |>
+  httr2::req_perform(path = file)
+toc()
+
+
+
 # devtools::install_github("ipeaGIT/r5r", subdir = "r-package", force=T)
 options(java.parameters = '-Xmx10G')
 library(sf)
@@ -686,6 +709,7 @@ covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat
 covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))
 
 
+a <- covr::function_coverage(fun=r5r::r5r_cache, test_file("tests/testthat/test-z_r5r_cache.R"))
 
 
 covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testthat/test-utils.R"))
@@ -762,8 +786,15 @@ lapply(X=docs, FUN = tools::showNonASCIIfile)
 library(tictoc)
 library(beepr)
 
+# run only the tests
+testthat::test_local()
+
 
 # LOCAL
+utils::remove.packages('r5r')
+jar_dir <- tools::R_user_dir("r5r", which = "cache")
+unlink(jar_dir, recursive = TRUE)
+
 tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
 devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
@@ -776,6 +807,7 @@ tictoc::tic()
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
+beepr::beep()
 
 
 devtools::check_win_release(pkg = ".")
@@ -791,6 +823,14 @@ beepr::beep()
 tictoc::tic()
 devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 tictoc::toc()
+
+
+# extrachecks -----------------
+#' https://github.com/JosiahParry/extrachecks
+#' remotes::install_github("JosiahParry/extrachecks")
+
+library(extrachecks)
+extrachecks::extrachecks()
 
 
 
@@ -917,5 +957,6 @@ ggplot(data=df, aes(x=cost, y=time, label = modes)) +
         scale_y_continuous(name="Travel time (minutes)", breaks=seq(0,60,10)) +
         coord_cartesian(xlim = c(0,15), ylim = c(0, 60)) +
         theme_classic()
+
 
 

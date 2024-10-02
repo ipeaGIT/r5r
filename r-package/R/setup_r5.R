@@ -56,9 +56,6 @@ setup_r5 <- function(data_path,
                      elevation = "TOBLER",
                      overwrite = FALSE) {
 
-  # R5 version
-  version = "6.9.0"
-
   # check inputs ------------------------------------------------------------
 
   checkmate::assert_directory_exists(data_path)
@@ -78,13 +75,13 @@ setup_r5 <- function(data_path,
   rJava::.jinit()
   ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
   ver <- as.numeric(gsub("\\..*", "", ver))
-  if (ver != 11) {
+  if (ver != 21) {
     stop(
-      "This package requires the Java SE Development Kit 11.\n",
+      "This package requires the Java SE Development Kit 21.\n",
       "Please update your Java installation. ",
-      "The jdk 11 can be downloaded from either:\n",
-      "  - openjdk: https://jdk.java.net/java-se-ri/11\n",
-      "  - oracle: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html"
+      "The jdk 21 can be downloaded from either:\n",
+      "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
+      "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
     )
   }
 
@@ -109,40 +106,32 @@ setup_r5 <- function(data_path,
     }
 
   # check if the most recent JAR release is stored already.
-
-  fileurl <- fileurl_from_metadata(version)
+  fileurl <- fileurl_from_metadata( r5r_env$r5_jar_version )
   filename <- basename(fileurl)
 
   jar_file <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
-    file.path(system.file("jar", package = "r5r"), filename)
+    file.path( r5r_env$cache_dir, filename)
   )
 
-  # If there isn't a JAR already, download it
-  if (checkmate::test_file_exists(jar_file)) {
+  # If there isn't a JAR already larger than 60MB, download it
+  if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
     if (!verbose) message("Using cached R5 version from ", jar_file)
   } else {
-  check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
-  if (is.null(check)) {  return(invisible(NULL)) }
+  check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
+  if (is.null(check)) { return(invisible(NULL)) }
   }
 
-  # start r5r and R5 JAR
-  existing_files <- list.files(system.file("jar", package = "r5r"))
-  r5r_jar <- file.path(
-    system.file("jar", package = "r5r"),
-    existing_files[grepl("r5r", existing_files)]
-  )
-  jri_jar <- file.path(
-    system.file("jar", package = "r5r"),
-    existing_files[grepl("JRI", existing_files)]
-  )
-
   # r5r jar
+  r5r_jar <- system.file("jar/r5r.jar", package = "r5r")
   rJava::.jaddClassPath(path = r5r_jar)
+
   # R5 jar
   rJava::.jaddClassPath(path = jar_file)
+
   # JRI jar
+  jri_jar <- system.file("jri/JRI.jar", package="rJava")
   rJava::.jaddClassPath(path = jri_jar)
 
   # check if data_path already has a network.dat file
@@ -155,6 +144,10 @@ setup_r5 <- function(data_path,
     message("\nUsing cached network.dat from ", dat_file)
 
   } else {
+    # check if the user has permission to write to the data directory. if not,
+    # R5 won't be able to create the required files and will fail with a
+    # not-that-enlightening error
+    error_if_no_write_permission(data_path)
 
     # stop r5 in case it is already running
     suppressMessages( r5r::stop_r5() )
@@ -169,7 +162,12 @@ setup_r5 <- function(data_path,
     )
 
     # build new r5r_core
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
+    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation, check=F)
+    ex = rJava::.jgetEx(clear=T)
+    if (!is.null(NULL)) {
+      ex$printStackTrace()
+      return(NULL)
+    }
 
     # display a message if there is a PBF file but no GTFS data
     if (any_pbf == TRUE & any_gtfs == FALSE) {
@@ -183,4 +181,26 @@ setup_r5 <- function(data_path,
 
   return(r5r_core)
 
+}
+
+error_if_no_write_permission <- function(data_path) {
+  write_permission <- file.access(data_path, mode = 2)
+
+  normalized_path <- normalizePath(data_path)
+
+  if (write_permission == -1) {
+    cli::cli_abort(
+      c(
+        "Permission to write to {.path {normalized_path}} denied.",
+        i = paste0(
+          "{.pkg r5r} needs write privilege to create the network files. ",
+          "Please make sure you have this privilege in the provided directory."
+        )
+      ),
+      class = "dir_permission_denied",
+      call = rlang::caller_env()
+    )
+  }
+
+  return(invisible(TRUE))
 }

@@ -77,8 +77,8 @@ dest <- poi %>% sample_n(size = nrow(poi))
 
 system.time(
   frontiers_df <- pareto_itineraries(r5r_core,
-                                     origins = poi[10, ],
-                                     destinations = poi[12, ],
+                                     # origins = poi[10, ],
+                                     # destinations = poi[12, ],
                                      # origins = poi[c(10, 10), ],
                                      # destinations = poi[c(9, 12), ],
                                      origins = orig,

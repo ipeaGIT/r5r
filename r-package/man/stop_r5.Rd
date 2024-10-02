@@ -29,7 +29,6 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other support functions: 
-\code{\link{check_connection}()},
 \code{\link{fileurl_from_metadata}()}
 }
 \concept{support functions}

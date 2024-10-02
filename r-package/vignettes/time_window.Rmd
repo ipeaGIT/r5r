@@ -82,8 +82,7 @@ departure_datetime = as.POSIXct("13-05-2019 14:00:00",
                                 format = "%d-%m-%Y %H:%M:%S")
 ```
 
-ps. Please keep in mind that the `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table.
-
+ps. Please keep in mind that the Monte Carlo draws in `time_window` only affects the results when the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed does not have a frequency table, r5r still allow for multiple runs over the set `time_window` in a deterministic way.
 
 
 ### 3.2 Accessibility with `time_window`.
@@ -102,7 +101,7 @@ acc <- r5r::accessibility(r5r_core = r5r_core,
                           cutoffs = 45,
                           departure_datetime = departure_datetime,
                           progress = FALSE,
-                          time_window = 30,
+                          time_window = 60,
                           percentiles = c(10, 20, 50, 70, 80)
                           )
 
@@ -149,7 +148,7 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           max_trip_duration = max_trip_duration,
                           departure_datetime = departure_datetime,
                           progress = TRUE,
-                          time_window = 20,
+                          time_window = 60,
                           percentiles = c(10, 20, 50, 70, 80)
                           )
 
@@ -181,6 +180,17 @@ ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,
 head(ettm, n = 10)
 
 ```
+
+### 3.5 Detailed itineraries with `time_window`.
+
+In the `detailed_itineraries()` function, the number of Monte Carlo draws per minute is hardcoded to 1. This means that the function simulates only one departure per minute within the `time_window`. So if you set a `time_window` of 10 minutes, it would simulate 10 departures, one in each minute. This is largely because the `time_window` behaves slightly differently here.
+
+See, functions like `travel_time_matrix()` or `accessibility()`, for example, return estimates of travel times or accessibility. In these cases, when we use the `time_window` parameter, these functions output selected percentiles of those values generated based on the distribution of all estimates that result from the multiple trip simulations.
+
+The `detailed_itineraries()`, on the other hand, does not return travel times or accessibility estimates. It returns alternatives of trip journeys. In this case, when we use the `time_window` parameter, the function will return the optimal trip itinerary found within the time window. It can also return the optimal route along with multiple sub-optimal journey alternatives found within the time window if the the user sets `shortest_path = FALSE`.
+
+*obs.* Mind you that `detailed_itineraries()` cannot be computed for public transport trips if the the network uses a frequencies-based GTFS feed. In these cases, we suggest using `gtfstools::frequencies_to_stop_times()` to create a suitable feed.
+
 
 
 ### Cleaning up after usage

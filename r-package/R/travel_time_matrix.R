@@ -189,16 +189,6 @@ travel_time_matrix <- function(r5r_core,
   set_expanded_travel_times(r5r_core, FALSE)
   set_breakdown(r5r_core, FALSE)
 
-  # travel time matrix cannot be computed on frequencies-based GTFS when a
-  # Fare Structure is set, because it uses McRaptor
-  if (!is.null(fare_structure) & r5r_core$hasFrequencies()) {
-    stop(
-      "Assertion on 'r5r_core' failed: None of the GTFS feeds used to create ",
-      "the transit network can contain a 'frequencies' table. Try using ",
-      "gtfstools::frequencies_to_stop_times() to create a suitable feed."
-    )
-  }
-
   # call r5r_core method and process result -------------------------------
 
   travel_times <- r5r_core$travelTimeMatrix(
