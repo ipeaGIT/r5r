@@ -26,6 +26,6 @@ test_that("adequately raises errors", {
 test_that("output is correct", {
 
   # expected behavior
-  expect_s3_class( find_snap(r5r_core, points = points, mode = 'WALK'), 'data.table' )
+  expect_s3_class( find_snap(r5r_core=r5r_core, points = points, mode = 'WALK'), 'data.table')
 
 })
