@@ -88,6 +88,10 @@ First, we need to increase the memory available to Java. This has to be done **b
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
+
+# By default, {r5r} uses all CPU cores available. If you want to limit the 
+# number of CPUs to 4, for example, you can run:  
+options(java.parameters = c("-Xmx2G", "-XX:ActiveProcessorCount=4"))
 ```
 
 Note: It's very important to allocate enough memory before loading `{r5r}` or any other Java-based package, since `rJava` starts a Java Virtual Machine only once for each R session. It might be useful to restart your R session and execute the code above right after, if you notice that you haven't succeeded in your previous attempts. 
