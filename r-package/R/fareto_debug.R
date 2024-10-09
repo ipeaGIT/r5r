@@ -1,29 +1,50 @@
 #' Output Fareto-format JSON for visualization with Fareto
-#' 
-#' This is primarily intended for debugging the fare system code. Fareto is an external tool
-#' that provides visualization for R5's McRAPTOR fare calculator. To use this,
-#' run fareto_debug(...) as if you were running paretoFrontier(...). The return value is a JSON-formatted
-#' string. Use [rfareto](https://github.com/mattwigway/rfareto) to visualize the results.
+#'
+#' This is primarily intended for debugging the fare system code. Fareto is an
+#' external tool that provides visualization for R5's McRAPTOR fare calculator.
+#' To use this, run `fareto_debug(...)` like you would run `pareto_frontier(...)`.
+#' Use [rfareto](https://github.com/mattwigway/rfareto) to visualize the results.
+#'
+#' @template r5r_core
+#' @template common_arguments
+#' @template time_window_related_args
+#' @template fare_structure
+#' @template verbose
+#' @param percentiles An integer vector (max length of 5). Specifies the
+#'   percentile to use when returning travel time estimates within the given
+#'   time window. Please note that this parameter is applied to the travel time
+#'   estimates only (e.g. if the 25th percentile is specified, and the output
+#'   between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper
+#'   than 10 dollars taken between these points are shorter than 15 minutes).
+#'   Defaults to 50, returning the median travel time. If a vector with length
+#'   bigger than 1 is passed, the output contains an additional column that
+#'   specifies the percentile of each travel time and monetary cost
+#'   combination. Due to upstream restrictions, only 5 percentiles can be
+#'   specified at a time. For more details, please see R5 documentation at
+#'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
+#'
+#' @return A JSON-formatted string.
+#' @export
 fareto_debug <- function(r5r_core,
-                            origins,
-                            destinations,
-                            mode = c("WALK", "TRANSIT"),
-                            mode_egress = "WALK",
-                            departure_datetime = Sys.time(),
-                            time_window = 10L,
-                            percentiles = 50L,
-                            max_walk_time = Inf,
-                            max_bike_time = Inf,
-                            max_car_time = Inf,
-                            max_trip_duration = 120L,
-                            fare_structure = NULL,
-                            walk_speed = 3.6,
-                            bike_speed = 12,
-                            max_rides = 3,
-                            max_lts = 2,
-                            n_threads = Inf,
-                            verbose = FALSE,
-                            progress = FALSE) {
+                         origins,
+                         destinations,
+                         mode = c("WALK", "TRANSIT"),
+                         mode_egress = "WALK",
+                         departure_datetime = Sys.time(),
+                         time_window = 10L,
+                         percentiles = 50L,
+                         max_walk_time = Inf,
+                         max_bike_time = Inf,
+                         max_car_time = Inf,
+                         max_trip_duration = 120L,
+                         fare_structure = NULL,
+                         walk_speed = 3.6,
+                         bike_speed = 12,
+                         max_rides = 3,
+                         max_lts = 2,
+                         n_threads = Inf,
+                         verbose = FALSE,
+                         progress = FALSE) {
 
   checkmate::assert_class(r5r_core, "jobjRef")
 
