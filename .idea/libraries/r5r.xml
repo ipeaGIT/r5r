@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="r5r">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/r5r.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -10,6 +10,7 @@ import com.google.common.collect.Multimap;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TObjectIntMap;
+// import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.linearref.LinearLocation;
@@ -28,6 +29,13 @@ public class TransitLayerWithShapes extends TransitLayer {
     public static final boolean SAVE_SHAPES = true;
 
     private static final Logger LOG = LoggerFactory.getLogger(TransitLayerWithShapes.class);
+
+
+    // private TIntObjectHashMap<String> indexForUnscopedStopIdReversed = new TIntObjectHashMap<>();
+    
+    // public String getGTFSStopId(Integer index){
+    //     return indexForUnscopedStopIdReversed.get(index);
+    // }
 
     /**
      * Load data from a GTFS feed. Call multiple times to load multiple feeds.
@@ -51,6 +59,7 @@ public class TransitLayerWithShapes extends TransitLayer {
             String scopedStopId = String.join(":", stop.feed_id, stop.stop_id);
             // This is only used while building the TransitNetwork to look up StopTimes from the same feed.
             indexForUnscopedStopId.put(stop.stop_id, stopIndex);
+            // indexForUnscopedStopIdReversed.put(stopIndex, stop.stop_id);
             stopIdForIndex.add(scopedStopId);
             // intern zone IDs to save memory
             fareZoneForStop.add(stop.zone_id);
