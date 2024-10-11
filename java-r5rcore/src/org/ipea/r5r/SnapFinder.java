@@ -22,7 +22,12 @@ public class SnapFinder {
     protected String[] fromIds;
     protected double[] fromLats;
     protected double[] fromLons;
+    protected double radius;
     private StreetMode mode;
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
 
     public void setMode(String mode) {
         this.mode = StreetMode.valueOf(mode);
@@ -61,8 +66,7 @@ public class SnapFinder {
             snapTable.set("lat", fromLats[index]);
             snapTable.set("lon", fromLons[index]);
 
-            Split split = transportNetwork.streetLayer.findSplit(fromLats[index], fromLons[index],
-                    StreetLayer.LINK_RADIUS_METERS, this.mode);
+            Split split = transportNetwork.streetLayer.findSplit(fromLats[index], fromLons[index], this.radius, this.mode);
 
             if (split != null) {
                 // found split at StreetLayer.INITIAL_LINK_RADIUS_METERS
