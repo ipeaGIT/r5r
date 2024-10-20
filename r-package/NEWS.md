@@ -1,5 +1,9 @@
 # r5r 2.1.0 (dev)
 
+**Breaking changes**
+
+- r5r now uses the latest version of R5 V7.2. Closed [#401](https://github.com/ipeaGIT/r5r/issues/401)
+
 **Minor changes**
 
 - The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
