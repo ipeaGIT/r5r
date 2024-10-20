@@ -209,8 +209,10 @@ isochrone <- function(r5r_core,
 
     network_e <- r5r::street_network_to_sf(r5r_core)$edges
 
+    sf::st_agr(network_e) = "constant"
+
     destinations <- sf::st_centroid(network_e)
-    }
+  }
 
   # rename id col
   names(destinations)[1] <- 'id'

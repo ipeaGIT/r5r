@@ -19,7 +19,7 @@ test_that("r5r_cache", {
   r5r::download_r5(force_update = FALSE)
 
   # cache dir
-  cache_d <- paste0('r5r/r5_jar_v', "7.1.0")
+  cache_d <- paste0('r5r/r5_jar_v', r5r_env$r5_jar_version)
   cache_dir <- tools::R_user_dir(cache_d, which = 'cache')
 
   # list cached files

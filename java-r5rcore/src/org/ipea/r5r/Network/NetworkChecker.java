@@ -43,6 +43,7 @@ public class NetworkChecker {
         byte[] header = new byte[HEADER.length];
         input.read(header, 0, header.length);
         if (!Arrays.equals(HEADER, header)) {
+            input.close();
             throw new RuntimeException("Unrecognized file header. Is this an R5 Kryo network?");
         }
         String formatVersion = kryo.readObject(input, String.class);
