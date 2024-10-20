@@ -1,5 +1,19 @@
 package org.ipea.r5r.Process;
 
+import static com.google.common.base.Preconditions.checkState;
+
+import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.concurrent.ForkJoinPool;
+
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
+import org.ipea.r5r.R5.R5TravelTimeComputer;
+import org.ipea.r5r.Utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.PathResult;
@@ -7,21 +21,9 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.cluster.TravelTimeResult;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.path.RouteSequence;
+import com.conveyal.analysis.models.CsvResultOptions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import org.ipea.r5r.R5.R5TravelTimeComputer;
-import org.ipea.r5r.RDataFrame;
-import org.ipea.r5r.RoutingProperties;
-import org.ipea.r5r.Utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.text.ParseException;
-import java.util.*;
-import java.util.concurrent.ForkJoinPool;
-
-import static com.google.common.base.Preconditions.checkState;
 
 public class TravelTimeMatrixComputer extends R5Process {
 
@@ -175,7 +177,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                         checkState(nIterations > 0, "A path was stored without any iterations");
 
                         // extract the route id's
-                        String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer);
+                        String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer, new CsvResultOptions());
 
                         for (PathResult.Iteration iteration : iterations) {
                             PathBreakdown breakdown = new PathBreakdown();
