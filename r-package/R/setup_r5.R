@@ -56,9 +56,6 @@ setup_r5 <- function(data_path,
                      elevation = "TOBLER",
                      overwrite = FALSE) {
 
-  # R5 version
-  version = "7.0.0"
-
   # check inputs ------------------------------------------------------------
 
   checkmate::assert_directory_exists(data_path)
@@ -109,22 +106,21 @@ setup_r5 <- function(data_path,
     }
 
   # check if the most recent JAR release is stored already.
-
-  fileurl <- fileurl_from_metadata(version)
+  fileurl <- fileurl_from_metadata( r5r_env$r5_jar_version )
   filename <- basename(fileurl)
 
   jar_file <- data.table::fifelse(
     temp_dir,
     file.path(tempdir(), filename),
-    file.path(system.file("jar", package = "r5r"), filename)
+    file.path( r5r_env$cache_dir, filename)
   )
 
-  # If there isn't a JAR already, download it
-  if (checkmate::test_file_exists(jar_file)) {
+  # If there isn't a JAR already larger than 60MB, download it
+  if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
     if (!verbose) message("Using cached R5 version from ", jar_file)
   } else {
-  check  <- download_r5(version = version, temp_dir = temp_dir, quiet = !verbose)
-  if (is.null(check)) {  return(invisible(NULL)) }
+  check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
+  if (is.null(check)) { return(invisible(NULL)) }
   }
 
   # r5r jar
@@ -148,6 +144,10 @@ setup_r5 <- function(data_path,
     message("\nUsing cached network.dat from ", dat_file)
 
   } else {
+    # check if the user has permission to write to the data directory. if not,
+    # R5 won't be able to create the required files and will fail with a
+    # not-that-enlightening error
+    error_if_no_write_permission(data_path)
 
     # stop r5 in case it is already running
     suppressMessages( r5r::stop_r5() )
@@ -181,4 +181,26 @@ setup_r5 <- function(data_path,
 
   return(r5r_core)
 
+}
+
+error_if_no_write_permission <- function(data_path) {
+  write_permission <- file.access(data_path, mode = 2)
+
+  normalized_path <- normalizePath(data_path)
+
+  if (write_permission == -1) {
+    cli::cli_abort(
+      c(
+        "Permission to write to {.path {normalized_path}} denied.",
+        i = paste0(
+          "{.pkg r5r} needs write privilege to create the network files. ",
+          "Please make sure you have this privilege in the provided directory."
+        )
+      ),
+      class = "dir_permission_denied",
+      call = rlang::caller_env()
+    )
+  }
+
+  return(invisible(TRUE))
 }

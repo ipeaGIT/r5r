@@ -3,7 +3,6 @@
 \docType{package}
 \name{r5r}
 \alias{r5r}
-\alias{_PACKAGE}
 \alias{r5r-package}
 \title{r5r: Rapid Realistic Routing with 'R5'}
 \description{
@@ -32,6 +31,7 @@ Please check the vignettes on the \href{https://ipeagit.github.io/r5r/}{website}
 Useful links:
 \itemize{
   \item \url{https://github.com/ipeaGIT/r5r}
+  \item \url{https://ipeagit.github.io/r5r/}
   \item Report bugs at \url{https://github.com/ipeaGIT/r5r/issues}
 }
 

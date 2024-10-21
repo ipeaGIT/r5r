@@ -79,17 +79,8 @@ if (getRversion() >= "2.15.1") {
       'travel_time_p50',
       'id',
       'i.travel_time_p50',
-      'i.isochrone'
+      'i.isochrone',
+      'edge_index'
     )
-  )
-}
-
-.onAttach <- function(lib, pkg) {
-  packageStartupMessage(
-    "Please make sure you have already allocated ",
-    "some memory to Java by running:\n",
-    "  options(java.parameters = '-Xmx2G').\n",
-    "You should replace '2G' by the amount of memory you'll require. ",
-    "Currently, Java memory is set to ", getOption("java.parameters")
   )
 }

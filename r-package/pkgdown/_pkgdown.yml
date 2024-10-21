@@ -9,12 +9,9 @@ repo:
     source: https://github.com/ipeaGIT/r5r/tree/master/r-package/
 
 reference:
-  - title: "Setup"
+  - title: "Setup network"
   - contents:
-    - download_r5
     - setup_r5
-    - stop_r5
-    - r5r_sitrep
   - title: "Accessibility"
   - contents:
     - accessibility
@@ -22,18 +19,25 @@ reference:
   - contents:
     - travel_time_matrix
     - expanded_travel_time_matrix
-    - pareto_frontier
     - detailed_itineraries
+    - pareto_frontier
   - title: "Isochrone"
   - contents:
     - isochrone
-  - title: "Network"
+  - title: "Extract Network spatial data"
   - contents:
     - street_network_to_sf
     - transit_network_to_sf
-    - find_snap
   - title: "Fare structure"
   - contents:
     - setup_fare_structure
     - read_fare_structure
     - write_fare_structure
+  - title: "Support functions"
+  - contents:
+    - find_snap
+    - r5r_sitrep
+    - r5r_cache
+    - download_r5
+    - stop_r5
+

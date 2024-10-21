@@ -8,10 +8,11 @@ isochrone(
   r5r_core,
   origins,
   mode = "transit",
-  mode_egress = "WALK",
+  mode_egress = "walk",
   cutoffs = c(0, 15, 30),
   sample_size = 0.8,
   departure_datetime = Sys.time(),
+  polygon_output = TRUE,
   time_window = 10L,
   max_walk_time = Inf,
   max_bike_time = Inf,
@@ -45,17 +46,24 @@ from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \item{cutoffs}{numeric vector. Number of minutes to define the time span of
 each Isochrone. Defaults to \code{c(0, 15, 30)}.}
 
-\item{sample_size}{numeric. Sample size of nodes in the road network used to
-estimate isochrones. Defaults to \code{0.8} (80\% of all nodes in the
+\item{sample_size}{numeric. Sample size of nodes in the transport network used
+to estimate isochrones. Defaults to \code{0.8} (80\% of all nodes in the
 transport network). Value can range between \code{0.2} and \code{1}. Smaller
 values increase computation speed but return results with lower
-precision.}
+precision. This parameter has no effect when \code{polygon_output = FALSE}.}
 
 \item{departure_datetime}{A POSIXct object. Please note that the departure
 time only influences public transport legs. When working with public
 transport networks, please check the \code{calendar.txt} within your GTFS
 feeds for valid dates. Please see details for further information on
 how datetimes are parsed.}
+
+\item{polygon_output}{A Logical. If \code{TRUE}, the function outputs
+polygon-based isochrones (the default) based on travel times from each
+origin to a sample of a random  sample nodes in the transport network
+(see parameter \code{sample_size}). If \code{FALSE}, the function outputs
+line-based isochronesbased on travel times from each origin to the
+centroids of all segments in the transport network.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
@@ -107,7 +115,9 @@ details for more information.}
 perform per time window minute when calculating travel time matrices and
 when estimating accessibility. Defaults to 5. This would mean 300 draws in
 a 60-minute time window, for example. This parameter only affects the
-results when the GTFS feeds contain a \code{frequencies.txt} table.}
+results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
+feed does not have a frequency table, r5r still allows for multiple runs
+over the set \code{time_window} but in a deterministic way.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
@@ -130,8 +140,11 @@ A \verb{POLYGON  "sf" "data.frame"} for each isochrone of each origin.
 }
 \description{
 Fast computation of isochrones from a given location. The
-function estimates isochrones based on the travel times from the trip origin
-to all nodes in the road network.
+function can return either polygon-based or line-based isochrones.
+Polygon-based isochrones are generated as concave polygons based on the
+travel times from the trip origin to all nodes in the transport network.
+Meanwhile, line-based isochronesare based on travel times from each origin
+to the centroids of all segments in the transport network.
 }
 \section{Transport modes}{
 
@@ -220,6 +233,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 options(java.parameters = "-Xmx2G")
 library(r5r)
+library(ggplot2)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -230,22 +244,47 @@ points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
 origin_1 <- points[936,]
 
 departure_datetime <- as.POSIXct(
-  "13-05-2019 14:00:00",
-  format = "\%d-\%m-\%Y \%H:\%M:\%S"
+"13-05-2019 14:00:00",
+format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate isochrone from origin_1
-iso1 <- isochrone(r5r_core,
-                origin = origin_1,
-                mode = c("walk"),
+# estimate polygon-based isochrone from origin_1
+iso_poly <- isochrone(r5r_core,
+                origins = origin_1,
+                mode = "walk",
+                polygon_output = TRUE,
                 departure_datetime = departure_datetime,
                 cutoffs = seq(0, 100, 10)
                 )
-head(iso1)
+head(iso_poly)
 
+
+# estimate line-based isochrone from origin_1
+iso_lines <- isochrone(r5r_core,
+                     origins = origin_1,
+                     mode = "walk",
+                     polygon_output = FALSE,
+                     departure_datetime = departure_datetime,
+                     cutoffs = seq(0, 100, 10)
+)
+head(iso_lines)
+
+
+# plot colors
 colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
            '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
-plot(iso1['isochrone'], col = colors)
+
+# polygons
+ggplot() +
+ geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
+ scale_fill_manual(values = colors) +
+ theme_minimal()
+
+# lines
+ggplot() +
+ geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
+ scale_color_manual(values = colors) +
+ theme_minimal()
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}

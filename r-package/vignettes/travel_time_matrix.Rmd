@@ -164,6 +164,12 @@ r5r::stop_r5(r5r_core)
 rJava::.jgc(R.gc = TRUE)
 ```
 
+```{r, eval = TRUE, include = FALSE, message = FALSE}
+# clean cache (CRAN policy)
+r5r::r5r_cache(delete_file = 'all')
+
+```
+
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
 ## References

@@ -2,7 +2,6 @@ package org.ipea.r5r.Fares;
 
 import com.conveyal.r5.analyst.fare.FareBounds;
 import com.conveyal.r5.analyst.fare.InRoutingFareCalculator;
-import com.conveyal.r5.analyst.fare.TransferAllowance;
 import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
@@ -110,6 +109,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
         int currentPatternIndex = -1;
         int currentBoardTime = -1;
+        int lastFareType = -1;
 
         // first leg of multimodal trip
         if (!patterns.isEmpty()) {
@@ -119,6 +119,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             fareForState = getFullFareForRoute(currentPatternIndex);
 
             previousPatternIndex = currentPatternIndex;
+            lastFareType = faresPerRoute[currentPatternIndex].getTypeIndex();
         }
 
         // subsequent legs
@@ -129,6 +130,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             // get info on each leg
             FarePerRoute firstLegType = faresPerRoute[previousPatternIndex];
             FarePerRoute secondLegType = faresPerRoute[currentPatternIndex];
+            lastFareType = secondLegType.getTypeIndex();
 
             // check if transfer is in same type with unlimited transfers
             if (firstLegType.getTypeIndex() == secondLegType.getTypeIndex()) {
@@ -160,7 +162,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
 
         // fares are limited by the maxFare parameter
         if (fareStructure.getFareCap() > 0) {
-            fareForState = Math.min(fareForState, Math.round(fareStructure.getIntegerFareCap()));
+            fareForState = Math.min(fareForState, fareStructure.getIntegerFareCap());
         }
 
         // initialize transfer allowance
@@ -171,20 +173,20 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         // if transfer allowances are inactive (for debugging purposes), just use and empty transfer allowance and
         // quit the function
         if (!ParetoItineraryPlanner.travelAllowanceActive) {
-            return new FareBounds(fareForState, new TransferAllowance());
+            return new FareBounds(fareForState, new R5RTransferAllowance());
         }
 
         // pattern is valid?
         if (currentPatternIndex == -1) {
             // no public transport patterns - return empty transfer allowance
-            return new FareBounds(fareForState, new TransferAllowance());
+            return new FareBounds(fareForState, new R5RTransferAllowance());
         }
 
         // remaining transfers
         int numberOfRemainingTransfers = fareStructure.getMaxDiscountedTransfers() - discountsApplied;
         if (numberOfRemainingTransfers <= 0) {
             // no remaining available transfers - return empty transfer allowance
-            return new FareBounds(fareForState, new TransferAllowance());
+            return new FareBounds(fareForState, new R5RTransferAllowance());
         }
 
         // get max benefit from possible transfers
@@ -208,7 +210,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int expirationTime = currentBoardTime + fareStructure.getTransferTimeAllowanceSeconds();
 
         // build transfer allowance considering constraints above
-        TransferAllowance transferAllowance = new TransferAllowance(maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
+        R5RTransferAllowance transferAllowance = new R5RTransferAllowance(lastFareType, maxAllowanceValue, numberOfRemainingTransfers, expirationTime);
         return new FareBounds(fareForState, transferAllowance);
 
     }

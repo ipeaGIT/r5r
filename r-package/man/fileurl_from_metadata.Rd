@@ -4,20 +4,20 @@
 \alias{fileurl_from_metadata}
 \title{Get most recent JAR file url from metadata}
 \usage{
-fileurl_from_metadata(version)
+fileurl_from_metadata(version = NULL)
 }
 \arguments{
-\item{version}{A string, the version of R5's to get the filename of.}
+\item{version}{A string. The version of R5 to be downloaded. When \code{NULL}, it
+defaults to the latest version.}
 }
 \value{
-The a url a string.
+A url a string.
 }
 \description{
 Returns the most recent JAR file url from metadata, depending on the version.
 }
 \seealso{
 Other support functions: 
-\code{\link{check_connection}()},
 \code{\link{stop_r5}()}
 }
 \concept{support functions}

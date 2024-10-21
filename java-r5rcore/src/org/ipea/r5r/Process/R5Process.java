@@ -1,14 +1,12 @@
 package org.ipea.r5r.Process;
 
 import com.conveyal.r5.analyst.FreeFormPointSet;
-import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
@@ -149,7 +147,8 @@ public abstract class R5Process {
         this.nDestinations = toIds.length;
 
         // set maxDestinations in R5 for detailed path information retrieval
-        PathResult.maxDestinations = this.nDestinations;
+        // PathResult.maxDestinations does not exist in R5 anymore
+        //PathResult.maxDestinations = this.nDestinations;
     }
 
     public void setOrigins(String[] fromIds, double[] fromLats, double[] fromLons) {

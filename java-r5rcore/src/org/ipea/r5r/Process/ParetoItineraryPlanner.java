@@ -7,7 +7,6 @@ import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;

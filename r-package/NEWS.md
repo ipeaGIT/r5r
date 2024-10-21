@@ -1,4 +1,27 @@
-# r5r 1.1.0999 dev
+# r5r 2.1.0 (dev)
+
+**Breaking changes**
+
+- r5r now uses the latest version of R5 V7.2. Closed [#401](https://github.com/ipeaGIT/r5r/issues/401)
+
+**Minor changes**
+
+- The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
+
+
+
+# r5r 2.0
+
+**Breaking changes**
+
+- r5r uses now JDK 21 or higher (Breaking changes). Closed [#350](https://github.com/ipeaGIT/r5r/issues/350).
+- r5r now uses the latest version of R5 V7.1. Closed [#350](https://github.com/ipeaGIT/r5r/issues/350)
+
+**Major changes**
+
+- r5r now stores R5 Jar file at user dir using `tools::R_user_dir()`
+- New function `r5r_cache()` to manage the cache of the R5 Jar file.
+- By using the JDK 21, this version of r5r also fixed an incompatibility with MAC ARM processors. Closed [#315](https://github.com/ipeaGIT/r5r/issues/315)
 
 **Minor changes**
 
@@ -9,7 +32,7 @@
 - Updated the vignette on time window to explain how this parameter behaves when used in the `detailed_itineraries()` function.
 
 **Bug Fixes**
-- Fixed bug that prevented the using the `output_dir` parameter in the `detailed_itineraries(all_to_all = TRUE)` function. Closes [#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution ([PR #354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
+- Fixed bug that prevented the use the `output_dir` parameter in the `detailed_itineraries(all_to_all = TRUE)` function. Closes [#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution ([PR #354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
 - Fixed bug that prevented  `detailed_itineraries` from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.
 
 **New contributors to r5r**

@@ -63,3 +63,23 @@ test_that("'overwrite' parameter works correctly", {
   )
 
 })
+
+test_that("throws error if write access to given dir is denied", {
+  # this test only works correctly with unix OSes. not sure how to change
+  # permissions from inside R in windows
+  skip_if_not(.Platform$OS.type == "unix")
+
+  invisible(file.copy(path, tempdir(), recursive = TRUE))
+
+  tmpdir <- file.path(tempdir(), "poa")
+
+  data_files <- list.files(tmpdir, full.names = TRUE)
+  files_to_remove <- data_files[grepl("network|\\.pbf\\.mapdb", data_files)]
+  if (length(files_to_remove) > 0) invisible(file.remove(files_to_remove))
+
+  Sys.chmod(tmpdir, "555")
+
+  expect_error(setup_r5(tmpdir), class = "dir_permission_denied")
+
+  Sys.chmod(tmpdir, "755")
+})
