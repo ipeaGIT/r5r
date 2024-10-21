@@ -6,7 +6,7 @@
 
 **Minor changes**
 
-- The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
+- The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or road-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
 
 
 
