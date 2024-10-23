@@ -84,7 +84,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
             travelTimesTable.set("option", tripId.incrementAndGet());
             travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
-            travelTimesTable.set("total_duration", (trip.getTotalDurationSeconds() ));
+            travelTimesTable.set("total_duration", Utils.roundTo1Place(trip.getTotalDurationSeconds() ));
             travelTimesTable.set("total_distance", trip.getTotalDistance());
 
             if (hasFares())
@@ -100,8 +100,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 if (hasFares())
                     travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
 
-                travelTimesTable.set("segment_duration", leg.getLegDurationSeconds() );
-                travelTimesTable.set("wait", (leg.getWaitTime()));
+                travelTimesTable.set("segment_duration", Utils.roundTo1Place(leg.getLegDurationSeconds()) );
+                travelTimesTable.set("wait", Utils.roundTo1Place((leg.getWaitTime())));
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
                 travelTimesTable.set("edge_id_list", leg.getEdgeIDList());
