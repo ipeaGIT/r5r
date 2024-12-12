@@ -75,14 +75,17 @@ setup_r5 <- function(data_path,
   rJava::.jinit()
   ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
   ver <- as.numeric(gsub("\\..*", "", ver))
+
   if (ver != 21) {
-    stop(
-      "This package requires the Java SE Development Kit 21.\n",
-      "Please update your Java installation. ",
-      "The jdk 21 can be downloaded from either:\n",
-      "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
-      "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
-    )
+    cli::cli_abort(c(
+      "r5r requires the Java SE Development Kit {.strong 21}.",
+      "x" = "Please update your Java installation.",
+      ">" = "The JDK 21 can be downloaded from either of these links:",
+      "  - {cli::style_hyperlink('OpenJDK', 'https://jdk.java.net/java-se-ri/21')}",
+      "  - {cli::style_hyperlink('Adoptium/Eclipse Temurin', 'https://adoptium.net')}",
+      "  - {cli::style_hyperlink('Amazon Corretto', 'https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html')}",
+      "Alternatively, consider setting up a Java environment with the {cli::style_hyperlink('rJavaEnv', 'https://www.ekotov.pro/rJavaEnv')} package."
+    ))
   }
 
   # expand data_path to full path, as required by rJava api call
