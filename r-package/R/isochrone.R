@@ -246,6 +246,18 @@ isochrone <- function(r5r_core,
     ttm[, isochrone := cut(x=travel_time_p50, breaks=cutoffs, labels=F)]
     ttm[, isochrone := cutoffs[cutoffs>0][isochrone]]
 
+    # check if there are at least 3 points to build a
+    if (isTRUE(polygon_output)) {
+
+      check_number_destinations <- ttm[, .(count=.N), by=.(from_id, isochrone) ]
+      temp_ids <- subset(check_number_destinations, count<3)$from_id
+
+      if(length(temp_ids)>0){
+        stop(paste0("Problem in the following origin points: ",
+                    paste0(temp_ids, collapse = ', '),". These origin points are probably located in areas where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))
+      }
+
+    }
 
     ### fun to get isochrones for each origin
     # polygon-based isochrones
@@ -264,8 +276,6 @@ isochrone <- function(r5r_core,
 
       get_poly <- function(cut){ # cut = 30
         temp <- subset(dest, travel_time_p50 <= cut)
-
-        if(nrow(temp)<=4){stop(paste0("Your origin point ", orig," is probably located in an area where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))}
 
         temp_iso <- concaveman::concaveman(temp)
         temp_iso$isochrone <- cut
