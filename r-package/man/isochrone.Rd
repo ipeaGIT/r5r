@@ -62,7 +62,7 @@ how datetimes are parsed.}
 polygon-based isochrones (the default) based on travel times from each
 origin to a sample of a random  sample nodes in the transport network
 (see parameter \code{sample_size}). If \code{FALSE}, the function outputs
-line-based isochronesbased on travel times from each origin to the
+line-based isochrones based on travel times from each origin to the
 centroids of all segments in the transport network.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
