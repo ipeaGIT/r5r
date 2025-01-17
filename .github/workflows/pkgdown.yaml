@@ -19,6 +19,12 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Java setup
+        uses: actions/setup-java@v1
+        with:
+          java-version: '21'
+          java-package: jdk
+
       - name: Copy README.md to r-package/index.md
         run: cp README.md r-package/index.md
 
