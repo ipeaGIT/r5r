@@ -2,12 +2,14 @@ on:
   push:
     paths:
       - r-package/**
+      - .github/workflows/test-coverage.yaml
     branches:
       - dev
       - master
   pull_request:
     paths:
       - r-package/**
+      - .github/workflows/test-coverage.yaml
     branches:
       - dev
       - master

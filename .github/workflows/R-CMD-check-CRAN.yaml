@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - r-package/**
+      - .github/workflows/R-CMD-check-CRAN.yaml
     branches:
       - master
       - dev
   pull_request:
     paths:
       - r-package/**
+      - .github/workflows/R-CMD-check-CRAN.yaml
     branches:
       - master
       - dev

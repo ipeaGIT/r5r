@@ -3,6 +3,7 @@ on:
     paths:
       - r-package/**
       - README.md
+      - .github/workflows/pkgdown.yaml
     branches:
       - master
 
