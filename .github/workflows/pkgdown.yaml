@@ -3,7 +3,6 @@ on:
     paths:
       - r-package/**
       - README.md
-      - .github/workflows/pkgdown.yaml
     branches:
       - master
 
@@ -11,9 +10,8 @@ name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-20.04
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-22.04
+
     steps:
       - uses: actions/checkout@v2
 
@@ -21,55 +19,21 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Java setup
-        uses: actions/setup-java@v1
-        with:
-          java-version: '21'
-          java-package: jdk
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "../.github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), "../.github/R-version")
-        shell: Rscript {0}
-        working-directory: r-package
-
-      - name: Cache R packages
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
-      - name: Install system dependencies
-        run: |
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
-          sudo apt install libharfbuzz-dev libfribidi-dev
-        working-directory: r-package
-
-      - name: Install dependencies
-        run: |
-          remotes::install_deps(dependencies = TRUE)
-          install.packages("pkgdown")
-        shell: Rscript {0}
-        working-directory: r-package
-
       - name: Copy README.md to r-package/index.md
         run: cp README.md r-package/index.md
 
       - name: Update r-package/index.md figures source
         run: sed -i 's/\"r-package\//\"/g' r-package/index.md
 
-      - name: Install package
-        run: R CMD INSTALL .
-        working-directory: r-package
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
+          working-directory: r-package
 
-      - name: Deploy package
+      - name: Build and deploy pkgdown site
         run: |
-          git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          Rscript -e 'pkgdown::deploy_to_branch(pkg = "./r-package", new_process = FALSE)'
+          git config --local user.email "actions@github.com"
+          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+        working-directory: r-package
