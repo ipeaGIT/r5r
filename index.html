@@ -4,116 +4,84 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Rapid Realistic Routing with R5 • r5r</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" sizes="any" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Rapid Realistic Routing with R5">
+<script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Rapid Realistic Routing with R5">
+<meta name="description" content="Rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5, the Rapid Realistic Routing on Real-world and Reimagined networks engine &lt;https://github.com/conveyal/r5&gt;. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine. While R5 is developed by Conveyal, the package r5r is independently developed by a team at the Institute for Applied Economic Research (Ipea) with contributions from collaborators. Apart from the documentation in this package, users will find additional information on R5 documentation at &lt;https://docs.conveyal.com/&gt;. Although we try to keep new releases of r5r in synchrony with R5, the development of R5 follows Conveyal's independent update process. Hence, users should confirm the R5 version implied by the Conveyal user manual (see &lt;https://docs.conveyal.com/changelog&gt;) corresponds with the R5 version that r5r depends on. This version of r5r depends on R5 v7.1.">
 <meta property="og:description" content="Rapid realistic routing on multimodal transport networks (walk, bike, public transport and car) using R5, the Rapid Realistic Routing on Real-world and Reimagined networks engine &lt;https://github.com/conveyal/r5&gt;. The package allows users to generate detailed routing analysis or calculate travel time matrices using seamless parallel computing on top of the R5 Java machine. While R5 is developed by Conveyal, the package r5r is independently developed by a team at the Institute for Applied Economic Research (Ipea) with contributions from collaborators. Apart from the documentation in this package, users will find additional information on R5 documentation at &lt;https://docs.conveyal.com/&gt;. Although we try to keep new releases of r5r in synchrony with R5, the development of R5 follows Conveyal's independent update process. Hence, users should confirm the R5 version implied by the Conveyal user manual (see &lt;https://docs.conveyal.com/changelog&gt;) corresponds with the R5 version that r5r depends on. This version of r5r depends on R5 v7.1.">
-<meta property="og:image" content="/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="articles/r5r.html">Get started</a>
-</li>
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="index.html">r5r</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/accessibility.html">Accessibility</a>
-    </li>
-    <li>
-      <a href="articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a>
-    </li>
-    <li>
-      <a href="articles/faq.html">FAQ - Frequently Asked Questions</a>
-    </li>
-    <li>
-      <a href="articles/fare_structure.html">Accounting for monetary costs</a>
-    </li>
-    <li>
-      <a href="articles/isochrones.html">Isochrones</a>
-    </li>
-    <li>
-      <a href="articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a>
-    </li>
-    <li>
-      <a href="articles/time_window.html">Using the time_window parameter</a>
-    </li>
-    <li>
-      <a href="articles/travel_time_matrix.html">Travel time matrices</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/r5r.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/accessibility.html">Accessibility</a></li>
+    <li><a class="dropdown-item" href="articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
+    <li><a class="dropdown-item" href="articles/faq.html">FAQ - Frequently Asked Questions</a></li>
+    <li><a class="dropdown-item" href="articles/fare_structure.html">Accounting for monetary costs</a></li>
+    <li><a class="dropdown-item" href="articles/isochrones.html">Isochrones</a></li>
+    <li><a class="dropdown-item" href="articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="articles/time_window.html">Using the time_window parameter</a></li>
+    <li><a class="dropdown-item" href="articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
 </li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/ipeaGIT/r5r/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipeaGIT/r5r/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="reference/figures/r5r_blue.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
+</h1>
 </div>
-<!--/.navbar -->
-
-
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-
-<div class="section level1">
-<div class="page-header"><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="reference/figures/r5r_blue.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
-</h1></div>
 <p><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a> <a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a> <a href="https://github.com/ipeaGIT/r5r/actions" class="external-link"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://app.codecov.io/gh/ipeaGIT/r5r?branch=master" class="external-link"><img src="https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg" alt="Lifecycle: maturing"></a> <a href="https://doi.org/10.32866/001c.21262" class="external-link"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></p>
 <p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
-<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/r5r.html" class="external-link">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html" class="external-link">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> might be expanded to incorporate other functionality from R<sup>5</sup>.</p>
+<p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/r5r.html">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> might be expanded to incorporate other functionality from R<sup>5</sup>.</p>
 <p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -183,7 +151,7 @@
 </ul>
 </li>
 </ol>
-<p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info on how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html" class="external-link">this vignette</a>.</p>
+<p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info on how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">this vignette</a>.</p>
 <p>The package also includes a few <strong>support functions</strong>.</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -254,7 +222,7 @@
 <div class="section level3">
 <h3 id="demonstration-on-sample-data">Demonstration on sample data<a class="anchor" aria-label="anchor" href="#demonstration-on-sample-data"></a>
 </h3>
-<p>See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/r5r.html" class="external-link">intro Vignette</a>. To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
+<p>See a detailed demonstration of <code>r5r</code> in this <a href="https://ipeagit.github.io/r5r/articles/r5r.html">intro Vignette</a>. To illustrate functionality, the package includes a small sample data set of the public transport and Open Street Map networks of Porto Alegre (Brazil). Three steps are required to use <code>r5r</code>, as follows.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># allocate RAM memory to Java</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -331,7 +299,7 @@
 <p>The <a href="https://github.com/conveyal/r5" class="external-link">R<sup>5</sup> routing engine</a> is developed at <a href="https://www.conveyal.com/" class="external-link">Conveyal</a> with contributions from several people.</p>
 </div>
 <div class="section level1">
-<h1 id="citation-">Citation <img align="right" src="reference/figures/ipea_logo.png" alt="ipea" width="300"><a class="anchor" aria-label="anchor" href="#citation-"></a>
+<h1 id="citation-">Citation <a class="anchor" aria-label="anchor" href="#citation-"></a>
 </h1>
 <p>The R package <strong>r5r</strong> is developed by a team at the Institute for Applied Economic Research (Ipea), Brazil. If you use this package in research publications, we please cite it as:</p>
 <ul>
@@ -363,10 +331,7 @@
 </ul>
 </div>
 
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=r5r" class="external-link">View on CRAN</a></li>
@@ -407,23 +372,20 @@
 
 
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
