@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accounting for monetary costs • r5r</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -38,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -109,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2024-12-13</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/fare_structure.Rmd" class="external-link"><code>vignettes/fare_structure.Rmd</code></a></small>
       <div class="hidden name"><code>fare_structure.Rmd</code></div>
@@ -225,9 +224,6 @@ system can be seen in the map below.</p>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.1.0/r5-v7.1-all.jar</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span></span>
 <span></span>
 <span><span class="co"># load transit network as an SF</span></span>
 <span><span class="va">transit_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
@@ -236,7 +232,6 @@ system can be seen in the map below.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">transit_network</span><span class="op">$</span><span class="va">routes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
 <p>According to the fare rules in Porto Alegre, as in most Brazilian
 cities, the cost a a journey depends on a combination of number of
 subsequent trips and/or transport modes. In the case of Porto Alegre,
@@ -293,77 +288,7 @@ when the entire system follows the same rules.</p>
 object. We can see below that it is simply a <code>list</code> with a
 few properties and data.frames.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fare_structure</span>, n<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $max_discounted_transfers</span></span>
-<span><span class="co">#&gt; [1] 1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $transfer_time_allowance</span></span>
-<span><span class="co">#&gt; [1] 120</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fare_cap</span></span>
-<span><span class="co">#&gt; [1] Inf</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fares_per_type</span></span>
-<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
-<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
-<span><span class="co">#&gt; 2:   RAIL               FALSE                     FALSE          FALSE   4.8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS   4.8</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS   4.8</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL   4.8</span></span>
-<span><span class="co">#&gt; 4:      RAIL       RAIL   4.8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fares_per_route</span></span>
-<span><span class="co">#&gt;      agency_id                                 agency_name  route_id</span></span>
-<span><span class="co">#&gt;         &lt;char&gt;                                      &lt;char&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:      EPTC Empresa Publica de Transportes e Circulação      1112</span></span>
-<span><span class="co">#&gt;   2:      EPTC Empresa Publica de Transportes e Circulação       149</span></span>
-<span><span class="co">#&gt;   3:      EPTC Empresa Publica de Transportes e Circulação       165</span></span>
-<span><span class="co">#&gt;   4:      EPTC Empresa Publica de Transportes e Circulação       168</span></span>
-<span><span class="co">#&gt;   5:      EPTC Empresa Publica de Transportes e Circulação       173</span></span>
-<span><span class="co">#&gt;  ---                                                                </span></span>
-<span><span class="co">#&gt; 113:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
-<span><span class="co">#&gt; 114:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
-<span><span class="co">#&gt; 115:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
-<span><span class="co">#&gt; 116:     TRENS                                    TRENSURB    LINHA1</span></span>
-<span><span class="co">#&gt; 117:     TRENS                                    TRENSURB LINHAAERO</span></span>
-<span><span class="co">#&gt;      route_short_name                           route_long_name   mode</span></span>
-<span><span class="co">#&gt;                &lt;char&gt;                                    &lt;char&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:             1112                         HIPICA / TRISTEZA    BUS</span></span>
-<span><span class="co">#&gt;   2:              149                                    ICARAI    BUS</span></span>
-<span><span class="co">#&gt;   3:              165                                     COHAB    BUS</span></span>
-<span><span class="co">#&gt;   4:              168                  BELEM NOVO(VIA TRISTEZA)    BUS</span></span>
-<span><span class="co">#&gt;   5:              173                                   CAMAQUA    BUS</span></span>
-<span><span class="co">#&gt;  ---                                                                  </span></span>
-<span><span class="co">#&gt; 113:               T9                                       PUC    BUS</span></span>
-<span><span class="co">#&gt; 114:             TR60                         TRONCAL TRI‘NGULO    BUS</span></span>
-<span><span class="co">#&gt; 115:             TR62                          TRONCAL BALTAZAR    BUS</span></span>
-<span><span class="co">#&gt; 116:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL</span></span>
-<span><span class="co">#&gt; 117:             AREO                        AEROMOVEL TRENSURB   RAIL</span></span>
-<span><span class="co">#&gt;      route_fare fare_type</span></span>
-<span><span class="co">#&gt;           &lt;num&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:        4.8       BUS</span></span>
-<span><span class="co">#&gt;   2:        4.8       BUS</span></span>
-<span><span class="co">#&gt;   3:        4.8       BUS</span></span>
-<span><span class="co">#&gt;   4:        4.8       BUS</span></span>
-<span><span class="co">#&gt;   5:        4.8       BUS</span></span>
-<span><span class="co">#&gt;  ---                     </span></span>
-<span><span class="co">#&gt; 113:        4.8       BUS</span></span>
-<span><span class="co">#&gt; 114:        4.8       BUS</span></span>
-<span><span class="co">#&gt; 115:        4.8       BUS</span></span>
-<span><span class="co">#&gt; 116:        4.8      RAIL</span></span>
-<span><span class="co">#&gt; 117:        4.8      RAIL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $debug_settings</span></span>
-<span><span class="co">#&gt; $debug_settings$output_file</span></span>
-<span><span class="co">#&gt; [1] ""</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $debug_settings$trip_info</span></span>
-<span><span class="co">#&gt; [1] "MODE"</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fare_structure</span>, n<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="global-properties">3.1 Global Properties<a class="anchor" aria-label="anchor" href="#global-properties"></a>
 </h3>
@@ -400,10 +325,8 @@ this feature is not applicable to Porto Alegre.</p>
 components:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">max_discounted_transfers</span></span>
-<span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span> <span class="co"># update transfer_time_allowance</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fare_cap</span></span>
-<span><span class="co">#&gt; [1] Inf</span></span></code></pre></div>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fare_cap</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -437,11 +360,7 @@ use the fare indicated in this table;</li>
 <code>fare</code>: the full fare price of this mode.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
-<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
-<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
-<span><span class="co">#&gt; 2:   RAIL               FALSE                     FALSE          FALSE   4.8</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span></code></pre></div>
 <p>We need to do a few small changes in the <code>fares_per_type</code>
 table to accomodate the fare rules of Porto Alegre. In the
 <code>"RAIL"</code> mode, we need to set
@@ -460,12 +379,7 @@ changes below, using <code>data.table</code> notation.</p>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
 <p>Checking the results below, everything looks OK:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span>
-<span><span class="co">#&gt; Index: &lt;type&gt;</span></span>
-<span><span class="co">#&gt;      type unlimited_transfers allow_same_route_transfer use_route_fare  fare</span></span>
-<span><span class="co">#&gt;    &lt;char&gt;              &lt;lgcl&gt;                    &lt;lgcl&gt;         &lt;lgcl&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:    BUS               FALSE                     FALSE          FALSE   4.8</span></span>
-<span><span class="co">#&gt; 2:   RAIL                TRUE                      TRUE          FALSE   4.5</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="configure-fares-by-transfers">3.3 Configure fares by transfers<a class="anchor" aria-label="anchor" href="#configure-fares-by-transfers"></a>
@@ -475,13 +389,7 @@ changes below, using <code>data.table</code> notation.</p>
 row contains the fare prices for transfers between the modes specified
 in <code>first_leg</code> and <code>second_leg</code> columns.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS   4.8</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS   4.8</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL   4.8</span></span>
-<span><span class="co">#&gt; 4:      RAIL       RAIL   4.8</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span></code></pre></div>
 <p>Let’s update <code>fare_per_transfer</code> to account for the actual
 integration rules in Porto Alegre.</p>
 <ul>
@@ -519,12 +427,7 @@ leave the that row in <code>fare_per_transfer</code>, transfers between
 <p>Once all changes are applied, the <code>fare_per_transfer</code>
 data.frame should look like this:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span>
-<span><span class="co">#&gt;    first_leg second_leg  fare</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:       BUS        BUS  7.20</span></span>
-<span><span class="co">#&gt; 2:      RAIL        BUS  8.37</span></span>
-<span><span class="co">#&gt; 3:       BUS       RAIL  8.37</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routes-configuration">3.4 Routes configuration<a class="anchor" aria-label="anchor" href="#routes-configuration"></a>
@@ -535,31 +438,7 @@ the bus and train routes in Porto Alegre. In case there a few special
 routes (e.g. express services) with specific fares, these values can be
 updated in this <code>fares_per_route</code> data.frame.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    agency_id                                 agency_name  route_id</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;                                      &lt;char&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:      EPTC Empresa Publica de Transportes e Circulação        T8</span></span>
-<span><span class="co">#&gt; 2:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
-<span><span class="co">#&gt; 3:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
-<span><span class="co">#&gt; 4:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
-<span><span class="co">#&gt; 5:     TRENS                                    TRENSURB    LINHA1</span></span>
-<span><span class="co">#&gt; 6:     TRENS                                    TRENSURB LINHAAERO</span></span>
-<span><span class="co">#&gt;    route_short_name                           route_long_name   mode route_fare</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;                                    &lt;char&gt; &lt;char&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:               T8                       CAMPUS  /  FARRAPOS    BUS        4.8</span></span>
-<span><span class="co">#&gt; 2:               T9                                       PUC    BUS        4.8</span></span>
-<span><span class="co">#&gt; 3:             TR60                         TRONCAL TRI‘NGULO    BUS        4.8</span></span>
-<span><span class="co">#&gt; 4:             TR62                          TRONCAL BALTAZAR    BUS        4.8</span></span>
-<span><span class="co">#&gt; 5:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL        4.8</span></span>
-<span><span class="co">#&gt; 6:             AREO                        AEROMOVEL TRENSURB   RAIL        4.8</span></span>
-<span><span class="co">#&gt;    fare_type</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:       BUS</span></span>
-<span><span class="co">#&gt; 2:       BUS</span></span>
-<span><span class="co">#&gt; 3:       BUS</span></span>
-<span><span class="co">#&gt; 4:       BUS</span></span>
-<span><span class="co">#&gt; 5:      RAIL</span></span>
-<span><span class="co">#&gt; 6:      RAIL</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span></code></pre></div>
 <p>Basic route information is taken directly from the GTFS data (agency,
 route id and names, mode, etc), but the <code>route_fare</code> and
 <code>fare_type</code> columns were added specifically for the
@@ -641,7 +520,6 @@ function.</p>
 <span></span>
 <span><span class="co"># calculate travel times, and combine results</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">calculate_travel_times</span><span class="op">(</span>fare <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: testthat</span></span>
 <span><span class="va">ttm_500</span> <span class="op">&lt;-</span> <span class="fu">calculate_travel_times</span><span class="op">(</span>fare <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># merge results</span></span>
@@ -655,19 +533,7 @@ trips take a little longer to complete
 (<code>travel_time_500 &gt; travel_time_unl</code>), and other trips
 cannot be completed at all (<code>travel_time_500 == NA</code>).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             from_id           to_id travel_time_500 travel_time_unl</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1: 89a90166da7ffff 89a90129c2bffff              38              36</span></span>
-<span><span class="co">#&gt;  2: 89a90166da7ffff 89a90129aa7ffff              33              30</span></span>
-<span><span class="co">#&gt;  3: 89a90166da7ffff 89a90e93497ffff              32              32</span></span>
-<span><span class="co">#&gt;  4: 89a90166da7ffff 89a90129807ffff              39              38</span></span>
-<span><span class="co">#&gt;  5: 89a90166da7ffff 89a90129b5bffff              34              34</span></span>
-<span><span class="co">#&gt;  6: 89a90166da7ffff 89a90129dd7ffff              37              37</span></span>
-<span><span class="co">#&gt;  7: 89a90166da7ffff 89a90129bbbffff              33              33</span></span>
-<span><span class="co">#&gt;  8: 89a90166da7ffff 89a90129bd7ffff              26              26</span></span>
-<span><span class="co">#&gt;  9: 89a90166da7ffff 89a90129a47ffff              19              19</span></span>
-<span><span class="co">#&gt; 10: 89a90166da7ffff 89a90166da7ffff               0               0</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">ttm</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>The plots below show the overall distribution of the travel time
 differences and unreachable destinations:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -704,7 +570,6 @@ differences and unreachable destinations:</p>
 <span></span>
 <span><span class="co"># combine both plots using patchwork</span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Comparing travel times with and without monetary cost restriction"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="calculating-accessibility-with-monetary-cost">4.2 Calculating accessibility with monetary cost<a class="anchor" aria-label="anchor" href="#calculating-accessibility-with-monetary-cost"></a>
@@ -760,7 +625,6 @@ differ quite substantially when we account for monetary costs.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fare_structure_files/figure-html/unnamed-chunk-20-1.png" width="100%"></p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
@@ -795,7 +659,7 @@ page</a>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
       </footer>

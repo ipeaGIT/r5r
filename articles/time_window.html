@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Using the time_window parameter • r5r</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -38,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -109,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2024-12-13</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="hidden name"><code>time_window.Rmd</code></div>
@@ -231,9 +230,7 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
 <p>ps. Please keep in mind that the Monte Carlo draws in
 <code>time_window</code> only affects the results when the GTFS feeds
-contain a <code>frequencies.txt</code> table. If the GTFS feed does not
-have a frequency table, r5r still allow for multiple runs over the set
-<code>time_window</code> in a deterministic way.</p>
+contain a <code>frequencies.txt</code> table.</p>
 </div>
 <div class="section level3">
 <h3 id="accessibility-with-time_window-">3.2 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
@@ -259,19 +256,7 @@ minutes <code>cutoffs = 45</code>.</p>
 <span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
 <span>                          <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                  id opportunity percentile cutoff accessibility</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
-<span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
-<span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
-<span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
-<span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
-<span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">acc</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
 departing from that origin between 2pm and 3pm a person would be able to
@@ -299,7 +284,6 @@ departure time within that 60-minute time window.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="time_window_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="travel-time-matrix-with-time_window-">3.3 Travel time matrix with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#travel-time-matrix-with-time_window-"></a>
@@ -321,31 +305,7 @@ output looks like.</p>
 <span>                          percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span></span>
 <span>                          <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             from_id           to_id travel_time_p10 travel_time_p20</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c603ffff               0               0</span></span>
-<span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c617ffff              13              13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c60fffff               6               6</span></span>
-<span><span class="co">#&gt;  4: 89a8100c603ffff 89a8100c607ffff              11              11</span></span>
-<span><span class="co">#&gt;  5: 89a8100c603ffff 89a8100c6abffff              20              20</span></span>
-<span><span class="co">#&gt;  6: 89a8100c603ffff 89a8100c6a3ffff              26              26</span></span>
-<span><span class="co">#&gt;  7: 89a8100c603ffff 89a8100c677ffff              14              14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c603ffff 89a8100c63bffff              14              14</span></span>
-<span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c633ffff              16              16</span></span>
-<span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c6afffff              24              24</span></span>
-<span><span class="co">#&gt;     travel_time_p50 travel_time_p70 travel_time_p80</span></span>
-<span><span class="co">#&gt;               &lt;int&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1:               0               0               0</span></span>
-<span><span class="co">#&gt;  2:              13              13              13</span></span>
-<span><span class="co">#&gt;  3:               6               6               6</span></span>
-<span><span class="co">#&gt;  4:              11              11              11</span></span>
-<span><span class="co">#&gt;  5:              20              20              20</span></span>
-<span><span class="co">#&gt;  6:              26              26              26</span></span>
-<span><span class="co">#&gt;  7:              14              14              14</span></span>
-<span><span class="co">#&gt;  8:              14              14              14</span></span>
-<span><span class="co">#&gt;  9:              16              16              16</span></span>
-<span><span class="co">#&gt; 10:              24              24              24</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>Now let’s look at the 2nd row of the output above. This output tell
 us that only 10% of the trips between 2pm and 3pm for that
 origin-destination pair took 39 minutes or less. Meanwhile, 50% of those
@@ -378,31 +338,7 @@ sets and time windows.</p>
 <span>                                    progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                    time_window <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             from_id           to_id departure_time draw_number  routes</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;          &lt;char&gt;         &lt;char&gt;       &lt;int&gt;  &lt;char&gt;</span></span>
-<span><span class="co">#&gt;  1: 89a8100c603ffff 89a8100c28bffff       14:00:00           1 4491-10</span></span>
-<span><span class="co">#&gt;  2: 89a8100c603ffff 89a8100c28bffff       14:00:00           2 4491-10</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff 89a8100c28bffff       14:00:00           3 4491-10</span></span>
-<span><span class="co">#&gt;  4: 89a8100c603ffff 89a8100c28bffff       14:00:00           4 4491-10</span></span>
-<span><span class="co">#&gt;  5: 89a8100c603ffff 89a8100c28bffff       14:00:00           5 4491-10</span></span>
-<span><span class="co">#&gt;  6: 89a8100c603ffff 89a8100c28bffff       14:01:00           1 4491-10</span></span>
-<span><span class="co">#&gt;  7: 89a8100c603ffff 89a8100c28bffff       14:01:00           2 4491-10</span></span>
-<span><span class="co">#&gt;  8: 89a8100c603ffff 89a8100c28bffff       14:01:00           3 4491-10</span></span>
-<span><span class="co">#&gt;  9: 89a8100c603ffff 89a8100c28bffff       14:01:00           4 4491-10</span></span>
-<span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
-<span><span class="co">#&gt;     total_time</span></span>
-<span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       51.5</span></span>
-<span><span class="co">#&gt;  2:       37.6</span></span>
-<span><span class="co">#&gt;  3:       36.1</span></span>
-<span><span class="co">#&gt;  4:       39.8</span></span>
-<span><span class="co">#&gt;  5:       35.7</span></span>
-<span><span class="co">#&gt;  6:       52.3</span></span>
-<span><span class="co">#&gt;  7:       50.6</span></span>
-<span><span class="co">#&gt;  8:       52.3</span></span>
-<span><span class="co">#&gt;  9:       38.5</span></span>
-<span><span class="co">#&gt; 10:       35.3</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
@@ -502,7 +438,7 @@ Analytics and City Science</em>, November, 23998083221137077. <a href="https://d
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
       </footer>

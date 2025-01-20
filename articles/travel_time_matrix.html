@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Travel time matrices • r5r</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -38,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0</span>
       </span>
     </div>
 
@@ -109,7 +108,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2024-12-13</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/travel_time_matrix.Rmd" class="external-link"><code>vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="hidden name"><code>travel_time_matrix.Rmd</code></div>
@@ -194,19 +193,7 @@ this vignette</a>.</p>
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
 <span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           from_id                     to_id travel_time_p50</span></span>
-<span><span class="co">#&gt;            &lt;char&gt;                    &lt;char&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1: public_market             public_market               0</span></span>
-<span><span class="co">#&gt;  2: public_market       bus_central_station              14</span></span>
-<span><span class="co">#&gt;  3: public_market          gasometer_museum              12</span></span>
-<span><span class="co">#&gt;  4: public_market       santa_casa_hospital              15</span></span>
-<span><span class="co">#&gt;  5: public_market                  townhall               3</span></span>
-<span><span class="co">#&gt;  6: public_market           piratini_palace              17</span></span>
-<span><span class="co">#&gt;  7: public_market    metropolitan_cathedral              17</span></span>
-<span><span class="co">#&gt;  8: public_market          farroupilha_park              18</span></span>
-<span><span class="co">#&gt;  9: public_market moinhos_de_vento_hospital              20</span></span>
-<span><span class="co">#&gt; 10: public_market          farrapos_station              21</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>Now remember that travel time estimates can vary significantly across
 the day because of variations in public transport service levels. In
 order to account for this, you might want to calculate multiple travel
@@ -243,19 +230,7 @@ data sets.</p>
 <span>                                    max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
 <span>                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           from_id         to_id departure_time draw_number routes total_time</span></span>
-<span><span class="co">#&gt;            &lt;char&gt;        &lt;char&gt;         &lt;char&gt;       &lt;int&gt; &lt;char&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1: public_market public_market       14:00:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  2: public_market public_market       14:01:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  3: public_market public_market       14:02:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  4: public_market public_market       14:03:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  5: public_market public_market       14:04:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  6: public_market public_market       14:05:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  7: public_market public_market       14:06:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  8: public_market public_market       14:07:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt;  9: public_market public_market       14:08:00           1 [WALK]          0</span></span>
-<span><span class="co">#&gt; 10: public_market public_market       14:09:00           1 [WALK]          0</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p><em>Calling expanded_travel_time_matrix() with
 <code>breakdown = TRUE</code></em></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -267,31 +242,7 @@ data sets.</p>
 <span>                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>                                    breakdown <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm2</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           from_id         to_id departure_time draw_number access_time</span></span>
-<span><span class="co">#&gt;            &lt;char&gt;        &lt;char&gt;         &lt;char&gt;       &lt;int&gt;       &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1: public_market public_market       14:00:00           1           0</span></span>
-<span><span class="co">#&gt;  2: public_market public_market       14:01:00           1           0</span></span>
-<span><span class="co">#&gt;  3: public_market public_market       14:02:00           1           0</span></span>
-<span><span class="co">#&gt;  4: public_market public_market       14:03:00           1           0</span></span>
-<span><span class="co">#&gt;  5: public_market public_market       14:04:00           1           0</span></span>
-<span><span class="co">#&gt;  6: public_market public_market       14:05:00           1           0</span></span>
-<span><span class="co">#&gt;  7: public_market public_market       14:06:00           1           0</span></span>
-<span><span class="co">#&gt;  8: public_market public_market       14:07:00           1           0</span></span>
-<span><span class="co">#&gt;  9: public_market public_market       14:08:00           1           0</span></span>
-<span><span class="co">#&gt; 10: public_market public_market       14:09:00           1           0</span></span>
-<span><span class="co">#&gt;     wait_time ride_time transfer_time egress_time routes n_rides total_time</span></span>
-<span><span class="co">#&gt;         &lt;num&gt;     &lt;num&gt;         &lt;num&gt;       &lt;num&gt; &lt;char&gt;   &lt;int&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  2:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  3:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  4:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  5:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  6:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  7:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  8:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt;  9:         0         0             0           0 [WALK]       0          0</span></span>
-<span><span class="co">#&gt; 10:         0         0             0           0 [WALK]       0          0</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm2</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>You will notice in the documentation that the
 <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> also has a
 <code>time_window</code> parameter. In this case, though, when the user
@@ -310,33 +261,7 @@ sets and time windows.</p>
 <span>                                           breakdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                           time_window <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ettm_window</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">25</span>,<span class="op">]</span></span>
-<span><span class="co">#&gt;           from_id               to_id departure_time draw_number access_time</span></span>
-<span><span class="co">#&gt;            &lt;char&gt;              &lt;char&gt;         &lt;char&gt;       &lt;int&gt;       &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1: public_market bus_central_station       14:04:00           1         1.5</span></span>
-<span><span class="co">#&gt;  2: public_market bus_central_station       14:05:00           1         4.8</span></span>
-<span><span class="co">#&gt;  3: public_market bus_central_station       14:06:00           1         4.1</span></span>
-<span><span class="co">#&gt;  4: public_market bus_central_station       14:07:00           1         4.4</span></span>
-<span><span class="co">#&gt;  5: public_market bus_central_station       14:08:00           1         2.3</span></span>
-<span><span class="co">#&gt;  6: public_market bus_central_station       14:09:00           1         2.3</span></span>
-<span><span class="co">#&gt;  7: public_market    gasometer_museum       14:00:00           1         2.9</span></span>
-<span><span class="co">#&gt;  8: public_market    gasometer_museum       14:01:00           1         6.0</span></span>
-<span><span class="co">#&gt;  9: public_market    gasometer_museum       14:02:00           1         6.0</span></span>
-<span><span class="co">#&gt; 10: public_market    gasometer_museum       14:03:00           1         3.5</span></span>
-<span><span class="co">#&gt; 11: public_market    gasometer_museum       14:04:00           1         3.5</span></span>
-<span><span class="co">#&gt;     wait_time ride_time transfer_time egress_time routes n_rides total_time</span></span>
-<span><span class="co">#&gt;         &lt;num&gt;     &lt;num&gt;         &lt;num&gt;       &lt;num&gt; &lt;char&gt;   &lt;int&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       1.5       3.5             0         6.7    525       1       13.2</span></span>
-<span><span class="co">#&gt;  2:       1.2       1.6             0         6.2 LINHA1       1       13.8</span></span>
-<span><span class="co">#&gt;  3:       1.9       2.0             0         6.7    495       1       14.7</span></span>
-<span><span class="co">#&gt;  4:       1.6       2.0             0         6.7    493       1       14.7</span></span>
-<span><span class="co">#&gt;  5:       4.7       1.1             0         7.4    D72       1       15.5</span></span>
-<span><span class="co">#&gt;  6:       3.7       1.1             0         7.4    D72       1       14.5</span></span>
-<span><span class="co">#&gt;  7:       1.1       4.5             0         1.8   2821       1       10.3</span></span>
-<span><span class="co">#&gt;  8:       3.0       4.3             0         1.8    346       1       15.1</span></span>
-<span><span class="co">#&gt;  9:       2.0       4.3             0         1.8    346       1       14.1</span></span>
-<span><span class="co">#&gt; 10:       3.5       4.9             0         1.8    244       1       13.7</span></span>
-<span><span class="co">#&gt; 11:       2.5       4.9             0         1.8    244       1       12.7</span></span></code></pre></div>
+<span><span class="va">ettm_window</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">25</span>,<span class="op">]</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
@@ -374,7 +299,7 @@ page</a>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
       </footer>

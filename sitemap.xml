@@ -1,6 +1,5 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>/404.html</loc></url>
-<url><loc>/LICENSE-text.html</loc></url>
 <url><loc>/articles/accessibility.html</loc></url>
 <url><loc>/articles/detailed_itineraries.html</loc></url>
 <url><loc>/articles/faq.html</loc></url>
@@ -13,6 +12,7 @@
 <url><loc>/articles/travel_time_matrix.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
 <url><loc>/news/index.html</loc></url>
 <url><loc>/reference/accessibility.html</loc></url>
 <url><loc>/reference/assert_fare_structure.html</loc></url>
@@ -27,8 +27,8 @@
 <url><loc>/reference/assign_shortest_path.html</loc></url>
 <url><loc>/reference/detailed_itineraries.html</loc></url>
 <url><loc>/reference/download_r5.html</loc></url>
-<url><loc>/reference/expand_od_pairs.html</loc></url>
 <url><loc>/reference/expanded_travel_time_matrix.html</loc></url>
+<url><loc>/reference/expand_od_pairs.html</loc></url>
 <url><loc>/reference/fileurl_from_metadata.html</loc></url>
 <url><loc>/reference/find_snap.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
@@ -39,6 +39,8 @@
 <url><loc>/reference/r5r_cache.html</loc></url>
 <url><loc>/reference/r5r_sitrep.html</loc></url>
 <url><loc>/reference/read_fare_structure.html</loc></url>
+<url><loc>/reference/setup_fare_structure.html</loc></url>
+<url><loc>/reference/setup_r5.html</loc></url>
 <url><loc>/reference/set_breakdown.html</loc></url>
 <url><loc>/reference/set_cutoffs.html</loc></url>
 <url><loc>/reference/set_expanded_travel_times.html</loc></url>
@@ -56,8 +58,6 @@
 <url><loc>/reference/set_suboptimal_minutes.html</loc></url>
 <url><loc>/reference/set_time_window.html</loc></url>
 <url><loc>/reference/set_verbose.html</loc></url>
-<url><loc>/reference/setup_fare_structure.html</loc></url>
-<url><loc>/reference/setup_r5.html</loc></url>
 <url><loc>/reference/stop_r5.html</loc></url>
 <url><loc>/reference/street_network_to_sf.html</loc></url>
 <url><loc>/reference/transit_network_to_sf.html</loc></url>
