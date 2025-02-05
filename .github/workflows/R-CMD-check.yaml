@@ -1,15 +1,15 @@
-# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
-# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
 on:
   push:
     paths:
       - r-package/**
+      - .github/workflows/R-CMD-check.yaml
     branches:
       - master
       - dev
   pull_request:
     paths:
       - r-package/**
+      - .github/workflows/R-CMD-check.yaml
     branches:
       - master
       - dev
@@ -27,69 +27,36 @@ jobs:
       matrix:
         config:
         - {os: windows-latest, r: 'release'}
-        - {os: windows-latest, r: 'oldrel'}
         - {os: macOS-latest, r: 'release'}
-        - {os: ubuntu-20.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-        - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-        - {os: ubuntu-20.04, r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
+        - {os: ubuntu-22.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
+        - {os: ubuntu-22.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
+        - {os: ubuntu-22.04, r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
 
     env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
 
+      - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Java setup
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v1
         with:
-          distribution: 'temurin'
           java-version: '21'
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "../.github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), "../.github/R-version")
-        shell: Rscript {0}
-        working-directory: r-package
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: brew install gdal proj
-        working-directory: r-package
-
-      - name: Install macOS system dependencies
-        if: runner.os == 'macos'
-        run: brew install gdal proj
-        working-directory: r-package
-
+          java-package: jdk
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
-        working-directory: r-package
+          working-directory: r-package
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true
-
+          working-directory: r-package
