@@ -26,7 +26,7 @@ download_r5 <- function(version = NULL,
                         temp_dir = FALSE) {
 
   # R5 version
-  if(is.null(version)) {version = r5r_env$r5_jar_version}
+  if (is.null(version)) {version = r5r_env$r5_jar_version}
 
 
   # check inputs ----------------------------------------------------------
