@@ -26,11 +26,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {os: windows-latest, r: 'release'}
-        - {os: macOS-latest, r: 'release'}
-        - {os: ubuntu-22.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
-        - {os: ubuntu-22.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
-        - {os: ubuntu-22.04, r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
+          - {os: windows-latest, r: 'release'}
+          - {os: macOS-latest, r: 'release'}
+          - {os: ubuntu-22.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
+          - {os: ubuntu-22.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
+          - {os: ubuntu-22.04, r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
 
     env:
       RSPM: ${{ matrix.config.rspm }}
@@ -45,11 +45,22 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Java setup
-        uses: actions/setup-java@v1
+      # Java setup for macOS (using the proper arm64 architecture)
+      - name: Java setup (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/setup-java@v3
         with:
+          distribution: temurin
           java-version: '21'
-          java-package: jdk
+          architecture: arm64
+
+      # Java setup for non-macOS runners
+      - name: Java setup (non-macOS)
+        if: runner.os != 'macOS'
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '21'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
