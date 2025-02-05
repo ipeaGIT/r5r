@@ -23,7 +23,7 @@
 #' @name r5r
 #' @aliases r5r-package
 #'
-#' @importFrom data.table := %between% %chin%
+#' @importFrom data.table := %between% %chin% .N
 #'
 #' @keywords internal
 "_PACKAGE"
@@ -80,7 +80,8 @@ if (getRversion() >= "2.15.1") {
       'id',
       'i.travel_time_p50',
       'i.isochrone',
-      'edge_index'
+      'edge_index',
+      'count'
     )
   )
 }

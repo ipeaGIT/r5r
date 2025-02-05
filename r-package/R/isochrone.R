@@ -92,62 +92,66 @@
 #' @family Isochrone
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
-#'options(java.parameters = "-Xmx2G")
-#'library(r5r)
-#'library(ggplot2)
+#' options(java.parameters = "-Xmx2G")
+#' library(r5r)
+#' library(ggplot2)
 #'
-#'# build transport network
-#'data_path <- system.file("extdata/poa", package = "r5r")
-#'r5r_core <- setup_r5(data_path = data_path)
+#' # build transport network
+#' data_path <- system.file("extdata/poa", package = "r5r")
+#' r5r_core <- setup_r5(data_path = data_path)
 #'
-#'# load origin/point of interest
-#'points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
-#'origin_1 <- points[936,]
+#' # load origin/point of interest
+#' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+#' origin <- points[2,]
 #'
-#'departure_datetime <- as.POSIXct(
-#' "13-05-2019 14:00:00",
-#' format = "%d-%m-%Y %H:%M:%S"
-#')
+#' departure_datetime <- as.POSIXct(
+#'  "13-05-2019 14:00:00",
+#'  format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#'# estimate polygon-based isochrone from origin_1
-#'iso_poly <- isochrone(r5r_core,
-#'                 origins = origin_1,
-#'                 mode = "walk",
-#'                 polygon_output = TRUE,
-#'                 departure_datetime = departure_datetime,
-#'                 cutoffs = seq(0, 100, 10)
-#'                 )
-#'head(iso_poly)
+#' # estimate polygon-based isochrone from origin
+#' iso_poly <- isochrone(
+#'   r5r_core,
+#'   origins = origin,
+#'   mode = "walk",
+#'   polygon_output = TRUE,
+#'   departure_datetime = departure_datetime,
+#'   cutoffs = seq(0, 120, 30)
+#'   )
 #'
-#'
-#'# estimate line-based isochrone from origin_1
-#'iso_lines <- isochrone(r5r_core,
-#'                      origins = origin_1,
-#'                      mode = "walk",
-#'                      polygon_output = FALSE,
-#'                      departure_datetime = departure_datetime,
-#'                      cutoffs = seq(0, 100, 10)
-#')
-#'head(iso_lines)
+#' head(iso_poly)
 #'
 #'
-#'# plot colors
-#'colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
-#'            '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+#' # estimate line-based isochrone from origin
+#' iso_lines <- isochrone(
+#'   r5r_core,
+#'   origins = origin,
+#'   mode = "walk",
+#'   polygon_output = FALSE,
+#'   departure_datetime = departure_datetime,
+#'   cutoffs = seq(0, 100, 25)
+#'   )
 #'
-#'# polygons
-#'ggplot() +
-#'  geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
-#'  scale_fill_manual(values = colors) +
-#'  theme_minimal()
+#' head(iso_lines)
 #'
-#'# lines
-#'ggplot() +
-#'  geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
-#'  scale_color_manual(values = colors) +
-#'  theme_minimal()
 #'
-#'stop_r5(r5r_core)
+#' # plot colors
+#' colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
+#'             '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+#'
+#' # polygons
+#' ggplot() +
+#'   geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
+#'   scale_fill_manual(values = colors) +
+#'   theme_minimal()
+#'
+#' # lines
+#' ggplot() +
+#'   geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
+#'   scale_color_manual(values = colors) +
+#'   theme_minimal()
+#'
+#' stop_r5(r5r_core)
 #'
 #' @export
 isochrone <- function(r5r_core,
@@ -199,12 +203,14 @@ isochrone <- function(r5r_core,
     destinations = r5r::street_network_to_sf(r5r_core)$vertices
 
     # sample size: proportion of nodes to be considered
+    set.seed(42)
     index_sample <- sample(1:nrow(destinations),
                            size = nrow(destinations) * sample_size,
                            replace = FALSE)
     destinations <- destinations[index_sample,]
     on.exit(rm(.Random.seed, envir=globalenv()))
   }
+
   if(isFALSE(polygon_output)){
 
     network_e <- r5r::street_network_to_sf(r5r_core)$edges
@@ -249,7 +255,7 @@ isochrone <- function(r5r_core,
     # check if there are at least 3 points to build a
     if (isTRUE(polygon_output)) {
 
-      check_number_destinations <- ttm[, .(count=.N), by=.(from_id, isochrone) ]
+      check_number_destinations <- ttm[, .(count= .N ), by=.(from_id, isochrone) ]
       temp_ids <- subset(check_number_destinations, count<3)$from_id
 
       if(length(temp_ids)>0){

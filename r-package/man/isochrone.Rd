@@ -240,51 +240,55 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = data_path)
 
 # load origin/point of interest
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
-origin_1 <- points[936,]
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+origin <- points[2,]
 
 departure_datetime <- as.POSIXct(
-"13-05-2019 14:00:00",
-format = "\%d-\%m-\%Y \%H:\%M:\%S"
+ "13-05-2019 14:00:00",
+ format = "\%d-\%m-\%Y \%H:\%M:\%S"
 )
 
-# estimate polygon-based isochrone from origin_1
-iso_poly <- isochrone(r5r_core,
-                origins = origin_1,
-                mode = "walk",
-                polygon_output = TRUE,
-                departure_datetime = departure_datetime,
-                cutoffs = seq(0, 100, 10)
-                )
+# estimate polygon-based isochrone from origin
+iso_poly <- isochrone(
+  r5r_core,
+  origins = origin,
+  mode = "walk",
+  polygon_output = TRUE,
+  departure_datetime = departure_datetime,
+  cutoffs = seq(0, 120, 30)
+  )
+
 head(iso_poly)
 
 
-# estimate line-based isochrone from origin_1
-iso_lines <- isochrone(r5r_core,
-                     origins = origin_1,
-                     mode = "walk",
-                     polygon_output = FALSE,
-                     departure_datetime = departure_datetime,
-                     cutoffs = seq(0, 100, 10)
-)
+# estimate line-based isochrone from origin
+iso_lines <- isochrone(
+  r5r_core,
+  origins = origin,
+  mode = "walk",
+  polygon_output = FALSE,
+  departure_datetime = departure_datetime,
+  cutoffs = seq(0, 100, 25)
+  )
+
 head(iso_lines)
 
 
 # plot colors
 colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
-           '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+            '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
 
 # polygons
 ggplot() +
- geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
- scale_fill_manual(values = colors) +
- theme_minimal()
+  geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
 
 # lines
 ggplot() +
- geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
- scale_color_manual(values = colors) +
- theme_minimal()
+  geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
+  scale_color_manual(values = colors) +
+  theme_minimal()
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
