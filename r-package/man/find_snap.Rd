@@ -4,7 +4,7 @@
 \alias{find_snap}
 \title{Find snapped locations of input points on street network}
 \usage{
-find_snap(r5r_core, points, mode = "WALK")
+find_snap(r5r_core, points, radius = 1600, mode = "WALK")
 }
 \arguments{
 \item{r5r_core}{An object to connect with the R5 routing engine, created with
@@ -13,12 +13,15 @@ find_snap(r5r_core, points, mode = "WALK")
 \item{points}{Either a \verb{POINT sf} object with WGS84 CRS, or a \code{data.frame}
 containing the columns \code{id}, \code{lon} and \code{lat}.}
 
+\item{radius}{Numeric. The maximum radius in meters within which to snap.
+Defaults to 1600m.}
+
 \item{mode}{A string. Which mode to consider when trying to snap the points
 to the network. Defaults to \code{WALK}, also allows \code{BICYCLE} and \code{CAR}.}
 }
 \value{
 A \code{data.table} with the original points, their respective
-snapped coordinates on the street network and the Euclidean distance ( in
+snapped coordinates on the street network and the Euclidean distance (in
 meters) between the original points and their snapped location. Points that
 could not be snapped show \code{NA} coordinates and \code{found = FALSE}.
 }
@@ -29,11 +32,11 @@ destinations specified by the user are actually positioned on the network
 created by \code{R5}. The snapping process in \code{R5} is composed of two rounds.
 First, it tries to snap the points within a radius of 300 meters from
 themselves. If the first round is unsuccessful, then \code{R5} expands the search
-radius to 1.6 km. If yet again it is unsuccessful, then the unsnapped points
-won't be used during the routing process. The snapped location of each point
-depends on the transport mode set by the user, because some network edges
-are not available to specific modes (e.g. a pedestrian-only street cannot be
-used to snap car trips).
+to the radius specified (by default 1.6km). If yet again it is unsuccessful,
+then the unsnapped points won't be used during the routing process. The
+snapped location of each point depends on the transport mode set by the user,
+because some network edges are not available to specific modes (e.g. a
+pedestrian-only street cannot be used to snap car trips).
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -43,7 +46,7 @@ path <- system.file("extdata/poa", package = "r5r")
 r5r_core <- setup_r5(data_path = path)
 points <- read.csv(file.path(path, "poa_hexgrid.csv"))
 
-snap_df <- find_snap(r5r_core, points, mode = "WALK")
+snap_df <- find_snap(r5r_core, points, radius = 2000, mode = "WALK")
 
 stop_r5(r5r_core)
 \dontshow{\}) # examplesIf}
