@@ -213,14 +213,14 @@ public class RDataFrame {
 
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             // save column titles
-            StringJoiner row = new StringJoiner(",");
+            StringJoiner row = new StringJoiner("\t");
             columnNames.forEach(row::add);
 
             pw.println(row);
 
             // save data
             for (int i = 0; i < nRow(); i++) {
-                row = new StringJoiner(",");
+                row = new StringJoiner("\t");
 
                 for (String c:columnNames) {
                     row.add(String.valueOf(dataFrame.get(c).get(i)));

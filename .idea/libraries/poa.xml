@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="poa">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/r-package/inst/extdata/poa/poa_trensurb.zip!/" />
+      <root url="jar://$PROJECT_DIR$/r-package/inst/extdata/poa/poa_eptc.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

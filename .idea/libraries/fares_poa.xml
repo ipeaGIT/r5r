@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fares_poa">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/r-package/inst/extdata/poa/fares/fares_poa.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
