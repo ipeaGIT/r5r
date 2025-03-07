@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2025-02-05</h4>
+            <h4 data-toc-skip class="date">2025-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/fare_structure.Rmd" class="external-link"><code>vignettes/fare_structure.Rmd</code></a></small>
       <div class="d-none name"><code>fare_structure.Rmd</code></div>
@@ -472,7 +472,7 @@ data.frame to account for that.</li>
 <span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span><span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fl">8.37</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># use fcase instead ?</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,</span>
+<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,</span>
 <span>                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <ul>
 <li>Transfers between “RAIL” and “RAIL” are free and unlimited, which is

@@ -50,9 +50,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.0" id="r5r-210-dev">r5r 2.1.0 (dev)<a class="anchor" aria-label="anchor" href="#r5r-210-dev"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.0" id="r5r-210">r5r 2.1.0<a class="anchor" aria-label="anchor" href="#r5r-210"></a></h2>
 <p><strong>Minor changes</strong></p>
 <ul><li>The <code><a href="../reference/isochrone.html">isochrone()</a></code> function has a new boolean parameter <code>polygon_output</code> that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed <a href="https://github.com/ipeaGIT/r5r/issues/382" class="external-link">#382</a>
+</li>
+<li>When using public transit modes, the package now automatically detects whether there are any transit services operation on the seleced departure date. If there are no services, the package will return an error message. Closed <a href="https://github.com/ipeaGIT/r5r/issues/326" class="external-link">#326</a>
 </li>
 </ul></div>
     <div class="section level2">

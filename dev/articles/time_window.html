@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2025-02-05</h4>
+            <h4 data-toc-skip class="date">2025-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="d-none name"><code>time_window.Rmd</code></div>
@@ -194,7 +194,7 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span></span>
 <span></span>
 <span><span class="co"># load origin/destination points</span></span>
-<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"spo_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"spo_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># departure datetime</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
@@ -238,9 +238,9 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -363,16 +363,16 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       48.6</span></span>
-<span><span class="co">#&gt;  2:       51.6</span></span>
-<span><span class="co">#&gt;  3:       34.3</span></span>
-<span><span class="co">#&gt;  4:       38.4</span></span>
-<span><span class="co">#&gt;  5:       37.8</span></span>
-<span><span class="co">#&gt;  6:       51.6</span></span>
-<span><span class="co">#&gt;  7:       48.5</span></span>
-<span><span class="co">#&gt;  8:       40.8</span></span>
-<span><span class="co">#&gt;  9:       40.6</span></span>
-<span><span class="co">#&gt; 10:       38.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       41.5</span></span>
+<span><span class="co">#&gt;  2:       43.2</span></span>
+<span><span class="co">#&gt;  3:       43.7</span></span>
+<span><span class="co">#&gt;  4:       50.2</span></span>
+<span><span class="co">#&gt;  5:       51.7</span></span>
+<span><span class="co">#&gt;  6:       42.1</span></span>
+<span><span class="co">#&gt;  7:       38.3</span></span>
+<span><span class="co">#&gt;  8:       34.5</span></span>
+<span><span class="co">#&gt;  9:       49.3</span></span>
+<span><span class="co">#&gt; 10:       53.7</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
