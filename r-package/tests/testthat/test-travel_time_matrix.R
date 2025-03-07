@@ -209,21 +209,6 @@ test_that("we get more results (and faster trips) when using faster modes", {
 })
 
 
-test_that("using transit outside the gtfs dates results in walk only trips", {
-  ttm_within_gtfs_date <- tester(
-    mode = c("WALK", "TRANSIT"),
-    departure_datetime = departure_datetime
-  )
-  ttm_outside_gtfs_date <- tester(
-    mode = c("WALK", "TRANSIT"),
-    departure_datetime = Sys.time()
-  )
-  ttm_walk_only <- tester()
-
-  expect_identical(ttm_outside_gtfs_date, ttm_walk_only)
-  expect_false(identical(ttm_within_gtfs_date, ttm_outside_gtfs_date))
-})
-
 test_that("higher percentiles travel times are slower", {
   ttm <- tester(
     mode = c("WALK", "TRANSIT"),
@@ -299,4 +284,15 @@ test_that("returns ttm even if last call saved to dir", {
   ttm_output_dir <- tester(output_dir = tmpdir)
   ttm_normal <- tester()
   expect_s3_class(ttm_normal, "data.table")
+})
+
+
+test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_core,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
 })

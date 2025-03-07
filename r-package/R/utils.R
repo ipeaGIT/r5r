@@ -40,3 +40,27 @@ fileurl_from_metadata <- function(version = NULL) {
 
 }
 
+
+check_transit_availability_on_date <- function(r5r_core,
+                                               departure_date){
+
+  # check services Available on the departure date
+  services <- r5r_core$getTransitServicesByDate(departure_date)
+  services <- java_to_dt(services)
+
+  # count services available
+  data.table::setDT(services)
+  services_available <- services[, sum(active_on_date) / .N ]
+
+  if (services_available == 0) {
+    cli::cli_abort("There are no transit services available on the selected departure
+               date: {.val {departure_date}}. Please ensure your departure date falls
+               within the GTFS calendar.")
+  }
+
+
+  if (services_available < 0.2) {
+    cli::cli_alert_warning("Less than 20% of the transit services in the GTFS are running
+                   on the selected departure date.")
+  }
+}

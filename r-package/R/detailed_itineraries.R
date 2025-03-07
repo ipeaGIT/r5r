@@ -143,6 +143,12 @@ detailed_itineraries <- function(r5r_core,
   }
 
   departure <- assign_departure(departure_datetime)
+
+  # check availability of transit services on the selected date
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+  }
+
   max_walk_time <- assign_max_street_time(
     max_walk_time,
     walk_speed,

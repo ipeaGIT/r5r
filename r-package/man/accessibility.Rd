@@ -389,7 +389,7 @@ access <- accessibility(
   mode = "WALK",
   departure_datetime = departure_datetime,
   decay_function = "step",
-  cutoffs = c(25, 30),
+  cutoffs = c(15, 30),
   max_trip_duration = 30
 )
 head(access)
