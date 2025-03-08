@@ -6,11 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Using the time_window parameter • r5r</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
-<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="icon" sizes="any" href="../favicon.ico">
-<link rel="manifest" href="../site.webmanifest">
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -25,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +37,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/r5r.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
@@ -78,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2025-01-20</h4>
+            <h4 data-toc-skip class="date">2025-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="d-none name"><code>time_window.Rmd</code></div>
@@ -192,14 +193,16 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span> <span class="co"># minutes</span></span>
 <span></span>
 <span><span class="co"># load origin/destination points</span></span>
-<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"spo_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"spo_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># departure datetime</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
 <p>ps. Please keep in mind that the Monte Carlo draws in
 <code>time_window</code> only affects the results when the GTFS feeds
-contain a <code>frequencies.txt</code> table.</p>
+contain a <code>frequencies.txt</code> table. If the GTFS feed does not
+have a frequency table, r5r still allow for multiple runs over the set
+<code>time_window</code> in a deterministic way.</p>
 </div>
 <div class="section level3">
 <h3 id="accessibility-with-time_window-">3.2 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
@@ -236,7 +239,7 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
 <span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -359,16 +362,16 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       43.2</span></span>
-<span><span class="co">#&gt;  2:       42.4</span></span>
-<span><span class="co">#&gt;  3:       43.4</span></span>
-<span><span class="co">#&gt;  4:       47.0</span></span>
-<span><span class="co">#&gt;  5:       52.3</span></span>
-<span><span class="co">#&gt;  6:       34.8</span></span>
-<span><span class="co">#&gt;  7:       43.8</span></span>
-<span><span class="co">#&gt;  8:       42.4</span></span>
+<span><span class="co">#&gt;  1:       42.3</span></span>
+<span><span class="co">#&gt;  2:       37.2</span></span>
+<span><span class="co">#&gt;  3:       37.5</span></span>
+<span><span class="co">#&gt;  4:       37.7</span></span>
+<span><span class="co">#&gt;  5:       46.2</span></span>
+<span><span class="co">#&gt;  6:       40.9</span></span>
+<span><span class="co">#&gt;  7:       36.9</span></span>
+<span><span class="co">#&gt;  8:       52.2</span></span>
 <span><span class="co">#&gt;  9:       46.9</span></span>
-<span><span class="co">#&gt; 10:       50.5</span></span></code></pre></div>
+<span><span class="co">#&gt; 10:       49.5</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
@@ -428,7 +431,7 @@ and Land Use</em> 11 (1). <a href="https://doi.org/10.5198/jtlu.2018.1074" class
 <div id="ref-levinson2020manual" class="csl-entry">
 Levinson, David, and et al. 2020. <span>“Transport Access Manual: A
 Guide for Measuring Connection Between People and Places,”</span>
-January. <a href="https://ses.library.usyd.edu.au/handle/2123/23733" class="external-link">https://ses.library.usyd.edu.au/handle/2123/23733</a>.
+January. <a href="https://hdl.handle.net/2123/23733" class="external-link">https://hdl.handle.net/2123/23733</a>.
 </div>
 <div id="ref-pereiramtup2019" class="csl-entry">
 Pereira, Rafael H. M. 2019. <span>“Future Accessibility Impacts of
@@ -462,7 +465,7 @@ Analytics and City Science</em>, November, 23998083221137077. <a href="https://d
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

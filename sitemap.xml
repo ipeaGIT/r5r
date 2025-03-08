@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://ipeagit.github.io/r5r/404.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/LICENSE-text.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/articles/accessibility.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/articles/detailed_itineraries.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/articles/faq.html</loc></url>
@@ -12,7 +13,6 @@
 <url><loc>https://ipeagit.github.io/r5r/articles/travel_time_matrix.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/authors.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/index.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/LICENSE-text.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/news/index.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/accessibility.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/assert_fare_structure.html</loc></url>
@@ -27,8 +27,8 @@
 <url><loc>https://ipeagit.github.io/r5r/reference/assign_shortest_path.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/detailed_itineraries.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/download_r5.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/expand_od_pairs.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/fileurl_from_metadata.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/find_snap.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/index.html</loc></url>
@@ -39,8 +39,6 @@
 <url><loc>https://ipeagit.github.io/r5r/reference/r5r_cache.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/r5r_sitrep.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/read_fare_structure.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/reference/setup_fare_structure.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/reference/setup_r5.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/set_breakdown.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/set_cutoffs.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/set_expanded_travel_times.html</loc></url>
@@ -58,6 +56,8 @@
 <url><loc>https://ipeagit.github.io/r5r/reference/set_suboptimal_minutes.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/set_time_window.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/set_verbose.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/reference/setup_fare_structure.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/reference/setup_r5.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/stop_r5.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/street_network_to_sf.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/reference/transit_network_to_sf.html</loc></url>
