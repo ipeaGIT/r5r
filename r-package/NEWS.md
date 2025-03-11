@@ -1,3 +1,8 @@
+# r5r 2.1.1
+
+**Buf fixes**
+- Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
+
 # r5r 2.1.0
 
 **Minor changes**
