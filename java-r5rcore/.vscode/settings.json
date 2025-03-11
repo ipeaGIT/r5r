@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "src/r5-v6.9-all.jar",
+        "d:\\Luyu\\Extreme_Heat_Exposure\\code\\JRI.jar",
+        "d:\\Luyu\\Extreme_Heat_Exposure\\code\\r5-v6.9-all.jar"
+    ]
+}

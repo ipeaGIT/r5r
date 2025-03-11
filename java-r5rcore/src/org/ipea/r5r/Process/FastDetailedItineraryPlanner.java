@@ -84,7 +84,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
             travelTimesTable.set("option", tripId.incrementAndGet());
             travelTimesTable.set("departure_time", Utils.getTimeFromSeconds(trip.getDepartureTime()));
-            travelTimesTable.set("total_duration", Utils.roundTo1Place(trip.getTotalDurationSeconds() / 60.0));
+            travelTimesTable.set("total_duration", Utils.roundTo1Place(trip.getTotalDurationSeconds() ));
             travelTimesTable.set("total_distance", trip.getTotalDistance());
 
             if (hasFares())
@@ -100,10 +100,13 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 if (hasFares())
                     travelTimesTable.set("cumulative_fare", leg.getCumulativeFare() / 100.0);
 
-                travelTimesTable.set("segment_duration", Utils.roundTo1Place(leg.getLegDurationSeconds() / 60.0));
-                travelTimesTable.set("wait", Utils.roundTo1Place(leg.getWaitTime() / 60.0));
+                travelTimesTable.set("segment_duration", Utils.roundTo1Place(leg.getLegDurationSeconds()) );
+                travelTimesTable.set("wait", Utils.roundTo1Place((leg.getWaitTime())));
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
+                travelTimesTable.set("edge_id_list", leg.getEdgeIDList());
+                travelTimesTable.set("board_stop_id", leg.getBoardStopString()); 
+                travelTimesTable.set("alight_stop_id", leg.getAlightStopString());
 
                 if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
             });
@@ -137,6 +140,9 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
         itinerariesDataFrame.addIntegerColumn("distance", 0);
         itinerariesDataFrame.addStringColumn("route", "");
+        itinerariesDataFrame.addStringColumn("edge_id_list", "");
+        itinerariesDataFrame.addStringColumn("board_stop_id", "");
+        itinerariesDataFrame.addStringColumn("alight_stop_id", "");
         if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
 
         return itinerariesDataFrame;

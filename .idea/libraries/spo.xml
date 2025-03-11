@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="spo">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/r-package/inst/extdata/spo/spo.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
