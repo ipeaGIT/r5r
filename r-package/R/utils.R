@@ -53,10 +53,12 @@ check_transit_availability_on_date <- function(r5r_core,
   services_available <- services[, sum(active_on_date) / .N ]
 
   if (services_available == 0 | is.na(services_available)) {
-    cli::cli_abort("There are no transit services available on the selected departure
-               date: {.val {departure_date}}. Please ensure your departure date falls
-               within the GTFS calendar.")
-  }
+    cli::cli_abort("There are no transit services available on the selected
+                   departure date: {.val {departure_date}}. Please ensure there
+                   is a GTFS in your data path & that the departure date falls
+                   within the GTFS calendar."
+                   )
+    }
 
 
   if (services_available < 0.2) {
