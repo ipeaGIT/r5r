@@ -165,8 +165,14 @@ setup_r5 <- function(data_path,
     r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation, check=F)
     ex = rJava::.jgetEx(clear=T)
     if (!is.null(ex)) {
+      msg <- rJava::.jcall(ex, "S", "toString")
+      if (grepl("Geographic extent of street layer", msg)) {
+        warning("Street layer too large.")
+        return(NULL)
+      } else {
       ex$printStackTrace()
       return(NULL)
+      }
     }
 
     # display a message if there is a PBF file but no GTFS data
