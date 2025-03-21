@@ -35,3 +35,8 @@ dependencies {
     implementation files(r5Path)
     implementation files(rJavaPath)
 }
+
+task runR5RCoreTest(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.ipea.r5r.SampleR5RCore'
+}
