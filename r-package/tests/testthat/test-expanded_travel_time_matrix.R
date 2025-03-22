@@ -89,6 +89,7 @@ test_that("adequately raises errors", {
   expect_error(default_tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
   expect_error(default_tester(r5r_core, numeric_datetime))
 
+
   # error with breakdown
   expect_error(default_tester(r5r_core, breakdown ='test'))
 
@@ -201,4 +202,15 @@ test_that("output is correct", {
   # expect_true(nrow(df) == 0)
 
 
+})
+
+
+test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_core,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
 })

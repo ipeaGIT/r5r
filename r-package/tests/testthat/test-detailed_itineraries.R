@@ -280,3 +280,14 @@ test_that("detailed_itineraries output is correct", {
   expect_true(nrow(df) == 0)
 
 })
+
+
+test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_core,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
+})

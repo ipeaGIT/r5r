@@ -1,9 +1,17 @@
-# r5r 2.1.0 (dev)
+# r5r 2.2.0
+
+**Minor changes**
+- r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.
+
+**Buf fixes**
+- Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
+
+# r5r 2.1.0
 
 **Minor changes**
 
 - The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
-
+- When using public transit modes, the package now automatically detects whether there are any transit services operation on the seleced departure date. If there are no services, the package will return an error message. Closed [#326](https://github.com/ipeaGIT/r5r/issues/326)
 
 
 # r5r 2.0
