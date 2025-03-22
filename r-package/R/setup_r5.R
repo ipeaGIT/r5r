@@ -167,8 +167,7 @@ setup_r5 <- function(data_path,
     if (!is.null(ex)) {
       msg <- rJava::.jcall(ex, "S", "toString")
       if (grepl("Geographic extent of street layer", msg)) {
-        warning("Street layer too large.")
-        return(NULL)
+        stop("Street layer too large.")
       } else {
       ex$printStackTrace()
       return(NULL)
