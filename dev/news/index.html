@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.099999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.0" id="r5r-210">r5r 2.1.0<a class="anchor" aria-label="anchor" href="#r5r-210"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.2.0" id="r5r-220">r5r 2.2.0<a class="anchor" aria-label="anchor" href="#r5r-220"></a></h2>
+<p><strong>Minor changes</strong> - r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.</p>
+<p><strong>Buf fixes</strong> - Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.0" id="r5r-210">r5r 2.1.0<a class="anchor" aria-label="anchor" href="#r5r-210"></a></h2><p class="text-muted">CRAN release: 2025-03-08</p>
 <p><strong>Minor changes</strong></p>
 <ul><li>The <code><a href="../reference/isochrone.html">isochrone()</a></code> function has a new boolean parameter <code>polygon_output</code> that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed <a href="https://github.com/ipeaGIT/r5r/issues/382" class="external-link">#382</a>
 </li>
