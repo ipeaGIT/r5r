@@ -1,4 +1,7 @@
-# r5r 2.1.1
+# r5r 2.2.0
+
+**Minor changes**
+- r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.
 
 **Buf fixes**
 - Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
