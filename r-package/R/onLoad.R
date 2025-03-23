@@ -15,8 +15,8 @@ r5r_env <- new.env(parent = emptyenv())
 .onLoad <- function(lib, pkg) {
 
   # JAR version
-  r5r_env$r5_jar_version <- "7.1.0"
-  r5r_env$r5_jar_size <- 63494047
+  r5r_env$r5_jar_version <- "7.3.0"
+  r5r_env$r5_jar_size <- 63863934
 
   # create dir to store R5 Jar
   cache_d <- paste0('r5r/r5_jar_v', r5r_env$r5_jar_version)
