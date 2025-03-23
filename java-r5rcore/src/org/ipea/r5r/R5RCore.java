@@ -187,7 +187,7 @@ public class R5RCore {
     }
 
     public void setProgress(boolean progress) {
-        Utils.progress = progress;
+        Utils.setlogProgress(progress);
     }
 
     public void setBenchmark(boolean benchmark) {

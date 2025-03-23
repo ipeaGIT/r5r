@@ -72,6 +72,22 @@ public class Utils {
         return (strHours + ":" + strMin + ":" + strSec);
     }
 
+    public static void setlogProgress(boolean progress){
+        Utils.progress = progress;
+
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger logger;
+        logger = loggerContext.getLogger("org.ipea.r5r.Process.R5RProcess");
+
+        if (Utils.verbose) {
+            logger.setLevel(Level.ALL);
+        } else if (progress) {
+            logger.setLevel(Level.INFO);
+        } else {
+            logger.setLevel(Level.ERROR);
+        }
+    }
+
     public static void setLogMode(String mode, boolean verbose) {
         Utils.verbose = verbose;
 
