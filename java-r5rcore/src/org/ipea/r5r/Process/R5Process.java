@@ -12,6 +12,8 @@ import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.ParseException;
@@ -61,6 +63,8 @@ public abstract class R5Process {
 
     protected abstract boolean isOneToOne();
 
+    private static final Logger LOG = LoggerFactory.getLogger("org.ipea.r5r.Process.R5RProcess");
+
     public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = transportNetwork;
@@ -80,9 +84,7 @@ public abstract class R5Process {
                         filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
 
-        if (!Utils.verbose & Utils.progress) {
-            System.out.print(".. DONE!\n");
-        }
+        LOG.info(".. DONE!\n");
 
         RDataFrame results = mergeResults(processResults);
 
@@ -197,9 +199,8 @@ public abstract class R5Process {
                 results.clear();
             }
 
-            if (!Utils.verbose & Utils.progress) {
-                System.out.print("\r" + totalProcessed.getAndIncrement() + " out of " + nOrigins + " origins processed.");
-            }
+            LOG.info("\r{} out of {} origins processed.", totalProcessed.getAndIncrement(), nOrigins);
+
         } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -224,9 +225,7 @@ public abstract class R5Process {
     protected abstract RDataFrame runProcess(int index) throws ParseException;
 
     private RDataFrame mergeResults(List<RDataFrame> processResults) {
-        if (!Utils.verbose & Utils.progress) {
-            System.out.print("Consolidating results...");
-        }
+        LOG.info("Consolidating results...");
 
         int nRows;
         nRows = processResults.stream()
@@ -252,9 +251,7 @@ public abstract class R5Process {
         );
         mergedDataFrame.updateRowCount();
 
-        if (!Utils.verbose & Utils.progress) {
-            System.out.print(" DONE!\n");
-        }
+        LOG.info(" DONE!\n");
 
         return mergedDataFrame;
     }
