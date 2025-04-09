@@ -1,8 +1,10 @@
 <configuration>
 
+    <!-- Define LOG_PATH using DATA_PATH with fallback to current dir -->
+    <property name="LOG_PATH" value="${LOG_PATH:-./r5r-log.log}" />
+
     <appender name="RFILE" class="ch.qos.logback.core.FileAppender">
-        <file>r5r-log.log</file>
-        <append>false</append>
+        <file>${LOG_PATH}</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
@@ -14,7 +16,7 @@
         </encoder>
     </appender>
 
-    <root level="ERROR">
+    <root level="ALL">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="RFILE"/>
     </root>

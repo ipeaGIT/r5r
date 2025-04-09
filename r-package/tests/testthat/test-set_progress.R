@@ -45,13 +45,13 @@ test_that("progress argument works in routing functions", {
     progress_regex <- "\\d+ out of \\d+ origins processed\\."
 
 
-    log_file <- file.path(getwd(), "r5r-log.log")
+    log_file <- file.path(r5r_core$getLogPath())
     # Clean log before test
     if (file.exists(log_file)) writeLines("", log_file)
 
     res <- eval(parse(text = progress_expr))
     # Wait a bit to ensure Java flushed the logs
-    Sys.sleep(0.5)
+    Sys.sleep(0.2)
     progress_messages <- readLines(log_file)
     expect_true(any(grepl(progress_regex, progress_messages)))
 
@@ -59,7 +59,7 @@ test_that("progress argument works in routing functions", {
     writeLines("", log_file)
     res <- eval(parse(text = non_progress_expr))
     # Wait a bit to ensure Java flushed the logs
-    Sys.sleep(0.5)
+    Sys.sleep(0.2)
     non_progress_messages <- readLines(log_file)
     expect_false(any(grepl(progress_regex, non_progress_messages)))
   }

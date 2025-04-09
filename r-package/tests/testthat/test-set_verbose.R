@@ -44,13 +44,13 @@ test_that("verbose argument works in routing functions", {
 
     info_regex <- "(\\[.*\\] INFO)|(\\[.*\\] DEBUG)|(\\[.*\\] WARN)"
 
-    log_file <- file.path(getwd(), "r5r-log.log")
+    log_file <- file.path(r5r_core$getLogPath())
     # Clean log before test
     if (file.exists(log_file)) writeLines("", log_file)
 
     res <- eval(parse(text = non_verbose_expr))
     # Wait a bit to ensure Java flushed the logs
-    Sys.sleep(0.5)
+    Sys.sleep(0.2)
     non_verbose_messages <- readLines(log_file)
     expect_false(any(grepl(info_regex, non_verbose_messages)))
 
@@ -58,7 +58,7 @@ test_that("verbose argument works in routing functions", {
     writeLines("", log_file)
     res <- eval(parse(text = verbose_expr))
     # Wait a bit to ensure Java flushed the logs
-    Sys.sleep(0.5)
+    Sys.sleep(0.2)
     verbose_messages <- readLines(log_file)
 
     expect_true(any(grepl(info_regex, verbose_messages)))

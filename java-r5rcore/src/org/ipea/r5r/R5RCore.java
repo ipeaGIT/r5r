@@ -208,6 +208,8 @@ public class R5RCore {
         return Utils.outputCsvFolder;
     }
 
+    public String getLogPath() { return System.getProperty("LOG_PATH"); }
+
     public void setDetailedItinerariesV2(boolean v2) {
         Utils.detailedItinerariesV2 = v2;
     }
