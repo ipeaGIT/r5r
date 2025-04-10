@@ -1,5 +1,6 @@
 package org.ipea.r5r.Process;
 
+import com.conveyal.analysis.models.CsvResultOptions;
 import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.PathResult;
@@ -87,6 +88,8 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     private static final Logger LOG = LoggerFactory.getLogger(TravelTimeMatrixComputer.class);
 
+    private final CsvResultOptions csvOptions;
+
     @Override
     protected boolean isOneToOne() {
         return false;
@@ -94,6 +97,7 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         super(threadPool, transportNetwork, routingProperties);
+        this.csvOptions = new CsvResultOptions();
     }
 
     @Override
@@ -175,7 +179,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                         checkState(nIterations > 0, "A path was stored without any iterations");
 
                         // extract the route id's
-                        String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer);
+                        String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer, csvOptions);
 
                         for (PathResult.Iteration iteration : iterations) {
                             PathBreakdown breakdown = new PathBreakdown();
