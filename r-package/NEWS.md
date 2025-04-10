@@ -5,6 +5,7 @@
 
 **Minor changes**
 - r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.
+- removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an `r5rlog` file in the data path.
 
 **Buf fixes**
 - Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
