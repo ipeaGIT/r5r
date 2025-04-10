@@ -15,11 +15,8 @@ import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
 import org.ipea.r5r.Utils.Utils;
-import org.rosuda.JRI.RConsoleOutputStream;
-import org.rosuda.JRI.Rengine;
 import org.slf4j.LoggerFactory;
 
-import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -190,7 +187,7 @@ public class R5RCore {
     }
 
     public void setProgress(boolean progress) {
-        Utils.progress = progress;
+        Utils.setlogProgress(progress);
     }
 
     public void setBenchmark(boolean benchmark) {
@@ -211,6 +208,8 @@ public class R5RCore {
         return Utils.outputCsvFolder;
     }
 
+    public String getLogPath() { return System.getProperty("LOG_PATH"); }
+
     public void setDetailedItinerariesV2(boolean v2) {
         Utils.detailedItinerariesV2 = v2;
     }
@@ -220,10 +219,6 @@ public class R5RCore {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
     public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
-        Rengine r = new Rengine();
-        RConsoleOutputStream rs = new RConsoleOutputStream(r, 1);
-        System.setOut(new PrintStream(rs));
-
         if (verbose) {
             verboseMode();
         } else {
@@ -679,11 +674,6 @@ public class R5RCore {
 
     public boolean hasFrequencies() {
         return this.transportNetwork.transitLayer.hasFrequencies;
-    }
-
-    public void message(String m) {
-        Rengine r = new Rengine();
-        r.eval("message(\"" + m + "\")");
     }
 
     public void abort() {
