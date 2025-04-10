@@ -1,5 +1,8 @@
 # r5r 2.2.0
 
+**Major changes**
+- r5r now uses the latest version of R5 V7.3. Closed [#417](https://github.com/ipeaGIT/r5r/issues/417)
+
 **Minor changes**
 - r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.
 
