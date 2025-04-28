@@ -136,7 +136,7 @@ knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/in
 
 ### 4.2 Keep geometry data in the output
 
-- Be default, `detailed_itineraries()` will not return the spatial geometry of results. To retrieve this information you can simply set `geometry = TRUE`.
+- Be default, `detailed_itineraries()` will return the spatial geometry of results. To prevent retrieving this information you can simply set `drop_geometry = TRUE`.
 
 
 

@@ -66,8 +66,7 @@ r5r_cache <- function(list_files = TRUE,
 
   # print file names
   if(isTRUE(list_files)){
-    message('Files currently chached:')
+    message('Files currently cached:')
     message(paste0(files, collapse = '\n'))
   }
 }
-
