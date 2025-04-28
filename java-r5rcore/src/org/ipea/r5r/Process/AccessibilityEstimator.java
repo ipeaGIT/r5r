@@ -5,8 +5,6 @@ import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.transit.TransportNetwork;
-import com.conveyal.r5.analyst.TravelTimeComputer;
-//import org.ipea.r5r.R5.R5TravelTimeComputer;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 

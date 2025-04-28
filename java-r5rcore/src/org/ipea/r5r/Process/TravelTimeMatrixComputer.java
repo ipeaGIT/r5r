@@ -10,7 +10,6 @@ import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.path.RouteSequence;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import org.ipea.r5r.R5.R5TravelTimeComputer;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
@@ -104,7 +103,7 @@ public class TravelTimeMatrixComputer extends R5Process {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
 
-        TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
+        TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
