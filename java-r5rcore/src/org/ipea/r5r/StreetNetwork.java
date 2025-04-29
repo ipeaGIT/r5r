@@ -49,8 +49,8 @@ public class StreetNetwork {
         EdgeStore.Edge edgeCursor = edges.getCursor();
         while (edgeCursor.advance()) {
             // edges that have the LINK flag are created by R5 specifically to link the OSM street network to bus stops,
-            // so such edges are removed from the return data.frame
-            if (!edgeCursor.getFlag(EdgeStore.EdgeFlag.LINK)) {
+            // so such edges are removed from the return data.frame !edgeCursor.getFlag(EdgeStore.EdgeFlag.LINK)
+            if (true) {
                 edgesTable.append();
                 edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
                 edgesTable.set("osm_id", edgeCursor.getOSMID());
