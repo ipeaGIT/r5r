@@ -7,8 +7,6 @@
 [![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Publication](https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow)](https://doi.org/10.32866/001c.21262)
 
-**Disclaimer**: this private version of r5r has been modified by me, and it may be unstable. The revisions are focusing on the detailed_itilnerary function and the csv output function. If you need a stable version, please go to the parent repository.
-
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
 networks (walk, bike, public transport and car). It provides a simple and 
 friendly interface to R<sup>5</sup>, the [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5), the routing engine developed independently by [Conveyal](http://conveyal.com).
