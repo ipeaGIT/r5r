@@ -111,7 +111,8 @@ detailed_itineraries <- function(r5r_core,
                                  verbose = FALSE,
                                  progress = FALSE,
                                  drop_geometry = FALSE,
-                                 output_dir = NULL) {
+                                 output_dir = NULL,
+                                 osm_link_ids = FALSE) {
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
@@ -215,7 +216,8 @@ detailed_itineraries <- function(r5r_core,
     max_car_time,
     max_trip_duration,
     drop_geometry,
-    shortest_path
+    shortest_path,
+    osm_link_ids
   )
 
   if (!is.null(output_dir)) return(output_dir)

@@ -19,7 +19,6 @@ import org.locationtech.jts.geom.LineString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.conveyal.r5.transit.TransitLayer.TRANSFER_DISTANCE_LIMIT_METERS;
 
@@ -35,8 +34,8 @@ public class TripLeg {
     private int boardStop;
     private int alightStop;
 
-    private String boardStopString;
-    private String alightStopString;
+    private String boardStopId = "";
+    private String alightStopId = "";
 
     private int fromStop;
     private int toStop;
@@ -44,6 +43,13 @@ public class TripLeg {
     private int boardStopPosition;
     private int alightStopPosition;
     private TripPattern pattern;
+
+    private int waitTime;
+    private String route;
+
+    private LineString geometry;
+    private List<StreetEdgeInfo> streetEdges;
+    private List<Integer> listEdgeId = new ArrayList<>();
 
     public void setPatternData(TripPattern pattern, int boardStopPosition, int alightStopPosition) {
         this.pattern = pattern;
@@ -55,13 +61,6 @@ public class TripLeg {
         this.fromStop = fromStop;
         this.toStop = toStop;
     }
-
-    private int waitTime;
-    private String route;
-
-    private LineString geometry;
-    private List<StreetEdgeInfo> streetEdges;
-    private String listEdgeId;
 
     public String getMode() {
         return mode;
@@ -84,16 +83,16 @@ public class TripLeg {
     }
 
     
-    public String getBoardStopString() {
-        return boardStopString;
+    public String getBoardStopId() {
+        return boardStopId;
     }
 
     public int getAlightStop() {
         return alightStop;
     }
 
-    public String getAlightStopString() {
-        return alightStopString;
+    public String getAlightStopId() {
+        return alightStopId;
     }
 
     public int getWaitTime() {
@@ -104,7 +103,7 @@ public class TripLeg {
         return route;
     }
 
-    public String getEdgeIDList() {
+    public List<Integer> getEdgeIDList() {
         return listEdgeId;
     }
 
@@ -123,7 +122,7 @@ public class TripLeg {
         newLeg.geometry = streetSegment.geometry;
 
         newLeg.streetEdges = streetSegment.streetEdges;
-        newLeg.listEdgeId = newLeg.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")); // populate listedgeid for First/last-mile legs 
+        newLeg.listEdgeId = newLeg.streetEdges.stream().map(u -> u.edgeId).toList(); // populate listedgeid for First/last-mile legs
 
         return newLeg;
     }
@@ -138,7 +137,8 @@ public class TripLeg {
         newLeg.cumulativeFare = fare;
         newLeg.route = "";
         if (streetSegment != null){
-            newLeg.listEdgeId = "[" + streetSegment.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
+
+            newLeg.listEdgeId = streetSegment.streetEdges.stream().map(u -> u.edgeId).toList();
         }
         newLeg.geometry = geometry;
 
@@ -158,8 +158,8 @@ public class TripLeg {
         newLeg.alightStop = alightStop;
         newLeg.route = route;
         
-        newLeg.boardStopString = "";
-        newLeg.alightStopString = "";
+        newLeg.boardStopId = "";
+        newLeg.alightStopId = "";
         // newLeg.legDistance = (int) geometry.getLength();
         // newLeg.geometry = geometry;
 
@@ -184,8 +184,8 @@ public class TripLeg {
             geometry = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
             legDistance = Utils.getLinestringLength(geometry);
 
-            this.alightStopString = network.transitLayer.stopIdForIndex.get(this.alightStop);
-            this.boardStopString = network.transitLayer.stopIdForIndex.get(this.boardStop);
+            this.alightStopId = network.transitLayer.stopIdForIndex.get(this.alightStop);
+            this.boardStopId = network.transitLayer.stopIdForIndex.get(this.boardStop);
 
         } else {
             // street path between stops
@@ -223,7 +223,7 @@ public class TripLeg {
                         this.legDurationSeconds = streetSegment.duration;
                         this.geometry = streetSegment.geometry;
                         this.streetEdges = streetSegment.streetEdges;
-                        this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
+                        this.listEdgeId = streetEdges.stream().map(u -> u.edgeId).toList();
                         this.legDistance = Utils.getLinestringLength(geometry);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
@@ -233,7 +233,7 @@ public class TripLeg {
                 } else {
                     this.geometry = streetSegment.geometry;
                     this.streetEdges = streetSegment.streetEdges;
-                    this.listEdgeId = "[" + this.streetEdges.stream().map(u -> u.edgeId.toString()).collect(Collectors.joining(";")) + "]";
+                    this.listEdgeId = streetEdges.stream().map(u -> u.edgeId).toList();
                     this.legDistance = Utils.getLinestringLength(geometry);
                 }
             } else {
