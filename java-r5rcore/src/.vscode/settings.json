@@ -1,7 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "r5-v6.9-all.jar",
-        "JRI.jar"
-    ]
-}
