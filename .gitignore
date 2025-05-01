@@ -33,17 +33,3 @@ r-package/vignettes/*.R
 aws.xml
 docs/
 network_settings.json
-*.jar
-*.jar
-java-r5rcore/src/src.jar
-java-r5rcore/.vscode/settings.json
-java-r5rcore/.gradle/vcs-1/gc.properties
-java-r5rcore/.gradle/buildOutputCleanup/cache.properties
-java-r5rcore/.gradle/buildOutputCleanup/buildOutputCleanup.lock
-java-r5rcore/.gradle/8.5/gc.properties
-java-r5rcore/.gradle/8.5/fileHashes/fileHashes.lock
-java-r5rcore/.gradle/8.5/fileChanges/last-build.bin
-java-r5rcore/.gradle/8.5/dependencies-accessors/gc.properties
-java-r5rcore/.gradle/8.5/dependencies-accessors/dependencies-accessors.lock
-java-r5rcore/.gradle/8.5/checksums/checksums.lock
-java-r5rcore/.vscode/settings.json
