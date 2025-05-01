@@ -48,6 +48,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         TripPlanner computer = new TripPlanner(transportNetwork, request);
         computer.setOD(fromIds[index], toIds[index]);
         computer.setShortestPath(this.shortestPath);
+        computer.setOSMLinkIds(this.OSMLinkIds);
         List<Trip> trips = computer.plan();
 
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);

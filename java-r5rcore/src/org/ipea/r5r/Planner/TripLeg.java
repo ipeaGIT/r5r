@@ -7,6 +7,7 @@ import com.conveyal.r5.common.GeometryUtils;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.profile.StreetPath;
+import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.TransportNetwork;
@@ -49,7 +50,7 @@ public class TripLeg {
 
     private LineString geometry;
     private List<StreetEdgeInfo> streetEdges;
-    private List<Number> listEdgeId = new ArrayList<>();
+    private List<Long> listEdgeId = new ArrayList<>();
 
     public void setPatternData(TripPattern pattern, int boardStopPosition, int alightStopPosition) {
         this.pattern = pattern;
@@ -103,7 +104,7 @@ public class TripLeg {
         return route;
     }
 
-    public List<Number> getEdgeIDList() {
+    public List<Long> getEdgeIDList() {
         return listEdgeId;
     }
 
@@ -111,7 +112,7 @@ public class TripLeg {
         return geometry;
     }
 
-    public static TripLeg newDirectLeg(String mode, StreetSegment streetSegment) {
+    public static TripLeg newDirectLeg(String mode, StreetSegment streetSegment, EdgeStore edgeStore) {
         TripLeg newLeg = new TripLeg();
 
         newLeg.mode = mode;
@@ -120,14 +121,18 @@ public class TripLeg {
         newLeg.cumulativeFare = 0;
         newLeg.route = "";
         newLeg.geometry = streetSegment.geometry;
-
         newLeg.streetEdges = streetSegment.streetEdges;
-        newLeg.listEdgeId = new ArrayList<>(newLeg.streetEdges.stream().map(u -> u.edgeId).toList()); // populate listedgeid for First/last-mile legs
+        if (edgeStore != null) {
+            newLeg.listEdgeId = new ArrayList<>(newLeg.streetEdges.stream().map(u ->
+                    edgeStore.getCursor(u.edgeId).getOSMID())
+                    .filter(osmId -> osmId > 0)
+                    .toList()); // populate listedgeid for First/last-mile legs
+        }
 
         return newLeg;
     }
 
-    public static TripLeg newTransferLeg(String mode, int duration, int fare, LineString geometry, StreetSegment streetSegment) {
+    public static TripLeg newTransferLeg(String mode, int duration, int fare, LineString geometry, StreetSegment streetSegment, EdgeStore edgeStore) {
         TripLeg newLeg = new TripLeg();
 
         newLeg.mode = mode;
@@ -136,9 +141,11 @@ public class TripLeg {
         newLeg.legDurationSeconds = duration;
         newLeg.cumulativeFare = fare;
         newLeg.route = "";
-        if (streetSegment != null){
-
-            newLeg.listEdgeId = new ArrayList<>(streetSegment.streetEdges.stream().map(u -> u.edgeId).toList());
+        if (edgeStore != null && streetSegment != null) {
+            newLeg.listEdgeId = new ArrayList<>(streetSegment.streetEdges.stream().map(u ->
+                    edgeStore.getCursor(u.edgeId).getOSMID())
+                    .filter(osmId -> osmId > 0)
+                    .toList());
         }
         newLeg.geometry = geometry;
 
@@ -167,7 +174,7 @@ public class TripLeg {
     }
 
     public void augmentTransitLeg(MultiKeyMap<Integer, StreetSegment> transferPaths,
-                                  TransportNetwork network, ProfileRequest request) {
+                                  TransportNetwork network, ProfileRequest request, Boolean OSMLinkIds) {
 //        TripPattern pattern = network.transitLayer.tripPatterns.get(state.pattern);
 //
 //        int boardStopIndex = pattern.stops[state.boardStopPosition];
@@ -183,9 +190,10 @@ public class TripLeg {
             }
             geometry = GeometryUtils.geometryFactory.createLineString(coords.toArray(new Coordinate[0]));
             legDistance = Utils.getLinestringLength(geometry);
-
-            this.alightStopId = network.transitLayer.stopIdForIndex.get(this.alightStop);
-            this.boardStopId = network.transitLayer.stopIdForIndex.get(this.boardStop);
+            if (OSMLinkIds) {
+                this.alightStopId = network.transitLayer.stopIdForIndex.get(this.alightStop);
+                this.boardStopId = network.transitLayer.stopIdForIndex.get(this.boardStop);
+            }
 
         } else {
             // street path between stops
@@ -221,27 +229,31 @@ public class TripLeg {
                         streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
 
                         this.legDurationSeconds = streetSegment.duration;
-                        this.geometry = streetSegment.geometry;
-                        this.streetEdges = streetSegment.streetEdges;
-                        this.listEdgeId = new ArrayList<>(streetEdges.stream().map(u ->
-                                network.streetLayer.edgeStore.getCursor(u.edgeId).getOSMID()).toList());
-                        this.legDistance = Utils.getLinestringLength(geometry);
+                        fillDataTransitLeg(network, OSMLinkIds, streetSegment);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
                     }
 
                     request.reverseSearch = prevReverseSearch;
                 } else {
-                    this.geometry = streetSegment.geometry;
-                    this.streetEdges = streetSegment.streetEdges;
-                    this.listEdgeId = new ArrayList<>(streetEdges.stream().map(u ->
-                            network.streetLayer.edgeStore.getCursor(u.edgeId).getOSMID()).toList());
-                    this.legDistance = Utils.getLinestringLength(geometry);
+                    fillDataTransitLeg(network, OSMLinkIds, streetSegment);
                 }
             } else {
                 this.legDistance = Utils.getLinestringLength(geometry);
             }
         }
+    }
+
+    private void fillDataTransitLeg(TransportNetwork network, Boolean OSMLinkIds, StreetSegment streetSegment) {
+        this.geometry = streetSegment.geometry;
+        this.streetEdges = streetSegment.streetEdges;
+        if (OSMLinkIds) {
+            this.listEdgeId = new ArrayList<>(streetEdges.stream().map(u ->
+                    network.streetLayer.edgeStore.getCursor(u.edgeId).getOSMID())
+                    .filter(osmId -> osmId > 0)
+                    .toList());
+        }
+        this.legDistance = Utils.getLinestringLength(geometry);
     }
 
     public int augmentDirectLeg() {
