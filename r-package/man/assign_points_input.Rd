@@ -26,6 +26,7 @@ Other assigning functions:
 \code{\link{assign_max_trip_duration}()},
 \code{\link{assign_mode}()},
 \code{\link{assign_opportunities}()},
+\code{\link{assign_osm_link_ids}()},
 \code{\link{assign_shortest_path}()}
 }
 \concept{assigning functions}
