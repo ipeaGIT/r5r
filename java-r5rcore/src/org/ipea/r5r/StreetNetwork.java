@@ -49,54 +49,56 @@ public class StreetNetwork {
         EdgeStore.Edge edgeCursor = edges.getCursor();
         while (edgeCursor.advance()) {
             // edges that have the LINK flag are created by R5 specifically to link the OSM street network to bus stops,
-            // so such edges are removed from the return data.frame !edgeCursor.getFlag(EdgeStore.EdgeFlag.LINK)
-            edgesTable.append();
-            edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
-            edgesTable.set("osm_id", edgeCursor.getOSMID());
+            // so such edges are removed from the return data.frame
+            if (!edgeCursor.getFlag(EdgeStore.EdgeFlag.LINK)) {
+                edgesTable.append();
+                edgesTable.set("edge_index", edgeCursor.getEdgeIndex());
+                edgesTable.set("osm_id", edgeCursor.getOSMID());
 
-            edgesTable.set("from_vertex", edgeCursor.getFromVertex());
-            edgesTable.set("to_vertex", edgeCursor.getToVertex());
-            edgesTable.set("length", edgeCursor.getLengthM());
-            edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
+                edgesTable.set("from_vertex", edgeCursor.getFromVertex());
+                edgesTable.set("to_vertex", edgeCursor.getToVertex());
+                edgesTable.set("length", edgeCursor.getLengthM());
+                edgesTable.set("walk", edgeCursor.allowsStreetMode(StreetMode.WALK));
 
-            byte streetClassCode = edgeCursor.getStreetClassCode();
-            StreetClass streetClass;
-            switch (edgeCursor.getStreetClassCode()) {
-                case 0:
-                    streetClass = StreetClass.MOTORWAY;
-                    break;
-                case 1:
-                    streetClass = StreetClass.PRIMARY;
-                    break;
-                case 2:
-                    streetClass = StreetClass.SECONDARY;
-                    break;
-                case 3:
-                    streetClass = StreetClass.TERTIARY;
-                    break;
-                default:
-                    streetClass = StreetClass.OTHER;
+                byte streetClassCode = edgeCursor.getStreetClassCode();
+                StreetClass streetClass;
+                switch (edgeCursor.getStreetClassCode()) {
+                    case 0:
+                        streetClass = StreetClass.MOTORWAY;
+                        break;
+                    case 1:
+                        streetClass = StreetClass.PRIMARY;
+                        break;
+                    case 2:
+                        streetClass = StreetClass.SECONDARY;
+                        break;
+                    case 3:
+                        streetClass = StreetClass.TERTIARY;
+                        break;
+                    default:
+                        streetClass = StreetClass.OTHER;
+                }
+
+                edgesTable.set("street_class", streetClass.toString());
+
+                edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
+                edgesTable.set("car_speed", (double) edgeCursor.getSpeedKph());
+
+                int lts = 1;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_2)) lts = 2;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_3)) lts = 3;
+                if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_4)) lts = 4;
+
+                edgesTable.set("bicycle", edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
+                edgesTable.set("bicycle_lts", lts);
+
+                edgesTable.set("geometry", edgeCursor.getGeometry().toString());
+
+                // if the edge is originally from OSM, add its from/to vertices to the vertices HashSet, so they can
+                // be returned later in the vertices data.frame
+                verticesSet.add(edgeCursor.getFromVertex());
+                verticesSet.add(edgeCursor.getToVertex());
             }
-
-            edgesTable.set("street_class", streetClass.toString());
-
-            edgesTable.set("car", edgeCursor.allowsStreetMode(StreetMode.CAR));
-            edgesTable.set("car_speed", (double) edgeCursor.getSpeedKph());
-
-            int lts = 1;
-            if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_2)) lts = 2;
-            if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_3)) lts = 3;
-            if (edgeCursor.getFlag(EdgeStore.EdgeFlag.BIKE_LTS_4)) lts = 4;
-
-            edgesTable.set("bicycle", edgeCursor.allowsStreetMode(StreetMode.BICYCLE));
-            edgesTable.set("bicycle_lts", lts);
-
-            edgesTable.set("geometry", edgeCursor.getGeometry().toString());
-
-            // if the edge is originally from OSM, add its from/to vertices to the vertices HashSet, so they can
-            // be returned later in the vertices data.frame
-            verticesSet.add(edgeCursor.getFromVertex());
-            verticesSet.add(edgeCursor.getToVertex());
         }
     }
 

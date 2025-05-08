@@ -137,9 +137,9 @@ public class TripLeg {
                 int edgeId = u.edgeId;
                 long osmId = edgeStore.getCursor(edgeId).getOSMID();
 
-                listEdgeId.add(edgeId);
                 if (osmId > 0) {
                     listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
                 }
             }
 
@@ -167,9 +167,10 @@ public class TripLeg {
                 int edgeId = u.edgeId;
                 long osmId = edgeStore.getCursor(edgeId).getOSMID();
 
-                listEdgeId.add(edgeId);
+
                 if (osmId > 0) {
                     listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
                 }
             }
 
@@ -284,9 +285,9 @@ public class TripLeg {
                 int edgeId = u.edgeId;
                 long osmId = network.streetLayer.edgeStore.getCursor(edgeId).getOSMID();
 
-                listEdgeId.add(edgeId);
                 if (osmId > 0) {
                     listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
                 }
             }
 
