@@ -19,6 +19,7 @@ import org.locationtech.jts.geom.LineString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.conveyal.r5.transit.TransitLayer.TRANSFER_DISTANCE_LIMIT_METERS;
@@ -50,7 +51,8 @@ public class TripLeg {
 
     private LineString geometry;
     private List<StreetEdgeInfo> streetEdges;
-    private List<Long> listEdgeId = new ArrayList<>();
+    private LinkedHashSet<Integer> listEdgeId = new LinkedHashSet<>();
+    private LinkedHashSet<Long> listOSMId = new LinkedHashSet<>();
 
     public void setPatternData(TripPattern pattern, int boardStopPosition, int alightStopPosition) {
         this.pattern = pattern;
@@ -104,7 +106,11 @@ public class TripLeg {
         return route;
     }
 
-    public List<Long> getEdgeIDList() {
+    public LinkedHashSet<Long> getListOSMId() {
+        return listOSMId;
+    }
+
+    public LinkedHashSet<Integer> getListEdgeId() {
         return listEdgeId;
     }
 
@@ -123,10 +129,22 @@ public class TripLeg {
         newLeg.geometry = streetSegment.geometry;
         newLeg.streetEdges = streetSegment.streetEdges;
         if (edgeStore != null) {
-            newLeg.listEdgeId = new ArrayList<>(newLeg.streetEdges.stream().map(u ->
-                    edgeStore.getCursor(u.edgeId).getOSMID())
-                    .filter(osmId -> osmId > 0)
-                    .toList()); // populate listedgeid for First/last-mile legs
+            // populate listedgeid for First/last-mile legs
+            LinkedHashSet<Long> listOSMId = new LinkedHashSet<>();
+            LinkedHashSet<Integer> listEdgeId = new LinkedHashSet<>();
+
+            for (var u : newLeg.streetEdges) {
+                int edgeId = u.edgeId;
+                long osmId = edgeStore.getCursor(edgeId).getOSMID();
+
+                if (osmId > 0) {
+                    listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
+                }
+            }
+
+            newLeg.listEdgeId = listEdgeId;
+            newLeg.listOSMId = listOSMId;
         }
 
         return newLeg;
@@ -142,10 +160,22 @@ public class TripLeg {
         newLeg.cumulativeFare = fare;
         newLeg.route = "";
         if (edgeStore != null && streetSegment != null) {
-            newLeg.listEdgeId = new ArrayList<>(streetSegment.streetEdges.stream().map(u ->
-                    edgeStore.getCursor(u.edgeId).getOSMID())
-                    .filter(osmId -> osmId > 0)
-                    .toList());
+            LinkedHashSet<Long> listOSMId = new LinkedHashSet<>();
+            LinkedHashSet<Integer> listEdgeId = new LinkedHashSet<>();
+
+            for (var u : streetSegment.streetEdges) {
+                int edgeId = u.edgeId;
+                long osmId = edgeStore.getCursor(edgeId).getOSMID();
+
+
+                if (osmId > 0) {
+                    listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
+                }
+            }
+
+            newLeg.listEdgeId = listEdgeId;
+            newLeg.listOSMId = listOSMId;
         }
         newLeg.geometry = geometry;
 
@@ -248,10 +278,21 @@ public class TripLeg {
         this.geometry = streetSegment.geometry;
         this.streetEdges = streetSegment.streetEdges;
         if (OSMLinkIds) {
-            this.listEdgeId = new ArrayList<>(streetEdges.stream().map(u ->
-                    network.streetLayer.edgeStore.getCursor(u.edgeId).getOSMID())
-                    .filter(osmId -> osmId > 0)
-                    .toList());
+            LinkedHashSet<Long> listOSMId = new LinkedHashSet<>();
+            LinkedHashSet<Integer> listEdgeId = new LinkedHashSet<>();
+
+            for (var u : streetEdges) {
+                int edgeId = u.edgeId;
+                long osmId = network.streetLayer.edgeStore.getCursor(edgeId).getOSMID();
+
+                if (osmId > 0) {
+                    listOSMId.add(osmId);
+                    listEdgeId.add(edgeId);
+                }
+            }
+
+            this.listEdgeId = listEdgeId;
+            this.listOSMId = listOSMId;
         }
         this.legDistance = Utils.getLinestringLength(geometry);
     }
