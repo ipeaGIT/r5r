@@ -189,7 +189,7 @@ isochrone <- function(r5r_core,
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
 
-  # include 0 in cutoffs
+  # sort cutoffs and include 0
   if (min(cutoffs) > 0) {cutoffs <- sort(c(0, cutoffs))}
 
 
@@ -246,6 +246,8 @@ isochrone <- function(r5r_core,
                               progress = progress
                               )
 
+    # ignore travel times equal to 0
+    ttm <- ttm[travel_time_p50>0, ]
 
     # aggregate travel-times
     # ttm[, isochrone_interval := cut(x=travel_time_p50, breaks=cutoffs)]
