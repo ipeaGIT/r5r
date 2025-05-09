@@ -402,3 +402,26 @@ assign_drop_geometry <- function(drop_geometry) {
 
   return(drop_geometry)
 }
+
+
+#' Assign osm_link_ids
+#'
+#' Check the osm_link_ids input.
+#'
+#' @param osm_link_ids A logical.
+#' @param drop_geometry A logical.
+#'
+#' @return A logical.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_osm_link_ids <- function(osm_link_ids, drop_geometry) {
+  checkmate::assert_logical(osm_link_ids, len = 1, any.missing = FALSE)
+
+  if (isTRUE(drop_geometry) & isTRUE(osm_link_ids)) {
+    cli::cli_abort("To set osm_link_ids to `TRUE`, the parameter 'drop_geometry' must also be `FALSE`")
+  }
+  return(osm_link_ids)
+}
+

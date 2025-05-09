@@ -3,6 +3,7 @@ package org.ipea.r5r.Planner;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.StreetSegment;
 import com.conveyal.r5.profile.*;
+import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.iterator.TIntObjectIterator;
@@ -23,6 +24,7 @@ public class TripPlanner {
     private String fromId;
     private String toId;
     private boolean shortestPath;
+    private boolean OSMLinkIds;
 
     private final TransportNetwork transportNetwork;
     private final ProfileRequest request;
@@ -34,6 +36,10 @@ public class TripPlanner {
 
     public void setShortestPath(boolean shortestPath) {
         this.shortestPath = shortestPath;
+    }
+
+    public void setOSMLinkIds(boolean OSMLinkIds) {
+        this.OSMLinkIds = OSMLinkIds;
     }
 
     public TripPlanner(TransportNetwork transportNetwork, ProfileRequest request) {
@@ -115,7 +121,7 @@ public class TripPlanner {
         }
 
         for (Trip trip : trips.values()) {
-            trip.augment(accessRouter, egressRouter, transportNetwork, request);
+            trip.augment(accessRouter, egressRouter, transportNetwork, request, OSMLinkIds);
         }
 
         return tripList;
@@ -161,7 +167,9 @@ public class TripPlanner {
                     transportNetwork.streetLayer);
 
             LOG.info("adding direct mode {}", mode);
-            Trip trip = Trip.newDirectTrip(request.fromTime, mode.toString(), streetSegment);
+            EdgeStore edgeStore = null;
+            if (OSMLinkIds) { edgeStore = transportNetwork.streetLayer.edgeStore; }
+            Trip trip = Trip.newDirectTrip(request.fromTime, mode.toString(), streetSegment, edgeStore);
             trip.setOD(fromId, toId, request);
             // the key for a direct trip is the name of the mode
             trips.put(mode.toString(), trip);

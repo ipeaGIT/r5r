@@ -7,6 +7,7 @@ import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.profile.StreetPath;
+import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.streets.VertexStore;
 import com.conveyal.r5.transit.RouteInfo;
@@ -106,13 +107,6 @@ public class Trip {
 
     public String getKey() {
         return key;
-//        if (isDirect) {
-//            return legs.iterator().next().getMode();
-//        } else {
-//            return legs.stream().map(TripLeg::getRoute).
-//                    filter(Predicate.not(String::isEmpty)).
-//                    collect(Collectors.joining(", "));
-//        }
     }
 
     public void buildKey() {
@@ -133,7 +127,7 @@ public class Trip {
         legs.add(leg);
     }
 
-    public static Trip newDirectTrip(int departureTime, String mode, StreetSegment streetSegment) {
+    public static Trip newDirectTrip(int departureTime, String mode, StreetSegment streetSegment, EdgeStore edgeStore) {
         Trip trip = new Trip();
         trip.isDirect = true;
         trip.departureTime = departureTime;
@@ -141,7 +135,7 @@ public class Trip {
         trip.totalDistance = streetSegment.distance;
         trip.totalFare = 0;
 
-        trip.addLeg(TripLeg.newDirectLeg(mode, streetSegment));
+        trip.addLeg(TripLeg.newDirectLeg(mode, streetSegment, edgeStore));
 
         return trip;
     }
@@ -165,7 +159,7 @@ public class Trip {
     }
 
     public void augment(Map<LegMode, StreetRouter> accessRouter, Map<LegMode, StreetRouter> egressRouter,
-                        TransportNetwork network, ProfileRequest request) {
+                        TransportNetwork network, ProfileRequest request, boolean OSMLinkIds) {
 
         Map<Integer, StreetSegment> accessPaths = new HashMap<>();
         Map<Integer, StreetSegment> egressPaths = new HashMap<>();
@@ -176,11 +170,11 @@ public class Trip {
             int tripDistance = 0;
 
             // add access and egress legs
-            addAccessPath(accessRouter, accessPaths, network, request);
-            addEgressPath(egressRouter, egressPaths, network, request);
+            addAccessPath(accessRouter, accessPaths, network, request, OSMLinkIds);
+            addEgressPath(egressRouter, egressPaths, network, request, OSMLinkIds);
 
             for (TripLeg leg : legs) {
-                leg.augmentTransitLeg(transferPaths, network, request);
+                leg.augmentTransitLeg(transferPaths, network, request, OSMLinkIds);
                 tripDuration += (leg.getLegDurationSeconds() + leg.getWaitTime());
                 tripDistance += leg.getLegDistance();
             }
@@ -223,7 +217,7 @@ public class Trip {
                         });
                     }
 
-                    TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom);
+                    TripLeg leg = TripLeg.newTransferLeg(StreetMode.WALK.toString(),destTime - originTime, fare, geom, null, null);
 
                     leg.setODStops(originStopIndex, destStopIndex);
 
@@ -256,7 +250,7 @@ public class Trip {
     }
 
     private void addAccessPath(Map<LegMode, StreetRouter> accessRouter, Map<Integer, StreetSegment> accessPaths,
-                               TransportNetwork network, ProfileRequest request) {
+                               TransportNetwork network, ProfileRequest request, boolean OSMLinkIds) {
         TripLeg leg = legs.get(0);
 
         int startStopIndex = leg.getBoardStop();
@@ -268,6 +262,10 @@ public class Trip {
         if (accessMode != null) {
 
             StreetSegment streetSegment = accessPaths.get(startVertexStopIndex);
+            EdgeStore edgeStore = null;
+            if (OSMLinkIds){
+                edgeStore = network.streetLayer.edgeStore;
+            }
             if (streetSegment == null) {
                 StreetRouter streetRouter = accessRouter.get(accessMode);
                 //FIXME: Must we really update this on every streetrouter?
@@ -281,7 +279,7 @@ public class Trip {
                     streetSegment = new StreetSegment(streetPath, accessMode, network.streetLayer);
 
                     TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
-                            streetSegment.duration, 0, streetSegment.geometry);
+                            streetSegment.duration, 0, streetSegment.geometry, streetSegment, edgeStore);
 
                     legs.add(0, accessLeg);
 
@@ -291,7 +289,7 @@ public class Trip {
                 }
             } else {
                 TripLeg accessLeg = TripLeg.newTransferLeg(accessMode.toString(),
-                        streetSegment.duration, 0, streetSegment.geometry);
+                        streetSegment.duration, 0, streetSegment.geometry, streetSegment, edgeStore);
                 legs.add(0, accessLeg);
 
                 accessPaths.put(startVertexStopIndex, streetSegment);
@@ -302,7 +300,7 @@ public class Trip {
     }
 
     private void addEgressPath(Map<LegMode, StreetRouter> egressRouter, Map<Integer, StreetSegment> egressPaths,
-                               TransportNetwork network, ProfileRequest request) {
+                               TransportNetwork network, ProfileRequest request, boolean OSMLinkIds) {
         TripLeg leg = legs.get(legs.size() - 1);
 
         int cumulativeFare = leg.getCumulativeFare();
@@ -314,6 +312,11 @@ public class Trip {
         if (egressMode != null) {
             //Here egressRouter needs to have this egress mode since stopModeEgressMap is filled from egressRouter
             StreetSegment streetSegment = egressPaths.get(endVertexStopIndex);
+            EdgeStore edgeStore = null;
+            if (OSMLinkIds){
+                edgeStore = network.streetLayer.edgeStore;
+            }
+
             if (streetSegment == null) {
                 StreetRouter streetRouter = egressRouter.get(egressMode);
                 //FIXME: Must we really update this on every streetrouter?
@@ -324,14 +327,14 @@ public class Trip {
                     streetSegment = new StreetSegment(streetPath, egressMode, network.streetLayer);
 
                     TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                            streetSegment.duration, cumulativeFare, streetSegment.geometry);
+                            streetSegment.duration, cumulativeFare, streetSegment.geometry, streetSegment, edgeStore);
                     legs.add(egressLeg);
                 } else {
                     LOG.warn("EGRESS: Last state not found for mode:{} stop:{}({})", egressMode, endVertexStopIndex, endStopIndex);
                 }
             } else {
                 TripLeg egressLeg = TripLeg.newTransferLeg(egressMode.toString(),
-                        streetSegment.duration, cumulativeFare, streetSegment.geometry);
+                        streetSegment.duration, cumulativeFare, streetSegment.geometry, streetSegment, edgeStore);
                 legs.add(egressLeg);
                 egressPaths.put(endVertexStopIndex, streetSegment);
             }

@@ -20,6 +20,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
     private boolean dropItineraryGeometry = false;
     private boolean shortestPath = false;
+    private boolean OSMLinkIds = false;
 
     private boolean hasFares() {
         return routingProperties.fareCalculator != null;
@@ -38,6 +39,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         dropItineraryGeometry = true;
     }
     public void shortestPathOnly() { shortestPath = true; }
+    public void OSMLinkIds() { OSMLinkIds = true; }
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
@@ -46,6 +48,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
         TripPlanner computer = new TripPlanner(transportNetwork, request);
         computer.setOD(fromIds[index], toIds[index]);
         computer.setShortestPath(this.shortestPath);
+        computer.setOSMLinkIds(this.OSMLinkIds);
         List<Trip> trips = computer.plan();
 
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
@@ -104,6 +107,12 @@ public class FastDetailedItineraryPlanner extends R5Process {
                 travelTimesTable.set("wait", Utils.roundTo1Place(leg.getWaitTime() / 60.0));
                 travelTimesTable.set("distance", leg.getLegDistance());
                 travelTimesTable.set("route", leg.getRoute());
+                if (OSMLinkIds) {
+                    travelTimesTable.set("osm_id_list", leg.getListOSMId().toString());
+                    travelTimesTable.set("edge_id_list", leg.getListEdgeId().toString());
+                    travelTimesTable.set("board_stop_id", leg.getBoardStopId());
+                    travelTimesTable.set("alight_stop_id", leg.getAlightStopId());
+                }
 
                 if (!dropItineraryGeometry) travelTimesTable.set("geometry", leg.getGeometry().toString());
             });
@@ -137,6 +146,12 @@ public class FastDetailedItineraryPlanner extends R5Process {
         itinerariesDataFrame.addDoubleColumn("wait", 0.0);
         itinerariesDataFrame.addIntegerColumn("distance", 0);
         itinerariesDataFrame.addStringColumn("route", "");
+        if (OSMLinkIds) {
+            itinerariesDataFrame.addStringColumn("osm_id_list", "");
+            itinerariesDataFrame.addStringColumn("edge_id_list", "");
+            itinerariesDataFrame.addStringColumn("board_stop_id", "");
+            itinerariesDataFrame.addStringColumn("alight_stop_id", "");
+        }
         if (!dropItineraryGeometry) itinerariesDataFrame.addStringColumn("geometry", "");
 
         return itinerariesDataFrame;
