@@ -44,6 +44,9 @@
 #' @param drop_geometry A logical. Whether the output should include the
 #'   geometry of each trip leg or not. The default value of `FALSE` keeps the
 #'   geometry column in the result.
+#' @param osm_link_ids A logical. Whether the output should include the
+#'   additional columns with the OSM ids of the road segments used along the trip
+#'   geometry Defaults to `FALSE`.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -111,6 +114,7 @@ detailed_itineraries <- function(r5r_core,
                                  verbose = FALSE,
                                  progress = FALSE,
                                  drop_geometry = FALSE,
+                                 osm_link_ids = FALSE,
                                  output_dir = NULL) {
 
   old_options <- options(datatable.optimize = Inf)
@@ -175,6 +179,7 @@ detailed_itineraries <- function(r5r_core,
   )
   shortest_path <- assign_shortest_path(shortest_path)
   drop_geometry <- assign_drop_geometry(drop_geometry)
+  osm_link_ids <- assign_osm_link_ids(osm_link_ids, drop_geometry)
 
   set_time_window(r5r_core, time_window)
   set_monte_carlo_draws(r5r_core, 1, time_window)
@@ -215,7 +220,8 @@ detailed_itineraries <- function(r5r_core,
     max_car_time,
     max_trip_duration,
     drop_geometry,
-    shortest_path
+    shortest_path,
+    osm_link_ids
   )
 
   if (!is.null(output_dir)) return(output_dir)
