@@ -102,6 +102,7 @@ other (more analytical) routing functions included in the package.</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  drop_geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  osm_link_ids <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -282,6 +283,12 @@ among all active threads.</p></dd>
 <dd><p>A logical. Whether the output should include the
 geometry of each trip leg or not. The default value of <code>FALSE</code> keeps the
 geometry column in the result.</p></dd>
+
+
+<dt id="arg-osm-link-ids">osm_link_ids<a class="anchor" aria-label="anchor" href="#arg-osm-link-ids"></a></dt>
+<dd><p>A logical. Whether the output should include the
+additional columns with the OSM ids of the road segments used along the trip
+geometry Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
