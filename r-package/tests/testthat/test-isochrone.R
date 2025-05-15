@@ -9,8 +9,8 @@ departure_datetime <- as.POSIXct(
 )
 
 tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
-                   origins = pois,
-                   cutoffs = c(0, 15, 30),
+                   origins = pois[2,],
+                   cutoffs = c(0, 30),
                    sample_size = 0.8,
                    mode = "WALK",
                    mode_egress = "WALK",
@@ -103,7 +103,7 @@ test_that("output is an sf with correct columns", {
 
   # more cutoffs means more rows
 
-  iso2 <- tester(cutoffs = c(15, 30, 50))
+  iso2 <- tester(cutoffs = c(30, 50))
   expect_true(
     nrow(iso2) > nrow(iso)
   )

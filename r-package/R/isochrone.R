@@ -32,7 +32,7 @@
 #'        polygon-based isochrones (the default) based on travel times from each
 #'        origin to a sample of a random  sample nodes in the transport network
 #'        (see parameter `sample_size`). If `FALSE`, the function outputs
-#'        line-based isochronesbased on travel times from each origin to the
+#'        line-based isochrones based on travel times from each origin to the
 #'        centroids of all segments in the transport network.
 #' @param time_window An integer. The time window in minutes for which `r5r`
 #'        will calculate multiple travel time matrices departing each minute.
@@ -92,62 +92,66 @@
 #' @family Isochrone
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
-#'options(java.parameters = "-Xmx2G")
-#'library(r5r)
-#'library(ggplot2)
+#' options(java.parameters = "-Xmx2G")
+#' library(r5r)
+#' library(ggplot2)
 #'
-#'# build transport network
-#'data_path <- system.file("extdata/poa", package = "r5r")
-#'r5r_core <- setup_r5(data_path = data_path)
+#' # build transport network
+#' data_path <- system.file("extdata/poa", package = "r5r")
+#' r5r_core <- setup_r5(data_path = data_path)
 #'
-#'# load origin/point of interest
-#'points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))
-#'origin_1 <- points[936,]
+#' # load origin/point of interest
+#' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+#' origin <- points[2,]
 #'
-#'departure_datetime <- as.POSIXct(
-#' "13-05-2019 14:00:00",
-#' format = "%d-%m-%Y %H:%M:%S"
-#')
+#' departure_datetime <- as.POSIXct(
+#'  "13-05-2019 14:00:00",
+#'  format = "%d-%m-%Y %H:%M:%S"
+#' )
 #'
-#'# estimate polygon-based isochrone from origin_1
-#'iso_poly <- isochrone(r5r_core,
-#'                 origins = origin_1,
-#'                 mode = "walk",
-#'                 polygon_output = TRUE,
-#'                 departure_datetime = departure_datetime,
-#'                 cutoffs = seq(0, 100, 10)
-#'                 )
-#'head(iso_poly)
+#' # estimate polygon-based isochrone from origin
+#' iso_poly <- isochrone(
+#'   r5r_core,
+#'   origins = origin,
+#'   mode = "walk",
+#'   polygon_output = TRUE,
+#'   departure_datetime = departure_datetime,
+#'   cutoffs = seq(0, 120, 30)
+#'   )
 #'
-#'
-#'# estimate line-based isochrone from origin_1
-#'iso_lines <- isochrone(r5r_core,
-#'                      origins = origin_1,
-#'                      mode = "walk",
-#'                      polygon_output = FALSE,
-#'                      departure_datetime = departure_datetime,
-#'                      cutoffs = seq(0, 100, 10)
-#')
-#'head(iso_lines)
+#' head(iso_poly)
 #'
 #'
-#'# plot colors
-#'colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
-#'            '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+#' # estimate line-based isochrone from origin
+#' iso_lines <- isochrone(
+#'   r5r_core,
+#'   origins = origin,
+#'   mode = "walk",
+#'   polygon_output = FALSE,
+#'   departure_datetime = departure_datetime,
+#'   cutoffs = seq(0, 100, 25)
+#'   )
 #'
-#'# polygons
-#'ggplot() +
-#'  geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
-#'  scale_fill_manual(values = colors) +
-#'  theme_minimal()
+#' head(iso_lines)
 #'
-#'# lines
-#'ggplot() +
-#'  geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
-#'  scale_color_manual(values = colors) +
-#'  theme_minimal()
 #'
-#'stop_r5(r5r_core)
+#' # plot colors
+#' colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
+#'             '#d45087','#a05195','#665191','#2f4b7c','#003f5c')
+#'
+#' # polygons
+#' ggplot() +
+#'   geom_sf(data=iso_poly, aes(fill=factor(isochrone))) +
+#'   scale_fill_manual(values = colors) +
+#'   theme_minimal()
+#'
+#' # lines
+#' ggplot() +
+#'   geom_sf(data=iso_lines, aes(color=factor(isochrone))) +
+#'   scale_color_manual(values = colors) +
+#'   theme_minimal()
+#'
+#' stop_r5(r5r_core)
 #'
 #' @export
 isochrone <- function(r5r_core,
@@ -185,7 +189,7 @@ isochrone <- function(r5r_core,
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
 
-  # include 0 in cutoffs
+  # sort cutoffs and include 0
   if (min(cutoffs) > 0) {cutoffs <- sort(c(0, cutoffs))}
 
 
@@ -199,12 +203,14 @@ isochrone <- function(r5r_core,
     destinations = r5r::street_network_to_sf(r5r_core)$vertices
 
     # sample size: proportion of nodes to be considered
+    set.seed(42)
     index_sample <- sample(1:nrow(destinations),
                            size = nrow(destinations) * sample_size,
                            replace = FALSE)
     destinations <- destinations[index_sample,]
     on.exit(rm(.Random.seed, envir=globalenv()))
   }
+
   if(isFALSE(polygon_output)){
 
     network_e <- r5r::street_network_to_sf(r5r_core)$edges
@@ -240,12 +246,26 @@ isochrone <- function(r5r_core,
                               progress = progress
                               )
 
+    # ignore travel times equal to 0
+    ttm <- ttm[travel_time_p50>0, ]
 
     # aggregate travel-times
     # ttm[, isochrone_interval := cut(x=travel_time_p50, breaks=cutoffs)]
     ttm[, isochrone := cut(x=travel_time_p50, breaks=cutoffs, labels=F)]
     ttm[, isochrone := cutoffs[cutoffs>0][isochrone]]
 
+    # check if there are at least 3 points to build a
+    if (isTRUE(polygon_output)) {
+
+      check_number_destinations <- ttm[, .(count= .N ), by=.(from_id, isochrone) ]
+      temp_ids <- subset(check_number_destinations, count<3)$from_id
+
+      if(length(temp_ids)>0){
+        stop(paste0("Problem in the following origin points: ",
+                    paste0(temp_ids, collapse = ', '),". These origin points are probably located in areas where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))
+      }
+
+    }
 
     ### fun to get isochrones for each origin
     # polygon-based isochrones
@@ -264,8 +284,6 @@ isochrone <- function(r5r_core,
 
       get_poly <- function(cut){ # cut = 30
         temp <- subset(dest, travel_time_p50 <= cut)
-
-        if(nrow(temp)<=4){stop(paste0("Your origin point ", orig," is probably located in an area where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))}
 
         temp_iso <- concaveman::concaveman(temp)
         temp_iso$isochrone <- cut

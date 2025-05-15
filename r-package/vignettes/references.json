@@ -169,7 +169,7 @@
 		"page": "45-53",
 		"source": "DOI.org (Crossref)",
 		"title": "Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks",
-		"URL": "http://journals.sagepub.com/doi/10.3141/2653-06",
+		"URL": "https://journals.sagepub.com/doi/10.3141/2653-06",
 		"volume": "2653",
 		"author": [
 			{
@@ -296,7 +296,7 @@
 		"id": "opentripplanneropentripplanner",
 		"type": "webpage",
 		"title": "OpenTripPlanner",
-		"URL": "http://www.opentripplanner.org/",
+		"URL": "https://www.opentripplanner.org/",
 		"author": [
 			{
 				"family": "OpenTripPlanner",
@@ -325,7 +325,7 @@
 		"page": "591-604",
 		"source": "DOI.org (Crossref)",
 		"title": "Round-Based Public Transit Routing",
-		"URL": "http://pubsonline.informs.org/doi/10.1287/trsc.2014.0534",
+		"URL": "https://pubsonline.informs.org/doi/10.1287/trsc.2014.0534",
 		"volume": "49",
 		"author": [
 			{
@@ -407,7 +407,7 @@
       "title":"The impact of temporal resolution on public transport accessibility measurement: Review and case study in Poland",
       "title-short":"The impact of temporal resolution on public transport accessibility measurement",
       "type":"article-journal",
-      "URL":"http://www.sciencedirect.com/science/article/pii/S0966692318305209",
+      "URL":"https://www.sciencedirect.com/science/article/pii/S0966692318305209",
       "volume":"75"
    },
    	{
@@ -418,7 +418,7 @@
 		"source": "ses.library.usyd.edu.au",
 		"title": "Transport Access Manual: A Guide for Measuring Connection between People and Places",
 		"title-short": "Transport Access Manual",
-		"URL": "https://ses.library.usyd.edu.au/handle/2123/23733",
+		"URL": "https://hdl.handle.net/2123/23733",
 		"author": [
 			{
 				"family": "Levinson",
@@ -479,7 +479,7 @@
     "page": "92-97",
     "title": "Constructing a routable retrospective transit timetable from a real-time vehicle location feed and GTFS",
     "type": "article-journal",
-    "URL": "http://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
+    "URL": "https://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
     "volume": "62"
   },
 
@@ -494,7 +494,7 @@
 		"source": "ScienceDirect",
 		"title": "Future accessibility impacts of transport policy scenarios: Equity and sensitivity to travel time thresholds for Bus Rapid Transit expansion in Rio de Janeiro",
 		"title-short": "Future accessibility impacts of transport policy scenarios",
-		"URL": "http://www.sciencedirect.com/science/article/pii/S0966692318302047",
+		"URL": "https://www.sciencedirect.com/science/article/pii/S0966692318302047",
 		"volume": "74",
 		"author": [
 			{

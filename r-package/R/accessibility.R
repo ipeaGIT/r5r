@@ -110,7 +110,7 @@
 #'   mode = "WALK",
 #'   departure_datetime = departure_datetime,
 #'   decay_function = "step",
-#'   cutoffs = c(25, 30),
+#'   cutoffs = c(15, 30),
 #'   max_trip_duration = 30
 #' )
 #' head(access)
@@ -178,7 +178,15 @@ accessibility <- function(r5r_core,
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
 
+  # check availability of transit services on the selected date
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+  }
+
   # cap trip duration with cutoffs
+  set_cutoffs(r5r_core, cutoffs, decay_function)
+  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+
   if(!is.null(cutoffs)){
     max_trip_duration <- ifelse(max_trip_duration > max(cutoffs), max(cutoffs), max_trip_duration)
 
@@ -211,8 +219,6 @@ accessibility <- function(r5r_core,
   )
 
 
-
-
   decay_list <- assign_decay_function(decay_function, decay_value)
 
   set_time_window(r5r_core, time_window)
@@ -228,7 +234,6 @@ accessibility <- function(r5r_core,
   set_fare_structure(r5r_core, fare_structure)
   set_max_fare(r5r_core, max_fare)
   set_output_dir(r5r_core, output_dir)
-  set_cutoffs(r5r_core, cutoffs, decay_function)
 
   # call r5r_core method and process results ------------------------------
 

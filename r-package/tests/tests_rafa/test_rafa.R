@@ -1,3 +1,8 @@
+#> Travel-time results are currently limited to 4 million destinations,
+#> and 16 million total origin-destination pairs. Path detail results are currently
+#> limited to 5000 destinations
+
+
 
 
 link <- 'https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/2023/PNADC_032023.zip'
@@ -37,7 +42,6 @@ library(testthat)
 library(ggplot2)
 library(checkmate)
 library(geobr)
-library(gtfs2gps)
 library(tictoc)
 library(mapview)
 mapviewOptions(platform = 'leafgl')

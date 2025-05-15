@@ -83,3 +83,19 @@ test_that("throws error if write access to given dir is denied", {
 
   Sys.chmod(tmpdir, "755")
 })
+
+
+
+# TO DO: create a mock test
+# test_that("throws error due to large geographic extent", {
+#
+#   local_mocked_bindings(
+#     jcall <- function(...) {"Geographic extent of street layer"}
+#   )
+#
+#   result <- tester(cache = FALSE)
+#   expect_true(
+#     grepl(file.path(fs::path_norm(tempdir()), "standardized_cnefe"), result)
+#   )
+# }
+

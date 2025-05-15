@@ -1,9 +1,24 @@
-# r5r 2.1.0 (dev)
+# r5r 2.2.0 dev
+
+**Major changes**
+- r5r now uses the latest version of R5 V7.3. Closed [#417](https://github.com/ipeaGIT/r5r/issues/417)
+
+**Minor changes**
+- r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus.
+- removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an `r5rlog` file in the data path.
+
+**Bug fixes**
+- Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
+- Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed [#434](https://github.com/ipeaGIT/r5r/issues/434) and [#433](https://github.com/ipeaGIT/r5r/issues/433)
+
+
+
+# r5r 2.1.0
 
 **Minor changes**
 
 - The `isochrone()` function has a new boolean parameter `polygon_output` that allows users to choose whether the output should be a polygon- or line-based isochrone. Closed [#382](https://github.com/ipeaGIT/r5r/issues/382)
-
+- When using public transit modes, the package now automatically detects whether there are any transit services operation on the seleced departure date. If there are no services, the package will return an error message. Closed [#326](https://github.com/ipeaGIT/r5r/issues/326)
 
 
 # r5r 2.0

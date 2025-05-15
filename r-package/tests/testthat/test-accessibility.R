@@ -18,7 +18,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    time_window = 1L,
                    percentiles = 50L,
                    decay_function = "step",
-                   cutoffs = NULL,
+                   cutoffs = 10,
                    decay_value = NULL,
                    fare_structure = NULL,
                    max_fare = Inf,
@@ -79,12 +79,12 @@ test_that("adequately raises errors", {
   list_origins      <- list(id = c("1", "2"), lat = c(-30.02756, -30.02329), long = c(-51.22781, -51.21886))
   list_destinations <- list_origins
 
-  expect_error(tester(r5r_core, origins = multipoint_origins))
-  expect_error(tester(r5r_core, destinations = multipoint_destinations))
-  expect_error(tester(r5r_core, origins = list_origins))
-  expect_error(tester(r5r_core, destinations = list_destinations))
-  expect_error(tester(r5r_core, origins = "origins"))
-  expect_error(tester(r5r_core, destinations = "destinations"))
+  expect_error(tester(origins = multipoint_origins))
+  expect_error(tester(destinations = multipoint_destinations))
+  expect_error(tester(origins = list_origins))
+  expect_error(tester(destinations = list_destinations))
+  expect_error(tester(origins = "origins"))
+  expect_error(tester(destinations = "destinations"))
 
   # error/warning related to using wrong origins/destinations column types
   origins <- destinations <- points[1:2, ]
@@ -94,69 +94,59 @@ test_that("adequately raises errors", {
   destinations_char_lat   <- data.frame(id = destinations$id, lat = as.character(destinations$lat), lon = destinations$lon)
   destinations_char_lon   <- data.frame(id = destinations$id, lat = destinations$lat, lon = as.character(destinations$lon))
 
-  expect_error(tester(r5r_core, origins = origins_char_lat))
-  expect_error(tester(r5r_core, origins = origins_char_lon))
-  expect_error(tester(r5r_core, destinations = destinations_char_lat))
-  expect_error(tester(r5r_core, destinations = destinations_char_lon))
+  expect_error(tester(origins = origins_char_lat))
+  expect_error(tester(origins = origins_char_lon))
+  expect_error(tester(destinations = destinations_char_lat))
+  expect_error(tester(destinations = destinations_char_lon))
 
   # error related to nonexistent mode
-  expect_error(tester(r5r_core, mode = "pogoball"))
+  expect_error(tester(mode = "pogoball"))
 
   # errors related to date formatting
   numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
-  expect_error(tester(r5r_core, departure_datetime = "13-05-2019 14:00:00"))
-  expect_error(tester(r5r_core, numeric_datetime))
+  expect_error(tester(departure_datetime = "13-05-2019 14:00:00"))
+  expect_error(tester(numeric_datetime))
+
 
 
   # errors related to max_trip_duration
-  expect_error(tester(r5r_core, cutoffs = 10, max_trip_duration = 5))
-  expect_error(tester(r5r_core, max_trip_duration = "1000"))
-  expect_error(tester(r5r_core, max_trip_duration = NULL))
+  expect_error(tester(cutoffs = 10, max_trip_duration = 5))
+  expect_error(tester(max_trip_duration = "1000"))
+  expect_error(tester(max_trip_duration = NULL))
 
   # errors related to max_walk_time
-  expect_error(tester(r5r_core, max_walk_time = "1000"))
-  expect_error(tester(r5r_core, max_walk_time = NULL))
+  expect_error(tester(max_walk_time = "1000"))
+  expect_error(tester(max_walk_time = NULL))
 
   # errors related to max_bike_time
-  expect_error(tester(r5r_core, max_bike_time = "1000"))
-  expect_error(tester(r5r_core, max_bike_time = NULL))
+  expect_error(tester(max_bike_time = "1000"))
+  expect_error(tester(max_bike_time = NULL))
 
-    # error/warning related to max_street_time
-  expect_error(tester(r5r_core, max_trip_duration = "120"))
 
   # error related to non-numeric walk_speed
-  expect_error(tester(r5r_core, walk_speed = "3.6"))
+  expect_error(tester(walk_speed = "3.6"))
 
   # error related to non-numeric bike_speed
-  expect_error(tester(r5r_core, bike_speed = "12"))
+  expect_error(tester(bike_speed = "12"))
 
   # error related to too many or invalid percentiles
-  expect_error(tester(r5r_core, percentiles = .3))
-  expect_error(tester(r5r_core, percentiles = 1:6))
+  expect_error(tester(percentiles = .3))
+  expect_error(tester(percentiles = 1:6))
 
   # decay_function
-  expect_error(tester(r5r_core, decay_function = "fixed_exponential"))
-  expect_error(tester(r5r_core, decay_function = "bananas"))
-  expect_error(tester(r5r_core, opportunities_colname = "bananas"))
-  expect_error(tester(r5r_core, cutoffs = "bananas"))
-  expect_error(tester(r5r_core, decay_value = "bananas"))
+  expect_error(tester(decay_function = "fixed_exponential"))
+  expect_error(tester(decay_function = "bananas"))
+  expect_error(tester(opportunities_colname = "bananas"))
+  expect_error(tester(cutoffs = "bananas"))
+  expect_error(tester(decay_value = "bananas"))
+  expect_error(
+    tester(decay_function = "fixed_exponential", decay_value = 0.5, cutoffs = 30)
+  )
 
 })
 
-# test_that("adequately raises warnings - needs java", {
-#
-#   # error/warning related to using wrong origins/destinations column types
-#   origins <- destinations <- points[1:2, ]
-#
-#   origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
-#   destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
-#
-#   expect_warning(tester(r5r_core, origins = origins_numeric_id))
-#   expect_error(tester(r5r_core, destinations = destinations_numeric_id))
-#
-#
-# })
+
 
 
 # adequate behavior ------------------------------------------------------
@@ -179,7 +169,7 @@ test_that("output is correct", {
     "data.table"
   )
   expect_s3_class(
-    tester(decay_function = "fixed_exponential", decay_value = 0.5),
+    tester(decay_function = "fixed_exponential", decay_value = 0.5, cutoffs = NULL),
     "data.table"
   )
 
@@ -222,4 +212,15 @@ test_that("output is correct", {
   )
   expect_true( nrow(two_opport) > nrow(one_opport))
   expect_true(is(two_opport, "data.table"))
+})
+
+
+test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_core,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
 })

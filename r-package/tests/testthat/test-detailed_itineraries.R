@@ -20,7 +20,8 @@ default_tester <- function(r5r_core,
                            shortest_path = TRUE,
                            n_threads = Inf,
                            verbose = FALSE,
-                           drop_geometry = FALSE) {
+                           drop_geometry = FALSE,
+                           osm_link_ids = FALSE) {
 
  results <- detailed_itineraries(
    r5r_core,
@@ -37,7 +38,8 @@ default_tester <- function(r5r_core,
    shortest_path = shortest_path,
    n_threads = n_threads,
    verbose = verbose,
-   drop_geometry = drop_geometry
+   drop_geometry = drop_geometry,
+   osm_link_ids = osm_link_ids
  )
 
  return(results)
@@ -124,7 +126,12 @@ test_that("detailed_itineraries adequately raises errors", {
   expect_error(default_tester(r5r_core, drop_geometry = "TRUE"))
   expect_error(default_tester(r5r_core, drop_geometry = 1))
 
-})
+  # error related to non-logical osm_link_ids
+  expect_error(default_tester(r5r_core, osm_link_ids = "TRUE"))
+  expect_error(default_tester(r5r_core, osm_link_ids = 1))
+  expect_error(default_tester(r5r_core, osm_link_ids = TRUE, drop_geometry=TRUE))
+
+  })
 
 test_that("detailed_itineraries adequately raises warnings and messages", {
 
@@ -187,8 +194,18 @@ test_that("detailed_itineraries output is correct", {
   expect_false(is(result_sf_input, "sf"))
   expect_true(is(result_sf_input, "data.table"))
 
-  # expect each column to be of right class
+  # bring osm ids
+  result_df_input_ids <- default_tester(r5r_core,
+                                        osm_link_ids = TRUE,
+                                        drop_geometry = FALSE)
 
+  expect_true(
+    all(c('edge_id_list', 'board_stop_id', 'alight_stop_id') %in% names(result_df_input_ids))
+    )
+
+
+
+  # expect each column to be of right class
   expect_true(typeof(result_df_input$from_id) == "character")
   expect_true(typeof(result_df_input$from_lat) == "double")
   expect_true(typeof(result_df_input$from_lon) == "double")
@@ -203,6 +220,9 @@ test_that("detailed_itineraries output is correct", {
   expect_true(typeof(result_df_input$wait) == "double")
   expect_true(typeof(result_df_input$distance) == "integer")
   expect_true(typeof(result_df_input$route) == "character")
+  expect_true(typeof(result_df_input_ids$edge_id_list) == "character")
+  expect_true(typeof(result_df_input_ids$board_stop_id) == "character")
+  expect_true(typeof(result_df_input_ids$alight_stop_id) == "character")
 
 
   #  * r5r options ----------------------------------------------------------
@@ -279,4 +299,15 @@ test_that("detailed_itineraries output is correct", {
 
   expect_true(nrow(df) == 0)
 
+})
+
+
+test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_core,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
 })

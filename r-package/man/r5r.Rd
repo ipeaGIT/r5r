@@ -31,6 +31,7 @@ Please check the vignettes on the \href{https://ipeagit.github.io/r5r/}{website}
 Useful links:
 \itemize{
   \item \url{https://github.com/ipeaGIT/r5r}
+  \item \url{https://ipeagit.github.io/r5r/}
   \item Report bugs at \url{https://github.com/ipeaGIT/r5r/issues}
 }
 
@@ -49,6 +50,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Luyu Liu \email{luyuliu@ufl.edu} (\href{https://orcid.org/0000-0002-6684-5570}{ORCID}) [contributor]
+  \item Alex Magnus \email{alex.magnus@mail.utoronto.ca} [contributor]
   \item Ipea - Institute for Applied Economic Research [copyright holder, funder]
 }
 

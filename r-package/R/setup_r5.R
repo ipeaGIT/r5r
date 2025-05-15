@@ -69,10 +69,13 @@ setup_r5 <- function(data_path,
     stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
     }
 
+  # expand data_path to full path, as required by rJava api call
+  data_path <- path.expand(data_path)
 
   # check Java version installed locally ---------------------------------------
-
-  rJava::.jinit()
+  log_filename <- paste0("r5rlog_", format(Sys.time(), "%Y%m%d"), ".log")
+  log_path <- file.path(data_path, log_filename)
+  rJava::.jinit(parameters = paste0("-DLOG_PATH=", log_path))
   ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
   ver <- as.numeric(gsub("\\..*", "", ver))
   if (ver != 21) {
@@ -84,9 +87,6 @@ setup_r5 <- function(data_path,
       "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
     )
   }
-
-  # expand data_path to full path, as required by rJava api call
-  data_path <- path.expand(data_path)
 
   # check if data_path has osm.pbf, .tif gtfs data, or a network.dat file
   any_network <- length(grep("network.dat", list.files(data_path))) > 0
@@ -163,10 +163,15 @@ setup_r5 <- function(data_path,
 
     # build new r5r_core
     r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation, check=F)
-    ex = rJava::.jgetEx(clear=T)
-    if (!is.null(NULL)) {
+    ex = rJava::.jgetEx(clear=TRUE)
+    if (!is.null(ex)) {
+      msg <- rJava::.jcall(ex, "S", "toString")
+      if (grepl("Geographic extent of street layer", msg)) {
+        cli::cli_abort("Geographic extent of street layer exceeds limit of 975000 km2.")
+      } else {
       ex$printStackTrace()
       return(NULL)
+      }
     }
 
     # display a message if there is a PBF file but no GTFS data

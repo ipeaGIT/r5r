@@ -1,4 +1,8 @@
-destination: ../docs
+url: https://ipeagit.github.io/r5r/
+
+template:
+  bootstrap: 5
+  light-switch: true
 
 development:
   mode: auto
@@ -40,4 +44,3 @@ reference:
     - r5r_cache
     - download_r5
     - stop_r5
-
