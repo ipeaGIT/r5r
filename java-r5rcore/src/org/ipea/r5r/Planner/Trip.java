@@ -106,13 +106,6 @@ public class Trip {
 
     public String getKey() {
         return key;
-//        if (isDirect) {
-//            return legs.iterator().next().getMode();
-//        } else {
-//            return legs.stream().map(TripLeg::getRoute).
-//                    filter(Predicate.not(String::isEmpty)).
-//                    collect(Collectors.joining(", "));
-//        }
     }
 
     public void buildKey() {
