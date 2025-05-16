@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.099999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,10 +51,25 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="r5r-220-dev">r5r 2.2.0 dev<a class="anchor" aria-label="anchor" href="#r5r-220-dev"></a></h2>
-<p><strong>Major changes</strong> - r5r now uses the latest version of R5 V7.3. Closed <a href="https://github.com/ipeaGIT/r5r/issues/417" class="external-link">#417</a></p>
-<p><strong>Minor changes</strong> - r5r now throws an error when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389 and #407. Thanks to PR #426 by Alex Magnus. - removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an <code>r5rlog</code> file in the data path.</p>
-<p><strong>Bug fixes</strong> - Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all. - Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a> and <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a></p>
-</div>
+<p><strong>Major changes</strong></p>
+<ul><li>r5r now uses the latest version of R5 V7.4. Closed <a href="https://github.com/ipeaGIT/r5r/issues/436" class="external-link">#436</a>
+</li>
+<li>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> now has a new parameter <code>osm_link_ids</code>. A logical. Whether the output should include the additional columns with the OSM ids of the road segments used along the trip geometry Defaults to <code>FALSE</code>. Closes issues <a href="https://github.com/ipeaGIT/r5r/issues/298" class="external-link">#298</a>
+</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>r5r now throws an informative error message when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389, #405, #406, #407, #412 and #421. Thanks to PR #426 by Alex Magnus.</li>
+<li>removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an <code>r5rlog</code> file in the data path.</li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>Fixed error caused by phantom 0-minute isochrone. Closed issues #433 and #434</li>
+<li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
+<li>Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a> and <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a>
+</li>
+</ul><p><strong>New contributors</strong></p>
+<ul><li>Alex Magnus</li>
+<li>Luyu Liu</li>
+<li>Daniel Snow</li>
+<li>Funding from the Department of Geography &amp; Planning, University of Toronto via the Bousfield Visitorship.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="r5r-210">r5r 2.1.0<a class="anchor" aria-label="anchor" href="#r5r-210"></a></h2><p class="text-muted">CRAN release: 2025-03-08</p>
 <p><strong>Minor changes</strong></p>
@@ -283,7 +298,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

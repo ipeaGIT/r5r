@@ -21,7 +21,7 @@ other (more analytical) routing functions included in the package."><meta proper
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.099999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -286,9 +286,13 @@ geometry column in the result.</p></dd>
 
 
 <dt id="arg-osm-link-ids">osm_link_ids<a class="anchor" aria-label="anchor" href="#arg-osm-link-ids"></a></dt>
-<dd><p>A logical. Whether the output should include the
-additional columns with the OSM ids of the road segments used along the trip
-geometry Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>A logical. Whether the output should include additional
+columns with the OSM ids of the road segments used along the trip geometry.
+Defaults to <code>FALSE</code>. Keep in mind that the <code>osm_id</code> for a road will be
+returned even if the route uses a small stretch of the road (e.g. 5m of a
+600m street segment). If you want more precision you should use the column
+<code>edge_id</code> which returns segments of the exact length used in the trip, and
+you can later tie that back to the <code>osm_id</code>.</p></dd>
 
 
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
@@ -457,7 +461,7 @@ Information Science, 33(9), 1759-1787. <a href="https://doi.org/10.1080/13658816
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">
