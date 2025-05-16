@@ -1,7 +1,7 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 2.1.099999
+Version: 2.1.0.9000
 Authors@R: c(
     person("Marcus", "Saraiva", , "marcus.saraiva@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-6218-2338")),
@@ -18,7 +18,7 @@ Authors@R: c(
     person("Alex", "Magnus", , "alex.magnus@mail.utoronto.ca", role = "ctb"),
     person("Daniel", "Snow", , "dan@sno.ws", role = "ctb"),
     person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd")),
-    person("Department of Geography & Planning, University of Toronto", role = fnd")
+    person("Department of Geography & Planning, University of Toronto", role ="fnd")
     )
 Description: Rapid realistic routing on multimodal transport networks
     (walk, bike, public transport and car) using 'R5', the Rapid Realistic
