@@ -5,21 +5,21 @@ destinations specified by the user are actually positioned on the network
 created by R5. The snapping process in R5 is composed of two rounds.
 First, it tries to snap the points within a radius of 300 meters from
 themselves. If the first round is unsuccessful, then R5 expands the search
-radius to 1.6 km. If yet again it is unsuccessful, then the unsnapped points
-won't be used during the routing process. The snapped location of each point
-depends on the transport mode set by the user, because some network edges
-are not available to specific modes (e.g. a pedestrian-only street cannot be
-used to snap car trips)."><meta property="og:description" content="Finds the snapped location of points on R5 network. Snapping is a very
+to the radius specified (by default 1.6km). If yet again it is unsuccessful,
+then the unsnapped points won't be used during the routing process. The
+snapped location of each point depends on the transport mode set by the user,
+because some network edges are not available to specific modes (e.g. a
+pedestrian-only street cannot be used to snap car trips)."><meta property="og:description" content="Finds the snapped location of points on R5 network. Snapping is a very
 important step of the routing process, which is when the origins and
 destinations specified by the user are actually positioned on the network
 created by R5. The snapping process in R5 is composed of two rounds.
 First, it tries to snap the points within a radius of 300 meters from
 themselves. If the first round is unsuccessful, then R5 expands the search
-radius to 1.6 km. If yet again it is unsuccessful, then the unsnapped points
-won't be used during the routing process. The snapped location of each point
-depends on the transport mode set by the user, because some network edges
-are not available to specific modes (e.g. a pedestrian-only street cannot be
-used to snap car trips)."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
+to the radius specified (by default 1.6km). If yet again it is unsuccessful,
+then the unsnapped points won't be used during the routing process. The
+snapped location of each point depends on the transport mode set by the user,
+because some network edges are not available to specific modes (e.g. a
+pedestrian-only street cannot be used to snap car trips)."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -77,16 +77,16 @@ destinations specified by the user are actually positioned on the network
 created by <code>R5</code>. The snapping process in <code>R5</code> is composed of two rounds.
 First, it tries to snap the points within a radius of 300 meters from
 themselves. If the first round is unsuccessful, then <code>R5</code> expands the search
-radius to 1.6 km. If yet again it is unsuccessful, then the unsnapped points
-won't be used during the routing process. The snapped location of each point
-depends on the transport mode set by the user, because some network edges
-are not available to specific modes (e.g. a pedestrian-only street cannot be
-used to snap car trips).</p>
+to the radius specified (by default 1.6km). If yet again it is unsuccessful,
+then the unsnapped points won't be used during the routing process. The
+snapped location of each point depends on the transport mode set by the user,
+because some network edges are not available to specific modes (e.g. a
+pedestrian-only street cannot be used to snap car trips).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_snap</span><span class="op">(</span><span class="va">r5r_core</span>, <span class="va">points</span>, mode <span class="op">=</span> <span class="st">"WALK"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_snap</span><span class="op">(</span><span class="va">r5r_core</span>, <span class="va">points</span>, radius <span class="op">=</span> <span class="fl">1600</span>, mode <span class="op">=</span> <span class="st">"WALK"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -103,6 +103,11 @@ used to snap car trips).</p>
 containing the columns <code>id</code>, <code>lon</code> and <code>lat</code>.</p></dd>
 
 
+<dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
+<dd><p>Numeric. The maximum radius in meters within which to snap.
+Defaults to 1600m.</p></dd>
+
+
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
 <dd><p>A string. Which mode to consider when trying to snap the points
 to the network. Defaults to <code>WALK</code>, also allows <code>BICYCLE</code> and <code>CAR</code>.</p></dd>
@@ -111,7 +116,7 @@ to the network. Defaults to <code>WALK</code>, also allows <code>BICYCLE</code> 
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>data.table</code> with the original points, their respective
-snapped coordinates on the street network and the Euclidean distance ( in
+snapped coordinates on the street network and the Euclidean distance (in
 meters) between the original points and their snapped location. Points that
 could not be snapped show <code>NA</code> coordinates and <code>found = FALSE</code>.</p>
     </div>
@@ -132,7 +137,7 @@ could not be snapped show <code>NA</code> coordinates and <code>found = FALSE</c
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
 <span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">snap_df</span> <span class="op">&lt;-</span> <span class="fu">find_snap</span><span class="op">(</span><span class="va">r5r_core</span>, <span class="va">points</span>, mode <span class="op">=</span> <span class="st">"WALK"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">snap_df</span> <span class="op">&lt;-</span> <span class="fu">find_snap</span><span class="op">(</span><span class="va">r5r_core</span>, <span class="va">points</span>, radius <span class="op">=</span> <span class="fl">2000</span>, mode <span class="op">=</span> <span class="st">"WALK"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
