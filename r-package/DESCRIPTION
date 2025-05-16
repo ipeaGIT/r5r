@@ -16,8 +16,10 @@ Authors@R: c(
     person("Luyu", "Liu", , "luyuliu@ufl.edu", role = "ctb",
            comment = c(ORCID = "0000-0002-6684-5570")),
     person("Alex", "Magnus", , "alex.magnus@mail.utoronto.ca", role = "ctb"),
-    person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd"))
-  )
+    person("Daniel", "Snow", , "dan@sno.ws", role = "ctb"),
+    person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd")),
+    person("Department of Geography & Planning, University of Toronto", role = fnd")
+    )
 Description: Rapid realistic routing on multimodal transport networks
     (walk, bike, public transport and car) using 'R5', the Rapid Realistic
     Routing on Real-world and Reimagined networks engine
