@@ -2,3 +2,5 @@ doc
 Meta
 /doc/
 /Meta/
+/r-package/rjavaenv/*
+*.log
