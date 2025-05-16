@@ -162,9 +162,13 @@ among all active threads.}
 geometry of each trip leg or not. The default value of \code{FALSE} keeps the
 geometry column in the result.}
 
-\item{osm_link_ids}{A logical. Whether the output should include the
-additional columns with the OSM ids of the road segments used along the trip
-geometry Defaults to \code{FALSE}.}
+\item{osm_link_ids}{A logical. Whether the output should include additional
+columns with the OSM ids of the road segments used along the trip geometry.
+Defaults to \code{FALSE}. Keep in mind that the \code{osm_id} for a road will be
+returned even if the route uses a small stretch of the road (e.g. 5m of a
+600m street segment). If you want more precision you should use the column
+\code{edge_id} which returns segments of the exact length used in the trip, and
+you can later tie that back to the \code{osm_id}.}
 
 \item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
 \code{NULL} (the default), the function will write one \code{.csv} file with the
