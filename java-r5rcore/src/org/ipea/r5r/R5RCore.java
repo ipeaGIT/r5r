@@ -518,17 +518,18 @@ public class R5RCore {
     }
 
     // ----------------------------------  FIND SNAP POINTS  -----------------------------------------
-    public RDataFrame findSnapPoints(String fromId, double fromLat, double fromLon, String mode) throws ExecutionException, InterruptedException {
+    public RDataFrame findSnapPoints(String fromId, double fromLat, double fromLon, double radius, String mode) throws ExecutionException, InterruptedException {
         String[] fromIds = {fromId};
         double[] fromLats = {fromLat};
         double[] fromLons = {fromLon};
 
-        return findSnapPoints(fromIds, fromLats, fromLons, mode);
+        return findSnapPoints(fromIds, fromLats, fromLons, radius, mode);
     }
 
-    public RDataFrame findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, String mode) throws ExecutionException, InterruptedException {
+    public RDataFrame findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, double radius, String mode) throws ExecutionException, InterruptedException {
         SnapFinder snapFinder = new SnapFinder(r5rThreadPool, this.transportNetwork);
         snapFinder.setOrigins(fromId, fromLat, fromLon);
+        snapFinder.setRadius(radius);
         snapFinder.setMode(mode);
         return snapFinder.run();
     }
