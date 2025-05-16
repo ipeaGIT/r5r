@@ -1,6 +1,6 @@
 #' Find snapped locations of input points on street network
 #'
-#' Finds the snapped location of points on `R5` network. Snapping is a very
+#' Finds the snapped location of points on `R5` network. Snapping is an
 #' important step of the routing process, which is when the origins and
 #' destinations specified by the user are actually positioned on the network
 #' created by `R5`. The snapping process in `R5` is composed of two rounds.
@@ -14,11 +14,11 @@
 #'
 #' @template r5r_core
 #' @param points Either a `POINT sf` object with WGS84 CRS, or a `data.frame`
-#' containing the columns `id`, `lon` and `lat`.
+#'        containing the columns `id`, `lon` and `lat`.
 #' @param radius Numeric. The maximum radius in meters within which to snap.
-#' Defaults to 1600m.
+#'        Defaults to 1600m.
 #' @param mode A string. Which mode to consider when trying to snap the points
-#' to the network. Defaults to `WALK`, also allows `BICYCLE` and `CAR`.
+#'        to the network. Defaults to `WALK`, also allows `BICYCLE` and `CAR`.
 #'
 #' @return A `data.table` with the original points, their respective
 #' snapped coordinates on the street network and the Euclidean distance (in
@@ -38,11 +38,15 @@
 #'
 #' stop_r5(r5r_core)
 #' @export
-find_snap <- function(r5r_core, points, radius = 1600, mode = "WALK") {
+find_snap <- function(r5r_core,
+                      points,
+                      radius = 1600,
+                      mode = "WALK"){
+
   checkmate::assert_class(r5r_core, "jobjRef")
 
-  mode_options <- c("WALK", "BICYCLE", "CAR")
   checkmate::assert_numeric(radius, lower = 0, finite = TRUE, max.len = 1)
+  mode_options <- c("WALK", "BICYCLE", "CAR")
   checkmate::assert(
     checkmate::check_string(mode),
     checkmate::check_names(mode, subset.of = mode_options),

@@ -26,7 +26,7 @@ meters) between the original points and their snapped location. Points that
 could not be snapped show \code{NA} coordinates and \code{found = FALSE}.
 }
 \description{
-Finds the snapped location of points on \code{R5} network. Snapping is a very
+Finds the snapped location of points on \code{R5} network. Snapping is an
 important step of the routing process, which is when the origins and
 destinations specified by the user are actually positioned on the network
 created by \code{R5}. The snapping process in \code{R5} is composed of two rounds.
