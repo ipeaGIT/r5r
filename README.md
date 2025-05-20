@@ -4,7 +4,7 @@
 [![CRAN/METACRAN Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
 [![R build status](https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/r5r/actions)
 [![Codecov test coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ipeaGIT/r5r?branch=master)
-[![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-stable.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Publication](https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow)](https://doi.org/10.32866/001c.21262)
 
 **r5r** is an `R` package for rapid realistic routing on multimodal transport 
