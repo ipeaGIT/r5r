@@ -1,4 +1,4 @@
-# r5r 2.2.0 dev
+# r5r 2.2.0
 
 **Major changes**
 
