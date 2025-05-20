@@ -46,7 +46,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ipeaGIT/r5r/tree/master/r-package/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -57,10 +57,10 @@
 <li>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> now has a new parameter <code>osm_link_ids</code>. A logical. Whether the output should include the additional columns with the OSM ids of the road segments used along the trip geometry Defaults to <code>FALSE</code>. Closes issues <a href="https://github.com/ipeaGIT/r5r/issues/298" class="external-link">#298</a>
 </li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>r5r now throws an informative error message when the geographic extent of input data exceeds limit of 975000 km2. Closes issues #389, #405, #406, #407, #412 and #421. Thanks to PR #426 by Alex Magnus.</li>
+<ul><li>r5r now throws an informative error message when the geographic extent of input data exceeds limit of 975000 km2. Closes issues <a href="https://github.com/ipeaGIT/r5r/issues/389" class="external-link">#389</a>, <a href="https://github.com/ipeaGIT/r5r/issues/405" class="external-link">#405</a>, <a href="https://github.com/ipeaGIT/r5r/issues/406" class="external-link">#406</a>, <a href="https://github.com/ipeaGIT/r5r/issues/407" class="external-link">#407</a>, <a href="https://github.com/ipeaGIT/r5r/issues/412" class="external-link">#412</a> and <a href="https://github.com/ipeaGIT/r5r/issues/421" class="external-link">#421</a>. Thanks to PR <a href="https://github.com/ipeaGIT/r5r/issues/426" class="external-link">#426</a> by Alex Magnus.</li>
 <li>removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an <code>r5rlog</code> file in the data path.</li>
 </ul><p><strong>Bug fixes</strong></p>
-<ul><li>Fixed error caused by phantom 0-minute isochrone. Closed issues #433 and #434</li>
+<ul><li>Fixed error caused by phantom 0-minute isochrone. Closed issues <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a> and <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a></li>
 <li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
 <li>Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a> and <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a>
 </li>
@@ -98,7 +98,7 @@
 </li>
 <li>Improved documentation of parameter <code>suboptimal_minutes</code> in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
 <li>Updated the vignette on time window to explain how this parameter behaves when used in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
-</ul><p><strong>Bug Fixes</strong> - Fixed bug that prevented the use the <code>output_dir</code> parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR #354</a>) from Luyu Liu. - Fixed bug that prevented <code>detailed_itineraries</code> from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.</p>
+</ul><p><strong>Bug Fixes</strong> - Fixed bug that prevented the use the <code>output_dir</code> parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR </a><a href="https://github.com/ipeaGIT/r5r/issues/354" class="external-link">#354</a>) from Luyu Liu. - Fixed bug that prevented <code>detailed_itineraries</code> from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.</p>
 <p><strong>New contributors to r5r</strong> - <a href="https://github.com/luyuliu" class="external-link">Luyu Liu</a></p>
 </div>
     <div class="section level2">
@@ -191,9 +191,9 @@
 <ul><li>New <code><a href="../reference/setup_r5.html">setup_r5()</a></code> parameter, <code>overwrite</code>, that forces the building of a new <code>network.dat</code>, even if one already exists.</li>
 <li>Improved documentation of parameter <code>departure_datetime</code> to clarify the parameter must be set to local time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/188" class="external-link">#188</a>
 </li>
-<li>Improved documentation regarding personalized LTS values. <a href="https://github.com/ipeaGIT/r5r/issues/190" class="external-link">Closes #190</a>.</li>
-<li>Improved documentation of <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> regarding stops that are not snapped to road network. <a href="https://github.com/ipeaGIT/r5r/issues/192" class="external-link">Closes #192</a>.</li>
-<li>Improved documentation of <code>max_walking_dist</code> and <code>max_cycling_dist</code> parameters. <a href="https://github.com/ipeaGIT/r5r/issues/193" class="external-link">Closes #193</a>.</li>
+<li>Improved documentation regarding personalized LTS values. <a href="https://github.com/ipeaGIT/r5r/issues/190" class="external-link">Closes </a><a href="https://github.com/ipeaGIT/r5r/issues/190" class="external-link">#190</a>.</li>
+<li>Improved documentation of <code><a href="../reference/transit_network_to_sf.html">transit_network_to_sf()</a></code> regarding stops that are not snapped to road network. <a href="https://github.com/ipeaGIT/r5r/issues/192" class="external-link">Closes </a><a href="https://github.com/ipeaGIT/r5r/issues/192" class="external-link">#192</a>.</li>
+<li>Improved documentation of <code>max_walking_dist</code> and <code>max_cycling_dist</code> parameters. <a href="https://github.com/ipeaGIT/r5r/issues/193" class="external-link">Closes </a><a href="https://github.com/ipeaGIT/r5r/issues/193" class="external-link">#193</a>.</li>
 <li>Started raising an error if the CRS of origins/destinations is not WGS 84. Closes <a href="https://github.com/ipeaGIT/r5r/issues/201" class="external-link">#201</a>.</li>
 </ul></div>
     <div class="section level2">
@@ -242,40 +242,40 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3-2" id="r5r-03-2">r5r 0.3-2<a class="anchor" aria-label="anchor" href="#r5r-03-2"></a></h2><p class="text-muted">CRAN release: 2021-01-08</p>
 <p><strong>Minor changes</strong></p>
-<ul><li>r5r does not save the medatada file in the package directory anymore, following CRAN’s policies. Closed #136.</li>
+<ul><li>r5r does not save the medatada file in the package directory anymore, following CRAN’s policies. Closed <a href="https://github.com/ipeaGIT/r5r/issues/136" class="external-link">#136</a>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3-1" id="r5r-03-1">r5r 0.3-1<a class="anchor" aria-label="anchor" href="#r5r-03-1"></a></h2><p class="text-muted">CRAN release: 2021-01-07</p>
 <p><strong>Minor changes</strong></p>
-<ul><li>Allow for combination of bicycle and public transport. Closed #135.</li>
-<li>Added new parameter <code>mode_egress</code> to routing functions, so that users can explicitly set the transport mode used after egress from public transport (walk, car or bicycle). Closed #63.</li>
+<ul><li>Allow for combination of bicycle and public transport. Closed <a href="https://github.com/ipeaGIT/r5r/issues/135" class="external-link">#135</a>.</li>
+<li>Added new parameter <code>mode_egress</code> to routing functions, so that users can explicitly set the transport mode used after egress from public transport (walk, car or bicycle). Closed <a href="https://github.com/ipeaGIT/r5r/issues/63" class="external-link">#63</a>.</li>
 <li>Allow for using the r5r package off-line, provided the user has successfully ran <code><a href="../reference/setup_r5.html">setup_r5()</a></code> before.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3-0" id="r5r-03-0">r5r 0.3-0<a class="anchor" aria-label="anchor" href="#r5r-03-0"></a></h2><p class="text-muted">CRAN release: 2021-01-05</p>
 <p><strong>Major changes</strong></p>
-<ul><li>Added Conveyal’s R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed #105.</li>
+<ul><li>Added Conveyal’s R5 repo as a git submodule. This will help improve the long term integration between r5r and R5. Closed <a href="https://github.com/ipeaGIT/r5r/issues/105" class="external-link">#105</a>.</li>
 <li>Internal changes to make r5r compatible with R5 latest version 6.0.1.</li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed #128.</li>
+<ul><li>Added columns with population and number of schools in sample data set of Porto Alegre to allow for accessibility examples. Closed <a href="https://github.com/ipeaGIT/r5r/issues/128" class="external-link">#128</a>.</li>
 <li>The <code>percentiles</code> parameter in the <code>travel_time_matrix</code> function now only accepts up to 5 cut points due to changes in R5.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2-1" id="r5r-02-1">r5r 0.2-1<a class="anchor" aria-label="anchor" href="#r5r-02-1"></a></h2><p class="text-muted">CRAN release: 2020-11-30</p>
 <p><strong>Minor changes</strong></p>
 <ul><li>Expanded number of routes in the sample GTFS for Porto Alegre, allowing for more complex/realistic examples.</li>
-<li>Fixes format of columns of the output of <code>travel_matrix_function</code> when the user sets <code>time_window</code> parameter. Closes #127.</li>
+<li>Fixes format of columns of the output of <code>travel_matrix_function</code> when the user sets <code>time_window</code> parameter. Closes <a href="https://github.com/ipeaGIT/r5r/issues/127" class="external-link">#127</a>.</li>
 <li>Remove repeated bus route alternatives from the output from <code>detailed_itineraries</code>
 </li>
-<li>Explicitly link destination points to street network before starting. Closes #121</li>
+<li>Explicitly link destination points to street network before starting. Closes <a href="https://github.com/ipeaGIT/r5r/issues/121" class="external-link">#121</a></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2-0" id="r5r-02-0">r5r 0.2-0<a class="anchor" aria-label="anchor" href="#r5r-02-0"></a></h2><p class="text-muted">CRAN release: 2020-10-20</p>
 <p><strong>Major changes</strong></p>
-<ul><li>Function <code>travel_time_matrix</code> now has new parameters <code>time_window</code> and <code>percentiles</code> it now calculates travel times for multiple departure times each minute within a given time window. For now, the function automatically set the number of Monte Carlo Draws to 5 times the size of <code>time_window</code>. Closes #104 and #118</li>
+<ul><li>Function <code>travel_time_matrix</code> now has new parameters <code>time_window</code> and <code>percentiles</code> it now calculates travel times for multiple departure times each minute within a given time window. For now, the function automatically set the number of Monte Carlo Draws to 5 times the size of <code>time_window</code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/104" class="external-link">#104</a> and <a href="https://github.com/ipeaGIT/r5r/issues/118" class="external-link">#118</a></li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>Added a sample of frequency-based GTFS for Sao Paulo. Closed #116</li>
-<li>Improved documentation of routing functions adding more info on the routing algorithms used in R5. Closes #114</li>
+<ul><li>Added a sample of frequency-based GTFS for Sao Paulo. Closed <a href="https://github.com/ipeaGIT/r5r/issues/116" class="external-link">#116</a></li>
+<li>Improved documentation of routing functions adding more info on the routing algorithms used in R5. Closes <a href="https://github.com/ipeaGIT/r5r/issues/114" class="external-link">#114</a></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1-1" id="r5r-v01-1">r5r v0.1-1<a class="anchor" aria-label="anchor" href="#r5r-v01-1"></a></h2><p class="text-muted">CRAN release: 2020-09-25</p>
