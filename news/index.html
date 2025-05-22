@@ -60,8 +60,7 @@
 <ul><li>r5r now throws an informative error message when the geographic extent of input data exceeds limit of 975000 km2. Closes issues <a href="https://github.com/ipeaGIT/r5r/issues/389" class="external-link">#389</a>, <a href="https://github.com/ipeaGIT/r5r/issues/405" class="external-link">#405</a>, <a href="https://github.com/ipeaGIT/r5r/issues/406" class="external-link">#406</a>, <a href="https://github.com/ipeaGIT/r5r/issues/407" class="external-link">#407</a>, <a href="https://github.com/ipeaGIT/r5r/issues/412" class="external-link">#412</a> and <a href="https://github.com/ipeaGIT/r5r/issues/421" class="external-link">#421</a>. Thanks to PR <a href="https://github.com/ipeaGIT/r5r/issues/426" class="external-link">#426</a> by Alex Magnus.</li>
 <li>removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an <code>r5rlog</code> file in the data path.</li>
 </ul><p><strong>Bug fixes</strong></p>
-<ul><li>Fixed error caused by phantom 0-minute isochrone. Closed issues <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a> and <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a></li>
-<li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
+<ul><li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
 <li>Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a> and <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a>
 </li>
 </ul><p><strong>New contributors</strong></p>
