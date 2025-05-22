@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Rapid Realistic Routing with R5 • r5r</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -29,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +79,7 @@
 <img src="logo.png" class="logo" alt=""><h1 id="r5r-rapid-realistic-routing-with-r5-in-r-">r5r: Rapid Realistic Routing with R5 in R <img align="right" src="reference/figures/r5r_blue.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#r5r-rapid-realistic-routing-with-r5-in-r-"></a>
 </h1>
 </div>
-<p><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a> <a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a> <a href="https://github.com/ipeaGIT/r5r/actions" class="external-link"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://app.codecov.io/gh/ipeaGIT/r5r?branch=master" class="external-link"><img src="https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://lifecycle.r-lib.org/articles/figures/lifecycle-maturing.svg" alt="Lifecycle: maturing"></a> <a href="https://doi.org/10.32866/001c.21262" class="external-link"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></p>
+<p><a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://www.r-pkg.org/badges/version/r5r" alt="CRAN/METACRAN Version"></a> <a href="https://CRAN.R-project.org/package=r5r" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue" alt="CRAN/METACRAN Total downloads"></a> <a href="https://github.com/ipeaGIT/r5r/actions" class="external-link"><img src="https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://app.codecov.io/gh/ipeaGIT/r5r?branch=master" class="external-link"><img src="https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://lifecycle.r-lib.org/articles/figures/lifecycle-stable.svg" alt="Lifecycle: maturing"></a> <a href="https://doi.org/10.32866/001c.21262" class="external-link"><img src="https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow" alt="Publication"></a></p>
 <p><strong>r5r</strong> is an <code>R</code> package for rapid realistic routing on multimodal transport networks (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, the <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on Real-world and Reimagined networks</a>, the routing engine developed independently by <a href="http://conveyal.com" class="external-link">Conveyal</a>.</p>
 <p><strong>r5r</strong> is a simple way to run R<sup>5</sup> locally, allowing <code>R</code> users to generate detailed routing analysis or calculate travel time matrices and accessibility using seamless parallel computing. See a detailed demonstration of <code>r5r</code> in the <a href="https://ipeagit.github.io/r5r/articles/r5r.html">intro Vignette</a>. More details about <strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html">package webpage</a> or on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>. Over time, <code>r5r</code> might be expanded to incorporate other functionality from R<sup>5</sup>.</p>
 <p>This repository contains the <code>R</code> code (r-package folder) and the Java code (java-api folder) that provides the interface to R<sup>5</sup>.</p>
@@ -365,12 +364,13 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Marcus Saraiva <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6218-2338" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Rafael H. M. Pereira <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Daniel Herszenhut <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8066-1105" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Carlos Kaue Vieira Braga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6104-7297" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Matthew Wigginton Bhagat-Conway <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1210-2982" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Ipea - Institute for Applied Economic Research <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li>Marcus Saraiva <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6218-2338" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Rafael H. M. Pereira <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Daniel Herszenhut <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8066-1105" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Carlos Kaue Vieira Braga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6104-7297" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Matthew Wigginton Bhagat-Conway <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1210-2982" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Ipea - Institute for Applied Economic Research <br><small class="roles"> Copyright holder, funder </small>   </li>
+<li>Department of Geography &amp; Planning, University of Toronto <br><small class="roles"> Funder </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -382,11 +382,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer>
