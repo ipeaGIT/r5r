@@ -12,7 +12,6 @@
 
 **Bug fixes**
 
-- Fixed error caused by phantom 0-minute isochrone. Closed issues #433 and #434
 - Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.
 - Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed [#434](https://github.com/ipeaGIT/r5r/issues/434) and [#433](https://github.com/ipeaGIT/r5r/issues/433)
 
