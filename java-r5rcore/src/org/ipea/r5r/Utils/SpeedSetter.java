@@ -30,7 +30,7 @@ public class SpeedSetter {
      * @return true if operation completed successfully
      * @throws Exception if reading or writing fails
      */
-    public static boolean modifyOSMSpeeds(String dataFolder, String speedCsvFileName, Double defaultValue,
+    public static boolean modifyOSMSpeeds(String dataFolder, String speedCsvFileName, double defaultValue,
                                           SpeedSetterMode mode) throws Exception {
         // Build paths
         File folder = new File(dataFolder);
@@ -94,10 +94,10 @@ public class SpeedSetter {
             Way way = entry.getValue();
 
             double speedKph;
-            Double value = speedMap.getOrDefault(wayId, defaultValue);
+            Double value = speedMap.getOrDefault(wayId, defaultValue); // default value should always be -1 if absolute mode
 
             if (mode == SpeedSetterMode.ABSOLUTE) {
-                if (value == null) continue; // skip setting a default if absolute mode
+                if (value == -1) continue; // skip setting a default if absolute mode
                 speedKph = value;
             } else {
                 // PERCENTAGE mode: apply multiplier to existing maxspeed tag

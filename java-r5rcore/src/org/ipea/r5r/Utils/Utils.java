@@ -150,7 +150,7 @@ public class Utils {
         logger = loggerContext.getLogger("org.ipea.r5r.Planner.TripLeg");
         logger.setLevel(Level.valueOf(mode));
 
-        logger = loggerContext.getLogger(SpeedSetter.class);
+        logger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
         logger.setLevel(Level.valueOf(mode));
     }
 
