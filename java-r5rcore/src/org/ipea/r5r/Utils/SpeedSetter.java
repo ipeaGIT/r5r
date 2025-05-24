@@ -41,9 +41,9 @@ public class SpeedSetter {
 
         // Find the first .pbf file in the folder
         File[] pbfFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".pbf"));
-        if (pbfFiles == null || pbfFiles.length == 0) {
-            LOG.error("No .pbf file found in folder: {}", dataFolder);
-            throw new IOException("No .pbf file found in folder: " + dataFolder);
+        if (pbfFiles == null || pbfFiles.length != 1) {
+            LOG.error("None or multiple .pbf file found in folder: {}", dataFolder);
+            throw new IOException("None or multiple .pbf file found in folder: " + dataFolder);
         }
         File pbfIn = pbfFiles[0];
 
@@ -96,6 +96,12 @@ public class SpeedSetter {
             double speedKph;
             Double value = speedMap.getOrDefault(wayId, defaultValue); // default value should always be -1 if absolute mode
 
+            // disable road if speed is 0
+            if (value == 0) {
+                way.addOrReplaceTag("highway", "construction");
+                continue;
+            }
+
             if (mode == SpeedSetterMode.ABSOLUTE) {
                 if (value == -1) continue; // skip setting a default if absolute mode
                 speedKph = value;
@@ -107,7 +113,6 @@ public class SpeedSetter {
                     continue;
                 }
                 try {
-                    // strip non-digits, parse
                     double base = Double.parseDouble(existingSpeed);
                     speedKph = base * value;
                 } catch (NumberFormatException nfe) {
@@ -117,7 +122,6 @@ public class SpeedSetter {
             }
 
             way.addOrReplaceTag("maxspeed:motorcar", String.format("%1.1f kph", speedKph));
-//            osm.ways.put(wayId, way);
         }
 
         // Write to new PBF file
