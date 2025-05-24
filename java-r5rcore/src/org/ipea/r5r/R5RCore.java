@@ -14,6 +14,8 @@ import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
+import org.ipea.r5r.Utils.SpeedSetter;
+import org.ipea.r5r.Utils.SpeedSetter.SpeedSetterMode;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
@@ -680,5 +682,10 @@ public class R5RCore {
 
     public void abort() {
         LOG.error("process aborted");
+    }
+
+    public boolean modifyOSMSpeeds(String dataFolder, String speedCsvFileName, double defaultValue, boolean modePercentage) throws Exception {
+        SpeedSetterMode mode = modePercentage ? SpeedSetterMode.PERCENTAGE : SpeedSetterMode.ABSOLUTE;
+        return SpeedSetter.modifyOSMSpeeds(dataFolder, speedCsvFileName, defaultValue, mode);
     }
 }
