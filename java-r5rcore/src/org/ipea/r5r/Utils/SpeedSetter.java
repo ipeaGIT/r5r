@@ -123,10 +123,10 @@ public class SpeedSetter {
 
             way.addOrReplaceTag("maxspeed:motorcar", String.format("%1.1f kph", speedKph));
         }
-
         // Write to new PBF file
         String originalFileName = pbfIn.getName();
-        String newFileName = "congested_" + originalFileName;
+        String csvPrefix = speedCsvFileName.replaceAll("\\.[^.]*$", ""); // Remove extension if present
+        String newFileName = csvPrefix + "_" + originalFileName;
         File pbfOut = new File(folder, newFileName);
         osm.writeToFile(pbfOut.getAbsolutePath());
 
