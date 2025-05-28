@@ -33,3 +33,4 @@ r-package/vignettes/*.R
 aws.xml
 docs/
 network_settings.json
+r-package/rjavaenv/
