@@ -51,14 +51,14 @@
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
-#' ttm <- travel_time_matrix(
-#'   r5r_core,
-#'   origins = points,
-#'   destinations = points,
-#'   mode = c("WALK", "TRANSIT"),
-#'   departure_datetime = departure_datetime,
-#'   max_trip_duration = 60
-#' )
+# ttm <- travel_time_matrix(
+#   r5r_core,
+#   origins = points,
+#   destinations = points,
+#   mode = c("WALK", "TRANSIT"),
+#   departure_datetime = departure_datetime,
+#   max_trip_duration = 60
+# )
 #' head(ttm)
 #'
 #' # using a larger time window
@@ -111,7 +111,8 @@ travel_time_matrix <- function(r5r_core,
                                destinations,
                                mode = "WALK",
                                mode_egress = "WALK",
-                               departure_datetime = Sys.time(),
+                               departure_datetime = NULL,
+                               arrival_datetime = NULL,
                                time_window = 10L,
                                percentiles = 50L,
                                fare_structure = NULL,
@@ -147,7 +148,8 @@ travel_time_matrix <- function(r5r_core,
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
-  departure <- assign_departure(departure_datetime)
+  departure <- assign_departure(departure_datetime, arrival_datetime, max_trip_duration)
+  time_window <- assign_time_window(time_window, max_trip_duration, arrival_datetime)
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
@@ -197,6 +199,9 @@ travel_time_matrix <- function(r5r_core,
 
   # call r5r_core method and process result -------------------------------
 
+  if (!is.null(arrival_datetime)) {
+    set_expanded_travel_times(r5r_core, TRUE)
+  }
   travel_times <- r5r_core$travelTimeMatrix(
     origins$id,
     origins$lat,
@@ -219,6 +224,18 @@ travel_time_matrix <- function(r5r_core,
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   travel_times <- java_to_dt(travel_times)
+
+  if (!is.null(arrival_datetime)) {
+    travel_times <- travel_times[
+      as.POSIXct(paste(as.Date(arrival_datetime), travel_times[["departure_time"]])) +
+        (travel_times[["total_time"]] * 60) < arrival_datetime
+    ]
+
+    travel_times <- travel_times[
+      , .SD[which.max(data.table::as.ITime(departure_time))],
+      by = .(from_id, to_id)
+    ]
+  }
 
   if (nrow(travel_times) > 0) {
     # replace travel-times of nonviable trips with NAs.

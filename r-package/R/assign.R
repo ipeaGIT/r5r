@@ -142,13 +142,29 @@ assign_mode <- function(mode, mode_egress, style) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_departure <- function(datetime) {
-  checkmate::assert_posixct(
-    datetime,
-    len = 1,
-    any.missing = FALSE,
-    .var.name = "departure_datetime"
-  )
+assign_departure <- function(departure_datetime, arrival_datetime = NULL, max_trip_duration = NULL) {
+  if (!is.null(departure_datetime) && !is.null(arrival_datetime)) {
+    stop("Only one of 'departure_datetime' or 'arrival_datetime' can be provided, not both.")
+  }
+
+  if (!is.null(departure_datetime)) {
+    checkmate::assert_posixct(
+      departure_datetime,
+      len = 1,
+      any.missing = FALSE,
+      .var.name = "departure_datetime"
+    )
+    datetime <- departure_datetime
+  } else {
+    checkmate::assert_posixct(
+      arrival_datetime,
+      len = 1,
+      any.missing = FALSE,
+      .var.name = "arrival_datetime"
+    )
+    datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
+  }
+
 
   tz <- attr(datetime, "tzone")
   if (is.null(tz)) tz <- ""
@@ -159,6 +175,29 @@ assign_departure <- function(datetime) {
   )
 
   return(datetime_list)
+}
+
+
+#' Check and assign time window
+#'
+#' This function checks whether an `arrival_datetime` is provided. If it is `NULL`,
+#' it returns the input `time_window`. Otherwise, it returns `max_trip_duration`.
+#'
+#' @param time_window A numeric or time-based value representing the default time window.
+#' @param max_trip_duration A numeric or time-based value representing the maximum duration allowed for a trip.
+#' @param arrival_datetime A datetime object or `NULL`. If not `NULL`, the function will return `max_trip_duration`.
+#'
+#' @return A value equal to either `time_window` or `max_trip_duration`, depending on whether `arrival_datetime` is `NULL`.
+#'
+#' @family assigning functions
+#'
+#' @keywords internal
+assign_time_window <- function(time_window, max_trip_duration, arrival_datetime) {
+  if (is.null(arrival_datetime)) {
+    return(time_window)
+  }
+
+  return(max_trip_duration)
 }
 
 
