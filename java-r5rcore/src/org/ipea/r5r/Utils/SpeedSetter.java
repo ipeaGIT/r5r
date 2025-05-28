@@ -30,24 +30,31 @@ public class SpeedSetter {
      * @return true if operation completed successfully
      * @throws Exception if reading or writing fails
      */
-    public static boolean modifyOSMSpeeds(String dataFolder, String speedCsvFileName, double defaultValue,
+    public static boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFileName, double defaultValue,
                                           SpeedSetterMode mode) throws Exception {
         // Build paths
-        File folder = new File(dataFolder);
-        if (!folder.exists() || !folder.isDirectory()) {
+        File dataFolderPath = new File(dataFolder);
+        if (!dataFolderPath.exists() || !dataFolderPath.isDirectory()) {
             LOG.error("Data folder does not exist or is not a directory: {}", dataFolder);
             throw new IOException("Data folder does not exist or is not a directory: " + dataFolder);
         }
 
+        // Build paths
+        File  outputFolderPath = new File(outputFolder);
+        if (!outputFolderPath.exists() || !outputFolderPath.isDirectory()) {
+            LOG.error("Output folder does not exist or is not a directory: {}", outputFolder);
+            throw new IOException("Output folder does not exist or is not a directory: " + outputFolder);
+        }
+
         // Find the first .pbf file in the folder
-        File[] pbfFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".pbf"));
+        File[] pbfFiles = dataFolderPath.listFiles((dir, name) -> name.toLowerCase().endsWith(".pbf"));
         if (pbfFiles == null || pbfFiles.length != 1) {
-            LOG.error("None or multiple .pbf file found in folder: {}", dataFolder);
-            throw new IOException("None or multiple .pbf file found in folder: " + dataFolder);
+            LOG.error("None or multiple ({}) .pbf file found in folder: {}", pbfFiles.length, dataFolder);
+            throw new IOException("None or multiple (" + pbfFiles.length + ") .pbf file found in folder: " + dataFolder);
         }
         File pbfIn = pbfFiles[0];
 
-        File speedsFile = new File(folder, speedCsvFileName);
+        File speedsFile = new File(dataFolderPath, speedCsvFileName);
         if (!speedsFile.exists()) {
             LOG.error("Speeds CSV not found: {}", speedsFile.getAbsolutePath());
             throw new IOException("Speeds CSV not found: " + speedsFile.getAbsolutePath());
@@ -127,7 +134,7 @@ public class SpeedSetter {
         String originalFileName = pbfIn.getName();
         String csvPrefix = speedCsvFileName.replaceAll("\\.[^.]*$", ""); // Remove extension if present
         String newFileName = csvPrefix + "_" + originalFileName;
-        File pbfOut = new File(folder, newFileName);
+        File pbfOut = new File(outputFolderPath, newFileName);
         osm.writeToFile(pbfOut.getAbsolutePath());
 
         LOG.info("Wrote modified OSM file to: {}", pbfOut.getAbsolutePath());
