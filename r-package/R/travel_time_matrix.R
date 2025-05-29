@@ -194,6 +194,7 @@ travel_time_matrix <- function(r5r_core,
   set_output_dir(r5r_core, output_dir)
   set_expanded_travel_times(r5r_core, FALSE)
   set_breakdown(r5r_core, FALSE)
+  r5r_core$setSearchType("DEPART_FROM")
 
   # call r5r_core method and process result -------------------------------
 
