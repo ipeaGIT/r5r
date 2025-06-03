@@ -684,8 +684,8 @@ public class R5RCore {
         LOG.error("process aborted");
     }
 
-    public boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFileName, double defaultValue, boolean modePercentage) throws Exception {
+    public boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFile, double defaultValue, boolean modePercentage) throws Exception {
         SpeedSetterMode mode = modePercentage ? SpeedSetterMode.PERCENTAGE : SpeedSetterMode.ABSOLUTE;
-        return SpeedSetter.modifyOSMSpeeds(dataFolder, outputFolder, speedCsvFileName, defaultValue, mode);
+        return SpeedSetter.modifyOSMSpeeds(dataFolder, outputFolder, speedCsvFile, defaultValue, mode);
     }
 }

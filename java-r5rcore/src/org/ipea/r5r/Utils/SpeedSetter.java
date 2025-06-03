@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,54 +27,79 @@ public class SpeedSetter {
      * and writes out a new PBF called congested_<original>.pbf in the same folder.
      *
      * @param dataFolder       Path to the folder containing the .pbf and the CSV
-     * @param speedCsvFileName Name of the CSV file with columns [osmWayId,value]
+     * @param speedCsvFile Path to the CSV file with columns [osm_id,max_speed]
      * @param mode             Mode of interpretation: ABSOLUTE (value as KPH) or PERCENTAGE (multiplier on existing maxspeed)
      * @return true if operation completed successfully
      * @throws Exception if reading or writing fails
      */
-    public static boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFileName, double defaultValue,
+    public static boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFile, double defaultValue,
                                           SpeedSetterMode mode) throws Exception {
         // Build paths
-        File dataFolderPath = new File(dataFolder);
-        if (!dataFolderPath.exists() || !dataFolderPath.isDirectory()) {
+        Path dataFolderPath = Paths.get(dataFolder);
+        if (!Files.exists(dataFolderPath) || !Files.isDirectory(dataFolderPath)) {
             LOG.error("Data folder does not exist or is not a directory: {}", dataFolder);
             throw new IOException("Data folder does not exist or is not a directory: " + dataFolder);
         }
 
-        // Build paths
-        File  outputFolderPath = new File(outputFolder);
-        if (!outputFolderPath.exists() || !outputFolderPath.isDirectory()) {
+        Path outputFolderPath = Paths.get(outputFolder);
+        if (!Files.exists(outputFolderPath) || !Files.isDirectory(outputFolderPath)) {
             LOG.error("Output folder does not exist or is not a directory: {}", outputFolder);
             throw new IOException("Output folder does not exist or is not a directory: " + outputFolder);
         }
 
         // Find the first .pbf file in the folder
-        File[] pbfFiles = dataFolderPath.listFiles((dir, name) -> name.toLowerCase().endsWith(".pbf"));
-        if (pbfFiles == null || pbfFiles.length != 1) {
-            LOG.error("None or multiple ({}) .pbf file found in folder: {}", pbfFiles.length, dataFolder);
-            throw new IOException("None or multiple (" + pbfFiles.length + ") .pbf file found in folder: " + dataFolder);
+        Path pbfIn = null;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dataFolderPath, "*.pbf")) {
+            for (Path entry : stream) {
+                if (pbfIn == null) {
+                    pbfIn = entry;
+                } else {
+                    LOG.error("Multiple .pbf files found in folder: {}", dataFolder);
+                    throw new IOException("Multiple .pbf files found in folder: " + dataFolder);
+                }
+            }
         }
-        File pbfIn = pbfFiles[0];
+        if (pbfIn == null) {
+            LOG.error("No .pbf file found in folder: {}", dataFolder);
+            throw new IOException("No .pbf file found in folder: " + dataFolder);
+        }
 
-        File speedsFile = new File(dataFolderPath, speedCsvFileName);
-        if (!speedsFile.exists()) {
-            LOG.error("Speeds CSV not found: {}", speedsFile.getAbsolutePath());
-            throw new IOException("Speeds CSV not found: " + speedsFile.getAbsolutePath());
+        Path speedCsvFilePath = Paths.get(speedCsvFile);
+        if (!Files.exists(speedCsvFilePath)) {
+            LOG.error("Speeds CSV not found: {}", speedCsvFilePath.toAbsolutePath());
+            throw new IOException("Speeds CSV not found: " + speedCsvFilePath.toAbsolutePath());
         }
 
         // Load OSM
         OSM osm = new OSM(null);
-        osm.readFromFile(pbfIn.getAbsolutePath());
-        LOG.info("Setting maxspeed:motorcar tags from {} in {} mode", speedsFile.getName(), mode);
+        osm.readFromFile(pbfIn.toAbsolutePath().toString());
+        LOG.info("Setting maxspeed:motorcar tags from {} in {} mode", speedCsvFilePath.getFileName(), mode);
 
         // Load CSV into a Map
+        Map<Long, Double> speedMap = buildSpeedMap(speedCsvFilePath, osm);
+
+        // Apply speeds to all ways
+        modifyWaySpeeds(defaultValue, mode, osm, speedMap);
+
+        // Write to new PBF file
+        String originalFileName = pbfIn.getFileName().toString();
+        String csvPrefix = speedCsvFilePath.getFileName().toString().substring(0, speedCsvFilePath.getFileName().toString().length() - 4); // cut extension
+        String newFileName = csvPrefix + "_" + originalFileName;
+        Path pbfOut = outputFolderPath.resolve(newFileName);
+        osm.writeToFile(pbfOut.toAbsolutePath().toString());
+
+        LOG.info("Wrote modified OSM file to: {}", pbfOut.toAbsolutePath());
+        return true;
+    }
+
+    private static Map<Long, Double> buildSpeedMap(Path speedCsvFilePath, OSM osm) throws IOException {
         Map<Long, Double> speedMap = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(speedsFile))) {
+        try (BufferedReader br = Files.newBufferedReader(speedCsvFilePath)) {
             String header = br.readLine(); // skip header
             if (header == null) {
-                LOG.error("Speeds CSV is empty: {}", speedsFile.getAbsolutePath());
-                throw new IOException("Speeds CSV is empty: " + speedsFile.getAbsolutePath());
+                LOG.error("Speeds CSV is empty: {}", speedCsvFilePath.toAbsolutePath());
+                throw new IOException("Speeds CSV is empty: " + speedCsvFilePath.toAbsolutePath());
             }
 
             String line;
@@ -95,7 +122,10 @@ public class SpeedSetter {
             }
         }
 
-        // Apply speeds to all ways
+        return speedMap;
+    }
+
+    private static void modifyWaySpeeds(double defaultValue, SpeedSetterMode mode, OSM osm, Map<Long, Double> speedMap) {
         for (Map.Entry<Long, Way> entry : osm.ways.entrySet()) {
             long wayId = entry.getKey();
             Way way = entry.getValue();
@@ -130,14 +160,5 @@ public class SpeedSetter {
 
             way.addOrReplaceTag("maxspeed:motorcar", String.format("%1.1f kph", speedKph));
         }
-        // Write to new PBF file
-        String originalFileName = pbfIn.getName();
-        String csvPrefix = speedCsvFileName.replaceAll("\\.[^.]*$", ""); // Remove extension if present
-        String newFileName = csvPrefix + "_" + originalFileName;
-        File pbfOut = new File(outputFolderPath, newFileName);
-        osm.writeToFile(pbfOut.getAbsolutePath());
-
-        LOG.info("Wrote modified OSM file to: {}", pbfOut.getAbsolutePath());
-        return true;
     }
 }
