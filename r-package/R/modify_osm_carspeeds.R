@@ -1,18 +1,17 @@
-#' Modify OSM Car Speeds in a Network
+#' Modify OSM Car Speeds in a PBF dataset
 #'
-#' This function updates car speeds in an OpenStreetMap (OSM)-based network by reading modifications from a CSV file
+#' This function updates car speeds in an PBF dataset by reading modifications from a roadspeeds CSV file
 #' and rebuilding the network with the modified speeds.
 #'
 #' @param data_dir Character. Path to the directory containing the OSM network data pbf file as well as the roadspeeds CSV file.
 #' @param output_dir Character. Directory where the modified network will be written. Defaults to a temporary directory.
 #' @param csv_name Character. Path to the CSV file specifying the speed modifications. Must contain columns \code{osm_id} and \code{max_speed}.
 #' @param default_speed Numeric. Default speed to use for segments not specified in the CSV. Must be >= 0. Defaults to 1.
-#' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are interpreted as percentages of original speeds; if \code{FALSE}, as absolute speeds. Defaults to \code{TRUE}.
-#' @param verbose Logical. If \code{TRUE}, provides verbose output when rebuilding the network. Defaults to \code{FALSE}.
+#' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are interpreted as percentages of original speeds; if \code{FALSE}, as absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
+#' @param verbose Logical. If \code{TRUE}, creates a verbose R5RCore when rebuilding the network. Defaults to \code{FALSE}.
 #'
 #' @details
-#' The CSV must have columns named \code{osm_id} and \code{max_speed}. The function checks for correct input files and directories,
-#' applies speed modifications via the \code{r5r_core$modifyOSMSpeeds} method, and rebuilds the network using \code{r5r::setup_r5}.
+#' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed} can be specified as a percentage of the original road speed or as an absolute speed in km/h. The function rebuilds the network in \code{output_dir} or a temporary directory and returns a new r5r_core object.
 #'
 #' @return An R5 core object representing the rebuilt network with modified car speeds.
 #'
