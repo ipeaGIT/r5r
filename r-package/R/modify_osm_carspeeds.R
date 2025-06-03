@@ -3,6 +3,7 @@
 #' This function updates car speeds in an PBF dataset by reading modifications from a roadspeeds CSV file
 #' and rebuilding the network with the modified speeds.
 #'
+#' @template r5r_core
 #' @param data_dir Character. Path to the directory containing the OSM network data pbf file as well as the roadspeeds CSV file.
 #' @param output_dir Character. Directory where the modified network will be written. Defaults to a temporary directory.
 #' @param csv_name Character. Path to the CSV file specifying the speed modifications. Must contain columns \code{osm_id} and \code{max_speed}.
@@ -31,12 +32,15 @@
 #' @importFrom checkmate assert_file_exists assert_directory_exists assert_numeric assert_logical assert_names
 #' @importFrom data.table fread
 #' @export
-modify_osm_carspeeds <- function(data_dir,
-                              output_dir = tempdir(),
-                              csv_name,
-                              default_speed = 1,
-                              percentage_mode = TRUE,
-                              verbose = FALSE){
+modify_osm_carspeeds <- function(r5r_core,
+                                 data_dir,
+                                 output_dir = tempdir(),
+                                 csv_name,
+                                 default_speed = 1,
+                                 percentage_mode = TRUE,
+                                 verbose = FALSE){
+
+  checkmate::assert_class(r5r_core, "jobjRef")
 
   data_dir <- normalizePath(data_dir, mustWork = FALSE)
   output_dir <- normalizePath(output_dir, mustWork = FALSE)
