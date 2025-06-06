@@ -282,7 +282,9 @@ public class R5RCore {
             if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
             if (osmLinkIds) detailedItineraryPlanner.OSMLinkIds();
 
-            return detailedItineraryPlanner.run();
+            RDataFrame out = detailedItineraryPlanner.run();
+            this.routingProperties.reset();
+            return out;
         } else {
             // call regular detailed itineraries, based on PointToPointQuery
             DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
@@ -293,7 +295,9 @@ public class R5RCore {
             detailedItineraryPlanner.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
             if (dropItineraryGeometry) { detailedItineraryPlanner.dropItineraryGeometry(); }
 
-            return detailedItineraryPlanner.run();
+            RDataFrame out = detailedItineraryPlanner.run();
+            this.routingProperties.reset();
+            return out;
         }
     }
 
@@ -365,7 +369,9 @@ public class R5RCore {
         travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
         travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        return travelTimeMatrixComputer.run();
+        RDataFrame out = travelTimeMatrixComputer.run();
+        this.routingProperties.reset();
+        return out;
     }
 
     // ----------------------------------  PARETO FRONTIERS  -----------------------------------------
@@ -435,7 +441,9 @@ public class R5RCore {
         paretoFrontierCalculator.setDepartureDateTime(date, departureTime);
         paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        return paretoFrontierCalculator.run();
+        RDataFrame out = paretoFrontierCalculator.run();
+        this.routingProperties.reset();
+        return out;
     }
 
     /**
@@ -455,6 +463,7 @@ public class R5RCore {
         calculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
         calculator.run();
+        this.routingProperties.reset();
 
         // we use the conveyal objectmapper, because it is already configured to properly serialize pareto returns
         // notably, it can handle GeoJson and names the properties the way fareto expects (camelCase rather than snake_case)
@@ -480,7 +489,9 @@ public class R5RCore {
         accessibilityEstimator.setDepartureDateTime(date, departureTime);
         accessibilityEstimator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        return accessibilityEstimator.run();
+        RDataFrame out = accessibilityEstimator.run();
+        routingProperties.reset();
+        return out;
     }
 
     // Test decay functions used to calculate accessibility
@@ -646,7 +657,9 @@ public class R5RCore {
         paretoFrontierCalculator.setDepartureDateTime(date, departureTime);
         paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        return paretoFrontierCalculator.run();
+        RDataFrame out = paretoFrontierCalculator.run();
+        this.routingProperties.reset();
+        return out;
     }
 
     // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------

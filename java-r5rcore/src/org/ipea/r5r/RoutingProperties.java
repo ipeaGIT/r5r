@@ -12,23 +12,34 @@ import static org.ipea.r5r.JsonUtil.OBJECT_MAPPER;
 
 public class RoutingProperties {
 
-    public double walkSpeed;
-    public double bikeSpeed;
-    public int maxRides; // max 8 number of rides in public transport trips
-    public int maxLevelTrafficStress;
-    public int suboptimalMinutes; // Suboptimal minutes in point-to-point queries
-    public int timeWindowSize; // minutes
-    public int numberOfMonteCarloDraws; //
-    public int[] percentiles = {50};
-    public int [] cutoffs = {30};
-    public boolean travelTimesBreakdown;
-    public boolean expandedTravelTimes;
-    public PathResult.Stat travelTimesBreakdownStat;
+    public static final float DEFAULT_WALK_SPEED = 1.0f;
+    public static final float DEFAULT_BIKE_SPEED = 3.3f;
+    public static final int DEFAULT_MAX_RIDES = 3;
+    public static final int DEFAULT_MAX_LEVEL_TRAFFIC_STRESS = 2;
+    public static final int DEFAULT_SUBOPTIMAL_MINUTES = 0;
+    public static final int DEFAULT_TIME_WINDOW_SIZE = 10;
+    public static final int DEFAULT_NUMBER_OF_MONTE_CARLO_DRAWS = 50;
+    public static final float DEFAULT_MAX_FARE = -1.0f;
+    public static final int[] DEFAULT_PERCENTILES = {50};
+    public static final int[] DEFAULT_CUTOFFS = {30};
+    public static final float[] DEFAULT_FARE_CUTOFFS = {-1.0f};
+    public double walkSpeed = DEFAULT_WALK_SPEED;
+    public double bikeSpeed = DEFAULT_BIKE_SPEED;
+    public int maxRides = DEFAULT_MAX_RIDES; // max 8 number of rides in public transport trips
+    public int maxLevelTrafficStress = DEFAULT_MAX_LEVEL_TRAFFIC_STRESS;
+    public int suboptimalMinutes = DEFAULT_SUBOPTIMAL_MINUTES; // Suboptimal minutes in point-to-point queries
+    public int timeWindowSize = DEFAULT_TIME_WINDOW_SIZE; // minutes
+    public int numberOfMonteCarloDraws = DEFAULT_NUMBER_OF_MONTE_CARLO_DRAWS; //
+    public int[] percentiles = DEFAULT_PERCENTILES;
+    public int[] cutoffs = DEFAULT_CUTOFFS;
+    public boolean travelTimesBreakdown = false;
+    public boolean expandedTravelTimes = false;
+    public PathResult.Stat travelTimesBreakdownStat = PathResult.Stat.MEAN;
 
-    public float maxFare;
-    public float[] fareCutoffs = {-1.0f};
-    public InRoutingFareCalculator fareCalculator;
-    public TransitLayer transitLayer;
+    public float maxFare = DEFAULT_MAX_FARE;
+    public float[] fareCutoffs = DEFAULT_FARE_CUTOFFS;
+    public InRoutingFareCalculator fareCalculator = null;
+    public TransitLayer transitLayer = null;
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
         // first, check to see if this is a built-in R5 fare calculator JSON representation
@@ -47,20 +58,28 @@ public class RoutingProperties {
     }
 
     public RoutingProperties() {
-        walkSpeed = 1.0f;
-        bikeSpeed = 3.3f;
-        maxRides = 8; // max 8 number of rides in public transport trips
-        maxLevelTrafficStress = 4;
-        suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
-        timeWindowSize = 60; // minutes
-        numberOfMonteCarloDraws = 60; //
+    }
+
+    public void reset() {
+        walkSpeed = DEFAULT_WALK_SPEED;
+        bikeSpeed = DEFAULT_BIKE_SPEED;
+
+        maxRides = DEFAULT_MAX_RIDES;
+        maxLevelTrafficStress = DEFAULT_MAX_LEVEL_TRAFFIC_STRESS;
+        suboptimalMinutes = DEFAULT_SUBOPTIMAL_MINUTES;
+        timeWindowSize = DEFAULT_TIME_WINDOW_SIZE;
+        numberOfMonteCarloDraws = DEFAULT_NUMBER_OF_MONTE_CARLO_DRAWS;
 
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;
         expandedTravelTimes = false;
 
-        maxFare = -1.0f;
+        percentiles = DEFAULT_PERCENTILES;
+        cutoffs = DEFAULT_CUTOFFS;
+        fareCutoffs = DEFAULT_FARE_CUTOFFS;
+
+        maxFare = DEFAULT_MAX_FARE;
         fareCalculator = null;
-        transitLayer = null;
+        // do not reset transitLayer
     }
 }
