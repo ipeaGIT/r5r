@@ -1,3 +1,14 @@
+# r5r 2.3.0
+
+**Major changes**
+
+
+**Minor changes**
+
+- routing properties within little jar are reset to default after a routing execution [#453](https://github.com/ipeaGIT/r5r/pull/453)
+
+**Bug fixes**
+
 # r5r 2.2.0
 
 **Major changes**
