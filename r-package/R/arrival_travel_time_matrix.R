@@ -10,18 +10,8 @@
 #' [travel_time_matrix()]. On the other hand, this function can be very memory
 #' intensive if the user allows for really long max trip duration.
 #'
-#'
-#' @template r5r_core
-#' @template common_arguments
-#' @template draws_per_minute
-#' @template verbose
-#' @param breakdown A logical. Whether to include detailed information about
-#'   each trip in the output. If `FALSE` (the default), the output lists the
-#'   total time between each origin-destination pair and the routes used to
-#'   complete the trip for each minute of the specified time window. If `TRUE`,
-#'   the output includes the total access, waiting, in-vehicle and transfer
-#'   time of each trip. Please note that setting this parameter to `TRUE` makes
-#'   the function significantly slower.
+#' @inheritParams expanded_travel_time_matrix
+#' @param arrival_datetime A POSIXct object.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) and the
 #'   routes used in each trip between origin and destination pairs, for each

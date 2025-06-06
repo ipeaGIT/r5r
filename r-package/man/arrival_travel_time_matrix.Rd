@@ -43,6 +43,8 @@ details for other options.}
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
+\item{arrival_datetime}{A POSIXct object.}
+
 \item{breakdown}{A logical. Whether to include detailed information about
 each trip in the output. If \code{FALSE} (the default), the output lists the
 total time between each origin-destination pair and the routes used to
@@ -130,12 +132,6 @@ function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents \code{r5r} from loading them to
 RAM memory.}
-
-\item{departure_datetime}{A POSIXct object. Please note that the departure
-time only influences public transport legs. When working with public
-transport networks, please check the \code{calendar.txt} within your GTFS feeds
-for valid dates. Please see details for further information on how
-datetimes are parsed.}
 }
 \value{
 A \code{data.table} with travel time estimates (in minutes) and the
