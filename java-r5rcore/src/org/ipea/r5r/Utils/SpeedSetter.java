@@ -26,14 +26,16 @@ public class SpeedSetter {
      * Reads an OSM PBF from dataFolder/*.pbf, applies maxspeed:motorcar tags based on the given CSV
      * and writes out a new PBF called congested_<original>.pbf in the same folder.
      *
-     * @param dataFolder       Path to the folder containing the .pbf and the CSV
+     * @param dataFolder Path to the folder containing the .pbf and the CSV
      * @param speedCsvFile Path to the CSV file with columns [osm_id,max_speed]
-     * @param mode             Mode of interpretation: ABSOLUTE (value as KPH) or PERCENTAGE (multiplier on existing maxspeed)
+     * @param modePercentage Mode of interpretation: FALSE = ABSOLUTE (value as KPH) or TRUE = PERCENTAGE (multiplier on existing maxspeed)
      * @return true if operation completed successfully
      * @throws Exception if reading or writing fails
      */
     public static boolean modifyOSMSpeeds(String dataFolder, String outputFolder, String speedCsvFile, double defaultValue,
-                                          SpeedSetterMode mode) throws Exception {
+                                          boolean modePercentage) throws Exception {
+        SpeedSetterMode mode = getSpeedSetterMode(modePercentage);
+
         // Build paths
         Path dataFolderPath = Paths.get(dataFolder);
         if (!Files.exists(dataFolderPath) || !Files.isDirectory(dataFolderPath)) {
@@ -90,6 +92,10 @@ public class SpeedSetter {
 
         LOG.info("Wrote modified OSM file to: {}", pbfOut.toAbsolutePath());
         return true;
+    }
+
+    private static SpeedSetterMode getSpeedSetterMode(boolean modePercentage) {
+        return modePercentage ? SpeedSetterMode.PERCENTAGE : SpeedSetterMode.ABSOLUTE;
     }
 
     private static Map<Long, Double> buildSpeedMap(Path speedCsvFilePath, OSM osm) throws IOException {
