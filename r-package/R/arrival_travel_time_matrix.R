@@ -1,10 +1,15 @@
-#' Calculate minute-by-minute travel times between origin destination pairs
+#' Calculate travel time matrix between origin destination pairs considering a
+#' time of arrival
 #'
-#' Detailed computation of travel time estimates between one or multiple origin
-#' destination pairs. Results show the travel time of the fastest route
-#' alternative departing each minute within a specified time window. Please
-#' note this function can be very memory intensive for large data sets and time
-#' windows.
+#' Computation of travel time estimates between one or multiple origin
+#' destination pairs. This function considers a time of arrival set by the user.
+#' If you want to calculate travel times considering a departure time, have a
+#' look at the [travel_time_matrix()] function. This function is a wrapper around
+#' [expanded_travel_time_matrix()]. On one hand, this means this the output of
+#' this function has more columns (more info) compared the output of
+#' [travel_time_matrix()]. On the other hand, this function can be very memory
+#' intensive if the user allows for really long max trip duration.
+#'
 #'
 #' @template r5r_core
 #' @template common_arguments
@@ -45,41 +50,41 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_core <- setup_r5(data_path )
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
-#' departure_datetime <- as.POSIXct(
+#' arrival_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
-#' ettm <- expanded_travel_time_matrix(
+#' arrival_ttm <- arrival_travel_time_matrix(
 #'   r5r_core,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
-#'   time_window = 20,
-#'   departure_datetime = departure_datetime,
+#'   arrival_datetime = arrival_datetime,
 #'   max_trip_duration = 60
 #' )
-#' head(ettm)
+#'
+#' head(arrival_ttm)
 #'
 #' # when breakdown = TRUE the output contains much more information
-#' ettm <- expanded_travel_time_matrix(
+#' arrival_ttm2 <- arrival_travel_time_matrix(
 #'   r5r_core,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
-#'   time_window = 20,
-#'   departure_datetime = departure_datetime,
+#'   arrival_datetime = arrival_datetime,
 #'   max_trip_duration = 60,
 #'   breakdown = TRUE
 #' )
-#' head(ettm)
+#'
+#' head(arrival_ttm2)
 #'
 #' stop_r5(r5r_core)
 #' @export

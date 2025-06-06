@@ -1,7 +1,10 @@
-#' Calculate travel time matrix between origin destination pairs
+#' Calculate travel time matrix between origin destination pairs considering a
+#' departure time
 #'
 #' Fast computation of travel time estimates between one or multiple origin
-#' destination pairs.
+#' destination pairs. This function considers a departure time set by the user.
+#' If you want to calculate travel times considering a time of arrival, have a
+#' look at the [arrival_travel_time_matrix()] function.
 #'
 #' @template r5r_core
 #' @template common_arguments
