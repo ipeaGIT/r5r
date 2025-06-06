@@ -17,6 +17,7 @@ reference:
   - title: "Routing"
   - contents:
     - travel_time_matrix
+    - arrival_travel_time_matrix
     - expanded_travel_time_matrix
     - detailed_itineraries
     - pareto_frontier

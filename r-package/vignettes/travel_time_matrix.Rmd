@@ -41,6 +41,7 @@ Some of the most common tasks in transport planning and modeling involve require
 The `r5r` packages has two functions that allow users to leverage the computing power of `R5`:
 - `travel_time_matrix()`
 - `expanded_travel_time_matrix()`
+- `arrival_travel_time_matrix()`
 
 This vignette shows a reproducible example to explain how these two functions work and the differences between them.
 
@@ -107,8 +108,6 @@ Now remember that travel time estimates can vary significantly across the day be
 This can be done very efficiently by using the `time_window` and `percentile` parameters in the `travel_time_matrix()` function. When these parameters are set, R<sup>5</sup> will automatically compute multiple travel times estimates considering multiple departures per minute within the `time_window` selected by the user. [More information about this functionality can found in this vignette](https://ipeagit.github.io/r5r/articles/time_window.html).
 
 
-
-
 # 4. The `expanded_travel_time_matrix()` function
 
 Sometimes, we want to know more than simply the total travel time from A to B. This is when the `expanded_travel_time_matrix()` function comes in. By default, the output of this function will also tell which public transport routes were taken between each origin destination pair.
@@ -155,6 +154,35 @@ ettm_window <- expanded_travel_time_matrix(r5r_core,
 
 ettm_window[15:25,]
 ```
+
+
+
+# 4. The `arrival_travel_time_matrix()` function
+
+Both of the functions we just saw (`travel_time_matrix()` and `expanded_travel_time_matrix()`) consider a departure time set by the user. In some cases, though, you might need to calculate the travel times considering an arrival time. For such cases, you can use `arrival_travel_time_matrix()` Note that the output of this function includes more information with additional columns, like in the `expanded_travel_time_matrix()` function (you can also use `breakdown = TRUE`).
+
+*A general call to arrival_travel_time_matrix()*
+```{r, message = FALSE}
+
+arrival_datetime <- as.POSIXct(
+ "13-05-2019 14:00:00",
+ format = "%d-%m-%Y %H:%M:%S"
+)
+
+arrival_ttm <- arrival_travel_time_matrix(
+  r5r_core,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  arrival_datetime = arrival_datetime,
+  max_trip_duration = 60
+)
+
+head(arrival_ttm, n = 10)
+```
+
+
+
 ### Cleaning up after usage
 
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
