@@ -63,4 +63,22 @@ public class RoutingProperties {
         fareCalculator = null;
         transitLayer = null;
     }
+
+    public void reset() {
+        walkSpeed = 1.0f;
+        bikeSpeed = 3.3f;
+        maxRides = 8; // max 8 number of rides in public transport trips
+        maxLevelTrafficStress = 4;
+        suboptimalMinutes = 5; // Suboptimal minutes in point-to-point queries
+        timeWindowSize = 60; // minutes
+        numberOfMonteCarloDraws = 60; //
+
+        travelTimesBreakdown = false;
+        travelTimesBreakdownStat = PathResult.Stat.MEAN;
+        expandedTravelTimes = false;
+
+        maxFare = -1.0f;
+        fareCalculator = null;
+        // do not reset transitLayer
+    }
 }
