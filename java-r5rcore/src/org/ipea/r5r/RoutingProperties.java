@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
+import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.transit.TransitLayer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,6 +41,7 @@ public class RoutingProperties {
     public float[] fareCutoffs = DEFAULT_FARE_CUTOFFS;
     public InRoutingFareCalculator fareCalculator = null;
     public TransitLayer transitLayer = null;
+    public SearchType searchType = SearchType.DEPART_FROM;
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
         // first, check to see if this is a built-in R5 fare calculator JSON representation
@@ -80,6 +82,7 @@ public class RoutingProperties {
 
         maxFare = DEFAULT_MAX_FARE;
         fareCalculator = null;
+        searchType = SearchType.DEPART_FROM;
         // do not reset transitLayer
     }
 }
