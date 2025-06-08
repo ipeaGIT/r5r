@@ -72,21 +72,8 @@ setup_r5 <- function(data_path,
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
 
-  # check Java version installed locally ---------------------------------------
-  log_filename <- paste0("r5rlog_", format(Sys.time(), "%Y%m%d"), ".log")
-  log_path <- file.path(data_path, log_filename)
-  rJava::.jinit(parameters = paste0("-DLOG_PATH=", log_path))
-  ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
-  ver <- as.numeric(gsub("\\..*", "", ver))
-  if (ver != 21) {
-    stop(
-      "This package requires the Java SE Development Kit 21.\n",
-      "Please update your Java installation. ",
-      "The jdk 21 can be downloaded from either:\n",
-      "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
-      "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
-    )
-  }
+  # check Java version installed locally and init java
+  start_r5r_java(data_path)
 
   # check if data_path has osm.pbf, .tif gtfs data, or a network.dat file
   any_network <- length(grep("network.dat", list.files(data_path))) > 0
@@ -123,16 +110,8 @@ setup_r5 <- function(data_path,
   if (is.null(check)) { return(invisible(NULL)) }
   }
 
-  # r5r jar
-  r5r_jar <- system.file("jar/r5r.jar", package = "r5r")
-  rJava::.jaddClassPath(path = r5r_jar)
-
   # R5 jar
   rJava::.jaddClassPath(path = jar_file)
-
-  # JRI jar
-  jri_jar <- system.file("jri/JRI.jar", package="rJava")
-  rJava::.jaddClassPath(path = jri_jar)
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")
