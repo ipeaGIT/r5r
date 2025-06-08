@@ -136,8 +136,6 @@ travel_time_matrix <- function(r5r_core,
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
 
-  checkmate::assert_number(n_threads, lower = 1)
-
   old_dt_threads <- data.table::getDTthreads()
   dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
   data.table::setDTthreads(dt_threads)

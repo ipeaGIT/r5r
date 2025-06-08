@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 This is where the `detailed_itineraries()` function comes in. This function outputs for each origin destination pair a detailed route plan with information per leg, meaning a route taken by a single mode such as a walk to the bus stop. In R5's documentation these legs are referred to as 'segments', a word more usually used to describe small sections on the transport network. Results contain information on the mode, waiting times, travel times and distances for each leg (or 'segment' in R5 documentation) and the trip geometry. Moreover, the `detailed_itineraries()` function can also return results for multiple route alternatives. Let's see how this function works using a reproducible example.
  
 
-**obs.** We only recommend using `detailed_itineraries()` in case you are interested in finding suboptimal alternative routes and/or need the geometry information of the outputs. If you only want to have route information detailed by trip segments, then we would strongly encourage you to use the `expanded_travel_time_matrix()` function. More info here.
+**obs.** We only recommend using `detailed_itineraries()` in case you are interested in finding suboptimal alternative routes and/or need the geometry information of the outputs. If you only want to have route information detailed by trip segments, then we would strongly encourage you to use the `expanded_travel_time_matrix()` function.
 
 # 2. Build routable transport network with `setup_r5()`
 
@@ -67,7 +67,7 @@ poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 In this example below, we want to know some alternative routes between a single origin/destination pair. To get multiple route alternatives, we need to set `shortest_path = FALSE`.
 
-Note that in the example below we set `suboptimal_minutes = 8`. In this case, `r5r` will consider sub-optimal routes that arrive up to 10 minutes after the arrival of the optimal route.
+Note that in the example below we set `suboptimal_minutes = 8`. In this case, `r5r` will consider sub-optimal routes that arrive up to 8 minutes after the arrival of the optimal route.
 
 ```{r, message = FALSE}
 # set inputs
