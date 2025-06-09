@@ -1,35 +1,49 @@
-#' Modify OSM Car Speeds in a PBF dataset
+#' Create a transport network used for routing in R5 with modified car speeds
 #'
-#' This function updates car speeds in an PBF dataset by reading modifications from a roadspeeds CSV file
-#' and rebuilding the network with the modified speeds.
+#' The function Updates the car speeds in an .pbf file by reading modifications
+#' from a roadspeeds .csv file and rebuilds the network with the modified speeds.
 #'
-#' @param pbf_path Character. Path to the directory containing the OSM network data pbf file as well as the roadspeeds CSV file.
-#' @param output_dir Character. Directory where the modified network will be written. Defaults to a temporary directory.
-#' @param csv_path Character. Path to the CSV file specifying the speed modifications. Must contain columns \code{osm_id} and \code{max_speed}.
-#' @param default_speed Numeric. Default speed to use for segments not specified in the CSV. Must be >= 0. Defaults to 1.
-#' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are interpreted as percentages of original speeds; if \code{FALSE}, as absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
-#' @param verbose Logical. If \code{TRUE}, creates a verbose R5RCore when rebuilding the network. Defaults to \code{FALSE}.
+#' @param pbf_path Character. Path to the `.pbf` file of the OSM network.
+#' @param csv_path Character. Path to the CSV file witha a table specifying the
+#'        speed modifications. The table must contain columns \code{osm_id} and
+#'        \code{max_speed}.
+#' @param output_dir Character. Directory where the modified network will be
+#'        written. Defaults to a temporary directory.
+#' @param default_speed Numeric. Default speed to use for segments not specified
+#'        in the CSV. Must be >= 0. Defaults to 1.
+#' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are
+#'        interpreted as percentages of original speeds; if \code{FALSE}, as
+#'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
+#' @param verbose Logical. If \code{TRUE}, creates a verbose R5RCore when
+#'        rebuilding the network. Defaults to \code{FALSE}.
 #'
 #' @details
-#' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed} can be specified as a percentage of the original road speed or as an absolute speed in km/h. The function rebuilds the network in \code{output_dir} or a temporary directory and returns a new r5r_core object.
+#' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
+#' can be specified as a percentage of the original road speed or as an absolute
+#' speed in km/h. The function rebuilds the network in \code{output_dir} and
+#' returns a new `r5r_core` object.
+#'
+#' @family setup
 #'
 #' @return An R5 core object representing the rebuilt network with modified car speeds.
 #'
-#' @examples
-#' \dontrun{
-#' # Example usage:
-#' modify_osm_carspeeds(
-#'   pbf_path = "path/to/network",
-#'   csv_path = "speed_modifications.csv",
-#'   output_dir = "path/to/output",
-#'   default_speed = 1,
-#'   percentage_mode = TRUE,
-#'   verbose = TRUE
-#' )
-#' }
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+#' library(r5r)
 #'
-#' @importFrom checkmate assert_file_exists assert_directory_exists assert_numeric assert_logical assert_names
-#' @importFrom data.table fread
+#' # path to OSM .pbf file
+#' pbf_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
+#'
+#' # path to CSV with a table pointing to the new speed info
+#' speeds_csv_path <- system.file("extdata/poa/osm_maxspeed_200.csv", package = "r5r")
+#'
+#' r5r_core_new_speed <- r5r:::modify_osm_carspeeds(
+#'   pbf_path = pbf_path,
+#'   csv_path = speeds_csv_path,
+#'   output_dir = NULL,
+#'   default_speed = 1,
+#'   percentage_mode = TRUE
+#' )
+#'
 #' @export
 modify_osm_carspeeds <- function(pbf_path,
                                  csv_path,
@@ -59,8 +73,15 @@ modify_osm_carspeeds <- function(pbf_path,
   # check remaining inputs
   checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
   checkmate::assert_file_exists(csv_path, access = "r", extension = "csv")
-  checkmate::assert_numeric(default_speed, lower = 0)
+  checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE)
   checkmate::assert_logical(percentage_mode)
+
+  if (percentage_mode==FALSE & default_speed==1) {
+    cli::cli_warn(
+      "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
+     When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
+    )
+  }
 
   # check colnames in csv
   tempdf <- data.table::fread(csv_path, nrows = 1)
@@ -84,9 +105,9 @@ modify_osm_carspeeds <- function(pbf_path,
                             verbose = verbose,
                             temp_dir = FALSE,
                             elevation = "TOBLER",
-                            overwrite = T)
+                            overwrite = TRUE)
 
-  message(paste("New car network with modified speeds built at", output_dir))
+  cli::cli_inform("New car network with modified speeds built at {.path {output_dir}}")
 
   return(new_core)
 }

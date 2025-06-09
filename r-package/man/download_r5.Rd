@@ -39,6 +39,7 @@ download_r5(temp_dir = TRUE)
 }
 \seealso{
 Other setup: 
+\code{\link{modify_osm_carspeeds}()},
 \code{\link{setup_r5}()}
 }
 \concept{setup}
