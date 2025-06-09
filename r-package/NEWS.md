@@ -1,7 +1,8 @@
-# r5r 2.3.0
+# r5r 2.3.0 dev
 
 **Major changes**
 
+- New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering a time of arrival
 
 **Minor changes**
 
