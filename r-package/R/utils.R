@@ -94,7 +94,9 @@ start_r5r_java <- function(data_path) {
       "This package requires the Java SE Development Kit 21.\n",
       "Please update your Java installation. ",
       "The jdk 21 can be downloaded from either:\n",
-      "  - {rJavaEnv} package: https://www.ekotov.pro/rJavaEnv/\n",
+      "  - {rJavaEnv} package: https://www.ekotov.pro/rJavaEnv\n",
+      "  - Eclipse Temurin: https://adoptium.net/temurin\n",
+      "  - Amazon Corretto: https://aws.amazon.com/corretto\n",
       "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
       "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
     )
