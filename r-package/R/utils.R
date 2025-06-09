@@ -87,8 +87,13 @@ start_r5r_java <- function(data_path) {
   log_filename <- paste0("r5rlog_", format(Sys.time(), "%Y%m%d"), ".log")
   log_path <- file.path(data_path, log_filename)
   rJava::.jinit(parameters = paste0("-DLOG_PATH=", log_path))
-  ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
-  ver <- as.numeric(gsub("\\..*", "", ver))
+
+  get_java_version <- function(){
+    ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
+    ver <- as.numeric(gsub("\\..*", "", ver))
+    return(ver)
+  }
+  ver <- get_java_version()
   if (ver != 21) {
     stop(
       "This package requires the Java SE Development Kit 21.\n",
