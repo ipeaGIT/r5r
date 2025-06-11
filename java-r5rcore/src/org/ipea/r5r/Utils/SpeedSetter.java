@@ -1,5 +1,7 @@
 package org.ipea.r5r.Utils;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.osmlib.Way;
 import org.slf4j.Logger;
@@ -100,7 +102,7 @@ public class SpeedSetter {
                     double value = Double.parseDouble(fields[1].trim());
                     Way way = osm.ways.get(osmWayId);
                     if (way == null) {
-                        LOG.warn("Way ID not found in OSM data, skipping: {}", osmWayId);
+                        LOG.warn("Way ID {} not found in OSM data, skipping.", osmWayId);
                         continue;
                     }
                     speedMap.put(osmWayId, value);
@@ -119,16 +121,15 @@ public class SpeedSetter {
             Way way = entry.getValue();
 
             double speedKph;
-            Double value = speedMap.getOrDefault(wayId, defaultValue); // default value should always be -1 if absolute mode
+            Double value = speedMap.getOrDefault(wayId, defaultValue);
 
-            // disable road if speed is 0
-            if (value == 0) {
+            if (value == 1) continue;   // default value of 1 is no change, even in ABSOLUTE mode
+            else if (value == 0) {      // disable road if speed is 0
                 way.addOrReplaceTag("highway", "construction");
                 continue;
             }
 
             if (mode == SpeedSetterMode.ABSOLUTE) {
-                if (value == -1) continue; // skip setting a default if absolute mode
                 speedKph = value;
             } else {
                 // PERCENTAGE mode: apply multiplier to existing maxspeed tag
@@ -149,4 +150,17 @@ public class SpeedSetter {
             way.addOrReplaceTag("maxspeed:motorcar", String.format("%1.1f kph", speedKph));
         }
     }
+
+    public static void silentMode() {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger logger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
+        logger.setLevel(Level.valueOf("ERROR"));
+    }
+
+    public static void verboseMode() {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger logger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
+        logger.setLevel(Level.valueOf("ALL"));
+    }
+
 }

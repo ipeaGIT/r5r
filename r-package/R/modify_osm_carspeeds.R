@@ -14,8 +14,8 @@
 #' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
-#' @param verbose Logical. If \code{TRUE}, creates a verbose R5RCore when
-#'        rebuilding the network. Defaults to \code{FALSE}.
+#' @param verbose Logical. If \code{TRUE}, the function modifies the network verbosely and
+#'        creates a verbose R5RCore. Defaults to \code{FALSE}.
 #'
 #' @details
 #' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
@@ -92,6 +92,18 @@ modify_osm_carspeeds <- function(pbf_path,
 
   # change speeds
   start_r5r_java(original_dir) # initialize rJava if needed
+
+  # set logger level of SpeedSetter
+  if (verbose) {
+    rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
+                  returnSig = "V",
+                  method = "verboseMode")
+  } else {
+    rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
+                  returnSig = "V",
+                  method = "silentMode")
+  }
+
   rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
                 returnSig = "Z",
                 method = "modifyOSMSpeeds",

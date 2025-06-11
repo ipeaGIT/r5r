@@ -73,7 +73,7 @@ setup_r5 <- function(data_path,
   data_path <- path.expand(data_path)
 
   # check Java version installed locally and init java
-  start_r5r_java(data_path)
+  start_r5r_java(data_path = data_path, temp_dir = temp_dir, verbose = verbose)
 
   # check if data_path has osm.pbf, .tif gtfs data, or a network.dat file
   any_network <- length(grep("network.dat", list.files(data_path))) > 0
@@ -91,27 +91,6 @@ setup_r5 <- function(data_path,
     elevation <- 'NONE'
     message("No raster .tif files found. Using elevation = 'NONE'.")
     }
-
-  # check if the most recent JAR release is stored already.
-  fileurl <- fileurl_from_metadata( r5r_env$r5_jar_version )
-  filename <- basename(fileurl)
-
-  jar_file <- data.table::fifelse(
-    temp_dir,
-    file.path(tempdir(), filename),
-    file.path( r5r_env$cache_dir, filename)
-  )
-
-  # If there isn't a JAR already larger than 60MB, download it
-  if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
-    if (!verbose) message("Using cached R5 version from ", jar_file)
-  } else {
-  check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
-  if (is.null(check)) { return(invisible(NULL)) }
-  }
-
-  # R5 jar
-  rJava::.jaddClassPath(path = jar_file)
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")
