@@ -1,27 +1,19 @@
-#' Calculate minute-by-minute travel times between origin destination pairs
+#' Calculate travel time matrix between origin destination pairs considering a
+#' time of arrival
 #'
-#' Detailed computation of travel time estimates between one or multiple origin
-#' destination pairs. Results show the travel time of the fastest route
-#' alternative departing each minute within a specified time window. Please
-#' note this function can be very memory intensive for large data sets and time
-#' windows.
+#' Computation of travel time estimates between one or multiple origin
+#' destination pairs considering a time of arrival. This function considers a
+#' time of arrival set by the user. The function returns the travel time of the
+#' trip with the latest departure time that arrives before the arrival time set
+#' by the user. If you want to calculate travel times considering a departure
+#' time, have a' look at the [travel_time_matrix()] function. This function is a
+#' wrapper around [expanded_travel_time_matrix()]. On one hand, this means this
+#' the output of this function has more columns (more info) compared the output
+#' of [travel_time_matrix()]. On the other hand, this function can be very memory
+#' intensive if the user allows for really long max trip duration.
 #'
-#' @template r5r_core
-#' @template common_arguments
-#' @param time_window An integer. The time window in minutes for which `r5r`
-#'   will calculate multiple travel time matrices departing each minute.
-#'   Defaults to 10 minutes. The function returns the result based on median
-#'   travel times. Please read the time window vignette for more details on its
-#'   usage `vignette("time_window", package = "r5r")`
-#' @template draws_per_minute
-#' @template verbose
-#' @param breakdown A logical. Whether to include detailed information about
-#'   each trip in the output. If `FALSE` (the default), the output lists the
-#'   total time between each origin-destination pair and the routes used to
-#'   complete the trip for each minute of the specified time window. If `TRUE`,
-#'   the output includes the total access, waiting, in-vehicle and transfer
-#'   time of each trip. Please note that setting this parameter to `TRUE` makes
-#'   the function significantly slower.
+#' @inheritParams expanded_travel_time_matrix
+#' @param arrival_datetime A POSIXct object.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) and the
 #'   routes used in each trip between origin and destination pairs, for each
@@ -50,51 +42,50 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_core <- setup_r5(data_path )
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 #'
-#' departure_datetime <- as.POSIXct(
+#' arrival_datetime <- as.POSIXct(
 #'   "13-05-2019 14:00:00",
 #'   format = "%d-%m-%Y %H:%M:%S"
 #' )
 #'
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
-#' ettm <- expanded_travel_time_matrix(
+#' arrival_ttm <- arrival_travel_time_matrix(
 #'   r5r_core,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
-#'   time_window = 20,
-#'   departure_datetime = departure_datetime,
+#'   arrival_datetime = arrival_datetime,
 #'   max_trip_duration = 60
 #' )
-#' head(ettm)
+#'
+#' head(arrival_ttm)
 #'
 #' # when breakdown = TRUE the output contains much more information
-#' ettm <- expanded_travel_time_matrix(
+#' arrival_ttm2 <- arrival_travel_time_matrix(
 #'   r5r_core,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
-#'   time_window = 20,
-#'   departure_datetime = departure_datetime,
+#'   arrival_datetime = arrival_datetime,
 #'   max_trip_duration = 60,
 #'   breakdown = TRUE
 #' )
-#' head(ettm)
+#'
+#' head(arrival_ttm2)
 #'
 #' stop_r5(r5r_core)
 #' @export
-expanded_travel_time_matrix <- function(r5r_core,
+arrival_travel_time_matrix <- function(r5r_core,
                                         origins,
                                         destinations,
                                         mode = "WALK",
                                         mode_egress = "WALK",
-                                        departure_datetime = Sys.time(),
-                                        time_window = 10L,
+                                        arrival_datetime = Sys.time(),
                                         breakdown = FALSE,
                                         max_walk_time = Inf,
                                         max_bike_time = Inf,
@@ -112,7 +103,7 @@ expanded_travel_time_matrix <- function(r5r_core,
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
-
+  checkmate::assert_number(n_threads, lower = 1)
   old_dt_threads <- data.table::getDTthreads()
   dt_threads <- ifelse(is.infinite(n_threads), 0, n_threads)
   data.table::setDTthreads(dt_threads)
@@ -125,6 +116,9 @@ expanded_travel_time_matrix <- function(r5r_core,
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
+
+  # calculate departure datetime
+  departure_datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
   departure <- assign_departure(departure_datetime)
 
   # check availability of transit services on the selected date
@@ -157,8 +151,8 @@ expanded_travel_time_matrix <- function(r5r_core,
     max_bike_time
   )
 
-  set_time_window(r5r_core, time_window)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+  set_time_window(r5r_core, max_trip_duration)
+  set_monte_carlo_draws(r5r_core, draws_per_minute, max_trip_duration)
   set_speed(r5r_core, walk_speed, "walk")
   set_speed(r5r_core, bike_speed, "bike")
   set_max_rides(r5r_core, max_rides)
@@ -168,9 +162,9 @@ expanded_travel_time_matrix <- function(r5r_core,
   set_progress(r5r_core, progress)
   set_output_dir(r5r_core, output_dir)
   set_expanded_travel_times(r5r_core, TRUE)
+  r5r_core$setSearchType("ARRIVE_BY")
   set_breakdown(r5r_core, breakdown)
   set_fare_structure(r5r_core, NULL)
-  r5r_core$setSearchType("DEPART_FROM")
 
   # call r5r_core method and process result -------------------------------
 
