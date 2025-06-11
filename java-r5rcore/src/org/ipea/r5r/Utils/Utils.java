@@ -149,6 +149,9 @@ public class Utils {
 
         logger = loggerContext.getLogger("org.ipea.r5r.Planner.TripLeg");
         logger.setLevel(Level.valueOf(mode));
+
+        logger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
+        logger.setLevel(Level.valueOf(mode));
     }
 
     public static int getLinestringLength(LineString geometry) {

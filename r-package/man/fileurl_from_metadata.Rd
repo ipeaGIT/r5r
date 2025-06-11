@@ -18,6 +18,7 @@ Returns the most recent JAR file url from metadata, depending on the version.
 }
 \seealso{
 Other support functions: 
+\code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()}
 }
 \concept{support functions}

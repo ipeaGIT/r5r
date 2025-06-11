@@ -78,6 +78,7 @@ r5r_core <- setup_r5(data_path)
 }
 \seealso{
 Other setup: 
-\code{\link{download_r5}()}
+\code{\link{download_r5}()},
+\code{\link{modify_osm_carspeeds}()}
 }
 \concept{setup}

@@ -99,3 +99,14 @@ test_that("throws error if write access to given dir is denied", {
 #   )
 # }
 
+
+# TO DO: create a mock test
+# test_that("throws error if Java is not 21", {
+#
+#   local_mocked_bindings(
+#     get_java_version = function(...) 999
+#   )
+#
+#   expect_error( r5r:::start_r5r_java(data_path = path) )
+#
+# })
