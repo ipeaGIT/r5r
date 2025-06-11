@@ -151,12 +151,14 @@ containing the results are saved.
 }
 \description{
 Computation of travel time estimates between one or multiple origin
-destination pairs. This function considers a time of arrival set by the user.
-If you want to calculate travel times considering a departure time, have a
-look at the \code{\link[=travel_time_matrix]{travel_time_matrix()}} function. This function is a wrapper around
-\code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}}. On one hand, this means this the output of
-this function has more columns (more info) compared the output of
-\code{\link[=travel_time_matrix]{travel_time_matrix()}}. On the other hand, this function can be very memory
+destination pairs considering a time of arrival. This function considers a
+time of arrival set by the user. The function returns the travel time of the
+trip with the latest departure time that arrives before the arrival time set
+by the user. If you want to calculate travel times considering a departure
+time, have a' look at the \code{\link[=travel_time_matrix]{travel_time_matrix()}} function. This function is a
+wrapper around \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}}. On one hand, this means this
+the output of this function has more columns (more info) compared the output
+of \code{\link[=travel_time_matrix]{travel_time_matrix()}}. On the other hand, this function can be very memory
 intensive if the user allows for really long max trip duration.
 }
 \section{Transport modes}{

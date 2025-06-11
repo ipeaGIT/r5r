@@ -159,12 +159,9 @@ ettm_window[15:25,]
 
 # 4. The `arrival_travel_time_matrix()` function
 
-Both of the functions `travel_time_matrix()` and `expanded_travel_time_matrix()` consider a **departure** time set by the user. In some cases, though, you might need to calculate travel times considering an **arrival time**. For such cases, you can use `arrival_travel_time_matrix()`. In this function, you need to set the latest arrival time desired and a maximum trip duration. The function returns the travel time of _ _ _ _  that arrives before the arrival time.
->
->(1) the trip with the latest departure time
-or
-(2) the trip with the shortest travel time
+Both of the functions `travel_time_matrix()` and `expanded_travel_time_matrix()` consider a **departure** time set by the user. In some cases, though, you might need to calculate travel times considering an **arrival time**. For such cases, you can use `arrival_travel_time_matrix()`. In this function, you need to set the latest arrival time desired and a maximum trip duration. The function returns the travel time of the trip with the latest departure time that arrives before the arrival time.
 
+This function is useful when modeling user behavior in situations where arriving by a specific time is important, such as getting to work or school for a set start time (e.g., 9 a.m.). In these scenarios, it is often most convenient for a person to take the latest possible departure that still ensures arrival before their required start time, rather than choosing the trip with the shortest travel time but arriving much earlier and waiting unnecessarily at the destination.
 
 Note that the output of this function includes more information with additional columns, like in the `expanded_travel_time_matrix()` function (you can also use `breakdown = TRUE`).
 
