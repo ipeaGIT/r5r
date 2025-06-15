@@ -93,25 +93,14 @@ modify_osm_carspeeds <- function(pbf_path,
   # change speeds
   start_r5r_java(original_dir) # initialize rJava if needed
 
-  # set logger level of SpeedSetter
-  if (verbose) {
-    rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
-                  returnSig = "V",
-                  method = "verboseMode")
-  } else {
-    rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
-                  returnSig = "V",
-                  method = "silentMode")
-  }
-
-  rJava::.jcall("org.ipea.r5r.Utils.SpeedSetter",
-                returnSig = "Z",
-                method = "modifyOSMSpeeds",
-                pbf_path,
-                csv_path,
-                output_dir,
-                default_speed,
-                percentage_mode)
+  speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
+                               pbf_path,
+                               csv_path,
+                               output_dir,
+                               verbose)
+  speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
+  speed_setter$setPercentageMode(percentage_mode)
+  speed_setter$runSpeedSetter()
 
   new_core <- r5r::setup_r5(output_dir,
                             verbose = verbose,
