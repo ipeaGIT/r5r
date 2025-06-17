@@ -2,7 +2,8 @@
 % Please edit documentation in R/travel_time_matrix.R
 \name{travel_time_matrix}
 \alias{travel_time_matrix}
-\title{Calculate travel time matrix between origin destination pairs}
+\title{Calculate travel time matrix between origin destination pairs considering a
+departure time}
 \usage{
 travel_time_matrix(
   r5r_core,
@@ -169,7 +170,9 @@ which the \code{.csv} files containing the results are saved.
 }
 \description{
 Fast computation of travel time estimates between one or multiple origin
-destination pairs.
+destination pairs. This function considers a departure time set by the user.
+If you want to calculate travel times considering a time of arrival, have a
+look at the \code{\link[=arrival_travel_time_matrix]{arrival_travel_time_matrix()}} function.
 }
 \section{Transport modes}{
 
@@ -235,14 +238,15 @@ ignoring the timezone attribute.
 \section{Routing algorithm}{
 
 
-The \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}} and
-\code{\link[=accessibility]{accessibility()}} functions use an \code{R5}-specific extension to the RAPTOR
-routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
-systematic sample of one departure per minute over the time window set by the
-user in the 'time_window' parameter. A detailed description of base RAPTOR
-can be found in Delling et al (2015). However, whenever the user includes
-transit fares inputs to these functions, they automatically switch to use an
-\code{R5}-specific extension to the McRAPTOR routing algorithm.
+The \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
+\code{\link[=arrival_travel_time_matrix]{arrival_travel_time_matrix()}}  and \code{\link[=accessibility]{accessibility()}} functions use an
+\code{R5}-specific extension to the RAPTOR routing algorithm (see Conway et al.,
+2017). This RAPTOR extension uses a systematic sample of one departure per
+minute over the time window set by the user in the 'time_window' parameter.
+A detailed description of base RAPTOR can be found in Delling et al (2015).
+However, whenever the user includes transit fares inputs to these functions,
+they automatically switch to use an \code{R5}-specific extension to the McRAPTOR
+routing algorithm.
 \itemize{
 \item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
@@ -327,6 +331,7 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other routing: 
+\code{\link{arrival_travel_time_matrix}()},
 \code{\link{detailed_itineraries}()},
 \code{\link{expanded_travel_time_matrix}()},
 \code{\link{pareto_frontier}()}
