@@ -73,6 +73,9 @@ check_transit_availability_on_date <- function(r5r_core,
 #' Sets up Java logging for r5r and ensures Java SE Development Kit 21 is installed.
 #'
 #' @param data_path A character string. The directory where the log file should be saved.
+#' @param temp_dir A logical. Whether the jar file should be saved in a temporary
+#'   directory. Defaults to `FALSE`.
+#' @param verbose A logical. Whether to show informative messages. Defaults to `FALSE`.
 #'
 #' @return No return value. The function will stop execution with an error if Java 21 is not found.
 #'
