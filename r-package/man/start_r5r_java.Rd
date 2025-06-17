@@ -4,10 +4,15 @@
 \alias{start_r5r_java}
 \title{Initialize Java and Check Version}
 \usage{
-start_r5r_java(data_path)
+start_r5r_java(data_path, temp_dir = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{data_path}{A character string. The directory where the log file should be saved.}
+
+\item{temp_dir}{A logical. Whether the jar file should be saved in a temporary
+directory. Defaults to \code{FALSE}.}
+
+\item{verbose}{A logical. Whether to show informative messages. Defaults to \code{FALSE}.}
 }
 \value{
 No return value. The function will stop execution with an error if Java 21 is not found.

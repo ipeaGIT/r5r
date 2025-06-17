@@ -30,8 +30,8 @@ in the CSV. Must be >= 0. Defaults to 1.}
 interpreted as percentages of original speeds; if \code{FALSE}, as
 absolute speeds (km/h). Defaults to \code{TRUE} - percentages.}
 
-\item{verbose}{Logical. If \code{TRUE}, creates a verbose R5RCore when
-rebuilding the network. Defaults to \code{FALSE}.}
+\item{verbose}{Logical. If \code{TRUE}, the function modifies the network verbosely and
+creates a verbose R5RCore. Defaults to \code{FALSE}.}
 }
 \value{
 An R5 core object representing the rebuilt network with modified car speeds.
