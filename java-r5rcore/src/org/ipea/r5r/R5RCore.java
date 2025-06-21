@@ -28,8 +28,8 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
-    public static final String R5_VERSION = "7.0";
-    public static final String R5R_VERSION = "1.1.0";
+    public static final String R5_VERSION = "7.4";
+    public static final String R5R_VERSION = "2.2.0";
 
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
