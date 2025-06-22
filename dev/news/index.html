@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.099999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.2.0" id="r5r-220">r5r 2.2.0<a class="anchor" aria-label="anchor" href="#r5r-220"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time.</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>routing properties within little jar are reset to default after a routing execution <a href="https://github.com/ipeaGIT/r5r/pull/453" class="external-link">#453</a>
+</li>
+</ul><p><strong>Bug fixes</strong></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.2.0" id="r5r-220">r5r 2.2.0<a class="anchor" aria-label="anchor" href="#r5r-220"></a></h2><p class="text-muted">CRAN release: 2025-05-22</p>
 <p><strong>Major changes</strong></p>
 <ul><li>r5r now uses the latest version of R5 V7.4. Closed <a href="https://github.com/ipeaGIT/r5r/issues/436" class="external-link">#436</a>
 </li>
@@ -60,8 +69,7 @@
 <ul><li>r5r now throws an informative error message when the geographic extent of input data exceeds limit of 975000 km2. Closes issues <a href="https://github.com/ipeaGIT/r5r/issues/389" class="external-link">#389</a>, <a href="https://github.com/ipeaGIT/r5r/issues/405" class="external-link">#405</a>, <a href="https://github.com/ipeaGIT/r5r/issues/406" class="external-link">#406</a>, <a href="https://github.com/ipeaGIT/r5r/issues/407" class="external-link">#407</a>, <a href="https://github.com/ipeaGIT/r5r/issues/412" class="external-link">#412</a> and <a href="https://github.com/ipeaGIT/r5r/issues/421" class="external-link">#421</a>. Thanks to PR <a href="https://github.com/ipeaGIT/r5r/issues/426" class="external-link">#426</a> by Alex Magnus.</li>
 <li>removed JRI dependency in r5r little jar. This helps debugging issues in Java without the need of using R. The side effect is that r5r now creates an <code>r5rlog</code> file in the data path.</li>
 </ul><p><strong>Bug fixes</strong></p>
-<ul><li>Fixed error caused by phantom 0-minute isochrone. Closed issues <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a> and <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a></li>
-<li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
+<ul><li>Fixed a bug that prevented the package to check the availability of transit services in specific days when there is no service at all.</li>
 <li>Fixed a bug in the isochrone function that was throwing false error message regarding cutoff being too short. Closed <a href="https://github.com/ipeaGIT/r5r/issues/434" class="external-link">#434</a> and <a href="https://github.com/ipeaGIT/r5r/issues/433" class="external-link">#433</a>
 </li>
 </ul><p><strong>New contributors</strong></p>
@@ -302,7 +310,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

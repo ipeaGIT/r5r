@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   accessibility: accessibility.html
@@ -11,7 +11,7 @@ articles:
   r5r: r5r.html
   time_window: time_window.html
   travel_time_matrix: travel_time_matrix.html
-last_built: 2025-05-20T14:49Z
+last_built: 2025-06-22T22:26Z
 urls:
   reference: https://ipeagit.github.io/r5r/reference
   article: https://ipeagit.github.io/r5r/articles

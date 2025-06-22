@@ -17,7 +17,7 @@ to the centroids of all segments in the transport network."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.099999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -313,14 +313,15 @@ ignoring the timezone attribute.</p>
 
 
 
-<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and
-<code><a href="accessibility.html">accessibility()</a></code> functions use an <code>R5</code>-specific extension to the RAPTOR
-routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
-systematic sample of one departure per minute over the time window set by the
-user in the 'time_window' parameter. A detailed description of base RAPTOR
-can be found in Delling et al (2015). However, whenever the user includes
-transit fares inputs to these functions, they automatically switch to use an
-<code>R5</code>-specific extension to the McRAPTOR routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
+<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>,
+<code><a href="arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>  and <code><a href="accessibility.html">accessibility()</a></code> functions use an
+<code>R5</code>-specific extension to the RAPTOR routing algorithm (see Conway et al.,
+2017). This RAPTOR extension uses a systematic sample of one departure per
+minute over the time window set by the user in the 'time_window' parameter.
+A detailed description of base RAPTOR can be found in Delling et al (2015).
+However, whenever the user includes transit fares inputs to these functions,
+they automatically switch to use an <code>R5</code>-specific extension to the McRAPTOR
+routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
 on combined schedule and headway-based networks. Transportation Research
 Record, 2653(1), 45-53. <a href="https://doi.org/10.3141/2653-06" class="external-link">doi:10.3141/2653-06</a></p></li>
@@ -444,7 +445,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

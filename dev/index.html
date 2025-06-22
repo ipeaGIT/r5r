@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.099999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -127,7 +127,13 @@
 <li>
 <code><a href="reference/travel_time_matrix.html">travel_time_matrix()</a></code>
 <ul>
-<li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs.</li>
+<li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs considering departure time.</li>
+</ul>
+</li>
+<li>
+<code><a href="reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>
+<ul>
+<li>Calculates travel time matrices between origin destination pairs considering a time of arrival. The output includes additional information such as the routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</li>
 </ul>
 </li>
 <li>
@@ -387,7 +393,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
