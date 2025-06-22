@@ -24,6 +24,7 @@ to set these speed profiles in r5r JAR.
 }
 \seealso{
 Other setting functions: 
+\code{\link{reverse_if_direct_mode}()},
 \code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},
 \code{\link{set_expanded_travel_times}()},
