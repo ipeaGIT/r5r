@@ -147,6 +147,17 @@ travel_time_matrix <- function(r5r_core,
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
 
+  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
+  if (
+    mode_list$transit_mode == "" &&
+    mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
+    nrow(origins) > nrow(destinations)
+  ) {
+    temp <- origins
+    origins <- destinations
+    destinations <- temp
+  }
+
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_core, departure_date = departure$date)
