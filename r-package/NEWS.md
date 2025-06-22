@@ -2,7 +2,7 @@
 
 **Major changes**
 
-- New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering a time of arrival
+- New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time.
 
 **Minor changes**
 
