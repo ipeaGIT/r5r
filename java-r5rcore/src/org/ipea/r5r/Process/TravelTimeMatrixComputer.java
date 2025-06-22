@@ -6,6 +6,7 @@ import com.conveyal.r5.analyst.TravelTimeComputer;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.cluster.TravelTimeResult;
+import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.path.RouteSequence;
 import com.google.common.collect.ArrayListMultimap;
@@ -17,7 +18,6 @@ import org.ipea.r5r.Utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -90,6 +90,8 @@ public class TravelTimeMatrixComputer extends R5Process {
 
     private final CsvResultOptions csvOptions;
 
+    private int monteCarloDrawsPerMinute;
+
     @Override
     protected boolean isOneToOne() {
         return false;
@@ -150,76 +152,127 @@ public class TravelTimeMatrixComputer extends R5Process {
         // extract travel paths, if required
         Multimap<Integer, PathBreakdown>[] pathBreakdown = extractPathResults(travelTimeResults.paths, travelTimeResults.travelTimes);
 
-        for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
-            // fill travel details for destination
-            populateTravelTimesBreakdown(travelTimesTable, pathBreakdown, destination);
+        // set expected monteCarloDrawsPerMinute to later use to count if every path was accounted for in routing
+        monteCarloDrawsPerMinute = transportNetwork.transitLayer.hasFrequencies
+                ? routingProperties.numberOfMonteCarloDraws / routingProperties.timeWindowSize
+                : 1;
+
+
+        if (routingProperties.searchType == SearchType.ARRIVE_BY) {
+            for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
+                // fill travel details for destination
+                filterLatestBeforeArrivalTime(travelTimesTable, pathBreakdown, destination);
+            }
+        } else {
+            for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
+                // fill travel details for destination
+                populateTravelTimesBreakdown(travelTimesTable, pathBreakdown, destination);
+            }
+        }
+    }
+
+    private void filterLatestBeforeArrivalTime(RDataFrame travelTimesTable, Multimap<Integer, PathBreakdown>[] pathBreakdown, int destination) {
+        if (this.routingProperties.expandedTravelTimes & pathBreakdown != null) {
+            if (!pathBreakdown[destination].isEmpty()) {
+                // for this destination return the latest departing trip that still arrives before the arrival time
+                int desiredArrivalTime = secondsFromMidnight + maxTripDuration * 60; // convert trip duration to seconds
+
+                for (int departureTime = secondsFromMidnight + (routingProperties.timeWindowSize - 1) * 60;
+                     departureTime >= secondsFromMidnight;
+                     departureTime -= 60) {
+                    Collection<PathBreakdown> pbs = pathBreakdown[destination].get(departureTime);
+
+                    int monteCarloDrawsForPath = 0;
+                    for (PathBreakdown path : pbs) {
+                        int arrivalTime = departureTime + (int) (path.getTotalTime() * 60);
+                        monteCarloDrawsForPath++;
+                        if (arrivalTime <= desiredArrivalTime) {
+                            addPathToDataframe(travelTimesTable, destination, monteCarloDrawsForPath, path);
+                            return; // only return the first trip per destination that arrives before the desiredArrivalTime cutoff
+                            // since we are searching in descending order of departure times it will be the lastest
+                            // departure arriving before our desired time
+                        }
+                    }
+
+                    // if there are less routes than expected check direct paths
+                    if (monteCarloDrawsForPath < monteCarloDrawsPerMinute) {
+                        Collection<PathBreakdown> directPaths = pathBreakdown[destination].get(0);
+
+                        PathBreakdown directPath;
+                        if (!directPaths.isEmpty()) {
+                            directPath = directPaths.iterator().next();
+                        } else {
+                            return; // if path is unreachable there is no point seeing if it arrives in time
+                        }
+
+                        monteCarloDrawsForPath = 1; // artificial "first draw" for direct path
+                        int arrivalTime = departureTime + (int) (directPath.getTotalTime() * 60);
+
+                        if (arrivalTime <= desiredArrivalTime) {
+                            directPath.departureTime = Utils.getTimeFromSeconds(departureTime);
+                            addPathToDataframe(travelTimesTable, destination, monteCarloDrawsForPath, directPath);
+                            return; // only return the first trip per destination that arrives before the desiredArrivalTime cutoff
+                            // since we are searching in descending order of departure times it will be the lastest
+                            // departure arriving before our desired time
+                        }
+                    }
+                }
+            }
         }
     }
 
     private Multimap<Integer, PathBreakdown>[] extractPathResults(PathResult paths, TravelTimeResult travelTimes) {
-        try {
-            // Create Field object
-            Field privateField = PathResult.class.getDeclaredField("iterationsForPathTemplates");
-            // Set the accessibility as true
-            privateField.setAccessible(true);
-            // Store the value of private field in variable
-            Multimap<RouteSequence, PathResult.Iteration>[] iterationMaps = (Multimap<RouteSequence, PathResult.Iteration>[])privateField.get(paths);
+        Multimap<Integer, PathBreakdown>[] pathResults = new Multimap[nDestinations];
 
-            Multimap<Integer, PathBreakdown>[] pathResults = new Multimap[nDestinations];
+        for (int d = 0; d < nDestinations; d++) {
+            pathResults[d] = ArrayListMultimap.create();
 
-            for (int d = 0; d < nDestinations; d++) {
-                pathResults[d] = ArrayListMultimap.create();
+            Multimap<RouteSequence, PathResult.Iteration> iterationMap = paths.iterationsForPathTemplates[d];
+            if (iterationMap != null) {
 
-                Multimap<RouteSequence, PathResult.Iteration> iterationMap = iterationMaps[d];
-                if (iterationMap != null) {
+                for (RouteSequence routeSequence : iterationMap.keySet()) {
+                    Collection<PathResult.Iteration> iterations = iterationMap.get(routeSequence);
+                    int nIterations = iterations.size();
+                    checkState(nIterations > 0, "A path was stored without any iterations");
 
-                    for (RouteSequence routeSequence : iterationMap.keySet()) {
-                        Collection<PathResult.Iteration> iterations = iterationMap.get(routeSequence);
-                        int nIterations = iterations.size();
-                        checkState(nIterations > 0, "A path was stored without any iterations");
+                    // extract the route id's
+                    String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer, csvOptions);
 
-                        // extract the route id's
-                        String[] path = routeSequence.detailsWithGtfsIds(this.transportNetwork.transitLayer, csvOptions);
-
-                        for (PathResult.Iteration iteration : iterations) {
-                            PathBreakdown breakdown = new PathBreakdown();
-                            breakdown.departureTime = Utils.getTimeFromSeconds(iteration.departureTime);
-                            breakdown.accessTime = routeSequence.stopSequence.access == null ? 0 : routeSequence.stopSequence.access.time / 60.0f;
-                            breakdown.waitTime = iteration.waitTimes.sum() / 60.0f;
-                            breakdown.rideTime = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.sum() / 60.0f;
-                            breakdown.transferTime = routeSequence.stopSequence.transferTime(iteration) / 60f;
-                            breakdown.egressTime = routeSequence.stopSequence.egress == null ? 0 : routeSequence.stopSequence.egress.time / 60.0f;
-                            breakdown.totalTime = iteration.totalTime / 60.0f;
-
-                            breakdown.routes = path[0];
-                            breakdown.nRides = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.size();
-
-                            if (iteration.departureTime == 0) {
-                                breakdown.departureTime = "";
-                                breakdown.routes = this.directModes.toString();
-                            }
-
-                            pathResults[d].put(iteration.departureTime, breakdown);
-                        }
-                    }
-                } else {
-                    // if iteration map for this destination is null, add possible direct route if shorter than max trip duration
-                    if (travelTimes.getValues()[0][d] <= this.maxTripDuration) {
+                    for (PathResult.Iteration iteration : iterations) {
                         PathBreakdown breakdown = new PathBreakdown();
-                        breakdown.departureTime = "";
-                        breakdown.routes = this.directModes.toString();
-                        breakdown.totalTime = travelTimes.getValues()[0][d];
-                        pathResults[d].put(0, breakdown);
+                        breakdown.departureTime = Utils.getTimeFromSeconds(iteration.departureTime);
+                        breakdown.accessTime = routeSequence.stopSequence.access == null ? 0 : routeSequence.stopSequence.access.time / 60.0f;
+                        breakdown.waitTime = iteration.waitTimes.sum() / 60.0f;
+                        breakdown.rideTime = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.sum() / 60.0f;
+                        breakdown.transferTime = routeSequence.stopSequence.transferTime(iteration) / 60f;
+                        breakdown.egressTime = routeSequence.stopSequence.egress == null ? 0 : routeSequence.stopSequence.egress.time / 60.0f;
+                        breakdown.totalTime = iteration.totalTime / 60.0f;
+
+                        breakdown.routes = path[0];
+                        breakdown.nRides = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.size();
+
+                        if (iteration.departureTime == 0) {
+                            breakdown.departureTime = "";
+                            breakdown.routes = this.directModes.toString();
+                        }
+
+                        pathResults[d].put(iteration.departureTime, breakdown);
                     }
                 }
+            } else {
+                // if iteration map for this destination is null, add possible direct route if shorter than max trip duration
+                if (travelTimes.getValues()[0][d] <= this.maxTripDuration) {
+                    PathBreakdown breakdown = new PathBreakdown();
+                    breakdown.departureTime = "";
+                    breakdown.routes = this.directModes.toString();
+                    breakdown.totalTime = travelTimes.getValues()[0][d];
+                    pathResults[d].put(0, breakdown);
+                }
             }
-
-            return pathResults;
-
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
         }
+
+        return pathResults;
+
     }
 
     private void populateTravelTimesBreakdown(RDataFrame travelTimesTable, Multimap<Integer, PathBreakdown>[] pathBreakdown, int destination) {
@@ -238,13 +291,7 @@ public class TravelTimeMatrixComputer extends R5Process {
                         addPathToDataframe(travelTimesTable, destination, monteCarloDrawsForPath, path);
                     }
 
-                    int monteCarloDrawsPerMinute;
-                    if (this.transportNetwork.transitLayer.hasFrequencies) {
-                        monteCarloDrawsPerMinute = routingProperties.numberOfMonteCarloDraws / routingProperties.timeWindowSize;
-                    } else {
-                        monteCarloDrawsPerMinute = 1;
-                    }
-
+                    // if there are less routes than expected check direct paths
                     if (monteCarloDrawsForPath < monteCarloDrawsPerMinute) {
                         Collection<PathBreakdown> directPaths = pathBreakdown[destination].get(0);
 

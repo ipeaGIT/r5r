@@ -113,15 +113,17 @@ transport network;
 2. `accessibility()` for fast computation of access to opportunities considering
 a selected decay function;
 
-3. `travel_time_matrix()` for fast computation of travel time estimates between origin/destination pairs;
+3. `travel_time_matrix()` for fast computation of travel time estimates between origin/destination pairs considering departure time;
 
-4. `expanded_travel_time_matrix()` for calculating travel matrices between origin destination pairs with additional information such as routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.
+4. `arrival_travel_time_matrix()` for calculating travel time matrices between origin destination pairs considering a time of arrival. The output includes additional information such as the routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.
 
-5. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
+5. `expanded_travel_time_matrix()` for calculating travel matrices between origin destination pairs with additional information such as routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.
 
-6. `pareto_frontier()` for analyzing the trade-off between the travel time and monetary costs of multiple route alternatives between origin/destination pairs.
+6. `detailed_itineraries()` to get detailed information on one or multiple alternative routes between origin/destination pairs.
 
-7. `isochrone()` to estimate the polygons of the areas that can be reached from an origin point at different travel time limits.
+7. `pareto_frontier()` for analyzing the trade-off between the travel time and monetary costs of multiple route alternatives between origin/destination pairs.
+
+8. `isochrone()` to estimate the polygons of the areas that can be reached from an origin point at different travel time limits.
 
 Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info about

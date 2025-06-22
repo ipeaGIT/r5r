@@ -1,13 +1,14 @@
 #' @section Routing algorithm:
 #'
-#' The [travel_time_matrix()], [expanded_travel_time_matrix()] and
-#' [accessibility()] functions use an `R5`-specific extension to the RAPTOR
-#' routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
-#' systematic sample of one departure per minute over the time window set by the
-#' user in the 'time_window' parameter. A detailed description of base RAPTOR
-#' can be found in Delling et al (2015). However, whenever the user includes
-#' transit fares inputs to these functions, they automatically switch to use an
-#' `R5`-specific extension to the McRAPTOR routing algorithm.
+#' The [travel_time_matrix()], [expanded_travel_time_matrix()],
+#' [arrival_travel_time_matrix()]  and [accessibility()] functions use an
+#' `R5`-specific extension to the RAPTOR routing algorithm (see Conway et al.,
+#' 2017). This RAPTOR extension uses a systematic sample of one departure per
+#' minute over the time window set by the user in the 'time_window' parameter.
+#' A detailed description of base RAPTOR can be found in Delling et al (2015).
+#' However, whenever the user includes transit fares inputs to these functions,
+#' they automatically switch to use an `R5`-specific extension to the McRAPTOR
+#' routing algorithm.
 #'
 #' - Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
 #' transit and land use sketch planning using interactive accessibility methods
