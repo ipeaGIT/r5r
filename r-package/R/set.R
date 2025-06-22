@@ -515,3 +515,37 @@ set_suboptimal_minutes <- function(r5r_core,
 
   return(invisible(TRUE))
 }
+
+
+#' Reverse Origins and Destinations for Direct Modes
+#'
+#' Swaps the `origins` and `destinations` data frames if certain conditions are met,
+#' specifically to optimize routing performance with R5's one-to-many algorithm.
+#'
+#' This function reverses the direction of analysis when the transit mode is empty
+#' and the direct modes are WALK or BICYCLE and when the number of
+#' origin points is greater than the number of destination points.
+#'
+#' @param origins A data frame representing origin locations.
+#' @param destinations A data frame representing destination locations.
+#' @param mode_list A named list containing the routing modes:
+#'
+#' @return List origins and destinations unchanges or in swapper order
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+reverse_if_direct_mode <- function(origins, destinations, mode_list) {
+  # In direct modes, reverse origin/destination to take advantage of R5's One to Many algorithm
+  if (
+    mode_list$transit_mode == "" &&
+    mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
+    nrow(origins) > nrow(destinations)
+  ) {
+    temp <- origins
+    origins <- destinations
+    destinations <- temp
+  }
+
+  return(list(origins = origins, destinations = destinations))
+}
