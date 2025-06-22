@@ -54,6 +54,8 @@
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
 </li>
+<li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In pactice, this means that these functions are now much faster when there are multiple origins to few destinations. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
+</li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>routing properties within little jar are reset to default after a routing execution <a href="https://github.com/ipeaGIT/r5r/pull/453" class="external-link">#453</a>
 </li>
