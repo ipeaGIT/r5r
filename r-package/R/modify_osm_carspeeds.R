@@ -34,7 +34,7 @@
 #' pbf_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
 #'
 #' # path to CSV with a table pointing to the new speed info
-#' speeds_csv_path <- system.file("extdata/poa/osm_maxspeed_200.csv", package = "r5r")
+#' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 #'
 #' r5r_core_new_speed <- r5r:::modify_osm_carspeeds(
 #'   pbf_path = pbf_path,
