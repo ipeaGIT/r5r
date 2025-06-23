@@ -51,9 +51,9 @@ rJavaEnv::java_quick_install(version = 21)
 
 ```
 
-## Usage
+## Usage 
 
-The package has seven **fundamental functions**:
+The package has seven **fundamental functions** :
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
@@ -96,6 +96,8 @@ The package has seven **fundamental functions**:
    
 8. `isochrone()`
    * Returns a `A ⁠POLYGON  "sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+
+<small>[See more details about each function here](https://ipeagit.github.io/r5r/reference/index.html)</small>
 
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
