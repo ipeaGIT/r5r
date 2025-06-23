@@ -172,11 +172,12 @@ fare_structure <- r5r::read_fare_structure(file.path(data_path, "fares/fares_poa
 
 In this example, we calculate the Pareto frontier from all origins to all 
 destinations considering multiple cutoffs of monetary costs:
-- $1, which would only allow for walking trips
-- $4.5, which would only allow for rail trips
-- $4.8, which would allow for a single bus trip
-- $7.20, which would allow for bus + bus
-- $8.37, which would allow for walking walking + bus + rail
+
+* $1, which would only allow for walking trips
+* $4.5, which would only allow for rail trips
+* $4.8, which would allow for a single bus trip
+* $7.20, which would allow for bus + bus
+* $8.37, which would allow for walking walking + bus + rail
 
 ```{r}
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
@@ -202,7 +203,7 @@ Moinhos hospital. An optimum route alternative means that one cannot make a fast
 increasing costs, and one cannot make a cheaper trip without increasing travel time.
 
 
-```{r, echo = FALSE, fig.width=7, fig.height=4}
+```{r, echo = FALSE, fig.width=7, fig.height=4, warning=FALSE}
 # select origin and destinations
 pf2 <- dplyr::filter(prtf, to_id == 'farrapos_station'  &
                        from_id %in% c('moinhos_de_vento_hospital', 
