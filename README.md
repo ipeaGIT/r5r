@@ -51,9 +51,11 @@ rJavaEnv::java_quick_install(version = 21)
 
 ```
 
-## Usage
+## Usage 
 
-The package has seven **fundamental functions**:
+<small>[See more details](https://ipeagit.github.io/r5r/reference/index.html)</small>
+
+The package has seven **fundamental functions** :
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
