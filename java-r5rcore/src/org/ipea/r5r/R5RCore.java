@@ -5,6 +5,7 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -118,6 +119,10 @@ public class R5RCore {
 
     public void setExpandedTravelTimes(boolean expandedTravelTimes) {
         this.routingProperties.expandedTravelTimes = expandedTravelTimes;
+    }
+
+    public void setSearchType(String searchType) {
+        this.routingProperties.searchType = SearchType.valueOf(searchType);
     }
 
     public void setTravelTimesBreakdown(boolean detailedTravelTimes) {

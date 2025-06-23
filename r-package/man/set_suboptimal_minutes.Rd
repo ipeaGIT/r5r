@@ -41,6 +41,7 @@ that they don't always run on schedule".
 }
 \seealso{
 Other setting functions: 
+\code{\link{reverse_if_direct_mode}()},
 \code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},
 \code{\link{set_expanded_travel_times}()},
