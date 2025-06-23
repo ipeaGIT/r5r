@@ -339,7 +339,6 @@ assert_fare_structure <- function(fare_structure) {
     return(invisible(TRUE))
   } else {
     # This is an R5R fare structure object
-
     element_names <- c(
       "max_discounted_transfers",
       "transfer_time_allowance",
