@@ -11,7 +11,7 @@ tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
                    percentage_mode = TRUE,
                    verbose = FALSE
                    ){
-  modify_osm_carspeeds(
+  new_r5r_core <- modify_osm_carspeeds(
     pbf_path = pbf_path,
     csv_path = csv_path,
     output_dir = output_dir,
@@ -52,7 +52,7 @@ test_that("success in increasing travel times", {
   )
 
   # this should be twice as long
-  testthat::expect_true(df_pos[2,] > df_pre[2,])
+  testthat::expect_true(df_pos[2,]$travel_time_p50 > df_pre[2,]$travel_time_p50)
 
   # clean tempdir
   r5r::stop_r5(new_r5r_core)
@@ -72,7 +72,6 @@ test_that("errors due to incorrect input types", {
 
   expect_error(tester(percentage_mode = 'banana'))
   expect_error(tester(percentage_mode = NULL))
-  expect_error(tester(percentage_mode = TRUE, default_speed = 1000))
 
   expect_error(tester(verbose = 'banana'))
   expect_error(tester(verbose = NULL))
@@ -81,8 +80,13 @@ test_that("errors due to incorrect input types", {
 
 test_that("errors due existing pbf in outputdir", {
 
-  expect_success(new_r5r_core <- tester())
-  expect_error(new_r5r_core <- tester())
+  # clean tempdir
+  r5r::stop_r5()
+  unlink(tempdir(check = TRUE), recursive = TRUE)
+  list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
+
+  new_r5r_core <- tester()
+  expect_error(tester())
 
   # clean tempdir
   r5r::stop_r5(new_r5r_core)

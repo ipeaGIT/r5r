@@ -36,10 +36,10 @@
 #' # path to CSV with a table pointing to the new speed info
 #' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 #'
-#' r5r_core_new_speed <- r5r:::modify_osm_carspeeds(
+#' r5r_core_new_speed <- r5r::modify_osm_carspeeds(
 #'   pbf_path = pbf_path,
 #'   csv_path = speeds_csv_path,
-#'   output_dir = NULL,
+#'   output_dir = tempdir(),
 #'   default_speed = 1,
 #'   percentage_mode = TRUE
 #' )
