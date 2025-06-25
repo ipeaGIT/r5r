@@ -47,16 +47,10 @@
 #' @export
 modify_osm_carspeeds <- function(pbf_path,
                                  csv_path,
-                                 output_dir = NULL,
+                                 output_dir = tempdir_unique(),
                                  default_speed = 1,
                                  percentage_mode = TRUE,
                                  verbose = FALSE){
-
-  if (is.null(output_dir)) { # tempdir() is the same for entire session
-    output_dir <- tempfile("r5rtemp_")
-    dir.create(output_dir)
-  }
-
   # Standardize format of passed paths
   pbf_path <- normalizePath(pbf_path, mustWork = FALSE)
   output_dir <- normalizePath(output_dir, mustWork = FALSE)
