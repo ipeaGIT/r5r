@@ -27,7 +27,8 @@ the installed Java version is 21. If not, it stops with an informative error mes
 \seealso{
 Other support functions: 
 \code{\link{fileurl_from_metadata}()},
-\code{\link{stop_r5}()}
+\code{\link{stop_r5}()},
+\code{\link{tempdir_unique}()}
 }
 \concept{support functions}
 \keyword{internal}

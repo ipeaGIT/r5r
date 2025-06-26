@@ -7,7 +7,7 @@
 modify_osm_carspeeds(
   pbf_path,
   csv_path,
-  output_dir = NULL,
+  output_dir = tempdir_unique(),
   default_speed = 1,
   percentage_mode = TRUE,
   verbose = FALSE
@@ -37,8 +37,8 @@ creates a verbose R5RCore. Defaults to \code{FALSE}.}
 An R5 core object representing the rebuilt network with modified car speeds.
 }
 \description{
-The function Updates the car speeds in an .pbf file by reading modifications
-from a roadspeeds .csv file and rebuilds the network with the modified speeds.
+The function builds a transport network after changing the car speeds from a
+\code{.pbf} file based on the new speeds indicated in a roadspeeds \code{.csv} file.
 }
 \details{
 The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
@@ -54,12 +54,12 @@ library(r5r)
 pbf_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
 
 # path to CSV with a table pointing to the new speed info
-speeds_csv_path <- system.file("extdata/poa/osm_maxspeed_200.csv", package = "r5r")
+speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 
-r5r_core_new_speed <- r5r:::modify_osm_carspeeds(
+r5r_core_new_speed <- r5r::modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = speeds_csv_path,
-  output_dir = NULL,
+  output_dir = tempdir(),
   default_speed = 1,
   percentage_mode = TRUE
 )
