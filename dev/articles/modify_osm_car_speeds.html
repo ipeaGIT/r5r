@@ -147,6 +147,7 @@ should have two columns: <code>"osm_id"</code> and
 <span><span class="va">csv_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_path</span>,<span class="st">'/poa_osm_congestion.csv'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">speed_factors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">csv_path</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">speed_factors</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      osm_id max_speed</span></span>
 <span><span class="co">#&gt; 1  27184648       0.5</span></span>
@@ -260,9 +261,8 @@ this:</p>
 <span>    <span class="va">highway</span> <span class="op">==</span> <span class="st">"motorway"</span>  <span class="op">~</span> <span class="fl">0.75</span>,</span>
 <span>    <span class="va">highway</span> <span class="op">==</span> <span class="st">"primary"</span>   <span class="op">~</span> <span class="fl">0.8</span>,</span>
 <span>    <span class="va">highway</span> <span class="op">==</span> <span class="st">"secondary"</span> <span class="op">~</span> <span class="fl">0.85</span>,</span>
-<span>    <span class="va">highway</span> <span class="op">==</span> <span class="st">"tertiary"</span>  <span class="op">~</span> <span class="fl">0.9</span>,</span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="va">highway</span> <span class="op">==</span> <span class="st">"tertiary"</span>  <span class="op">~</span> <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">new_speeds</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     osm_id highway max_speed</span></span>
@@ -366,7 +366,6 @@ call to Java’s garbage collector, as follows:</p>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
 page</a>.</p>
-<p>=</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
