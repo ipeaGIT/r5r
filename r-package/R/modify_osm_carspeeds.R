@@ -25,7 +25,7 @@
 #' speed in km/h. The function rebuilds the network in \code{output_dir} and
 #' returns a new `r5r_core` object.
 #'
-#' @family setup
+#' @family modify_osm_car_speeds
 #'
 #' @return An R5 core object representing the rebuilt network with modified car speeds.
 #'

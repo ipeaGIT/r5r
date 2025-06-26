@@ -26,7 +26,7 @@ reference:
     - isochrone
   - title: "Modifying OSM car speeds"
   - contents:
-    - modify_osm_car_speeds
+    - modify_osm_carspeeds
   - title: "Extracting transport network spatial data"
   - contents:
     - street_network_to_sf

@@ -66,9 +66,4 @@ r5r_core_new_speed <- r5r::modify_osm_carspeeds(
 )
 \dontshow{\}) # examplesIf}
 }
-\seealso{
-Other setup: 
-\code{\link{download_r5}()},
-\code{\link{setup_r5}()}
-}
-\concept{setup}
+\concept{modify_osm_car_speeds}
