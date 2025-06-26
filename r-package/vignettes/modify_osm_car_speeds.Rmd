@@ -198,8 +198,8 @@ r5r_core_20kmph <- r5r::modify_osm_carspeeds(
 steps TODO:
 
 - create a custom polygon, e.g. a circle over the city center
-- determine OMS ids in the polygon using a spatial join operation between the polygon and the .pbf
-- create a csv file with custom speeds for roads within the polygon
+- determine OSM ids in the polygon using a spatial join operation between the polygon and the `.pbf`
+- create a csv file with custom speeds for OSM ids within the polygon
 
 this can be computationally intensive due to the spatial join operation, depending on the size of the road network and the number of polygons. A new function under development will make this much easier / faster.
 
