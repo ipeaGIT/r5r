@@ -10,7 +10,8 @@
 #' @param output_dir Character. Directory where the modified network will be
 #'        written. Defaults to a temporary directory.
 #' @param default_speed Numeric. Default speed to use for segments not specified
-#'        in the CSV. Must be >= 0. Defaults to 1.
+#'        in the CSV. Must be >= 0. Defaults to `NULL` so that roads not listed
+#'        in. the CSV have their speeds unchanged.
 #' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
@@ -40,7 +41,6 @@
 #'   pbf_path = pbf_path,
 #'   csv_path = speeds_csv_path,
 #'   output_dir = tempdir(),
-#'   default_speed = 1,
 #'   percentage_mode = TRUE
 #' )
 #'
@@ -48,9 +48,10 @@
 modify_osm_carspeeds <- function(pbf_path,
                                  csv_path,
                                  output_dir = tempdir_unique(),
-                                 default_speed = 1,
+                                 default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE){
+
   # Standardize format of passed paths
   pbf_path <- normalizePath(pbf_path, mustWork = FALSE)
   output_dir <- normalizePath(output_dir, mustWork = FALSE)
@@ -67,10 +68,17 @@ modify_osm_carspeeds <- function(pbf_path,
   # check remaining inputs
   checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
   checkmate::assert_file_exists(csv_path, access = "r", extension = "csv")
-  checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE)
+  checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
 
-  if (percentage_mode==FALSE & default_speed==1) {
+  # default speed to keep unlisted roads unchanged
+  if (isFALSE(percentage_mode) & is.null(default_speed)) {
+    default_speed <- FALSE
+  }
+  if (isTRUE(percentage_mode) & is.null(default_speed)) {
+    default_speed <- 1
+  }
+  if (isFALSE(percentage_mode) & default_speed==1) {
     cli::cli_warn(
       "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
      When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
@@ -81,7 +89,7 @@ modify_osm_carspeeds <- function(pbf_path,
   tempdf <- data.table::fread(csv_path, nrows = 1)
   checkmate::assert_names(
     x = names(tempdf),
-    permutation.of = c("osm_id", "max_speed")
+    must.include = c("osm_id", "max_speed")
     )
 
   # change speeds

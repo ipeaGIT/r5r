@@ -8,7 +8,7 @@ modify_osm_carspeeds(
   pbf_path,
   csv_path,
   output_dir = tempdir_unique(),
-  default_speed = 1,
+  default_speed = NULL,
   percentage_mode = TRUE,
   verbose = FALSE
 )
@@ -24,7 +24,8 @@ speed modifications. The table must contain columns \code{osm_id} and
 written. Defaults to a temporary directory.}
 
 \item{default_speed}{Numeric. Default speed to use for segments not specified
-in the CSV. Must be >= 0. Defaults to 1.}
+in the CSV. Must be >= 0. Defaults to \code{NULL} so that roads not listed
+in. the CSV have their speeds unchanged.}
 
 \item{percentage_mode}{Logical. If \code{TRUE}, values in \code{max_speed} are
 interpreted as percentages of original speeds; if \code{FALSE}, as
@@ -60,7 +61,6 @@ r5r_core_new_speed <- r5r::modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = speeds_csv_path,
   output_dir = tempdir(),
-  default_speed = 1,
   percentage_mode = TRUE
 )
 \dontshow{\}) # examplesIf}
