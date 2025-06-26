@@ -8,7 +8,7 @@ template:
   light-switch: true
 
 reference:
-  - title: "Setup network"
+  - title: "Building routable transport network"
   - contents:
     - setup_r5
   - title: "Accessibility"
@@ -24,7 +24,10 @@ reference:
   - title: "Isochrone"
   - contents:
     - isochrone
-  - title: "Extract Network spatial data"
+  - title: "Modifying OSM car speeds"
+  - contents:
+    - modify_osm_car_speeds
+  - title: "Extracting transport network spatial data"
   - contents:
     - street_network_to_sf
     - transit_network_to_sf

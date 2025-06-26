@@ -3,6 +3,8 @@
 
 testthat::skip_on_cran()
 
+# TODO
+# test if setting max_speed to 0 closes the road
 
 tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
                    csv_path = paste0(data_path,'/poa_osm_congestion.csv'),
