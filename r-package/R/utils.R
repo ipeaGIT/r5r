@@ -136,3 +136,21 @@ start_r5r_java <- function(data_path, temp_dir = FALSE, verbose = FALSE) {
   # R5 jar
   rJava::.jaddClassPath(path = jar_file)
 }
+
+
+#' Return a temporary directory path that is unique with every call
+#'
+#' This is different from the built in tempdir() in that it does not return the same directory within a given runtime. Always returns a unique directory
+#'
+#' @return Path. Returns the path of the created temporary directory
+#'
+#' @family support functions
+#'
+#' @keywords internal
+tempdir_unique <- function(){
+  output_dir <- tempfile("r5rtemp_")
+  if (!dir.create(output_dir)) {
+    stop("Failed to create temporary directory.")
+  }
+  return(output_dir)
+}
