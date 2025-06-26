@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.099999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
+    <li><a class="dropdown-item" href="../articles/modify_osm_car_speeds.html">Modify OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
@@ -79,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2025-06-23</h4>
+            <h4 data-toc-skip class="date">2025-06-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/fare_structure.Rmd" class="external-link"><code>vignettes/fare_structure.Rmd</code></a></small>
       <div class="d-none name"><code>fare_structure.Rmd</code></div>
@@ -288,34 +289,34 @@ few properties and data.frames.</p>
 <span><span class="co">#&gt; $fares_per_route</span></span>
 <span><span class="co">#&gt;      agency_id                                 agency_name  route_id</span></span>
 <span><span class="co">#&gt;         &lt;char&gt;                                      &lt;char&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:      EPTC Empresa Publica de Transportes e Circulação      1112</span></span>
-<span><span class="co">#&gt;   2:      EPTC Empresa Publica de Transportes e Circulação       149</span></span>
-<span><span class="co">#&gt;   3:      EPTC Empresa Publica de Transportes e Circulação       165</span></span>
-<span><span class="co">#&gt;   4:      EPTC Empresa Publica de Transportes e Circulação       168</span></span>
-<span><span class="co">#&gt;   5:      EPTC Empresa Publica de Transportes e Circulação       173</span></span>
+<span><span class="co">#&gt;   1:     TRENS                                    TRENSURB    LINHA1</span></span>
+<span><span class="co">#&gt;   2:     TRENS                                    TRENSURB LINHAAERO</span></span>
+<span><span class="co">#&gt;   3:      EPTC Empresa Publica de Transportes e Circulação      1112</span></span>
+<span><span class="co">#&gt;   4:      EPTC Empresa Publica de Transportes e Circulação       149</span></span>
+<span><span class="co">#&gt;   5:      EPTC Empresa Publica de Transportes e Circulação       165</span></span>
 <span><span class="co">#&gt;  ---                                                                </span></span>
-<span><span class="co">#&gt; 113:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
-<span><span class="co">#&gt; 114:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
-<span><span class="co">#&gt; 115:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
-<span><span class="co">#&gt; 116:     TRENS                                    TRENSURB    LINHA1</span></span>
-<span><span class="co">#&gt; 117:     TRENS                                    TRENSURB LINHAAERO</span></span>
+<span><span class="co">#&gt; 113:      EPTC Empresa Publica de Transportes e Circulação        T7</span></span>
+<span><span class="co">#&gt; 114:      EPTC Empresa Publica de Transportes e Circulação        T8</span></span>
+<span><span class="co">#&gt; 115:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
+<span><span class="co">#&gt; 116:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
+<span><span class="co">#&gt; 117:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
 <span><span class="co">#&gt;      route_short_name                           route_long_name   mode</span></span>
 <span><span class="co">#&gt;                &lt;char&gt;                                    &lt;char&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:             1112                         HIPICA / TRISTEZA    BUS</span></span>
-<span><span class="co">#&gt;   2:              149                                    ICARAI    BUS</span></span>
-<span><span class="co">#&gt;   3:              165                                     COHAB    BUS</span></span>
-<span><span class="co">#&gt;   4:              168                  BELEM NOVO(VIA TRISTEZA)    BUS</span></span>
-<span><span class="co">#&gt;   5:              173                                   CAMAQUA    BUS</span></span>
+<span><span class="co">#&gt;   1:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL</span></span>
+<span><span class="co">#&gt;   2:             AREO                        AEROMOVEL TRENSURB   RAIL</span></span>
+<span><span class="co">#&gt;   3:             1112                         HIPICA / TRISTEZA    BUS</span></span>
+<span><span class="co">#&gt;   4:              149                                    ICARAI    BUS</span></span>
+<span><span class="co">#&gt;   5:              165                                     COHAB    BUS</span></span>
 <span><span class="co">#&gt;  ---                                                                  </span></span>
-<span><span class="co">#&gt; 113:               T9                                       PUC    BUS</span></span>
-<span><span class="co">#&gt; 114:             TR60                         TRONCAL TRI‘NGULO    BUS</span></span>
-<span><span class="co">#&gt; 115:             TR62                          TRONCAL BALTAZAR    BUS</span></span>
-<span><span class="co">#&gt; 116:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL</span></span>
-<span><span class="co">#&gt; 117:             AREO                        AEROMOVEL TRENSURB   RAIL</span></span>
+<span><span class="co">#&gt; 113:               T7                     NILO / PRAIA DE BELAS    BUS</span></span>
+<span><span class="co">#&gt; 114:               T8                       CAMPUS  /  FARRAPOS    BUS</span></span>
+<span><span class="co">#&gt; 115:               T9                                       PUC    BUS</span></span>
+<span><span class="co">#&gt; 116:             TR60                         TRONCAL TRI‘NGULO    BUS</span></span>
+<span><span class="co">#&gt; 117:             TR62                          TRONCAL BALTAZAR    BUS</span></span>
 <span><span class="co">#&gt;      route_fare fare_type</span></span>
 <span><span class="co">#&gt;           &lt;num&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt;   1:        4.8       BUS</span></span>
-<span><span class="co">#&gt;   2:        4.8       BUS</span></span>
+<span><span class="co">#&gt;   1:        4.8      RAIL</span></span>
+<span><span class="co">#&gt;   2:        4.8      RAIL</span></span>
 <span><span class="co">#&gt;   3:        4.8       BUS</span></span>
 <span><span class="co">#&gt;   4:        4.8       BUS</span></span>
 <span><span class="co">#&gt;   5:        4.8       BUS</span></span>
@@ -323,8 +324,8 @@ few properties and data.frames.</p>
 <span><span class="co">#&gt; 113:        4.8       BUS</span></span>
 <span><span class="co">#&gt; 114:        4.8       BUS</span></span>
 <span><span class="co">#&gt; 115:        4.8       BUS</span></span>
-<span><span class="co">#&gt; 116:        4.8      RAIL</span></span>
-<span><span class="co">#&gt; 117:        4.8      RAIL</span></span>
+<span><span class="co">#&gt; 116:        4.8       BUS</span></span>
+<span><span class="co">#&gt; 117:        4.8       BUS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $debug_settings</span></span>
 <span><span class="co">#&gt; $debug_settings$output_file</span></span>
@@ -504,30 +505,22 @@ routes (e.g. express services) with specific fares, these values can be
 updated in this <code>fares_per_route</code> data.frame.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_route</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    agency_id                                 agency_name  route_id</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;                                      &lt;char&gt;    &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:      EPTC Empresa Publica de Transportes e Circulação        T8</span></span>
-<span><span class="co">#&gt; 2:      EPTC Empresa Publica de Transportes e Circulação        T9</span></span>
-<span><span class="co">#&gt; 3:      EPTC Empresa Publica de Transportes e Circulação      TR60</span></span>
-<span><span class="co">#&gt; 4:      EPTC Empresa Publica de Transportes e Circulação      TR62</span></span>
-<span><span class="co">#&gt; 5:     TRENS                                    TRENSURB    LINHA1</span></span>
-<span><span class="co">#&gt; 6:     TRENS                                    TRENSURB LINHAAERO</span></span>
-<span><span class="co">#&gt;    route_short_name                           route_long_name   mode route_fare</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;                                    &lt;char&gt; &lt;char&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:               T8                       CAMPUS  /  FARRAPOS    BUS        4.8</span></span>
-<span><span class="co">#&gt; 2:               T9                                       PUC    BUS        4.8</span></span>
-<span><span class="co">#&gt; 3:             TR60                         TRONCAL TRI‘NGULO    BUS        4.8</span></span>
-<span><span class="co">#&gt; 4:             TR62                          TRONCAL BALTAZAR    BUS        4.8</span></span>
-<span><span class="co">#&gt; 5:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL        4.8</span></span>
-<span><span class="co">#&gt; 6:             AREO                        AEROMOVEL TRENSURB   RAIL        4.8</span></span>
-<span><span class="co">#&gt;    fare_type</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:       BUS</span></span>
-<span><span class="co">#&gt; 2:       BUS</span></span>
-<span><span class="co">#&gt; 3:       BUS</span></span>
-<span><span class="co">#&gt; 4:       BUS</span></span>
-<span><span class="co">#&gt; 5:      RAIL</span></span>
-<span><span class="co">#&gt; 6:      RAIL</span></span></code></pre></div>
+<span><span class="co">#&gt;    agency_id                                 agency_name route_id</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;                                      &lt;char&gt;   &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:      EPTC Empresa Publica de Transportes e Circulação       T6</span></span>
+<span><span class="co">#&gt; 2:      EPTC Empresa Publica de Transportes e Circulação       T7</span></span>
+<span><span class="co">#&gt; 3:      EPTC Empresa Publica de Transportes e Circulação       T8</span></span>
+<span><span class="co">#&gt; 4:      EPTC Empresa Publica de Transportes e Circulação       T9</span></span>
+<span><span class="co">#&gt; 5:      EPTC Empresa Publica de Transportes e Circulação     TR60</span></span>
+<span><span class="co">#&gt; 6:      EPTC Empresa Publica de Transportes e Circulação     TR62</span></span>
+<span><span class="co">#&gt;    route_short_name       route_long_name   mode route_fare fare_type</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;                &lt;char&gt; &lt;char&gt;      &lt;num&gt;    &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:               T6         TRANSVERSAL 6    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 2:               T7 NILO / PRAIA DE BELAS    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 3:               T8   CAMPUS  /  FARRAPOS    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 4:               T9                   PUC    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 5:             TR60     TRONCAL TRI‘NGULO    BUS        4.8       BUS</span></span>
+<span><span class="co">#&gt; 6:             TR62      TRONCAL BALTAZAR    BUS        4.8       BUS</span></span></code></pre></div>
 <p>Basic route information is taken directly from the GTFS data (agency,
 route id and names, mode, etc), but the <code>route_fare</code> and
 <code>fare_type</code> columns were added specifically for the

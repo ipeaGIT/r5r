@@ -6,6 +6,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/fare_structure.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/index.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/isochrones.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/articles/modify_osm_car_speeds.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/pareto_frontier.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/r5r.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/time_window.html</loc></url>
@@ -35,6 +36,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/index.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/isochrone.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/java_to_dt.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/modify_osm_carspeeds.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/pareto_frontier.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_cache.html</loc></url>
@@ -60,8 +62,10 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_verbose.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/setup_fare_structure.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/setup_r5.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/start_r5r_java.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/stop_r5.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/write_fare_structure.html</loc></url>

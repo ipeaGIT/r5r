@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.099999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
+    <li><a class="dropdown-item" href="../articles/modify_osm_car_speeds.html">Modify OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
@@ -53,6 +54,8 @@
 <h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
+</li>
+<li>New function <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
 </li>
 <li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In pactice, this means that these functions are now much faster when there are multiple origins to few destinations. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
 </li>
