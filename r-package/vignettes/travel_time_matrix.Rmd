@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 
 Some of the most common tasks in transport planning and modeling involve require having good quality data with travel time estimates between origins and destinations. `R5` is incredibly fast in generating realistic door-to-door travel time estimates in multimodal transport systems.
 
-The `r5r` packages has two functions that allow users to leverage the computing power of `R5`:
+The `r5r` package has two functions that allow users to leverage the computing power of `R5`:
 - `travel_time_matrix()`
 - `expanded_travel_time_matrix()`
 - `arrival_travel_time_matrix()`
