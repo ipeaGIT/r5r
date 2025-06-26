@@ -25,15 +25,45 @@ tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
 # tests -------------------------------------------------------------------
 test_that("success in increasing travel times", {
 
+  # get origin and destination points in a single road
+  network <- r5r::street_network_to_sf(r5r_core)
+
+  point_orig <- network$vertices |>
+    dplyr::filter(index == 		18050 ) |> # 7772
+    sfheaders::sf_to_df() |>
+    dplyr::select(id=sfg_id, lon=x, lat=y)
+
+  point_dest <- network$vertices |>
+    dplyr::filter(index == 16844 )  |> #8128
+    sfheaders::sf_to_df() |>
+    dplyr::select(id=sfg_id, lon=x, lat=y)
+
   # calculate ttm *before* changing road speeds
-  df_pre <- r5r::travel_time_matrix(
+  ttm_pre <- r5r::travel_time_matrix(
     r5r_core = r5r_core,
-    origins = pois,
-    destinations = pois,
+    origins = point_orig,
+    destinations = point_dest,
     mode = 'car',
     departure_datetime = Sys.time(),
     max_trip_duration = 60
   )
+
+  det_pre <- detailed_itineraries(
+    r5r_core,
+    origins = point_orig,
+    destinations = point_dest,
+    mode = "car",
+    departure_datetime = departure_datetime,
+    max_trip_duration = 60
+  )
+
+  # plot(det_pre['total_duration'])
+  # mapview(network$edges) + network$vertices + det
+
+  # # clean tempdir
+  # r5r::stop_r5(new_r5r_core)
+  # unlink(tempdir(check = TRUE), recursive = TRUE)
+  # list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
   # put all roads at 50% of their speed
   mock_data <- data.frame(osm_id = 1, max_speed = 1)
@@ -42,17 +72,30 @@ test_that("success in increasing travel times", {
 
   new_r5r_core <- tester(csv_path = mock_csv, default_speed = 0.5)
 
-  df_pos <- r5r::travel_time_matrix(
+  ttm_pos <- r5r::travel_time_matrix(
     r5r_core = new_r5r_core,
-    origins = pois,
-    destinations = pois,
+    origins = point_orig,
+    destinations = point_dest,
     mode = 'car',
     departure_datetime = Sys.time(),
     max_trip_duration = 60
   )
 
+  det_pos <- detailed_itineraries(
+    new_r5r_core,
+    origins = point_orig,
+    destinations = point_dest,
+    mode = "car",
+    departure_datetime = departure_datetime,
+    max_trip_duration = 60
+  )
+
+  #  mapview(det_pre) + det_pos
+
   # this should be twice as long
-  testthat::expect_true(df_pos[2,]$travel_time_p50 > df_pre[2,]$travel_time_p50)
+  testthat::expect_true(ttm_pos$travel_time_p50 > ttm_pre$travel_time_p50)
+  testthat::expect_true(det_pos$total_duration > det_pre$total_duration)
+  testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
   # clean tempdir
   r5r::stop_r5(new_r5r_core)
