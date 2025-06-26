@@ -2,7 +2,7 @@
 % Please edit documentation in R/modify_osm_carspeeds.R
 \name{modify_osm_carspeeds}
 \alias{modify_osm_carspeeds}
-\title{Create a transport network used for routing in R5 with modified car speeds}
+\title{Create a transport network used for routing in R5 with modified OSM car speeds}
 \usage{
 modify_osm_carspeeds(
   pbf_path,
@@ -38,8 +38,9 @@ creates a verbose R5RCore. Defaults to \code{FALSE}.}
 An R5 core object representing the rebuilt network with modified car speeds.
 }
 \description{
-The function builds a transport network after changing the car speeds from a
-\code{.pbf} file based on the new speeds indicated in a roadspeeds \code{.csv} file.
+The function builds a transport network with modified OSM car speeds. The new
+speed factors must me passed from a \code{.csv} file indication the new max speed
+of each OSM edge id.
 }
 \details{
 The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}

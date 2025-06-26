@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
 
 <details><summary>click to expand</summary>
 
-> `r5r` includes a convenient function `modify_osm_carspeeds()` that allows one to modify OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html). For other changes to the OSM network (e.g. including a new road link), you would need to edit the OpenStreetMap `.pbf` file direclty before using it in `r5r`. To to this, you can edit the `.pbf` file with [JOSM (https://wiki.openstreetmap.org/wiki/JOSM)](https://wiki.openstreetmap.org/wiki/JOSM). Mind you that the the OpenStreetMap tags can be changed but they cannot be removed from the data.
+> `r5r` includes a convenient function `modify_osm_carspeeds()` that allows one to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html). For other changes to the OSM network (e.g. including a new road link), you would need to edit the OpenStreetMap `.pbf` file direclty before using it in `r5r`. To to this, you can edit the `.pbf` file with [JOSM (https://wiki.openstreetmap.org/wiki/JOSM)](https://wiki.openstreetmap.org/wiki/JOSM). Mind you that the the OpenStreetMap tags can be changed but they cannot be removed from the data.
 
 </details>
 

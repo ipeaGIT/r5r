@@ -1,7 +1,8 @@
-#' Create a transport network used for routing in R5 with modified car speeds
+#' Create a transport network used for routing in R5 with modified OSM car speeds
 #'
-#' The function builds a transport network after changing the car speeds from a
-#' `.pbf` file based on the new speeds indicated in a roadspeeds `.csv` file.
+#' The function builds a transport network with modified OSM car speeds. The new
+#' speed factors must me passed from a `.csv` file indication the new max speed
+#' of each OSM edge id.
 #'
 #' @param pbf_path Character. Path to the `.pbf` file of the OSM network.
 #' @param csv_path Character. Path to the CSV file witha a table specifying the

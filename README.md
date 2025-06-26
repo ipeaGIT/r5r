@@ -101,8 +101,7 @@ obs. Most of these functions also allow users to account for monetary travel cos
 when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
-obs.2 The package also includes a convenient function `modify_osm_carspeeds()` that allows one to modify OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
-
+obs.2 The package also includes a convenient function `modify_osm_carspeeds()` that allows one build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
 
 
 The package also includes a few **support functions**.
