@@ -54,6 +54,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 csv_path <- paste0(data_path,'/poa_osm_congestion.csv')
 
 speed_factors <- read.csv(csv_path)
+
 head(speed_factors)
 
 ```
@@ -101,7 +102,7 @@ In this example, we'll set different speed factor for roads of different hierarc
 
 We can do this by reading the OSM data from our `.pbf` file in just a couple of steps.
 
-```{r}
+```{r, message=FALSE}
 # read layer of lines from pbf
 roads <- sf::st_read(
   pbf_path, 
@@ -134,9 +135,8 @@ new_speeds <- roads |>
     highway == "motorway"  ~ 0.75,
     highway == "primary"   ~ 0.8,
     highway == "secondary" ~ 0.85,
-    highway == "tertiary"  ~ 0.9,
-  )) |>
-sf::st_drop_geometry()
+    highway == "tertiary"  ~ 0.9)) |>
+  sf::st_drop_geometry()
 
 head(new_speeds)
 
@@ -225,4 +225,3 @@ r5r::r5r_cache(delete_file = 'all')
 
 If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
 
-=
