@@ -1,0 +1,152 @@
+---
+title: 'Modify car speeds'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+abstract: "This vignette shows how to modify car speeds of OSM in r5r."
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{Travel time matrices} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+bibliography: references.json
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = identical(tolower(Sys.getenv("NOT_CRAN")), "true"),
+  out.width = "100%"
+)
+
+```
+
+# 1. Introduction 
+
+By default, routing by car in `R5` considers that vehicles travel at the legal speed limit in each OSM road edge. This is commonly referred to as a "free flow scenario", without congestion. However, the average speed of car trips is different (usually lower) than the legal speed limit in most real case scenarios due to traffic conditions and driving behavior.
+
+This vignette shows how you can set custom speeds for cars by making simple changes to OSM data with the convenient `modify_osm_carspeeds()` function. We'll show how OSM speeds can be changed using two different strategies: (1) by applying different speed factors by road hierarchy, and (2) by changing the same speed factor to all roads. A third scenario would be to change the speed of only the roads within determined areas/polygons, but we'll leave this for a future occasion.
+
+
+## Basic usage
+
+The `modify_osm_carspeeds()` has a relatively similar behavior to the `r5r::setup_r5()` function. It builds a transport network that can be used in the routing and accessibility function in `r5r`. The two key differences here are:
+
+1. The user needs to pass a directory path where the new transport network is going to be saved. By default, `r5r_core_congestion()` builds the new network in a temporary directory, but users can point to a permanent directory using the `output_dir` parameter.
+2. The user needs to point to a `.csv` file that indicates the speed factor for each OSM edge id.
+
+In this first example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. This sample data path includes the file `"poa_osm_congestion.csv"`, which should have two columns: `"osm_id"` and `"max_speed"`. Like this:
+
+```{r}
+# increase Java memory
+options(java.parameters = "-Xmx2G")
+
+# load libraries
+# library(r5r)
+library(data.table)
+library(ggplot2)
+
+# data path where the .pbf file is located
+data_path <- system.file("extdata/poa", package = "r5r")
+
+# path to csv file with speed factors
+csv_path <- paste0(data_path,'/poa_osm_congestion.csv')
+
+speed_factors <- read.csv(csv_path)
+head(speed_factors)
+
+```
+With the code below, we build a new transport network with the modified speeds present in the `.csv` file. In this example, the values of the `"max_speed"` column in the `.csv` file are all set to `0.5`. Since we also set the parameter `percentage_mode = TRUE`, this means that the driving speed of those OSM edges listed in the `.csv` will be at 50% of the original speed in the OSM data. Mind you that the values in the `"max_speed"` column can also be in absolute values in Km/h, in which case you must use `percentage_mode = FALSE`.
+
+Also note that function includes the parameter `default_speed`, which can be used to set the speed of all the OSM edges that are not listed in the `.csv` file. By default, `default_speed = NULL` and the speeds of the roads not listed are kept unchanged.
+
+```{r}
+# path to the .pbf file with the OSM network data
+pbf_path <- paste0(data_path,'/poa_osm.pbf')
+
+r5r_core_congestion <- modify_osm_carspeeds(
+  pbf_path = pbf_path,
+  csv_path = csv_path,
+  default_speed = 1, # this should be NULL 666
+  percentage_mode = TRUE,
+  verbose = FALSE
+  #,overwrite = FALSE 666
+  )
+
+```
+
+And that's it ! You can now use the new network `r5r_core_congestion` in a routing or accessibility function, like this.
+
+Obs. Mind you however that, even though we have set the speed factors to `0.5`, travel times might not become twice as long. This is because of how travel times by car are also affected by intersections, and how changes in the road speeds might also affect the route and hence the trip distance itself.  
+
+```{r, eval=FALSE}
+# load origin/destination points
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+
+ttm_congestion <- r5r::travel_time_matrix(
+  r5r_core = r5r_core_congestion,
+  origins = points,
+  destinations = points,
+  mode = 'car',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 60
+)
+```
+
+Now let's dive into more realistic examples.
+
+# 2. Setting different congestion levels by road hierarchy
+
+steps TODO:
+
+- read osm pbf
+- determine road ids of different road types / hierarchies
+- create a csv file with custom speeds for each type / hierarchy
+
+```{r}
+
+roads <- sf::st_read(pbf_path)
+
+```
+
+
+# 3. Congestion level in all roads
+
+steps TODO:
+
+- create a .csv with a single fake osm edge id
+- use the `default_speed` to set the same speed factor for all the the roads
+
+# 4. Congestion level within a polygon
+
+steps TODO:
+
+- create a custom polygon, e.g. a circle over the city center
+- determine OMS ids in the polygon using a spatial join operation between the polygon and the .pbf
+- create a csv file with custom speeds for roads within the polygon
+
+this can be computationally intensive due to the spatial join operation, depending on the size of the road network and the number of polygons. A new function under development will make this much easier / faster.
+
+# Extra tip: 
+
+- **Road closure**: one can simulate a road closure by setting the `"max_speed"` value to `0`. This can be quite handy for studies that try to measure the resilience of transport systems to network disruptions.
+
+
+### Cleaning up after usage
+
+`r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
+
+```{r, message = FALSE}
+r5r::stop_r5(r5r_core)
+rJava::.jgc(R.gc = TRUE)
+```
+
+```{r, eval = TRUE, include = FALSE, message = FALSE}
+# clean cache (CRAN policy)
+r5r::r5r_cache(delete_file = 'all')
+
+```
+
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+
+=
