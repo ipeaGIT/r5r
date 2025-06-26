@@ -7,7 +7,7 @@ testthat::skip_on_cran()
 tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
                    csv_path = paste0(data_path,'/poa_osm_congestion.csv'),
                    output_dir = tempdir(check = TRUE),
-                   default_speed = 1,
+                   default_speed = NULL,
                    percentage_mode = TRUE,
                    verbose = FALSE
                    ){
@@ -66,11 +66,14 @@ test_that("success in increasing travel times", {
   # list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
   # put all roads at 50% of their speed
-  mock_data <- data.frame(osm_id = 1, max_speed = 1)
+  mock_data <- data.frame(osm_id = 9999, max_speed = 9999)
   mock_csv <- tempfile(fileext = '.csv')
   data.table::fwrite(mock_data, file = mock_csv)
 
-  new_r5r_core <- tester(csv_path = mock_csv, default_speed = 0.5)
+
+  new_r5r_core <- tester(csv_path = mock_csv,
+                         default_speed = 0.5,
+                         percentage_mode = TRUE)
 
   ttm_pos <- r5r::travel_time_matrix(
     r5r_core = new_r5r_core,
@@ -102,6 +105,11 @@ test_that("success in increasing travel times", {
   unlink(tempdir(check = TRUE), recursive = TRUE)
   list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
+
+  testthat::expect_warning(
+    tester(default_speed = 1,percentage_mode = FALSE)
+  )
+
 })
 
 test_that("errors due to incorrect input types", {
@@ -111,7 +119,7 @@ test_that("errors due to incorrect input types", {
   expect_error(tester(output_dir = 'banana'))
 
   expect_error(tester(default_speed = Inf))
-  expect_error(tester(default_speed = NULL))
+  expect_error(tester(default_speed = 'banana'))
 
   expect_error(tester(percentage_mode = 'banana'))
   expect_error(tester(percentage_mode = NULL))
