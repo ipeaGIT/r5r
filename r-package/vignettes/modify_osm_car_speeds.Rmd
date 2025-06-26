@@ -98,15 +98,17 @@ Now let's dive into more realistic examples.
 
 # 2. Setting different congestion levels by road hierarchy
 
-In this example, we'll set different speed factor for roads of different hierarchy levels. We can assume for example that congestion levels tend to be more intense in roads of higher hierarchy. The first thing we need to do is to determine the OSM edge ids by road type.
+In this example, we'll set different speed factor for roads of different hierarchy levels. We can assume for example that congestion levels tend to be more intense in roads of higher hierarchy. We can do this in two simple steps.
 
-We can do this by reading the OSM data from our `.pbf` file in just a couple of steps.
+First we need to do read the OSM data from our `.pbf` file, and to filter the OSM edges with the road types we want.
+
 
 ```{r, message=FALSE}
 # read layer of lines from pbf
 roads <- sf::st_read(
   pbf_path, 
-  layer = 'lines'
+  layer = 'lines', 
+  quiet = TRUE
   )
 
 # Filter only road types of interest
@@ -119,7 +121,7 @@ roads <- roads |>
 head(roads)
 ```
 
-Here's how this road network looks like.
+Here's how the road network looks like.
 
 ```{r}
 # map
@@ -127,7 +129,7 @@ plot(roads["highway"])
 
 ```
 
-After we add a new column `"max_speed"` with values conditioned on the road type, the `data.frame` looks like this:
+Now we only need to add a new column `"max_speed"` with values conditioned on the road type, and save the table as a `.csv` file. The `data.frame` looks like this:
 
 ```{r}
 new_speeds <- roads |>
@@ -140,17 +142,15 @@ new_speeds <- roads |>
 
 head(new_speeds)
 
-```
-
-Now we just need to save this table as a `.csv` file and pass it to the `modify_osm_carspeeds()` along with the original OSM `.pbf` file.
-
-```{r, message = FALSE}
 # save speed factors to a csv
 csv_path <- tempfile(pattern = 'speed_factors', fileext = '.csv')
 data.table::fwrite(new_speeds, file = csv_path)
 
-# path to the .pbf file with the OSM network data
-pbf_path <- paste0(data_path,'/poa_osm.pbf')
+```
+
+That's it. Now we can pass the path of the `.csv` file to the `modify_osm_carspeeds()` along with the original OSM `.pbf` file to build a new routable transport network with modified OSM car speeds.
+
+```{r, message = FALSE}
 
 r5r_core_new_speeds <- modify_osm_carspeeds(
   pbf_path = pbf_path,
@@ -165,10 +165,9 @@ r5r_core_new_speeds <- modify_osm_carspeeds(
 
 # 3. Applying the same speed factor to all roads
 
-The `modify_osm_carspeeds()` function has a parameter `default_speed`, which you can use to set the speed of all the roads not listed in the `.csv` file. By default, `default_speed = NULL` and the speeds of the unlisted roads are kept unchanged.
+The `modify_osm_carspeeds()` function has a parameter `default_speed`, which can be used to set the speed of all the roads not listed in the `.csv` file. By default, `default_speed = NULL` and the speeds of the unlisted roads are kept unchanged.
 
-In this example, we'll use this parameter to apply the same speed factor to all roads. To do this, can only need to create a `.csv` file with a mock OSM id that that does not exist in our OSM data.
-
+In this example, we'll use this parameter to apply the same speed factor to all roads, to simulate as if the speed limits of all roads was changed to 40 Km/h. To do this, can only need to create a `.csv` file with a mock OSM id that that does not exist in our OSM data and to pass `default_speed = 40` with `percentage_mode = FALSE`.
 
 
 ```{r, message = FALSE}
@@ -178,15 +177,15 @@ mock_csv <- tempfile(fileext = '.csv')
 data.table::fwrite(mock_data, file = mock_csv)
 
 # create a temp dir
-new_temp_dir <- fs::path_temp(tmpdir='./20kmph')
+new_temp_dir <- fs::path_temp(tmpdir='./40kmph')
 dir.create(new_temp_dir)
 
-# build network with all roads at at 20 Km/h 
+# build network with all roads at at 40 Km/h 
 r5r_core_20kmph <- r5r::modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = mock_csv,
   output_dir = new_temp_dir,
-  default_speed = 20,
+  default_speed = 40,
   percentage_mode = FALSE,
   verbose = FALSE
   #,overwrite = FALSE 666
