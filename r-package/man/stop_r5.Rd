@@ -29,6 +29,8 @@ stop_r5(r5r_core)
 }
 \seealso{
 Other support functions: 
-\code{\link{fileurl_from_metadata}()}
+\code{\link{fileurl_from_metadata}()},
+\code{\link{start_r5r_java}()},
+\code{\link{tempdir_unique}()}
 }
 \concept{support functions}

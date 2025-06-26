@@ -136,7 +136,7 @@ computation efficiency, because the progress counter must be
 synchronized among all active threads.}
 }
 \value{
-A \verb{POLYGON  "sf" "data.frame"} for each isochrone of each origin.
+A \verb{"sf" "data.frame"} for each isochrone of each origin.
 }
 \description{
 Fast computation of isochrones from a given location. The

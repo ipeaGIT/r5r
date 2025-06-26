@@ -82,7 +82,7 @@
 #'        synchronized among all active threads.
 #' @template verbose
 #'
-#' @return A `POLYGON  "sf" "data.frame"` for each isochrone of each origin.
+#' @return A `"sf" "data.frame"` for each isochrone of each origin.
 #'
 #' @template transport_modes_section
 #' @template lts_section

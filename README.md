@@ -95,13 +95,15 @@ The package has seven **fundamental functions** :
    route alternatives for specified origin-destination pairs.
    
 8. `isochrone()`
-   * Returns a `A ⁠POLYGON  "sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+   * Returns a `sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
 
 <small>[See more details about each function here](https://ipeagit.github.io/r5r/reference/index.html)</small>
 
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
+
+obs.2 The package also includes a convenient function `modify_osm_carspeeds()` that allows one build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
 
 
 The package also includes a few **support functions**.

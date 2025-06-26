@@ -107,7 +107,7 @@ library(ggplot2)
 
 The `{r5r}` package has seven **fundamental functions**:
 
-1. `setup_r5()` to initialize an instance of `{r5r}`, that also builds a routable
+1. `setup_r5()` to initialize an instance of `{r5r}` and build a routable
 transport network;
 
 2. `accessibility()` for fast computation of access to opportunities considering
@@ -139,6 +139,9 @@ The package also includes a few **support functions**.
 3. `find_snap()` to find snapped locations of input points on street network.
 
 4. `r5r_sitrep()` to generate a situation report to help debug eventual errors.
+
+obs. The package also includes a convenient function `modify_osm_carspeeds()` that allows one to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
+
 
 ## 3.1 Data requirements:
 
