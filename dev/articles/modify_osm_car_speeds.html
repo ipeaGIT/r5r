@@ -208,24 +208,17 @@ route and hence the trip distance itself.</p>
 </h2>
 <p>In this example, we’ll set different speed factor for roads of
 different hierarchy levels. We can assume for example that congestion
-levels tend to be more intense in roads of higher hierarchy. The first
-thing we need to do is to determine the OSM edge ids by road type.</p>
-<p>We can do this by reading the OSM data from our <code>.pbf</code>
-file in just a couple of steps.</p>
+levels tend to be more intense in roads of higher hierarchy. We can do
+this in two simple steps.</p>
+<p>First we need to do read the OSM data from our <code>.pbf</code>
+file, and to filter the OSM edges with the road types we want.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read layer of lines from pbf</span></span>
 <span><span class="va">roads</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span></span>
 <span>  <span class="va">pbf_path</span>, </span>
-<span>  layer <span class="op">=</span> <span class="st">'lines'</span></span>
+<span>  layer <span class="op">=</span> <span class="st">'lines'</span>, </span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Reading layer `lines' from data source </span></span>
-<span><span class="co">#&gt;   `/home/runner/work/_temp/Library/r5r/extdata/poa/poa_osm.pbf' </span></span>
-<span><span class="co">#&gt;   using driver `OSM'</span></span>
-<span><span class="co">#&gt; Simple feature collection with 15904 features and 9 fields</span></span>
-<span><span class="co">#&gt; Geometry type: LINESTRING</span></span>
-<span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: -51.26635 ymin: -30.11333 xmax: -51.13216 ymax: -29.98764</span></span>
-<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span></span>
 <span><span class="co"># Filter only road types of interest</span></span>
 <span><span class="va">rt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"motorway"</span>, <span class="st">"primary"</span>, <span class="st">"secondary"</span>, <span class="st">"tertiary"</span><span class="op">)</span> </span>
@@ -247,14 +240,14 @@ file in just a couple of steps.</p>
 <span><span class="co">#&gt; 4 26847798 primary LINESTRING (-51.21315 -30.0...</span></span>
 <span><span class="co">#&gt; 5 26936215 primary LINESTRING (-51.20818 -30.0...</span></span>
 <span><span class="co">#&gt; 6 26936224 primary LINESTRING (-51.20818 -30.0...</span></span></code></pre></div>
-<p>Here’s how this road network looks like.</p>
+<p>Here’s how the road network looks like.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># map</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roads</span><span class="op">[</span><span class="st">"highway"</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modify_osm_car_speeds_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
-<p>After we add a new column <code>"max_speed"</code> with values
-conditioned on the road type, the <code>data.frame</code> looks like
-this:</p>
+<p>Now we only need to add a new column <code>"max_speed"</code> with
+values conditioned on the road type, and save the table as a
+<code>.csv</code> file. The <code>data.frame</code> looks like this:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_speeds</span> <span class="op">&lt;-</span> <span class="va">roads</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>max_speed <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -271,18 +264,17 @@ this:</p>
 <span><span class="co">#&gt; 3 26786732 primary       0.8</span></span>
 <span><span class="co">#&gt; 4 26847798 primary       0.8</span></span>
 <span><span class="co">#&gt; 5 26936215 primary       0.8</span></span>
-<span><span class="co">#&gt; 6 26936224 primary       0.8</span></span></code></pre></div>
-<p>Now we just need to save this table as a <code>.csv</code> file and
-pass it to the <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> along with the
-original OSM <code>.pbf</code> file.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># save speed factors to a csv</span></span>
+<span><span class="co">#&gt; 6 26936224 primary       0.8</span></span>
+<span></span>
+<span><span class="co"># save speed factors to a csv</span></span>
 <span><span class="va">csv_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'speed_factors'</span>, fileext <span class="op">=</span> <span class="st">'.csv'</span><span class="op">)</span></span>
-<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">new_speeds</span>, file <span class="op">=</span> <span class="va">csv_path</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># path to the .pbf file with the OSM network data</span></span>
-<span><span class="va">pbf_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_path</span>,<span class="st">'/poa_osm.pbf'</span><span class="op">)</span></span>
-<span></span>
+<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">new_speeds</span>, file <span class="op">=</span> <span class="va">csv_path</span><span class="op">)</span></span></code></pre></div>
+<p>That’s it. Now we can pass the path of the <code>.csv</code> file to
+the <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> along with the original OSM
+<code>.pbf</code> file to build a new routable transport network with
+modified OSM car speeds.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">r5r_core_new_speeds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
 <span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="va">csv_path</span>,</span>
@@ -296,14 +288,16 @@ original OSM <code>.pbf</code> file.</p>
 <h2 id="applying-the-same-speed-factor-to-all-roads">3. Applying the same speed factor to all roads<a class="anchor" aria-label="anchor" href="#applying-the-same-speed-factor-to-all-roads"></a>
 </h2>
 <p>The <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> function has a parameter
-<code>default_speed</code>, which you can use to set the speed of all
+<code>default_speed</code>, which can be used to set the speed of all
 the roads not listed in the <code>.csv</code> file. By default,
 <code>default_speed = NULL</code> and the speeds of the unlisted roads
 are kept unchanged.</p>
 <p>In this example, we’ll use this parameter to apply the same speed
-factor to all roads. To do this, can only need to create a
+factor to all roads, to simulate as if the speed limits of all roads was
+changed to 40 Km/h. To do this, can only need to create a
 <code>.csv</code> file with a mock OSM id that that does not exist in
-our OSM data.</p>
+our OSM data and to pass <code>default_speed = 40</code> with
+<code>percentage_mode = FALSE</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create csv with a road that does not exist.</span></span>
 <span><span class="va">mock_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>osm_id <span class="op">=</span> <span class="fl">9999</span>, max_speed <span class="op">=</span> <span class="fl">9999</span><span class="op">)</span></span>
@@ -311,15 +305,15 @@ our OSM data.</p>
 <span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">mock_data</span>, file <span class="op">=</span> <span class="va">mock_csv</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a temp dir</span></span>
-<span><span class="va">new_temp_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span>tmpdir<span class="op">=</span><span class="st">'./20kmph'</span><span class="op">)</span></span>
+<span><span class="va">new_temp_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span>tmpdir<span class="op">=</span><span class="st">'./40kmph'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">new_temp_dir</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># build network with all roads at at 20 Km/h </span></span>
+<span><span class="co"># build network with all roads at at 40 Km/h </span></span>
 <span><span class="va">r5r_core_20kmph</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
 <span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="va">mock_csv</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">new_temp_dir</span>,</span>
-<span>  default_speed <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  default_speed <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  percentage_mode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
