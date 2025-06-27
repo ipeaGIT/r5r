@@ -2,7 +2,7 @@
 title: 'Modify OSM car speeds'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-abstract: "This vignette shows how to modify car speeds of OSM in r5r."
+abstract: "This vignette shows how to build a transport network with modified OSM car speeds, which can be used to simulate different scenarios of traffic congestion and road closures."
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Modify OSM car speeds} 
