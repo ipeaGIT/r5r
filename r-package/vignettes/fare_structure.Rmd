@@ -202,7 +202,7 @@ Below, we can see that the `fares_per_type` data.frame contains five columns:
 
 -   `mode`: the transport mode to which rules on each row refer to;
 -   `unlimited_transfers`: a logical value `TRUE` or `FALSE` that indicates if that transport mode allows unlimited transfers between trips of the same mode, such as a metro/subway system where the passenger pays a fare to access a station and then can use as many services as she wants as long as she doesn't exit the system;
--   `allow_same_route_transfer`: a logical value indicating if a discounted transfer can be done between vehicles ??? of the same route;
+-   `allow_same_route_transfer`: a logical value indicating if a discounted transfer can be done between vehicles of the same route;
 -   `use_route_fare`: another logical value that indicates if each route will have its own fare, or if all routes in this mode will use the fare indicated in this table;
 -   `fare`: the full fare price of this mode.
 

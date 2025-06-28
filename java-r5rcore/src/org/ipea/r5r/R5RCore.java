@@ -5,6 +5,7 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -14,6 +15,8 @@ import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
+import org.ipea.r5r.Utils.SpeedSetter;
+import org.ipea.r5r.Utils.SpeedSetter.SpeedSetterMode;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +31,8 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
-    public static final String R5_VERSION = "7.0";
-    public static final String R5R_VERSION = "1.1.0";
+    public static final String R5_VERSION = "7.4";
+    public static final String R5R_VERSION = "2.2.0";
 
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
@@ -116,6 +119,10 @@ public class R5RCore {
 
     public void setExpandedTravelTimes(boolean expandedTravelTimes) {
         this.routingProperties.expandedTravelTimes = expandedTravelTimes;
+    }
+
+    public void setSearchType(String searchType) {
+        this.routingProperties.searchType = SearchType.valueOf(searchType);
     }
 
     public void setTravelTimesBreakdown(boolean detailedTravelTimes) {

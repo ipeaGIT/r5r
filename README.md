@@ -51,9 +51,9 @@ rJavaEnv::java_quick_install(version = 21)
 
 ```
 
-## Usage
+## Usage 
 
-The package has seven **fundamental functions**:
+The package has seven **fundamental functions** :
 
 1. `setup_r5()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
@@ -71,29 +71,39 @@ The package has seven **fundamental functions**:
 
 3. `travel_time_matrix()`
    * Fast function that returns a simple `data.table` with travel time estimates
-   between one or multiple origin destination pairs.
+   between one or multiple origin destination pairs considering departure time.
 
-4. `expanded_travel_time_matrix()`
+4. `arrival_travel_time_matrix()`
+   * Calculates travel time matrices between origin destination pairs considering 
+   a time of arrival. The output includes additional information such as the 
+   routes used and total time disaggregated by access, waiting, in-vehicle and 
+   transfer times.
+
+5. `expanded_travel_time_matrix()`
    * Calculates travel time matrices between origin destination pairs with 
    additional information such as routes used and total time disaggregated by access, 
    waiting, in-vehicle and transfer times.
 
-5. `detailed_itineraries()`
+6. `detailed_itineraries()`
    * Returns a `data.frame sf LINESTRINGs` with one or multiple alternative routes
    between one or multiple origin destination pairs. The data output brings 
    detailed information on transport mode, travel time, walk distance etc for 
    each trip segment.
 
-6. `pareto_frontier()`
+7. `pareto_frontier()`
    * Returns a `data.table` with the travel time and monetary cost of multiple
    route alternatives for specified origin-destination pairs.
    
-7. `isochrone()`
-   * Returns a `A ⁠POLYGON  "sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+8. `isochrone()`
+   * Returns a `sf" "data.frame"` showing the area that can be reached from an origin point at a given travel time limit.
+
+<small>[See more details about each function here](https://ipeagit.github.io/r5r/reference/index.html)</small>
 
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
+
+obs.2 The package also includes a convenient function `modify_osm_carspeeds()` that allows one build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
 
 
 The package also includes a few **support functions**.

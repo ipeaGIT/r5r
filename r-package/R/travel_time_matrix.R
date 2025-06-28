@@ -1,7 +1,10 @@
-#' Calculate travel time matrix between origin destination pairs
+#' Calculate travel time matrix between origin destination pairs considering a
+#' departure time
 #'
 #' Fast computation of travel time estimates between one or multiple origin
-#' destination pairs.
+#' destination pairs. This function considers a departure time set by the user.
+#' If you want to calculate travel times considering a time of arrival, have a
+#' look at the [arrival_travel_time_matrix()] function.
 #'
 #' @template r5r_core
 #' @template common_arguments
@@ -147,6 +150,11 @@ travel_time_matrix <- function(r5r_core,
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
 
+  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
+  res <- reverse_if_direct_mode(origins, destinations, mode_list)
+  origins <- res$origins
+  destinations <- res$destinations
+
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_core, departure_date = departure$date)
@@ -192,6 +200,7 @@ travel_time_matrix <- function(r5r_core,
   set_output_dir(r5r_core, output_dir)
   set_expanded_travel_times(r5r_core, FALSE)
   set_breakdown(r5r_core, FALSE)
+  r5r_core$setSearchType("DEPART_FROM")
 
   # call r5r_core method and process result -------------------------------
 
