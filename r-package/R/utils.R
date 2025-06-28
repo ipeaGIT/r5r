@@ -87,9 +87,13 @@ check_transit_availability_on_date <- function(r5r_core,
 #'
 #' @keywords internal
 start_r5r_java <- function(data_path, temp_dir = FALSE, verbose = FALSE) {
-  log_filename <- paste0("r5rlog_", format(Sys.time(), "%Y%m%d"), ".log")
-  log_path <- file.path(data_path, log_filename)
-  rJava::.jinit(parameters = paste0("-DLOG_PATH=", log_path))
+  log_filename <- "r5r-log.log"
+  log_path <- paste0("-DLOG_PATH=", file.path(data_path, log_filename))
+
+  r5_version <- paste0("-R5_VER=", r5r_env$r5_jar_version)
+  r5r_version <- paste0("-R5R_VER=", utils::packageVersion("r5r"))
+
+  rJava::.jinit(parameters = c(log_path, r5_version, r5r_version))
 
   get_java_version <- function(){
     ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
