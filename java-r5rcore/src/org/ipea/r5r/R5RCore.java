@@ -31,8 +31,9 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
-    public static final String R5_VERSION = System.getenv().getOrDefault("R5_VERSION", "7+, ERROR getting exact version");
-    public static final String R5R_VERSION = System.getenv().getOrDefault("R5R_VERSION", "2+, ERROR getting exact version");
+    public static final String R5_VERSION = System.getProperty("R5_VER", "7+, ERROR getting exact version");
+
+    public static final String R5R_VERSION = System.getProperty("R5R_VER", "2+, ERROR getting exact version");
 
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
