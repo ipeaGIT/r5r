@@ -8,21 +8,25 @@
 #' @param csv_path Character. Path to the CSV file witha a table specifying the
 #'        speed modifications. The table must contain columns \code{osm_id} and
 #'        \code{max_speed}.
-#' @param output_dir Character. Directory where the modified network will be
-#'        written. Defaults to a temporary directory.
+#' @param output_path Character. A string pointing to the directory where the
+#' modified `network.dat` will be saved. Must be different from \code{data_path}.
+#' Defaults to a temporary directory.
 #' @param default_speed Numeric. Default speed to use for segments not specified
 #'        in the CSV. Must be >= 0. Defaults to `NULL` so that roads not listed
 #'        in. the CSV have their speeds unchanged.
 #' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
-#' @param verbose Logical. If \code{TRUE}, the function modifies the network verbosely and
-#'        creates a verbose R5RCore. Defaults to \code{FALSE}.
-#'
+#' @template verbose
+#' @param @template elevation For more info see \code{\link{setup_r5}}.
+#' @param overwrite A logical. Whether allow overwriting an existing .pbf in the
+#' output directory. Defaults to `FALSE`.
+#' @param copy_data A logical. Whether to copy supporting data (.zip and .tif)
+#' from the data_path to output_path. Defaults to `FALSE`.
 #' @details
 #' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
 #' can be specified as a percentage of the original road speed or as an absolute
-#' speed in km/h. The function rebuilds the network in \code{output_dir} and
+#' speed in km/h. The function rebuilds the network in \code{output_path} and
 #' returns a new `r5r_core` object.
 #'
 #' @family modify_osm_car_speeds
@@ -41,29 +45,32 @@
 #' r5r_core_new_speed <- r5r::modify_osm_carspeeds(
 #'   pbf_path = pbf_path,
 #'   csv_path = speeds_csv_path,
-#'   output_dir = tempdir(),
+#'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
 #'
 #' @export
 modify_osm_carspeeds <- function(pbf_path,
                                  csv_path,
-                                 output_dir = tempdir_unique(),
+                                 output_path = tempdir_unique(),
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
-                                 verbose = FALSE){
+                                 verbose = FALSE,
+                                 elevation = "TOBLER",
+                                 overwrite = FALSE,
+                                 copy_data = FALSE) {
 
   # Standardize format of passed paths
   pbf_path <- normalizePath(pbf_path, mustWork = FALSE)
-  output_dir <- normalizePath(output_dir, mustWork = FALSE)
+  output_path <- normalizePath(output_path, mustWork = FALSE)
   original_dir <-  normalizePath(dirname(pbf_path))
   csv_path <- normalizePath(csv_path, mustWork = F)
 
   # Assert quality of output directory
-  checkmate::assert_directory_exists(output_dir, access = "rw")
-  output_pbf_files <- list.files(output_dir, pattern = "\\.pbf$", full.names = TRUE)
+  checkmate::assert_directory_exists(output_path, access = "rw")
+  output_pbf_files <- list.files(output_path, pattern = "\\.pbf$", full.names = TRUE)
   if (length(output_pbf_files) != 0) {
-    stop(sprintf("output_dir must contain zero .pbf files, found: %d", length(output_pbf_files)))
+    stop(sprintf("output_path must contain zero .pbf files, found: %d", length(output_pbf_files)))
   }
 
   # check remaining inputs
@@ -71,13 +78,21 @@ modify_osm_carspeeds <- function(pbf_path,
   checkmate::assert_file_exists(csv_path, access = "r", extension = "csv")
   checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
-
   if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
     cli::cli_warn(
       "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
      When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
     )
   }
+
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_logical(copy_data)
+  checkmate::assert_character(elevation)
+  elevation <- toupper(elevation)
+  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
+    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
+  }
+
   # default speed to keep unlisted roads unchanged
   if (is.null(default_speed)) {
     default_speed <- 1
@@ -96,19 +111,19 @@ modify_osm_carspeeds <- function(pbf_path,
   speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
                                pbf_path,
                                csv_path,
-                               output_dir,
+                               output_path,
                                verbose)
   speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
   speed_setter$setPercentageMode(percentage_mode)
   speed_setter$runSpeedSetter()
 
-  new_core <- r5r::setup_r5(output_dir,
+  new_core <- r5r::setup_r5(output_path,
                             verbose = verbose,
                             temp_dir = FALSE,
-                            elevation = "TOBLER",
+                            elevation = elevation,
                             overwrite = TRUE)
 
-  cli::cli_inform("New car network with modified speeds built at {.path {output_dir}}")
+  cli::cli_inform("New car network with modified speeds built at {.path {output_path}}")
 
   return(new_core)
 }
