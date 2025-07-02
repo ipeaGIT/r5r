@@ -4,7 +4,8 @@
 #' speed factors must me passed from a `.csv` file indication the new max speed
 #' of each OSM edge id.
 #'
-#' @param pbf_path Character. Path to the `.pbf` file of the OSM network.
+#' @param data_path Character. Path to the directory with the`.pbf` file of the
+#' OSM network and optionally supporting data.
 #' @param csv_path Character. Path to the CSV file witha a table specifying the
 #'        speed modifications. The table must contain columns \code{osm_id} and
 #'        \code{max_speed}.
@@ -18,11 +19,11 @@
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
+#' @param copy_data A logical. Whether to copy supporting data (.zip and .tif)
+#' from the data_path to output_path. Defaults to `FALSE`.
 #' @param @template elevation For more info see \code{\link{setup_r5}}.
 #' @param overwrite A logical. Whether allow overwriting an existing .pbf in the
 #' output directory. Defaults to `FALSE`.
-#' @param copy_data A logical. Whether to copy supporting data (.zip and .tif)
-#' from the data_path to output_path. Defaults to `FALSE`.
 #' @details
 #' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
 #' can be specified as a percentage of the original road speed or as an absolute
@@ -37,37 +38,43 @@
 #' library(r5r)
 #'
 #' # path to OSM .pbf file
-#' pbf_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
+#' data_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
 #'
 #' # path to CSV with a table pointing to the new speed info
 #' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 #'
 #' r5r_core_new_speed <- r5r::modify_osm_carspeeds(
-#'   pbf_path = pbf_path,
+#'   data_path = data_path,
 #'   csv_path = speeds_csv_path,
 #'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
 #'
 #' @export
-modify_osm_carspeeds <- function(pbf_path,
+modify_osm_carspeeds <- function(data_path,
                                  csv_path,
                                  output_path = tempdir_unique(),
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
+                                 copy_data = FALSE,
                                  elevation = "TOBLER",
-                                 overwrite = FALSE,
-                                 copy_data = FALSE) {
+                                 overwrite = FALSE) {
 
   # Standardize format of passed paths
-  pbf_path <- normalizePath(pbf_path, mustWork = FALSE)
+  data_path <- normalizePath(data_path, mustWork = FALSE)
   output_path <- normalizePath(output_path, mustWork = FALSE)
-  original_dir <-  normalizePath(dirname(pbf_path))
   csv_path <- normalizePath(csv_path, mustWork = F)
 
-  # Assert quality of output directory
+  # Assert quality of directories
+  checkmate::assert_directory_exists(data_path, access = "r")
   checkmate::assert_directory_exists(output_path, access = "rw")
+  if (output_dir == data_dir) { # checkmate doesn't support custom messages
+    stop(sprintf("output_dir ('%s') and data_dir ('%s') must be different directories.", output_dir, data_dir))
+  }
+
+  # check for number of pbfs
+  data_pbf_files <- list.files(data_dir, pattern = "\\.pbf$", full.names = TRUE)
   output_pbf_files <- list.files(output_path, pattern = "\\.pbf$", full.names = TRUE)
   if (length(output_pbf_files) != 0) {
     stop(sprintf("output_path must contain zero .pbf files, found: %d", length(output_pbf_files)))
@@ -106,7 +113,7 @@ modify_osm_carspeeds <- function(pbf_path,
     )
 
   # change speeds
-  start_r5r_java(original_dir) # initialize rJava if needed
+  start_r5r_java(output_path) # initialize rJava if needed
 
   speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
                                pbf_path,
