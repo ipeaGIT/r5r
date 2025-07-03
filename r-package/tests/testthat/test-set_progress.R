@@ -31,10 +31,10 @@ test_that("progress argument works in routing functions", {
       )"
     } else if (identical(f, accessibility)) {
       "f(
-        r5r_network,
-        origins = pois[1:5],
-        destinations = pois[1:5],
-        opportunities_colnames = \"schools\",
+        r5r_network=r5r_network,
+        origins = points[1:5],
+        destinations = points[1:5],
+        opportunities_colnames = \"jobs\" ,
         cutoffs = 60
       )"
     }
