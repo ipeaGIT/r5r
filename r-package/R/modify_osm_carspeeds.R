@@ -72,18 +72,15 @@ modify_osm_carspeeds <- function(pbf_path,
   checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
 
-  # default speed to keep unlisted roads unchanged
-  if (isFALSE(percentage_mode) & is.null(default_speed)) {
-    default_speed <- FALSE
-  }
-  if (isTRUE(percentage_mode) & is.null(default_speed)) {
-    default_speed <- 1
-  }
-  if (isFALSE(percentage_mode) & default_speed==1) {
+  if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
     cli::cli_warn(
       "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
      When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
     )
+  }
+  # default speed to keep unlisted roads unchanged
+  if (is.null(default_speed)) {
+    default_speed <- 1
   }
 
   # check colnames in csv
