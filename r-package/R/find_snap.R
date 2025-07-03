@@ -35,7 +35,12 @@
 #' r5r_network <- build_network(data_path = path)
 #' points <- read.csv(file.path(path, "poa_hexgrid.csv"))
 #'
-#' snap_df <- find_snap(r5r_network, points, radius = 2000, mode = "WALK")
+#' snap_df <- find_snap(
+#'   r5r_network,
+#'   points = points,
+#'   radius = 2000,
+#'   mode = "WALK"
+#'   )
 #'
 #' stop_r5(r5r_network)
 #' @export

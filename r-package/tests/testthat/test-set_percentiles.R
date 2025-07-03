@@ -3,7 +3,9 @@
 
 testthat::skip_on_cran()
 
-tester <- function(percentiles) set_percentiles(r5r_network, percentiles)
+tester <- function(percentiles) {
+  set_percentiles(r5r_network, percentiles)
+  }
 
 test_that("input is correct", {
   expect_error(tester("1"))
@@ -19,8 +21,8 @@ test_that("set_percentiles argument works in travel_time_matrix()", {
   basic_expr <- call(
     "travel_time_matrix",
     r5r_network,
-    pois,
-    pois,
+    origins=pois,
+    destinations=pois,
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     draws_per_minute = 1,
@@ -67,8 +69,8 @@ test_that("set_percentiles argument works in accessibility()", {
   basic_expr <- call(
     "accessibility",
     r5r_network,
-    points[1:30],
-    points[1:30],
+    origins=points[1:30],
+    destinations=points[1:30],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     opportunities_colnames = "population",
@@ -109,8 +111,8 @@ test_that("set_percentiles argument works in pareto_frontier()", {
   basic_expr <- call(
     "pareto_frontier",
     r5r_network,
-    points[1:5],
-    points[1:5],
+    origins=points[1:5],
+    destinations=points[1:5],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     fare_structure = fare_structure,

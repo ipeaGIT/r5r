@@ -14,16 +14,16 @@ test_that("input is correct", {
 test_that("verbose argument works in routing functions", {
   assert_function <- function(f) {
     expr <- if (identical(f, travel_time_matrix)) {
-      "f(r5r_network, pois[1:5], pois[1:5])"
+      "f(r5r_network=r5r_network, origins=pois[1:5], destinations=pois[1:5])"
     } else if (identical(f, expanded_travel_time_matrix)) {
-      "f(r5r_network, pois[1:5], pois[1:5])"
+      "f(r5r_network=r5r_network, origins=pois[1:5], destinations=pois[1:5])"
     } else if (identical(f, detailed_itineraries)) {
-      "f(r5r_network, pois[1:5], pois[5:1])"
+      "f(r5r_network=r5r_network, origins=pois[1:5], destinations=pois[5:1])"
     } else if (identical(f, pareto_frontier)) {
       "f(
         r5r_network,
-        pois[1:5],
-        pois[1:5],
+        origins=pois[1:5],
+        destinations=pois[1:5],
         departure_datetime = departure_datetime,
         fare_structure = fare_structure,
         fare_cutoffs = c(0, 5, 10),
@@ -32,8 +32,8 @@ test_that("verbose argument works in routing functions", {
     } else if (identical(f, accessibility)) {
       "f(
         r5r_network,
-        points[1:5],
-        points[1:5],
+        origins=points[1:5],
+        destinations=points[1:5],
         opportunities_colnames = \"schools\",
         cutoffs = 60
       )"

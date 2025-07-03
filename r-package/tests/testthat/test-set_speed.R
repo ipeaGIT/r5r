@@ -17,7 +17,7 @@ test_that("input is correct", {
 })
 
 test_that("set_speed argument works in travel_time_matrix()", {
-  walk_expr <- call("travel_time_matrix", r5r_network, pois, pois, mode = "WALK")
+  walk_expr <- call("travel_time_matrix", r5r_network, origins=pois, destinations=pois, mode = "WALK")
 
   slow_walk_expr <- fast_walk_expr <- walk_expr
   slow_walk_expr$walk_speed <- 2
@@ -58,8 +58,8 @@ test_that("set_speed argument works in expanded_travel_time_matrix()", {
   walk_expr <- call(
     "expanded_travel_time_matrix",
     r5r_network,
-    pois,
-    pois,
+    origins=pois,
+    destinations=pois,
     mode = "WALK"
   )
 
@@ -102,8 +102,8 @@ test_that("set_speed argument works in accessibility()", {
   walk_expr <- call(
     "accessibility",
     r5r_network,
-    points[1:15],
-    points[1:15],
+    origins=points[1:15],
+    destinations=points[1:15],
     mode = "WALK",
     opportunities_colnames = "population",
     decay_function = "step",
@@ -139,8 +139,8 @@ test_that("set_speed argument works in pareto_frontier()", {
   walk_expr <- call(
     "pareto_frontier",
     r5r_network,
-    points[1:5],
-    points[1:5],
+    origins=points[1:5],
+    destinations=points[1:5],
     mode = "WALK",
     fare_structure = fare_structure,
     fare_cutoffs = 0
@@ -188,8 +188,8 @@ test_that("set_speed argument works in detailed_itineraries()", {
   walk_expr <- call(
     "detailed_itineraries",
     r5r_network,
-    pois,
-    pois[15:1],
+    origins=pois,
+    destinations=pois[15:1],
     mode = "WALK",
     drop_geometry = TRUE
   )

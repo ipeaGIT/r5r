@@ -15,8 +15,8 @@ test_that("input is correct", {
 test_that("max_rides argument works in travel_time_matrix()", {
   expr <- "travel_time_matrix(
     r5r_network,
-    pois,
-    pois,
+    origins=pois,
+    destinations=pois,
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime
   )"
@@ -44,8 +44,8 @@ test_that("max_rides argument works in travel_time_matrix()", {
 test_that("max_rides argument works in accessibility()", {
   expr <- "accessibility(
     r5r_network,
-    points[1:15],
-    points[1:15],
+    origins=points[1:15],
+    destinations=points[1:15],
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime,
     opportunities_colnames = 'population',
@@ -66,8 +66,8 @@ test_that("max_rides argument works in accessibility()", {
 test_that("max_rides argument works in expanded_travel_time_matrix()", {
   expr <- "expanded_travel_time_matrix(
     r5r_network,
-    pois[1:5],
-    pois[1:5],
+    origins=pois[1:5],
+    destinations=pois[1:5],
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime,
     draws_per_minute = 1
@@ -107,8 +107,8 @@ test_that("max_rides argument works in expanded_travel_time_matrix()", {
 test_that("max_rides argument works in pareto_frontier()", {
   expr <- "pareto_frontier(
     r5r_network,
-    pois[1:5],
-    pois[1:5],
+    origins=pois[1:5],
+    destinations=pois[1:5],
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime,
     fare_structure = fare_structure,
@@ -132,8 +132,8 @@ test_that("max_rides argument works in pareto_frontier()", {
 test_that("max_rides argument works in detailed_itineraries()", {
   expr <- "detailed_itineraries(
     r5r_network,
-    pois,
-    pois[15:1],
+    origins=pois,
+    destinations=pois[15:1],
     mode = c('WALK', 'TRANSIT'),
     departure_datetime = departure_datetime,
     drop_geometry = TRUE,

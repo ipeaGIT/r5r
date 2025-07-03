@@ -35,13 +35,13 @@ test_that("output is correct", {
   points_snap <- points
   points_snap$lat <- points_snap$lat + 0.01
   expect_equal(
-    sum(!find_snap(r5r_network, points_snap, mode = 'WALK')$found),
+    sum(!find_snap(r5r_network, points=points_snap, mode = 'WALK')$found),
     6
   )
 
   # all points are snapped after increasing the radius
   expect_equal(
-    sum(!find_snap(r5r_network, points_snap, mode = 'WALK', radius = 5000)$found),
+    sum(!find_snap(r5r_network, points=points_snap, mode = 'WALK', radius = 5000)$found),
     0
   )
 
