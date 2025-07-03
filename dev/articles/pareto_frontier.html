@@ -152,8 +152,8 @@ calculate the Pareto frontier for multiple origins.</p>
 <h3 id="demonstration-of-pareto_frontier-">3. Demonstration of <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-pareto_frontier-"></a>
 </h3>
 <div class="section level4">
-<h4 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with
-<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h4 id="build-routable-transport-network-with-build_network">3.1 Build routable transport network with
+<code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h4>
 <p>First, let’s build the network and create the routing inputs. In this
 example we’ll be using the a sample data set for the city of Porto
@@ -170,10 +170,7 @@ Alegre (Brazil) included in <code>r5r</code>.</p>
 <span></span>
 <span><span class="co"># build a routable transport network with r5r</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
@@ -202,7 +199,7 @@ of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/artic
 other vignette)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create basic fare structure</span></span>
-<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
+<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_network</span>, </span>
 <span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
 <span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span>
 <span></span>
@@ -245,7 +242,7 @@ all destinations considering multiple cutoffs of monetary costs:</p>
 <code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">prtf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span><span class="va">prtf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareto_frontier.html">pareto_frontier</a></span><span class="op">(</span><span class="va">r5r_network</span>,</span>
 <span>                      origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                      destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                      mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
@@ -280,7 +277,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub

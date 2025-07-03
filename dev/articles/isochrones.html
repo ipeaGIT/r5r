@@ -122,8 +122,8 @@ ways to do this in the <a href="https://ipeagit.github.io/r5r/articles/accessibi
 vignette</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with
-<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h2 id="build-routable-transport-network-with-build_network">2. Build routable transport network with
+<code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h2>
 <div class="section level4">
 <h4 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
@@ -140,17 +140,14 @@ Java <em>before</em> loading our libraries.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interp</span><span class="op">)</span></span></code></pre></div>
 <p>To build a routable transport network with <code>r5r</code>, the user
-needs to call <code><a href="../reference/setup_r5.html">setup_r5()</a></code> with the path to the directory
-where OpenStreetMap and GTFS data are stored.</p>
+needs to call <code><a href="../reference/build_network.html">build_network()</a></code> with the path to the
+directory where OpenStreetMap and GTFS data are stored.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
 <span><span class="co"># set data path to directory containing your own data if not running this example</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -188,7 +185,7 @@ calculated departing every minute over a 120-minute time window, between
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># calculate travel time matrix</span></span>
-<span><span class="va">iso1</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/isochrone.html">isochrone</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span><span class="va">iso1</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/isochrone.html">isochrone</a></span><span class="op">(</span><span class="va">r5r_network</span>,</span>
 <span>                       origins <span class="op">=</span> <span class="va">central_bus_stn</span>,</span>
 <span>                       mode <span class="op">=</span> <span class="va">mode</span>,</span>
 <span>                       cutoffs <span class="op">=</span> <span class="va">time_intervals</span>,</span>
@@ -220,7 +217,7 @@ origin.</p>
 <p>Now it becomes super simple to visualize our isochrones on a map:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
-<span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="va">main_roads</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">street_net</span><span class="op">$</span><span class="va">edges</span>, <span class="va">street_class</span> <span class="op"><a href="https://rdatatable.gitlab.io/data.table/reference/like.html" class="external-link">%like%</a></span> <span class="st">'PRIMARY|SECONDARY'</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#ffe0a5'</span>,<span class="st">'#ffcb69'</span>,<span class="st">'#ffa600'</span>,<span class="st">'#ff7c43'</span>,<span class="st">'#f95d6a'</span>,</span>
@@ -256,7 +253,7 @@ comprises the centroids of a hexagonal grid at a fine spatial
 resolution.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate travel time matrix</span></span>
-<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_core</span>,</span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,</span>
 <span>                          origins <span class="op">=</span> <span class="va">central_bus_stn</span>,</span>
 <span>                          destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -324,7 +321,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub

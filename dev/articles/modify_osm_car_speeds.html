@@ -121,9 +121,9 @@ function in <code>r5r</code>. The two key differences here are:</p>
 <ol style="list-style-type: decimal">
 <li>The user needs to pass a directory path where the new transport
 network is going to be saved. By default,
-<code>r5r_core_congestion()</code> builds the new network in a temporary
-directory, but users can point to a permanent directory using the
-<code>output_dir</code> parameter.</li>
+<code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> builds the new network in a
+temporary directory, but users can point to a permanent directory using
+the <code>output_dir</code> parameter.</li>
 <li>The user needs to point to a <code>.csv</code> file that indicates
 the speed factor for each OSM edge id.</li>
 </ol>
@@ -175,25 +175,22 @@ value, as we’ll see in the second example below.</p>
 <code class="sourceCode R"><span><span class="co"># path to the .pbf file with the OSM network data</span></span>
 <span><span class="va">pbf_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_path</span>,<span class="st">'/poa_osm.pbf'</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">r5r_core_congestion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
+<span><span class="va">r5r_network_congestion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
 <span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="va">csv_path</span>,</span>
 <span>  percentage_mode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>And that’s it ! You can now use the new network
-<code>r5r_core_congestion</code> in any of <code>r5r</code>’s routing
+<code>r5r_network_congestion</code> in any of <code>r5r</code>’s routing
 and accessibility functions, like this.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load origin/destination points</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ttm_congestion</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
-<span>  r5r_core <span class="op">=</span> <span class="va">r5r_core_congestion</span>,</span>
+<span>  <span class="va">r5r_network_congestion</span>,</span>
 <span>  origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>  destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">'car'</span>,</span>
@@ -280,17 +277,14 @@ the <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds(
 modified OSM car speeds.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">r5r_core_new_speeds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
+<span><span class="va">r5r_network_new_speeds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
 <span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="va">csv_path</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  percentage_mode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="applying-the-same-speed-factor-to-all-roads">3. Applying the same speed factor to all roads<a class="anchor" aria-label="anchor" href="#applying-the-same-speed-factor-to-all-roads"></a>
@@ -317,7 +311,7 @@ our OSM data and to pass <code>default_speed = 40</code> with
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">new_temp_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># build network with all roads at at 40 Km/h </span></span>
-<span><span class="va">r5r_core_20kmph</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
+<span><span class="va">r5r_network_20kmph</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds</a></span><span class="op">(</span></span>
 <span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="va">mock_csv</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">new_temp_dir</span>,</span>
@@ -325,10 +319,7 @@ our OSM data and to pass <code>default_speed = 40</code> with
 <span>  percentage_mode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="congestion-level-within-a-polygon">4. Congestion level within a polygon<a class="anchor" aria-label="anchor" href="#congestion-level-within-a-polygon"></a>
@@ -366,7 +357,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core_congestion</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network_congestion</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub

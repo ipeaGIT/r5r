@@ -118,7 +118,7 @@ creates a verbose R5RCore. Defaults to <code>FALSE</code>.</p></dd>
     <p>The CSV must have columns named <code>osm_id</code> and <code>max_speed</code>. <code>max_speed</code>
 can be specified as a percentage of the original road speed or as an absolute
 speed in km/h. The function rebuilds the network in <code>output_dir</code> and
-returns a new <code>r5r_core</code> object.</p>
+returns a new <code>r5r_network</code> object.</p>
     </div>
 
     <div class="section level2">
@@ -131,21 +131,18 @@ returns a new <code>r5r_core</code> object.</p>
 <span class="r-in"><span><span class="co"># path to CSV with a table pointing to the new speed info</span></span></span>
 <span class="r-in"><span><span class="va">speeds_csv_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_osm_congestion.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">r5r_core_new_speed</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu">modify_osm_carspeeds</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">r5r_network_new_speed</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu">modify_osm_carspeeds</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pbf_path <span class="op">=</span> <span class="va">pbf_path</span>,</span></span>
 <span class="r-in"><span>  csv_path <span class="op">=</span> <span class="va">speeds_csv_path</span>,</span></span>
 <span class="r-in"><span>  output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  percentage_mode <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   future release.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No raster .tif files found. Using elevation = 'NONE'.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No public transport data (gtfs) provided. Graph will be built with the street network only.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished building network.dat at /tmp/Rtmp5f1DXI/network.dat</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> New car network with modified speeds built at <span style="color: #0000BB;">/tmp/Rtmp5f1DXI</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished building network.dat at /tmp/RtmpQLz8zs/network.dat</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New car network with modified speeds built at <span style="color: #0000BB;">/tmp/RtmpQLz8zs</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

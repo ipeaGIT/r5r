@@ -167,8 +167,8 @@ than 15 minutes.</p>
 <h2 id="demonstration-of-time_window-">3. Demonstration of <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-time_window-"></a>
 </h2>
 <div class="section level3">
-<h3 id="build-routable-transport-network-with-setup_r5">3.1 Build routable transport network with
-<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h3 id="build-routable-transport-network-with-build_network">3.1 Build routable transport network with
+<code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h3>
 <p>First, let’s build the network and create the routing inputs. In this
 example we’ll be using the a sample data set for the city of São Paulo
@@ -186,10 +186,7 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span></span>
 <span><span class="co"># build a routable transport network with r5r</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/spo"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
-<span><span class="co">#&gt;   future release.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
@@ -218,7 +215,7 @@ each location within a 60-minute time window departing between 2pm and
 minutes <code>cutoffs = 45</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate accessibility</span></span>
-<span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
 <span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          destinations <span class="op">=</span> <span class="va">points</span>, </span>
 <span>                          opportunities_colnames <span class="op">=</span> <span class="st">'schools'</span>,</span>
@@ -237,12 +234,12 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;              &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt;  1: 89a8100c603ffff     schools         10     45            13</span></span>
 <span><span class="co">#&gt;  2: 89a8100c603ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
+<span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             6</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45             9</span></span>
 <span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
@@ -282,7 +279,7 @@ departure time within that 60-minute time window.</p>
 output looks like.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
-<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
 <span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          destinations <span class="op">=</span> <span class="va">points</span>,    </span>
 <span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -341,7 +338,7 @@ alternative departing each minute within the specified time window.
 Please note this function can be very memory intensive for large data
 sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,   </span>
+<code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
 <span>                                    origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,<span class="op">]</span>,</span>
 <span>                                    destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">31</span><span class="op">:</span><span class="fl">61</span>,<span class="op">]</span>,    </span>
 <span>                                    mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -366,16 +363,16 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       51.0</span></span>
-<span><span class="co">#&gt;  2:       38.1</span></span>
-<span><span class="co">#&gt;  3:       44.5</span></span>
-<span><span class="co">#&gt;  4:       44.8</span></span>
-<span><span class="co">#&gt;  5:       41.6</span></span>
-<span><span class="co">#&gt;  6:       54.2</span></span>
-<span><span class="co">#&gt;  7:       42.4</span></span>
-<span><span class="co">#&gt;  8:       36.8</span></span>
-<span><span class="co">#&gt;  9:       40.0</span></span>
-<span><span class="co">#&gt; 10:       35.7</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       47.3</span></span>
+<span><span class="co">#&gt;  2:       50.7</span></span>
+<span><span class="co">#&gt;  3:       34.6</span></span>
+<span><span class="co">#&gt;  4:       40.2</span></span>
+<span><span class="co">#&gt;  5:       41.1</span></span>
+<span><span class="co">#&gt;  6:       45.6</span></span>
+<span><span class="co">#&gt;  7:       42.3</span></span>
+<span><span class="co">#&gt;  8:       40.8</span></span>
+<span><span class="co">#&gt;  9:       40.2</span></span>
+<span><span class="co">#&gt; 10:       44.8</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
@@ -415,7 +412,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
