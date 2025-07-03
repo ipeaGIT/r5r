@@ -49,7 +49,7 @@ Let's see a couple concrete examples now.
 
 ## 3. Demonstration of `time_window`.
 
-### 3.1 Build routable transport network with `setup_r5()`
+### 3.1 Build routable transport network with `build_network()`
 
 First, let's build the network and create the routing inputs. In this example we'll be using the a sample data set for the city of São Paulo (Brazil) included in `r5r`.
 
@@ -67,7 +67,7 @@ library(dplyr)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/spo", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
@@ -91,7 +91,7 @@ In this example we calculate the number of schools accessible from each location
 
 ```{r, message = FALSE}
 # estimate accessibility
-acc <- r5r::accessibility(r5r_core = r5r_core,   
+acc <- r5r::accessibility(r5r_network,   
                           origins = points,
                           destinations = points, 
                           opportunities_colnames = 'schools',
@@ -140,7 +140,7 @@ Now let's calculate all-to-all travel time estimates within a 60-minute time win
 
 ```{r, message = FALSE}
 # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core = r5r_core,   
+ttm <- travel_time_matrix(r5r_network,   
                           origins = points,
                           destinations = points,    
                           mode = mode,
@@ -167,7 +167,7 @@ The last row in the result above has a few `NA`s. This tell us that at least 50%
 Finally, we can also use the `time_window` in the `expanded_travel_time_matrix()` function. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
 ```{r}
-ettm <- r5r::expanded_travel_time_matrix(r5r_core = r5r_core,   
+ettm <- r5r::expanded_travel_time_matrix(r5r_network,   
                                     origins = points[1:30,],
                                     destinations = points[31:61,],    
                                     mode = mode,
@@ -198,7 +198,7 @@ The `detailed_itineraries()`, on the other hand, does not return travel times or
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core)
+r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
