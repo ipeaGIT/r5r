@@ -36,7 +36,9 @@ test_that("build_network - expected errors", {
 #  testthat::expect_error(build_network(data_path = path, version = 'a'))
 
   # No OSM data
-  testthat::expect_error( build_network(data_path = file.path(.libPaths()[1]) ) )
+  testthat::expect_error(
+    build_network(data_path = tempdir())
+    )
 
   # # remove existing network.dat
   #   file.rename(file.path(path, "network.dat"), file.path(path, "network2.x"))

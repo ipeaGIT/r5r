@@ -67,7 +67,7 @@ obs. by default, the speeds of all the OSM edges not listed in the `.csv` file a
 # path to the .pbf file with the OSM network data
 pbf_path <- paste0(data_path,'/poa_osm.pbf')
 
-r5r_core_congestion <- modify_osm_carspeeds(
+r5r_network_congestion <- modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = csv_path,
   percentage_mode = TRUE,
