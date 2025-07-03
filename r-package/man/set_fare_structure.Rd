@@ -7,8 +7,8 @@
 set_fare_structure(r5r_core, fare_structure)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares

@@ -7,8 +7,8 @@
 set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{draws_per_minute}{A number.}
 

@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(speed, mode) set_speed(r5r_core, speed, mode)
+tester <- function(speed, mode) set_speed(r5r_network, speed, mode)
 
 test_that("input is correct", {
   expect_error(tester(10, 1))
@@ -17,7 +17,7 @@ test_that("input is correct", {
 })
 
 test_that("set_speed argument works in travel_time_matrix()", {
-  walk_expr <- call("travel_time_matrix", r5r_core, pois, pois, mode = "WALK")
+  walk_expr <- call("travel_time_matrix", r5r_network, pois, pois, mode = "WALK")
 
   slow_walk_expr <- fast_walk_expr <- walk_expr
   slow_walk_expr$walk_speed <- 2
@@ -57,7 +57,7 @@ test_that("set_speed argument works in travel_time_matrix()", {
 test_that("set_speed argument works in expanded_travel_time_matrix()", {
   walk_expr <- call(
     "expanded_travel_time_matrix",
-    r5r_core,
+    r5r_network,
     pois,
     pois,
     mode = "WALK"
@@ -101,7 +101,7 @@ test_that("set_speed argument works in expanded_travel_time_matrix()", {
 test_that("set_speed argument works in accessibility()", {
   walk_expr <- call(
     "accessibility",
-    r5r_core,
+    r5r_network,
     points[1:15],
     points[1:15],
     mode = "WALK",
@@ -138,7 +138,7 @@ test_that("set_speed argument works in accessibility()", {
 test_that("set_speed argument works in pareto_frontier()", {
   walk_expr <- call(
     "pareto_frontier",
-    r5r_core,
+    r5r_network,
     points[1:5],
     points[1:5],
     mode = "WALK",
@@ -187,7 +187,7 @@ test_that("set_speed argument works in pareto_frontier()", {
 test_that("set_speed argument works in detailed_itineraries()", {
   walk_expr <- call(
     "detailed_itineraries",
-    r5r_core,
+    r5r_network,
     pois,
     pois[15:1],
     mode = "WALK",

@@ -2,20 +2,23 @@
 % Please edit documentation in R/street_network_to_sf.R
 \name{street_network_to_sf}
 \alias{street_network_to_sf}
-\title{Extract OpenStreetMap network in sf format from a network.dat file}
+\title{Extract OpenStreetMap network in sf format}
 \usage{
-street_network_to_sf(r5r_core)
+street_network_to_sf(r5r_network, r5r_core = deprecated())
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A list with two components of a street network in sf format: vertices
 (POINT) and edges (LINESTRING).
 }
 \description{
-Extract OpenStreetMap network in sf format from a network.dat file
+Extracts the OpenStreetMap network in \code{sf} format from a routable transport
+network built with \code{\link[=build_network]{build_network()}}).
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

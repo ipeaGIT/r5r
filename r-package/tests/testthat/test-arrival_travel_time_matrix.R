@@ -5,7 +5,7 @@ testthat::skip_on_cran()
 
 # create testing function
 
-default_tester <- function(r5r_core,
+default_tester <- function(r5r_network,
                            origins = points[1:10,],
                            destinations = points[1:10,],
                            mode = "TRANSIT",
@@ -23,7 +23,7 @@ default_tester <- function(r5r_core,
                            progress=TRUE) {
 
   results <- arrival_travel_time_matrix(
-    r5r_core,
+    r5r_network,
     origins = origins,
     destinations = destinations,
     mode = mode,
@@ -49,8 +49,8 @@ default_tester <- function(r5r_core,
 
 test_that("adequately raises errors", {
 
-  # error related to using object with wrong type as r5r_core
-  expect_error(default_tester("r5r_core"))
+  # error related to using object with wrong type as r5r_network
+  expect_error(default_tester("r5r_network"))
 
   # error related to using wrong origins/destinations object type
   multipoint_origins      <- sf::st_cast(sf::st_as_sf(points[1:2,], coords = c("lon", "lat")), "MULTIPOINT")
@@ -58,12 +58,12 @@ test_that("adequately raises errors", {
   list_origins      <- list(id = c("1", "2"), lat = c(-30.02756, -30.02329), long = c(-51.22781, -51.21886))
   list_destinations <- list_origins
 
-  expect_error(default_tester(r5r_core, origins = multipoint_origins))
-  expect_error(default_tester(r5r_core, destinations = multipoint_destinations))
-  expect_error(default_tester(r5r_core, origins = list_origins))
-  expect_error(default_tester(r5r_core, destinations = list_destinations))
-  expect_error(default_tester(r5r_core, origins = "origins"))
-  expect_error(default_tester(r5r_core, destinations = "destinations"))
+  expect_error(default_tester(r5r_network, origins = multipoint_origins))
+  expect_error(default_tester(r5r_network, destinations = multipoint_destinations))
+  expect_error(default_tester(r5r_network, origins = list_origins))
+  expect_error(default_tester(r5r_network, destinations = list_destinations))
+  expect_error(default_tester(r5r_network, origins = "origins"))
+  expect_error(default_tester(r5r_network, destinations = "destinations"))
 
   # error/warning related to using wrong origins/destinations column types
   origins <- destinations <- points[1:2, ]
@@ -73,40 +73,40 @@ test_that("adequately raises errors", {
   destinations_char_lat   <- data.frame(id = destinations$id, lat = as.character(destinations$lat), lon = destinations$lon)
   destinations_char_lon   <- data.frame(id = destinations$id, lat = destinations$lat, lon = as.character(destinations$lon))
 
-  expect_error(default_tester(r5r_core, origins = origins_char_lat))
-  expect_error(default_tester(r5r_core, origins = origins_char_lon))
-  expect_error(default_tester(r5r_core, destinations = destinations_char_lat))
-  expect_error(default_tester(r5r_core, destinations = destinations_char_lon))
+  expect_error(default_tester(r5r_network, origins = origins_char_lat))
+  expect_error(default_tester(r5r_network, origins = origins_char_lon))
+  expect_error(default_tester(r5r_network, destinations = destinations_char_lat))
+  expect_error(default_tester(r5r_network, destinations = destinations_char_lon))
 
   # error related to nonexistent mode
-  expect_error(default_tester(r5r_core, mode = "pogoball"))
+  expect_error(default_tester(r5r_network, mode = "pogoball"))
 
   # errors related to date formatting
   numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
-  expect_error(default_tester(r5r_core, arrival_datetime = "13-05-2019 14:00:00"))
-  expect_error(default_tester(r5r_core, numeric_datetime))
+  expect_error(default_tester(r5r_network, arrival_datetime = "13-05-2019 14:00:00"))
+  expect_error(default_tester(r5r_network, numeric_datetime))
 
 
   # error with breakdown
-  expect_error(default_tester(r5r_core, breakdown ='test'))
+  expect_error(default_tester(r5r_network, breakdown ='test'))
 
   # errors related to max_walk_time
-  expect_error(default_tester(r5r_core, max_walk_time = "1000"))
-  expect_error(default_tester(r5r_core, max_walk_time = NULL))
+  expect_error(default_tester(r5r_network, max_walk_time = "1000"))
+  expect_error(default_tester(r5r_network, max_walk_time = NULL))
 
   # errors related to max_bike_time
-  expect_error(default_tester(r5r_core, max_bike_time = "1000"))
-  expect_error(default_tester(r5r_core, max_bike_time = NULL))
+  expect_error(default_tester(r5r_network, max_bike_time = "1000"))
+  expect_error(default_tester(r5r_network, max_bike_time = NULL))
 
   # error/warning related to max_street_time
-  expect_error(default_tester(r5r_core, max_trip_duration = "120"))
+  expect_error(default_tester(r5r_network, max_trip_duration = "120"))
 
   # error related to non-numeric walk_speed
-  expect_error(default_tester(r5r_core, walk_speed = "3.6"))
+  expect_error(default_tester(r5r_network, walk_speed = "3.6"))
 
   # error related to non-numeric bike_speed
-  expect_error(default_tester(r5r_core, bike_speed = "12"))
+  expect_error(default_tester(r5r_network, bike_speed = "12"))
 })
 
 test_that("adequately raises warnings - needs java", {
@@ -117,8 +117,8 @@ test_that("adequately raises warnings - needs java", {
   origins_numeric_id <- data.frame(id = 1:2, lat = origins$lat, lon = origins$lon)
   destinations_numeric_id <- data.frame(id = 1:2, lat = destinations$lat, lon = destinations$lon)
 
-  expect_warning(default_tester(r5r_core, origins = origins_numeric_id))
-  expect_warning(default_tester(r5r_core, destinations = destinations_numeric_id))
+  expect_warning(default_tester(r5r_network, origins = origins_numeric_id))
+  expect_warning(default_tester(r5r_network, destinations = destinations_numeric_id))
 
 
 })
@@ -141,8 +141,8 @@ test_that("output is correct", {
     crs = 4326
   )
 
-  result_df_input <- default_tester(r5r_core)
-  result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf)
+  result_df_input <- default_tester(r5r_network)
+  result_sf_input <- default_tester(r5r_network, origins_sf, destinations_sf)
 
   expect_true(is(result_df_input, "data.table"))
   expect_true(is(result_sf_input, "data.table"))
@@ -156,7 +156,7 @@ test_that("output is correct", {
 
   #  * r5r options ----------------------------------------------------------
 
-  result_sf_input <- default_tester(r5r_core, origins_sf, destinations_sf,
+  result_sf_input <- default_tester(r5r_network, origins_sf, destinations_sf,
                                     verbose = FALSE, progress=TRUE)
 
 
@@ -168,7 +168,7 @@ test_that("output is correct", {
   origins <- destinations <- points[1:10,]
   max_trip_duration <- 60L
 
-  df <- default_tester(r5r_core, origins, destinations, max_trip_duration = max_trip_duration)
+  df <- default_tester(r5r_network, origins, destinations, max_trip_duration = max_trip_duration)
   max_duration <- data.table::setDT(df)[, max(total_time, na.rm=T)]
 
   expect_true(max_duration <= max_trip_duration)
@@ -176,8 +176,8 @@ test_that("output is correct", {
 
 
   # expect number of columns to be larger when breakdown = TRUE
-  df2 <- default_tester(r5r_core, breakdown =TRUE)
-  df3 <- default_tester(r5r_core, breakdown =FALSE)
+  df2 <- default_tester(r5r_network, breakdown =TRUE)
+  df3 <- default_tester(r5r_network, breakdown =FALSE)
   expect_true(ncol(df2) > ncol(df3))
 
   expect_true(typeof(df2$routes) == "character")
@@ -187,15 +187,15 @@ test_that("output is correct", {
   #
   # origins <- destinations <- points[1:10,]
   #
-  # df <- default_tester(r5r_core, origins = origins, destinations = destinations,
+  # df <- default_tester(r5r_network, origins = origins, destinations = destinations,
   #                      mode = "WALK")
   # expect_true(nrow(df) == 0)
   #
-  # df <- default_tester(r5r_core, origins = origins, destinations = destinations,
+  # df <- default_tester(r5r_network, origins = origins, destinations = destinations,
   #                      mode = "BICYCLE")
   # expect_true(nrow(df) == 0)
   #
-  # df <- default_tester(r5r_core, origins = origins, destinations = destinations,
+  # df <- default_tester(r5r_network, origins = origins, destinations = destinations,
   #                      mode = "CAR")
   # expect_true(nrow(df) == 0)
 
@@ -205,7 +205,7 @@ test_that("output is correct", {
 
 test_that("using transit outside the gtfs dates throws an error", {
   expect_error(
-    tester(r5r_core,
+    tester(r5r_network,
            mode='transit',
            arrival_datetime = as.POSIXct("13-05-2025 14:00:00",
                                            format = "%d-%m-%Y %H:%M:%S")

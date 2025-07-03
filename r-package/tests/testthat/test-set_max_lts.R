@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(max_lts) set_max_lts(r5r_core, max_lts)
+tester <- function(max_lts) set_max_lts(r5r_r5r_network, max_lts)
 
 test_that("input is correct", {
   expect_error(tester("1"))
@@ -14,7 +14,7 @@ test_that("input is correct", {
 
 test_that("max_lts argument works in travel_time_matrix()", {
   expr <- "travel_time_matrix(
-    r5r_core,
+    r5r_r5r_network,
     pois[1:5],
     pois[1:5],
     mode = \"BICYCLE\"
@@ -31,7 +31,7 @@ test_that("max_lts argument works in travel_time_matrix()", {
 
 test_that("max_lts argument works in expanded_travel_time_matrix()", {
   expr <- "expanded_travel_time_matrix(
-    r5r_core,
+    r5r_r5r_network,
     pois[1:5],
     pois[1:5],
     mode = \"BICYCLE\"
@@ -48,7 +48,7 @@ test_that("max_lts argument works in expanded_travel_time_matrix()", {
 
 test_that("max_lts argument works in pareto_frontier()", {
   expr <- "pareto_frontier(
-    r5r_core,
+    r5r_r5r_network,
     pois[1:5],
     pois[1:5],
     mode = \"BICYCLE\",
@@ -68,7 +68,7 @@ test_that("max_lts argument works in pareto_frontier()", {
 
 test_that("max_lts argument works in detailed_itineraries()", {
   expr <- "detailed_itineraries(
-    r5r_core,
+    r5r_r5r_network,
     pois[1:5],
     pois[5:1],
     mode = 'BICYCLE'
@@ -85,7 +85,7 @@ test_that("max_lts argument works in detailed_itineraries()", {
 
 test_that("max_lts argument works in accessibility()", {
   expr <- "accessibility(
-    r5r_core,
+    r5r_r5r_network,
     points[1:15],
     points[1:15],
     mode = 'BICYCLE',

@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-struc <- setup_fare_structure(r5r_core, 5)
+struc <- setup_fare_structure(r5r_network, 5)
 tmpfile <- tempfile(pattern = "fare_structure", fileext = ".zip")
 
 tester <- function(fare_structure = struc, file_path = tmpfile) {

@@ -5,7 +5,8 @@ testthat::skip_on_cran()
 
 # create testing function
 
-default_tester <- function(r5r_core,
+default_tester <- function(r5r_network,
+                           r5r_core,
                            origins = points[1:10,],
                            destinations = points[1:10,],
                            mode = "TRANSIT",
@@ -24,7 +25,7 @@ default_tester <- function(r5r_core,
                            progress=TRUE) {
 
   results <- expanded_travel_time_matrix(
-    r5r_core,
+    r5r_network,
     origins = origins,
     destinations = destinations,
     mode = mode,

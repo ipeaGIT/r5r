@@ -80,7 +80,8 @@
 #'
 #' stop_r5(r5r_network)
 #' @export
-arrival_travel_time_matrix <- function(r5r_core,
+arrival_travel_time_matrix <- function(r5r_network,
+                                       r5r_core = deprecated(),
                                        origins,
                                        destinations,
                                        mode = "WALK",
@@ -100,6 +101,17 @@ arrival_travel_time_matrix <- function(r5r_core,
                                        verbose = FALSE,
                                        progress = FALSE,
                                        output_dir = NULL) {
+
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)

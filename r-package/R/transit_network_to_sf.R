@@ -1,8 +1,9 @@
 #' Extract transit network in sf format
 #'
-#' Extracts the transit network from a `network.dat` file (built with
-#' [build_network()]) in `sf` format.
+#' Extracts the transit network in `sf` format from a routable transport network
+#' built with [build_network()]).
 #'
+#' @template r5r_network
 #' @template r5r_core
 #'
 #' @return A list with two components of a transit network in `sf` format:
@@ -29,10 +30,23 @@
 #'
 #' stop_r5(r5r_network)
 #' @export
-transit_network_to_sf <- function(r5r_core) {
-  checkmate::assert_class(r5r_core, "jobjRef")
+transit_network_to_sf <- function(r5r_network,
+                                  r5r_core = deprecated()) {
 
-  network <- r5r_core$getTransitNetwork()
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
+
+  checkmate::assert_class(r5r_network, "jobjRef")
+
+  network <- r5r_network$getTransitNetwork()
 
   # Convert edges to SF (linestring)
   routes_df <- java_to_dt(network$get(0L))

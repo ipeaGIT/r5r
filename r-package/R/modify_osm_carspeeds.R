@@ -102,7 +102,7 @@ modify_osm_carspeeds <- function(pbf_path,
   speed_setter$setPercentageMode(percentage_mode)
   speed_setter$runSpeedSetter()
 
-  new_core <- r5r::setup_r5(output_dir,
+  new_network <- r5r::build_network(output_dir,
                             verbose = verbose,
                             temp_dir = FALSE,
                             elevation = "TOBLER",
@@ -110,5 +110,5 @@ modify_osm_carspeeds <- function(pbf_path,
 
   cli::cli_inform("New car network with modified speeds built at {.path {output_dir}}")
 
-  return(new_core)
+  return(new_network)
 }

@@ -1,5 +1,9 @@
-#' Extract OpenStreetMap network in sf format from a network.dat file
+#' Extract OpenStreetMap network in sf format
 #'
+#' Extracts the OpenStreetMap network in `sf` format from a routable transport
+#' network built with [build_network()]).
+#'
+#' @template r5r_network
 #' @template r5r_core
 #'
 #' @return A list with two components of a street network in sf format: vertices
@@ -19,14 +23,26 @@
 #'
 #' stop_r5(r5r_network)
 #' @export
-street_network_to_sf <- function(r5r_core) {
+street_network_to_sf <- function(r5r_network,
+                                 r5r_core = deprecated()) {
+
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
 
   # check input
-  if(class(r5r_core)[1] != "jobjRef"){
+  if(class(r5r_network)[1] != "jobjRef"){
   stop("Input must be an object of class 'jobjRef' built with 'r5r::build_network()'")}
 
   # Get street network from R5R core
-  network <- r5r_core$getStreetNetwork()
+  network <- r5r_network$getStreetNetwork()
 
   # Convert vertices to SF (point)
   vertices_df <- java_to_dt(network$get(0L))
