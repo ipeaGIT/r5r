@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Modify OSM car speeds</h1>
             
-            <h4 data-toc-skip class="date">2025-06-28</h4>
+            <h4 data-toc-skip class="date">2025-07-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/modify_osm_car_speeds.Rmd" class="external-link"><code>vignettes/modify_osm_car_speeds.Rmd</code></a></small>
       <div class="d-none name"><code>modify_osm_car_speeds.Rmd</code></div>
@@ -181,7 +181,10 @@ value, as we’ll see in the second example below.</p>
 <span>  percentage_mode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
+<span><span class="co">#&gt;   future release.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
 <p>And that’s it ! You can now use the new network
 <code>r5r_core_congestion</code> in any of <code>r5r</code>’s routing
 and accessibility functions, like this.</p>
@@ -284,7 +287,10 @@ modified OSM car speeds.</p>
 <span>  percentage_mode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
+<span><span class="co">#&gt;   future release.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="applying-the-same-speed-factor-to-all-roads">3. Applying the same speed factor to all roads<a class="anchor" aria-label="anchor" href="#applying-the-same-speed-factor-to-all-roads"></a>
@@ -319,7 +325,10 @@ our OSM data and to pass <code>default_speed = 40</code> with
 <span>  percentage_mode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="co">#,overwrite = FALSE 666</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
+<span><span class="co">#&gt;   future release.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="congestion-level-within-a-polygon">4. Congestion level within a polygon<a class="anchor" aria-label="anchor" href="#congestion-level-within-a-polygon"></a>
@@ -371,7 +380,7 @@ page</a>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

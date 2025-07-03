@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2025-06-28</h4>
+            <h4 data-toc-skip class="date">2025-07-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/travel_time_matrix.Rmd" class="external-link"><code>vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="d-none name"><code>travel_time_matrix.Rmd</code></div>
@@ -128,6 +128,9 @@ the city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <span><span class="co"># build a routable transport network with r5r</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> `setup_r5()` is being deprecated in *r5r* v2.3.0 and will be removed in a</span></span>
+<span><span class="co">#&gt;   future release.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `r5r::build_network()` instead.</span></span>
 <span></span>
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
@@ -401,7 +404,7 @@ page</a>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">
