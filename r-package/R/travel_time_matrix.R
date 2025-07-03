@@ -44,7 +44,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_network <- build_network(data_path)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -55,7 +55,7 @@
 #' )
 #'
 #' ttm <- travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -66,7 +66,7 @@
 #'
 #' # using a larger time window
 #' ttm <- travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -78,7 +78,7 @@
 #'
 #' # selecting different percentiles
 #' ttm <- travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -95,7 +95,7 @@
 #'   file.path(data_path, "fares/fares_poa.zip")
 #' )
 #' ttm <- travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -106,7 +106,7 @@
 #' )
 #' head(ttm)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #'
 #' @export
 travel_time_matrix <- function(r5r_core,

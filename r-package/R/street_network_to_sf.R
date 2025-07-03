@@ -12,18 +12,18 @@
 #'
 #' # build transport network
 #' path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(path)
+#' r5r_network <- build_network(path)
 #'
-#' # extract street network from r5r_core
-#' street_net <- street_network_to_sf(r5r_core)
+#' # extract street network from r5r_network
+#' street_net <- street_network_to_sf(r5r_network)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 street_network_to_sf <- function(r5r_core) {
 
   # check input
   if(class(r5r_core)[1] != "jobjRef"){
-  stop("Input must be an object of class 'jobjRef' built with 'r5r::setup_r5()'")}
+  stop("Input must be an object of class 'jobjRef' built with 'r5r::build_network()'")}
 
   # Get street network from R5R core
   network <- r5r_core$getStreetNetwork()

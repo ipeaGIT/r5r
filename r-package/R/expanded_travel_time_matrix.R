@@ -50,7 +50,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_network <- build_network(data_path)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -63,7 +63,7 @@
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
 #' ettm <- expanded_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -75,7 +75,7 @@
 #'
 #' # when breakdown = TRUE the output contains much more information
 #' ettm <- expanded_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -86,7 +86,7 @@
 #' )
 #' head(ettm)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 expanded_travel_time_matrix <- function(r5r_core,
                                         origins,

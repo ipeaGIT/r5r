@@ -98,7 +98,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_network <- build_network(data_path = data_path)
 #'
 #' # load origin/point of interest
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -111,7 +111,7 @@
 #'
 #' # estimate polygon-based isochrone from origin
 #' iso_poly <- isochrone(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = origin,
 #'   mode = "walk",
 #'   polygon_output = TRUE,
@@ -124,7 +124,7 @@
 #'
 #' # estimate line-based isochrone from origin
 #' iso_lines <- isochrone(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = origin,
 #'   mode = "walk",
 #'   polygon_output = FALSE,
@@ -151,7 +151,7 @@
 #'   scale_color_manual(values = colors) +
 #'   theme_minimal()
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #'
 #' @export
 isochrone <- function(r5r_core,

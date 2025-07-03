@@ -251,7 +251,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path )
+r5r_network <- build_network(data_path )
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -264,7 +264,7 @@ arrival_datetime <- as.POSIXct(
 # by default only returns the total time between each pair in each minute of
 # the specified time window
 arrival_ttm <- arrival_travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -276,7 +276,7 @@ head(arrival_ttm)
 
 # when breakdown = TRUE the output contains much more information
 arrival_ttm2 <- arrival_travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -287,7 +287,7 @@ arrival_ttm2 <- arrival_travel_time_matrix(
 
 head(arrival_ttm2)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

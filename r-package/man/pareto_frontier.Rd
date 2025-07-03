@@ -269,7 +269,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_network <- build_network(data_path = data_path)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
@@ -287,7 +287,7 @@ departure_datetime <- as.POSIXct(
 )
 
 pf <- pareto_frontier(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -297,7 +297,7 @@ pf <- pareto_frontier(
 )
 head(pf)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

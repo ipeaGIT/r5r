@@ -71,7 +71,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_network <- build_network(data_path)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -83,7 +83,7 @@
 #' )
 #'
 #' det <- detailed_itineraries(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points[10,],
 #'   destinations = points[12,],
 #'   mode = c("WALK", "TRANSIT"),
@@ -92,7 +92,7 @@
 #' )
 #' head(det)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 detailed_itineraries <- function(r5r_core,
                                  origins,

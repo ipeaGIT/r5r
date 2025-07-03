@@ -23,12 +23,12 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(path)
+r5r_network <- build_network(path)
 
-# extract street network from r5r_core
-street_net <- street_network_to_sf(r5r_core)
+# extract street network from r5r_network
+street_net <- street_network_to_sf(r5r_network)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

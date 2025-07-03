@@ -1,7 +1,7 @@
 #' Extract transit network in sf format
 #'
 #' Extracts the transit network from a `network.dat` file (built with
-#' [setup_r5()]) in `sf` format.
+#' [build_network()]) in `sf` format.
 #'
 #' @template r5r_core
 #'
@@ -22,12 +22,12 @@
 #'
 #' # build transport network
 #' path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(path)
+#' r5r_network <- build_network(path)
 #'
-#' # extract transit network from r5r_core
-#' transit_net <- transit_network_to_sf(r5r_core)
+#' # extract transit network from r5r_network
+#' transit_net <- transit_network_to_sf(r5r_network)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 transit_network_to_sf <- function(r5r_core) {
   checkmate::assert_class(r5r_core, "jobjRef")

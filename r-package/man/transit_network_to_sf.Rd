@@ -23,7 +23,7 @@ area larger than the \code{.osm.pbf} input data.
 }
 \description{
 Extracts the transit network from a \code{network.dat} file (built with
-\code{\link[=setup_r5]{setup_r5()}}) in \code{sf} format.
+\code{\link[=build_network]{build_network()}}) in \code{sf} format.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -31,12 +31,12 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(path)
+r5r_network <- build_network(path)
 
-# extract transit network from r5r_core
-transit_net <- transit_network_to_sf(r5r_core)
+# extract transit network from r5r_network
+transit_net <- transit_network_to_sf(r5r_network)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

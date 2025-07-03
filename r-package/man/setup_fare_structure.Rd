@@ -71,13 +71,13 @@ long as they stick to some basic premises. Please see the \link[vignette:fare_st
 library(r5r)
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
-fare_structure <- setup_fare_structure(r5r_core, base_fare = 5)
+fare_structure <- setup_fare_structure(r5r_network, base_fare = 5)
 
 # to debug fare calculation
 fare_structure <- setup_fare_structure(
-  r5r_core,
+  r5r_network,
   base_fare = 5,
   debug_path = "fare_debug.csv",
   debug_info = "MODE"

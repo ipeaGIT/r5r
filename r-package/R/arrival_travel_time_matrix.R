@@ -42,7 +42,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path )
+#' r5r_network <- build_network(data_path )
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -55,7 +55,7 @@
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
 #' arrival_ttm <- arrival_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -67,7 +67,7 @@
 #'
 #' # when breakdown = TRUE the output contains much more information
 #' arrival_ttm2 <- arrival_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -78,28 +78,28 @@
 #'
 #' head(arrival_ttm2)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 arrival_travel_time_matrix <- function(r5r_core,
-                                        origins,
-                                        destinations,
-                                        mode = "WALK",
-                                        mode_egress = "WALK",
-                                        arrival_datetime = Sys.time(),
-                                        breakdown = FALSE,
-                                        max_walk_time = Inf,
-                                        max_bike_time = Inf,
-                                        max_car_time = Inf,
-                                        max_trip_duration = 120L,
-                                        walk_speed = 3.6,
-                                        bike_speed = 12,
-                                        max_rides = 3,
-                                        max_lts = 2,
-                                        draws_per_minute = 5L,
-                                        n_threads = Inf,
-                                        verbose = FALSE,
-                                        progress = FALSE,
-                                        output_dir = NULL) {
+                                       origins,
+                                       destinations,
+                                       mode = "WALK",
+                                       mode_egress = "WALK",
+                                       arrival_datetime = Sys.time(),
+                                       breakdown = FALSE,
+                                       max_walk_time = Inf,
+                                       max_bike_time = Inf,
+                                       max_car_time = Inf,
+                                       max_trip_duration = 120L,
+                                       walk_speed = 3.6,
+                                       bike_speed = 12,
+                                       max_rides = 3,
+                                       max_lts = 2,
+                                       draws_per_minute = 5L,
+                                       n_threads = Inf,
+                                       verbose = FALSE,
+                                       progress = FALSE,
+                                       output_dir = NULL) {
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)

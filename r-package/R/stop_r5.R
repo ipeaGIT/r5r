@@ -1,9 +1,9 @@
-#' Stop running r5r core
+#' Stop running r5r network
 #'
-#' @description Stops running r5r cores.
+#' @description Stops running r5r network
 #'
-#' @param ... \code{r5r_core} objects currently running. By default, if no cores
-#'            are supplied all running cores are stopped.
+#' @param ... \code{r5r_network} objects currently running. By default, if no
+#'            r5r network is supplied all running networks are stopped.
 #' @return No return value, called for side effects.
 #'
 #' @family support functions
@@ -13,9 +13,9 @@
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(path)
+#' r5r_network <- build_network(path)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 stop_r5 <- function(...) {
 
