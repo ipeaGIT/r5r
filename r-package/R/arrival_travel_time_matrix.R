@@ -123,7 +123,7 @@ arrival_travel_time_matrix <- function(r5r_network,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::assert_class(r5r_network, "jobjRef")
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
@@ -140,7 +140,7 @@ arrival_travel_time_matrix <- function(r5r_network,
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   max_walk_time <- assign_max_street_time(
@@ -168,24 +168,24 @@ arrival_travel_time_matrix <- function(r5r_network,
     max_bike_time
   )
 
-  set_time_window(r5r_core, max_trip_duration)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, max_trip_duration)
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-  set_max_rides(r5r_core, max_rides)
-  set_max_lts(r5r_core, max_lts)
-  set_n_threads(r5r_core, n_threads)
-  set_verbose(r5r_core, verbose)
-  set_progress(r5r_core, progress)
-  set_output_dir(r5r_core, output_dir)
-  set_expanded_travel_times(r5r_core, TRUE)
-  r5r_core$setSearchType("ARRIVE_BY")
-  set_breakdown(r5r_core, breakdown)
-  set_fare_structure(r5r_core, NULL)
+  set_time_window(r5r_network, max_trip_duration)
+  set_monte_carlo_draws(r5r_network, draws_per_minute, max_trip_duration)
+  set_speed(r5r_network, walk_speed, "walk")
+  set_speed(r5r_network, bike_speed, "bike")
+  set_max_rides(r5r_network, max_rides)
+  set_max_lts(r5r_network, max_lts)
+  set_n_threads(r5r_network, n_threads)
+  set_verbose(r5r_network, verbose)
+  set_progress(r5r_network, progress)
+  set_output_dir(r5r_network, output_dir)
+  set_expanded_travel_times(r5r_network, TRUE)
+  r5r_network$setSearchType("ARRIVE_BY")
+  set_breakdown(r5r_network, breakdown)
+  set_fare_structure(r5r_network, NULL)
 
-  # call r5r_core method and process result -------------------------------
+  # call r5r_network method and process result -------------------------------
 
-  travel_times <- r5r_core$travelTimeMatrix(
+  travel_times <- r5r_network$travelTimeMatrix(
     origins$id,
     origins$lat,
     origins$lon,

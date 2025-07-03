@@ -4,11 +4,10 @@
 \alias{set_time_window}
 \title{Set time window}
 \usage{
-set_time_window(r5r_core, time_window)
+set_time_window(r5r_network, time_window)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{time_window}{A number.}
 }

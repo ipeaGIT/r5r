@@ -41,7 +41,7 @@ street_network_to_sf <- function(r5r_network,
   if(class(r5r_network)[1] != "jobjRef"){
   stop("Input must be an object of class 'jobjRef' built with 'r5r::build_network()'")}
 
-  # Get street network from R5R core
+  # Get street network from R5R network
   network <- r5r_network$getStreetNetwork()
 
   # Convert vertices to SF (point)

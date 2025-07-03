@@ -4,11 +4,10 @@
 \alias{set_n_threads}
 \title{Set number of threads}
 \usage{
-set_n_threads(r5r_core, n_threads)
+set_n_threads(r5r_network, n_threads)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{n_threads}{A number, passed from the function above.}
 }

@@ -4,11 +4,10 @@
 \alias{set_max_lts}
 \title{Set max Level of Transit Stress (LTS)}
 \usage{
-set_max_lts(r5r_core, max_lts)
+set_max_lts(r5r_network, max_lts)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{max_lts}{A number (between 1 and 4). The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will only

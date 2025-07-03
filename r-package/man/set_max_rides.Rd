@@ -4,11 +4,10 @@
 \alias{set_max_rides}
 \title{Set max number of rides}
 \usage{
-set_max_rides(r5r_core, max_rides)
+set_max_rides(r5r_network, max_rides)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{max_rides}{A number. The max number of public transport rides allowed
 in the same trip. Passed from routing function.}

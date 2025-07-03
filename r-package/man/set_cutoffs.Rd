@@ -4,11 +4,10 @@
 \alias{set_cutoffs}
 \title{Set cutoffs}
 \usage{
-set_cutoffs(r5r_core, cutoffs, decay_function)
+set_cutoffs(r5r_network, cutoffs, decay_function)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{cutoffs}{A numeric vector.}
 

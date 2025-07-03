@@ -21,7 +21,7 @@ stop_r5 <- function(...) {
 
   supplied_cores <- list(...)
 
-  # find all running r5r cores in the parent frame
+  # find all running r5r networks in the parent frame
 
   current_objects <- mget(ls(envir = parent.frame()), envir = parent.frame())
 
@@ -29,14 +29,14 @@ stop_r5 <- function(...) {
 
   running_cores <- current_objects[which(classes_list == "jobjRef")]
 
-  # if no cores have been supplied, remove all running cores
-  # else, remove matches between running and supplied cores
+  # if no networks have been supplied, remove all running networks
+  # else, remove matches between running and supplied networks
 
   if (length(supplied_cores) == 0) {
 
     rm(list = names(running_cores), envir = parent.frame())
 
-    message("All r5r cores have been successfully stopped.")
+    message("All r5r networks have been successfully stopped.")
 
   } else {
 

@@ -5,15 +5,14 @@
 \title{Set suboptimal minutes}
 \usage{
 set_suboptimal_minutes(
-  r5r_core,
+  r5r_network,
   suboptimal_minutes,
   fare_structure,
   shortest_path
 )
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{suboptimal_minutes}{A number.}
 

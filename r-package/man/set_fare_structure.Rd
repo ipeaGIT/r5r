@@ -4,11 +4,10 @@
 \alias{set_fare_structure}
 \title{Set the fare structure used when calculating transit fares}
 \usage{
-set_fare_structure(r5r_core, fare_structure)
+set_fare_structure(r5r_network, fare_structure)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares

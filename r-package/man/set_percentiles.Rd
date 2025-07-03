@@ -4,11 +4,10 @@
 \alias{set_percentiles}
 \title{Set percentiles}
 \usage{
-set_percentiles(r5r_core, percentiles)
+set_percentiles(r5r_network, percentiles)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{percentiles}{An integer vector of maximum length 5.}
 }

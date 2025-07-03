@@ -4,11 +4,10 @@
 \alias{set_monte_carlo_draws}
 \title{Set number of Monte Carlo draws}
 \usage{
-set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{draws_per_minute}{A number.}
 

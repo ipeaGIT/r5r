@@ -4,11 +4,10 @@
 \alias{set_breakdown}
 \title{Set breakdown}
 \usage{
-set_breakdown(r5r_core, breakdown)
+set_breakdown(r5r_network, breakdown)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{breakdown}{A logical.}
 }

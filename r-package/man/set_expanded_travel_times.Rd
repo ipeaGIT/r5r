@@ -4,11 +4,10 @@
 \alias{set_expanded_travel_times}
 \title{Set expanded travel times}
 \usage{
-set_expanded_travel_times(r5r_core, expanded)
+set_expanded_travel_times(r5r_network, expanded)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{expanded}{A logical.}
 }

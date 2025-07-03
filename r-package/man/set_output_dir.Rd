@@ -4,11 +4,10 @@
 \alias{set_output_dir}
 \title{Set output directory}
 \usage{
-set_output_dir(r5r_core, output_dir)
+set_output_dir(r5r_network, output_dir)
 }
 \arguments{
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{output_dir}{A path.}
 }
