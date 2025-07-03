@@ -38,34 +38,12 @@ or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached network).}
 An \code{rJava} object to connect with \code{R5} routing engine.
 }
 \description{
-Builds a multimodal transport network used for routing in \code{R5}, combining
-multiple data inputs present in the directory where the network should be
-saved to. The directory must contain only one street network file (in
-\code{.osm.pbf} format). It may optionally contain one or more public transport
-GTFS feeds (in \code{GTFS.zip} format, where \code{GTFS} is the name of your feed),
-when used for public transport routing, and a \code{.tif} file describing the
-elevation profile of the study area. If there is more than one GTFS feed in
-the directory, all feeds are merged. If there is already a 'network.dat'
-file in the directory, the function will simply read it and load it to
-memory (unless specified not to do so).
-}
-\section{Details}{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-More information about the \code{TOBLER} and \code{MINETTI} options to calculate the
-effects of elevation on travel times can be found in the references below:
-\itemize{
-\item Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
-model the relationship between slope and travel rates. Applied geography, 106,
-93-107. \doi{10.1016/j.apgeog.2019.03.008}.
-\item Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
-uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
-\item Tobler, W. (1993). Three presentations on geographical analysis and modeling:
-Non-isotropic geographic modeling speculations on the geometry of geography
-global spatial analysis. Technical Report. National center for geographic
-information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
+\code{setup_r5()} was renamed to \code{\link[=build_network]{build_network()}} to create a more consistent
+API. \strong{\code{setup_r5()} is being deprecated} after \emph{r5r} v2.3.0 and will be
+\strong{removed in a future release}. Please switch to \code{\link[=build_network]{build_network()}}.
 }
-}
-
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
@@ -73,11 +51,13 @@ library(r5r)
 # directory with street network and gtfs files
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path)
+r5r_network <- setup_r5(data_path)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other setup: 
+Other Build network: 
+\code{\link{build_network}()},
 \code{\link{download_r5}()}
 }
-\concept{setup}
+\concept{Build network}
+\keyword{internal}

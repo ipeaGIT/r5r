@@ -1,15 +1,11 @@
 #' Create a transport network used for routing in R5
 #'
-#' Builds a multimodal transport network used for routing in `R5`, combining
-#' multiple data inputs present in the directory where the network should be
-#' saved to. The directory must contain only one street network file (in
-#' `.osm.pbf` format). It may optionally contain one or more public transport
-#' GTFS feeds (in `GTFS.zip` format, where `GTFS` is the name of your feed),
-#' when used for public transport routing, and a `.tif` file describing the
-#' elevation profile of the study area. If there is more than one GTFS feed in
-#' the directory, all feeds are merged. If there is already a 'network.dat'
-#' file in the directory, the function will simply read it and load it to
-#' memory (unless specified not to do so).
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `setup_r5()` was renamed to [`build_network()`] to create a more consistent
+#' API. **`setup_r5()` is being deprecated** after *r5r* v2.3.0 and will be
+#' **removed in a future release**. Please switch to [`build_network()`].
 #'
 #' @template verbose
 #' @param data_path A string pointing to the directory where data inputs are
@@ -26,21 +22,8 @@
 #'
 #' @return An `rJava` object to connect with `R5` routing engine.
 #'
-#' @family setup
-#'
-#' @section Details:
-#' More information about the `TOBLER` and `MINETTI` options to calculate the
-#' effects of elevation on travel times can be found in the references below:
-#'
-#'- Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
-#'model the relationship between slope and travel rates. Applied geography, 106,
-#'93-107. \doi{10.1016/j.apgeog.2019.03.008}.
-#'- Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
-#'uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
-#'- Tobler, W. (1993). Three presentations on geographical analysis and modeling:
-#'Non-isotropic geographic modeling speculations on the geometry of geography
-#'global spatial analysis. Technical Report. National center for geographic
-#'information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
+#' @family Build network
+#' @keywords internal
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -48,7 +31,7 @@
 #' # directory with street network and gtfs files
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(data_path)
+#' r5r_network <- setup_r5(data_path)
 #' @export
 setup_r5 <- function(data_path,
                      verbose = FALSE,
@@ -56,114 +39,31 @@ setup_r5 <- function(data_path,
                      elevation = "TOBLER",
                      overwrite = FALSE) {
 
-  # check inputs ------------------------------------------------------------
+  # Deprecation warning --------------------------------------------------------
+  cli::cli_warn(c(
+    "!" = "{.fn setup_r5} is being deprecated in *r5r* v2.3.0 and will be removed in a future release.",
+    "i" = "Please use {.fn r5r::build_network} instead."
+  ))
 
-  checkmate::assert_directory_exists(data_path)
-  checkmate::assert_logical(verbose)
-  checkmate::assert_logical(temp_dir)
-  checkmate::assert_character(elevation)
-  checkmate::assert_logical(overwrite)
+  # lifecycle::deprecate_soft(
+  #   when = "2.3.0",
+  #   what = "setup_r5()",
+  #   with = "r5r::build_network()"
+  #   )
 
-  elevation <- toupper(elevation)
-  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
-    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
-    }
+  # # Optional base-R signal for tools that watch .Deprecated()
+  # .Deprecated("build_network", package = "r5r")
 
-  # expand data_path to full path, as required by rJava api call
-  data_path <- path.expand(data_path)
 
-  # check Java version installed locally and init java
-  start_r5r_java(data_path = data_path, temp_dir = temp_dir, verbose = verbose)
+  # Pass through to the replacement -------------------------------------------
 
-  # check if data_path has osm.pbf, .tif gtfs data, or a network.dat file
-  any_network <- length(grep("network.dat", list.files(data_path))) > 0
-  any_pbf  <- length(grep(".pbf", list.files(data_path))) > 0
-  any_gtfs <- length(grep(".zip", list.files(data_path))) > 0
-  any_tif <- length(grep(".tif", list.files(data_path))) > 0
-
-  # stop if there is no input data
-  if (!(any_pbf | any_network)){
-    stop("\nAn OSM PBF file is required to build a network.")
-    }
-
-  # use no elevation model if there is no raster.tif input data
-  if (!(any_tif)) {
-    elevation <- 'NONE'
-    message("No raster .tif files found. Using elevation = 'NONE'.")
-    }
-
-  # check if data_path already has a network.dat file
-  dat_file <- file.path(data_path, "network.dat")
-
-  if (checkmate::test_file_exists(dat_file) && !overwrite) {
-
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
-
-    message("\nUsing cached network.dat from ", dat_file)
-
-  } else {
-    # check if the user has permission to write to the data directory. if not,
-    # R5 won't be able to create the required files and will fail with a
-    # not-that-enlightening error
-    error_if_no_write_permission(data_path)
-
-    # stop r5 in case it is already running
-    suppressMessages( r5r::stop_r5() )
-
-    # clean up any files that might have been created by previous r5r usage
-    # if the files do not exist 'file.remove()' will raise a warning, which is
-    # suppressed here
-    mapdb_files <- list.files(data_path, full.names = TRUE)
-    mapdb_files <- mapdb_files[grepl("\\.mapdb", mapdb_files)]
-    suppressWarnings(
-      invisible(file.remove(dat_file, mapdb_files))
+  r5r_network <- build_network(
+    data_path,
+    verbose = verbose,
+    temp_dir = temp_dir,
+    elevation = elevation,
+    overwrite = overwrite
     )
 
-    # build new r5r_core
-    r5r_core <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation, check=F)
-    ex = rJava::.jgetEx(clear=TRUE)
-    if (!is.null(ex)) {
-      msg <- rJava::.jcall(ex, "S", "toString")
-      if (grepl("Geographic extent of street layer", msg)) {
-        cli::cli_abort("Geographic extent of street layer exceeds limit of 975000 km2.")
-      } else {
-      ex$printStackTrace()
-      return(NULL)
-      }
-    }
-
-    # display a message if there is a PBF file but no GTFS data
-    if (any_pbf == TRUE & any_gtfs == FALSE) {
-      message(paste("\nNo public transport data (gtfs) provided.",
-                    "Graph will be built with the street network only."))
-    }
-
-    message("\nFinished building network.dat at ", dat_file)
-
-  }
-
-  return(r5r_core)
-
-}
-
-error_if_no_write_permission <- function(data_path) {
-  write_permission <- file.access(data_path, mode = 2)
-
-  normalized_path <- normalizePath(data_path)
-
-  if (write_permission == -1) {
-    cli::cli_abort(
-      c(
-        "Permission to write to {.path {normalized_path}} denied.",
-        i = paste0(
-          "{.pkg r5r} needs write privilege to create the network files. ",
-          "Please make sure you have this privilege in the provided directory."
-        )
-      ),
-      class = "dir_permission_denied",
-      call = rlang::caller_env()
-    )
-  }
-
-  return(invisible(TRUE))
+  return(r5r_network)
 }
