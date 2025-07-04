@@ -24,7 +24,7 @@ congestion_poly <- readRDS(
   system.file("extdata/poa/poa_poly_congestion.rds", package = "r5r")
   )
 
-geojson_path <- congestion_poly2geojson(
+geojson_path <- r5r:::congestion_poly2geojson(
   new_speeds_poly = congestion_poly
   )
 \dontshow{\}) # examplesIf}
