@@ -43,7 +43,8 @@ find_snap <- function(r5r_core,
                       radius = 1600,
                       mode = "WALK"){
 
-  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::assert_class(r5r_core, "r5r_core")
+  r5r_core <- r5r_core@jcore
 
   checkmate::assert_numeric(radius, lower = 0, finite = TRUE, max.len = 1)
   mode_options <- c("WALK", "BICYCLE", "CAR")

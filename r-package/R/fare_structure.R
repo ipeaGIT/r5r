@@ -76,7 +76,9 @@ setup_fare_structure <- function(r5r_core,
                                  by = "MODE",
                                  debug_path = NULL,
                                  debug_info = NULL) {
-  checkmate::assert_class(r5r_core, "jobjRef")
+  # check inputs and set r5r options --------------------------------------
+  checkmate::assert_class(r5r_core, "r5r_core")
+  r5r_core <- r5r_core@jcore
   checkmate::assert_numeric(base_fare, lower = 0, len = 1, any.missing = FALSE)
 
   by_options <- c("MODE", "AGENCY_ID", "AGENCY_NAME", "GENERIC")

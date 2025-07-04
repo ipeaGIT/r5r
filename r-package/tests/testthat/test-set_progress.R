@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(progress) set_progress(r5r_core, progress)
+tester <- function(progress) set_progress(r5r_core@jcore, progress)
 
 test_that("input is correct", {
   expect_error(tester("TRUE"))
@@ -45,7 +45,7 @@ test_that("progress argument works in routing functions", {
     progress_regex <- "\\d+ out of \\d+ origins processed\\."
 
 
-    log_file <- file.path(r5r_core$getLogPath())
+    log_file <- file.path(r5r_core@jcore$getLogPath())
     # Clean log before test
     if (file.exists(log_file)) writeLines("", log_file)
 

@@ -119,7 +119,8 @@ pareto_frontier <- function(r5r_core,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::assert_class(r5r_core, "r5r_core")
+  r5r_core <- r5r_core@jcore
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")

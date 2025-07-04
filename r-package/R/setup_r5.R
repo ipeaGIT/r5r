@@ -142,7 +142,7 @@ setup_r5 <- function(data_path,
 
   }
 
-  return(r5r_core)
+  return(wrap_r5r_core(r5r_core))
 
 }
 

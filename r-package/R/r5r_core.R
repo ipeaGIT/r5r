@@ -1,26 +1,33 @@
 #' Class to internally handle Java reference to R5RCore
 #'
+#' @family r5r_core
+#'
 #' @keywords internal
 setClass(
-  "R5R_core",
-  slots = list(r5r_core = "jobjRef")
+  "r5r_core",
+  slots = list(jcore = "jobjRef")
 )
 
-#' Constructor for R5R_core object
+#' Constructor for r5r_core object
 #'
 #' @description
-#' Wraps a Java R5RCore as an R5R_core.
-#' @param r5r_core A \code{jobjRef} Java object reference to R5RCore.
+#' Wraps a Java R5RCore as an r5r_core.
+#'
+#' @param jcore A \code{jobjRef} Java object reference to R5RCore.
+#' @return \code{r5r_core}
+#'
+#' @family r5r_core
+#'
 #' @keywords internal
-wrap_r5r_core <- function(r5r_core) {
-  # if (!identical(r5r_core$identify(), "I am an R5R core!")) {
-  #   stop('Provided object is not a valid reference to a java R5R core.')
-  # }
-  new("R5R_core", r5r_core = r5r_core)
+wrap_r5r_core <- function(jcore) {
+  if (!identical(jcore$identify(), "I am an R5R core!")) {
+    stop('Provided object is not a valid reference to a java R5R core.')
+  }
+  new("r5r_core", jcore = jcore)
 }
 
-setGeneric("get_core", function(object) standardGeneric("get_core"))
-
-setMethod("get_core", "R5R_core", function(object) {
-  object@r5r_core
-})
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal

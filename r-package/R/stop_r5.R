@@ -27,7 +27,7 @@ stop_r5 <- function(...) {
 
   classes_list <- lapply(current_objects, class)
 
-  running_cores <- current_objects[which(classes_list == "jobjRef")]
+  running_cores <- current_objects[which(classes_list == "r5r_core")]
 
   # if no cores have been supplied, remove all running cores
   # else, remove matches between running and supplied cores

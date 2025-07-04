@@ -178,6 +178,7 @@ isochrone <- function(r5r_core,
 
 
 # check inputs ------------------------------------------------------------
+  checkmate::assert_class(r5r_core, "r5r_core")
 
   # check cutoffs
   checkmate::assert_numeric(cutoffs, lower = 0)

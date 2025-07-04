@@ -22,11 +22,10 @@
 street_network_to_sf <- function(r5r_core) {
 
   # check input
-  if(class(r5r_core)[1] != "jobjRef"){
-  stop("Input must be an object of class 'jobjRef' built with 'r5r::setup_r5()'")}
+  checkmate::assert_class(r5r_core, "r5r_core")
 
   # Get street network from R5R core
-  network <- r5r_core$getStreetNetwork()
+  network <- r5r_core@jcore$getStreetNetwork()
 
   # Convert vertices to SF (point)
   vertices_df <- java_to_dt(network$get(0L))
