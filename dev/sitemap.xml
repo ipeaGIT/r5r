@@ -42,6 +42,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/pareto_frontier.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_cache.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_network-class.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_sitrep.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/read_fare_structure.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/reverse_if_direct_mode.html</loc></url>
@@ -70,6 +71,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/wrap_r5r_network.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/write_fare_structure.html</loc></url>
 </urlset>
 
