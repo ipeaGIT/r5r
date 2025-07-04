@@ -63,7 +63,7 @@ public abstract class R5Process {
 
     protected abstract boolean isOneToOne();
 
-    private static final Logger LOG = LoggerFactory.getLogger("org.ipea.r5r.Process.R5RProcess");
+    private static final Logger LOG = LoggerFactory.getLogger(R5Process.class);
 
     public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
@@ -84,7 +84,7 @@ public abstract class R5Process {
                         filter(Objects::nonNull).
                         collect(Collectors.toList())).get();
 
-        LOG.info(".. DONE!\n");
+        LOG.info(".. DONE!");
 
         RDataFrame results = mergeResults(processResults);
 
@@ -199,7 +199,7 @@ public abstract class R5Process {
                 results.clear();
             }
 
-            LOG.info("\r{} out of {} origins processed.", totalProcessed.getAndIncrement(), nOrigins);
+            LOG.info("{} out of {} origins processed.", totalProcessed.getAndIncrement(), nOrigins);
 
         } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
@@ -251,7 +251,7 @@ public abstract class R5Process {
         );
         mergedDataFrame.updateRowCount();
 
-        LOG.info(" DONE!\n");
+        LOG.info(" DONE!");
 
         return mergedDataFrame;
     }
