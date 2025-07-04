@@ -44,9 +44,9 @@ transit_network_to_sf <- function(r5r_network,
     r5r_network <- r5r_core
   }
 
-  checkmate::assert_class(r5r_network, "jobjRef")
+  checkmate::assert_class(r5r_network, "r5r_network")
 
-  network <- r5r_network$getTransitNetwork()
+  network <- r5r_network@jcore$getTransitNetwork()
 
   # Convert edges to SF (linestring)
   routes_df <- java_to_dt(network$get(0L))

@@ -38,11 +38,10 @@ street_network_to_sf <- function(r5r_network,
   }
 
   # check input
-  if(class(r5r_network)[1] != "jobjRef"){
-  stop("Input must be an object of class 'jobjRef' built with 'r5r::build_network()'")}
+  checkmate::assert_class(r5r_network, "r5r_network")
 
   # Get street network from R5R network
-  network <- r5r_network$getStreetNetwork()
+  network <- r5r_network@jcore$getStreetNetwork()
 
   # Convert vertices to SF (point)
   vertices_df <- java_to_dt(network$get(0L))
