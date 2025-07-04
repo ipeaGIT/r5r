@@ -124,7 +124,7 @@ arrival_travel_time_matrix <- function(r5r_network,
   # check inputs and set r5r options --------------------------------------
 
   checkmate::assert_class(r5r_network, "r5r_core")
-  r5r_core <- r5r_network@jcore
+  r5r_network <- r5r_network@jcore
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")

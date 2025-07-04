@@ -144,7 +144,7 @@ build_network <- function(data_path,
 
   }
 
-  return(r5r_network)
+  return(wrap_r5r_core(r5r_network))
 
 }
 

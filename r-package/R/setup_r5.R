@@ -65,5 +65,5 @@ setup_r5 <- function(data_path,
     overwrite = overwrite
     )
 
-  return(wrap_r5r_core(r5r_network))
+  return(r5r_network)
 }

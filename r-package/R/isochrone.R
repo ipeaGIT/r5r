@@ -191,7 +191,7 @@ isochrone <- function(r5r_network,
   }
 
 # check inputs ------------------------------------------------------------
-  checkmate::assert_class(r5r_core, "r5r_core")
+  checkmate::assert_class(r5r_network, "r5r_core")
 
   # check cutoffs
   checkmate::assert_numeric(cutoffs, lower = 0)
