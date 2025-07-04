@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(verbose) set_verbose(r5r_network, verbose)
+tester <- function(verbose) set_verbose(r5r_network@jcore, verbose)
 
 test_that("input is correct", {
   expect_error(tester("TRUE"))
@@ -44,7 +44,7 @@ test_that("verbose argument works in routing functions", {
 
     info_regex <- "(\\[.*\\] INFO)|(\\[.*\\] DEBUG)|(\\[.*\\] WARN)"
 
-    log_file <- file.path(r5r_network$getLogPath())
+    log_file <- file.path(r5r_network@jcore$getLogPath())
     # Clean log before test
     if (file.exists(log_file)) writeLines("", log_file)
 
