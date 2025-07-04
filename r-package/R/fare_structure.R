@@ -91,7 +91,7 @@ setup_fare_structure <- function(r5r_network,
   }
 
   # check inputs and set r5r options --------------------------------------
-  checkmate::assert_class(r5r_network, "r5r_core")
+  checkmate::assert_class(r5r_network, "r5r_network")
   r5r_network <- r5r_network@jcore
   checkmate::assert_numeric(base_fare, lower = 0, len = 1, any.missing = FALSE)
 

@@ -44,7 +44,7 @@ transit_network_to_sf <- function(r5r_network,
     r5r_network <- r5r_core
   }
 
-  checkmate::assert_class(r5r_network, "r5r_core")
+  checkmate::assert_class(r5r_network, "r5r_network")
 
   network <- r5r_network@jcore$getTransitNetwork()
 

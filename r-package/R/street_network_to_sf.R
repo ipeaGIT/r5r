@@ -38,7 +38,7 @@ street_network_to_sf <- function(r5r_network,
   }
 
   # check input
-  checkmate::assert_class(r5r_network, "r5r_core")
+  checkmate::assert_class(r5r_network, "r5r_network")
 
   # Get street network from R5R network
   network <- r5r_network@jcore$getStreetNetwork()
