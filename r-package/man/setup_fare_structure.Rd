@@ -5,7 +5,8 @@
 \title{Setup a fare structure to calculate the monetary costs of trips}
 \usage{
 setup_fare_structure(
-  r5r_core,
+  r5r_network,
+  r5r_core = deprecated(),
   base_fare,
   by = "MODE",
   debug_path = NULL,
@@ -13,8 +14,10 @@ setup_fare_structure(
 )
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{base_fare}{A numeric. A base value used to populate the fare
 structure.}
@@ -71,13 +74,13 @@ long as they stick to some basic premises. Please see the \link[vignette:fare_st
 library(r5r)
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
-fare_structure <- setup_fare_structure(r5r_core, base_fare = 5)
+fare_structure <- setup_fare_structure(r5r_network, base_fare = 5)
 
 # to debug fare calculation
 fare_structure <- setup_fare_structure(
-  r5r_core,
+  r5r_network,
   base_fare = 5,
   debug_path = "fare_debug.csv",
   debug_info = "MODE"

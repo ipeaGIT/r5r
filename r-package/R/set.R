@@ -3,7 +3,7 @@
 #' Indicates whether R5 should output informative messages or not. Please note
 #' that R5 error messages are still reported even when `verbose` is `FALSE`.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param verbose A logical, passed from the function above.
 #'
 #' @param verbose A logical, passed from function above.
@@ -13,13 +13,13 @@
 #' @family setting functions
 #'
 #' @keywords internal
-set_verbose <- function(r5r_core, verbose) {
+set_verbose <- function(r5r_network, verbose) {
   checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
 
   if (verbose) {
-    r5r_core$verboseMode()
+    r5r_network$verboseMode()
   } else {
-    r5r_core$silentMode()
+    r5r_network$silentMode()
   }
 
   return(invisible(TRUE))
@@ -31,7 +31,7 @@ set_verbose <- function(r5r_core, verbose) {
 #' Indicates whether or not a progress counter must be printed during
 #' computations. Applies to all routing functions.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param progress A logical, passed from the function above.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -39,10 +39,10 @@ set_verbose <- function(r5r_core, verbose) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_progress <- function(r5r_core, progress) {
+set_progress <- function(r5r_network, progress) {
   checkmate::assert_logical(progress, len = 1, any.missing = FALSE)
 
-  r5r_core$setProgress(progress)
+  r5r_network$setProgress(progress)
 
   return(invisible(TRUE))
 }
@@ -52,7 +52,7 @@ set_progress <- function(r5r_core, progress) {
 #'
 #' Sets the number of threads to be used by the r5r `.jar`.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param n_threads A number, passed from the function above.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -60,14 +60,14 @@ set_progress <- function(r5r_core, progress) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_n_threads <- function(r5r_core, n_threads) {
+set_n_threads <- function(r5r_network, n_threads) {
   checkmate::assert_number(n_threads, lower = 1)
 
   if (is.infinite(n_threads)) {
-    r5r_core$setNumberOfThreadsToMax()
+    r5r_network$setNumberOfThreadsToMax()
   } else {
     n_threads <- as.integer(n_threads)
-    r5r_core$setNumberOfThreads(n_threads)
+    r5r_network$setNumberOfThreads(n_threads)
   }
 
   return(invisible(TRUE))
@@ -76,7 +76,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 
 #' Set max Level of Transit Stress (LTS)
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param max_lts A number (between 1 and 4). The maximum level of traffic
 #'   stress that cyclists will tolerate. A value of 1 means cyclists will only
 #'   travel through the quietest streets, while a value of 4 indicates cyclists
@@ -87,7 +87,7 @@ set_n_threads <- function(r5r_core, n_threads) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_max_lts <- function(r5r_core, max_lts) {
+set_max_lts <- function(r5r_network, max_lts) {
   checkmate::assert_number(max_lts)
 
   if (max_lts < 1 | max_lts > 4) {
@@ -98,7 +98,7 @@ set_max_lts <- function(r5r_core, max_lts) {
     )
   }
 
-  r5r_core$setMaxLevelTrafficStress(as.integer(max_lts))
+  r5r_network$setMaxLevelTrafficStress(as.integer(max_lts))
 
   return(invisible(TRUE))
 }
@@ -108,7 +108,7 @@ set_max_lts <- function(r5r_core, max_lts) {
 #'
 #' Sets the maximum number of rides a trip can use in R5.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param max_rides A number. The max number of public transport rides allowed
 #'   in the same trip. Passed from routing function.
 #'
@@ -117,10 +117,10 @@ set_max_lts <- function(r5r_core, max_lts) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_max_rides <- function(r5r_core, max_rides) {
+set_max_rides <- function(r5r_network, max_rides) {
   checkmate::assert_number(max_rides, lower = 1, finite = TRUE)
 
-  r5r_core$setMaxRides(as.integer(max_rides))
+  r5r_network$setMaxRides(as.integer(max_rides))
 
   return(invisible(TRUE))
 }
@@ -132,7 +132,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 #' functions above and converts them to meters per second, which is then used
 #' to set these speed profiles in r5r JAR.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param speed A number representing the speed in km/h.
 #' @param mode A string. Either `"bike"` or `"walk"`.
 #'
@@ -141,7 +141,7 @@ set_max_rides <- function(r5r_core, max_rides) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_speed <- function(r5r_core, speed, mode) {
+set_speed <- function(r5r_network, speed, mode) {
   checkmate::assert(
     checkmate::check_string(mode),
     checkmate::check_names(mode, subset.of = c("bike", "walk")),
@@ -158,9 +158,9 @@ set_speed <- function(r5r_core, speed, mode) {
   speed <- speed * 5 / 18
 
   if (mode == "walk") {
-    r5r_core$setWalkSpeed(speed)
+    r5r_network$setWalkSpeed(speed)
   } else {
-    r5r_core$setBikeSpeed(speed)
+    r5r_network$setBikeSpeed(speed)
   }
 
   return(invisible(TRUE))
@@ -171,7 +171,7 @@ set_speed <- function(r5r_core, speed, mode) {
 #'
 #' Sets the time window to be used by R5.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param time_window A number.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -179,12 +179,12 @@ set_speed <- function(r5r_core, speed, mode) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_time_window <- function(r5r_core, time_window) {
+set_time_window <- function(r5r_network, time_window) {
   checkmate::assert_number(time_window, lower = 1, finite = TRUE)
 
   time_window <- as.integer(time_window)
 
-  r5r_core$setTimeWindowSize(time_window)
+  r5r_network$setTimeWindowSize(time_window)
 
   return(invisible(TRUE))
 }
@@ -194,7 +194,7 @@ set_time_window <- function(r5r_core, time_window) {
 #'
 #' Sets the percentiles to be used by R5.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param percentiles An integer vector of maximum length 5.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -202,7 +202,7 @@ set_time_window <- function(r5r_core, time_window) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_percentiles <- function(r5r_core, percentiles) {
+set_percentiles <- function(r5r_network, percentiles) {
   checkmate::assert_numeric(
     percentiles,
     lower = 1,
@@ -215,7 +215,7 @@ set_percentiles <- function(r5r_core, percentiles) {
 
   percentiles <- as.integer(percentiles)
 
-  r5r_core$setPercentiles(percentiles)
+  r5r_network$setPercentiles(percentiles)
 
   return(invisible(TRUE))
 }
@@ -225,7 +225,7 @@ set_percentiles <- function(r5r_core, percentiles) {
 #'
 #' Sets the number of Monte Carlo draws to be used by R5.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param draws_per_minute A number.
 #' @param time_window A number.
 #'
@@ -234,14 +234,14 @@ set_percentiles <- function(r5r_core, percentiles) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
+set_monte_carlo_draws <- function(r5r_network, draws_per_minute, time_window) {
   # time_window is previously checked in set_time_window()
   checkmate::assert_number(draws_per_minute, lower = 1, finite = TRUE)
 
   draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
 
-  r5r_core$setNumberOfMonteCarloDraws(draws)
+  r5r_network$setNumberOfMonteCarloDraws(draws)
 
   return(invisible(TRUE))
 }
@@ -253,7 +253,7 @@ set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
 #' `NULL` is passed to `fare_structure` by the upstream routing and
 #' accessibility functions when fares are not to be calculated.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @template fare_structure
 #'
 #' @return Invisibly returns `TRUE`.
@@ -261,7 +261,7 @@ set_monte_carlo_draws <- function(r5r_core, draws_per_minute, time_window) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_fare_structure <- function(r5r_core, fare_structure) {
+set_fare_structure <- function(r5r_network, fare_structure) {
   if (!is.null(fare_structure)) {
     assert_fare_structure(fare_structure)
 
@@ -281,9 +281,9 @@ set_fare_structure <- function(r5r_core, fare_structure) {
     fare_settings_json <- jsonlite::toJSON(fare_structure, auto_unbox = TRUE)
     json_string <- as.character(fare_settings_json)
 
-    r5r_core$setFareCalculator(json_string)
+    r5r_network$setFareCalculator(json_string)
   } else {
-    r5r_core$dropFareCalculator()
+    r5r_network$dropFareCalculator()
   }
 
   return(invisible(TRUE))
@@ -294,7 +294,7 @@ set_fare_structure <- function(r5r_core, fare_structure) {
 #'
 #' Sets the max fare allowed when calculating transit fares.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param max_fare A number.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -302,16 +302,16 @@ set_fare_structure <- function(r5r_core, fare_structure) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_max_fare <- function(r5r_core, max_fare) {
+set_max_fare <- function(r5r_network, max_fare) {
   checkmate::assert_number(max_fare, lower = 0)
 
   # Inf values are not allowed in Java, so -1 is used to indicate when max_fare
   # is unconstrained
 
   if (!is.infinite(max_fare)) {
-    r5r_core$setMaxFare(rJava::.jfloat(max_fare))
+    r5r_network$setMaxFare(rJava::.jfloat(max_fare))
   } else {
-    r5r_core$setMaxFare(rJava::.jfloat(-1.0))
+    r5r_network$setMaxFare(rJava::.jfloat(-1.0))
   }
 
   return(invisible(TRUE))
@@ -322,7 +322,7 @@ set_max_fare <- function(r5r_core, max_fare) {
 #'
 #' Sets whether r5r should save output to a specified directory.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param output_dir A path.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -330,14 +330,14 @@ set_max_fare <- function(r5r_core, max_fare) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_output_dir <- function(r5r_core, output_dir) {
+set_output_dir <- function(r5r_network, output_dir) {
   checkmate::assert_string(output_dir, null.ok = TRUE)
 
   if (!is.null(output_dir)) {
     checkmate::assert_directory_exists(output_dir)
-    r5r_core$setCsvOutput(output_dir)
+    r5r_network$setCsvOutput(output_dir)
   } else {
-    r5r_core$setCsvOutput("")
+    r5r_network$setCsvOutput("")
   }
 
   return(invisible(TRUE))
@@ -348,7 +348,7 @@ set_output_dir <- function(r5r_core, output_dir) {
 #'
 #' Sets the cutoffs used when calculating accessibility.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param cutoffs A numeric vector.
 #' @param decay_function A string, the name of the decay function.
 #'
@@ -357,7 +357,7 @@ set_output_dir <- function(r5r_core, output_dir) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
+set_cutoffs <- function(r5r_network, cutoffs, decay_function) {
   checkmate::assert_numeric(
     cutoffs,
     min.len = 1,
@@ -389,7 +389,7 @@ set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
     cutoffs <- as.integer(cutoffs)
   }
 
-  r5r_core$setCutoffs(cutoffs)
+  r5r_network$setCutoffs(cutoffs)
 
   return(invisible(TRUE))
 }
@@ -400,7 +400,7 @@ set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
 #' Sets the monetary cutoffs that should be considered when calculating the
 #' Pareto frontier.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param fare_cutoffs A path.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -408,7 +408,7 @@ set_cutoffs <- function(r5r_core, cutoffs, decay_function) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_fare_cutoffs <- function(r5r_core, fare_cutoffs) {
+set_fare_cutoffs <- function(r5r_network, fare_cutoffs) {
   checkmate::assert_numeric(
     fare_cutoffs,
     lower = 0,
@@ -417,7 +417,7 @@ set_fare_cutoffs <- function(r5r_core, fare_cutoffs) {
     unique = TRUE
   )
 
-  r5r_core$setFareCutoffs(rJava::.jfloat(fare_cutoffs))
+  r5r_network$setFareCutoffs(rJava::.jfloat(fare_cutoffs))
 
   return(invisible(TRUE))
 }
@@ -428,7 +428,7 @@ set_fare_cutoffs <- function(r5r_core, fare_cutoffs) {
 #' Sets whether travel time matrices should include detailed trip information or
 #' not.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param breakdown A logical.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -436,10 +436,10 @@ set_fare_cutoffs <- function(r5r_core, fare_cutoffs) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_breakdown <- function(r5r_core, breakdown) {
+set_breakdown <- function(r5r_network, breakdown) {
   checkmate::assert_logical(breakdown, any.missing = FALSE, len = 1)
 
-  r5r_core$setTravelTimesBreakdown(breakdown)
+  r5r_network$setTravelTimesBreakdown(breakdown)
 
   return(invisible(TRUE))
 }
@@ -450,7 +450,7 @@ set_breakdown <- function(r5r_core, breakdown) {
 #' Sets whether travel time matrices should return results for each minute of
 #' the specified time window.
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param expanded A logical.
 #'
 #' @return Invisibly returns `TRUE`.
@@ -458,10 +458,10 @@ set_breakdown <- function(r5r_core, breakdown) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_expanded_travel_times <- function(r5r_core, expanded) {
+set_expanded_travel_times <- function(r5r_network, expanded) {
   checkmate::assert_logical(expanded, any.missing = FALSE, len = 1)
 
-  r5r_core$setExpandedTravelTimes(expanded)
+  r5r_network$setExpandedTravelTimes(expanded)
 
   return(invisible(TRUE))
 }
@@ -479,7 +479,7 @@ set_expanded_travel_times <- function(r5r_core, expanded) {
 #' push the max travel time of alternatives out a bit to account for the fact
 #' that they don't always run on schedule".
 #'
-#' @template r5r_core
+#' @template r5r_network
 #' @param suboptimal_minutes A number.
 #' @template fare_structure
 #' @param shortest_path A logical.
@@ -489,7 +489,7 @@ set_expanded_travel_times <- function(r5r_core, expanded) {
 #' @family setting functions
 #'
 #' @keywords internal
-set_suboptimal_minutes <- function(r5r_core,
+set_suboptimal_minutes <- function(r5r_network,
                                    suboptimal_minutes,
                                    fare_structure,
                                    shortest_path) {
@@ -511,7 +511,7 @@ set_suboptimal_minutes <- function(r5r_core,
 
   suboptimal_minutes <- as.integer(suboptimal_minutes)
 
-  r5r_core$setSuboptimalMinutes(suboptimal_minutes)
+  r5r_network$setSuboptimalMinutes(suboptimal_minutes)
 
   return(invisible(TRUE))
 }

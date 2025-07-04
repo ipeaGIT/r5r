@@ -12,6 +12,7 @@
 #' because some network edges are not available to specific modes (e.g. a
 #' pedestrian-only street cannot be used to snap car trips).
 #'
+#' @template r5r_network
 #' @template r5r_core
 #' @param points Either a `POINT sf` object with WGS84 CRS, or a `data.frame`
 #'        containing the columns `id`, `lon` and `lat`.
@@ -31,20 +32,37 @@
 #' library(r5r)
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = path)
+#' r5r_network <- build_network(data_path = path)
 #' points <- read.csv(file.path(path, "poa_hexgrid.csv"))
 #'
-#' snap_df <- find_snap(r5r_core, points, radius = 2000, mode = "WALK")
+#' snap_df <- find_snap(
+#'   r5r_network,
+#'   points = points,
+#'   radius = 2000,
+#'   mode = "WALK"
+#'   )
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
-find_snap <- function(r5r_core,
+find_snap <- function(r5r_network,
+                      r5r_core = deprecated(),
                       points,
                       radius = 1600,
                       mode = "WALK"){
 
-  checkmate::assert_class(r5r_core, "r5r_core")
-  r5r_core <- r5r_core@jcore
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
+
+  checkmate::assert_class(r5r_network, "r5r_core")
+  r5r_network <- r5r_network@jcore
 
   checkmate::assert_numeric(radius, lower = 0, finite = TRUE, max.len = 1)
   mode_options <- c("WALK", "BICYCLE", "CAR")
@@ -56,7 +74,7 @@ find_snap <- function(r5r_core,
 
   points <- assign_points_input(points, "points")
 
-  snap_df <- r5r_core$findSnapPoints(points$id,
+  snap_df <- r5r_network$findSnapPoints(points$id,
                                      points$lat,
                                      points$lon,
                                      radius,

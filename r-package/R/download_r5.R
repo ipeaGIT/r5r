@@ -13,7 +13,7 @@
 #'
 #' @return The path to the downloaded file.
 #'
-#' @family setup
+#' @family Build network
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)

@@ -7,6 +7,7 @@
 #' Meanwhile, line-based isochronesare based on travel times from each origin
 #' to the centroids of all segments in the transport network.
 #'
+#' @template r5r_network
 #' @template r5r_core
 #' @param origins Either a `POINT sf` object with WGS84 CRS, or a
 #'        `data.frame` containing the columns `id`, `lon` and `lat`.
@@ -98,7 +99,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_network <- build_network(data_path = data_path)
 #'
 #' # load origin/point of interest
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -111,7 +112,7 @@
 #'
 #' # estimate polygon-based isochrone from origin
 #' iso_poly <- isochrone(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = origin,
 #'   mode = "walk",
 #'   polygon_output = TRUE,
@@ -124,7 +125,7 @@
 #'
 #' # estimate line-based isochrone from origin
 #' iso_lines <- isochrone(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = origin,
 #'   mode = "walk",
 #'   polygon_output = FALSE,
@@ -151,10 +152,11 @@
 #'   scale_color_manual(values = colors) +
 #'   theme_minimal()
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #'
 #' @export
-isochrone <- function(r5r_core,
+isochrone <- function(r5r_network,
+                      r5r_core = deprecated(),
                       origins,
                       mode = "transit",
                       mode_egress = "walk",
@@ -176,6 +178,17 @@ isochrone <- function(r5r_core,
                       verbose = FALSE,
                       progress = TRUE){
 
+
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
 
 # check inputs ------------------------------------------------------------
   checkmate::assert_class(r5r_core, "r5r_core")
@@ -201,7 +214,7 @@ isochrone <- function(r5r_core,
   if (isTRUE(polygon_output)) {
 
     # use all network nodes as destination points
-    destinations = r5r::street_network_to_sf(r5r_core)$vertices
+    destinations = r5r::street_network_to_sf(r5r_network)$vertices
 
     # sample size: proportion of nodes to be considered
     set.seed(42)
@@ -214,7 +227,7 @@ isochrone <- function(r5r_core,
 
   if(isFALSE(polygon_output)){
 
-    network_e <- r5r::street_network_to_sf(r5r_core)$edges
+    network_e <- r5r::street_network_to_sf(r5r_network)$edges
 
     destinations <- sf::st_centroid(network_e)
     }
@@ -225,7 +238,7 @@ isochrone <- function(r5r_core,
 
 
     # estimate travel time matrix
-    ttm <- travel_time_matrix(r5r_core = r5r_core,
+    ttm <- travel_time_matrix(r5r_network = r5r_network,
                               origins = origins,
                               destinations = destinations,
                               mode = mode,

@@ -1,6 +1,6 @@
 #' Java object to data.table
 #'
-#' @description Converts a Java object returned by r5r_core to an R data.table
+#' @description Converts a Java object returned by r5r_network to an R `data.table`
 #'
 #' @param obj A Java Object reference
 #'

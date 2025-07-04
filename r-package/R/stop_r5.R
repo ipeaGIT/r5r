@@ -1,9 +1,9 @@
-#' Stop running r5r core
+#' Stop running r5r network
 #'
-#' @description Stops running r5r cores.
+#' @description Stops running r5r network
 #'
-#' @param ... \code{r5r_core} objects currently running. By default, if no cores
-#'            are supplied all running cores are stopped.
+#' @param ... \code{r5r_network} objects currently running. By default, if no
+#'            r5r network is supplied all running networks are stopped.
 #' @return No return value, called for side effects.
 #'
 #' @family support functions
@@ -13,15 +13,15 @@
 #'
 #' path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_core <- setup_r5(path)
+#' r5r_network <- build_network(path)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
 stop_r5 <- function(...) {
 
   supplied_cores <- list(...)
 
-  # find all running r5r cores in the parent frame
+  # find all running r5r networks in the parent frame
 
   current_objects <- mget(ls(envir = parent.frame()), envir = parent.frame())
 
@@ -29,14 +29,14 @@ stop_r5 <- function(...) {
 
   running_cores <- current_objects[which(classes_list == "r5r_core")]
 
-  # if no cores have been supplied, remove all running cores
-  # else, remove matches between running and supplied cores
+  # if no networks have been supplied, remove all running networks
+  # else, remove matches between running and supplied networks
 
   if (length(supplied_cores) == 0) {
 
     rm(list = names(running_cores), envir = parent.frame())
 
-    message("All r5r cores have been successfully stopped.")
+    message("All r5r networks have been successfully stopped.")
 
   } else {
 

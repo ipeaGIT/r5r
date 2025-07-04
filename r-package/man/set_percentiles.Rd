@@ -4,11 +4,10 @@
 \alias{set_percentiles}
 \title{Set percentiles}
 \usage{
-set_percentiles(r5r_core, percentiles)
+set_percentiles(r5r_network, percentiles)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{percentiles}{An integer vector of maximum length 5.}
 }

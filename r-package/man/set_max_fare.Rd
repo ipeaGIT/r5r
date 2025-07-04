@@ -4,11 +4,10 @@
 \alias{set_max_fare}
 \title{Set max fare}
 \usage{
-set_max_fare(r5r_core, max_fare)
+set_max_fare(r5r_network, max_fare)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{max_fare}{A number.}
 }

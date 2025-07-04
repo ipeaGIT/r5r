@@ -31,7 +31,7 @@ This is where the `detailed_itineraries()` function comes in. This function outp
 
 **obs.** We only recommend using `detailed_itineraries()` in case you are interested in finding suboptimal alternative routes and/or need the geometry information of the outputs. If you only want to have route information detailed by trip segments, then we would strongly encourage you to use the `expanded_travel_time_matrix()` function.
 
-# 2. Build routable transport network with `setup_r5()`
+# 2. Build routable transport network with `build_network()`
 
 First, let's load some libraries and build our multimodal transport network. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
@@ -47,7 +47,7 @@ library(data.table)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
@@ -79,7 +79,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate detailed itineraries
-det <- detailed_itineraries(r5r_core = r5r_core,
+det <- detailed_itineraries(r5r_network,
                             origins = origins,
                             destinations = destinations,
                             mode = mode,
@@ -104,10 +104,10 @@ for the visualization of the results in `ggplot2`, you can also use the `street_
 
 ```{r, message = FALSE}
 # extract OSM network
-street_net <- street_network_to_sf(r5r_core)
+street_net <- r5r::street_network_to_sf(r5r_network)
 
 # extract public transport network
-transit_net <- r5r::transit_network_to_sf(r5r_core)
+transit_net <- r5r::transit_network_to_sf(r5r_network)
 
 # plot
 fig <- ggplot() +
@@ -170,7 +170,7 @@ gtfstools::write_gtfs(gtfs = stop_times_gtfs,
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core)
+r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 

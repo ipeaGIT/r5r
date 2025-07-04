@@ -23,7 +23,7 @@
 #' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
 #' can be specified as a percentage of the original road speed or as an absolute
 #' speed in km/h. The function rebuilds the network in \code{output_dir} and
-#' returns a new `r5r_core` object.
+#' returns a new `r5r_network` object.
 #'
 #' @family modify_osm_car_speeds
 #'
@@ -38,7 +38,7 @@
 #' # path to CSV with a table pointing to the new speed info
 #' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 #'
-#' r5r_core_new_speed <- r5r::modify_osm_carspeeds(
+#' r5r_network_new_speed <- r5r::modify_osm_carspeeds(
 #'   pbf_path = pbf_path,
 #'   csv_path = speeds_csv_path,
 #'   output_dir = tempdir(),
@@ -102,7 +102,7 @@ modify_osm_carspeeds <- function(pbf_path,
   speed_setter$setPercentageMode(percentage_mode)
   speed_setter$runSpeedSetter()
 
-  new_core <- r5r::setup_r5(output_dir,
+  new_network <- r5r::build_network(output_dir,
                             verbose = verbose,
                             temp_dir = FALSE,
                             elevation = "TOBLER",
@@ -110,5 +110,5 @@ modify_osm_carspeeds <- function(pbf_path,
 
   cli::cli_inform("New car network with modified speeds built at {.path {output_dir}}")
 
-  return(new_core)
+  return(new_network)
 }

@@ -3,6 +3,7 @@
 #' Fast computation of travel time and monetary cost Pareto frontier between
 #' origin and destination pairs.
 #'
+#' @template r5r_network
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
@@ -56,7 +57,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path = data_path)
+#' r5r_network <- build_network(data_path = data_path)
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5,]
@@ -74,7 +75,7 @@
 #' )
 #'
 #' pf <- pareto_frontier(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -84,9 +85,10 @@
 #' )
 #' head(pf)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
-pareto_frontier <- function(r5r_core,
+pareto_frontier <- function(r5r_network,
+                            r5r_core = deprecated(),
                             origins,
                             destinations,
                             mode = c("WALK", "TRANSIT"),
@@ -109,6 +111,17 @@ pareto_frontier <- function(r5r_core,
                             progress = FALSE,
                             output_dir = NULL) {
 
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
+
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
 
@@ -119,9 +132,8 @@ pareto_frontier <- function(r5r_core,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_core, "r5r_core")
-  r5r_core <- r5r_core@jcore
-
+  checkmate::assert_class(r5r_network, "r5r_core")
+  r5r_network <- r5r_network@jcore
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
@@ -129,7 +141,7 @@ pareto_frontier <- function(r5r_core,
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   max_walk_time <- assign_max_street_time(
@@ -157,23 +169,23 @@ pareto_frontier <- function(r5r_core,
     max_bike_time
   )
 
-  set_time_window(r5r_core, time_window)
-  set_percentiles(r5r_core, percentiles)
-  set_monte_carlo_draws(r5r_core, 1, time_window)
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-  set_max_rides(r5r_core, max_rides)
-  set_max_lts(r5r_core, max_lts)
-  set_n_threads(r5r_core, n_threads)
-  set_verbose(r5r_core, verbose)
-  set_progress(r5r_core, progress)
-  set_fare_structure(r5r_core, fare_structure)
-  set_output_dir(r5r_core, output_dir)
-  set_fare_cutoffs(r5r_core, fare_cutoffs)
+  set_time_window(r5r_network, time_window)
+  set_percentiles(r5r_network, percentiles)
+  set_monte_carlo_draws(r5r_network, 1, time_window)
+  set_speed(r5r_network, walk_speed, "walk")
+  set_speed(r5r_network, bike_speed, "bike")
+  set_max_rides(r5r_network, max_rides)
+  set_max_lts(r5r_network, max_lts)
+  set_n_threads(r5r_network, n_threads)
+  set_verbose(r5r_network, verbose)
+  set_progress(r5r_network, progress)
+  set_fare_structure(r5r_network, fare_structure)
+  set_output_dir(r5r_network, output_dir)
+  set_fare_cutoffs(r5r_network, fare_cutoffs)
 
-  # call r5r_core method and process result -------------------------------
+  # call r5r_network method and process result -------------------------------
 
-  frontier <- r5r_core$paretoFrontier(
+  frontier <- r5r_network$paretoFrontier(
     origins$id,
     origins$lat,
     origins$lon,

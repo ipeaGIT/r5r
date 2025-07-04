@@ -4,7 +4,7 @@
 testthat::skip_on_cran()
 #
 # tester <- function(draws_per_minute) {
-#   set_monte_carlo_draws(r5r_core, draws_per_minute, time_window = 30)
+#   set_monte_carlo_draws(r5r_network, draws_per_minute, time_window = 30)
 # }
 #
 # test_that("input is correct", {
@@ -23,7 +23,7 @@ testthat::skip_on_cran()
 # test_that("works in expanded_travel_time_matrix() - poa", {
 #   basic_expr <- call(
 #     "expanded_travel_time_matrix",
-#     r5r_core = r5r_core,
+#     r5r_network = r5r_network,
 #     origins = pois,
 #     destinations = pois,
 #     mode = c("TRANSIT", "WALK"),
@@ -45,7 +45,7 @@ testthat::skip_on_cran()
 # test_that("works in expanded_travel_time_matrix() - spo", {
 #   basic_expr <- call(
 #     "expanded_travel_time_matrix",
-#     r5r_core = spo_core,
+#     r5r_network = spo_network,
 #     origins = spo_points[51:65],
 #     destinations = spo_points[51:65],
 #     mode = c("TRANSIT", "WALK"),
@@ -81,7 +81,7 @@ testthat::skip_on_cran()
 # test_that("works in travel_time_matrix() - poa", {
 #   basic_expr <- call(
 #     "travel_time_matrix",
-#     r5r_core = r5r_core,
+#     r5r_network = r5r_network,
 #     origins = pois,
 #     destinations = pois,
 #     mode = c("TRANSIT", "WALK"),
@@ -104,7 +104,7 @@ testthat::skip_on_cran()
 # test_that("works in expanded_travel_time_matrix() - spo", {
 #   basic_expr <- call(
 #     "expanded_travel_time_matrix",
-#     r5r_core = spo_core,
+#     r5r_network = spo_network,
 #     origins = spo_points[51:65],
 #     destinations = spo_points[51:65],
 #     mode = c("TRANSIT", "WALK"),
@@ -140,7 +140,7 @@ testthat::skip_on_cran()
 test_that("works in travel_time_matrix() - poa", {
   basic_expr <- call(
     "travel_time_matrix",
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     origins = pois,
     destinations = pois,
     mode = c("TRANSIT", "WALK"),
@@ -173,7 +173,7 @@ test_that("works in travel_time_matrix() - poa", {
 test_that("works in travel_time_matrix() - spo", {
   basic_expr <- call(
     "travel_time_matrix",
-    r5r_core = spo_core,
+    r5r_network = spo_network,
     origins = spo_points[51:80],
     destinations = spo_points[51:80],
     mode = c("TRANSIT", "WALK"),
@@ -198,7 +198,7 @@ test_that("works in travel_time_matrix() - spo", {
 test_that("works in accessibility() - poa", {
   basic_expr <- call(
     "accessibility",
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     origins = points[1:30],
     destinations = points[1:30],
     mode = c("TRANSIT", "WALK"),
@@ -234,7 +234,7 @@ test_that("works in accessibility() - poa", {
 test_that("works in accessibility() - spo", {
   basic_expr <- call(
     "accessibility",
-    r5r_core = spo_core,
+    r5r_network = spo_network,
     origins = spo_points[51:80],
     destinations = spo_points[51:80],
     mode = c("TRANSIT", "WALK"),
@@ -262,7 +262,7 @@ test_that("works in accessibility() - spo", {
 test_that("poa draws_per_minute should fail in pareto_frontier() issue #281", {
   basic_expr <- call(
     "pareto_frontier",
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     origins = points[1:10],
     destinations = points[1:10],
     mode = c("TRANSIT", "WALK"),
@@ -286,7 +286,7 @@ test_that("poa draws_per_minute should fail in pareto_frontier() issue #281", {
 test_that("spo draws_per_minute should fail in pareto_frontier() issue #281", {
   basic_expr <- call(
     "pareto_frontier",
-    r5r_core = spo_core,
+    r5r_network = spo_network,
     origins = spo_points[51:80],
     destinations = spo_points[51:80],
     mode = c("TRANSIT", "WALK"),

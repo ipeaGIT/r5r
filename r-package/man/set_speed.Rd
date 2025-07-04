@@ -4,11 +4,10 @@
 \alias{set_speed}
 \title{Set walk and bike speed}
 \usage{
-set_speed(r5r_core, speed, mode)
+set_speed(r5r_network, speed, mode)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{speed}{A number representing the speed in km/h.}
 

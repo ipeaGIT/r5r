@@ -15,12 +15,12 @@ gtfs_trensurb <- gtfstools::read_gtfs(
 )
 gtfs <- gtfstools::merge_gtfs(gtfs_eptc, gtfs_trensurb)
 
-tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
+tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    base_fare = 5, by = "MODE",
                    debug_path = NULL,
                    debug_info = NULL) {
   setup_fare_structure(
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     base_fare = base_fare,
     by = by,
     debug_path = debug_path,
@@ -29,7 +29,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
 }
 
 test_that("raises error due to incorrect input types", {
-  expect_error(tester(unclass(r5r_core)))
+  expect_error(tester(unclass(r5r_network)))
 
   expect_error(tester(base_fare = "5"))
   expect_error(tester(base_fare = -1))

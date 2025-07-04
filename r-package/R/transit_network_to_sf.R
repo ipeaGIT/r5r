@@ -1,8 +1,9 @@
 #' Extract transit network in sf format
 #'
-#' Extracts the transit network from a `network.dat` file (built with
-#' [setup_r5()]) in `sf` format.
+#' Extracts the transit network in `sf` format from a routable transport network
+#' built with [build_network()]).
 #'
+#' @template r5r_network
 #' @template r5r_core
 #'
 #' @return A list with two components of a transit network in `sf` format:
@@ -22,17 +23,30 @@
 #'
 #' # build transport network
 #' path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(path)
+#' r5r_network <- build_network(path)
 #'
-#' # extract transit network from r5r_core
-#' transit_net <- transit_network_to_sf(r5r_core)
+#' # extract transit network from r5r_network
+#' transit_net <- transit_network_to_sf(r5r_network)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
-transit_network_to_sf <- function(r5r_core) {
-  checkmate::assert_class(r5r_core, "r5r_core")
+transit_network_to_sf <- function(r5r_network,
+                                  r5r_core = deprecated()) {
 
-  network <- r5r_core@jcore$getTransitNetwork()
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
+
+  checkmate::assert_class(r5r_network, "r5r_core")
+
+  network <- r5r_network@jcore$getTransitNetwork()
 
   # Convert edges to SF (linestring)
   routes_df <- java_to_dt(network$get(0L))
