@@ -23,7 +23,7 @@ wrap_r5r_network <- function(jcore) {
   if (!identical(jcore$identify(), "I am an R5R core!")) {
     stop('Provided object is not a valid reference to a java R5R core.')
   }
-  new("r5r_network", jcore = jcore)
+  methods::new("r5r_network", jcore = jcore)
 }
 
 #' @return Invisibly returns `TRUE`.

@@ -48,6 +48,7 @@ Imports:
     data.table,
     jsonlite,
     lifecycle,
+    methods,
     rJava (>= 0.9-10),
     rlang,
     sf (>= 1.0-12),
