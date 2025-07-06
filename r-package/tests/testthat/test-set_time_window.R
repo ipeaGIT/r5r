@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(time_window) set_time_window(r5r_core, time_window)
+tester <- function(time_window) set_time_window(r5r_network, time_window)
 
 test_that("input is correct", {
   expect_error(tester("1"))
@@ -15,9 +15,9 @@ test_that("input is correct", {
 test_that("set_time_window argument works in expanded_travel_time_matrix()", {
   basic_expr <- call(
     "expanded_travel_time_matrix",
-    r5r_core,
-    pois,
-    pois,
+    r5r_network,
+    origins=pois,
+    destinations=pois,
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     draws_per_minute = 1,
@@ -62,9 +62,9 @@ percentiles <- c(25, 50, 75)
 test_that("set_time_window argument works in travel_time_matrix()", {
   basic_expr <- call(
     "travel_time_matrix",
-    r5r_core,
-    pois,
-    pois,
+    r5r_network,
+    origins=pois,
+    destinations=pois,
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     draws_per_minute = 1,
@@ -91,9 +91,9 @@ test_that("set_time_window argument works in travel_time_matrix()", {
 test_that("set_time_window argument works in accessibility()", {
   basic_expr <- call(
     "accessibility",
-    r5r_core,
-    points[1:30],
-    points[1:30],
+    r5r_network,
+    origins=points[1:30],
+    destinations=points[1:30],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     draws_per_minute = 1,
@@ -140,9 +140,9 @@ test_that("set_time_window argument works in accessibility()", {
 test_that("set_time_window argument works in pareto_frontier()", {
   basic_expr <- call(
     "pareto_frontier",
-    r5r_core,
-    points[1:5],
-    points[1:5],
+    r5r_network,
+    origins=points[1:5],
+    destinations=points[1:5],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     percentiles = percentiles,
@@ -200,9 +200,9 @@ test_that("set_time_window argument works in pareto_frontier()", {
 test_that("set_time_window argument works in detailed_itineraries()", {
   basic_expr <- call(
     "detailed_itineraries",
-    r5r_core,
-    points[1:5],
-    points[5:1],
+    r5r_network,
+    origins=points[1:5],
+    destinations=points[5:1],
     mode = c("TRANSIT", "WALK"),
     departure_datetime = departure_datetime,
     drop_geometry = TRUE,

@@ -4,11 +4,10 @@
 \alias{set_progress}
 \title{Set progress argument}
 \usage{
-set_progress(r5r_core, progress)
+set_progress(r5r_network, progress)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{progress}{A logical, passed from the function above.}
 }

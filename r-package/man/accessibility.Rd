@@ -5,7 +5,8 @@
 \title{Calculate access to opportunities}
 \usage{
 accessibility(
-  r5r_core,
+  r5r_network,
+  r5r_core = deprecated(),
   origins,
   destinations,
   opportunities_colnames = "opportunities",
@@ -35,8 +36,10 @@ accessibility(
 )
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -345,7 +348,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 library(r5r)
 
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 
 departure_datetime <- as.POSIXct(
@@ -354,7 +357,7 @@ departure_datetime <- as.POSIXct(
 )
 
 access <- accessibility(
-  r5r_core,
+  r5r_network ,
   origins = points,
   destinations = points,
   opportunities_colnames = "schools",
@@ -368,7 +371,7 @@ head(access)
 
 # using a different decay function
 access <- accessibility(
-  r5r_core,
+  r5r_network ,
   origins = points,
   destinations = points,
   opportunities_colnames = "schools",
@@ -383,7 +386,7 @@ head(access)
 
 # using several cutoff values
 access <- accessibility(
-  r5r_core,
+  r5r_network ,
   origins = points,
   destinations = points,
   opportunities_colnames = "schools",
@@ -397,7 +400,7 @@ head(access)
 
 # calculating access to different types of opportunities
 access <- accessibility(
-  r5r_core,
+  r5r_network ,
   origins = points,
   destinations = points,
   opportunities_colnames = c("schools", "healthcare"),
@@ -409,7 +412,7 @@ access <- accessibility(
 )
 head(access)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network )
 \dontshow{\}) # examplesIf}
 }
 \concept{accessibility}

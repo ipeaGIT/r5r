@@ -10,6 +10,7 @@ template:
 reference:
   - title: "Building routable transport network"
   - contents:
+    - build_network
     - setup_r5
   - title: "Accessibility"
   - contents:

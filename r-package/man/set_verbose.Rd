@@ -4,11 +4,10 @@
 \alias{set_verbose}
 \title{Set verbose argument}
 \usage{
-set_verbose(r5r_core, verbose)
+set_verbose(r5r_network, verbose)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{verbose}{A logical, passed from function above.}
 }

@@ -4,11 +4,10 @@
 \alias{set_breakdown}
 \title{Set breakdown}
 \usage{
-set_breakdown(r5r_core, breakdown)
+set_breakdown(r5r_network, breakdown)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{breakdown}{A logical.}
 }

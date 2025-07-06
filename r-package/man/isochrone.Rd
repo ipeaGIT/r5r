@@ -5,7 +5,8 @@
 \title{Estimate isochrones from a given location}
 \usage{
 isochrone(
-  r5r_core,
+  r5r_network,
+  r5r_core = deprecated(),
   origins,
   mode = "transit",
   mode_egress = "walk",
@@ -29,8 +30,10 @@ isochrone(
 )
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{origins}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -238,7 +241,7 @@ library(ggplot2)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = data_path)
+r5r_network <- build_network(data_path = data_path)
 
 # load origin/point of interest
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -251,7 +254,7 @@ departure_datetime <- as.POSIXct(
 
 # estimate polygon-based isochrone from origin
 iso_poly <- isochrone(
-  r5r_core,
+  r5r_network,
   origins = origin,
   mode = "walk",
   polygon_output = TRUE,
@@ -264,7 +267,7 @@ head(iso_poly)
 
 # estimate line-based isochrone from origin
 iso_lines <- isochrone(
-  r5r_core,
+  r5r_network,
   origins = origin,
   mode = "walk",
   polygon_output = FALSE,
@@ -291,7 +294,7 @@ ggplot() +
   scale_color_manual(values = colors) +
   theme_minimal()
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \concept{Isochrone}

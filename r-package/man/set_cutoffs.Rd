@@ -4,11 +4,10 @@
 \alias{set_cutoffs}
 \title{Set cutoffs}
 \usage{
-set_cutoffs(r5r_core, cutoffs, decay_function)
+set_cutoffs(r5r_network, cutoffs, decay_function)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{cutoffs}{A numeric vector.}
 

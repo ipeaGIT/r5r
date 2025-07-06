@@ -4,11 +4,13 @@
 \alias{transit_network_to_sf}
 \title{Extract transit network in sf format}
 \usage{
-transit_network_to_sf(r5r_core)
+transit_network_to_sf(r5r_network, r5r_core = deprecated())
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A list with two components of a transit network in \code{sf} format:
@@ -22,8 +24,8 @@ possibly because the GTFS feed used to create the transit network covers an
 area larger than the \code{.osm.pbf} input data.
 }
 \description{
-Extracts the transit network from a \code{network.dat} file (built with
-\code{\link[=setup_r5]{setup_r5()}}) in \code{sf} format.
+Extracts the transit network in \code{sf} format from a routable transport network
+built with \code{\link[=build_network]{build_network()}}).
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -31,12 +33,12 @@ library(r5r)
 
 # build transport network
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(path)
+r5r_network <- build_network(path)
 
-# extract transit network from r5r_core
-transit_net <- transit_network_to_sf(r5r_core)
+# extract transit network from r5r_network
+transit_net <- transit_network_to_sf(r5r_network)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

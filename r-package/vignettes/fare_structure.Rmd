@@ -112,10 +112,10 @@ Porto Alegre has a relatively straightforward public transport system, where the
 # set data path to directory containing your own data if not using the examples
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
 # load transit network as an SF
-transit_network <- transit_network_to_sf(r5r_core)
+transit_network <- transit_network_to_sf(r5r_network)
 
 # map
 ggplot() +
@@ -144,7 +144,7 @@ There are three support functions in `r5r` to help users configure the fare stru
 -   `write_fare_structure()` and `read_fare_structure()` allow saving the current fare structure settings to disk, and reading them back into memory. The settings are saved as standard `.csv` files inside a zipped folder. These files can be edited outside the R session using external text editors and spreadsheet software, for user's convenience.
 
 First, we need to call `setup_fare_structure()`, providing three parameters: the
-current `r5r_core` object, a `base_fare` used to populate the fare structure, and
+current `r5r_network` object, a `base_fare` used to populate the fare structure, and
 the `by` parameters that identifies what is the main property of the route that 
 defines the different fares.
 
@@ -154,7 +154,7 @@ fares and integration rules. Users can also create a fare structure where fare
 rules of routes differ by `"AGENCY_ID"` or `"AGENCY_NAME"`, or simply set `by = "GENERIC"` when the entire system follows the same rules.
 
 ```{r}
-fare_structure <- setup_fare_structure(r5r_core, 
+fare_structure <- setup_fare_structure(r5r_network, 
                                        base_fare = 4.8,
                                        by = "MODE")
 ```
@@ -343,7 +343,7 @@ points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 # calculate travel times function
 calculate_travel_times <- function(fare) {
   ttm_df <- travel_time_matrix(
-    r5r_core,
+    r5r_network,
     origins = points,
     destinations = points,
     mode = c("WALK", "TRANSIT"),
@@ -431,7 +431,7 @@ and compare the results the accessibility unconstrained by monetary costs:
 # calculate accessibility function
 calculate_accessibility <- function(fare, fare_string) {
   access_df <- accessibility(
-    r5r_core,
+    r5r_network,
     origins = points,
     destinations = points,
     mode = c("WALK", "TRANSIT"),
@@ -487,7 +487,7 @@ ggplot(data = access) +
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core)
+r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 

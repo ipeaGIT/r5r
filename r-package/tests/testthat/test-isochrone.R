@@ -8,7 +8,7 @@ departure_datetime <- as.POSIXct(
   format = "%d-%m-%Y %H:%M:%S"
 )
 
-tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
+tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    origins = pois[2,],
                    cutoffs = c(0, 30),
                    sample_size = 0.8,
@@ -28,7 +28,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    progress = FALSE
                    ) {
   isochrone(
-    r5r_core,
+    r5r_network,
     origins = origins,
     cutoffs = cutoffs,
     sample_size = sample_size,
@@ -76,7 +76,7 @@ test_that("errors due to incorrect input types - origins and destinations", {
 test_that("errors due to incorrect input types - other inputs", {
   # mode and mode_egress are tested in assign_mode() tests
 
-  expect_error(tester(unclass(r5r_core)))
+  expect_error(tester(unclass(r5r_network)))
 
   expect_error(tester(departure_datetime = unclass(departure_datetime)))
   expect_error(tester(departure_datetime = rep(departure_datetime, 2)))

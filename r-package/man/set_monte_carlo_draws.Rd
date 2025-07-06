@@ -4,11 +4,10 @@
 \alias{set_monte_carlo_draws}
 \title{Set number of Monte Carlo draws}
 \usage{
-set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
+set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{draws_per_minute}{A number.}
 

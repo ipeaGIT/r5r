@@ -4,11 +4,10 @@
 \alias{set_time_window}
 \title{Set time window}
 \usage{
-set_time_window(r5r_core, time_window)
+set_time_window(r5r_network, time_window)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{time_window}{A number.}
 }

@@ -41,11 +41,11 @@ fileurl_from_metadata <- function(version = NULL) {
 }
 
 
-check_transit_availability_on_date <- function(r5r_core,
+check_transit_availability_on_date <- function(r5r_network,
                                                departure_date){
 
   # check services Available on the departure date
-  services <- r5r_core$getTransitServicesByDate(departure_date)
+  services <- r5r_network$getTransitServicesByDate(departure_date)
   services <- java_to_dt(services)
 
   # count services available

@@ -8,7 +8,7 @@ departure_datetime <- as.POSIXct(
   format = "%d-%m-%Y %H:%M:%S"
 )
 
-tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
+tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    origins = points[1:10, ],
                    destinations = points[1:10, ],
                    opportunities_colname = "schools",
@@ -35,7 +35,7 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
                    progress = FALSE,
                    output_dir = NULL) {
   accessibility(
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     origins = origins,
     destinations = destinations,
     opportunities_colname = opportunities_colname,
@@ -70,8 +70,8 @@ tester <- function(r5r_core = get("r5r_core", envir = parent.frame()),
 
 test_that("adequately raises errors", {
 
-  # error related to using object with wrong type as r5r_core
-  expect_error(tester("r5r_core"))
+  # error related to using object with wrong type as r5r_network
+  expect_error(tester("r5r_network"))
 
   # error related to using wrong origins/destinations object type
   multipoint_origins      <- sf::st_cast(sf::st_as_sf(points[1:2,], coords = c("lon", "lat")), "MULTIPOINT")
@@ -217,7 +217,7 @@ test_that("output is correct", {
 
 test_that("using transit outside the gtfs dates throws an error", {
   expect_error(
-    tester(r5r_core,
+    tester(r5r_network,
            mode='transit',
            departure_datetime = as.POSIXct("13-05-2025 14:00:00",
                                            format = "%d-%m-%Y %H:%M:%S")

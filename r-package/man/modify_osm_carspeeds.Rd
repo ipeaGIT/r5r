@@ -46,7 +46,7 @@ of each OSM edge id.
 The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
 can be specified as a percentage of the original road speed or as an absolute
 speed in km/h. The function rebuilds the network in \code{output_dir} and
-returns a new \code{r5r_core} object.
+returns a new \code{r5r_network} object.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -58,7 +58,7 @@ pbf_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
 # path to CSV with a table pointing to the new speed info
 speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 
-r5r_core_new_speed <- r5r::modify_osm_carspeeds(
+r5r_network_new_speed <- r5r::modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = speeds_csv_path,
   output_dir = tempdir(),

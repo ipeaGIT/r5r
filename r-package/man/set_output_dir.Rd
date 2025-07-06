@@ -4,11 +4,10 @@
 \alias{set_output_dir}
 \title{Set output directory}
 \usage{
-set_output_dir(r5r_core, output_dir)
+set_output_dir(r5r_network, output_dir)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{output_dir}{A path.}
 }
