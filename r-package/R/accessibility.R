@@ -2,6 +2,7 @@
 #'
 #' Fast computation of access to opportunities given a selected decay function.
 #'
+#' @template r5r_network
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
@@ -65,7 +66,7 @@
 #' library(r5r)
 #'
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path)
+#' r5r_network <- build_network(data_path)
 #' points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
 #'
 #' departure_datetime <- as.POSIXct(
@@ -74,7 +75,7 @@
 #' )
 #'
 #' access <- accessibility(
-#'   r5r_core,
+#'   r5r_network ,
 #'   origins = points,
 #'   destinations = points,
 #'   opportunities_colnames = "schools",
@@ -88,7 +89,7 @@
 #'
 #' # using a different decay function
 #' access <- accessibility(
-#'   r5r_core,
+#'   r5r_network ,
 #'   origins = points,
 #'   destinations = points,
 #'   opportunities_colnames = "schools",
@@ -103,7 +104,7 @@
 #'
 #' # using several cutoff values
 #' access <- accessibility(
-#'   r5r_core,
+#'   r5r_network ,
 #'   origins = points,
 #'   destinations = points,
 #'   opportunities_colnames = "schools",
@@ -117,7 +118,7 @@
 #'
 #' # calculating access to different types of opportunities
 #' access <- accessibility(
-#'   r5r_core,
+#'   r5r_network ,
 #'   origins = points,
 #'   destinations = points,
 #'   opportunities_colnames = c("schools", "healthcare"),
@@ -129,10 +130,11 @@
 #' )
 #' head(access)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network )
 #'
 #' @export
-accessibility <- function(r5r_core,
+accessibility <- function(r5r_network,
+                          r5r_core = deprecated(),
                           origins,
                           destinations,
                           opportunities_colnames = "opportunities",
@@ -160,6 +162,17 @@ accessibility <- function(r5r_core,
                           progress = FALSE,
                           output_dir = NULL) {
 
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
+
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
 
@@ -170,7 +183,8 @@ accessibility <- function(r5r_core,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::assert_class(r5r_network, "r5r_network")
+  r5r_network <- r5r_network@jcore
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
@@ -180,11 +194,11 @@ accessibility <- function(r5r_core,
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   # cap trip duration with cutoffs
-  set_cutoffs(r5r_core, cutoffs, decay_function)
+  set_cutoffs(r5r_network, cutoffs, decay_function)
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if(!is.null(cutoffs)){
@@ -221,23 +235,23 @@ accessibility <- function(r5r_core,
 
   decay_list <- assign_decay_function(decay_function, decay_value)
 
-  set_time_window(r5r_core, time_window)
-  set_percentiles(r5r_core, percentiles)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, time_window)
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-  set_max_rides(r5r_core, max_rides)
-  set_max_lts(r5r_core, max_lts)
-  set_n_threads(r5r_core, n_threads)
-  set_verbose(r5r_core, verbose)
-  set_progress(r5r_core, progress)
-  set_fare_structure(r5r_core, fare_structure)
-  set_max_fare(r5r_core, max_fare)
-  set_output_dir(r5r_core, output_dir)
+  set_time_window(r5r_network, time_window)
+  set_percentiles(r5r_network, percentiles)
+  set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+  set_speed(r5r_network, walk_speed, "walk")
+  set_speed(r5r_network, bike_speed, "bike")
+  set_max_rides(r5r_network, max_rides)
+  set_max_lts(r5r_network, max_lts)
+  set_n_threads(r5r_network, n_threads)
+  set_verbose(r5r_network, verbose)
+  set_progress(r5r_network, progress)
+  set_fare_structure(r5r_network, fare_structure)
+  set_max_fare(r5r_network, max_fare)
+  set_output_dir(r5r_network, output_dir)
 
-  # call r5r_core method and process results ------------------------------
+  # call r5r_network method and process results ------------------------------
 
-  # wrap r5r_core inputs in arrays (this helps to simplify the Java code)
+  # wrap r5r_network inputs in arrays (this helps to simplify the Java code)
 
   from_id_arr <- rJava::.jarray(origins$id)
   from_lat_arr <- rJava::.jarray(origins$lat)
@@ -250,7 +264,7 @@ accessibility <- function(r5r_core,
   opportunities_names <- rJava::.jarray(opportunities_colnames)
   opportunities_values <- rJava::.jarray(opportunities, "[I")
 
-  accessibility <- r5r_core$accessibility(
+  accessibility <- r5r_network$accessibility(
     from_id_arr,
     from_lat_arr,
     from_lon_arr,

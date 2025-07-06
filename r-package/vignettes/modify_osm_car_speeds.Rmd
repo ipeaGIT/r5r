@@ -32,7 +32,7 @@ This vignette shows how you can set custom speeds for cars by making simple chan
 
 The `modify_osm_carspeeds()` has a relatively similar behavior to the `r5r::setup_r5()` function. It builds a transport network that can be used in the routing and accessibility function in `r5r`. The two key differences here are:
 
-1. The user needs to pass a directory path where the new transport network is going to be saved. By default, `r5r_core_congestion()` builds the new network in a temporary directory, but users can point to a permanent directory using the `output_dir` parameter.
+1. The user needs to pass a directory path where the new transport network is going to be saved. By default, `modify_osm_carspeeds()` builds the new network in a temporary directory, but users can point to a permanent directory using the `output_dir` parameter.
 2. The user needs to point to a `.csv` file that indicates the speed factor for each OSM edge id.
 
 In this first example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. This sample data path includes the file `"poa_osm_congestion.csv"`, which should have two columns: `"osm_id"` and `"max_speed"`. Like this:
@@ -67,7 +67,7 @@ obs. by default, the speeds of all the OSM edges not listed in the `.csv` file a
 # path to the .pbf file with the OSM network data
 pbf_path <- paste0(data_path,'/poa_osm.pbf')
 
-r5r_core_congestion <- modify_osm_carspeeds(
+r5r_network_congestion <- modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = csv_path,
   percentage_mode = TRUE,
@@ -77,14 +77,14 @@ r5r_core_congestion <- modify_osm_carspeeds(
 
 ```
 
-And that's it ! You can now use the new network `r5r_core_congestion` in any of `r5r`'s routing and accessibility functions, like this.
+And that's it ! You can now use the new network `r5r_network_congestion` in any of `r5r`'s routing and accessibility functions, like this.
 
 ```{r, eval=FALSE}
 # load origin/destination points
 points <- data.table::fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 ttm_congestion <- r5r::travel_time_matrix(
-  r5r_core = r5r_core_congestion,
+  r5r_network_congestion,
   origins = points,
   destinations = points,
   mode = 'car',
@@ -152,7 +152,7 @@ That's it. Now we can pass the path of the `.csv` file to the `modify_osm_carspe
 
 ```{r, message = FALSE}
 
-r5r_core_new_speeds <- modify_osm_carspeeds(
+r5r_network_new_speeds <- modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = csv_path,
   output_dir = tempdir(),
@@ -181,7 +181,7 @@ new_temp_dir <- fs::path_temp(tmpdir='./40kmph')
 dir.create(new_temp_dir)
 
 # build network with all roads at at 40 Km/h 
-r5r_core_20kmph <- r5r::modify_osm_carspeeds(
+r5r_network_20kmph <- r5r::modify_osm_carspeeds(
   pbf_path = pbf_path,
   csv_path = mock_csv,
   output_dir = new_temp_dir,
@@ -212,7 +212,7 @@ this can be computationally intensive due to the spatial join operation, dependi
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core_congestion)
+r5r::stop_r5(r5r_network_congestion)
 rJava::.jgc(R.gc = TRUE)
 ```
 

@@ -2,6 +2,7 @@
 
 export(accessibility)
 export(arrival_travel_time_matrix)
+export(build_network)
 export(detailed_itineraries)
 export(download_r5)
 export(expanded_travel_time_matrix)
@@ -24,3 +25,4 @@ importFrom(data.table,"%chin%")
 importFrom(data.table,"%like%")
 importFrom(data.table,":=")
 importFrom(data.table,.N)
+importFrom(lifecycle,deprecated)

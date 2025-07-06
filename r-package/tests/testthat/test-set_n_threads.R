@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(n_threads) set_n_threads(r5r_core, n_threads)
+tester <- function(n_threads) set_n_threads(r5r_network@jcore, n_threads)
 
 test_that("input is correct", {
   expect_error(tester("1"))
@@ -13,8 +13,8 @@ test_that("input is correct", {
 
 test_that("number of threads is set correctly", {
   expect_true(tester(1))
-  expect_true(r5r_core$getNumberOfThreads() == 1)
+  expect_true(r5r_network@jcore$getNumberOfThreads() == 1)
 
   expect_true(tester(Inf))
-  expect_true(r5r_core$getNumberOfThreads() == parallel::detectCores() - 1)
+  expect_true(r5r_network@jcore$getNumberOfThreads() == parallel::detectCores() - 1)
 })

@@ -6,7 +6,8 @@
 departure time}
 \usage{
 travel_time_matrix(
-  r5r_core,
+  r5r_network,
+  r5r_core = deprecated(),
   origins,
   destinations,
   mode = "WALK",
@@ -32,8 +33,10 @@ travel_time_matrix(
 )
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -264,7 +267,7 @@ library(r5r)
 
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
 # load origin/destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -275,7 +278,7 @@ departure_datetime <- as.POSIXct(
 )
 
 ttm <- travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -286,7 +289,7 @@ head(ttm)
 
 # using a larger time window
 ttm <- travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -298,7 +301,7 @@ head(ttm)
 
 # selecting different percentiles
 ttm <- travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -315,7 +318,7 @@ fare_structure <- read_fare_structure(
   file.path(data_path, "fares/fares_poa.zip")
 )
 ttm <- travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -326,7 +329,7 @@ ttm <- travel_time_matrix(
 )
 head(ttm)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

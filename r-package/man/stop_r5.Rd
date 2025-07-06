@@ -2,19 +2,19 @@
 % Please edit documentation in R/stop_r5.R
 \name{stop_r5}
 \alias{stop_r5}
-\title{Stop running r5r core}
+\title{Stop running r5r network}
 \usage{
 stop_r5(...)
 }
 \arguments{
-\item{...}{\code{r5r_core} objects currently running. By default, if no cores
-are supplied all running cores are stopped.}
+\item{...}{\code{r5r_network} objects currently running. By default, if no
+r5r network is supplied all running networks are stopped.}
 }
 \value{
 No return value, called for side effects.
 }
 \description{
-Stops running r5r cores.
+Stops running r5r network
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -22,9 +22,9 @@ library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(path)
+r5r_network <- build_network(path)
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

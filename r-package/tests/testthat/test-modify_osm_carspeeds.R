@@ -13,7 +13,7 @@ tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
                    percentage_mode = TRUE,
                    verbose = FALSE
                    ){
-  new_r5r_core <- modify_osm_carspeeds(
+  new_r5r_network <- modify_osm_carspeeds(
     pbf_path = pbf_path,
     csv_path = csv_path,
     output_dir = output_dir,
@@ -28,7 +28,7 @@ tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
 test_that("success in increasing travel times", {
 
   # get origin and destination points in a single road
-  network <- r5r::street_network_to_sf(r5r_core)
+  network <- r5r::street_network_to_sf(r5r_network)
 
   point_orig <- network$vertices |>
     dplyr::filter(index == 		18050 ) |> # 7772
@@ -42,7 +42,7 @@ test_that("success in increasing travel times", {
 
   # calculate ttm *before* changing road speeds
   ttm_pre <- r5r::travel_time_matrix(
-    r5r_core = r5r_core,
+    r5r_network = r5r_network,
     origins = point_orig,
     destinations = point_dest,
     mode = 'car',
@@ -51,7 +51,7 @@ test_that("success in increasing travel times", {
   )
 
   det_pre <- detailed_itineraries(
-    r5r_core,
+    r5r_network,
     origins = point_orig,
     destinations = point_dest,
     mode = "car",
@@ -63,7 +63,7 @@ test_that("success in increasing travel times", {
   # mapview(network$edges) + network$vertices + det
 
   # # clean tempdir
-  # r5r::stop_r5(new_r5r_core)
+  # r5r::stop_r5(new_r5r_network)
   # unlink(tempdir(check = TRUE), recursive = TRUE)
   # list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
@@ -73,12 +73,12 @@ test_that("success in increasing travel times", {
   data.table::fwrite(mock_data, file = mock_csv)
 
 
-  new_r5r_core <- tester(csv_path = mock_csv,
+  new_r5r_network <- tester(csv_path = mock_csv,
                          default_speed = 0.5,
                          percentage_mode = TRUE)
 
   ttm_pos <- r5r::travel_time_matrix(
-    r5r_core = new_r5r_core,
+    r5r_network = new_r5r_network,
     origins = point_orig,
     destinations = point_dest,
     mode = 'car',
@@ -87,7 +87,7 @@ test_that("success in increasing travel times", {
   )
 
   det_pos <- detailed_itineraries(
-    new_r5r_core,
+    new_r5r_network,
     origins = point_orig,
     destinations = point_dest,
     mode = "car",
@@ -103,7 +103,7 @@ test_that("success in increasing travel times", {
   testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
   # clean tempdir
-  r5r::stop_r5(new_r5r_core)
+  r5r::stop_r5(new_r5r_network)
   unlink(tempdir(check = TRUE), recursive = TRUE)
   list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
@@ -138,11 +138,11 @@ test_that("errors due existing pbf in outputdir", {
   unlink(tempdir(check = TRUE), recursive = TRUE)
   list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 
-  new_r5r_core <- tester()
+  new_r5r_network <- tester()
   expect_error(tester())
 
   # clean tempdir
-  r5r::stop_r5(new_r5r_core)
+  r5r::stop_r5(new_r5r_network)
   unlink(tempdir(check = TRUE), recursive = TRUE)
   list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
 

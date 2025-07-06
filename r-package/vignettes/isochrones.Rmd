@@ -32,7 +32,7 @@ Before we start, we need to increase Java memory + load a few libraries, and to 
 ***Warning:*** If you want to calculate how many opportunities (e.g. jobs, or schools or hospitals) are located inside each isochrone, we strongly recommend you NOT to use the `isochrone()` function. You will find much more efficient ways to do this in the [Accessibility vignette](https://ipeagit.github.io/r5r/articles/accessibility.html).
 
 
-# 2. Build routable transport network with `setup_r5()`
+# 2. Build routable transport network with `build_network()`
 
 ### Increase Java memory and load libraries
 
@@ -49,14 +49,14 @@ library(interp)
 ```
 
 
-To build a routable transport network with `r5r`, the user needs to call `setup_r5()` with the path to the directory where OpenStreetMap and GTFS data are stored.
+To build a routable transport network with `r5r`, the user needs to call `build_network()` with the path to the directory where OpenStreetMap and GTFS data are stored.
 
 ```{r, message = FALSE}
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not running this example
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 ```
 
 
@@ -87,7 +87,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate travel time matrix
-iso1 <- r5r::isochrone(r5r_core,
+iso1 <- r5r::isochrone(r5r_network,
                        origins = central_bus_stn,
                        mode = mode,
                        cutoffs = time_intervals,
@@ -109,7 +109,7 @@ Now it becomes super simple to visualize our isochrones on a map:
 
 ```{r, message = FALSE}
 # extract OSM network
-street_net <- street_network_to_sf(r5r_core)
+street_net <- street_network_to_sf(r5r_network)
 main_roads <- subset(street_net$edges, street_class %like% 'PRIMARY|SECONDARY')
   
 colors <- c('#ffe0a5','#ffcb69','#ffa600','#ff7c43','#f95d6a',
@@ -138,7 +138,7 @@ First, we calculate the travel times by public transport from the central bus st
 
 ```{r, message = FALSE}
 # calculate travel time matrix
-ttm <- travel_time_matrix(r5r_core,
+ttm <- travel_time_matrix(r5r_network,
                           origins = central_bus_stn,
                           destinations = points,
                           mode = mode,
@@ -199,7 +199,7 @@ ggplot(travel_times.interp) +
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core)
+r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 

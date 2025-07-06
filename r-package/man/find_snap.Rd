@@ -4,11 +4,19 @@
 \alias{find_snap}
 \title{Find snapped locations of input points on street network}
 \usage{
-find_snap(r5r_core, points, radius = 1600, mode = "WALK")
+find_snap(
+  r5r_network,
+  r5r_core = deprecated(),
+  points,
+  radius = 1600,
+  mode = "WALK"
+)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 
 \item{points}{Either a \verb{POINT sf} object with WGS84 CRS, or a \code{data.frame}
 containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -43,12 +51,17 @@ pedestrian-only street cannot be used to snap car trips).
 library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = path)
+r5r_network <- build_network(data_path = path)
 points <- read.csv(file.path(path, "poa_hexgrid.csv"))
 
-snap_df <- find_snap(r5r_core, points, radius = 2000, mode = "WALK")
+snap_df <- find_snap(
+  r5r_network,
+  points = points,
+  radius = 2000,
+  mode = "WALK"
+  )
 
-stop_r5(r5r_core)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

@@ -24,6 +24,7 @@
 #' @aliases r5r-package
 #'
 #' @importFrom data.table := %between% %chin% %like% .N
+#' @importFrom lifecycle deprecated
 #'
 #' @keywords internal
 "_PACKAGE"
@@ -86,3 +87,7 @@ if (getRversion() >= "2.15.1") {
     )
   )
 }
+
+
+## usethis namespace: end
+NULL

@@ -4,11 +4,10 @@
 \alias{set_expanded_travel_times}
 \title{Set expanded travel times}
 \usage{
-set_expanded_travel_times(r5r_core, expanded)
+set_expanded_travel_times(r5r_network, expanded)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{expanded}{A logical.}
 }

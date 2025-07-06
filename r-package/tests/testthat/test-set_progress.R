@@ -3,7 +3,7 @@
 
 testthat::skip_on_cran()
 
-tester <- function(progress) set_progress(r5r_core, progress)
+tester <- function(progress) set_progress(r5r_network@jcore, progress)
 
 test_that("input is correct", {
   expect_error(tester("TRUE"))
@@ -14,16 +14,16 @@ test_that("input is correct", {
 test_that("progress argument works in routing functions", {
   assert_function <- function(f) {
     expr <- if (identical(f, travel_time_matrix)) {
-      "f(r5r_core, pois[1:5], pois[1:5])"
+      "f(r5r_network, origins=pois[1:5], destinations=pois[1:5])"
     } else if (identical(f, expanded_travel_time_matrix)) {
-      "f(r5r_core, pois[1:5], pois[1:5])"
+      "f(r5r_network, origins=pois[1:5], destinations=pois[1:5])"
     } else if (identical(f, detailed_itineraries)) {
-      "f(r5r_core, pois[1:5], pois[5:1])"
+      "f(r5r_network, origins=pois[1:5], destinations=pois[5:1])"
     } else if (identical(f, pareto_frontier)) {
       "f(
-        r5r_core,
-        pois[1:5],
-        pois[1:5],
+        r5r_network,
+        origins=pois[1:5],
+        destinations=pois[1:5],
         departure_datetime = departure_datetime,
         fare_structure = fare_structure,
         fare_cutoffs = c(0, 5, 10),
@@ -31,10 +31,10 @@ test_that("progress argument works in routing functions", {
       )"
     } else if (identical(f, accessibility)) {
       "f(
-        r5r_core,
-        points[1:5],
-        points[1:5],
-        opportunities_colnames = \"schools\",
+        r5r_network=r5r_network,
+        origins = points[1:5],
+        destinations = points[1:5],
+        opportunities_colnames = \"jobs\" ,
         cutoffs = 60
       )"
     }
@@ -45,7 +45,7 @@ test_that("progress argument works in routing functions", {
     progress_regex <- "\\d+ out of \\d+ origins processed\\."
 
 
-    log_file <- file.path(r5r_core$getLogPath())
+    log_file <- file.path(r5r_network@jcore$getLogPath())
     # Clean log before test
     if (file.exists(log_file)) writeLines("", log_file)
 

@@ -42,7 +42,7 @@
 #'
 #' # build transport network
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_core <- setup_r5(data_path )
+#' r5r_network <- build_network(data_path )
 #'
 #' # load origin/destination points
 #' points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
@@ -55,7 +55,7 @@
 #' # by default only returns the total time between each pair in each minute of
 #' # the specified time window
 #' arrival_ttm <- arrival_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -67,7 +67,7 @@
 #'
 #' # when breakdown = TRUE the output contains much more information
 #' arrival_ttm2 <- arrival_travel_time_matrix(
-#'   r5r_core,
+#'   r5r_network,
 #'   origins = points,
 #'   destinations = points,
 #'   mode = c("WALK", "TRANSIT"),
@@ -78,28 +78,40 @@
 #'
 #' head(arrival_ttm2)
 #'
-#' stop_r5(r5r_core)
+#' stop_r5(r5r_network)
 #' @export
-arrival_travel_time_matrix <- function(r5r_core,
-                                        origins,
-                                        destinations,
-                                        mode = "WALK",
-                                        mode_egress = "WALK",
-                                        arrival_datetime = Sys.time(),
-                                        breakdown = FALSE,
-                                        max_walk_time = Inf,
-                                        max_bike_time = Inf,
-                                        max_car_time = Inf,
-                                        max_trip_duration = 120L,
-                                        walk_speed = 3.6,
-                                        bike_speed = 12,
-                                        max_rides = 3,
-                                        max_lts = 2,
-                                        draws_per_minute = 5L,
-                                        n_threads = Inf,
-                                        verbose = FALSE,
-                                        progress = FALSE,
-                                        output_dir = NULL) {
+arrival_travel_time_matrix <- function(r5r_network,
+                                       r5r_core = deprecated(),
+                                       origins,
+                                       destinations,
+                                       mode = "WALK",
+                                       mode_egress = "WALK",
+                                       arrival_datetime = Sys.time(),
+                                       breakdown = FALSE,
+                                       max_walk_time = Inf,
+                                       max_bike_time = Inf,
+                                       max_car_time = Inf,
+                                       max_trip_duration = 120L,
+                                       walk_speed = 3.6,
+                                       bike_speed = 12,
+                                       max_rides = 3,
+                                       max_lts = 2,
+                                       draws_per_minute = 5L,
+                                       n_threads = Inf,
+                                       verbose = FALSE,
+                                       progress = FALSE,
+                                       output_dir = NULL) {
+
+  # deprecating r5r_core --------------------------------------
+  if (lifecycle::is_present(r5r_core)) {
+
+    cli::cli_warn(c(
+      "!" = "The `r5r_core` argument is deprecated as of r5r v2.3.0.",
+      "i" = "Please use the `r5r_network` argument instead."
+    ))
+
+    r5r_network <- r5r_core
+  }
 
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
@@ -111,7 +123,8 @@ arrival_travel_time_matrix <- function(r5r_core,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_core, "jobjRef")
+  checkmate::assert_class(r5r_network, "r5r_network")
+  r5r_network <- r5r_network@jcore
 
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
@@ -128,7 +141,7 @@ arrival_travel_time_matrix <- function(r5r_core,
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_core, departure_date = departure$date)
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   max_walk_time <- assign_max_street_time(
@@ -156,24 +169,24 @@ arrival_travel_time_matrix <- function(r5r_core,
     max_bike_time
   )
 
-  set_time_window(r5r_core, max_trip_duration)
-  set_monte_carlo_draws(r5r_core, draws_per_minute, max_trip_duration)
-  set_speed(r5r_core, walk_speed, "walk")
-  set_speed(r5r_core, bike_speed, "bike")
-  set_max_rides(r5r_core, max_rides)
-  set_max_lts(r5r_core, max_lts)
-  set_n_threads(r5r_core, n_threads)
-  set_verbose(r5r_core, verbose)
-  set_progress(r5r_core, progress)
-  set_output_dir(r5r_core, output_dir)
-  set_expanded_travel_times(r5r_core, TRUE)
-  r5r_core$setSearchType("ARRIVE_BY")
-  set_breakdown(r5r_core, breakdown)
-  set_fare_structure(r5r_core, NULL)
+  set_time_window(r5r_network, max_trip_duration)
+  set_monte_carlo_draws(r5r_network, draws_per_minute, max_trip_duration)
+  set_speed(r5r_network, walk_speed, "walk")
+  set_speed(r5r_network, bike_speed, "bike")
+  set_max_rides(r5r_network, max_rides)
+  set_max_lts(r5r_network, max_lts)
+  set_n_threads(r5r_network, n_threads)
+  set_verbose(r5r_network, verbose)
+  set_progress(r5r_network, progress)
+  set_output_dir(r5r_network, output_dir)
+  set_expanded_travel_times(r5r_network, TRUE)
+  r5r_network$setSearchType("ARRIVE_BY")
+  set_breakdown(r5r_network, breakdown)
+  set_fare_structure(r5r_network, NULL)
 
-  # call r5r_core method and process result -------------------------------
+  # call r5r_network method and process result -------------------------------
 
-  travel_times <- r5r_core$travelTimeMatrix(
+  travel_times <- r5r_network$travelTimeMatrix(
     origins$id,
     origins$lat,
     origins$lon,

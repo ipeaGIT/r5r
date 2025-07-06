@@ -4,11 +4,10 @@
 \alias{set_fare_cutoffs}
 \title{Set monetary cutoffs}
 \usage{
-set_fare_cutoffs(r5r_core, fare_cutoffs)
+set_fare_cutoffs(r5r_network, fare_cutoffs)
 }
 \arguments{
-\item{r5r_core}{An object to connect with the R5 routing engine, created with
-\code{\link[=setup_r5]{setup_r5()}}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{fare_cutoffs}{A path.}
 }

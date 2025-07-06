@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-## removes files previously created by 'setup_r5()'
+## removes files previously created by 'build_network()'
 #data_path <- system.file("extdata/poa", package = "r5r")
 #existing_files <- list.files(data_path)
 #files_to_keep <- c(
@@ -46,7 +46,7 @@ The `r5r` package has two functions that allow users to leverage the computing p
 This vignette shows a reproducible example to explain how these two functions work and the differences between them.
 
 
-# 2. Build routable transport network with `setup_r5()`
+# 2. Build routable transport network with `build_network()`
 
 First, let's build the multimodal transport network we'll be using in this vignette. In this example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
 
@@ -62,7 +62,7 @@ library(ggplot2)
 
 # build a routable transport network with r5r
 data_path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path)
+r5r_network <- build_network(data_path)
 
 # routing inputs
 mode <- c('walk', 'transit')
@@ -92,7 +92,7 @@ The user can also customize many parameters such as:
 
 ```{r, message = FALSE}
 # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_core,   
+ttm <- travel_time_matrix(r5r_network,   
                           origins = points,
                           destinations = points,    
                           mode = mode,
@@ -116,7 +116,7 @@ Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more in
 
 *A general call to expanded_travel_time_matrix()*
 ```{r, message = FALSE}
-ettm <- expanded_travel_time_matrix(r5r_core,   
+ettm <- expanded_travel_time_matrix(r5r_network,   
                                     origins = points,
                                     destinations = points,    
                                     mode = mode,
@@ -129,7 +129,7 @@ head(ettm, n = 10)
 *Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
 
 ```{r, message = FALSE}
-ettm2 <- expanded_travel_time_matrix(r5r_core,   
+ettm2 <- expanded_travel_time_matrix(r5r_network,   
                                     origins = points,
                                     destinations = points,    
                                     mode = mode,
@@ -143,7 +143,7 @@ head(ettm2, n = 10)
 You will notice in the documentation that the `expanded_travel_time_matrix()` also has a `time_window` parameter. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
 ```{r, message = FALSE}
-ettm_window <- expanded_travel_time_matrix(r5r_core,   
+ettm_window <- expanded_travel_time_matrix(r5r_network,   
                                            origins = points,
                                            destinations = points,    
                                            mode = mode,
@@ -174,7 +174,7 @@ arrival_datetime <- as.POSIXct(
 )
 
 arrival_ttm <- arrival_travel_time_matrix(
-  r5r_core,
+  r5r_network,
   origins = points,
   destinations = points,
   mode = c("WALK", "TRANSIT"),
@@ -192,7 +192,7 @@ head(arrival_ttm, n = 10)
 `r5r` objects are still allocated to any amount of memory previously set after they are done with their calculations. In order to remove an existing `r5r` object and reallocate the memory it had been using, we use the `stop_r5` function followed by a call to Java's garbage collector, as follows:
 
 ```{r, message = FALSE}
-r5r::stop_r5(r5r_core)
+r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
