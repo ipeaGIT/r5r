@@ -1,4 +1,5 @@
 <configuration>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 
     <!-- Define LOG_PATH using DATA_PATH with fallback to current dir -->
     <property name="LOG_PATH" value="${LOG_PATH:-./r5r-log.log}" />
@@ -6,18 +7,18 @@
     <appender name="RFILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_PATH}</file>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger - %msg%n</pattern>
         </encoder>
         <append>false</append>
     </appender>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight([%-5level]) %logger - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="ALL">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="RFILE"/>
     </root>

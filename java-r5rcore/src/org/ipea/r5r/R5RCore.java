@@ -29,8 +29,9 @@ import java.util.concurrent.ForkJoinPool;
 
 public class R5RCore {
 
-    public static final String R5_VERSION = "7.4";
-    public static final String R5R_VERSION = "2.2.0";
+    public static final String R5_VERSION = System.getProperty("R5_VER", "7+, ERROR getting exact version");
+
+    public static final String R5R_VERSION = System.getProperty("R5R_VER", "2+, ERROR getting exact version");
 
     private int numberOfThreads;
     private ForkJoinPool r5rThreadPool;
@@ -184,11 +185,11 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        Utils.setLogMode("ERROR", false);
+        Utils.setLogMode("OFF");
     }
 
     public void verboseMode() {
-        Utils.setLogMode("ALL", true);
+        Utils.setLogMode("INFO");
     }
 
     public void setProgress(boolean progress) {
