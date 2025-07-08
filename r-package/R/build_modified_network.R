@@ -6,7 +6,7 @@
 #'
 #' @param data_path Character. Path to the directory with the`.pbf` file of the
 #' OSM network and optionally supporting data.
-#' @param csv_path Character. Path to the CSV file witha a table specifying the
+#' @param new_carspeeds data.frame/data.table. Table specifying the
 #'        speed modifications. The table must contain columns \code{osm_id} and
 #'        \code{max_speed}.
 #' @param output_path Character. A string pointing to the directory where the
@@ -34,21 +34,21 @@
 #' library(r5r)
 #'
 #' # path to OSM .pbf file
-#' data_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
+#' data_path <- system.file("extdata/poa", package = "r5r")
 #'
 #' # path to CSV with a table pointing to the new speed info
-#' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
+#' new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
 #' r5r_network_new_speed <- r5r::build_modified_network(
 #'   data_path = data_path,
-#'   csv_path = speeds_csv_path,
+#'   new_carspeeds = new_carspeeds,
 #'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
 #'
 #' @export
 build_modified_network <- function(data_path,
-                                 csv_path,
+                                 new_carspeeds,
                                  output_path = tempdir_unique(),
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
@@ -59,7 +59,6 @@ build_modified_network <- function(data_path,
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)
   output_path <- normalizePath(output_path, mustWork = FALSE)
-  csv_path <- normalizePath(csv_path, mustWork = F)
 
   # Assert quality of directories
   checkmate::assert_directory_exists(data_path, access = "r")
@@ -101,7 +100,7 @@ build_modified_network <- function(data_path,
 
   # check remaining inputs
   checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
-  checkmate::assert_file_exists(csv_path, access = "r", extension = "csv")
+  checkmate::assert_class(new_carspeeds, "data.frame")
   checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
   if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
@@ -122,25 +121,21 @@ build_modified_network <- function(data_path,
     default_speed <- 1
   }
 
-  # check colnames in csv
-  tempdf <- data.table::fread(csv_path, nrows = 1)
-  checkmate::assert_names(
-    x = names(tempdf),
-    must.include = c("osm_id", "max_speed")
-    )
-
   # change speeds
   start_r5r_java(output_path) # initialize rJava if needed
 
+  speed_map <- dt_to_speed_map(new_carspeeds)
+  message("Building speed modifier...")
   speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
                                pbf_path,
-                               csv_path,
+                               speed_map,
                                output_path,
                                verbose)
   speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
   speed_setter$setPercentageMode(percentage_mode)
   speed_setter$runSpeedSetter()
 
+  message("Building new network...")
   new_network <- r5r::build_network(output_path,
                             verbose = verbose,
                             temp_dir = FALSE,

@@ -6,7 +6,7 @@
 \usage{
 build_modified_network(
   data_path,
-  csv_path,
+  new_carspeeds,
   output_path = tempdir_unique(),
   default_speed = NULL,
   percentage_mode = TRUE,
@@ -18,7 +18,7 @@ build_modified_network(
 \item{data_path}{Character. Path to the directory with the\code{.pbf} file of the
 OSM network and optionally supporting data.}
 
-\item{csv_path}{Character. Path to the CSV file witha a table specifying the
+\item{new_carspeeds}{data.frame/data.table. Table specifying the
 speed modifications. The table must contain columns \code{osm_id} and
 \code{max_speed}.}
 
@@ -61,14 +61,14 @@ returns a new \code{r5r_network} object.
 library(r5r)
 
 # path to OSM .pbf file
-data_path <- system.file("extdata/poa/poa_osm.pbf", package = "r5r")
+data_path <- system.file("extdata/poa", package = "r5r")
 
 # path to CSV with a table pointing to the new speed info
-speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
+new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
 r5r_network_new_speed <- r5r::build_modified_network(
   data_path = data_path,
-  csv_path = speeds_csv_path,
+  new_carspeeds = new_carspeeds,
   output_path = tempdir(),
   percentage_mode = TRUE
 )

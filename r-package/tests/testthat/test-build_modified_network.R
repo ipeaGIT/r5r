@@ -13,7 +13,7 @@ tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
                    percentage_mode = TRUE,
                    verbose = FALSE
                    ){
-  new_r5r_network <- modify_osm_carspeeds(
+  new_r5r_network <- build_custom_network(
     pbf_path = pbf_path,
     csv_path = csv_path,
     output_dir = output_dir,

@@ -34,3 +34,29 @@ java_to_dt <- function(obj) {
   data.table::setDT(dt)
   data.table::setnames(dt, new = columns)
 }
+
+#' data.table to speedMap
+#'
+#' @description Converts a `data.frame` with road OSM id's and respective speeds
+#'              to a Java Map<Long, Float> for use by r5r_network.
+#'
+#' @param dt data.frame/data.table. Table specifying the
+#'        speed modifications. The table must contain columns \code{osm_id} and
+#'        \code{max_speed}.
+#' @return A speedMap (Java HashMap<Long, Float>)
+#' @family java support functions
+#' @keywords internal
+dt_to_speed_map <- function(dt) {
+  checkmate::assert_names(names(dt), identical.to = c("osm_id", "max_speed"))
+  checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE)
+
+  # Create new HashMap<Long, Float>
+  speed_map <- rJava::.jnew("java/util/HashMap")
+  for (i in seq_len(nrow(dt))) {
+    speed_map$put(
+      rJava::.jnew("java/lang/Long", as.character(dt$osm_id[i])),
+      rJava::.jnew("java/lang/Float", as.numeric(dt$max_speed[i])))
+  }
+  return(speed_map)
+}
