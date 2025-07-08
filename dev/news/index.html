@@ -53,18 +53,21 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
 <p><strong>Major changes</strong></p>
-<ul><li>New function <code><a href="../reference/build_network.html">build_network()</a></code> to replace <code><a href="../reference/setup_r5.html">setup_r5()</a></code>, which is being deprecated.</li>
+<ul><li>New function <code><a href="../reference/build_network.html">build_network()</a></code> to replace <code><a href="../reference/setup_r5.html">setup_r5()</a></code>, which is being deprecated. Idiomatically r5r_core is now r5r_network.</li>
 <li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
 </li>
-<li>New function <code><a href="../reference/modify_osm_carspeeds.html">modify_osm_carspeeds()</a></code> to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
+<li>New function <code>build_custom_network()</code> to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
 </li>
 <li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In pactice, this means that these functions are now much faster when there are multiple origins to few destinations. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
 </li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>The routable transport network build with <code><a href="../reference/build_network.html">build_network()</a></code> and <code><a href="../reference/setup_r5.html">setup_r5()</a></code> now have a their own class <code>"r5r_network"</code>, making the package more consistent and safer from errors.</li>
+<ul><li>The routable transport network build with <code><a href="../reference/build_network.html">build_network()</a></code> and <code><a href="../reference/setup_r5.html">setup_r5()</a></code> and <code>build_custom_network</code> now have a their own class <code>"r5r_network"</code>, making the package more consistent and safer from errors <a href="https://github.com/ipeaGIT/r5r/pull/472" class="external-link">#472</a>.</li>
 <li>Routing properties within r5r jar (aka little jar) are reset to default after a routing execution <a href="https://github.com/ipeaGIT/r5r/pull/453" class="external-link">#453</a>
 </li>
-</ul><p><strong>Bug fixes</strong></p>
+<li>Less cluttering messages in R5R dialogue. Removed logback startup messages. <code>Verbose=F</code> now completly silences java output. <code>Verbose=T</code> only reports messages up to INFO level as opposed to up to DEBUG <a href="https://github.com/ipeaGIT/r5r/pull/456" class="external-link">#456</a>.</li>
+<li>Removed date from r5r-log. You no longer have to delete the previous day’s log! <a href="https://github.com/ipeaGIT/r5r/pull/456" class="external-link">#456</a>
+</li>
+</ul><p><strong>Bug fixes</strong> - Fixed a bug where <code>network_settings.json</code> wasn’t showing the right version numbers <a href="https://github.com/ipeaGIT/r5r/pull/459" class="external-link">#459</a>. Version number now dynamically updated <a href="https://github.com/ipeaGIT/r5r/pull/456" class="external-link">#456</a>.</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="r5r-220">r5r 2.2.0<a class="anchor" aria-label="anchor" href="#r5r-220"></a></h2><p class="text-muted">CRAN release: 2025-05-22</p>
