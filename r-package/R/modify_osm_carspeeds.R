@@ -19,11 +19,7 @@
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
-#' @param copy_data A logical. Whether to copy supporting data (.zip and .tif)
-#' from the data_path to output_path. Defaults to `FALSE`.
 #' @param @template elevation For more info see \code{\link{setup_r5}}.
-#' @param overwrite A logical. Whether allow overwriting an existing .pbf in the
-#' output directory. Defaults to `FALSE`.
 #' @details
 #' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
 #' can be specified as a percentage of the original road speed or as an absolute
@@ -43,7 +39,7 @@
 #' # path to CSV with a table pointing to the new speed info
 #' speeds_csv_path <- system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
 #'
-#' r5r_network_new_speed <- r5r::modify_osm_carspeeds(
+#' r5r_network_new_speed <- r5r::build_modified_network(
 #'   data_path = data_path,
 #'   csv_path = speeds_csv_path,
 #'   output_path = tempdir(),
@@ -51,15 +47,14 @@
 #' )
 #'
 #' @export
-modify_osm_carspeeds <- function(data_path,
+build_modified_network <- function(data_path,
                                  csv_path,
                                  output_path = tempdir_unique(),
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
-                                 copy_data = FALSE,
-                                 elevation = "TOBLER",
-                                 overwrite = FALSE) {
+                                 elevation = "TOBLER"
+                                 ) {
 
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)
@@ -69,15 +64,39 @@ modify_osm_carspeeds <- function(data_path,
   # Assert quality of directories
   checkmate::assert_directory_exists(data_path, access = "r")
   checkmate::assert_directory_exists(output_path, access = "rw")
-  if (output_dir == data_dir) { # checkmate doesn't support custom messages
-    stop(sprintf("output_dir ('%s') and data_dir ('%s') must be different directories.", output_dir, data_dir))
+  if (output_path == data_path) {
+    stop(sprintf("output_path ('%s') and data_path ('%s') must be different directories.", output_path, data_path))
   }
 
-  # check for number of pbfs
-  data_pbf_files <- list.files(data_dir, pattern = "\\.pbf$", full.names = TRUE)
+  # manipulate data_path directory
+  data_pbf_files <- list.files(data_path, pattern = "\\.pbf$", full.names = TRUE)
+  if (length(data_pbf_files) != 1) {
+    stop(sprintf("data_path must contain exactly one .pbf file, found: %d", length(data_pbf_files)))
+  }
+  pbf_path <- data_pbf_files[[1]]
+
+  # copy over all supporting files
+  files_to_copy <- list.files(
+    data_path,
+    pattern = "\\.(zip|tif)$",
+    full.names = TRUE,
+    ignore.case = TRUE,
+    recursive = FALSE
+  )
+  for (file in files_to_copy) {
+    message(sprintf("Copying file to output_path: %s", file))
+    file.copy(file, file.path(output_path, basename(file)), overwrite = TRUE)
+  }
+
+  # manipulate output_path directory
   output_pbf_files <- list.files(output_path, pattern = "\\.pbf$", full.names = TRUE)
-  if (length(output_pbf_files) != 0) {
-    stop(sprintf("output_path must contain zero .pbf files, found: %d", length(output_pbf_files)))
+  if (length(output_pbf_files) > 1) {
+    stop(sprintf("output_path must contain zero or one .pbf file, found: %d", length(output_pbf_files)))
+  }
+  if (length(output_pbf_files) == 1) {
+    message(sprintf("Deleting existing pbf file in output folder: %s\n", output_pbf_files[[1]]))
+    # write access for output_path directory has been checked so file can be deleted
+    file.remove(output_pbf_files[[1]])
   }
 
   # check remaining inputs
@@ -92,8 +111,6 @@ modify_osm_carspeeds <- function(data_path,
     )
   }
 
-  checkmate::assert_logical(overwrite)
-  checkmate::assert_logical(copy_data)
   checkmate::assert_character(elevation)
   elevation <- toupper(elevation)
   if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
