@@ -3,6 +3,7 @@
 #' @family r5r_network
 #'
 #' @keywords internal
+#' @importClassesFrom rJava jobjRef
 setClass(
   "r5r_network",
   slots = list(jcore = "jobjRef")
