@@ -42,7 +42,7 @@ test_that("verbose argument works in routing functions", {
     verbose_expr <- sub("\\)$", ", verbose = TRUE\\)", expr)
     non_verbose_expr <- sub("\\)$", ", verbose = FALSE\\)", expr)
 
-    info_regex <- "(\\[.*\\] INFO)|(\\[.*\\] DEBUG)|(\\[.*\\] WARN)"
+    info_regex <- "\\[\\s*(INFO|ERROR|WARN)\\s*\\]"
 
     log_file <- file.path(r5r_network@jcore$getLogPath())
     # Clean log before test
