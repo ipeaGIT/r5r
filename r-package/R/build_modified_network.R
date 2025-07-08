@@ -1,34 +1,32 @@
 #' Create a transport network used for routing in R5 with modified OSM car speeds
 #'
 #' The function builds a transport network with modified OSM car speeds. The new
-#' speed factors must me passed from a `.csv` file indication the new max speed
+#' speed factors must me passed from as `data.frame` indicating the new max speed
 #' of each OSM edge id.
 #'
 #' @param data_path Character. Path to the directory with the`.pbf` file of the
-#' OSM network and optionally supporting data.
-#' @param new_carspeeds data.frame/data.table. Table specifying the
-#'        speed modifications. The table must contain columns \code{osm_id} and
-#'        \code{max_speed}.
+#'        OSM network and optionally supporting data.
+#' @param new_carspeeds A `data.frame` specifying the speed modifications. The
+#'        table must contain columns \code{osm_id} and \code{max_speed}.
 #' @param output_path Character. A string pointing to the directory where the
-#' modified `network.dat` will be saved. Must be different from \code{data_path}.
-#' Defaults to a temporary directory.
-#' @param default_speed Numeric. Default speed to use for segments not specified
-#'        in the CSV. Must be >= 0. Defaults to `NULL` so that roads not listed
-#'        in. the CSV have their speeds unchanged.
+#'        modified `network.dat` will be saved. Must be different from
+#'        \code{data_path}. Defaults to a temporary directory.
+#' @param default_speed Numeric. Default speed to use for road segments not
+#'        specified in `new_carspeeds`. Must be `>= `0. Defaults to `NULL` so that
+#'        roads not listed have their speeds unchanged. When set to `0`, the road
+#'        segment is assumed to be closed.
 #' @param percentage_mode Logical. If \code{TRUE}, values in \code{max_speed} are
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
-#' @param @template elevation For more info see \code{\link{setup_r5}}.
-#' @details
-#' The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
-#' can be specified as a percentage of the original road speed or as an absolute
-#' speed in km/h. The function rebuilds the network in \code{output_path} and
-#' returns a new `r5r_network` object.
+#' @template elevation
 #'
-#' @family modify_osm_car_speeds
+#' @return A `r5r_network` object representing the built network to connect with
+#'         `R5` routing engine.
 #'
-#' @return An R5 core object representing the rebuilt network with modified car speeds.
+#' @template elevation_section
+#'
+#' @family Build network
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -48,13 +46,12 @@
 #'
 #' @export
 build_modified_network <- function(data_path,
-                                 new_carspeeds,
-                                 output_path = tempdir_unique(),
-                                 default_speed = NULL,
-                                 percentage_mode = TRUE,
-                                 verbose = FALSE,
-                                 elevation = "TOBLER"
-                                 ) {
+                                   new_carspeeds,
+                                   output_path = tempdir_unique(),
+                                   default_speed = NULL,
+                                   percentage_mode = TRUE,
+                                   verbose = FALSE,
+                                   elevation = "TOBLER"){
 
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)

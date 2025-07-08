@@ -22,8 +22,8 @@ running the function. Defaults to \code{FALSE} (please note that in such case
 detailed output, which can be useful for debugging issues not caught by
 \code{r5r}.}
 
-\item{temp_dir}{A logical. Whether the \code{R5} Jar file should be saved to a
-temporary directory. Defaults to \code{FALSE}.}
+\item{temp_dir}{A logical. Whether the \code{network.dat} file should be saved to
+a temporary directory. Defaults to \code{FALSE}.}
 
 \item{elevation}{A string. The name of the impedance function to be used to
 calculate impedance for walking and cycling based on street slopes.
@@ -37,21 +37,22 @@ or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached
 network).}
 }
 \value{
-An \code{rJava} object to connect with \code{R5} routing engine.
+A \code{r5r_network} object representing the built network to connect with
+\code{R5} routing engine.
 }
 \description{
 Builds a multimodal transport network used for routing in \code{R5}, combining
 multiple data inputs present in the directory where the network should be
 saved to. The directory must contain only one street network file (in
 \code{.osm.pbf} format). It may optionally contain one or more public transport
-GTFS feeds (in \code{GTFS.zip} format, where \code{GTFS} is the name of your feed),
-when used for public transport routing, and a \code{.tif} file describing the
-elevation profile of the study area. If there is more than one GTFS feed in
-the directory, all feeds are merged. If there is already a 'network.dat'
-file in the directory, the function will simply read it and load it to
-memory (unless specified not to do so).
+GTFS feeds (in \code{.zip} format), when used for public transport routing, and a
+\code{.tif} file describing the elevation profile of the study area. If there is
+more than one GTFS feed in the directory, all feeds are automatically merged.
+If there is already a \code{'network.dat'} file in the directory, the function will
+simply read it and load it to memory (unless specified not to do so).
 }
-\section{Details}{
+\section{Elevation}{
+
 
 More information about the \code{TOBLER} and \code{MINETTI} options to calculate the
 effects of elevation on travel times can be found in the references below:
@@ -80,6 +81,7 @@ r5r_network <- build_network(data_path)
 }
 \seealso{
 Other Build network: 
+\code{\link{build_modified_network}()},
 \code{\link{download_r5}()},
 \code{\link{setup_r5}()}
 }

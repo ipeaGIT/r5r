@@ -18,17 +18,17 @@ build_modified_network(
 \item{data_path}{Character. Path to the directory with the\code{.pbf} file of the
 OSM network and optionally supporting data.}
 
-\item{new_carspeeds}{data.frame/data.table. Table specifying the
-speed modifications. The table must contain columns \code{osm_id} and
-\code{max_speed}.}
+\item{new_carspeeds}{A \code{data.frame} specifying the speed modifications. The
+table must contain columns \code{osm_id} and \code{max_speed}.}
 
 \item{output_path}{Character. A string pointing to the directory where the
-modified \code{network.dat} will be saved. Must be different from \code{data_path}.
-Defaults to a temporary directory.}
+modified \code{network.dat} will be saved. Must be different from
+\code{data_path}. Defaults to a temporary directory.}
 
-\item{default_speed}{Numeric. Default speed to use for segments not specified
-in the CSV. Must be >= 0. Defaults to \code{NULL} so that roads not listed
-in. the CSV have their speeds unchanged.}
+\item{default_speed}{Numeric. Default speed to use for road segments not
+specified in \code{new_carspeeds}. Must be \verb{>= }0. Defaults to \code{NULL} so that
+roads not listed have their speeds unchanged. When set to \code{0}, the road
+segment is assumed to be closed.}
 
 \item{percentage_mode}{Logical. If \code{TRUE}, values in \code{max_speed} are
 interpreted as percentages of original speeds; if \code{FALSE}, as
@@ -40,22 +40,40 @@ running the function. Defaults to \code{FALSE} (please note that in such case
 detailed output, which can be useful for debugging issues not caught by
 \code{r5r}.}
 
-\item{@template}{elevation For more info see \code{\link{setup_r5}}.}
+\item{elevation}{A string. The name of the impedance function to be used to
+calculate impedance for walking and cycling based on street slopes.
+Available options include \code{TOBLER} (Default) and \code{MINETTI}, or \code{NONE}
+to ignore elevation. R5 loads elevation data from \code{.tif} files saved
+inside the \code{data_path} directory. See more info in the Details section
+below.}
 }
 \value{
-An R5 core object representing the rebuilt network with modified car speeds.
+A \code{r5r_network} object representing the built network to connect with
+\code{R5} routing engine.
 }
 \description{
 The function builds a transport network with modified OSM car speeds. The new
-speed factors must me passed from a \code{.csv} file indication the new max speed
+speed factors must me passed from as \code{data.frame} indicating the new max speed
 of each OSM edge id.
 }
-\details{
-The CSV must have columns named \code{osm_id} and \code{max_speed}. \code{max_speed}
-can be specified as a percentage of the original road speed or as an absolute
-speed in km/h. The function rebuilds the network in \code{output_path} and
-returns a new \code{r5r_network} object.
+\section{Elevation}{
+
+
+More information about the \code{TOBLER} and \code{MINETTI} options to calculate the
+effects of elevation on travel times can be found in the references below:
+\itemize{
+\item Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
+model the relationship between slope and travel rates. Applied geography, 106,
+93-107. \doi{10.1016/j.apgeog.2019.03.008}.
+\item Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
+uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
+\item Tobler, W. (1993). Three presentations on geographical analysis and modeling:
+Non-isotropic geographic modeling speculations on the geometry of geography
+global spatial analysis. Technical Report. National center for geographic
+information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
 }
+}
+
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
@@ -74,4 +92,10 @@ r5r_network_new_speed <- r5r::build_modified_network(
 )
 \dontshow{\}) # examplesIf}
 }
-\concept{modify_osm_car_speeds}
+\seealso{
+Other Build network: 
+\code{\link{build_network}()},
+\code{\link{download_r5}()},
+\code{\link{setup_r5}()}
+}
+\concept{Build network}

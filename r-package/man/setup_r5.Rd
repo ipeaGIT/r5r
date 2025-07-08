@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_r5.R
 \name{setup_r5}
 \alias{setup_r5}
-\title{Create a transport network used for routing in R5}
+\title{Create a transport network used for routing in R5 (deprecated)}
 \usage{
 setup_r5(
   data_path,
@@ -22,16 +22,23 @@ running the function. Defaults to \code{FALSE} (please note that in such case
 detailed output, which can be useful for debugging issues not caught by
 \code{r5r}.}
 
-\item{temp_dir}{A logical. Whether the \code{R5} Jar file should be saved to a
-temporary directory. Defaults to \code{FALSE}.}
+\item{temp_dir}{A logical. Whether the \code{network.dat} file should be saved to
+a temporary directory. Defaults to \code{FALSE}.}
+
+\item{elevation}{A string. The name of the impedance function to be used to
+calculate impedance for walking and cycling based on street slopes.
+Available options include \code{TOBLER} (Default) and \code{MINETTI}, or \code{NONE}
+to ignore elevation. R5 loads elevation data from \code{.tif} files saved
+inside the \code{data_path} directory. See more info in the Details section
+below.}
 
 \item{overwrite}{A logical. Whether to overwrite an existing \code{network.dat}
-or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached network).}
-
-\item{@template}{elevation For more info see Details below.}
+or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached
+network).}
 }
 \value{
-An \code{rJava} object to connect with \code{R5} routing engine.
+A \code{r5r_network} object representing the built network to connect with
+\code{R5} routing engine.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
@@ -40,6 +47,24 @@ An \code{rJava} object to connect with \code{R5} routing engine.
 API. \strong{\code{setup_r5()} is being deprecated} after \emph{r5r} v2.3.0 and will be
 \strong{removed in a future release}. Please switch to \code{\link[=build_network]{build_network()}}.
 }
+\section{Elevation}{
+
+
+More information about the \code{TOBLER} and \code{MINETTI} options to calculate the
+effects of elevation on travel times can be found in the references below:
+\itemize{
+\item Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
+model the relationship between slope and travel rates. Applied geography, 106,
+93-107. \doi{10.1016/j.apgeog.2019.03.008}.
+\item Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
+uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
+\item Tobler, W. (1993). Three presentations on geographical analysis and modeling:
+Non-isotropic geographic modeling speculations on the geometry of geography
+global spatial analysis. Technical Report. National center for geographic
+information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
+}
+}
+
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
@@ -47,13 +72,14 @@ library(r5r)
 # directory with street network and gtfs files
 data_path <- system.file("extdata/poa", package = "r5r")
 
-r5r_network <- setup_r5(data_path)
+# `setup_r5()` has been deprecated, please switch to `build_network()`
+r5r_network <- build_network(data_path)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
 Other Build network: 
+\code{\link{build_modified_network}()},
 \code{\link{build_network}()},
 \code{\link{download_r5}()}
 }
 \concept{Build network}
-\keyword{internal}

@@ -4,45 +4,28 @@
 #' multiple data inputs present in the directory where the network should be
 #' saved to. The directory must contain only one street network file (in
 #' `.osm.pbf` format). It may optionally contain one or more public transport
-#' GTFS feeds (in `GTFS.zip` format, where `GTFS` is the name of your feed),
-#' when used for public transport routing, and a `.tif` file describing the
-#' elevation profile of the study area. If there is more than one GTFS feed in
-#' the directory, all feeds are merged. If there is already a 'network.dat'
-#' file in the directory, the function will simply read it and load it to
-#' memory (unless specified not to do so).
+#' GTFS feeds (in `.zip` format), when used for public transport routing, and a
+#' `.tif` file describing the elevation profile of the study area. If there is
+#' more than one GTFS feed in the directory, all feeds are automatically merged.
+#' If there is already a `'network.dat'` file in the directory, the function will
+#' simply read it and load it to memory (unless specified not to do so).
 #'
 #' @template verbose
 #' @param data_path A string pointing to the directory where data inputs are
 #'        stored and where the built `network.dat` will be saved.
-#' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
-#'        temporary directory. Defaults to `FALSE`.
-#' @param elevation A string. The name of the impedance function to be used to
-#'        calculate impedance for walking and cycling based on street slopes.
-#'        Available options include `TOBLER` (Default) and `MINETTI`, or `NONE`
-#'        to ignore elevation. R5 loads elevation data from `.tif` files saved
-#'        inside the `data_path` directory. See more info in the Details section
-#'        below.
+#' @param temp_dir A logical. Whether the `network.dat` file should be saved to
+#'        a temporary directory. Defaults to `FALSE`.
+#' @template elevation
 #' @param overwrite A logical. Whether to overwrite an existing `network.dat`
 #'        or to use a cached file. Defaults to `FALSE` (i.e. use a cached
 #'        network).
 #'
-#' @return An `rJava` object to connect with `R5` routing engine.
+#' @return A `r5r_network` object representing the built network to connect with
+#'         `R5` routing engine.
+#'
+#' @template elevation_section
 #'
 #' @family Build network
-#'
-#' @section Details:
-#' More information about the `TOBLER` and `MINETTI` options to calculate the
-#' effects of elevation on travel times can be found in the references below:
-#'
-#'- Campbell, M. J., et al (2019). Using crowdsourced fitness tracker data to
-#'model the relationship between slope and travel rates. Applied geography, 106,
-#'93-107. \doi{10.1016/j.apgeog.2019.03.008}.
-#'- Minetti, A. E., et al (2002). Energy cost of walking and running at extreme
-#'uphill and downhill slopes. Journal of applied physiology. \doi{10.1152/japplphysiol.01177.2001}.
-#'- Tobler, W. (1993). Three presentations on geographical analysis and modeling:
-#'Non-isotropic geographic modeling speculations on the geometry of geography
-#'global spatial analysis. Technical Report. National center for geographic
-#'information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz}.
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -53,10 +36,10 @@
 #' r5r_network <- build_network(data_path)
 #' @export
 build_network <- function(data_path,
-                     verbose = FALSE,
-                     temp_dir = FALSE,
-                     elevation = "TOBLER",
-                     overwrite = FALSE) {
+                          verbose = FALSE,
+                          temp_dir = FALSE,
+                          elevation = "TOBLER",
+                          overwrite = FALSE) {
 
   # check inputs ------------------------------------------------------------
 
