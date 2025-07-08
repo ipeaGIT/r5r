@@ -9,11 +9,10 @@
 
 **Minor changes**
 
-- The routable transport network build with `build_network()` and `setup_r5()` now have a their own class `"r5r_network"`, making the package more consistent and safer from errors. 
+- The routable transport network build with `build_network()` and `setup_r5()` and `build_custom_network` now have a their own class `"r5r_network"`, making the package more consistent and safer from errors [#472](https://github.com/ipeaGIT/r5r/pull/472).
 - Routing properties within r5r jar (aka little jar) are reset to default after a routing execution [#453](https://github.com/ipeaGIT/r5r/pull/453)
 - Less cluttering messages in R5R dialogue. Removed logback startup messages. `Verbose=F` now completly silences java output. `Verbose=T` only reports messages up to INFO level as opposed to up to DEBUG [#456](https://github.com/ipeaGIT/r5r/pull/456).
 - Removed date from r5r-log. You no longer have to delete the previous day's log! [#456](https://github.com/ipeaGIT/r5r/pull/456)
-- `build_network()` and `build_custom_network()` return class r5r_network instead of jobjRef [#472](https://github.com/ipeaGIT/r5r/pull/472).
 
 **Bug fixes**
 - Fixed a bug where `network_settings.json` wasn't showing the right version numbers [#459](https://github.com/ipeaGIT/r5r/pull/459). Version number now dynamically updated [#456](https://github.com/ipeaGIT/r5r/pull/456).
