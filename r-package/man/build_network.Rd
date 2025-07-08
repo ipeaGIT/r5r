@@ -81,7 +81,7 @@ r5r_network <- build_network(data_path)
 }
 \seealso{
 Other Build network: 
-\code{\link{build_modified_network}()},
+\code{\link{build_custom_network}()},
 \code{\link{download_r5}()},
 \code{\link{setup_r5}()}
 }

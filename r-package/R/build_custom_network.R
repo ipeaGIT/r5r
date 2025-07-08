@@ -1,4 +1,4 @@
-#' Create a transport network used for routing in R5 with modified OSM car speeds
+#' Create a custom transport network used for routing in R5 with modified OSM car speeds
 #'
 #' The function builds a transport network with modified OSM car speeds. The new
 #' speed factors must me passed from as `data.frame` indicating the new max speed
@@ -34,10 +34,10 @@
 #' # path to OSM .pbf file
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #'
-#' # path to CSV with a table pointing to the new speed info
+#' # data.frame with new speed info
 #' new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
-#' r5r_network_new_speed <- r5r::build_modified_network(
+#' r5r_network_new_speed <- r5r::build_custom_network(
 #'   data_path = data_path,
 #'   new_carspeeds = new_carspeeds,
 #'   output_path = tempdir(),
@@ -45,13 +45,13 @@
 #' )
 #'
 #' @export
-build_modified_network <- function(data_path,
-                                   new_carspeeds,
-                                   output_path = tempdir_unique(),
-                                   default_speed = NULL,
-                                   percentage_mode = TRUE,
-                                   verbose = FALSE,
-                                   elevation = "TOBLER"){
+build_custom_network <- function(data_path,
+                                 new_carspeeds,
+                                 output_path = tempdir_unique(),
+                                 default_speed = NULL,
+                                 percentage_mode = TRUE,
+                                 verbose = FALSE,
+                                 elevation = "TOBLER"){
 
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)
@@ -79,18 +79,22 @@ build_modified_network <- function(data_path,
     ignore.case = TRUE,
     recursive = FALSE
   )
-  for (file in files_to_copy) {
-    message(sprintf("Copying file to output_path: %s", file))
-    file.copy(file, file.path(output_path, basename(file)), overwrite = TRUE)
-  }
+  # message copied files
+  formatted_files <- paste0("{.file ", basename(files_to_copy), "}", collapse = ", ")
+  cli::cli_inform(c(
+    i = "Copying {length(files_to_copy)} file{?s}: {formatted_files} → {.path {output_path}}"
+  ))
 
   # manipulate output_path directory
   output_pbf_files <- list.files(output_path, pattern = "\\.pbf$", full.names = TRUE)
   if (length(output_pbf_files) > 1) {
-    stop(sprintf("output_path must contain zero or one .pbf file, found: %d", length(output_pbf_files)))
-  }
+    cli::cli_abort(
+      "`.path {output_path}` must contain at most one {.file .pbf} file; found {length(output_pbf_files)} file{?s}."
+      )
+    }
   if (length(output_pbf_files) == 1) {
-    message(sprintf("Deleting existing pbf file in output folder: %s\n", output_pbf_files[[1]]))
+    #message(sprintf("Deleting existing pbf file in output folder: %s\n", output_pbf_files[[1]]))
+    cli_inform(c(i = "Deleting existing {.file {output_pbf_files[[1]]}} from the output folder."))
     # write access for output_path directory has been checked so file can be deleted
     file.remove(output_pbf_files[[1]])
   }
@@ -109,8 +113,13 @@ build_modified_network <- function(data_path,
 
   checkmate::assert_character(elevation)
   elevation <- toupper(elevation)
-  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
-    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
+  valid_elev <- c("TOBLER", "MINETTI", "NONE")
+
+  if (!elevation %in% valid_elev) {
+    cli::cli_abort(c(
+      "Invalid value for {.arg elevation}: {.val {elevation}}.",
+      "x" = "Must be one of: {.val {valid_elev}}")
+    )
   }
 
   # default speed to keep unlisted roads unchanged

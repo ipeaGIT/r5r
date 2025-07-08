@@ -2,7 +2,7 @@
 
 export(accessibility)
 export(arrival_travel_time_matrix)
-export(build_modified_network)
+export(build_custom_network)
 export(build_network)
 export(detailed_itineraries)
 export(download_r5)
