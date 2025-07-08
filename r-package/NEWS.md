@@ -4,7 +4,7 @@
 
 - New function `build_network()` to replace `setup_r5()`, which is being deprecated. Idiomatically r5r_core is now r5r_network.
 - New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes [#291](https://github.com/ipeaGIT/r5r/issues/291)
-- New function `modify_osm_carspeeds()` to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
+- New function `build_custom_network()` to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
 - We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions `travel_time_matrix()`, `expanded_travel_time_matrix()` and `arrival_travel_time_matrix()`. In pactice, this means that these functions are now much faster when there are multiple origins to few destinations. Closes [#450](https://github.com/ipeaGIT/r5r/issues/450)
 
 **Minor changes**
