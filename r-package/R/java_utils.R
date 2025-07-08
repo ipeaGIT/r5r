@@ -47,7 +47,7 @@ java_to_dt <- function(obj) {
 #' @family java support functions
 #' @keywords internal
 dt_to_speed_map <- function(dt) {
-  checkmate::assert_names(names(dt), identical.to = c("osm_id", "max_speed"))
+  checkmate::assert_names(names(dt), subset.of = c("osm_id", "max_speed"))
   checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
   checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE)
 
