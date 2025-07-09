@@ -6,20 +6,25 @@ testthat::skip_on_cran()
 # TODO
 # test if setting max_speed to 0 closes the road
 
-tester <- function(pbf_path = paste0(data_path,'/poa_osm.pbf'),
-                   csv_path = paste0(data_path,'/poa_osm_congestion.csv'),
-                   output_dir = tempdir(check = TRUE),
+# data.frame with new speed info
+new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
+
+tester <- function(test_data_path = data_path,
+                   test_new_carspeeds = new_carspeeds,
+                   output_path = tempdir(check = TRUE),
                    default_speed = NULL,
                    percentage_mode = TRUE,
-                   verbose = FALSE
+                   verbose = FALSE,
+                   elevation = "TOBLER"
                    ){
-  new_r5r_network <- build_custom_network(
-    pbf_path = pbf_path,
-    csv_path = csv_path,
-    output_dir = output_dir,
+  new_r5r_network <- r5r::build_custom_network(
+    data_path = test_data_path,
+    new_carspeeds = test_new_carspeeds,
+    output_path = output_path,
     default_speed = default_speed,
     percentage_mode = percentage_mode,
-    verbose = verbose
+    verbose = verbose,
+    elevation = elevation
   )
 }
 
@@ -69,13 +74,10 @@ test_that("success in increasing travel times", {
 
   # put all roads at 50% of their speed
   mock_data <- data.frame(osm_id = 9999, max_speed = 9999)
-  mock_csv <- tempfile(fileext = '.csv')
-  data.table::fwrite(mock_data, file = mock_csv)
 
-
-  new_r5r_network <- tester(csv_path = mock_csv,
-                         default_speed = 0.5,
-                         percentage_mode = TRUE)
+  new_r5r_network <- tester(test_new_carspeeds = mock_data,
+                            default_speed = 0.5,
+                            percentage_mode = TRUE)
 
   ttm_pos <- r5r::travel_time_matrix(
     r5r_network = new_r5r_network,
@@ -102,23 +104,18 @@ test_that("success in increasing travel times", {
   testthat::expect_true(det_pos$total_duration > det_pre$total_duration)
   testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
-  # clean tempdir
-  r5r::stop_r5(new_r5r_network)
-  unlink(tempdir(check = TRUE), recursive = TRUE)
-  list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
-
 
   testthat::expect_warning(
-    tester(default_speed = 1,percentage_mode = FALSE)
+    tester(default_speed = 1, percentage_mode = FALSE)
   )
 
 })
 
 test_that("errors due to incorrect input types", {
 
-  expect_error(tester(pbf_path = 'banana'))
-  expect_error(tester(csv_path = 'banana'))
-  expect_error(tester(output_dir = 'banana'))
+  expect_error(tester(data_path = 'banana'))
+  expect_error(tester(new_carspeeds = 'banana'))
+  expect_error(tester(output_path  = 'banana'))
 
   expect_error(tester(default_speed = Inf))
   expect_error(tester(default_speed = 'banana'))
@@ -131,30 +128,18 @@ test_that("errors due to incorrect input types", {
 
 })
 
-test_that("errors due existing pbf in outputdir", {
-
-  # clean tempdir
-  r5r::stop_r5()
-  unlink(tempdir(check = TRUE), recursive = TRUE)
-  list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
+test_that("overwrite existing network in outputdir", {
 
   new_r5r_network <- tester()
-  expect_error(tester())
-
-  # clean tempdir
-  r5r::stop_r5(new_r5r_network)
-  unlink(tempdir(check = TRUE), recursive = TRUE)
-  list.files(tempdir(check = TRUE), all.files = TRUE, pattern = '.pbf')
+  new_r5r_network <- tester()
+  expect_true(is(new_r5r_network, "r5r_network"))
 
   })
 
 
-test_that("errors error in the csv column name", {
+test_that("errors error in the new_carspeeds column names", {
 
   mock_data <- data.frame(osm_id_col = 1, max_speed = 1)
-  mock_csv <- tempfile(fileext = '.csv')
-  data.table::fwrite(mock_data, file = mock_csv)
-
-  expect_error(tester(csv_path = mock_csv))
+  expect_error(tester(test_new_carspeeds = mock_csv))
 
 })

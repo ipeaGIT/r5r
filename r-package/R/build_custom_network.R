@@ -53,6 +53,28 @@ build_custom_network <- function(data_path,
                                  verbose = FALSE,
                                  elevation = "TOBLER"){
 
+  # check inputs
+  checkmate::assert_class(new_carspeeds, "data.frame")
+  checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
+  checkmate::assert_logical(percentage_mode)
+  if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
+    cli::cli_warn(
+      "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
+     When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
+    )
+  }
+
+  checkmate::assert_character(elevation)
+  elevation <- toupper(elevation)
+  valid_elev <- c("TOBLER", "MINETTI", "NONE")
+
+  if (!elevation %in% valid_elev) {
+    cli::cli_abort(c(
+      "Invalid value for {.arg elevation}: {.val {elevation}}.",
+      "x" = "Must be one of: {.val {valid_elev}}")
+    )
+  }
+
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)
   output_path <- normalizePath(output_path, mustWork = FALSE)
@@ -70,6 +92,7 @@ build_custom_network <- function(data_path,
     stop(sprintf("data_path must contain exactly one .pbf file, found: %d", length(data_pbf_files)))
   }
   pbf_path <- data_pbf_files[[1]]
+  checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
 
   # copy over all supporting files
   files_to_copy <- list.files(
@@ -94,33 +117,11 @@ build_custom_network <- function(data_path,
     }
   if (length(output_pbf_files) == 1) {
     #message(sprintf("Deleting existing pbf file in output folder: %s\n", output_pbf_files[[1]]))
-    cli_inform(c(i = "Deleting existing {.file {output_pbf_files[[1]]}} from the output folder."))
+    cli::cli_inform(c(i = "Deleting existing {.file {output_pbf_files[[1]]}} from the output folder."))
     # write access for output_path directory has been checked so file can be deleted
     file.remove(output_pbf_files[[1]])
   }
 
-  # check remaining inputs
-  checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
-  checkmate::assert_class(new_carspeeds, "data.frame")
-  checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
-  checkmate::assert_logical(percentage_mode)
-  if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
-    cli::cli_warn(
-      "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
-     When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
-    )
-  }
-
-  checkmate::assert_character(elevation)
-  elevation <- toupper(elevation)
-  valid_elev <- c("TOBLER", "MINETTI", "NONE")
-
-  if (!elevation %in% valid_elev) {
-    cli::cli_abort(c(
-      "Invalid value for {.arg elevation}: {.val {elevation}}.",
-      "x" = "Must be one of: {.val {valid_elev}}")
-    )
-  }
 
   # default speed to keep unlisted roads unchanged
   if (is.null(default_speed)) {
