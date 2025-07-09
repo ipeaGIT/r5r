@@ -130,8 +130,7 @@ test_that("errors due to incorrect input types", {
 
 test_that("overwrite existing network in outputdir", {
 
-  new_r5r_network <- tester()
-  new_r5r_network <- tester()
+  testthat::expect_message(new_r5r_network <- tester())
   expect_true(is(new_r5r_network, "r5r_network"))
 
   })

@@ -88,9 +88,13 @@ build_custom_network <- function(data_path,
 
   # manipulate data_path directory
   data_pbf_files <- list.files(data_path, pattern = "\\.pbf$", full.names = TRUE)
-  if (length(data_pbf_files) != 1) {
-    stop(sprintf("data_path must contain exactly one .pbf file, found: %d", length(data_pbf_files)))
+  if (length(data_pbf_files) > 1) {
+    cli::cli_abort(
+      "`.path {output_path}` must contain at most one {.file .pbf} file; found {length(data_pbf_files)} file{?s}."
+    )
   }
+
+
   pbf_path <- data_pbf_files[[1]]
   checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
 
@@ -105,7 +109,7 @@ build_custom_network <- function(data_path,
   # message copied files
   formatted_files <- paste0("{.file ", basename(files_to_copy), "}", collapse = ", ")
   cli::cli_inform(c(
-    i = "Copying {length(files_to_copy)} file{?s}: {formatted_files} → {.path {output_path}}"
+    i = "Copying {length(files_to_copy)} file{?s}: {formatted_files} to {.path {output_path}}"
   ))
 
   # manipulate output_path directory
