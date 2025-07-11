@@ -584,11 +584,11 @@ public class R5RCore {
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
 
-    public void applyCongestion(String dataFolder, String fileName, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
-        Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
+    public void applyCongestion(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
+        Path filePathPath = Paths.get(filePath).toAbsolutePath().normalize();
 
         RoadCongestion congestion = new RoadCongestion();
-        congestion.polygonLayer = Paths.get(path.toString(), fileName).toString();
+        congestion.polygonLayer = filePathPath.toString();
         congestion.scalingAttribute = scalingAttribute;
         congestion.priorityAttribute = priorityAttribute;
         congestion.nameAttribute = nameAttribute;

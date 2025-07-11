@@ -29,7 +29,7 @@ congestion_poly2geojson <- function(new_speeds_poly){
   # check input colnames
   checkmate::assert_names(
     x = names(new_speeds_poly),
-    must.include = c("poly_id", "max_speed")
+    must.include = c("poly_id", "scale", "priority", "geometry")
   )
 
   # check input geometry

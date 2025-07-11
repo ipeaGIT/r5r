@@ -19,7 +19,10 @@ build_custom_network(
 OSM network and optionally supporting data.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the speed modifications. The
-table must contain columns \code{osm_id} and \code{max_speed}.}
+table must contain columns \code{osm_id} and \code{max_speed}. OR
+A \verb{sf data.frame} specifying the speed modifications. The table must
+contain columns \code{sf polygon}, \code{scale}, \code{priority}. See
+\code{details}.}
 
 \item{output_path}{Character. A string pointing to the directory where the
 modified \code{network.dat} will be saved. Must be different from
@@ -30,7 +33,7 @@ specified in \code{new_carspeeds}. Must be \verb{>= }0. Defaults to \code{NULL} 
 roads not listed have their speeds unchanged. When set to \code{0}, the road
 segment is assumed to be closed.}
 
-\item{percentage_mode}{Logical. If \code{TRUE}, values in \code{max_speed} are
+\item{percentage_mode}{Logical. Only OSM mode. If \code{TRUE}, values in \code{max_speed} are
 interpreted as percentages of original speeds; if \code{FALSE}, as
 absolute speeds (km/h). Defaults to \code{TRUE} - percentages.}
 
@@ -52,9 +55,22 @@ A \code{r5r_network} object representing the built network to connect with
 \code{R5} routing engine.
 }
 \description{
-The function builds a transport network with modified OSM car speeds. The new
-speed factors must me passed from as \code{data.frame} indicating the new max speed
-of each OSM edge id.
+The function builds a transport network with modified OSM car speeds. The
+function has two modes, herby refereed to as "OSM mode" and "polygon mode".
+}
+\details{
+OSM mode: The new speed factors must be passed as a \code{data.frame}
+indicating the new max speed of each OSM edge id. The table must contain
+columns \code{osm_id} and \code{max_speed}. Values in \code{max_speed} can be
+interpreted as percentages of original speeds or as absolute speeds (km/h) by
+using \code{percentage_mode} parameter.
+
+Polygon mode: The new speed factors must be passed through "congestion
+region(s)" specified as \code{data.frame} containing  in each row an \verb{sf polygon}
+outlining the "congestion region", \code{scale} and \code{priority}.
+Values in \code{scale} can only be interpreted as percentages of original
+speeds as \code{percentage_mode} must be \code{TRUE}. \code{Priority} is used to apply
+a heirarchy in case of overlapping polygons.
 }
 \section{Elevation}{
 
