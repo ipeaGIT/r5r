@@ -51,31 +51,31 @@ public class SpeedSetter {
     private final Path outputFilePath;
     private float defaultValue = 1;
     private final OSM osmRoadNetwork;
-    private final Map<Long, Float> speedMap;
+    private final HashMap<Long, Float> speedMap;
     private SpeedSetterMode mode = SpeedSetterMode.PERCENTAGE;
     private float defaultSpeedForNoHwyTag;
-    private final Map<String, Float> highwayDefaultSpeedMap;
+    private final HashMap<String, Float> highwayDefaultSpeedMap;
 
     /**
      * Prepares data for manipulation does not modify any files.
      *
      * @param pbfFile      Absolute path to the pbf file
-     * @param speedCsvFile Absolute path to the CSV file with columns [osm_id,max_speed]
+     * @param speedMap     A HashMap with key [osm_id] and value [max_speed]
      * @param outputFolder Absolute path to the output folder to save the modified PBF
      * @param verbose      If true, enables verbose logging; otherwise, logs only errors
      * @throws IOException If any of the input files or the output folder are not found or accessible
      */
-    public SpeedSetter(String pbfFile, String speedCsvFile, String outputFolder, boolean verbose) throws IOException {
+    public SpeedSetter(String pbfFile, HashMap<Long, Float> speedMap, String outputFolder, boolean verbose) throws IOException {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         ch.qos.logback.classic.Logger speedSetterLogger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
         ch.qos.logback.classic.Logger osmLogger = loggerContext.getLogger("com.conveyal.osmlib");
 
         if (verbose) {
-            speedSetterLogger.setLevel(Level.ALL);
-            osmLogger.setLevel(Level.ALL);
+            speedSetterLogger.setLevel(Level.INFO);
+            osmLogger.setLevel(Level.INFO);
         } else {
             speedSetterLogger.setLevel(Level.ERROR);
-            osmLogger.setLevel(Level.ERROR);
+            osmLogger.setLevel(Level.OFF);
         }
 
         // Build paths
@@ -91,13 +91,7 @@ public class SpeedSetter {
             throw new IOException("Speeds CSV not found: " + pbfFilePath.toAbsolutePath());
         }
 
-        Path speedCsvFilePath = Paths.get(speedCsvFile);
-        if (!Files.exists(speedCsvFilePath)) {
-            LOG.error("Speeds CSV not found: {}", speedCsvFilePath.toAbsolutePath());
-            throw new IOException("Speeds CSV not found: " + speedCsvFilePath.toAbsolutePath());
-        }
-
-        outputFilePath = createOutputFilePath(pbfFilePath, outputFolderPath, speedCsvFilePath);
+        outputFilePath = createOutputFilePath(pbfFilePath, outputFolderPath);
         // finished building paths
 
         // Load OSM
@@ -106,8 +100,8 @@ public class SpeedSetter {
         LOG.info("Loaded OSM network from file {}", pbfFilePath.getFileName());
 
         // Load CSV into a Map
-        speedMap = buildSpeedMap(speedCsvFilePath);
-        LOG.info("Loaded desired road speeds from file {}", speedCsvFilePath.getFileName());
+        this.speedMap = speedMap;
+        LOG.info("Loaded desired road speeds from table.");
 
         highwayDefaultSpeedMap = createHighwayDefaultSpeedMap();
     }
@@ -138,10 +132,9 @@ public class SpeedSetter {
      *
      * @return Path to the new output PBF file
      */
-    private Path createOutputFilePath(Path pbfFilePath, Path outputFolderPath, Path speedCsvFilePath) {
+    private Path createOutputFilePath(Path pbfFilePath, Path outputFolderPath) {
         String originalPbfName = pbfFilePath.getFileName().toString();
-        String csvPrefix = speedCsvFilePath.getFileName().toString().substring(0, speedCsvFilePath.getFileName().toString().length() - 4); // cut extension
-        String newFileName = csvPrefix + "-" + originalPbfName;
+        String newFileName = "congested-" + originalPbfName;
         return outputFolderPath.resolve(newFileName);
     }
 
@@ -153,8 +146,8 @@ public class SpeedSetter {
      * Loads a map of OSM way IDs to speed values from the specified CSV file.
      * The CSV must have columns [osm_id,max_speed].
      */
-    private Map<Long, Float> buildSpeedMap(Path speedCsvFilePath) throws IOException {
-        Map<Long, Float> speedMap = new HashMap<>();
+    private HashMap<Long, Float> buildSpeedMap(Path speedCsvFilePath) throws IOException {
+        HashMap<Long, Float> speedMap = new HashMap<>();
 
         try (BufferedReader br = Files.newBufferedReader(speedCsvFilePath)) {
             String header = br.readLine(); // skip header
@@ -228,9 +221,9 @@ public class SpeedSetter {
         }
     }
 
-    private Map<String, Float> createHighwayDefaultSpeedMap() {
+    private HashMap<String, Float> createHighwayDefaultSpeedMap() {
         SpeedConfig speedConfig = SpeedConfig.defaultConfig();
-        Map<String, Float> highwaySpeedMap = new HashMap<>(speedConfig.values.size() + 1);
+        HashMap<String, Float> highwaySpeedMap = new HashMap<>(speedConfig.values.size() + 1);
         if (speedConfig.units != MPH) {
             LOG.error("speedConfig is expected to be in MPH. Something has changed; skipping without generating a default highwaySpeedMap.");
             defaultSpeedForNoHwyTag = 40;
