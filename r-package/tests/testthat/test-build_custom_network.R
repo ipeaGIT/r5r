@@ -142,3 +142,7 @@ test_that("errors error in the new_carspeeds column names", {
   expect_error(tester(test_new_carspeeds = mock_csv))
 
 })
+
+test_that("no pbf data provided", {
+  expect_error(tester(test_data_path = tempdir_unique()))
+})

@@ -88,9 +88,9 @@ build_custom_network <- function(data_path,
 
   # manipulate data_path directory
   data_pbf_files <- list.files(data_path, pattern = "\\.pbf$", full.names = TRUE)
-  if (length(data_pbf_files) > 1) {
+  if (length(data_pbf_files) != 1) {
     cli::cli_abort(
-      "`.path {output_path}` must contain at most one {.file .pbf} file; found {length(data_pbf_files)} file{?s}."
+      "`.path {output_path}` must contain exactly one {.file .pbf} file; found {length(data_pbf_files)} file{?s}."
     )
   }
 
