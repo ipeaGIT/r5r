@@ -4,7 +4,7 @@
 #' calculated in [travel_time_matrix()], [expanded_travel_time_matrix()],
 #' [accessibility()] and [pareto_frontier()]. This fare structure can be
 #' manually edited and adjusted to the existing rules in your study area, as
-#' long as they stick to some basic premises. Please see the \link[vignette:fare_structure]{fare structure vignette} for more information.
+#' long as they stick to some basic premises. Please see the \href{../doc/fare_structure.html}{fare-structure vignette} for more information.
 #'
 #' @template r5r_network
 #' @template r5r_core
