@@ -67,7 +67,7 @@ Creates a basic fare structure that describes how transit fares should be
 calculated in \code{\link[=travel_time_matrix]{travel_time_matrix()}}, \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
 \code{\link[=accessibility]{accessibility()}} and \code{\link[=pareto_frontier]{pareto_frontier()}}. This fare structure can be
 manually edited and adjusted to the existing rules in your study area, as
-long as they stick to some basic premises. Please see the \link[vignette:fare_structure]{fare structure vignette} for more information.
+long as they stick to some basic premises. Please see the \href{../doc/fare_structure.html}{fare-structure vignette} for more information.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

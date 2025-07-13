@@ -1,8 +1,8 @@
 ---
-title: 'Modify OSM car speeds'
+title: 'Building a custom network with modified OSM car speeds'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-abstract: "This vignette shows how to build a transport network with modified OSM car speeds, which can be used to simulate different scenarios of traffic congestion and road closures."
+abstract: "This vignette shows how to build a custom transport network with modified OSM car speeds, which can be used to simulate different scenarios of traffic congestion and road closures."
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Modify OSM car speeds} 
@@ -25,15 +25,15 @@ knitr::opts_chunk$set(
 
 By default, routing by car in `R5` considers that vehicles travel at the legal speed limit in each OSM road edge. This is commonly referred to as a "free flow scenario", without congestion. However, the average speed of car trips is different (usually lower) than the legal speed limit in most real case scenarios due to traffic conditions and driving behavior.
 
-This vignette shows how you can set custom speeds for cars by making simple changes to OSM data with the convenient `modify_osm_carspeeds()` function. We'll show how OSM speeds can be changed using two different strategies: (1) by applying different speed factors by road hierarchy, and (2) by changing the same speed factor to all roads. A third scenario would be to change the speed of only the roads within determined areas/polygons, but we'll leave this for a future occasion.
+This vignette shows how you can set custom speeds for cars by making simple changes to OSM data with the convenient `build_custom_network()` function. We'll show how OSM speeds can be changed using two different strategies: (1) by applying different speed factors by road hierarchy, and (2) by changing the same speed factor to all roads. A third scenario would be to change the speed of only the roads within determined areas/polygons, but we'll leave this for a future occasion.
 
 
 ## Basic usage
 
-The `modify_osm_carspeeds()` has a relatively similar behavior to the `r5r::setup_r5()` function. It builds a transport network that can be used in the routing and accessibility function in `r5r`. The two key differences here are:
+The `build_custom_network()` has a relatively similar behavior to the `r5r::build_network()` function. It builds a transport network that can be used in the routing and accessibility function in `r5r`. The two key differences here are:
 
-1. The user needs to pass a directory path where the new transport network is going to be saved. By default, `modify_osm_carspeeds()` builds the new network in a temporary directory, but users can point to a permanent directory using the `output_dir` parameter.
-2. The user needs to point to a `.csv` file that indicates the speed factor for each OSM edge id.
+1. The user needs to pass a directory path where the new transport network is going to be saved. By default, `build_custom_network()` builds the new network in a temporary directory, but users can point to a permanent directory using the `output_dir` parameter.
+2. The user needs to point to pass to the `new_carspeeds` parameter a `data.frame` that indicates the speed factor for each OSM edge id.
 
 In this first example we'll be using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. This sample data path includes the file `"poa_osm_congestion.csv"`, which should have two columns: `"osm_id"` and `"max_speed"`. Like this:
 
@@ -50,29 +50,24 @@ library(ggplot2)
 # data path where the .pbf file is located
 data_path <- system.file("extdata/poa", package = "r5r")
 
-# path to csv file with speed factors
-csv_path <- paste0(data_path,'/poa_osm_congestion.csv')
-
-speed_factors <- read.csv(csv_path)
+# read data.frame with speed factors
+speed_factors <- read.csv(
+  system.file("extdata/poa/poa_osm_congestion.csv", package = "r5r")
+  )
 
 head(speed_factors)
 
 ```
+In this example, the values of the `"max_speed"` column in the `speed_factors` object are all set to `0.5`. Since we also set the parameter `percentage_mode = TRUE`, this means that the driving speed of those OSM edges listed in the `data.frame` will be at 50% of the original speed in the OSM data. Mind you that the values in the `"max_speed"` column also accept absolute values in Km/h, in which case you must use `percentage_mode = FALSE`.
 
-With the code below, we build a new transport network with the modified speeds present in the `.csv` file. In this example, the values of the `"max_speed"` column in the `.csv` file are all set to `0.5`. Since we also set the parameter `percentage_mode = TRUE`, this means that the driving speed of those OSM edges listed in the `.csv` will be at 50% of the original speed in the OSM data. Mind you that the values in the `"max_speed"` column also accept absolute values in Km/h, in which case you must use `percentage_mode = FALSE`.
-
-obs. by default, the speeds of all the OSM edges not listed in the `.csv` file are kept unchanged. You can change the default value, as we'll see in the second example below.
+obs. by default, the speeds of all the OSM edges not listed in the `data.frame` are kept unchanged. You can change the default value, as we'll see in the second example below.
 
 ```{r, message = FALSE}
-# path to the .pbf file with the OSM network data
-pbf_path <- paste0(data_path,'/poa_osm.pbf')
-
-r5r_network_congestion <- modify_osm_carspeeds(
-  pbf_path = pbf_path,
-  csv_path = csv_path,
+r5r_network_congestion <- r5r::build_custom_network(
+  data_path = data_path,
+  new_carspeeds = speed_factors,
   percentage_mode = TRUE,
   verbose = FALSE
-  #,overwrite = FALSE 666
   )
 
 ```
@@ -104,6 +99,9 @@ First we need to do read the OSM data from our `.pbf` file, and to filter the OS
 
 
 ```{r, message=FALSE}
+# path to OSM pbf
+pbf_path <- paste0(data_path, "/poa_osm.pbf")
+  
 # read layer of lines from pbf
 roads <- sf::st_read(
   pbf_path, 
@@ -129,66 +127,59 @@ plot(roads["highway"])
 
 ```
 
-Now we only need to add a new column `"max_speed"` with values conditioned on the road type, and save the table as a `.csv` file. The `data.frame` looks like this:
+Now we only need to add a new column `"max_speed"` with values conditioned on the road type, and make sure the `osm_id` is of class `numeric`. The `data.frame` looks like this:
 
 ```{r}
 new_speeds <- roads |>
-  mutate(max_speed = case_when(
-    highway == "motorway"  ~ 0.75,
-    highway == "primary"   ~ 0.8,
-    highway == "secondary" ~ 0.85,
-    highway == "tertiary"  ~ 0.9)) |>
+  mutate( 
+    osm_id = as.numeric(osm_id),
+    max_speed = case_when(
+      highway == "motorway"  ~ 0.75,
+      highway == "primary"   ~ 0.8,
+      highway == "secondary" ~ 0.85,
+      highway == "tertiary"  ~ 0.9)) |>
   sf::st_drop_geometry()
 
 head(new_speeds)
 
-# save speed factors to a csv
-csv_path <- tempfile(pattern = 'speed_factors', fileext = '.csv')
-data.table::fwrite(new_speeds, file = csv_path)
-
 ```
 
-That's it. Now we can pass the path of the `.csv` file to the `modify_osm_carspeeds()` along with the original OSM `.pbf` file to build a new routable transport network with modified OSM car speeds.
+That's it. Now we can pass the `new_speeds` data frame to `build_custom_network()` along with the path to the directory where the original OSM `.pbf` file is stored and the function will build a new routable transport network with modified OSM car speeds.
 
 ```{r, message = FALSE}
 
-r5r_network_new_speeds <- modify_osm_carspeeds(
-  pbf_path = pbf_path,
-  csv_path = csv_path,
-  output_dir = tempdir(),
+r5r_network_new_speeds <- r5r::build_custom_network(
+  data_path = data_path,
+  new_carspeeds = new_speeds,
+  output_path = tempdir(),
   percentage_mode = TRUE,
   verbose = FALSE
-  #,overwrite = FALSE 666
   )
 ```
 
 
 # 3. Applying the same speed factor to all roads
 
-The `modify_osm_carspeeds()` function has a parameter `default_speed`, which can be used to set the speed of all the roads not listed in the `.csv` file. By default, `default_speed = NULL` and the speeds of the unlisted roads are kept unchanged.
+The `build_custom_network()` function has a parameter `default_speed`, which can be used to set the speed of all the roads not listed in the `new_carspeeds` input. By default, `default_speed = NULL` and the speeds of the unlisted roads are kept unchanged.
 
-In this example, we'll use this parameter to apply the same speed factor to all roads, to simulate as if the speed limits of all roads was changed to 40 Km/h. To do this, can only need to create a `.csv` file with a mock OSM id that that does not exist in our OSM data and to pass `default_speed = 40` with `percentage_mode = FALSE`.
+In this example, we'll use this parameter to apply the same speed factor to all roads, to simulate as if the speed limits of all roads was changed to 40 Km/h. To do this, we only need to create a `data.frame` with a mock OSM id that that does not exist in our OSM data and to pass `default_speed = 40` with `percentage_mode = FALSE`.
 
 
 ```{r, message = FALSE}
-# create csv with a road that does not exist.
+# create df with a road that does not exist.
 mock_data <- data.frame(osm_id = 9999, max_speed = 9999)
-mock_csv <- tempfile(fileext = '.csv')
-data.table::fwrite(mock_data, file = mock_csv)
 
-# create a temp dir
+# create a temp dir where the custom network will be saved
 new_temp_dir <- fs::path_temp(tmpdir='./40kmph')
 dir.create(new_temp_dir)
 
 # build network with all roads at at 40 Km/h 
-r5r_network_20kmph <- r5r::modify_osm_carspeeds(
-  pbf_path = pbf_path,
-  csv_path = mock_csv,
-  output_dir = new_temp_dir,
+r5r_network_20kmph <- r5r::build_custom_network(
+  data_path = data_path,
+  new_carspeeds = mock_data,
+  output_path = new_temp_dir,
   default_speed = 40,
-  percentage_mode = FALSE,
-  verbose = FALSE
-  #,overwrite = FALSE 666
+  percentage_mode = FALSE
   )
 ```
 

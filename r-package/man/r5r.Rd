@@ -44,12 +44,12 @@ Authors:
   \item Marcus Saraiva \email{marcus.saraiva@gmail.com} (\href{https://orcid.org/0000-0001-6218-2338}{ORCID})
   \item Daniel Herszenhut \email{dhersz@gmail.com} (\href{https://orcid.org/0000-0001-8066-1105}{ORCID})
   \item Alex Magnus \email{alex.magnus@mail.utoronto.ca}
-  \item Carlos Kaue Vieira Braga \email{kaue@kauebraga.dev} (\href{https://orcid.org/0000-0002-6104-7297}{ORCID})
   \item Matthew Wigginton Bhagat-Conway \email{mwbc@unc.edu} (\href{https://orcid.org/0000-0002-1210-2982}{ORCID})
 }
 
 Other contributors:
 \itemize{
+  \item Carlos Kaue Vieira Braga \email{kaue@kauebraga.dev} (\href{https://orcid.org/0000-0002-6104-7297}{ORCID}) [contributor]
   \item Luyu Liu \email{luyuliu@ufl.edu} (\href{https://orcid.org/0000-0002-6684-5570}{ORCID}) [contributor]
   \item Daniel Snow \email{dan@sno.ws} [contributor]
   \item Ipea - Institute for Applied Economic Research [copyright holder, funder]

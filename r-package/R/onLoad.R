@@ -1,12 +1,14 @@
 # initial message about ram memory
 .onAttach <- function(lib, pkg) {
-  packageStartupMessage(
-    "Please make sure you have already allocated ",
-    "some memory to Java by running:\n",
-    "  options(java.parameters = '-Xmx2G').\n",
-    "You should replace '2G' by the amount of memory you'll require. ",
-    "Currently, Java memory is set to ", getOption("java.parameters")
-    )
+  msg <- cli::format_inline(
+    "Please make sure you have already allocated some memory to Java by running
+    {.code options(java.parameters = '-Xmx2G')} *before* loading library(r5r)
+
+    You should replace {.val 2G} by the amount of memory you'll need.
+    Currently, Java memory is set to {.val {getOption('java.parameters')}}."
+  )
+
+  packageStartupMessage(msg)
   }
 
 # package global variables

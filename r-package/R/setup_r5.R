@@ -1,4 +1,4 @@
-#' Create a transport network used for routing in R5
+#' Create a transport network used for routing in R5 (deprecated)
 #'
 #' @description
 #' `r lifecycle::badge("deprecated")`
@@ -9,21 +9,20 @@
 #'
 #' @template verbose
 #' @param data_path A string pointing to the directory where data inputs are
-#' stored and where the built `network.dat` will be saved.
-#' @param temp_dir A logical. Whether the `R5` Jar file should be saved to a
-#' temporary directory. Defaults to `FALSE`.
-#' @param elevation A string. The name of the impedance function to be used to
-#' calculate impedance for walking and cycling based on street slopes.
-#' Available options include `TOBLER` (Default) and `MINETTI`, or `NONE` to
-#' ignore elevation. R5 loads elevation data from `.tif` files saved inside the
-#' `data_path` directory. See more info in the Details below.
+#'        stored and where the built `network.dat` will be saved.
+#' @param temp_dir A logical. Whether the `network.dat` file should be saved to
+#'        a temporary directory. Defaults to `FALSE`.
+#' @template elevation
 #' @param overwrite A logical. Whether to overwrite an existing `network.dat`
-#' or to use a cached file. Defaults to `FALSE` (i.e. use a cached network).
+#'        or to use a cached file. Defaults to `FALSE` (i.e. use a cached
+#'        network).
 #'
-#' @return An `rJava` object to connect with `R5` routing engine.
+#' @return A `r5r_network` object representing the built network to connect with
+#'         `R5` routing engine.
+#'
+#' @template elevation_section
 #'
 #' @family Build network
-#' @keywords internal
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -31,7 +30,8 @@
 #' # directory with street network and gtfs files
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #'
-#' r5r_network <- setup_r5(data_path)
+#' # `setup_r5()` has been deprecated, please switch to `build_network()`
+#' r5r_network <- build_network(data_path)
 #' @export
 setup_r5 <- function(data_path,
                      verbose = FALSE,

@@ -32,19 +32,13 @@ test_that("build_network - expected errors", {
   testthat::expect_error( build_network(data_path = 'a') )
   testthat::expect_error(build_network(data_path = path, verbose = 'a'))
   testthat::expect_error(build_network(data_path = path, temp_dir = 'a'))
-  # testthat::expect_error(build_network(data_path = path, elevation = 'a'))
-#  testthat::expect_error(build_network(data_path = path, version = 'a'))
+  testthat::expect_error(build_network(data_path = path, elevation = 'a'))
 
   # No OSM data
+  r5r_temp <- r5r:::tempdir_unique()
   testthat::expect_error(
-    build_network(data_path = tempdir())
+    build_network(data_path = r5r_temp)
     )
-
-  # # remove existing network.dat
-  #   file.rename(file.path(path, "network.dat"), file.path(path, "network2.x"))
-  #   testthat::expect_error( build_network(data_path = path, version = "0") )
-  #   testthat::expect_error( build_network(data_path = path, verbose ='a') )
-  #   file.rename(file.path(path, "network2.x"), file.path(path, "network.dat"))
 
   })
 
