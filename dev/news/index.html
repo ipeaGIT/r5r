@@ -20,11 +20,11 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
+    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
-    <li><a class="dropdown-item" href="../articles/modify_osm_car_speeds.html">Modify OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
@@ -54,9 +54,9 @@
 <h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/build_network.html">build_network()</a></code> to replace <code><a href="../reference/setup_r5.html">setup_r5()</a></code>, which is being deprecated. Idiomatically r5r_core is now r5r_network.</li>
-<li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
+<li>New function <code><a href="../reference/build_custom_network.html">build_custom_network()</a></code> to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
 </li>
-<li>New function <code>build_modified_network()</code> to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
+<li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
 </li>
 <li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In pactice, this means that these functions are now much faster when there are multiple origins to few destinations. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
 </li>
@@ -317,7 +317,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

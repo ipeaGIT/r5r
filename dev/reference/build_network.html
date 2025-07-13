@@ -3,21 +3,19 @@
 multiple data inputs present in the directory where the network should be
 saved to. The directory must contain only one street network file (in
 .osm.pbf format). It may optionally contain one or more public transport
-GTFS feeds (in GTFS.zip format, where GTFS is the name of your feed),
-when used for public transport routing, and a .tif file describing the
-elevation profile of the study area. If there is more than one GTFS feed in
-the directory, all feeds are merged. If there is already a 'network.dat'
-file in the directory, the function will simply read it and load it to
-memory (unless specified not to do so)."><meta property="og:description" content="Builds a multimodal transport network used for routing in R5, combining
+GTFS feeds (in .zip format), when used for public transport routing, and a
+.tif file describing the elevation profile of the study area. If there is
+more than one GTFS feed in the directory, all feeds are automatically merged.
+If there is already a 'network.dat' file in the directory, the function will
+simply read it and load it to memory (unless specified not to do so)."><meta property="og:description" content="Builds a multimodal transport network used for routing in R5, combining
 multiple data inputs present in the directory where the network should be
 saved to. The directory must contain only one street network file (in
 .osm.pbf format). It may optionally contain one or more public transport
-GTFS feeds (in GTFS.zip format, where GTFS is the name of your feed),
-when used for public transport routing, and a .tif file describing the
-elevation profile of the study area. If there is more than one GTFS feed in
-the directory, all feeds are merged. If there is already a 'network.dat'
-file in the directory, the function will simply read it and load it to
-memory (unless specified not to do so)."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
+GTFS feeds (in .zip format), when used for public transport routing, and a
+.tif file describing the elevation profile of the study area. If there is
+more than one GTFS feed in the directory, all feeds are automatically merged.
+If there is already a 'network.dat' file in the directory, the function will
+simply read it and load it to memory (unless specified not to do so)."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -38,11 +36,11 @@ memory (unless specified not to do so)."><meta property="og:image" content="http
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
+    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
-    <li><a class="dropdown-item" href="../articles/modify_osm_car_speeds.html">Modify OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
@@ -74,12 +72,11 @@ memory (unless specified not to do so)."><meta property="og:image" content="http
 multiple data inputs present in the directory where the network should be
 saved to. The directory must contain only one street network file (in
 <code>.osm.pbf</code> format). It may optionally contain one or more public transport
-GTFS feeds (in <code>GTFS.zip</code> format, where <code>GTFS</code> is the name of your feed),
-when used for public transport routing, and a <code>.tif</code> file describing the
-elevation profile of the study area. If there is more than one GTFS feed in
-the directory, all feeds are merged. If there is already a 'network.dat'
-file in the directory, the function will simply read it and load it to
-memory (unless specified not to do so).</p>
+GTFS feeds (in <code>.zip</code> format), when used for public transport routing, and a
+<code>.tif</code> file describing the elevation profile of the study area. If there is
+more than one GTFS feed in the directory, all feeds are automatically merged.
+If there is already a <code>'network.dat'</code> file in the directory, the function will
+simply read it and load it to memory (unless specified not to do so).</p>
     </div>
 
     <div class="section level2">
@@ -111,8 +108,8 @@ detailed output, which can be useful for debugging issues not caught by
 
 
 <dt id="arg-temp-dir">temp_dir<a class="anchor" aria-label="anchor" href="#arg-temp-dir"></a></dt>
-<dd><p>A logical. Whether the <code>R5</code> Jar file should be saved to a
-temporary directory. Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>A logical. Whether the <code>network.dat</code> file should be saved to
+a temporary directory. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-elevation">elevation<a class="anchor" aria-label="anchor" href="#arg-elevation"></a></dt>
@@ -132,10 +129,12 @@ network).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>rJava</code> object to connect with <code>R5</code> routing engine.</p>
+    <p>A <code>r5r_network</code> object representing the built network to connect with
+<code>R5</code> routing engine.</p>
     </div>
     <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <h2 id="elevation">Elevation<a class="anchor" aria-label="anchor" href="#elevation"></a></h2>
+
 
 
 <p>More information about the <code>TOBLER</code> and <code>MINETTI</code> options to calculate the
@@ -154,6 +153,7 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other Build network:
+<code><a href="build_custom_network.html">build_custom_network</a>()</code>,
 <code><a href="download_r5.html">download_r5</a>()</code>,
 <code><a href="setup_r5.html">setup_r5</a>()</code></p></div>
     </div>
@@ -175,7 +175,7 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">
