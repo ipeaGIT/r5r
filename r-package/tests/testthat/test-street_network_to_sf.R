@@ -7,6 +7,7 @@ testthat::skip_on_cran()
 test_that("street_network_to_sf - expected behavior", {
 
   testthat::expect_type( street_network_to_sf(r5r_network), 'list')
+
 })
 
 
@@ -16,4 +17,9 @@ test_that("street_network_to_sf - expected errors", {
 
   # invalid input
   testthat::expect_error( street_network_to_sf('a') )
+
+
+  # warning due to deprecated argument
+  testthat::expect_warning( street_network_to_sf(r5r_core=r5r_network))
+
   })
