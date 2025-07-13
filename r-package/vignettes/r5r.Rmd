@@ -139,7 +139,7 @@ The package also includes a few **support functions**.
 
 4. `r5r_sitrep()` to generate a situation report to help debug eventual errors.
 
-obs. The package also includes a convenient function `modify_osm_carspeeds()` that allows one to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/modify_osm_car_speeds.html).
+obs. The package also includes a convenient function `build_custom_network()` that allows one to build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/build_custom_network.html).
 
 
 ## 3.1 Data requirements:
