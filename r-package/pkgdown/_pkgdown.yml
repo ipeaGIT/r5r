@@ -12,6 +12,7 @@ reference:
   - contents:
     - build_network
     - build_custom_network
+    - setup_r5
   - title: "Accessibility"
   - contents:
     - accessibility

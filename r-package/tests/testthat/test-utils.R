@@ -140,6 +140,12 @@ test_that("assign_points_input output is coherent", {
   })
 
 
+# r5r_sitrep situation report --------------------------------------------------
+
+  test_that("raises error if version is not a string", {
+    expect_is(r5r::r5r_sitrep(), 'list')
+  })
+
 
 
 # fileurl_from_metadata --------------------------------------------------

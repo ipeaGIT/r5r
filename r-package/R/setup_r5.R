@@ -37,7 +37,7 @@ setup_r5 <- function(data_path,
                      verbose = FALSE,
                      temp_dir = FALSE,
                      elevation = "TOBLER",
-                     overwrite = FALSE) {
+                     overwrite = FALSE) { # nocov start
 
   # Deprecation warning --------------------------------------------------------
   cli::cli_warn(c(
@@ -66,4 +66,4 @@ setup_r5 <- function(data_path,
     )
 
   return(r5r_network)
-}
+} # nocov end

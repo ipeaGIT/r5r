@@ -10,7 +10,7 @@
 #' @family support functions
 #'
 #' @keywords internal
-fileurl_from_metadata <- function(version = NULL) {
+fileurl_from_metadata <- function(version = NULL) { # nocov start
 
   # R5 version
   if(is.null(version)) {version = r5r_env$r5_jar_version}
@@ -38,11 +38,11 @@ fileurl_from_metadata <- function(version = NULL) {
   url <- metadata$download_path
   return(url)
 
-}
+} # nocov end
 
 
 check_transit_availability_on_date <- function(r5r_network,
-                                               departure_date){
+                                               departure_date){ # nocov start
 
   # check services Available on the departure date
   services <- r5r_network$getTransitServicesByDate(departure_date)
@@ -65,7 +65,7 @@ check_transit_availability_on_date <- function(r5r_network,
     cli::cli_alert_warning("Less than 20% of the transit services in the GTFS are running
                    on the selected departure date.")
   }
-}
+} # nocov end
 
 
 #' Initialize Java and Check Version
@@ -86,7 +86,10 @@ check_transit_availability_on_date <- function(r5r_network,
 #' @family support functions
 #'
 #' @keywords internal
-start_r5r_java <- function(data_path, temp_dir = FALSE, verbose = FALSE) {
+start_r5r_java <- function(data_path,
+                           temp_dir = FALSE,
+                           verbose = FALSE) { # nocov start
+
   log_filename <- "r5r-log.log"
   log_path <- paste0("-DLOG_PATH=", file.path(data_path, log_filename))
 
@@ -139,7 +142,7 @@ start_r5r_java <- function(data_path, temp_dir = FALSE, verbose = FALSE) {
 
   # R5 jar
   rJava::.jaddClassPath(path = jar_file)
-}
+} # nocov end
 
 
 #' Return a temporary directory path that is unique with every call
@@ -151,10 +154,10 @@ start_r5r_java <- function(data_path, temp_dir = FALSE, verbose = FALSE) {
 #' @family support functions
 #'
 #' @keywords internal
-tempdir_unique <- function(){
+tempdir_unique <- function(){ # nocov start
   output_dir <- tempfile("r5rtemp_")
   if (!dir.create(output_dir)) {
     stop("Failed to create temporary directory.")
   }
   return(output_dir)
-}
+} # nocov end

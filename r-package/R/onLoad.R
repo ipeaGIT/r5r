@@ -1,5 +1,5 @@
 # initial message about ram memory
-.onAttach <- function(lib, pkg) {
+.onAttach <- function(lib, pkg) { # nocov start
   msg <- cli::format_inline(
     "Please make sure you have already allocated some memory to Java by running
     {.code options(java.parameters = '-Xmx2G')} *before* loading library(r5r)
@@ -9,12 +9,12 @@
   )
 
   packageStartupMessage(msg)
-  }
+  } # nocov end
 
 # package global variables
 r5r_env <- new.env(parent = emptyenv())
 
-.onLoad <- function(lib, pkg) {
+.onLoad <- function(lib, pkg) { # nocov start
 
   # JAR version
   r5r_env$r5_jar_version <- "7.4.0"
@@ -32,4 +32,4 @@ r5r_env <- new.env(parent = emptyenv())
   old_cache <- all_cache[!grepl(r5r_env$r5_jar_version, all_cache)]
   if(length(old_cache)>0){ unlink(old_cache, recursive = TRUE) }
 
-}
+} # nocov end
