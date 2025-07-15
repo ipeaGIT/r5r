@@ -13,6 +13,8 @@ test_that("build_network - expected behavior", {
 
   testthat::expect_message( build_network(data_path = path, elevation="TOBLER", temp_dir = TRUE) )
 
+  testthat::expect_is( build_network(data_path = path, temp_dir = TRUE), "r5r_network" )
+
   # remove files GTFS
   #  file.rename(file.path(path, "poa.zip"), file.path(path, "poa.x"))
   # testthat::expect_message( build_network(data_path = path, verbose = F) )
