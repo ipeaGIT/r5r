@@ -51,22 +51,21 @@
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #'
 #' # data.frame with new speed info
-#' new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
+#' edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
 #' r5r_network_new_speeds <- r5r::build_custom_network(
 #'   data_path = data_path,
-#'   new_carspeeds = new_carspeeds,
+#'   new_carspeeds = edge_speeds,
 #'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
-#'
 #'
 #' # sf with congestion polygons
 #' congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
 #'
 #' r5r_network_congestion <- r5r::build_custom_network(
 #'   data_path = data_path,
-#'   new_carspeeds = new_carspeeds,
+#'   new_carspeeds = congestion_poly,
 #'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
@@ -103,6 +102,12 @@ build_custom_network <- function(data_path,
     )
   }
 
+  if(inherits(new_carspeeds, "sf") & isFALSE(percentage_mode)) {
+    cli::cli_abort(
+      "The `percentage_mode` must be `TRUE` when passing an `sf` objecto to `new_carspeeds`."
+    )
+  }
+
   # Standardize format of passed paths
   data_path <- normalizePath(data_path, mustWork = FALSE)
   output_path <- normalizePath(output_path, mustWork = FALSE)
@@ -134,6 +139,7 @@ build_custom_network <- function(data_path,
     ignore.case = TRUE,
     recursive = FALSE
   )
+
   # message copied files
   formatted_files <- paste0("{.file ", basename(files_to_copy), "}", collapse = ", ")
   cli::cli_inform(c(
@@ -184,7 +190,7 @@ build_custom_network <- function(data_path,
                                 rJava::.jfloat(default_speed))
   }
   else {
-    # OSM mode
+    # Edge mode
     # change speeds
     speed_map <- dt_to_speed_map(new_carspeeds)
     message("Building speed modifier...")
@@ -206,6 +212,6 @@ build_custom_network <- function(data_path,
                                       overwrite = TRUE)
   }
 
-  cli::cli_inform("New car network with modified speeds built at {.path {output_path}}")
+  cli::cli_inform("Custom network with modified car speeds built at {.path {output_path}}")
   return(new_network)
 }

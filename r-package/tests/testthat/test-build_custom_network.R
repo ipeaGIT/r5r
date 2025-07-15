@@ -9,6 +9,9 @@ testthat::skip_on_cran()
 # data.frame with new speed info
 new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
+# sf with congestion polygons
+congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
+
 tester <- function(test_data_path = data_path,
                    test_new_carspeeds = new_carspeeds,
                    output_path = tempdir(check = TRUE),
@@ -104,7 +107,6 @@ test_that("success in increasing travel times", {
   testthat::expect_true(det_pos$total_duration > det_pre$total_duration)
   testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
-
   testthat::expect_warning(
     tester(default_speed = 1, percentage_mode = FALSE)
   )
@@ -131,6 +133,9 @@ test_that("errors due to incorrect input types", {
 test_that("overwrite existing network in outputdir", {
 
   testthat::expect_message(new_r5r_network <- tester())
+  expect_true(is(new_r5r_network, "r5r_network"))
+
+  testthat::expect_message(new_r5r_network <- tester(test_new_carspeeds = congestion_poly))
   expect_true(is(new_r5r_network, "r5r_network"))
 
   })

@@ -16,7 +16,7 @@ build_custom_network(
 }
 \arguments{
 \item{data_path}{Character. Path to the directory with the\code{.pbf} file of the
-OSM network and optionally supporting data.}
+OSM network and optionally supporting data such as elevation and GTFS.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the speed modifications. The
 table must contain columns \code{osm_id} and \code{max_speed}. OR
@@ -52,25 +52,27 @@ below.}
 }
 \value{
 A \code{r5r_network} object representing the built network to connect with
-\code{R5} routing engine.
+\code{R5} routing engine, and a \code{network.dat} file saved in the \code{output_path}.
 }
 \description{
 The function builds a transport network with modified OSM car speeds. The
-function has two modes, herby refereed to as "OSM mode" and "polygon mode".
+function has two modes, hereby refereed to as "edge mode" and "polygon mode".
+See the Details section below.
 }
 \details{
-OSM mode: The new speed factors must be passed as a \code{data.frame}
+\itemize{
+\item \strong{Edge mode:} The new speed factors must be passed as a \code{data.frame}
 indicating the new max speed of each OSM edge id. The table must contain
 columns \code{osm_id} and \code{max_speed}. Values in \code{max_speed} can be
 interpreted as percentages of original speeds or as absolute speeds (km/h) by
 using \code{percentage_mode} parameter.
-
-Polygon mode: The new speed factors must be passed through "congestion
-region(s)" specified as \code{data.frame} containing  in each row an \verb{sf polygon}
-outlining the "congestion region", \code{scale} and \code{priority}.
+\item \strong{Polygon mode:} The new speed factors must be passed through "congestion
+region(s)" specified as an \verb{sf data.frame} containing  in each row an
+\verb{sf polygon} outlining the "congestion region", \code{scale} and \code{priority}.
 Values in \code{scale} can only be interpreted as percentages of original
 speeds as \code{percentage_mode} must be \code{TRUE}. \code{Priority} is used to apply
-a heirarchy in case of overlapping polygons.
+a hierarchy in case of overlapping polygons.
+}
 }
 \section{Elevation}{
 
@@ -98,14 +100,26 @@ library(r5r)
 data_path <- system.file("extdata/poa", package = "r5r")
 
 # data.frame with new speed info
-new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
+edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
-r5r_network_new_speed <- r5r::build_custom_network(
+r5r_network_new_speeds <- r5r::build_custom_network(
   data_path = data_path,
-  new_carspeeds = new_carspeeds,
+  new_carspeeds = edge_speeds,
   output_path = tempdir(),
   percentage_mode = TRUE
 )
+
+
+# sf with congestion polygons
+congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
+
+r5r_network_congestion <- r5r::build_custom_network(
+  data_path = data_path,
+  new_carspeeds = congestion_poly,
+  output_path = tempdir(),
+  percentage_mode = TRUE
+)
+
 \dontshow{\}) # examplesIf}
 }
 \seealso{
