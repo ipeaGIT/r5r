@@ -235,7 +235,7 @@ fare_structure$fares_per_type
 
 The fare rules for transfer are stored in the `fares_per_transfer` data.frame, 
 which is shown below. Each row contains the fare prices for transfers between the
-modes specified in `first_leg` and `second_leg` columns.
+modes specified in `alight_leg` and `board_leg` columns.
 
 ```{r}
 fare_structure$fares_per_transfer
@@ -248,18 +248,18 @@ Porto Alegre.
 
 ```{r}
 # conditional update fare value
-fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare := 7.2]
+fare_structure$fares_per_transfer[alight_leg == "BUS" & board_leg == "BUS", fare := 7.2]
 ```
 
 - Transfers between "BUS" and "RAIL" (in any direction) cost 8.37, once the 10% discount is applied. Let's make a final update in the data.frame to account for that.
 
 ```{r}
 # conditional update fare value
-fare_structure$fares_per_transfer[first_leg != second_leg, fare := 8.37]
+fare_structure$fares_per_transfer[alight_leg != board_leg, fare := 8.37]
 
 # use fcase instead ?
-fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
-                                                 first_leg != second_leg, 8.37)]
+fare_structure$fares_per_transfer[, fare := fcase(alight_leg == "BUS" & board_leg == "BUS", 7.2,
+                                                 alight_leg != board_leg, 8.37)]
 
 ```
 
@@ -271,7 +271,7 @@ will count to the global `max_discounted_transfers` allowance.
 
 ```{r}
 # remove row
-fare_structure$fares_per_transfer <- fare_structure$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
+fare_structure$fares_per_transfer <- fare_structure$fares_per_transfer[!(alight_leg == "RAIL" & board_leg == "RAIL")]
 
 ```
 

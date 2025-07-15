@@ -90,8 +90,8 @@ public class FareStructureBuilder {
             String[] legs = transfer.split("&");
 
             FarePerTransfer newTransfer = new FarePerTransfer();
-            newTransfer.setFirstLeg(legs[0]);
-            newTransfer.setSecondLeg(legs[1]);
+            newTransfer.setAlightLeg(legs[0]);
+            newTransfer.setBoardLeg(legs[1]);
             newTransfer.setFare(fare);
 
             faresPerTransfer.add(newTransfer);
