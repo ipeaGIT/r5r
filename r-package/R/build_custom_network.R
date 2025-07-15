@@ -1,24 +1,11 @@
 #' Create a custom transport network used for routing in R5 with modified OSM car speeds
 #'
 #' The function builds a transport network with modified OSM car speeds. The
-#' function has two modes, herby refereed to as "OSM mode" and "polygon mode".
-#'
-#' @details
-#' OSM mode: The new speed factors must be passed as a `data.frame`
-#' indicating the new max speed of each OSM edge id. The table must contain
-#' columns \code{osm_id} and \code{max_speed}. Values in \code{max_speed} can be
-#' interpreted as percentages of original speeds or as absolute speeds (km/h) by
-#' using `percentage_mode` parameter.
-#'
-#' Polygon mode: The new speed factors must be passed through "congestion
-#' region(s)" specified as `data.frame` containing  in each row an `sf polygon`
-#' outlining the "congestion region", \code{scale} and \code{priority}.
-#' Values in \code{scale} can only be interpreted as percentages of original
-#' speeds as `percentage_mode` must be `TRUE`. \code{Priority} is used to apply
-#' a heirarchy in case of overlapping polygons.
+#' function has two modes, hereby refereed to as "edge mode" and "polygon mode".
+#' See the Details section below.
 #'
 #' @param data_path Character. Path to the directory with the`.pbf` file of the
-#'        OSM network and optionally supporting data.
+#'        OSM network and optionally supporting data such as elevation and GTFS.
 #' @param new_carspeeds A `data.frame` specifying the speed modifications. The
 #'        table must contain columns \code{osm_id} and \code{max_speed}. OR
 #'        A `sf data.frame` specifying the speed modifications. The table must
@@ -38,8 +25,21 @@
 #' @template elevation
 #'
 #' @return A `r5r_network` object representing the built network to connect with
-#'         `R5` routing engine.
+#'         `R5` routing engine, and a `network.dat` file saved in the `output_path`.
 #'
+#' @details
+#' - **Edge mode:** The new speed factors must be passed as a `data.frame`
+#' indicating the new max speed of each OSM edge id. The table must contain
+#' columns \code{osm_id} and \code{max_speed}. Values in \code{max_speed} can be
+#' interpreted as percentages of original speeds or as absolute speeds (km/h) by
+#' using `percentage_mode` parameter.
+#'
+#' - **Polygon mode:** The new speed factors must be passed through "congestion
+#' region(s)" specified as an `sf data.frame` containing  in each row an
+#' `sf polygon` outlining the "congestion region", \code{scale} and \code{priority}.
+#' Values in \code{scale} can only be interpreted as percentages of original
+#' speeds as `percentage_mode` must be `TRUE`. \code{Priority} is used to apply
+#' a hierarchy in case of overlapping polygons.
 #' @template elevation_section
 #'
 #' @family Build network
@@ -53,12 +53,24 @@
 #' # data.frame with new speed info
 #' new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
-#' r5r_network_new_speed <- r5r::build_custom_network(
+#' r5r_network_new_speeds <- r5r::build_custom_network(
 #'   data_path = data_path,
 #'   new_carspeeds = new_carspeeds,
 #'   output_path = tempdir(),
 #'   percentage_mode = TRUE
 #' )
+#'
+#'
+#' # sf with congestion polygons
+#' congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
+#'
+#' r5r_network_congestion <- r5r::build_custom_network(
+#'   data_path = data_path,
+#'   new_carspeeds = new_carspeeds,
+#'   output_path = tempdir(),
+#'   percentage_mode = TRUE
+#' )
+#'
 #'
 #' @export
 build_custom_network <- function(data_path,
