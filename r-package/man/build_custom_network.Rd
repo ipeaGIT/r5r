@@ -11,6 +11,7 @@ build_custom_network(
   default_speed = NULL,
   percentage_mode = TRUE,
   verbose = FALSE,
+  verbose_core = FALSE,
   elevation = "TOBLER"
 )
 }
@@ -37,11 +38,7 @@ segment is assumed to be closed.}
 interpreted as percentages of original speeds; if \code{FALSE}, as
 absolute speeds (km/h). Defaults to \code{TRUE} - percentages.}
 
-\item{verbose}{A logical. Whether to show \code{R5} informative messages when
-running the function. Defaults to \code{FALSE} (please note that in such case
-\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
-detailed output, which can be useful for debugging issues not caught by
-\code{r5r}.}
+\item{verbose}{core Whether the returned core has paremeter \code{verbose = TRUE}.}
 
 \item{elevation}{A string. The name of the impedance function to be used to
 calculate impedance for walking and cycling based on street slopes.
@@ -102,12 +99,6 @@ data_path <- system.file("extdata/poa", package = "r5r")
 # data.frame with new speed info
 edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
-r5r_network_new_speeds <- r5r::build_custom_network(
-  data_path = data_path,
-  new_carspeeds = edge_speeds,
-  output_path = tempdir(),
-  percentage_mode = TRUE
-)
 
 # sf with congestion polygons
 congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))

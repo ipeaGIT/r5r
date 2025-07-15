@@ -101,6 +101,7 @@ public class SpeedSetter {
 
         // Load CSV into a Map
         this.speedMap = speedMap;
+        verifySpeedMap();
         LOG.info("Loaded desired road speeds from table.");
 
         highwayDefaultSpeedMap = createHighwayDefaultSpeedMap();
@@ -143,41 +144,17 @@ public class SpeedSetter {
     }
 
     /**
-     * Loads a map of OSM way IDs to speed values from the specified CSV file.
-     * The CSV must have columns [osm_id,max_speed].
+        Verify that the OSM ids are real
      */
-    private HashMap<Long, Float> buildSpeedMap(Path speedCsvFilePath) throws IOException {
-        HashMap<Long, Float> speedMap = new HashMap<>();
-
-        try (BufferedReader br = Files.newBufferedReader(speedCsvFilePath)) {
-            String header = br.readLine(); // skip header
-            if (header == null) {
-                LOG.error("Speeds CSV is empty: {}", speedCsvFilePath.toAbsolutePath());
-                throw new IOException("Speeds CSV is empty: " + speedCsvFilePath.toAbsolutePath());
-            }
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-                if (fields.length < 2) continue; // skip malformed lines
-
-                try {
-                    long osmWayId = Long.parseLong(fields[0].trim());
-                    float value = Float.parseFloat(fields[1].trim());
-                    Way way = osmRoadNetwork.ways.get(osmWayId);
-                    if (way == null) {
-                        LOG.warn("Way ID {} not found in OSM data, skipping.", osmWayId);
-                        continue;
-                    }
-                    speedMap.put(osmWayId, value);
-                } catch (NumberFormatException nfe) {
-                    LOG.warn("Skipping invalid line in CSV: {}", line);
-                }
+    private void verifySpeedMap() {
+        for (Long potentialWayId : speedMap.keySet()) {
+            Way way = osmRoadNetwork.ways.get(potentialWayId);
+            if (way == null) {
+                LOG.warn("Way ID {} not found in OSM data, skipping.", potentialWayId);
             }
         }
-
-        return speedMap;
     }
+
 
     private void modifyWaySpeeds() {
         for (Map.Entry<Long, Way> entry : osmRoadNetwork.ways.entrySet()) {

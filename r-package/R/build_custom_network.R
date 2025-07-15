@@ -22,6 +22,7 @@
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
+#' @param verbose core Whether the returned core has paremeter `verbose = TRUE`.
 #' @template elevation
 #'
 #' @return A `r5r_network` object representing the built network to connect with
@@ -53,12 +54,12 @@
 #' # data.frame with new speed info
 #' edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
-#' r5r_network_new_speeds <- r5r::build_custom_network(
-#'   data_path = data_path,
-#'   new_carspeeds = edge_speeds,
-#'   output_path = tempdir(),
-#'   percentage_mode = TRUE
-#' )
+# r5r_network_new_speeds <- r5r::build_custom_network(
+#   data_path = data_path,
+#   new_carspeeds = edge_speeds,
+#   output_path = tempdir(),
+#   percentage_mode = TRUE
+# )
 #'
 #' # sf with congestion polygons
 #' congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
@@ -78,6 +79,7 @@ build_custom_network <- function(data_path,
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
+                                 verbose_core = FALSE,
                                  elevation = "TOBLER"){
 
   # check inputs
@@ -181,7 +183,7 @@ build_custom_network <- function(data_path,
     dest_path <- file.path(output_path, basename(pbf_path))
     file.copy(from = pbf_path, to = dest_path, overwrite = TRUE)
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose,
+                                      verbose = verbose_core,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
@@ -206,7 +208,7 @@ build_custom_network <- function(data_path,
 
     message("Building new network...")
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose,
+                                      verbose = verbose_core,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
