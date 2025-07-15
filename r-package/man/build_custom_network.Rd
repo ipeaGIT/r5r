@@ -38,7 +38,13 @@ segment is assumed to be closed.}
 interpreted as percentages of original speeds; if \code{FALSE}, as
 absolute speeds (km/h). Defaults to \code{TRUE} - percentages.}
 
-\item{verbose}{core Whether the returned core has paremeter \code{verbose = TRUE}.}
+\item{verbose}{A logical. Whether to show \code{R5} informative messages when
+running the function. Defaults to \code{FALSE} (please note that in such case
+\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
+detailed output, which can be useful for debugging issues not caught by
+\code{r5r}.}
+
+\item{verbose_network}{Whether the returned core has paremeter \code{verbose = TRUE}.}
 
 \item{elevation}{A string. The name of the impedance function to be used to
 calculate impedance for walking and cycling based on street slopes.

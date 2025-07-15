@@ -22,7 +22,7 @@
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
-#' @param verbose core Whether the returned core has paremeter `verbose = TRUE`.
+#' @param verbose_network Whether the returned core has paremeter `verbose = TRUE`.
 #' @template elevation
 #'
 #' @return A `r5r_network` object representing the built network to connect with
