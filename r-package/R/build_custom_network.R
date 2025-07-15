@@ -79,7 +79,7 @@ build_custom_network <- function(data_path,
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
-                                 verbose_core = FALSE,
+                                 verbose_network = FALSE,
                                  elevation = "TOBLER"){
 
   # check inputs
@@ -183,7 +183,7 @@ build_custom_network <- function(data_path,
     dest_path <- file.path(output_path, basename(pbf_path))
     file.copy(from = pbf_path, to = dest_path, overwrite = TRUE)
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose_core,
+                                      verbose = verbose_network,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
@@ -208,7 +208,7 @@ build_custom_network <- function(data_path,
 
     message("Building new network...")
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose_core,
+                                      verbose = verbose_network,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)

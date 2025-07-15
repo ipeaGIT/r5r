@@ -11,7 +11,7 @@ build_custom_network(
   default_speed = NULL,
   percentage_mode = TRUE,
   verbose = FALSE,
-  verbose_core = FALSE,
+  verbose_network = FALSE,
   elevation = "TOBLER"
 )
 }
