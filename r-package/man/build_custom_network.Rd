@@ -109,7 +109,6 @@ r5r_network_new_speeds <- r5r::build_custom_network(
   percentage_mode = TRUE
 )
 
-
 # sf with congestion polygons
 congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
 
