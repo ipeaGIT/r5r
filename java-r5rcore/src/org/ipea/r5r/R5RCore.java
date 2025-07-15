@@ -6,6 +6,7 @@ import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
 import com.conveyal.r5.api.util.SearchType;
+import com.conveyal.r5.analyst.scenario.RoadCongestion;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -582,6 +583,20 @@ public class R5RCore {
     }
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
+
+    public void applyCongestion(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
+        Path filePathPath = Paths.get(filePath).toAbsolutePath().normalize();
+
+        RoadCongestion congestion = new RoadCongestion();
+        congestion.polygonLayer = filePathPath.toString();
+        congestion.scalingAttribute = scalingAttribute;
+        congestion.priorityAttribute = priorityAttribute;
+        congestion.nameAttribute = nameAttribute;
+        congestion.defaultScaling = defaultScaling;
+        congestion.resolve(this.transportNetwork);
+        congestion.apply(this.transportNetwork);
+
+    }
 
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
