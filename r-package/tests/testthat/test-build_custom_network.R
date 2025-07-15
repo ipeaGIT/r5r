@@ -113,7 +113,33 @@ test_that("success in increasing travel times", {
 
 })
 
+test_that("errors in congestion polygon", {
+
+  # wrong col names
+  wrong_congestion_poly1 <- congestion_poly
+  names(wrong_congestion_poly1) <- c("poly_id", "speed", "priority", "geometry")
+  testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly1))
+
+  # missing col
+  wrong_congestion_poly2 <- congestion_poly
+  wrong_congestion_poly2$poly_id <- NULL
+  testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly2))
+
+  # Wrong geometry type
+  wrong_congestion_poly3 <- congestion_poly
+  wrong_congestion_poly3 <- sf::st_cast(wrong_congestion_poly3, to = 'MULTIPOINT')
+  testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly3))
+
+  # Wrong projection
+  wrong_congestion_poly4 <- sf::st_transform(congestion_poly, 3857)
+  testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly4))
+
+  })
+
+
 test_that("errors due to incorrect input types", {
+
+  testthat::expect_error(tester(test_new_carspeeds = congestion_poly, percentage_mode = FALSE))
 
   expect_error(tester(data_path = 'banana'))
   expect_error(tester(new_carspeeds = 'banana'))

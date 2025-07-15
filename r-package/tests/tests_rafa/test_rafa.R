@@ -705,6 +705,7 @@ covr::function_coverage(fun=r5r::detailed_itineraries, test_file("tests/testthat
 a <- covr::function_coverage(fun=r5r::expanded_travel_time_matrix, test_file("tests/testthat/test-expanded_travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::pareto_frontier, test_file("tests/testthat/test-pareto_frontier.R"))
 a <- covr::function_coverage(fun=r5r::accessibility, test_file("tests/testthat/test-accessibility.R"))
+a <- covr::function_coverage(fun=r5r::build_custom_network, test_file("tests/testthat/test-build_custom_network.R"))
 
 a <- covr::function_coverage(fun=r5r:::set_verbose, test_file("tests/testthat/test-set_verbose.R"))
 
