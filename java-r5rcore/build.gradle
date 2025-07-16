@@ -34,4 +34,6 @@ sourceSets {
 dependencies {
     implementation files(r5Path)
     implementation files(rJavaPath)
+    implementation 'org.apache.arrow:arrow-vector:20.0.0'
+    implementation 'org.apache.arrow:arrow-memory-netty:20.0.0'
 }
