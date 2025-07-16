@@ -161,3 +161,21 @@ tempdir_unique <- function(){ # nocov start
   }
   return(output_dir)
 } # nocov end
+
+
+#' Check if there is an elevation data file in `.tif` format in a given data path
+#'
+#' @param data_path A string pointing to a directory.
+#' @return `TRUE` if there is a `.tif` file, `FALSE` otherwise
+#'
+#' @family support functions
+#'
+#' @keywords internal
+exists_tiff <- function(data_path){ # nocov start
+
+  all_files <- list.files(data_path)
+  check <- ifelse(any(data.table::like(all_files, '.tif')), TRUE, FALSE)
+
+  return(check)
+} # nocov end
+

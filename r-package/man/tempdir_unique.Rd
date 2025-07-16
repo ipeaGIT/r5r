@@ -14,6 +14,7 @@ This is different from the built in tempdir() in that it does not return the sam
 }
 \seealso{
 Other support functions: 
+\code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()}

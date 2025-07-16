@@ -18,6 +18,7 @@ Returns the most recent JAR file url from metadata, depending on the version.
 }
 \seealso{
 Other support functions: 
+\code{\link{exists_tiff}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
 \code{\link{tempdir_unique}()}

@@ -39,6 +39,8 @@ public class R5RCore {
 
     private final RoutingProperties routingProperties;
 
+    private final String dataPath;
+
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
     }
@@ -221,6 +223,8 @@ public class R5RCore {
         Utils.detailedItinerariesV2 = v2;
     }
 
+    public String getDataPath() { return dataPath; }
+
     private final TransportNetwork transportNetwork;
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
@@ -240,6 +244,7 @@ public class R5RCore {
         NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
         NetworkBuilder.elevationCostFunction = nativeElevationFunction;
 
+        dataPath = dataFolder;
         Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
         this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(path.toString());
 
