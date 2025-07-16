@@ -143,8 +143,8 @@ fare_structure$fares_per_type[, fare := fcase(type == "BUS", 4.80,
                                              type == "RAIL", 4.50)]
 
 # update the cost of tranfers
-fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
-                                                 first_leg != second_leg, 8.37)]
+fare_structure$fares_per_transfer[, fare := fcase(alight_leg == "BUS" & board_leg == "BUS", 7.2,
+                                                 alight_leg != board_leg, 8.37)]
 
 # update transfer_time_allowance to 60 minutes
 fare_structure$transfer_time_allowance <- 60
