@@ -46,8 +46,8 @@ test_that("outputs a list with correct elements", {
   expect_type(struc$fares_per_type$fare, "double")
 
   expect_s3_class(struc$fares_per_transfer, "data.table")
-  expect_type(struc$fares_per_transfer$first_leg, "character")
-  expect_type(struc$fares_per_transfer$second_leg, "character")
+  expect_type(struc$fares_per_transfer$alight_leg, "character")
+  expect_type(struc$fares_per_transfer$board_leg, "character")
   expect_type(struc$fares_per_transfer$fare, "double")
 
   expect_s3_class(struc$fares_per_route, "data.table")

@@ -2,7 +2,6 @@ package org.ipea.r5r.Fares;
 
 import com.conveyal.r5.analyst.fare.FareBounds;
 import com.conveyal.r5.analyst.fare.InRoutingFareCalculator;
-import com.conveyal.r5.analyst.fare.TransferAllowance;
 import com.conveyal.r5.profile.McRaptorSuboptimalPathProfileRouter;
 import com.conveyal.r5.transit.RouteInfo;
 import com.conveyal.r5.transit.TransitLayer;
@@ -65,11 +64,11 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         this.faresPerTransfer = new FarePerTransfer[nTypes][nTypes];
 
         for (FarePerTransfer transfer : fareStructure.getFaresPerTransfer()) {
-            int firstTypeIndex = indexTransportType.get(transfer.getFirstLeg());
-            int secondTypeIndex = indexTransportType.get(transfer.getSecondLeg());
+            int firstTypeIndex = indexTransportType.get(transfer.getAlightLeg());
+            int secondTypeIndex = indexTransportType.get(transfer.getBoardLeg());
 
-            transfer.setFirstLegFullIntegerFare(fareStructure.getFaresPerType().get(firstTypeIndex).getIntegerFare());
-            transfer.setSecondLegFullIntegerFare(fareStructure.getFaresPerType().get(secondTypeIndex).getIntegerFare());
+            transfer.setAlightLegFullIntegerFare(fareStructure.getFaresPerType().get(firstTypeIndex).getIntegerFare());
+            transfer.setBoardLegFullIntegerFare(fareStructure.getFaresPerType().get(secondTypeIndex).getIntegerFare());
 
             faresPerTransfer[firstTypeIndex][secondTypeIndex] = transfer;
         }
@@ -129,13 +128,13 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
             currentBoardTime = boardTimes.get(ride);
 
             // get info on each leg
-            FarePerRoute firstLegType = faresPerRoute[previousPatternIndex];
-            FarePerRoute secondLegType = faresPerRoute[currentPatternIndex];
-            lastFareType = secondLegType.getTypeIndex();
+            FarePerRoute alightLegType = faresPerRoute[previousPatternIndex];
+            FarePerRoute boardLegType = faresPerRoute[currentPatternIndex];
+            lastFareType = boardLegType.getTypeIndex();
 
             // check if transfer is in same type with unlimited transfers
-            if (firstLegType.getTypeIndex() == secondLegType.getTypeIndex()) {
-                FarePerType typeData = getTypeByIndex(firstLegType.getTypeIndex());
+            if (alightLegType.getTypeIndex() == boardLegType.getTypeIndex()) {
+                FarePerType typeData = getTypeByIndex(alightLegType.getTypeIndex());
 
                 // unlimited transfers mean the fare is $ 0.00, and transfer allowance is not spent
                 if (typeData.isUnlimitedTransfers()) {
@@ -195,7 +194,7 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
         int maxAllowanceValue = 0;
         for (FarePerTransfer transfer : faresPerTransfer[faresPerRoute[currentPatternIndex].getTypeIndex()]) {
             if (transfer != null) {
-                int fullTransferFare = transfer.getFirstLegFullIntegerFare() + transfer.getSecondLegFullIntegerFare();
+                int fullTransferFare = transfer.getAlightLegFullIntegerFare() + transfer.getBoardLegFullIntegerFare();
 
                 int allowance = fullTransferFare - transfer.getIntegerFare();
                 maxAllowanceValue = Math.max(allowance, maxAllowanceValue);
@@ -223,47 +222,47 @@ public class RuleBasedInRoutingFareCalculator extends InRoutingFareCalculator {
     }
 
     private IntegratedFare getIntegrationFare(int firstPattern, int secondPattern, int transferTime) {
-        FarePerRoute firstLeg = faresPerRoute[firstPattern];
-        FarePerRoute secondLeg = faresPerRoute[secondPattern];
+        FarePerRoute alightLeg = faresPerRoute[firstPattern];
+        FarePerRoute boardLeg = faresPerRoute[secondPattern];
 
-        FarePerTransfer transferFare = getTransferByIndex(firstLeg.getTypeIndex(), secondLeg.getTypeIndex());
+        FarePerTransfer transferFare = getTransferByIndex(alightLeg.getTypeIndex(), boardLeg.getTypeIndex());
         if (transferFare == null) {
             // there is no record in transfers table, return full fare of second route
-            int fareSecondLeg = getFullFareForRoute(secondPattern);
-            return new IntegratedFare(fareSecondLeg, false);
+            int fareboardLeg = getFullFareForRoute(secondPattern);
+            return new IntegratedFare(fareboardLeg, false);
         }
 
         // discounted transfer found
         // check if transfer is allowed (transfer between same route ids)
-        if (!isTransferAllowed(firstLeg, secondLeg)) {
+        if (!isTransferAllowed(alightLeg, boardLeg)) {
             // transfer is not allowed, so return full fare for second leg
-            int fareSecondLeg = getFullFareForRoute(secondPattern);
-            return new IntegratedFare(fareSecondLeg, false);
+            int fareboardLeg = getFullFareForRoute(secondPattern);
+            return new IntegratedFare(fareboardLeg, false);
         }
 
         // transfer is allowed
         // check if transfer time is within limits
         if (transferTime > this.fareStructure.getTransferTimeAllowanceSeconds()) {
             // transfer time expired, return full fare for second leg
-            int fareSecondLeg = getFullFareForRoute(secondPattern);
-            return new IntegratedFare(fareSecondLeg, false);
+            int fareboardLeg = getFullFareForRoute(secondPattern);
+            return new IntegratedFare(fareboardLeg, false);
         }
 
         // all restrictions clear: transfer is allowed
         // discount the fare already considered in first leg
-        int fareFirstLeg = getFullFareForRoute(firstPattern);
-        return new IntegratedFare(transferFare.getIntegerFare() - fareFirstLeg, true);
+        int farealightLeg = getFullFareForRoute(firstPattern);
+        return new IntegratedFare(transferFare.getIntegerFare() - farealightLeg, true);
     }
 
-    private boolean isTransferAllowed(FarePerRoute firstLeg, FarePerRoute secondLeg) {
+    private boolean isTransferAllowed(FarePerRoute alightLeg, FarePerRoute boardLeg) {
         // if transfer is between routes in the same type, the condition 'allow-same-route-transfer' also applies
-        if (firstLeg.getTypeIndex() == secondLeg.getTypeIndex()) {
+        if (alightLeg.getTypeIndex() == boardLeg.getTypeIndex()) {
             // if type allows transfers between same route, return true
-            FarePerType typeData = getTypeByIndex(firstLeg.getTypeIndex());
+            FarePerType typeData = getTypeByIndex(alightLeg.getTypeIndex());
             if (typeData.isAllowSameRouteTransfer()) return true;
 
             // if transfers between same route are not allowed, then check if route ids are different
-            return !firstLeg.getRouteId().equals(secondLeg.getRouteId());
+            return !alightLeg.getRouteId().equals(boardLeg.getRouteId());
         } else {
             // transfer is between routes in different types, so transfer is allowed
             return true;

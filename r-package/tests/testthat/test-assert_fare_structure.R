@@ -151,21 +151,21 @@ test_that("fares_per_transfer is right", {
   expect_true(assert_fare_structure(struc_copy))
 
   struc_copy <- copied_element("fares_per_transfer")
-  struc_copy$fares_per_transfer[, first_leg := as.factor(first_leg)]
+  struc_copy$fares_per_transfer[, alight_leg := as.factor(alight_leg)]
   expect_error(assert_fare_structure(struc_copy))
   struc_copy <- copied_element("fares_per_transfer")
-  struc_copy$fares_per_transfer[1, first_leg := NA]
+  struc_copy$fares_per_transfer[1, alight_leg := NA]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy$fares_per_transfer[1, first_leg := "oie"]
+  struc_copy$fares_per_transfer[1, alight_leg := "oie"]
   expect_error(assert_fare_structure(struc_copy))
 
   struc_copy <- copied_element("fares_per_transfer")
-  struc_copy$fares_per_transfer[, second_leg := as.factor(second_leg)]
+  struc_copy$fares_per_transfer[, board_leg := as.factor(board_leg)]
   expect_error(assert_fare_structure(struc_copy))
   struc_copy <- copied_element("fares_per_transfer")
-  struc_copy$fares_per_transfer[1, second_leg := NA]
+  struc_copy$fares_per_transfer[1, board_leg := NA]
   expect_error(assert_fare_structure(struc_copy))
-  struc_copy$fares_per_transfer[1, second_leg := "oie"]
+  struc_copy$fares_per_transfer[1, board_leg := "oie"]
   expect_error(assert_fare_structure(struc_copy))
 
   struc_copy <- copied_element("fares_per_transfer")

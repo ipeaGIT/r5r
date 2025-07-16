@@ -299,8 +299,8 @@ read_fare_structure <- function(file_path, encoding = "UTF-8") {
   fare_structure$fares_per_transfer <- data.table::fread(
     file = tmpfile("fares_per_transfer.csv"),
     select = c(
-      first_leg = "character",
-      second_leg = "character",
+      alight_leg = "character",
+      board_leg = "character",
       fare = "numeric"
     ),
     encoding = encoding
@@ -403,19 +403,19 @@ assert_fare_structure <- function(fare_structure) {
     checkmate::expect_data_frame(fare_structure$fares_per_transfer)
     if (length(names(fare_structure$fares_per_transfer)) > 0) {
       checkmate::expect_character(
-        fare_structure$fares_per_transfer$first_leg,
+        fare_structure$fares_per_transfer$alight_leg,
         any.missing = FALSE
       )
       checkmate::assert_names(
-        fare_structure$fares_per_transfer$first_leg,
+        fare_structure$fares_per_transfer$alight_leg,
         subset.of = unique(fare_structure$fares_per_type$type)
       )
       checkmate::expect_character(
-        fare_structure$fares_per_transfer$second_leg,
+        fare_structure$fares_per_transfer$board_leg,
         any.missing = FALSE
       )
       checkmate::assert_names(
-        fare_structure$fares_per_transfer$second_leg,
+        fare_structure$fares_per_transfer$board_leg,
         subset.of = unique(fare_structure$fares_per_type$type)
       )
       checkmate::expect_numeric(

@@ -3,36 +3,36 @@ package org.ipea.r5r.Fares;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FarePerTransfer {
-    private String firstLeg;
-    private String secondLeg;
+    private String alightLeg;
+    private String boardLeg;
     private float fare;
     @JsonIgnore
     private int integerFare;
 
-    public int getFirstLegFullIntegerFare() {
-        return firstLegFullIntegerFare;
+    public int getAlightLegFullIntegerFare() {
+        return alightLegFullIntegerFare;
     }
 
-    public void setFirstLegFullIntegerFare(int firstLegFullIntegerFare) {
-        this.firstLegFullIntegerFare = firstLegFullIntegerFare;
+    public void setAlightLegFullIntegerFare(int alightLegFullIntegerFare) {
+        this.alightLegFullIntegerFare = alightLegFullIntegerFare;
     }
 
-    public int getSecondLegFullIntegerFare() {
-        return secondLegFullIntegerFare;
+    public int getBoardLegFullIntegerFare() {
+        return boardLegFullIntegerFare;
     }
 
-    public void setSecondLegFullIntegerFare(int secondLegFullIntegerFare) {
-        this.secondLegFullIntegerFare = secondLegFullIntegerFare;
+    public void setBoardLegFullIntegerFare(int boardLegFullIntegerFare) {
+        this.boardLegFullIntegerFare = boardLegFullIntegerFare;
     }
 
     @JsonIgnore
-    private int firstLegFullIntegerFare;
+    private int alightLegFullIntegerFare;
     @JsonIgnore
-    private int secondLegFullIntegerFare;
+    private int boardLegFullIntegerFare;
 
-    public FarePerTransfer(String firstLeg, String secondLeg, float fare) {
-        this.firstLeg = firstLeg;
-        this.secondLeg = secondLeg;
+    public FarePerTransfer(String alightLeg, String boardLeg, float fare) {
+        this.alightLeg = alightLeg;
+        this.boardLeg = boardLeg;
         this.fare = fare;
         this.integerFare = Math.round(fare * 100.0f);
     }
@@ -41,20 +41,20 @@ public class FarePerTransfer {
         this("BUS", "BUS", 0.0f);
     }
 
-    public String getFirstLeg() {
-        return firstLeg;
+    public String getAlightLeg() {
+        return alightLeg;
     }
 
-    public void setFirstLeg(String firstLeg) {
-        this.firstLeg = firstLeg;
+    public void setAlightLeg(String alightLeg) {
+        this.alightLeg = alightLeg;
     }
 
-    public String getSecondLeg() {
-        return secondLeg;
+    public String getBoardLeg() {
+        return boardLeg;
     }
 
-    public void setSecondLeg(String secondLeg) {
-        this.secondLeg = secondLeg;
+    public void setBoardLeg(String boardLeg) {
+        this.boardLeg = boardLeg;
     }
 
     public float getFare() {
@@ -73,8 +73,8 @@ public class FarePerTransfer {
     @Override
     public String toString() {
         return "FarePerTransfer{" +
-                "firstLeg='" + firstLeg + '\'' +
-                ", secondLeg='" + secondLeg + '\'' +
+                "alightLeg='" + alightLeg + '\'' +
+                ", boardLeg='" + boardLeg + '\'' +
                 ", fare=" + fare +
                 '}';
     }
