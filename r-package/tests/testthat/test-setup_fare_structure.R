@@ -85,8 +85,8 @@ test_that("outputs a list with correct elements", {
   expect_type(struc$fares_per_type$fare, "double")
 
   expect_s3_class(struc$fares_per_transfer, "data.table")
-  expect_type(struc$fares_per_transfer$first_leg, "character")
-  expect_type(struc$fares_per_transfer$second_leg, "character")
+  expect_type(struc$fares_per_transfer$alight_leg, "character")
+  expect_type(struc$fares_per_transfer$board_leg, "character")
   expect_type(struc$fares_per_transfer$fare, "double")
 
   expect_s3_class(struc$fares_per_route, "data.table")
@@ -113,32 +113,32 @@ test_that("uses the parameter 'by' to fill the structure", {
   struc <- tester(by = "AGENCY_ID")
   expect_true(all(gtfs$agency$agency_id %in% struc$fares_per_type$type))
   expect_true(
-    all(gtfs$agency$agency_id %in% struc$fares_per_transfer$first_leg)
+    all(gtfs$agency$agency_id %in% struc$fares_per_transfer$alight_leg)
   )
   expect_true(
-    all(gtfs$agency$agency_id %in% struc$fares_per_transfer$second_leg)
+    all(gtfs$agency$agency_id %in% struc$fares_per_transfer$board_leg)
   )
 
   struc <- tester(by = "AGENCY_NAME")
   expect_true(all(gtfs$agency$agency_name %in% struc$fares_per_type$type))
   expect_true(
-    all(gtfs$agency$agency_name %in% struc$fares_per_transfer$first_leg)
+    all(gtfs$agency$agency_name %in% struc$fares_per_transfer$alight_leg)
   )
   expect_true(
-    all(gtfs$agency$agency_name %in% struc$fares_per_transfer$second_leg)
+    all(gtfs$agency$agency_name %in% struc$fares_per_transfer$board_leg)
   )
 
   gtfs_modes <- gtfs$routes$route_type
   gtfs_modes <- ifelse(gtfs_modes == 3, "BUS", "RAIL")
   struc <- tester(by = "MODE")
   expect_true(all(gtfs_modes %in% struc$fares_per_type$type))
-  expect_true(all(gtfs_modes %in% struc$fares_per_transfer$first_leg))
-  expect_true(all(gtfs_modes %in% struc$fares_per_transfer$second_leg))
+  expect_true(all(gtfs_modes %in% struc$fares_per_transfer$alight_leg))
+  expect_true(all(gtfs_modes %in% struc$fares_per_transfer$board_leg))
 
   struc <- tester(by = "GENERIC")
   expect_true(struc$fares_per_type$type == "GENERIC")
-  expect_true(struc$fares_per_transfer$first_leg == "GENERIC")
-  expect_true(struc$fares_per_transfer$second_leg == "GENERIC")
+  expect_true(struc$fares_per_transfer$alight_leg == "GENERIC")
+  expect_true(struc$fares_per_transfer$board_leg == "GENERIC")
 })
 
 test_that("debug info is correctly set", {
