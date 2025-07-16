@@ -165,7 +165,8 @@ travel_time_matrix <- function(r5r_network,
   departure <- assign_departure(departure_datetime)
 
   # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
-  res <- reverse_if_direct_mode(origins, destinations, mode_list)
+  data_path <- r5r_network$getDataPath()
+  res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
   origins <- res$origins
   destinations <- res$destinations
 

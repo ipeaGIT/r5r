@@ -534,14 +534,15 @@ set_suboptimal_minutes <- function(r5r_network,
 #' @family setting functions
 #'
 #' @keywords internal
-reverse_if_direct_mode <- function(origins, destinations, mode_list) {
+reverse_if_direct_mode <- function(origins, destinations, mode_list, data_path) {
 
   # In direct modes, reverse origin/destination to take advantage of R5's One to Many algorithm
   if (
     mode_list$transit_mode == "" &&
     mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
-    nrow(origins) > nrow(destinations)
-  ) {
+    nrow(origins) > nrow(destinations) &&
+    !exists_tiff(data_path) # only if no elevation data is present
+    ) {
     temp <- origins
     origins <- destinations
     destinations <- temp
