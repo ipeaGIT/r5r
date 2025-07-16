@@ -4,7 +4,7 @@
 \alias{reverse_if_direct_mode}
 \title{Reverse Origins and Destinations for Direct Modes}
 \usage{
-reverse_if_direct_mode(origins, destinations, mode_list)
+reverse_if_direct_mode(origins, destinations, mode_list, data_path)
 }
 \arguments{
 \item{origins}{A data frame representing origin locations.}

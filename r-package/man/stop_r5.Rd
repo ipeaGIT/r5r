@@ -29,6 +29,7 @@ stop_r5(r5r_network)
 }
 \seealso{
 Other support functions: 
+\code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{start_r5r_java}()},
 \code{\link{tempdir_unique}()}
