@@ -186,11 +186,13 @@ public class R5RCore {
     }
 
     public void silentMode() {
-        Utils.setLogMode("OFF");
+        Utils.setLogModeOther("OFF");
+        Utils.setLogModeJar("WARN");
     }
 
     public void verboseMode() {
-        Utils.setLogMode("INFO");
+        Utils.setLogModeOther("INFO");
+        Utils.setLogModeJar("INFO");
     }
 
     public void setProgress(boolean progress) {

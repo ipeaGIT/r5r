@@ -5,15 +5,16 @@ import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.osmlib.Way;
 import com.conveyal.r5.point_to_point.builder.SpeedConfig;
+import jdk.jshell.execution.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.measure.UnitConverter;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,11 +72,11 @@ public class SpeedSetter {
         ch.qos.logback.classic.Logger osmLogger = loggerContext.getLogger("com.conveyal.osmlib");
 
         if (verbose) {
-            speedSetterLogger.setLevel(Level.INFO);
-            osmLogger.setLevel(Level.INFO);
+            Utils.setLogModeOther("INFO");
+            Utils.setLogModeJar("INFO");
         } else {
-            speedSetterLogger.setLevel(Level.ERROR);
-            osmLogger.setLevel(Level.OFF);
+            Utils.setLogModeOther("OFF");
+            Utils.setLogModeJar("WARN");
         }
 
         // Build paths
@@ -101,7 +102,6 @@ public class SpeedSetter {
 
         // Load CSV into a Map
         this.speedMap = speedMap;
-        verifySpeedMap();
         LOG.info("Loaded desired road speeds from table.");
 
         highwayDefaultSpeedMap = createHighwayDefaultSpeedMap();
@@ -146,13 +146,15 @@ public class SpeedSetter {
     /**
         Verify that the OSM ids are real
      */
-    private void verifySpeedMap() {
+    public String verifySpeedMap() {
+        ArrayList<Long> badIds = new ArrayList<>();
         for (Long potentialWayId : speedMap.keySet()) {
             Way way = osmRoadNetwork.ways.get(potentialWayId);
             if (way == null) {
-                LOG.warn("Way ID {} not found in OSM data, skipping.", potentialWayId);
+                badIds.add(potentialWayId);
             }
         }
+        return badIds.toString();
     }
 
 

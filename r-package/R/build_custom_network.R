@@ -22,7 +22,6 @@
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
 #' @template verbose
-#' @param verbose_network Whether the returned core has paremeter `verbose = TRUE`.
 #' @template elevation
 #'
 #' @return A `r5r_network` object representing the built network to connect with
@@ -79,7 +78,6 @@ build_custom_network <- function(data_path,
                                  default_speed = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
-                                 verbose_network = FALSE,
                                  elevation = "TOBLER"){
 
   # check inputs
@@ -183,7 +181,7 @@ build_custom_network <- function(data_path,
     dest_path <- file.path(output_path, basename(pbf_path))
     file.copy(from = pbf_path, to = dest_path, overwrite = TRUE)
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose_network,
+                                      verbose = verbose,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
@@ -204,11 +202,13 @@ build_custom_network <- function(data_path,
                                  verbose)
     speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
     speed_setter$setPercentageMode(percentage_mode)
+    bad_ids <- speed_setter$verifySpeedMap()
+    # insert pretty warning message if bad_ids != "[]"
     speed_setter$runSpeedSetter()
 
     message("Building new network...")
     new_network <- r5r::build_network(output_path,
-                                      verbose = verbose_network,
+                                      verbose = verbose,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
