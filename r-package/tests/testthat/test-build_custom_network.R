@@ -107,8 +107,9 @@ test_that("success in increasing travel times", {
   testthat::expect_true(det_pos$total_duration > det_pre$total_duration)
   testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
-  testthat::expect_warning(
-    tester(default_speed = 1, percentage_mode = FALSE)
+  testthat::expect_message(
+    tester(default_speed = 1, percentage_mode = FALSE),
+    regexp = "percentage_mode is FALSE, but default_speed is still 1"
   )
 
 })
