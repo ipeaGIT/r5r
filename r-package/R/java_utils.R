@@ -72,3 +72,29 @@ get_java_version <- function(){
   ver <- as.numeric(gsub("\\..*", "", ver))
   return(ver)
 }
+
+#' data.table to ltsMap
+#'
+#' @description Converts a `data.frame` with road OSM id's and respective LTS
+#'              levels a Java Map<Long, Integer> for use by r5r_network.
+#'
+#' @param dt data.frame/data.table. Table specifying the
+#'        LTS levels. The table must contain columns \code{osm_id} and
+#'        \code{lts}.
+#' @return A speedMap (Java HashMap<Long, Integer>)
+#' @family java support functions
+#' @keywords internal
+dt_to_lts_map <- function(dt) {
+  checkmate::assert_names(names(dt), must.include = c("osm_id", "lts"))
+  checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_integer(dt$lts, any.missing = FALSE, all.missing = FALSE)
+
+  # Create new HashMap<Long, Integer>
+  speed_map <- rJava::.jnew("java/util/HashMap")
+  for (i in seq_len(nrow(dt))) {
+    speed_map$put(
+      rJava::.jnew("java/lang/Long", as.character(dt$osm_id[i])),
+      rJava::.jnew("java/lang/Integer", as.integer(dt$lts[i])))
+  }
+  return(speed_map)
+}

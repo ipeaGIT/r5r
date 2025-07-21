@@ -48,9 +48,11 @@ public class SpeedSetter {
     }
 
     private final Path outputFilePath;
-    private float defaultValue = 1;
+    private float defaultSpeed = 1;
+    private int defaultLts = 1;
     private final OSM osmRoadNetwork;
-    private final HashMap<Long, Float> speedMap;
+    private HashMap<Long, Float> speedMap;
+    private HashMap<Long, Integer> ltsMap;
     private SpeedSetterMode mode = SpeedSetterMode.PERCENTAGE;
     private float defaultSpeedForNoHwyTag;
     private final HashMap<String, Float> highwayDefaultSpeedMap;
@@ -59,12 +61,11 @@ public class SpeedSetter {
      * Prepares data for manipulation does not modify any files.
      *
      * @param pbfFile      Absolute path to the pbf file
-     * @param speedMap     A HashMap with key [osm_id] and value [max_speed]
      * @param outputFolder Absolute path to the output folder to save the modified PBF
      * @param verbose      If true, enables verbose logging; otherwise, logs only errors
      * @throws IOException If any of the input files or the output folder are not found or accessible
      */
-    public SpeedSetter(String pbfFile, HashMap<Long, Float> speedMap, String outputFolder, boolean verbose) throws IOException {
+    public SpeedSetter(String pbfFile, String outputFolder, boolean verbose) throws IOException {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         ch.qos.logback.classic.Logger speedSetterLogger = loggerContext.getLogger("org.ipea.r5r.Utils.SpeedSetter");
         ch.qos.logback.classic.Logger osmLogger = loggerContext.getLogger("com.conveyal.osmlib");
@@ -98,29 +99,41 @@ public class SpeedSetter {
         osmRoadNetwork.readFromFile(pbfFilePath.toAbsolutePath().toString());
         LOG.info("Loaded OSM network from file {}", pbfFilePath.getFileName());
 
-        // Load CSV into a Map
-        this.speedMap = speedMap;
-        LOG.info("Loaded desired road speeds from table.");
-
         highwayDefaultSpeedMap = createHighwayDefaultSpeedMap();
     }
 
-    /**
-     * Sets the default value to use for speed when no value is found in the CSV.
-     */
-    public void setDefaultValue(float defaultValue) {
-        this.defaultValue = defaultValue;
+    public void setSpeedMap(HashMap<Long, Float> speedMap) {
+        this.speedMap = speedMap;
+        LOG.info("Loaded desired road speeds from table.");
+    }
+
+    public void setLtsMap(HashMap<Long, Integer> ltsMap) {
+        this.ltsMap = ltsMap;
+        LOG.info("Loaded desired lts levels from table.");
     }
 
     /**
-     * This is the method you should call from R
+     * Sets the default speed modification factor.
+     *
+     * @param defaultSpeed A float value greater than 0:
+     *                     - If set to 0, the highway will be set to construction.
+     *                     - If set to 1, the highway speed remains unchanged.
      */
-    public void runSpeedSetter() {
-        LOG.info("Setting maxspeed:motorcar tags in {} mode", mode);
+    public void setDefaultSpeed(float defaultSpeed) {
+        this.defaultSpeed = defaultSpeed;
+    }
 
-        // Apply speeds to all ways
-        modifyWaySpeeds();
+    /**
+     * Sets the default LTS level.
+     *
+     * @param defaultLts An int between 1-4 or -1:
+     *                     - If set to -1, the LTS will remain unchanged.
+     */
+    public void setDefaultLts(int defaultLts) {
+        this.defaultLts = defaultLts;
+    }
 
+    public void saveModifiedPbf() {
         // Write to new PBF file
         osmRoadNetwork.writeToFile(outputFilePath.toAbsolutePath().toString());
         LOG.info("Wrote modified OSM file to: {}", outputFilePath.toAbsolutePath());
@@ -133,11 +146,11 @@ public class SpeedSetter {
      */
     private Path createOutputFilePath(Path pbfFilePath, Path outputFolderPath) {
         String originalPbfName = pbfFilePath.getFileName().toString();
-        String newFileName = "congested-" + originalPbfName;
+        String newFileName = "modified-" + originalPbfName;
         return outputFolderPath.resolve(newFileName);
     }
 
-    public void setPercentageMode(boolean modePercentage) {
+    public void setSpeedPercentageMode(boolean modePercentage) {
         mode = modePercentage ? SpeedSetterMode.PERCENTAGE : SpeedSetterMode.ABSOLUTE;
     }
 
@@ -156,13 +169,15 @@ public class SpeedSetter {
     }
 
 
-    private void modifyWaySpeeds() {
+    public void runModifySpeeds() {
+        LOG.info("Setting maxspeed:motorcar tags in {} mode", mode);
+
         for (Map.Entry<Long, Way> entry : osmRoadNetwork.ways.entrySet()) {
             long wayId = entry.getKey();
             Way way = entry.getValue();
 
             float speedKph;
-            Float value = speedMap.getOrDefault(wayId, defaultValue);
+            Float value = speedMap.getOrDefault(wayId, defaultSpeed);
 
             if (value == 1) continue;   // default value of 1 is no change, even in ABSOLUTE mode
             else if (value == 0) {      // disable road if speed is 0
@@ -195,6 +210,19 @@ public class SpeedSetter {
             }
 
             way.addOrReplaceTag("maxspeed:motorcar", String.format("%1.1f kph", speedKph));
+        }
+    }
+
+    public void runModifyLts() {
+        LOG.info("Setting custom lts levels");
+
+        for (Map.Entry<Long, Way> entry : osmRoadNetwork.ways.entrySet()) {
+            long wayId = entry.getKey();
+            int desiredLts = ltsMap.getOrDefault(wayId, defaultLts);
+            if (desiredLts == -1) continue;   // desiredLts of -1 is no change
+
+            Way way = entry.getValue();
+            way.addOrReplaceTag("lts", Integer.toString(desiredLts));
         }
     }
 
