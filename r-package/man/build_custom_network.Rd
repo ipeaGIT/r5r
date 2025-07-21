@@ -102,6 +102,12 @@ data_path <- system.file("extdata/poa", package = "r5r")
 # data.frame with new speed info
 edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
+r5r_network_new_speeds <- r5r::build_custom_network(
+  data_path = data_path,
+  new_carspeeds = edge_speeds,
+  output_path = tempdir(),
+  percentage_mode = TRUE
+)
 
 # sf with congestion polygons
 congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))

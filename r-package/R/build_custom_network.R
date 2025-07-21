@@ -53,12 +53,12 @@
 #' # data.frame with new speed info
 #' edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 #'
-# r5r_network_new_speeds <- r5r::build_custom_network(
-#   data_path = data_path,
-#   new_carspeeds = edge_speeds,
-#   output_path = tempdir(),
-#   percentage_mode = TRUE
-# )
+#' r5r_network_new_speeds <- r5r::build_custom_network(
+#'   data_path = data_path,
+#'   new_carspeeds = edge_speeds,
+#'   output_path = tempdir(),
+#'   percentage_mode = TRUE
+#' )
 #'
 #' # sf with congestion polygons
 #' congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
@@ -85,26 +85,18 @@ build_custom_network <- function(data_path,
   checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
   if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
-    cli::cli_warn(
-      "{.arg percentage_mode} is {.code FALSE}, but {.arg default_speed} is still {.val 1}.
-     When {.arg percentage_mode} is FALSE, {.arg default_speed} must be given in km/h."
-    )
+    cli::cli_inform(c(
+      "!" = "{.arg percentage_mode} is {.val FALSE}, but {.arg default_speed} is still {.val 1}.
+         When {.arg percentage_mode} is {.val FALSE}, {.arg default_speed} must be given in km/h."
+    ))
   }
 
   checkmate::assert_character(elevation)
-  elevation <- toupper(elevation)
-  valid_elev <- c("TOBLER", "MINETTI", "NONE")
-
-  if (!elevation %in% valid_elev) {
-    cli::cli_abort(c(
-      "Invalid value for {.arg elevation}: {.val {elevation}}.",
-      "x" = "Must be one of: {.val {valid_elev}}")
-    )
-  }
+  elevation <- set_elevation(elevation)
 
   if(inherits(new_carspeeds, "sf") & isFALSE(percentage_mode)) {
     cli::cli_abort(
-      "The `percentage_mode` must be `TRUE` when passing an `sf` objecto to `new_carspeeds`."
+      "{.arg percentage_mode} must be {.val TRUE} when passing an {.cls sf} object to {.arg new_carspeeds}."
     )
   }
 
@@ -116,17 +108,18 @@ build_custom_network <- function(data_path,
   checkmate::assert_directory_exists(data_path, access = "r")
   checkmate::assert_directory_exists(output_path, access = "rw")
   if (output_path == data_path) {
-    stop(sprintf("output_path ('%s') and data_path ('%s') must be different directories.", output_path, data_path))
+    cli::cli_abort(
+      "{.arg data_path} ('{data_path}') and {.arg output_path} ('{output_path}') must be different directories."
+    )
   }
 
   # manipulate data_path directory
   data_pbf_files <- list.files(data_path, pattern = "\\.pbf$", full.names = TRUE)
   if (length(data_pbf_files) != 1) {
     cli::cli_abort(
-      "`.path {output_path}` must contain exactly one {.file .pbf} file; found {length(data_pbf_files)} file{?s}."
+      "{.path {data_path}} must contain exactly one {.file .pbf} file; found {length(data_pbf_files)} file{?s}."
     )
   }
-
 
   pbf_path <- data_pbf_files[[1]]
   checkmate::assert_file_exists(pbf_path, access = "r", extension = "pbf")
@@ -141,9 +134,8 @@ build_custom_network <- function(data_path,
   )
 
   # message copied files
-  formatted_files <- paste0("{.file ", basename(files_to_copy), "}", collapse = ", ")
   cli::cli_inform(c(
-    i = "Copying {length(files_to_copy)} file{?s}: {formatted_files} to {.path {output_path}}"
+    i = "Copying {length(files_to_copy)} file{?s}: {.file {files_to_copy}} to {.path {output_path}}"
   ))
   file.copy(
     from = files_to_copy,
@@ -155,11 +147,10 @@ build_custom_network <- function(data_path,
   output_pbf_files <- list.files(output_path, pattern = "\\.pbf$", full.names = TRUE)
   if (length(output_pbf_files) > 1) {
     cli::cli_abort(
-      "`.path {output_path}` must contain at most one {.file .pbf} file; found {length(output_pbf_files)} file{?s}."
-      )
+      "{.path {output_path}} must contain at most one {.file .pbf} file; found {length(output_pbf_files)} file{?s}."
+    )
     }
   if (length(output_pbf_files) == 1) {
-    #message(sprintf("Deleting existing pbf file in output folder: %s\n", output_pbf_files[[1]]))
     cli::cli_inform(c(i = "Deleting existing {.file {output_pbf_files[[1]]}} from the output folder."))
     # write access for output_path directory has been checked so file can be deleted
     file.remove(output_pbf_files[[1]])
@@ -192,9 +183,8 @@ build_custom_network <- function(data_path,
   else {
     # Edge mode
     # change speeds
+    cli::cli_inform(c(i = "Building network modifier..."))
     speed_map <- dt_to_speed_map(new_carspeeds)
-    message("Building speed modifier...")
-
     speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
                                  pbf_path,
                                  speed_map,
@@ -205,7 +195,7 @@ build_custom_network <- function(data_path,
     validate_bad_osm_ids(speed_setter$verifySpeedMap())
     speed_setter$runSpeedSetter()
 
-    message("Building new network...")
+    cli::cli_inform(c(i = "Building new network..."))
     new_network <- r5r::build_network(output_path,
                                       verbose = verbose,
                                       temp_dir = FALSE,
@@ -213,6 +203,5 @@ build_custom_network <- function(data_path,
                                       overwrite = TRUE)
   }
 
-  cli::cli_inform("Custom network with modified car speeds built at {.path {output_path}}")
   return(new_network)
 }

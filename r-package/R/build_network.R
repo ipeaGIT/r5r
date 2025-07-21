@@ -49,10 +49,7 @@ build_network <- function(data_path,
   checkmate::assert_character(elevation)
   checkmate::assert_logical(overwrite)
 
-  elevation <- toupper(elevation)
-  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
-    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
-    }
+  elevation <- set_elevation(elevation)
 
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
@@ -123,8 +120,7 @@ build_network <- function(data_path,
                     "Graph will be built with the street network only."))
     }
 
-    message("\nFinished building network.dat at ", dat_file)
-
+    cli::cli_inform(c(v = "Finished building network at {.path {data_path}}"))
   }
 
   return(wrap_r5r_network(r5r_network))
