@@ -11,6 +11,8 @@
 #'        A `sf data.frame` specifying the speed modifications. The table must
 #'        contain columns \code{sf polygon}, \code{scale}, \code{priority}. See
 #'        `details`.
+#' @param new_lts A `data.frame` specifying the LTS levels. The
+#'        table must contain columns \code{osm_id} and \code{lts}.
 #' @param output_path Character. A string pointing to the directory where the
 #'        modified `network.dat` will be saved. Must be different from
 #'        \code{data_path}. Defaults to a temporary directory.
@@ -18,6 +20,9 @@
 #'        specified in `new_carspeeds`. Must be `>= `0. Defaults to `NULL` so that
 #'        roads not listed have their speeds unchanged. When set to `0`, the road
 #'        segment is assumed to be closed.
+#' @param default_lts Numeric. Default LTS to use for road segments not
+#'        specified in `new_lts`. Must be 1-4. Defaults to `NULL` so that
+#'        roads not listed have their LTS unchanged.
 #' @param percentage_mode Logical. Only OSM mode. If \code{TRUE}, values in \code{max_speed} are
 #'        interpreted as percentages of original speeds; if \code{FALSE}, as
 #'        absolute speeds (km/h). Defaults to \code{TRUE} - percentages.
@@ -73,16 +78,24 @@
 #'
 #' @export
 build_custom_network <- function(data_path,
-                                 new_carspeeds,
+                                 new_carspeeds = NULL,
+                                 new_lts = NULL,
                                  output_path = tempdir_unique(),
                                  default_speed = NULL,
+                                 default_lts = NULL,
                                  percentage_mode = TRUE,
                                  verbose = FALSE,
                                  elevation = "TOBLER"){
 
   # check inputs
-  checkmate::assert_class(new_carspeeds, "data.frame")
+  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = TRUE)
+  checkmate::assert_class(new_lts, "data.frame", null.ok = TRUE)
+  if (is.null(new_carspeeds) && is.null(new_lts)) {
+    cli::cli_abort("Either {cli::col_blue('new_carspeeds')} or {cli::col_blue('new_lts')} must be a non-NULL data.frame, but not both NULL.")
+  }
+
   checkmate::assert_numeric(default_speed, lower = 0, finite = TRUE, null.ok = TRUE)
+  checkmate::assert_integer(default_lts, lower = 1, upper = 4, null.ok = TRUE)
   checkmate::assert_logical(percentage_mode)
   if (isFALSE(percentage_mode) && !is.null(default_speed) && default_speed==1) {
     cli::cli_warn(
@@ -166,9 +179,12 @@ build_custom_network <- function(data_path,
   }
 
 
-  # default speed to keep unlisted roads unchanged
+  # default speed and lts to keep unlisted roads unchanged
   if (is.null(default_speed)) {
     default_speed <- 1
+  }
+  if (is.null(default_lts)) {
+    default_lts <- -1
   }
 
   start_r5r_java(output_path) # initialize rJava if needed
@@ -191,18 +207,28 @@ build_custom_network <- function(data_path,
   }
   else {
     # Edge mode
-    # change speeds
-    speed_map <- dt_to_speed_map(new_carspeeds)
     message("Building speed modifier...")
 
     speed_setter <- rJava::.jnew("org.ipea.r5r.Utils.SpeedSetter",
                                  pbf_path,
-                                 speed_map,
                                  output_path,
                                  verbose)
-    speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
-    speed_setter$setPercentageMode(percentage_mode)
-    speed_setter$runSpeedSetter()
+    if (!is.null(new_carspeeds)){
+      speed_map <- dt_to_speed_map(new_carspeeds)
+      speed_setter$setSpeedMap(speed_map)
+      speed_setter$setDefaultSpeed(rJava::.jfloat(default_speed))
+      speed_setter$setSpeedPercentageMode(percentage_mode)
+      speed_setter$runModifySpeeds()
+    }
+
+    if (!is.null(new_lts)){
+      lts_map <- dt_to_lts_map(new_lts)
+      speed_setter$setLtsMap(lts_map)
+      speed_setter$setDefaultLts(as.integer(default_lts))
+      speed_setter$runModifyLts()
+    }
+
+    speed_setter$saveModifiedPbf()
 
     message("Building new network...")
     new_network <- r5r::build_network(output_path,

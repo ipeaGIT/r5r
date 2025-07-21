@@ -17,6 +17,7 @@ Converts a Java object returned by r5r_network to an R \code{data.table}
 }
 \seealso{
 Other java support functions: 
+\code{\link{dt_to_lts_map}()},
 \code{\link{dt_to_speed_map}()}
 }
 \concept{java support functions}
