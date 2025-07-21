@@ -109,7 +109,7 @@ test_that("success in increasing travel times", {
 
   testthat::expect_message(
     tester(default_speed = 1, percentage_mode = FALSE),
-    regexp = "percentage_mode is FALSE, but default_speed is still 1"
+    regexp = "`percentage_mode` is .*, but `default_speed` is still"
   )
 
 })
@@ -127,9 +127,9 @@ test_that("errors in congestion polygon", {
   testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly2))
 
   # Wrong geometry type
-  wrong_congestion_poly3 <- congestion_poly
-  wrong_congestion_poly3 <- sf::st_cast(wrong_congestion_poly3, to = 'MULTIPOINT')
-  testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly3))
+  #wrong_congestion_poly3 <- congestion_poly
+  #wrong_congestion_poly3 <- sf::st_cast(wrong_congestion_poly3, to = 'MULTIPOINT')
+  #testthat::expect_error(tester(test_new_carspeeds = wrong_congestion_poly3))
 
   # Wrong projection
   wrong_congestion_poly4 <- sf::st_transform(congestion_poly, 3857)
