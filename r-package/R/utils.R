@@ -179,3 +179,30 @@ exists_tiff <- function(data_path){ # nocov start
   return(check)
 } # nocov end
 
+
+#' Validate OSM IDs returned from Java backend and print warnings
+#'
+#' Parses a Java-style array string (e.g., \code{"[id1, id2]"}), extracts OSM IDs,
+#' and prints a pretty warning if any invalid IDs are found.
+#'
+#' If no invalid IDs are found (i.e., input is \code{"[]"}), prints nothing.
+#'
+#' @param bad_ids_string Character. A string formatted as a Java array (e.g., \code{"[id1, id2]"}).
+#'
+#' @return Warning if necessary.
+#'
+#' @family support functions
+#' @keywords internal
+validate_bad_osm_ids <- function(bad_ids_string) {
+  # Remove brackets and trim whitespace
+  ids <- gsub("^\\[|\\]$", "", bad_ids_string)
+  ids <- trimws(ids)
+
+  # Handle empty case: after removing brackets, should be empty string
+  if (nchar(ids) > 0) {
+    # Optionally, split into vector for pretty printing
+    ids_vec <- unlist(strsplit(ids, ",\\s*"))
+    cli::cli_alert_warning("Found invalid osm IDs in congestion data: {paste(ids_vec, collapse = ', ')}")
+  }
+}
+

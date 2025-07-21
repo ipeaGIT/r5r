@@ -202,8 +202,7 @@ build_custom_network <- function(data_path,
                                  verbose)
     speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
     speed_setter$setPercentageMode(percentage_mode)
-    bad_ids <- speed_setter$verifySpeedMap()
-    # insert pretty warning message if bad_ids != "[]"
+    validate_bad_osm_ids(speed_setter$verifySpeedMap())
     speed_setter$runSpeedSetter()
 
     message("Building new network...")
