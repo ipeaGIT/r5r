@@ -1,11 +1,9 @@
 package org.ipea.r5r.Utils;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.osmlib.Way;
 import com.conveyal.r5.point_to_point.builder.SpeedConfig;
-import jdk.jshell.execution.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
