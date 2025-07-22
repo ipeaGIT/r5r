@@ -1,6 +1,5 @@
 package org.ipea.r5r.Utils;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.osmlib.Way;
@@ -9,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.measure.UnitConverter;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,11 +70,11 @@ public class SpeedSetter {
         ch.qos.logback.classic.Logger osmLogger = loggerContext.getLogger("com.conveyal.osmlib");
 
         if (verbose) {
-            speedSetterLogger.setLevel(Level.INFO);
-            osmLogger.setLevel(Level.INFO);
+            Utils.setLogModeOther("INFO");
+            Utils.setLogModeJar("INFO");
         } else {
-            speedSetterLogger.setLevel(Level.ERROR);
-            osmLogger.setLevel(Level.OFF);
+            Utils.setLogModeOther("OFF");
+            Utils.setLogModeJar("WARN");
         }
 
         // Build paths
@@ -143,41 +142,19 @@ public class SpeedSetter {
     }
 
     /**
-     * Loads a map of OSM way IDs to speed values from the specified CSV file.
-     * The CSV must have columns [osm_id,max_speed].
+        Verify that the OSM ids are real
      */
-    private HashMap<Long, Float> buildSpeedMap(Path speedCsvFilePath) throws IOException {
-        HashMap<Long, Float> speedMap = new HashMap<>();
-
-        try (BufferedReader br = Files.newBufferedReader(speedCsvFilePath)) {
-            String header = br.readLine(); // skip header
-            if (header == null) {
-                LOG.error("Speeds CSV is empty: {}", speedCsvFilePath.toAbsolutePath());
-                throw new IOException("Speeds CSV is empty: " + speedCsvFilePath.toAbsolutePath());
-            }
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-                if (fields.length < 2) continue; // skip malformed lines
-
-                try {
-                    long osmWayId = Long.parseLong(fields[0].trim());
-                    float value = Float.parseFloat(fields[1].trim());
-                    Way way = osmRoadNetwork.ways.get(osmWayId);
-                    if (way == null) {
-                        LOG.warn("Way ID {} not found in OSM data, skipping.", osmWayId);
-                        continue;
-                    }
-                    speedMap.put(osmWayId, value);
-                } catch (NumberFormatException nfe) {
-                    LOG.warn("Skipping invalid line in CSV: {}", line);
-                }
+    public String verifySpeedMap() {
+        ArrayList<Long> badIds = new ArrayList<>();
+        for (Long potentialWayId : speedMap.keySet()) {
+            Way way = osmRoadNetwork.ways.get(potentialWayId);
+            if (way == null) {
+                badIds.add(potentialWayId);
             }
         }
-
-        return speedMap;
+        return badIds.toString();
     }
+
 
     private void modifyWaySpeeds() {
         for (Map.Entry<Long, Way> entry : osmRoadNetwork.ways.entrySet()) {

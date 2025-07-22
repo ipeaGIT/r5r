@@ -550,3 +550,28 @@ reverse_if_direct_mode <- function(origins, destinations, mode_list, data_path) 
 
   return(list(origins = origins, destinations = destinations))
 }
+
+
+#' Set elevation
+#'
+#' Verifies whether elevation mode is correct.
+#'
+#' @param elevation Character.
+#'
+#' @return Character. Corretly formatted elevation.
+#' @family setting functions
+#'
+#' @keywords internal
+set_elevation <- function(elevation) {
+  elevation <- toupper(elevation)
+  valid_elev <- c("TOBLER", "MINETTI", "NONE")
+  if (!elevation %in% valid_elev) {
+    cli::cli_abort(c(
+      "Invalid value for {.arg elevation}: {.val {elevation}}.",
+      "x" = "Must be one of: {.val {valid_elev}}")
+    )
+  }
+
+  elevation
+}
+
