@@ -17,7 +17,8 @@ Other support functions:
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{start_r5r_java}()},
-\code{\link{stop_r5}()}
+\code{\link{stop_r5}()},
+\code{\link{validate_bad_osm_ids}()}
 }
 \concept{support functions}
 \keyword{internal}
