@@ -192,16 +192,20 @@ build_custom_network <- function(data_path,
                                  verbose)
     speed_setter$setDefaultValue(rJava::.jfloat(default_speed))
     speed_setter$setPercentageMode(percentage_mode)
-    validate_bad_osm_ids(speed_setter$verifySpeedMap())
     speed_setter$runSpeedSetter()
 
     cli::cli_inform(c(i = "Building new network..."))
+
+    # check for 'bad' osm ids
+    validate_bad_osm_ids(speed_setter$verifySpeedMap())
+
     new_network <- r5r::build_network(output_path,
                                       verbose = verbose,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
   }
+
 
   return(new_network)
 }
