@@ -51,13 +51,13 @@ test_that("'overwrite' parameter works correctly", {
   # since a network was already created, if overwrite = FALSE it should use it
   testthat::expect_message(
     r5r_network <- build_network(path, verbose = FALSE, temp_dir = TRUE),
-    regexp = "Using cached network\\.dat from "
+    regexp = "Using cached network from from"
   )
 
   # but if overwrite = TRUE, then it should create a new network anyway
   testthat::expect_message(
     r5r_network <- build_network(path, verbose = FALSE, overwrite = TRUE, temp_dir = TRUE),
-    regexp = "Finished building network\\.dat at "
+    regexp = "Finished building network at"
   )
 
 })

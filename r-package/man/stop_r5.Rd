@@ -32,6 +32,7 @@ Other support functions:
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
 \code{\link{start_r5r_java}()},
-\code{\link{tempdir_unique}()}
+\code{\link{tempdir_unique}()},
+\code{\link{validate_bad_osm_ids}()}
 }
 \concept{support functions}

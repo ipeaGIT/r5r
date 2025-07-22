@@ -21,7 +21,8 @@ Other support functions:
 \code{\link{exists_tiff}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
-\code{\link{tempdir_unique}()}
+\code{\link{tempdir_unique}()},
+\code{\link{validate_bad_osm_ids}()}
 }
 \concept{support functions}
 \keyword{internal}

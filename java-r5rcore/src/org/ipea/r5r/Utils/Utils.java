@@ -89,7 +89,7 @@ public class Utils {
         logger.setLevel(levelToSet);
     }
 
-    public static void setLogMode(String level) {
+    public static void setLogModeOther(String level) {
         Utils.setLogLevel(Level.valueOf(level));
         String[] loggerNames = {
                 "com.conveyal",
@@ -106,6 +106,12 @@ public class Utils {
             Logger logger = loggerContext.getLogger(name);
             logger.setLevel(Utils.getLogLevel());
         }
+    }
+
+    public static void setLogModeJar(String level) {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger logger = loggerContext.getLogger("org.ipea.r5r");
+        logger.setLevel(Level.valueOf(level));
     }
 
     public static int getLinestringLength(LineString geometry) {

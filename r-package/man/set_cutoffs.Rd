@@ -23,6 +23,7 @@ Sets the cutoffs used when calculating accessibility.
 Other setting functions: 
 \code{\link{reverse_if_direct_mode}()},
 \code{\link{set_breakdown}()},
+\code{\link{set_elevation}()},
 \code{\link{set_expanded_travel_times}()},
 \code{\link{set_fare_cutoffs}()},
 \code{\link{set_fare_structure}()},
