@@ -51,13 +51,13 @@ test_that("'overwrite' parameter works correctly", {
   # since a network was already created, if overwrite = FALSE it should use it
   testthat::expect_message(
     r5r_network <- build_network(path, verbose = FALSE, temp_dir = TRUE),
-    regexp = "Using cached network\\.dat from "
+    regexp = "Using cached network from from"
   )
 
   # but if overwrite = TRUE, then it should create a new network anyway
   testthat::expect_message(
     r5r_network <- build_network(path, verbose = FALSE, overwrite = TRUE, temp_dir = TRUE),
-    regexp = "Finished building network\\.dat at "
+    regexp = "Finished building network at"
   )
 
 })
@@ -83,28 +83,33 @@ test_that("throws error if write access to given dir is denied", {
 })
 
 
+# mock test
+test_that("throws error if Java is not 21", {
+
+  local_mocked_bindings(
+    get_java_version = function(...) 999
+  )
+
+  expect_error( r5r:::start_r5r_java(data_path = data_path) )
+
+})
 
 # TO DO: create a mock test
 # test_that("throws error due to large geographic extent", {
 #
+#   my_wrapper <- function(...) {
+#     rJava::.jcall(...)
+#   }
+#
 #   local_mocked_bindings(
-#     jcall <- function(...) {"Geographic extent of street layer"}
+#     my_wrapper = function(...) "Geographic extent of street layer"
 #   )
 #
-#   result <- tester(cache = FALSE)
-#   expect_true(
-#     grepl(file.path(fs::path_norm(tempdir()), "standardized_cnefe"), result)
+#   # expect_error( r5r:::start_r5r_java(data_path = data_path) )
+#
+#   build_network(data_path)
+#
 #   )
 # }
 
 
-# TO DO: create a mock test
-# test_that("throws error if Java is not 21", {
-#
-#   local_mocked_bindings(
-#     get_java_version = function(...) 999
-#   )
-#
-#   expect_error( r5r:::start_r5r_java(data_path = path) )
-#
-# })
