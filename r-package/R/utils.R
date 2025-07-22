@@ -98,24 +98,35 @@ start_r5r_java <- function(data_path,
 
   rJava::.jinit(parameters = c(log_path, r5_version, r5r_version))
 
-  get_java_version <- function(){
-    ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
-    ver <- as.numeric(gsub("\\..*", "", ver))
-    return(ver)
-  }
   ver <- get_java_version()
+
   if (ver != 21) {
-    stop(
-      "This package requires the Java SE Development Kit 21.\n",
-      "Please update your Java installation. ",
-      "The jdk 21 can be downloaded from either:\n",
-      "  - {rJavaEnv} package: https://www.ekotov.pro/rJavaEnv\n",
-      "  - Eclipse Temurin: https://adoptium.net/temurin\n",
-      "  - Amazon Corretto: https://aws.amazon.com/corretto\n",
-      "  - openjdk: https://jdk.java.net/java-se-ri/21\n",
-      "  - oracle: https://docs.oracle.com/en/java/javase/21/install/index.html"
-    )
+    # Helper that turns plain text into a clickable hyperlink (works in
+    # RStudio ≥2023.12 and other terminals that support OSC 8 links)
+    link <- cli::style_hyperlink
+
+    cli::cli_abort(c(
+      "This package requires {.val Java SE Development Kit 21}.",
+      "i" = "Please install JDK 21 from one of the sources below:",
+      "*" = link("rJavaEnv",       "https://www.ekotov.pro/rJavaEnv"),
+      "*" = link("Eclipse Temurin","https://adoptium.net/temurin"),
+      "*" = link("Amazon Corretto","https://aws.amazon.com/corretto"),
+      "*" = link("OpenJDK",        "https://jdk.java.net/java-se-ri/21"),
+      "*" = link("Oracle",         "https://docs.oracle.com/en/java/javase/21/install/index.html")
+    ))
   }
+
+  # if (ver != 21) {
+  #   cli::cli_abort(c(
+  #     "This package requires {.val Java SE Development Kit 21}.",
+  #     "i" = "Please install JDK 21 from one of the sources below:",
+  #     "*" = "{.pkg rJavaEnv}: <https://www.ekotov.pro/rJavaEnv>",
+  #     "*" = "Eclipse Temurin: <https://adoptium.net/temurin>",
+  #     "*" = "Amazon Corretto: <https://aws.amazon.com/corretto>",
+  #     "*" = "OpenJDK: <https://jdk.java.net/java-se-ri/21>",
+  #     "*" = "Oracle: <https://docs.oracle.com/en/java/javase/21/install/index.html>"
+  #   ))
+  # }
 
   # r5r jar
   r5r_jar <- system.file("jar/r5r.jar", package = "r5r")
