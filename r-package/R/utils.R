@@ -102,15 +102,15 @@ start_r5r_java <- function(data_path,
 
   if (ver != 21) {
     # Helper that turns plain text into a clickable hyperlink (works in
-    # RStudio ≥2023.12 and other terminals that support OSC 8 links)
+    # RStudio ≥ 2023.12 and other terminals that support OSC-8 links)
     link <- cli::style_hyperlink
 
     cli::cli_abort(c(
-      "This package requires {.val Java SE Development Kit 21}.",
-      "i" = "Please install JDK 21 from one of the sources below:",
+      "This package requires {.val Java-SE Development Kit 21}.",
+      "i" = "Please install JDK 21 from one of the sources below:",
       "*" = link("rJavaEnv",       "https://www.ekotov.pro/rJavaEnv"),
-      "*" = link("Eclipse Temurin","https://adoptium.net/temurin"),
-      "*" = link("Amazon Corretto","https://aws.amazon.com/corretto"),
+      "*" = link("Eclipse Temurin","https://adoptium.net/temurin"),
+      "*" = link("Amazon Corretto","https://aws.amazon.com/corretto"),
       "*" = link("OpenJDK",        "https://jdk.java.net/java-se-ri/21"),
       "*" = link("Oracle",         "https://docs.oracle.com/en/java/javase/21/install/index.html")
     ))
