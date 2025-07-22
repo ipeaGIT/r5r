@@ -83,22 +83,7 @@ test_that("throws error if write access to given dir is denied", {
 })
 
 
-
-# TO DO: create a mock test
-# test_that("throws error due to large geographic extent", {
-#
-#   local_mocked_bindings(
-#     jcall <- function(...) {"Geographic extent of street layer"}
-#   )
-#
-#   result <- tester(cache = FALSE)
-#   expect_true(
-#     grepl(file.path(fs::path_norm(tempdir()), "standardized_cnefe"), result)
-#   )
-# }
-
-
-# TO DO: create a mock test
+# mock test
 test_that("throws error if Java is not 21", {
 
   local_mocked_bindings(
@@ -108,3 +93,23 @@ test_that("throws error if Java is not 21", {
   expect_error( r5r:::start_r5r_java(data_path = data_path) )
 
 })
+
+# TO DO: create a mock test
+# test_that("throws error due to large geographic extent", {
+#
+#   my_wrapper <- function(...) {
+#     rJava::.jcall(...)
+#   }
+#
+#   local_mocked_bindings(
+#     my_wrapper = function(...) "Geographic extent of street layer"
+#   )
+#
+#   # expect_error( r5r:::start_r5r_java(data_path = data_path) )
+#
+#   build_network(data_path)
+#
+#   )
+# }
+
+
