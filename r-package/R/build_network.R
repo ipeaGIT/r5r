@@ -49,10 +49,7 @@ build_network <- function(data_path,
   checkmate::assert_character(elevation)
   checkmate::assert_logical(overwrite)
 
-  elevation <- toupper(elevation)
-  if (!(elevation %in% c('TOBLER', 'MINETTI','NONE'))) {
-    stop("The 'elevation' parameter only accepts one of the following: c('TOBLER', 'MINETTI','NONE')")
-    }
+  elevation <- set_elevation(elevation)
 
   # expand data_path to full path, as required by rJava api call
   data_path <- path.expand(data_path)
@@ -68,23 +65,26 @@ build_network <- function(data_path,
 
   # stop if there is no input data
   if (!(any_pbf | any_network)){
-    stop("\nAn OSM PBF file is required to build a network.")
-    }
+    cli::cli_abort("An OSM {.file .pbf} file is required in {.path {data_path}} to build a network.")
+  }
 
   # use no elevation model if there is no raster.tif input data
   if (!(any_tif)) {
     elevation <- 'NONE'
-    message("No raster .tif files found. Using elevation = 'NONE'.")
-    }
+    cli::cli_inform(c(
+      i = "No raster {.file .tif} files found in {.path {data_path}}. Using elevation = {.val 'NONE'}."
+    ))
+  }
 
   # check if data_path already has a network.dat file
   dat_file <- file.path(data_path, "network.dat")
 
   if (checkmate::test_file_exists(dat_file) && !overwrite) {
-
     r5r_network <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
 
-    message("\nUsing cached network.dat from ", dat_file)
+    cli::cli_inform(c(
+      i = "Using cached network from from {.path {dat_file}}."
+    ))
 
   } else {
     # check if the user has permission to write to the data directory. if not,
@@ -110,25 +110,28 @@ build_network <- function(data_path,
     if (!is.null(ex)) {
       msg <- rJava::.jcall(ex, "S", "toString")
       if (grepl("Geographic extent of street layer", msg)) {
-        cli::cli_abort("Geographic extent of street layer exceeds limit of 975000 km2.")
+        cli::cli_abort(
+          "Geographic extent of street layer exceeds limit of {.val 975,000} {.unit km^2}."
+        )
       } else {
-      ex$printStackTrace()
-      return(NULL)
+        ex$printStackTrace()
+        return(NULL)
       }
     }
 
     # display a message if there is a PBF file but no GTFS data
-    if (any_pbf == TRUE & any_gtfs == FALSE) {
-      message(paste("\nNo public transport data (gtfs) provided.",
-                    "Graph will be built with the street network only."))
+    if (any_pbf && !any_gtfs) {
+      cli::cli_inform(c(
+        i = "No public transport data ({.file GTFS}) found in {.path {data_path}}. Graph will be built with the street network only."
+      ))
     }
 
-    message("\nFinished building network.dat at ", dat_file)
-
+    cli::cli_inform(c(
+      v = "Finished building network at {.path {data_path}}"
+    ))
   }
 
   return(wrap_r5r_network(r5r_network))
-
 }
 
 error_if_no_write_permission <- function(data_path) {

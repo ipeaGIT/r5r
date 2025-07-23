@@ -60,3 +60,15 @@ dt_to_speed_map <- function(dt) {
   }
   return(speed_map)
 }
+
+
+#' Determine the Java version installed locally
+#'
+#' @return The number of the Java version
+#' @family java support functions
+#' @keywords internal
+get_java_version <- function(){
+  ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
+  ver <- as.numeric(gsub("\\..*", "", ver))
+  return(ver)
+}
