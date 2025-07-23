@@ -6,9 +6,11 @@
 \usage{
 build_custom_network(
   data_path,
-  new_carspeeds,
+  new_carspeeds = NULL,
+  new_lts = NULL,
   output_path = tempdir_unique(),
   default_speed = NULL,
+  default_lts = NULL,
   percentage_mode = TRUE,
   verbose = FALSE,
   elevation = "TOBLER"
@@ -24,6 +26,9 @@ A \verb{sf data.frame} specifying the speed modifications. The table must
 contain columns \code{sf polygon}, \code{scale}, \code{priority}. See
 \code{details}.}
 
+\item{new_lts}{A \code{data.frame} specifying the LTS levels. The
+table must contain columns \code{osm_id} and \code{lts}.}
+
 \item{output_path}{Character. A string pointing to the directory where the
 modified \code{network.dat} will be saved. Must be different from
 \code{data_path}. Defaults to a temporary directory.}
@@ -32,6 +37,10 @@ modified \code{network.dat} will be saved. Must be different from
 specified in \code{new_carspeeds}. Must be \verb{>= }0. Defaults to \code{NULL} so that
 roads not listed have their speeds unchanged. When set to \code{0}, the road
 segment is assumed to be closed.}
+
+\item{default_lts}{Numeric. Default LTS to use for road segments not
+specified in \code{new_lts}. Must be 1-4. Defaults to \code{NULL} so that
+roads not listed have their LTS unchanged.}
 
 \item{percentage_mode}{Logical. Only OSM mode. If \code{TRUE}, values in \code{max_speed} are
 interpreted as percentages of original speeds; if \code{FALSE}, as
