@@ -20,6 +20,7 @@ to a Java Map<Long, Float> for use by r5r_network.
 }
 \seealso{
 Other java support functions: 
+\code{\link{dt_to_lts_map}()},
 \code{\link{java_to_dt}()}
 }
 \concept{java support functions}
