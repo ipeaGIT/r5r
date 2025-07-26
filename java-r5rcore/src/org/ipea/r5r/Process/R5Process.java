@@ -199,8 +199,10 @@ public abstract class R5Process {
                 results.clear();
             }
 
-            LOG.info("{} out of {} origins processed.", totalProcessed.getAndIncrement(), nOrigins);
-
+            int nProcessed = totalProcessed.getAndIncrement();
+            if (nProcessed % 1000 == 0) {
+                LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
+            }
         } catch (ParseException | FileNotFoundException e) {
             e.printStackTrace();
         }
