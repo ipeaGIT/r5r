@@ -5,13 +5,12 @@ import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.list.TShortList;
 import gnu.trove.list.array.TShortArrayList;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
 public class RoadCongestionOSM extends Modification {
-    private static final Logger LOG = LoggerFactory.getLogger(RoadCongestionOSM.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RoadCongestionOSM.class);
 
     /** The default value by which to scale when no polygon is found. */
     public float defaultScaling = 1;
