@@ -16,6 +16,7 @@ import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
+import org.ipea.r5r.Scenario.RoadCongestionOSM;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -227,8 +229,6 @@ public class R5RCore {
 
     public String getDataPath() { return dataPath; }
 
-    private final TransportNetwork transportNetwork;
-
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(R5RCore.class);
 
     public R5RCore(String dataFolder, boolean verbose, String nativeElevationFunction) throws Exception {
@@ -248,10 +248,8 @@ public class R5RCore {
 
         dataPath = dataFolder;
         Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
-        this.transportNetwork = NetworkBuilder.checkAndLoadR5Network(path.toString());
-
-        this.routingProperties = new RoutingProperties();
-        this.routingProperties.transitLayer = this.transportNetwork.transitLayer;
+        TransportNetwork network = NetworkBuilder.checkAndLoadR5Network(path.toString());
+        this.routingProperties = new RoutingProperties(network);
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -286,7 +284,7 @@ public class R5RCore {
                                                                             boolean dropItineraryGeometry, boolean shortestPath, boolean osmLinkIds) throws ExecutionException, InterruptedException {
         if (Utils.detailedItinerariesV2) {
             // call regular detailed itineraries, based on PointToPointQuery
-            FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            FastDetailedItineraryPlanner detailedItineraryPlanner = new FastDetailedItineraryPlanner(this.r5rThreadPool, this.routingProperties);
             detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
             detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
             detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
@@ -301,7 +299,7 @@ public class R5RCore {
             return out;
         } else {
             // call regular detailed itineraries, based on PointToPointQuery
-            DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+            DetailedItineraryPlanner detailedItineraryPlanner = new DetailedItineraryPlanner(this.r5rThreadPool, this.routingProperties);
             detailedItineraryPlanner.setOrigins(fromIds, fromLats, fromLons);
             detailedItineraryPlanner.setDestinations(toIds, toLats, toLons);
             detailedItineraryPlanner.setModes(directModes, accessModes, transitModes, egressModes);
@@ -376,7 +374,7 @@ public class R5RCore {
                                                                            String date, String departureTime,
                                                                            int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-        TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        TravelTimeMatrixComputer travelTimeMatrixComputer = new TravelTimeMatrixComputer(this.r5rThreadPool, this.routingProperties);
         travelTimeMatrixComputer.setOrigins(fromIds, fromLats, fromLons);
         travelTimeMatrixComputer.setDestinations(toIds, toLats, toLons);
         travelTimeMatrixComputer.setModes(directModes, accessModes, transitModes, egressModes);
@@ -448,7 +446,7 @@ public class R5RCore {
                                        String date, String departureTime,
                                        int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-        ParetoFrontierCalculator paretoFrontierCalculator = new ParetoFrontierCalculator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        ParetoFrontierCalculator paretoFrontierCalculator = new ParetoFrontierCalculator(this.r5rThreadPool, this.routingProperties);
         paretoFrontierCalculator.setOrigins(fromIds, fromLats, fromLons);
         paretoFrontierCalculator.setDestinations(toIds, toLats, toLons);
         paretoFrontierCalculator.setModes(directModes, accessModes, transitModes, egressModes);
@@ -469,7 +467,7 @@ public class R5RCore {
                                 String directModes, String transitModes, String accessModes, String egressModes,
                                 String date, String departureTime,
                                 int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException, JsonProcessingException {
-        FaretoDebug calculator = new FaretoDebug(r5rThreadPool, transportNetwork, routingProperties);
+        FaretoDebug calculator = new FaretoDebug(r5rThreadPool, routingProperties);
         calculator.setOrigins(new String[] {fromId}, new double[] {fromLat}, new double[] {fromLon});
         calculator.setDestinations(new String[] {toId}, new double[] {toLat}, new double[] {toLon});
         calculator.setModes(directModes, accessModes, transitModes, egressModes);
@@ -495,7 +493,7 @@ public class R5RCore {
                                     int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration)
             throws ExecutionException, InterruptedException {
 
-        AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        AccessibilityEstimator accessibilityEstimator = new AccessibilityEstimator(this.r5rThreadPool, this.routingProperties);
         accessibilityEstimator.setOrigins(fromIds, fromLats, fromLons);
         accessibilityEstimator.setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
         accessibilityEstimator.setDecayFunction(decayFunction, decayValue);
@@ -552,7 +550,7 @@ public class R5RCore {
     }
 
     public RDataFrame findSnapPoints(String[] fromId, double[] fromLat, double[] fromLon, double radius, String mode) throws ExecutionException, InterruptedException {
-        SnapFinder snapFinder = new SnapFinder(r5rThreadPool, this.transportNetwork);
+        SnapFinder snapFinder = new SnapFinder(r5rThreadPool, routingProperties.getTransportNetworkBase());
         snapFinder.setOrigins(fromId, fromLat, fromLon);
         snapFinder.setRadius(radius);
         snapFinder.setMode(mode);
@@ -564,7 +562,7 @@ public class R5RCore {
     }
 
     public RDataFrame getGrid(int resolution, boolean dropGeometry) {
-        Grid gridPointSet = new Grid(resolution, this.transportNetwork.getEnvelope());
+        Grid gridPointSet = new Grid(resolution, routingProperties.getTransportNetworkBase().getEnvelope());
 
         RDataFrame gridTable = new RDataFrame(gridPointSet.featureCount());
         gridTable.addStringColumn("id", "");
@@ -591,7 +589,7 @@ public class R5RCore {
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
 
-    public void applyCongestion(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
+    public void applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
         Path filePathPath = Paths.get(filePath).toAbsolutePath().normalize();
 
         RoadCongestion congestion = new RoadCongestion();
@@ -600,14 +598,14 @@ public class R5RCore {
         congestion.priorityAttribute = priorityAttribute;
         congestion.nameAttribute = nameAttribute;
         congestion.defaultScaling = defaultScaling;
-        congestion.resolve(this.transportNetwork);
-        congestion.apply(this.transportNetwork);
+        congestion.resolve(routingProperties.transportNetworkWorking);
+        congestion.apply(routingProperties.transportNetworkWorking);
 
     }
 
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
-        StreetNetwork streetNetwork = new StreetNetwork(this.transportNetwork);
+        StreetNetwork streetNetwork = new StreetNetwork(routingProperties.getTransportNetworkBase());
 
         // Return a list of dataframes
         List<RDataFrame> transportNetworkList = new ArrayList<>();
@@ -619,7 +617,7 @@ public class R5RCore {
 
     public List<RDataFrame> getTransitNetwork() {
         // Convert R5's transit network to Simple Features objects
-        TransitNetwork transitNetwork = new TransitNetwork(this.transportNetwork);
+        TransitNetwork transitNetwork = new TransitNetwork(routingProperties.getTransportNetworkBase());
 
         // Return a list of dataframes
         List<RDataFrame> transportNetworkList = new ArrayList<>();
@@ -633,7 +631,7 @@ public class R5RCore {
     // ------------------------------- FARE CALCULATOR ----------------------------------------
 
     public FareStructure buildFareStructure(float baseFare, String type) {
-        FareStructureBuilder builder = new FareStructureBuilder(this.transportNetwork);
+        FareStructureBuilder builder = new FareStructureBuilder(routingProperties.getTransportNetworkBase());
 
         type = type.toUpperCase();
         return builder.build(baseFare, type);
@@ -678,7 +676,7 @@ public class R5RCore {
                                      String date, String departureTime,
                                      int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
 
-        ParetoItineraryPlanner paretoFrontierCalculator = new ParetoItineraryPlanner(this.r5rThreadPool, this.transportNetwork, this.routingProperties);
+        ParetoItineraryPlanner paretoFrontierCalculator = new ParetoItineraryPlanner(this.r5rThreadPool, this.routingProperties);
         paretoFrontierCalculator.setOrigins(fromIds, fromLats, fromLons);
         paretoFrontierCalculator.setDestinations(toIds, toLats, toLons);
         paretoFrontierCalculator.setModes(directModes, accessModes, transitModes, egressModes);
@@ -700,7 +698,7 @@ public class R5RCore {
         servicesTable.addStringColumn("end_date", "");
         servicesTable.addBooleanColumn("active_on_date", false);
 
-        for (Service service : transportNetwork.transitLayer.services) {
+        for (Service service : routingProperties.getTransportNetworkBase().transitLayer.services) {
             servicesTable.append();
             servicesTable.set("service_id", service.service_id);
 
@@ -716,7 +714,7 @@ public class R5RCore {
     }
 
     public boolean hasFrequencies() {
-        return this.transportNetwork.transitLayer.hasFrequencies;
+        return routingProperties.getTransportNetworkBase().transitLayer.hasFrequencies;
     }
 
     public void abort() {
