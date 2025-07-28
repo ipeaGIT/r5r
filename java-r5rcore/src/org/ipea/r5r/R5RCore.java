@@ -603,6 +603,15 @@ public class R5RCore {
 
     }
 
+    public void applyCongestionOSM(HashMap<Long, Float> speedMap, float defaultScaling){
+        RoadCongestionOSM congestion = new RoadCongestionOSM();
+        congestion.speedMap = speedMap;
+        congestion.defaultScaling = defaultScaling;
+        congestion.resolve(routingProperties.transportNetworkWorking);
+        congestion.apply(routingProperties.transportNetworkWorking);
+
+    }
+
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
         StreetNetwork streetNetwork = new StreetNetwork(routingProperties.getTransportNetworkBase());
