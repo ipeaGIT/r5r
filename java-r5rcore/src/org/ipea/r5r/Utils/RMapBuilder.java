@@ -10,16 +10,21 @@ public class RMapBuilder {
         HashMap<Long, Float> map = new HashMap<>();
         for (int i = 0; i < osmIdsArray.length; i++) {
             long osmId = Long.parseLong(osmIdsArray[i]);
-            float maxSpeed = Float.parseFloat(scaleArray[i]);
-            map.put(osmId, maxSpeed);
+            float jScale = Float.parseFloat(scaleArray[i]);
+            map.put(osmId, jScale);
         }
         return map;
     }
 
-    public static HashMap<Long, Integer> buildLtsMap(long[] osmIds, int[] lts){
+    public static HashMap<Long, Integer> buildLtsMap(String osmIds, String lts){
+        String[] osmIdsArray = osmIds.split(",");
+        String[] ltsArray = lts.split(",");
+
         HashMap<Long, Integer> map = new HashMap<>();
-        for (int i = 0; i < osmIds.length; i++) {
-            map.put(osmIds[i], lts[i]);
+        for (int i = 0; i < osmIdsArray.length; i++) {
+            long osmId = Long.parseLong(osmIdsArray[i]);
+            int jLts = Integer.parseInt(ltsArray[i]);
+            map.put(osmId, jLts);
         }
         return map;
     }

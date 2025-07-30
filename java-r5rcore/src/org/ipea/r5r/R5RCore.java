@@ -18,6 +18,7 @@ import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
 import org.ipea.r5r.Scenario.RoadCongestionOSM;
+import org.ipea.r5r.Scenario.SetLtsOsm;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
@@ -611,7 +612,7 @@ public class R5RCore {
         File file = fileJPath.toFile();
 
         ShapefileLts lts = new ShapefileLts();
-        // Set the private 'fileStorageKey' field
+        // Set the private 'localFile' field
         try {
             Field localFileField = ShapefileLts.class.getDeclaredField("localFile");
             localFileField.setAccessible(true);
@@ -623,13 +624,21 @@ public class R5RCore {
         return lts.errors.toString();
     }
 
-    public String applyCongestionOSM(HashMap<Long, Float> speedMap, float defaultScaling){
+    public String applyCongestionOsm(HashMap<Long, Float> speedMap, float defaultScaling){
         RoadCongestionOSM congestion = new RoadCongestionOSM();
         congestion.speedMap = speedMap;
         congestion.defaultScaling = defaultScaling;
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
+    }
+
+    public String applyLtsOsm(HashMap<Long, Integer> ltsMap){
+        SetLtsOsm lts = new SetLtsOsm();
+        lts.ltsMap = ltsMap;
+        lts.resolve(routingProperties.transportNetworkWorking);
+        lts.apply(routingProperties.transportNetworkWorking);
+        return lts.errors.toString();
     }
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------

@@ -602,7 +602,7 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
                                                rJava::.jfloat(carspeed_scale))
     } else { # OSM mode or scale != 1
       speed_map <- dt_to_speed_map(new_carspeeds)
-      errors <- r5r_network$applyCongestionOSM(speed_map,
+      errors <- r5r_network$applyCongestionOsm(speed_map,
                                      rJava::.jfloat(carspeed_scale))
     }
 
@@ -636,7 +636,7 @@ set_new_lts <- function(r5r_network, new_lts) {
       errors <- r5r_network$applyLtsPolygon(shp_path)
     } else { # OSM mode
       lts_map <- dt_to_lts_map(new_lts)
-      #errors <- r5r_network$applyLtsOsm(lts_map)
+      errors <- r5r_network$applyLtsOsm(lts_map)
     }
     if (errors != "[]"){
       cli::cli_inform(c(

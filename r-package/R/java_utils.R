@@ -93,11 +93,9 @@ dt_to_lts_map <- function(dt) {
   checkmate::assert_integer(dt$lts, any.missing = FALSE, all.missing = FALSE)
 
   # Create new HashMap<Long, Integer>
-  lts_map <- rJava::.jnew("java/util/HashMap")
-  for (i in seq_len(nrow(dt))) {
-    lts_map$put(
-      rJava::.jnew("java/lang/Long", as.character(dt$osm_id[i])),
-      rJava::.jnew("java/lang/Integer", as.integer(dt$lts[i])))
-  }
+  map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")
+  lts_map <- map_builder$buildLtsMap(paste(as.character(dt$osm_id), collapse = ","),
+                                         paste(as.character(dt$lts), collapse = ","))
+
   return(lts_map)
 }
