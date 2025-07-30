@@ -638,11 +638,10 @@ set_new_lts <- function(r5r_network, new_lts) {
       lts_map <- dt_to_lts_map(new_lts)
       #errors <- r5r_network$applyLtsOsm(lts_map)
     }
-  }
-
-  if (errors != "[]"){
-    cli::cli_inform(c(
-      "!" = "Encountered the following errors modifying LTS:",
-      " " = errors ))
+    if (errors != "[]"){
+      cli::cli_inform(c(
+        "!" = "Encountered the following errors modifying LTS:",
+        " " = errors ))
+    }
   }
 }
