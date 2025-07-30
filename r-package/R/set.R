@@ -609,8 +609,7 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
     if (errors != "[]"){
       cli::cli_inform(c(
         "!" = "Encountered the following errors modifying carspeeds:",
-        " " = errors
-      ))
+        " " = errors ))
     }
   }
 }
@@ -631,12 +630,19 @@ set_new_lts <- function(r5r_network, new_lts) {
   checkmate::assert_class(new_lts, "data.frame", null.ok = TRUE)
   if (!is.null(new_lts)){
     cli::cli_inform(c(i = "Modifying LTS levels..."))
-    if (inherits(new_carspeeds, "sf")) { # polygon mode
-      #geojson_path <- congestion_poly2geojson(new_carspeeds)
-      #r5r_network$applyLtsPolygon(geojson_path)
+
+    if (inherits(new_lts, "sf")) { # polygon mode
+      shp_path <- lts_lines2shp(new_lts)
+      errors <- r5r_network$applyLtsPolygon(shp_path)
     } else { # OSM mode
       lts_map <- dt_to_lts_map(new_lts)
-      #r5r_network$applyLtsOsm(lts_map)
+      #errors <- r5r_network$applyLtsOsm(lts_map)
     }
+  }
+
+  if (errors != "[]"){
+    cli::cli_inform(c(
+      "!" = "Encountered the following errors modifying LTS:",
+      " " = errors ))
   }
 }

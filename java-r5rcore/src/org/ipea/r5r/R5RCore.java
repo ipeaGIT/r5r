@@ -5,6 +5,7 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.analyst.scenario.ShapefileLts;
 import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.analyst.scenario.RoadCongestion;
 import com.conveyal.r5.transit.TransportNetwork;
@@ -20,6 +21,8 @@ import org.ipea.r5r.Scenario.RoadCongestionOSM;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -587,13 +590,13 @@ public class R5RCore {
         return gridTable;
     }
 
-    // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
+    // ------------------------------ SCENARIOS ----------------------------------------
 
     public String applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
-        Path filePathPath = Paths.get(filePath).toAbsolutePath().normalize();
+        Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
 
         RoadCongestion congestion = new RoadCongestion();
-        congestion.polygonLayer = filePathPath.toString();
+        congestion.polygonLayer = fileJPath.toString();
         congestion.scalingAttribute = scalingAttribute;
         congestion.priorityAttribute = priorityAttribute;
         congestion.nameAttribute = nameAttribute;
@@ -601,6 +604,23 @@ public class R5RCore {
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
+    }
+
+    public String applyLtsPolygon(String filePath){
+        Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
+        File file = fileJPath.toFile();
+
+        ShapefileLts lts = new ShapefileLts();
+        // Set the private 'fileStorageKey' field
+        try {
+            Field localFileField = ShapefileLts.class.getDeclaredField("localFile");
+            localFileField.setAccessible(true);
+            localFileField.set(lts, file);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            LOG.error("Failed to set localFile field when applying Polygon LTS", e);
+        }
+        lts.apply(routingProperties.transportNetworkWorking);
+        return lts.errors.toString();
     }
 
     public String applyCongestionOSM(HashMap<Long, Float> speedMap, float defaultScaling){
@@ -612,9 +632,11 @@ public class R5RCore {
         return congestion.errors.toString();
     }
 
+    // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
+
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
-        StreetNetwork streetNetwork = new StreetNetwork(routingProperties.getTransportNetworkBase());
+        StreetNetwork streetNetwork = new StreetNetwork(routingProperties.transportNetworkWorking);
 
         // Return a list of dataframes
         List<RDataFrame> transportNetworkList = new ArrayList<>();
