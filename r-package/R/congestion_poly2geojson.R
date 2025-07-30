@@ -32,7 +32,10 @@ congestion_poly2geojson <- function(new_speeds_poly){
     must.include = c("poly_id", "scale", "priority", "geometry")
   )
 
-  # check input geometry
+  # Check column types and check input geometry
+  checkmate::assert_character(new_speeds_poly$poly_id, any.missing = FALSE)
+  checkmate::assert_numeric(new_speeds_poly$scale, any.missing = FALSE)
+  checkmate::assert_integer(new_speeds_poly$priority, any.missing = FALSE)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_speeds_poly))),
     choices = c("POLYGON", "MULTIPOLYGON"),

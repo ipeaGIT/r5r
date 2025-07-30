@@ -589,7 +589,7 @@ public class R5RCore {
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------
 
-    public void applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
+    public String applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
         Path filePathPath = Paths.get(filePath).toAbsolutePath().normalize();
 
         RoadCongestion congestion = new RoadCongestion();
@@ -600,16 +600,16 @@ public class R5RCore {
         congestion.defaultScaling = defaultScaling;
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
-
+        return congestion.errors.toString();
     }
 
-    public void applyCongestionOSM(HashMap<Long, Float> speedMap, float defaultScaling){
+    public String applyCongestionOSM(HashMap<Long, Float> speedMap, float defaultScaling){
         RoadCongestionOSM congestion = new RoadCongestionOSM();
         congestion.speedMap = speedMap;
         congestion.defaultScaling = defaultScaling;
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
-
+        return congestion.errors.toString();
     }
 
     public List<RDataFrame> getStreetNetwork() {

@@ -13,7 +13,7 @@
 #' @template draws_per_minute
 #' @template fare_structure
 #' @template max_fare
-#' @template new_carspeeds
+#' @template scenarios
 #' @template verbose
 #' @param percentiles An integer vector (max length of 5). Specifies the
 #'   percentile to use when returning travel time estimates within the given
@@ -124,6 +124,7 @@ travel_time_matrix <- function(r5r_network,
                                max_fare = Inf,
                                new_carspeeds = NULL,
                                carspeed_scale = 1,
+                               new_lts = NULL,
                                max_walk_time = Inf,
                                max_bike_time = Inf,
                                max_car_time = Inf,
@@ -221,13 +222,9 @@ travel_time_matrix <- function(r5r_network,
   r5r_network$setSearchType("DEPART_FROM")
 
   # SCENARIOS -------------------------------------------
-  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = T)
+  set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
+  set_new_lts(r5r_network, new_lts)
 
-  if (!is.null(new_carspeeds) || carspeed_scale != 1){
-    cli::cli_inform(c(i = "Modifying carspeeds..."))
-    speed_map <- dt_to_speed_map(new_carspeeds)
-    r5r_network$applyCongestionOSM(speed_map, rJava::.jfloat(carspeed_scale))
-  }
 
   # call r5r_network method and process result -------------------------------
 

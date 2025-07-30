@@ -19,6 +19,7 @@ travel_time_matrix(
   max_fare = Inf,
   new_carspeeds = NULL,
   carspeed_scale = 1,
+  new_lts = NULL,
   max_walk_time = Inf,
   max_bike_time = Inf,
   max_car_time = Inf,
@@ -86,10 +87,15 @@ understand how this object is structured:
 calculating the fastest journey between each origin and destination pair.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the speed modifications. The
-table must contain columns \code{osm_id} and \code{max_speed}.}
+table must contain columns \code{osm_id} and \code{max_speed}. OR A
+\verb{sf data.frame} specifying the speed modifications. The table must contain
+columns \code{sf polygon}, \code{scale}, \code{priority}. See \verb{link to congestion vignette}.}
 
 \item{carspeed_scale}{Numeric. Default speed to use for road segments not
 specified in \code{new_carspeeds}.}
+
+\item{new_lts}{A \code{data.frame} specifying the LTS levels. The
+table must contain columns \code{osm_id} and \code{lts}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network

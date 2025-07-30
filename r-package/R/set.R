@@ -575,3 +575,68 @@ set_elevation <- function(elevation) {
   elevation
 }
 
+#' Set car congestion
+#'
+#' Verifies if and which congestion mode to use and applies it.
+#'
+#' @template r5r_network
+#' @param new_carspeeds A df or sf polygon.
+#' @param carspeed_scale Numeric > 0.
+#'
+#' @return Invisibly returns `TRUE`.
+#' @family setting functions
+#'
+#' @keywords internal
+set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
+  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = T)
+  checkmate::assert_numeric(carspeed_scale, lower = 0, finite = TRUE, null.ok = F)
+  if (!is.null(new_carspeeds) || carspeed_scale != 1){
+    cli::cli_inform(c(i = "Modifying carspeeds..."))
+
+    if (inherits(new_carspeeds, "sf")) { # polygon mode
+      geojson_path <- congestion_poly2geojson(new_carspeeds)
+      errors <- r5r_network$applyCongestionPolygon(geojson_path,
+                                               "scale",
+                                               "priority",
+                                               "poly_id",
+                                               rJava::.jfloat(carspeed_scale))
+    } else { # OSM mode or scale != 1
+      speed_map <- dt_to_speed_map(new_carspeeds)
+      errors <- r5r_network$applyCongestionOSM(speed_map,
+                                     rJava::.jfloat(carspeed_scale))
+    }
+
+    if (errors != "[]"){
+      cli::cli_inform(c(
+        "!" = "Encountered the following errors modifying carspeeds:",
+        " " = errors
+      ))
+    }
+  }
+}
+
+
+#' Set LTS level
+#'
+#' Verifies if and which LTS mode to use and applies it.
+#'
+#' @template r5r_network
+#' @param new_carspeeds A df or sf polygon.
+#'
+#' @return Invisibly returns `TRUE`.
+#' @family setting functions
+#'
+#' @keywords internal
+set_new_lts <- function(r5r_network, new_lts) {
+  checkmate::assert_class(new_lts, "data.frame", null.ok = TRUE)
+  if (!is.null(new_lts)){
+    cli::cli_inform(c(i = "Modifying LTS levels..."))
+    if (inherits(new_carspeeds, "sf")) { # polygon mode
+      #geojson_path <- congestion_poly2geojson(new_carspeeds)
+      #r5r_network$applyLtsPolygon(geojson_path)
+    } else { # OSM mode
+      lts_map <- dt_to_lts_map(new_lts)
+      #r5r_network$applyLtsOsm(lts_map)
+    }
+  }
+}
