@@ -3,9 +3,9 @@ package org.ipea.r5r.Scenario;
 import com.conveyal.r5.analyst.scenario.Modification;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.transit.TransportNetwork;
-import gnu.trove.list.TShortList;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.list.array.TShortArrayList;
+import gnu.trove.list.array.TLongArrayList;
+import gnu.trove.set.hash.TLongHashSet;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
@@ -17,6 +17,27 @@ public class SetLtsOsm extends Modification {
 
     /** A HashMap with key [osm_id] and value [max_speed] */
     public HashMap<Long, Integer> ltsMap;
+
+    @Override
+    public boolean resolve(TransportNetwork network) {
+        TLongHashSet osmIdSet = new TLongHashSet();
+        for (int i = 0; i < network.streetLayer.edgeStore.osmids.size(); i++) {
+            // need to manually iterate because the iterator of osmids is disabled
+            osmIdSet.add(network.streetLayer.edgeStore.osmids.get(i));
+        }
+        TLongArrayList badIds = new TLongArrayList();
+
+        for (Long osmId : ltsMap.keySet()) {
+            if (!osmIdSet.contains(osmId)){ badIds.add(osmId); }
+        }
+
+        if (!badIds.isEmpty()) {
+            // this.addWarning("Cannot find the following OSM IDs in network: " + badIds);
+            LOG.warn("Cannot find the following OSM IDs in network: {}", badIds);
+        }
+
+        return hasErrors();
+    }
 
     @Override
     public boolean apply(TransportNetwork network) {
