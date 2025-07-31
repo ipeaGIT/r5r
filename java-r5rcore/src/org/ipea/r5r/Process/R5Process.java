@@ -200,7 +200,7 @@ public abstract class R5Process {
             }
 
             int nProcessed = totalProcessed.getAndIncrement();
-            if (nProcessed % 1000 == 0) {
+            if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
                 LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
             }
         } catch (ParseException | FileNotFoundException e) {
