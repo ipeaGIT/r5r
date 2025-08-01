@@ -51,9 +51,10 @@ dt_to_speed_map <- function(dt) {
     return (rJava::.jnew("java/util/HashMap"))
   }
 
-  checkmate::assert_names(names(dt), must.include = c("osm_id", "max_speed"))
+  checkmate::assert_names(names(dt), must.include = c("osm_id", "max_speed", "speed_type"))
   checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
   checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_true(length(unique(dt$speed_type)) == 1 && dt$speed_type[1] %in% c("km/h", "scale"))
 
   # Create new HashMap<long, float>
   map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")

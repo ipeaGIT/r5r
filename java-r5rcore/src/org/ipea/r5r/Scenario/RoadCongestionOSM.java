@@ -24,6 +24,8 @@ public class RoadCongestionOSM extends Modification {
      */
     public HashMap<Long, Float> speedMap;
 
+    public boolean absoluteMode = false;
+
 
     @Override
     public boolean resolve(TransportNetwork network) {
@@ -35,7 +37,9 @@ public class RoadCongestionOSM extends Modification {
         TLongArrayList badIds = new TLongArrayList();
 
         for (Long osmId : speedMap.keySet()) {
-            if (!osmIdSet.contains(osmId)){ badIds.add(osmId); }
+            if (!osmIdSet.contains(osmId)) {
+                badIds.add(osmId);
+            }
         }
 
         if (!badIds.isEmpty()) {
@@ -51,18 +55,20 @@ public class RoadCongestionOSM extends Modification {
         LOG.info("Applying road congestion by OSM id...");
 
         EdgeStore edgeStore = network.streetLayer.edgeStore;
-        TShortList adjustedSpeeds = new TShortArrayList(edgeStore.speeds.size());
         EdgeStore.Edge edge = edgeStore.getCursor();
 
         while (edge.advance()) {
-            float scale = speedMap.getOrDefault(edge.getOSMID(), defaultScaling);
+            Float value = speedMap.get(edge.getOSMID());
 
-            // saving cm/sec, conveyal could change unit in the future, I am just multiplying by a factor so this should
-            // work even if unit changes, however you could use Edge.setSpeedKph()
-            adjustedSpeeds.add((short) (edge.getSpeed() * scale));
+            if (value == null) {
+                edge.setSpeed((short) (edge.getSpeed() * defaultScaling));
+            } else if (absoluteMode) {
+                edge.setSpeedKph(value);
+            } else {
+                edge.setSpeed((short) (edge.getSpeed() * value)); // saving cm/sec
+            }
         }
 
-        edgeStore.speeds = adjustedSpeeds;
         return hasErrors();
     }
 

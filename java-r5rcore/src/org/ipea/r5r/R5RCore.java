@@ -624,10 +624,11 @@ public class R5RCore {
         return lts.errors.toString();
     }
 
-    public String applyCongestionOsm(HashMap<Long, Float> speedMap, float defaultScaling){
+    public String applyCongestionOsm(HashMap<Long, Float> speedMap, float defaultScaling, boolean absoluteMode){
         RoadCongestionOSM congestion = new RoadCongestionOSM();
         congestion.speedMap = speedMap;
         congestion.defaultScaling = defaultScaling;
+        congestion.absoluteMode = absoluteMode;
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
