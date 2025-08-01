@@ -20,8 +20,8 @@ public class ParetoFrontierCalculator  extends R5Process {
         return false;
     }
 
-    public ParetoFrontierCalculator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public ParetoFrontierCalculator(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
     }
 
     @Override

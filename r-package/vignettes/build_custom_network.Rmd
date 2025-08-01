@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 ```
 
 # 1. Introduction 
-
 By default, routing by car in `R5` considers that vehicles travel at the legal speed limit in each OSM road edge. This is commonly referred to as a "free flow scenario", without congestion. However, the average speed of car trips is different (usually slower) than the legal speed limit in most real case scenarios due to traffic conditions and driving behavior.
 
 This vignette shows how you can set custom speeds for cars by making simple changes to OSM data with the convenient `build_custom_network()` function. OSM speeds can be changed using two different strategies: (1) by applying different speed factors to each road, or (2) by applying speed factors only to the roads within determined polygons.
@@ -33,6 +32,19 @@ The `build_custom_network()` has a relatively similar behavior to the `r5r::buil
 2. The user needs to pass some info to the `new_carspeeds`, which can be either a `data.frame` that indicates the speed factor for each OSM edge id, OR an `sf data.frame` polygon that indicates the speed factor for all the roads that fall within that polygon.
 
 Let's see how this works with a few examples using the a sample data set for the city of Porto Alegre (Brazil) included in `r5r`.
+
+There are two congestion modes:
+- **Edge mode:** The new speed factors must be passed as a `data.frame`
+indicating the new max speed of each OSM edge id. The table must contain
+columns \code{osm_id} and \code{max_speed}. Values in \code{max_speed} can be
+interpreted as percentages of original speeds or as absolute speeds (km/h) by
+using `percentage_mode` parameter.
+- **Polygon mode:** The new speed factors must be passed through "congestion
+region(s)" specified as an `sf data.frame` containing  in each row an
+`sf polygon` outlining the "congestion region", \code{scale} and \code{priority}.
+Values in \code{scale} can only be interpreted as percentages of original
+speeds as `percentage_mode` must be `TRUE`. \code{Priority} is used to apply
+a hierarchy in case of overlapping polygons.
 
 # 2. Changing car speeds by OSM edge
 

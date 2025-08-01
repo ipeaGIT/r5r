@@ -21,8 +21,8 @@ public class ParetoItineraryPlanner extends R5Process {
         return true;
     }
 
-    public ParetoItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public ParetoItineraryPlanner(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
     }
 
     @Override

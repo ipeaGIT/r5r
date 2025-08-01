@@ -23,8 +23,8 @@ public class DetailedItineraryPlanner extends R5Process {
         return true;
     }
 
-    public DetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public DetailedItineraryPlanner(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
     }
 
     @Override

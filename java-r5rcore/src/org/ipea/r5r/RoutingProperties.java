@@ -2,11 +2,14 @@ package org.ipea.r5r;
 
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.fare.*;
+import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.transit.TransitLayer;
+import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
+import org.ipea.r5r.Scenario.DummyScenario;
 
 import static org.ipea.r5r.JsonUtil.OBJECT_MAPPER;
 
@@ -42,6 +45,9 @@ public class RoutingProperties {
     public InRoutingFareCalculator fareCalculator = null;
     public TransitLayer transitLayer = null;
     public SearchType searchType = SearchType.DEPART_FROM;
+    private final TransportNetwork transportNetworkBase;
+    public TransportNetwork transportNetworkWorking;
+    private final Scenario dummyScenario = new DummyScenario();
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
         // first, check to see if this is a built-in R5 fare calculator JSON representation
@@ -59,7 +65,10 @@ public class RoutingProperties {
 
     }
 
-    public RoutingProperties() {
+    public RoutingProperties(TransportNetwork network) {
+        transportNetworkBase = network;
+        transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
+        transitLayer = network.transitLayer;
     }
 
     public void reset() {
@@ -83,6 +92,9 @@ public class RoutingProperties {
         maxFare = DEFAULT_MAX_FARE;
         fareCalculator = null;
         searchType = SearchType.DEPART_FROM;
+        transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
         // do not reset transitLayer
     }
+
+    public TransportNetwork getTransportNetworkBase(){ return transportNetworkBase; }
 }

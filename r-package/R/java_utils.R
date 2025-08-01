@@ -47,17 +47,20 @@ java_to_dt <- function(obj) {
 #' @family java support functions
 #' @keywords internal
 dt_to_speed_map <- function(dt) {
-  checkmate::assert_names(names(dt), must.include = c("osm_id", "max_speed"))
+  if (is.null(dt)){
+    return (rJava::.jnew("java/util/HashMap"))
+  }
+
+  checkmate::assert_names(names(dt), must.include = c("osm_id", "max_speed", "speed_type"))
   checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
   checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_true(length(unique(dt$speed_type)) == 1 && dt$speed_type[1] %in% c("km/h", "scale"))
 
-  # Create new HashMap<Long, Float>
-  speed_map <- rJava::.jnew("java/util/HashMap")
-  for (i in seq_len(nrow(dt))) {
-    speed_map$put(
-      rJava::.jnew("java/lang/Long", as.character(dt$osm_id[i])),
-      rJava::.jnew("java/lang/Float", as.numeric(dt$max_speed[i])))
-  }
+  # Create new HashMap<long, float>
+  map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")
+  speed_map <- map_builder$buildSpeedMap(paste(as.character(dt$osm_id), collapse = ","),
+                                        paste(as.character(dt$max_speed), collapse = ","))
+
   return(speed_map)
 }
 
@@ -71,4 +74,29 @@ get_java_version <- function(){
   ver <- rJava::.jcall("java.lang.System", "S", "getProperty", "java.version")
   ver <- as.numeric(gsub("\\..*", "", ver))
   return(ver)
+}
+
+
+#' data.table to ltsMap
+#'
+#' @description Converts a `data.frame` with road OSM id's and respective LTS
+#'              levels a Java Map<Long, Integer> for use by r5r_network.
+#'
+#' @param dt data.frame/data.table. Table specifying the
+#'        LTS levels. The table must contain columns \code{osm_id} and
+#'        \code{lts}.
+#' @return A speedMap (Java HashMap<Long, Integer>)
+#' @family java support functions
+#' @keywords internal
+dt_to_lts_map <- function(dt) {
+  checkmate::assert_names(names(dt), must.include = c("osm_id", "lts"))
+  checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_integer(dt$lts, any.missing = FALSE, all.missing = FALSE)
+
+  # Create new HashMap<Long, Integer>
+  map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")
+  lts_map <- map_builder$buildLtsMap(paste(as.character(dt$osm_id), collapse = ","),
+                                         paste(as.character(dt$lts), collapse = ","))
+
+  return(lts_map)
 }

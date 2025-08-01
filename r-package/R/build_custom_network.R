@@ -176,7 +176,7 @@ build_custom_network <- function(data_path,
                                       temp_dir = FALSE,
                                       elevation = elevation,
                                       overwrite = TRUE)
-    new_network@jcore$applyCongestion(geojson_path,
+    new_network@jcore$applyCongestionPolygon(geojson_path,
                                 "scale", "priority", "poly_id",
                                 rJava::.jfloat(default_speed))
   }

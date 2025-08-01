@@ -31,8 +31,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
         return true;
     }
 
-    public FastDetailedItineraryPlanner(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public FastDetailedItineraryPlanner(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
     }
 
     public void dropItineraryGeometry() {

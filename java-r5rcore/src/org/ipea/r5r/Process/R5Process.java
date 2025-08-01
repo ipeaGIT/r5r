@@ -65,9 +65,9 @@ public abstract class R5Process {
 
     private static final Logger LOG = LoggerFactory.getLogger(R5Process.class);
 
-    public R5Process(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
+    public R5Process(ForkJoinPool threadPool, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
-        this.transportNetwork = transportNetwork;
+        this.transportNetwork = routingProperties.transportNetworkWorking;
         this.routingProperties = routingProperties;
 
         destinationPoints = null;
