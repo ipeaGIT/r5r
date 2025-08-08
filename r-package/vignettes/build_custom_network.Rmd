@@ -201,7 +201,7 @@ ttm_congestion <- r5r::travel_time_matrix(
 - **Road closure**: one can simulate a road closure by setting the `"max_speed"` value to `0`. This can be quite handy for studies that try to measure the resilience of transport systems to network disruptions.
 
 
-## 2.2. Changing car speeds with a spatial polygon
+## 2.2 Changing car speeds with a spatial polygon
 
 If you do not want to set the speed factor for each individual OSM road edge, you 
 can use one or more spatial polygons to set speed the new car speeds of all the 
@@ -243,12 +243,64 @@ And that's it!
 
 
 
-# 2. Changing LTS values
+# 3. Changing cycling LTS values
 
-The approaches to changing LTS are pretty similar to changing road speeds. It can 
-be done either with a `data.frame` indicating the new LTS of each individual OSM edge id, or an `sf data.frame` polygon that will update the LTS of all the roads that fall within each polygon.
+There are two approaches to changing LTS, pretty similar to changing road speeds. 
+This can be done either with a `data.frame` indicating the new LTS of each individual OSM edge id, or an `sf data.frame` polygon that will update the LTS of all the roads that fall within each polygon.
 
 
+## 3.1 Changing LTS by OSM edge
+
+Now let's simulate the local government has implemented protected cycle lanes or  tracks across a few designated roads in our transport network. Mind you that the
+`data.frame` must contain the column `"lts"` indicating the new LTS value.
+
+```{r, message=FALSE}
+# read data.frame with new lts
+edge_lts <- read.csv(
+  file.path(data_path, "poa_osm_lts.csv")
+  )
+
+head(edge_lts)
+```
+Now we simply need to pass this `data.frame` with the new LTS values to the parameter `new_lts` in a routing/accessibility function:
+
+```{r, message = FALSE}
+ttm_new_lts <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'bicycle',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_lts = edge_lts
+  )
+```
+
+## 3.2. Changing LTS with a spatial polygon
+
+Alternatively, we can simulate that all roads within a given polygon received new cycling infrastructure.
+
+```{r, message = FALSE}
+# read sf with congestion polygons
+lts_poly <- readRDS(file.path(data_path, "poa_mls_lts.rds"))
+
+# preview
+mapview::mapview(lts_poly, zcol="lts")
+```
+
+And we only need to pass this polygon with the new LTS values to the `new_lts` parameter in any routing/accessibility function:
+
+```{r, message = FALSE}
+ttm_new_lts <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'bicycle',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_lts = lts_poly
+  )
+```
 
 # Cleaning up after usage
 
