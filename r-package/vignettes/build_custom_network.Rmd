@@ -64,7 +64,7 @@ Let's see a couple examples.
 
 ## 2.1 Changing car speeds by OSM edge
 
-In this first example, we will pass the new car speeds using a sample `data.frame` that comes with the package. Mind you that this data frame must contain the columns `"osm_id"`, `"max_speed"` and `"speed_type"`. The `"speed_type"` columns is of class character where all values must be either `"scale"` or `"km/h"`, indicating whether the values in `"max_speed"` should be interpreted as percentages of original speeds (`"scale"`) or as absolute speeds (`"km/h"`). Like this:
+In this first example, we will pass the new car speeds using a sample `data.frame` that comes with the package. Mind you that this data frame must contain the columns `"osm_id"`, `"max_speed"` and `"speed_type"`. The `"speed_type"` column is of class character where all values must be either `"scale"` or `"km/h"`, indicating whether the values in `"max_speed"` should be interpreted as percentages of original speeds (`"scale"`) or as absolute speeds (`"km/h"`). Like this:
 
 ```{r, message=FALSE}
 # read data.frame with new car speeds
@@ -273,7 +273,7 @@ ttm_new_lts <- r5r::travel_time_matrix(
 
 ## 3.2. Changing LTS with a spatial polygon
 
-Alternatively, we can pass a `sf` linestring of the road edges where we want to 
+Alternatively, we can pass a `sf` linestring of the roads where we want to 
 simulate a some cycling network intervetion. Here we simulate that local authorities would have build dedicated lanes along all secondary roads in the city.
 
 ```{r, message = FALSE}
