@@ -15,6 +15,7 @@
 #'   travel times. Please read the time window vignette for more details on its
 #'   usage `vignette("time_window", package = "r5r")`
 #' @template draws_per_minute
+#' @template scenarios
 #' @template verbose
 #' @param breakdown A logical. Whether to include detailed information about
 #'   each trip in the output. If `FALSE` (the default), the output lists the
@@ -106,6 +107,9 @@ expanded_travel_time_matrix <- function(r5r_network,
                                         bike_speed = 12,
                                         max_rides = 3,
                                         max_lts = 2,
+                                        new_carspeeds = NULL,
+                                        carspeed_scale = 1,
+                                        new_lts = NULL,
                                         draws_per_minute = 5L,
                                         n_threads = Inf,
                                         verbose = FALSE,
@@ -191,6 +195,11 @@ expanded_travel_time_matrix <- function(r5r_network,
   set_breakdown(r5r_network, breakdown)
   set_fare_structure(r5r_network, NULL)
   r5r_network$setSearchType("DEPART_FROM")
+
+  # SCENARIOS -------------------------------------------
+  set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
+  set_new_lts(r5r_network, new_lts)
+
 
   # call r5r_network method and process result -------------------------------
 

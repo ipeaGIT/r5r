@@ -15,11 +15,6 @@ travel_time_matrix(
   departure_datetime = Sys.time(),
   time_window = 10L,
   percentiles = 50L,
-  fare_structure = NULL,
-  max_fare = Inf,
-  new_carspeeds = NULL,
-  carspeed_scale = 1,
-  new_lts = NULL,
   max_walk_time = Inf,
   max_bike_time = Inf,
   max_car_time = Inf,
@@ -28,6 +23,11 @@ travel_time_matrix(
   bike_speed = 12,
   max_rides = 3,
   max_lts = 2,
+  fare_structure = NULL,
+  max_fare = Inf,
+  new_carspeeds = NULL,
+  carspeed_scale = 1,
+  new_lts = NULL,
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
@@ -77,26 +77,6 @@ upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
 \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
-\item{fare_structure}{A fare structure object, following the convention
-set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-\code{vignette("fare_structure", package = "r5r")}.}
-
-\item{max_fare}{A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.}
-
-\item{new_carspeeds}{A \code{data.frame} specifying the speed modifications. The
-table must contain columns \code{osm_id} and \code{max_speed}. OR A
-\verb{sf data.frame} specifying the speed modifications. The table must contain
-columns \code{sf polygon}, \code{scale}, \code{priority}. See \verb{link to congestion vignette}.}
-
-\item{carspeed_scale}{Numeric. Default speed to use for road segments not
-specified in \code{new_carspeeds}.}
-
-\item{new_lts}{A \code{data.frame} specifying the LTS levels. The
-table must contain columns \code{osm_id} and \code{lts}.}
-
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network
 or to complete walk-only trips. Defaults to no restrictions (numeric value
@@ -144,6 +124,39 @@ stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
 can travel through any road. Defaults to 2. Please see details for more
 information.}
+
+\item{fare_structure}{A fare structure object, following the convention
+set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+\code{vignette("fare_structure", package = "r5r")}.}
+
+\item{max_fare}{A number. The maximum value that trips can cost when
+calculating the fastest journey between each origin and destination pair.}
+
+\item{new_carspeeds}{A \code{data.frame} specifying the new car speed for each OSM
+edge id. This table must contain columns \code{osm_id}, \code{max_speed}
+and \code{speed_type}. The \code{"speed_type"} column is of class character
+and it indicates whether the values in \code{"max_speed"} should be
+interpreted as percentages of original speeds (\code{"scale"}) or as absolute
+speeds (\code{"km/h"}). Alternatively, the \code{new_carspeeds} parameter can
+receive an \verb{sf data.frame} with POLYGON geometry that indicates the new
+car speed for all the roads that fall within each polygon. In this case,
+the table must contain the columns \code{poly_id} with a unique id for
+each polygon, \code{scale} with the new speed scaling factors and
+\code{priority}, which is a number ranking which polygon should be
+considered in case of overlapping polygons. See more into in the
+\verb{link to congestion vignette}.}
+
+\item{carspeed_scale}{Numeric. The default car speed to use for road segments
+not specified in \code{new_carspeeds}. By default, it is \code{NULL} and the speeds
+of the unlisted roads are kept unchanged.}
+
+\item{new_lts}{A \code{data.frame} specifying the new LTS levels for each OSM edge
+id. The table must contain columns \code{osm_id} and \code{lts}.
+Alternatively, the \code{new_lts} parameter can receive an \verb{sf data.frame}
+with LINESTRING geometry. R5 will then find the nearest road for each
+LINESTRING and update its LTS value accordingly.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
