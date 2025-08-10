@@ -170,7 +170,7 @@ ttm_congestion <- r5r::travel_time_matrix(
 
 ```
 
-### 2.1.1 Applying the same speed factor to all roads
+### 2.1.2 Applying the same speed factor to all roads
 
 In this example, we'll simulate as if the speed limits of all roads were changed to 40 Km/h. To do this, we simply edit the `new_edge_speeds` table we created in our previous example to assign a 40 Km/h to each and every OSM id.
 

@@ -3,9 +3,9 @@
 **Major changes**
 
 - New function `build_network()` to replace `setup_r5()`, which is being deprecated. Idiomatically `r5r_core` is now `r5r_network`.
-- New function `build_custom_network()` to build a routable network. At the moment, the functions allows using modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
 - New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes [#291](https://github.com/ipeaGIT/r5r/issues/291)
 - We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions `travel_time_matrix()`, `expanded_travel_time_matrix()` and `arrival_travel_time_matrix()`. In practice, this means that these functions are now much faster when there are multiple origins to few destinations but only when there is no elevation `.tif` file in the data path. Closes [#450](https://github.com/ipeaGIT/r5r/issues/450)
+- All routing and accessibility functions now have new parameters `new_carspeeds`, `carspeed_scale` and `new_lts`, which allow one to use custom car speeds and LTS levels for cycling, which allow one to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
 
 **Minor changes**
 
