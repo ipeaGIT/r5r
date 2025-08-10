@@ -20,12 +20,12 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -71,8 +71,6 @@
 <span>  decay_function <span class="op">=</span> <span class="st">"step"</span>,</span>
 <span>  cutoffs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  decay_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_fare <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_car_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -81,6 +79,11 @@
 <span>  bike_speed <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  max_rides <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_fare <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  new_carspeeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  carspeed_scale <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  new_lts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -185,19 +188,6 @@ in the <code>logistic</code> and <code>linear</code> functions, and the half-lif
 <code>exponential</code>.</p></dd>
 
 
-<dt id="arg-fare-structure">fare_structure<a class="anchor" aria-label="anchor" href="#arg-fare-structure"></a></dt>
-<dd><p>A fare structure object, following the convention
-set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
-
-
-<dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
-<dd><p>A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.</p></dd>
-
-
 <dt id="arg-max-walk-time">max_walk_time<a class="anchor" aria-label="anchor" href="#arg-max-walk-time"></a></dt>
 <dd><p>An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network
@@ -260,6 +250,49 @@ stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
 can travel through any road. Defaults to 2. Please see details for more
 information.</p></dd>
+
+
+<dt id="arg-fare-structure">fare_structure<a class="anchor" aria-label="anchor" href="#arg-fare-structure"></a></dt>
+<dd><p>A fare structure object, following the convention
+set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
+
+
+<dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
+<dd><p>A number. The maximum value that trips can cost when
+calculating the fastest journey between each origin and destination pair.</p></dd>
+
+
+<dt id="arg-new-carspeeds">new_carspeeds<a class="anchor" aria-label="anchor" href="#arg-new-carspeeds"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new car speed for each OSM
+edge id. This table must contain columns <code>osm_id</code>, <code>max_speed</code>
+and <code>speed_type</code>. The <code>"speed_type"</code> column is of class character
+and it indicates whether the values in <code>"max_speed"</code> should be
+interpreted as percentages of original speeds (<code>"scale"</code>) or as absolute
+speeds (<code>"km/h"</code>). Alternatively, the <code>new_carspeeds</code> parameter can
+receive an <code>sf data.frame</code> with POLYGON geometry that indicates the new
+car speed for all the roads that fall within each polygon. In this case,
+the table must contain the columns <code>poly_id</code> with a unique id for
+each polygon, <code>scale</code> with the new speed scaling factors and
+<code>priority</code>, which is a number ranking which polygon should be
+considered in case of overlapping polygons. See more into in the
+<code>link to congestion vignette</code>.</p></dd>
+
+
+<dt id="arg-carspeed-scale">carspeed_scale<a class="anchor" aria-label="anchor" href="#arg-carspeed-scale"></a></dt>
+<dd><p>Numeric. The default car speed to use for road segments
+not specified in <code>new_carspeeds</code>. By default, it is <code>NULL</code> and the speeds
+of the unlisted roads are kept unchanged.</p></dd>
+
+
+<dt id="arg-new-lts">new_lts<a class="anchor" aria-label="anchor" href="#arg-new-lts"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new LTS levels for each OSM edge
+id. The table must contain columns <code>osm_id</code> and <code>lts</code>.
+Alternatively, the <code>new_lts</code> parameter can receive an <code>sf data.frame</code>
+with LINESTRING geometry. R5 will then find the nearest road for each
+LINESTRING and update its LTS value accordingly.</p></dd>
 
 
 <dt id="arg-draws-per-minute">draws_per_minute<a class="anchor" aria-label="anchor" href="#arg-draws-per-minute"></a></dt>

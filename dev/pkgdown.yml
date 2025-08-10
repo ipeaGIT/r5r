@@ -3,16 +3,16 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   accessibility: accessibility.html
-  build_custom_network: build_custom_network.html
   detailed_itineraries: detailed_itineraries.html
   faq: faq.html
   fare_structure: fare_structure.html
   isochrones: isochrones.html
   pareto_frontier: pareto_frontier.html
   r5r: r5r.html
+  scenarios: scenarios.html
   time_window: time_window.html
   travel_time_matrix: travel_time_matrix.html
-last_built: 2025-07-31T23:39Z
+last_built: 2025-08-10T02:45Z
 urls:
   reference: https://ipeagit.github.io/r5r/reference
   article: https://ipeagit.github.io/r5r/articles

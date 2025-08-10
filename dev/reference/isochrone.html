@@ -30,12 +30,12 @@ to the centroids of all segments in the transport network."><meta property="og:i
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -371,13 +371,13 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 4 features and 2 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2422 ymin: -30.0778 xmax: -51.1602 ymax: -29.9966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2454 ymin: -30.082 xmax: -51.1554 ymax: -29.9966</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    id isochrone                       polygons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120 POLYGON ((-51.2412 -30.0724...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120 POLYGON ((-51.2125 -30.082,...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 bus_central_station        90 POLYGON ((-51.2421 -30.0365...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 bus_central_station        60 POLYGON ((-51.2421 -30.0365...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30 POLYGON ((-51.2314 -30.0287...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30 POLYGON ((-51.228 -30.0336,...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate line-based isochrone from origin</span></span></span>
@@ -395,29 +395,29 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 13 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: LINESTRING</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.18467 ymin: -30.05426 xmax: -51.17266 ymax: -30.02355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.17223 ymin: -30.03979 xmax: -51.16588 ymax: -30.02889</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edge_index   osm_id isochrone travel_time_p50 from_vertex to_vertex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        644 27238056       100             100         443       444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        645 27238056       100             100         444       443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       1048 27370379       100             100         717       718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       1049 27370379       100             100         718       717</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       1058 27370382       100             100         722       723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       1059 27370382       100             100         723       722</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        594 27234386       100             100         414       415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        595 27234386       100             100         415       414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        598 27234513       100             100         417       411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        599 27234513       100             100         411       417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       2072 28069055       100             100        1397      1398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       2073 28069055       100             100        1398      1397</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   street_class  length walk   car car_speed bicycle bicycle_lts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        OTHER 224.482 TRUE  TRUE    40.248    TRUE           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        OTHER 224.482 TRUE FALSE    40.248   FALSE           4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LINESTRING (-51.17282 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 LINESTRING (-51.17266 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 LINESTRING (-51.18231 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 LINESTRING (-51.18467 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 LINESTRING (-51.18424 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 LINESTRING (-51.1839 -30.05...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LINESTRING (-51.16588 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 LINESTRING (-51.16876 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 LINESTRING (-51.1687 -30.03...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 LINESTRING (-51.17039 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 LINESTRING (-51.17223 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 LINESTRING (-51.17027 -30.0...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot colors</span></span></span>

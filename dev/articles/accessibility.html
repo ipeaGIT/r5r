@@ -41,12 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Accessibility</h1>
             
-            <h4 data-toc-skip class="date">2025-07-31</h4>
+            <h4 data-toc-skip class="date">2025-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/accessibility.Rmd" class="external-link"><code>vignettes/accessibility.Rmd</code></a></small>
       <div class="d-none name"><code>accessibility.Rmd</code></div>
@@ -196,11 +196,11 @@ manually computing accessibility.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             3</span></span>
+<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             4</span></span>
 <span><span class="co">#&gt; 2: 89a901291abffff  healthcare         50     20             6</span></span>
 <span><span class="co">#&gt; 3: 89a9012a3cfffff     schools         50     20             0</span></span>
 <span><span class="co">#&gt; 4: 89a9012a3cfffff  healthcare         50     20             0</span></span>
-<span><span class="co">#&gt; 5: 89a901295b7ffff     schools         50     20             6</span></span>
+<span><span class="co">#&gt; 5: 89a901295b7ffff     schools         50     20             8</span></span>
 <span><span class="co">#&gt; 6: 89a901295b7ffff  healthcare         50     20             4</span></span></code></pre></div>
 <p>Mind you that the <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> also allow users
 to calculate gravity-based accessibility metrics, which can be
@@ -260,21 +260,21 @@ travel time matrix and land use data as input:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_edu</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id schools</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;   &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a9012124fffff       1</span></span>
+<span><span class="co">#&gt; 1: 89a9012124fffff       2</span></span>
 <span><span class="co">#&gt; 2: 89a9012126bffff       4</span></span>
 <span><span class="co">#&gt; 3: 89a9012127bffff       2</span></span>
-<span><span class="co">#&gt; 4: 89a90128003ffff       8</span></span>
-<span><span class="co">#&gt; 5: 89a90128007ffff       5</span></span>
-<span><span class="co">#&gt; 6: 89a9012800bffff       8</span></span>
+<span><span class="co">#&gt; 4: 89a90128003ffff       9</span></span>
+<span><span class="co">#&gt; 5: 89a90128007ffff       7</span></span>
+<span><span class="co">#&gt; 6: 89a9012800bffff       9</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_health</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id healthcare</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;      &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a9012124fffff          0</span></span>
+<span><span class="co">#&gt; 1: 89a9012124fffff          2</span></span>
 <span><span class="co">#&gt; 2: 89a9012126bffff          1</span></span>
 <span><span class="co">#&gt; 3: 89a9012127bffff          1</span></span>
 <span><span class="co">#&gt; 4: 89a90128003ffff          3</span></span>
-<span><span class="co">#&gt; 5: 89a90128007ffff          1</span></span>
-<span><span class="co">#&gt; 6: 89a9012800bffff          3</span></span></code></pre></div>
+<span><span class="co">#&gt; 5: 89a90128007ffff          2</span></span>
+<span><span class="co">#&gt; 6: 89a9012800bffff          4</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="map-accessibility">5. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>

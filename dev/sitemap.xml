@@ -1,7 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://ipeagit.github.io/r5r/dev/LICENSE-text.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/accessibility.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/dev/articles/build_custom_network.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/detailed_itineraries.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/faq.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/fare_structure.html</loc></url>
@@ -9,6 +8,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/isochrones.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/pareto_frontier.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/r5r.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/articles/scenarios.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/time_window.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/articles/travel_time_matrix.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/authors.html</loc></url>
@@ -27,11 +27,11 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/assign_osm_link_ids.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/assign_points_input.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/assign_shortest_path.html</loc></url>
-<url><loc>https://ipeagit.github.io/r5r/dev/reference/build_custom_network.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/build_network.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/congestion_poly2geojson.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/download_r5.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/dt_to_lts_map.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/dt_to_speed_map.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/exists_tiff.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/expand_od_pairs.html</loc></url>
@@ -42,6 +42,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/index.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/isochrone.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/java_to_dt.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/lts_lines2shp.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/pareto_frontier.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_cache.html</loc></url>
@@ -60,6 +61,8 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_max_rides.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_monte_carlo_draws.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_n_threads.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/set_new_congestion.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/set_new_lts.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_output_dir.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_percentiles.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_progress.html</loc></url>

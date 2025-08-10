@@ -28,12 +28,12 @@ windows."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -87,6 +87,9 @@ windows.</p>
 <span>  bike_speed <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  max_rides <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  new_carspeeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  carspeed_scale <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  new_lts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -213,6 +216,36 @@ stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
 can travel through any road. Defaults to 2. Please see details for more
 information.</p></dd>
+
+
+<dt id="arg-new-carspeeds">new_carspeeds<a class="anchor" aria-label="anchor" href="#arg-new-carspeeds"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new car speed for each OSM
+edge id. This table must contain columns <code>osm_id</code>, <code>max_speed</code>
+and <code>speed_type</code>. The <code>"speed_type"</code> column is of class character
+and it indicates whether the values in <code>"max_speed"</code> should be
+interpreted as percentages of original speeds (<code>"scale"</code>) or as absolute
+speeds (<code>"km/h"</code>). Alternatively, the <code>new_carspeeds</code> parameter can
+receive an <code>sf data.frame</code> with POLYGON geometry that indicates the new
+car speed for all the roads that fall within each polygon. In this case,
+the table must contain the columns <code>poly_id</code> with a unique id for
+each polygon, <code>scale</code> with the new speed scaling factors and
+<code>priority</code>, which is a number ranking which polygon should be
+considered in case of overlapping polygons. See more into in the
+<code>link to congestion vignette</code>.</p></dd>
+
+
+<dt id="arg-carspeed-scale">carspeed_scale<a class="anchor" aria-label="anchor" href="#arg-carspeed-scale"></a></dt>
+<dd><p>Numeric. The default car speed to use for road segments
+not specified in <code>new_carspeeds</code>. By default, it is <code>NULL</code> and the speeds
+of the unlisted roads are kept unchanged.</p></dd>
+
+
+<dt id="arg-new-lts">new_lts<a class="anchor" aria-label="anchor" href="#arg-new-lts"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new LTS levels for each OSM edge
+id. The table must contain columns <code>osm_id</code> and <code>lts</code>.
+Alternatively, the <code>new_lts</code> parameter can receive an <code>sf data.frame</code>
+with LINESTRING geometry. R5 will then find the nearest road for each
+LINESTRING and update its LTS value accordingly.</p></dd>
 
 
 <dt id="arg-draws-per-minute">draws_per_minute<a class="anchor" aria-label="anchor" href="#arg-draws-per-minute"></a></dt>

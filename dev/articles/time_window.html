@@ -41,12 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2025-07-31</h4>
+            <h4 data-toc-skip class="date">2025-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="d-none name"><code>time_window.Rmd</code></div>
@@ -238,9 +238,9 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -363,16 +363,16 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       35.8</span></span>
-<span><span class="co">#&gt;  2:       34.9</span></span>
-<span><span class="co">#&gt;  3:       46.7</span></span>
-<span><span class="co">#&gt;  4:       53.2</span></span>
-<span><span class="co">#&gt;  5:       52.3</span></span>
-<span><span class="co">#&gt;  6:       39.1</span></span>
-<span><span class="co">#&gt;  7:       42.4</span></span>
-<span><span class="co">#&gt;  8:       44.7</span></span>
-<span><span class="co">#&gt;  9:       48.2</span></span>
-<span><span class="co">#&gt; 10:       49.7</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       35.2</span></span>
+<span><span class="co">#&gt;  2:       38.6</span></span>
+<span><span class="co">#&gt;  3:       38.8</span></span>
+<span><span class="co">#&gt;  4:       51.7</span></span>
+<span><span class="co">#&gt;  5:       45.7</span></span>
+<span><span class="co">#&gt;  6:       36.2</span></span>
+<span><span class="co">#&gt;  7:       42.2</span></span>
+<span><span class="co">#&gt;  8:       52.0</span></span>
+<span><span class="co">#&gt;  9:       54.3</span></span>
+<span><span class="co">#&gt; 10:       51.0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>

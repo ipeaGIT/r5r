@@ -22,12 +22,12 @@ build_custom_network() and saves it to a .geojson temporary file."><meta propert
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -49,13 +49,13 @@ build_custom_network() and saves it to a .geojson temporary file."><meta propert
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Save speeds polygon to .geojson temporary file</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/R/congestion_poly2geojson.R" class="external-link"><code>R/congestion_poly2geojson.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>congestion_poly2geojson.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
     <p>Support function that checks the input of speeds polygon passed to
-<code><a href="build_custom_network.html">build_custom_network()</a></code> and saves it to a <code>.geojson</code> temporary file.</p>
+<code>build_custom_network()</code> and saves it to a <code>.geojson</code> temporary file.</p>
     </div>
 
     <div class="section level2">
@@ -68,12 +68,17 @@ build_custom_network() and saves it to a .geojson temporary file."><meta propert
 
 
 <dl><dt id="arg-new-speeds-poly">new_speeds_poly<a class="anchor" aria-label="anchor" href="#arg-new-speeds-poly"></a></dt>
-<dd><p>An a s</p></dd>
+<dd><p>An sf polygon</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The path to a <code>.geojson</code> saved as a temporary file.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other Support functions:
+<code><a href="lts_lines2shp.html">lts_lines2shp</a>()</code></p></div>
     </div>
 
     <div class="section level2">

@@ -34,12 +34,12 @@ other (more analytical) routing functions included in the package."><meta proper
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -88,8 +88,6 @@ other (more analytical) routing functions included in the package.</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  time_window <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>  suboptimal_minutes <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_fare <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_car_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -100,6 +98,11 @@ other (more analytical) routing functions included in the package.</p>
 <span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  shortest_path <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  all_to_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fare_structure <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_fare <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  new_carspeeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  carspeed_scale <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  new_lts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -171,19 +174,6 @@ take a path that is technically not optimal in terms of travel time, for
 example, for some practical reasons (e.g. mode preference, safety, etc).
 In practice, the higher this value, the more itineraries will be returned
 in the final result.</p></dd>
-
-
-<dt id="arg-fare-structure">fare_structure<a class="anchor" aria-label="anchor" href="#arg-fare-structure"></a></dt>
-<dd><p>A fare structure object, following the convention
-set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
-
-
-<dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
-<dd><p>A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.</p></dd>
 
 
 <dt id="arg-max-walk-time">max_walk_time<a class="anchor" aria-label="anchor" href="#arg-max-walk-time"></a></dt>
@@ -261,6 +251,49 @@ or multiple alternatives.</p></dd>
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
 on (<code>FALSE</code>, the default) or to query routes between all origins to all
 destinations (<code>TRUE</code>).</p></dd>
+
+
+<dt id="arg-fare-structure">fare_structure<a class="anchor" aria-label="anchor" href="#arg-fare-structure"></a></dt>
+<dd><p>A fare structure object, following the convention
+set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
+should be calculated. Please see the fare structure vignette to
+understand how this object is structured:
+<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
+
+
+<dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
+<dd><p>A number. The maximum value that trips can cost when
+calculating the fastest journey between each origin and destination pair.</p></dd>
+
+
+<dt id="arg-new-carspeeds">new_carspeeds<a class="anchor" aria-label="anchor" href="#arg-new-carspeeds"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new car speed for each OSM
+edge id. This table must contain columns <code>osm_id</code>, <code>max_speed</code>
+and <code>speed_type</code>. The <code>"speed_type"</code> column is of class character
+and it indicates whether the values in <code>"max_speed"</code> should be
+interpreted as percentages of original speeds (<code>"scale"</code>) or as absolute
+speeds (<code>"km/h"</code>). Alternatively, the <code>new_carspeeds</code> parameter can
+receive an <code>sf data.frame</code> with POLYGON geometry that indicates the new
+car speed for all the roads that fall within each polygon. In this case,
+the table must contain the columns <code>poly_id</code> with a unique id for
+each polygon, <code>scale</code> with the new speed scaling factors and
+<code>priority</code>, which is a number ranking which polygon should be
+considered in case of overlapping polygons. See more into in the
+<code>link to congestion vignette</code>.</p></dd>
+
+
+<dt id="arg-carspeed-scale">carspeed_scale<a class="anchor" aria-label="anchor" href="#arg-carspeed-scale"></a></dt>
+<dd><p>Numeric. The default car speed to use for road segments
+not specified in <code>new_carspeeds</code>. By default, it is <code>NULL</code> and the speeds
+of the unlisted roads are kept unchanged.</p></dd>
+
+
+<dt id="arg-new-lts">new_lts<a class="anchor" aria-label="anchor" href="#arg-new-lts"></a></dt>
+<dd><p>A <code>data.frame</code> specifying the new LTS levels for each OSM edge
+id. The table must contain columns <code>osm_id</code> and <code>lts</code>.
+Alternatively, the <code>new_lts</code> parameter can receive an <code>sf data.frame</code>
+with LINESTRING geometry. R5 will then find the nearest road for each
+LINESTRING and update its LTS value accordingly.</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
@@ -447,17 +480,17 @@ Information Science, 33(9), 1759-1787. <a href="https://doi.org/10.1080/13658816
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      to_lon option departure_time total_duration total_distance segment mode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -51.22875      1       14:09:10           36.2           9460       1 WALK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -51.22875      1       14:09:10           36.2           9460       2 RAIL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -51.22875      1       14:09:10           36.2           9460       3 WALK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -51.22875      1       14:09:10           36.2           9460       4  BUS</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -51.22875      1       14:09:10           36.2           9460       5 WALK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -51.22875      1       14:09:10           33.9           9460       1 WALK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -51.22875      1       14:09:10           33.9           9460       2 RAIL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -51.22875      1       14:09:10           33.9           9460       3 WALK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -51.22875      1       14:09:10           33.9           9460       4  BUS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -51.22875      1       14:09:10           33.9           9460       5 WALK</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   segment_duration wait distance  route                       geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              4.6  0.0      174        LINESTRING (-51.1981 -29.99...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2              6.6  1.3     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              4.5  0.0      174        LINESTRING (-51.1981 -29.99...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              6.6  1.4     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_network has been successfully stopped.</span>

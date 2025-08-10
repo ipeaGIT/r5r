@@ -41,12 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility</a></li>
-    <li><a class="dropdown-item" href="../articles/build_custom_network.html">Building a custom network with modified OSM car speeds</a></li>
     <li><a class="dropdown-item" href="../articles/detailed_itineraries.html">Trip planning with detailed_itineraries()</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">FAQ - Frequently Asked Questions</a></li>
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Trade-offs between travel time and monetary cost</h1>
             
-            <h4 data-toc-skip class="date">2025-07-31</h4>
+            <h4 data-toc-skip class="date">2025-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/pareto_frontier.Rmd" class="external-link"><code>vignettes/pareto_frontier.Rmd</code></a></small>
       <div class="d-none name"><code>pareto_frontier.Rmd</code></div>
@@ -256,11 +256,11 @@ all destinations considering multiple cutoffs of monetary costs:</p>
 <span><span class="co">#&gt;          from_id               to_id percentile travel_time monetary_cost</span></span>
 <span><span class="co">#&gt;           &lt;char&gt;              &lt;char&gt;      &lt;int&gt;       &lt;int&gt;         &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: public_market       public_market         50           0           1.0</span></span>
-<span><span class="co">#&gt; 2: public_market bus_central_station         50          23           1.0</span></span>
-<span><span class="co">#&gt; 3: public_market bus_central_station         50          19           4.5</span></span>
-<span><span class="co">#&gt; 4: public_market bus_central_station         50          14           4.8</span></span>
-<span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
-<span><span class="co">#&gt; 6: public_market    gasometer_museum         50          13           4.8</span></span></code></pre></div>
+<span><span class="co">#&gt; 2: public_market bus_central_station         50          21           1.0</span></span>
+<span><span class="co">#&gt; 3: public_market bus_central_station         50          16           4.5</span></span>
+<span><span class="co">#&gt; 4: public_market bus_central_station         50          13           4.8</span></span>
+<span><span class="co">#&gt; 5: public_market    gasometer_museum         50          26           1.0</span></span>
+<span><span class="co">#&gt; 6: public_market    gasometer_museum         50          12           4.8</span></span></code></pre></div>
 <p>For the sake of illustration, let’s check the optimum route
 alternatives from the Farrapos train station to (a) the Praia de Belas
 shopping mall and (b) the Moinhos hospital. An optimum route alternative
