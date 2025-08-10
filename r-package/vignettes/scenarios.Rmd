@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 abstract: "This vignette shows how to calculate travel times and accessibility with custom OSM car speeds and Level of Traffic Stress, which can be used to simulate different scenarios of traffic congestion and road closures, or interventions in cycling infrastructure."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Modify OSM car speeds} 
+  %\VignetteIndexEntry{Using custom OSM car speeds and LTS} 
   %\VignetteEngine{knitr::rmarkdown} 
   \usepackage[utf8]{inputenc}
 bibliography: references.json
@@ -79,7 +79,7 @@ In this example, the values of the `"max_speed"` column are all set to `0.5` and
 
 Now you can simply run any routing or accessibility function passing the parameters `new_carspeeds` and `carspeed_scale`:
 
-```{r, eval=TRUE}
+```{r, message=FALSE}
 # origins and destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
