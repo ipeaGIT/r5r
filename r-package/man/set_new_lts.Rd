@@ -9,7 +9,7 @@ set_new_lts(r5r_network, new_lts)
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
-\item{new_carspeeds}{A df or sf polygon.}
+\item{new_lts}{A df or sf polygon.}
 }
 \value{
 Invisibly returns \code{TRUE}.

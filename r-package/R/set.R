@@ -622,7 +622,7 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
 #' Verifies if and which LTS mode to use and applies it.
 #'
 #' @template r5r_network
-#' @param new_carspeeds A df or sf polygon.
+#' @param new_lts A df or sf polygon.
 #'
 #' @return Invisibly returns `TRUE`.
 #' @family setting functions

@@ -159,6 +159,9 @@ Alternatively, the \code{new_lts} parameter can receive an \verb{sf data.frame}
 with LINESTRING geometry. R5 will then find the nearest road for each
 LINESTRING and update its LTS value accordingly.}
 
+\item{pickup_zones}{A \code{data.frame} specifying the pickup and drop-off zones
+as well as their respective wait times for dynamic-transit or bike share.}
+
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per time window minute when calculating travel time matrices and
 when estimating accessibility. Defaults to 5. This would mean 300 draws in
