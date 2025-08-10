@@ -217,3 +217,132 @@ validate_bad_osm_ids <- function(bad_ids_string) {
   }
 }
 
+
+#' Save speeds polygon to .geojson temporary file
+#'
+#' Support function that checks the input of speeds polygon passed to
+#' `build_custom_network()` and saves it to a `.geojson` temporary file.
+#'
+#' @param new_speeds_poly An sf polygon
+#'
+#' @family Support functions
+#'
+#' @return The path to a `.geojson` saved as a temporary file.
+#'
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+#'
+#' # read polygons with new speeds
+#' congestion_poly <- readRDS(
+#'   system.file("extdata/poa/poa_poly_congestion.rds", package = "r5r")
+#'   )
+#'
+#' geojson_path <- r5r:::congestion_poly2geojson(
+#'   new_speeds_poly = congestion_poly
+#'   )
+#'
+#' @keywords internal
+congestion_poly2geojson <- function(new_speeds_poly){
+
+  # check input class
+  checkmate::assert_class(new_speeds_poly, "sf")
+
+  # check input colnames
+  checkmate::assert_names(
+    x = names(new_speeds_poly),
+    must.include = c("poly_id", "scale", "priority", "geometry")
+  )
+
+  # Check column types and check input geometry
+  checkmate::assert_character(new_speeds_poly$poly_id, any.missing = FALSE)
+  checkmate::assert_numeric(new_speeds_poly$scale, any.missing = FALSE)
+  checkmate::assert_integer(new_speeds_poly$priority, any.missing = FALSE)
+  checkmate::assert_subset(
+    x = unique(as.character(sf::st_geometry_type(new_speeds_poly))),
+    choices = c("POLYGON", "MULTIPOLYGON"),
+    empty.ok = FALSE
+  )
+
+  # check input spatial projection
+  if (sf::st_crs(new_speeds_poly) != sf::st_crs(4326)) {
+    stop(
+      "The CRS of parameter `new_speeds` must be WGS 84 (EPSG 4326). ",
+      "Please use either sf::set_crs() to set it or ",
+      "sf::st_transform() to reproject it."
+    )
+  }
+
+  # save polygons to temp file
+  file_path <- tempfile(
+    pattern = 'r5r_congestion_poly',
+    fileext = ".geojson"
+  )
+
+  sf::st_write(new_speeds_poly, file_path, quiet = TRUE)
+
+  if (file.exists(file_path)) { return(file_path)}
+}
+
+
+#' Save LTS lines to shapefile temporary file
+#'
+#' Support function that checks the input of LTS lines passed to
+#' and saves it to a `.shp` temporary file.
+#'
+#' @param new_lts_lines An sf LINESTRING or MULTILINESTRING
+#'
+#' @family Support functions
+#'
+#' @return The path to a `.shp` saved as a temporary file.
+#'
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+#'
+#' # read lines with new speeds
+#' new_lts_lines <- readRDS(
+#'   system.file("extdata/poa/poa_mls_lts.rds", package = "r5r")
+#'   )
+#'
+#' shp_path <- r5r:::lts_lines2shp(
+#'   new_lts_lines = new_lts_lines
+#'   )
+#'
+#' @keywords internal
+lts_lines2shp <- function(new_lts_lines){
+
+  # check input class
+  checkmate::assert_class(new_lts_lines, "sf")
+
+  # check input colnames
+  checkmate::assert_names(
+    x = names(new_lts_lines),
+    must.include = c("line_id", "lts", "priority", "geometry")
+  )
+
+  # Check column types and check input geometry
+  checkmate::assert_character(new_lts_lines$line_id, any.missing = FALSE)
+  checkmate::assert_integer(new_lts_lines$lts, any.missing = FALSE, lower = 1, upper = 4)
+  checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE)
+  checkmate::assert_subset(
+    x = unique(as.character(sf::st_geometry_type(new_lts_lines))),
+    choices = c("LINESTRING", "MULTILINESTRING"),
+    empty.ok = FALSE
+  )
+
+  # check input spatial projection
+  if (sf::st_crs(new_lts_lines) != sf::st_crs(4326)) {
+    stop(
+      "The CRS of parameter `new_lts_lines` must be WGS 84 (EPSG 4326). ",
+      "Please use either sf::set_crs() to set it or ",
+      "sf::st_transform() to reproject it."
+    )
+  }
+
+  # save lines to temp file
+  file_path <- tempfile(
+    pattern = 'r5r_lts_lines',
+    fileext = ".shp"
+  )
+
+  sf::st_write(new_lts_lines, file_path, quiet = TRUE)
+
+  if (file.exists(file_path)) { return(file_path)}
+}

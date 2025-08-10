@@ -12,6 +12,7 @@
 #' @template r5r_network
 #' @template r5r_core
 #' @template common_arguments
+#' @template scenarios
 #' @template verbose
 #' @template fare_structure
 #' @template max_fare
@@ -104,8 +105,6 @@ detailed_itineraries <- function(r5r_network,
                                  departure_datetime = Sys.time(),
                                  time_window = 10L,
                                  suboptimal_minutes = 0L,
-                                 fare_structure = NULL,
-                                 max_fare = Inf,
                                  max_walk_time = Inf,
                                  max_bike_time = Inf,
                                  max_car_time = Inf,
@@ -116,6 +115,11 @@ detailed_itineraries <- function(r5r_network,
                                  max_lts = 2,
                                  shortest_path = TRUE,
                                  all_to_all = FALSE,
+                                 fare_structure = NULL,
+                                 max_fare = Inf,
+                                 new_carspeeds = NULL,
+                                 carspeed_scale = 1,
+                                 new_lts = NULL,
                                  n_threads = Inf,
                                  verbose = FALSE,
                                  progress = FALSE,
@@ -217,6 +221,10 @@ detailed_itineraries <- function(r5r_network,
     fare_structure,
     shortest_path
   )
+
+  # SCENARIOS -------------------------------------------
+  set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
+  set_new_lts(r5r_network, new_lts)
 
   # call r5r_network method and process result -------------------------------
 

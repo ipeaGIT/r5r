@@ -9,6 +9,7 @@
 #' @template draws_per_minute
 #' @template fare_structure
 #' @template max_fare
+#' @template scenarios
 #' @template verbose
 #' @param opportunities_colnames A character vector. The names of the columns
 #'   in the `destinations` input that tells the number of opportunities in each
@@ -146,8 +147,6 @@ accessibility <- function(r5r_network,
                           decay_function = "step",
                           cutoffs = NULL,
                           decay_value = NULL,
-                          fare_structure = NULL,
-                          max_fare = Inf,
                           max_walk_time = Inf,
                           max_bike_time = Inf,
                           max_car_time = Inf,
@@ -156,6 +155,11 @@ accessibility <- function(r5r_network,
                           bike_speed = 12,
                           max_rides = 3,
                           max_lts = 2,
+                          fare_structure = NULL,
+                          max_fare = Inf,
+                          new_carspeeds = NULL,
+                          carspeed_scale = 1,
+                          new_lts = NULL,
                           draws_per_minute = 5L,
                           n_threads = Inf,
                           verbose = FALSE,
@@ -248,6 +252,11 @@ accessibility <- function(r5r_network,
   set_fare_structure(r5r_network, fare_structure)
   set_max_fare(r5r_network, max_fare)
   set_output_dir(r5r_network, output_dir)
+
+  # SCENARIOS -------------------------------------------
+  set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
+  set_new_lts(r5r_network, new_lts)
+
 
   # call r5r_network method and process results ------------------------------
 

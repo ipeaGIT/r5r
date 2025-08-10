@@ -97,8 +97,8 @@ public class TravelTimeMatrixComputer extends R5Process {
         return false;
     }
 
-    public TravelTimeMatrixComputer(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public TravelTimeMatrixComputer(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
         this.csvOptions = new CsvResultOptions();
     }
 

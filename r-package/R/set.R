@@ -575,3 +575,75 @@ set_elevation <- function(elevation) {
   elevation
 }
 
+#' Set car congestion
+#'
+#' Verifies if and which congestion mode to use and applies it.
+#'
+#' @template r5r_network
+#' @param new_carspeeds A df or sf polygon.
+#' @param carspeed_scale Numeric > 0.
+#'
+#' @return Invisibly returns `TRUE`.
+#' @family setting functions
+#'
+#' @keywords internal
+set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
+  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = T)
+  checkmate::assert_numeric(carspeed_scale, lower = 0, finite = TRUE, null.ok = F)
+  if (!is.null(new_carspeeds) || carspeed_scale != 1){
+    cli::cli_inform(c(i = "Modifying carspeeds..."))
+
+    if (inherits(new_carspeeds, "sf")) { # polygon mode
+      geojson_path <- congestion_poly2geojson(new_carspeeds)
+      errors <- r5r_network$applyCongestionPolygon(geojson_path,
+                                               "scale",
+                                               "priority",
+                                               "poly_id",
+                                               rJava::.jfloat(carspeed_scale))
+    } else { # OSM mode or scale != 1
+      speed_map <- dt_to_speed_map(new_carspeeds)
+      absolute_mode <- !is.null(new_carspeeds) && (new_carspeeds$speed_type[1] == "km/h")
+      errors <- r5r_network$applyCongestionOsm(speed_map,
+                                     rJava::.jfloat(carspeed_scale),
+                                     absolute_mode)
+    }
+
+    if (errors != "[]"){
+      cli::cli_inform(c(
+        "!" = "Encountered the following errors modifying carspeeds:",
+        " " = errors ))
+    }
+  }
+}
+
+
+#' Set LTS level
+#'
+#' Verifies if and which LTS mode to use and applies it.
+#'
+#' @template r5r_network
+#' @param new_carspeeds A df or sf polygon.
+#'
+#' @return Invisibly returns `TRUE`.
+#' @family setting functions
+#'
+#' @keywords internal
+set_new_lts <- function(r5r_network, new_lts) {
+  checkmate::assert_class(new_lts, "data.frame", null.ok = TRUE)
+  if (!is.null(new_lts)){
+    cli::cli_inform(c(i = "Modifying LTS levels..."))
+
+    if (inherits(new_lts, "sf")) { # polygon mode
+      shp_path <- lts_lines2shp(new_lts)
+      errors <- r5r_network$applyLtsPolygon(shp_path)
+    } else { # OSM mode
+      lts_map <- dt_to_lts_map(new_lts)
+      errors <- r5r_network$applyLtsOsm(lts_map)
+    }
+    if (errors != "[]"){
+      cli::cli_inform(c(
+        "!" = "Encountered the following errors modifying LTS:",
+        " " = errors ))
+    }
+  }
+}

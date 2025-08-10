@@ -42,8 +42,8 @@ public class AccessibilityEstimator extends R5Process {
         return false;
     }
 
-    public AccessibilityEstimator(ForkJoinPool threadPool, TransportNetwork transportNetwork, RoutingProperties routingProperties) {
-        super(threadPool, transportNetwork, routingProperties);
+    public AccessibilityEstimator(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+        super(threadPool, routingProperties);
     }
 
     @Override

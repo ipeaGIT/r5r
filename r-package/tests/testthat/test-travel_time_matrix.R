@@ -25,6 +25,8 @@ tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    bike_speed = 12,
                    max_rides = 3,
                    max_lts = 2,
+                   new_carspeeds = NULL,
+                   carspeed_scale = 1,
                    draws_per_minute = 5L,
                    n_threads = Inf,
                    verbose = FALSE,
@@ -48,6 +50,8 @@ tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
     bike_speed = bike_speed,
     max_rides = max_rides,
     max_lts = max_lts,
+    new_carspeeds = new_carspeeds,
+    carspeed_scale = carspeed_scale,
     draws_per_minute = draws_per_minute,
     n_threads = n_threads,
     verbose = verbose,
@@ -296,3 +300,5 @@ test_that("using transit outside the gtfs dates throws an error", {
     )
   )
 })
+
+
