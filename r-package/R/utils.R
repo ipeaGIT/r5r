@@ -323,7 +323,7 @@ lts_lines2shp <- function(new_lts_lines){
   checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_lts_lines))),
-    choices = c("LINESTRING", "MULTILINESTRING"),
+    choices = c("LINESTRING"),
     empty.ok = FALSE
   )
 
