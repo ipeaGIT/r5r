@@ -39,7 +39,6 @@ download_r5(temp_dir = TRUE)
 }
 \seealso{
 Other Build network: 
-\code{\link{build_custom_network}()},
 \code{\link{build_network}()},
 \code{\link{setup_r5}()}
 }
