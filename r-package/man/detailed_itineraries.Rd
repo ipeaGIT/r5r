@@ -29,6 +29,7 @@ detailed_itineraries(
   new_carspeeds = NULL,
   carspeed_scale = 1,
   new_lts = NULL,
+  pickup_zones = NULL,
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
@@ -171,6 +172,9 @@ id. The table must contain columns \code{osm_id} and \code{lts}.
 Alternatively, the \code{new_lts} parameter can receive an \verb{sf data.frame}
 with LINESTRING geometry. R5 will then find the nearest road for each
 LINESTRING and update its LTS value accordingly.}
+
+\item{pickup_zones}{A \code{data.frame} specifying the pickup and drop-off zones
+as well as their respective wait times for dynamic-transit or bike share.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (Inf).}

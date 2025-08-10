@@ -622,7 +622,7 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
 #' Verifies if and which LTS mode to use and applies it.
 #'
 #' @template r5r_network
-#' @param new_carspeeds A df or sf polygon.
+#' @param new_lts A df or sf polygon.
 #'
 #' @return Invisibly returns `TRUE`.
 #' @family setting functions
@@ -643,6 +643,40 @@ set_new_lts <- function(r5r_network, new_lts) {
     if (errors != "[]"){
       cli::cli_inform(c(
         "!" = "Encountered the following errors modifying LTS:",
+        " " = errors ))
+    }
+  }
+}
+
+
+#' Set Pickup Delay
+#'
+#' Verifies if to set a pickup delay and sets it
+#'
+#' @template r5r_network
+#' @param pickup_poly A sf polygon.
+#'
+#' @return Invisibly returns `TRUE`.
+#' @family setting functions
+#'
+#' @keywords internal
+set_pickup_delay <- function(r5r_network, pickup_poly) {
+  checkmate::assert_class(pickup_poly, "sf", null.ok = TRUE)
+  if (!is.null(pickup_poly)){
+    cli::cli_inform(c(i = "Modifying pickup delay..."))
+
+    geojson_path <- pickup_poly2geojson(pickup_poly)
+    stops_map <- dt_to_stops_map(pickup_poly)
+    street_mode <- assign_pickup_mode(pickup_poly)
+    default_wait <- assign_pickup_default_wait(pickup_poly)
+    errors <- r5r_network$applyPickupDelay(geojson_path,
+                                           stops_map,
+                                           street_mode,
+                                           default_wait)
+
+    if (errors != "[]"){
+      cli::cli_inform(c(
+        "!" = "Encountered the following errors modifying pickup delay:",
         " " = errors ))
     }
   }

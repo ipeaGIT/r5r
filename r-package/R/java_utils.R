@@ -53,7 +53,7 @@ dt_to_speed_map <- function(dt) {
 
   checkmate::assert_names(names(dt), must.include = c("osm_id", "max_speed", "speed_type"))
   checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
-  checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_numeric(dt$max_speed, any.missing = FALSE, all.missing = FALSE, lower = 0)
   checkmate::assert_true(length(unique(dt$speed_type)) == 1 && dt$speed_type[1] %in% c("km/h", "scale"))
 
   # Create new HashMap<long, float>
@@ -91,7 +91,7 @@ get_java_version <- function(){
 dt_to_lts_map <- function(dt) {
   checkmate::assert_names(names(dt), must.include = c("osm_id", "lts"))
   checkmate::assert_numeric(dt$osm_id, any.missing = FALSE, all.missing = FALSE)
-  checkmate::assert_integer(dt$lts, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_integer(dt$lts, any.missing = FALSE, all.missing = FALSE, lower = 1, upper = 4)
 
   # Create new HashMap<Long, Integer>
   map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")
@@ -99,4 +99,30 @@ dt_to_lts_map <- function(dt) {
                                          paste(as.character(dt$lts), collapse = ","))
 
   return(lts_map)
+}
+
+
+#' data.table to stopsMap
+#'
+#' @description Converts a `data.frame` with pickup polygons and and respective
+#'              drop off stops to a Java Map<String, Set<String>>.
+#'
+#' @param dt data.frame/data.table. Table specifying the
+#'        polygon ID and stops it links to. The table must contain columns
+#'        \code{poly_id} and \code{stops_ids}.
+#' @return A stopsMap (Java Map<String, Set<String>>)
+#' @family java support functions
+#' @keywords internal
+dt_to_stops_map <- function(dt) {
+  checkmate::assert_names(names(dt), must.include = c("poly_id", "stops_ids"))
+  checkmate::assert_character(dt$poly_id, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_list(dt$stops_ids, types = "numeric", any.missing = FALSE, all.missing = FALSE)
+
+  # Create new HashMap<Long, Integer>
+  map_builder <- rJava::.jnew("org.ipea.r5r.Utils.RMapBuilder")
+  stops_str <- sapply(dt$stops_ids, function(x) paste(x, collapse = ","))
+  stops_map <- map_builder$buildStopsMap(paste(as.character(dt$poly_id), collapse = ","),
+                                     paste(as.character(stops_str), collapse = ";"))
+
+  return(stops_map)
 }

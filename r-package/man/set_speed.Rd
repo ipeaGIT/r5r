@@ -39,6 +39,7 @@ Other setting functions:
 \code{\link{set_new_lts}()},
 \code{\link{set_output_dir}()},
 \code{\link{set_percentiles}()},
+\code{\link{set_pickup_delay}()},
 \code{\link{set_progress}()},
 \code{\link{set_suboptimal_minutes}()},
 \code{\link{set_time_window}()},

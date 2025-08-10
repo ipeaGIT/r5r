@@ -5,9 +5,11 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
+import com.conveyal.r5.analyst.scenario.PickupDelay;
 import com.conveyal.r5.analyst.scenario.ShapefileLts;
 import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.analyst.scenario.RoadCongestion;
+import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -28,9 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -640,6 +640,22 @@ public class R5RCore {
         lts.resolve(routingProperties.transportNetworkWorking);
         lts.apply(routingProperties.transportNetworkWorking);
         return lts.errors.toString();
+    }
+
+    public String applyPickupDelay(String filePath, Map<String, Set<String>> stopsMap, String streetMode, double defaultWait){
+        Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
+
+        PickupDelay pickDel = new PickupDelay();
+        pickDel.streetMode = StreetMode.valueOf(streetMode);
+        pickDel.waitTimeAttribute = "wait_time";
+        pickDel.idAttribute = "poly_id";
+        pickDel.stopsForZone = stopsMap;
+        pickDel.defaultWait = defaultWait;
+        pickDel.zonePolygons = fileJPath.toString();
+
+        pickDel.resolve(routingProperties.transportNetworkWorking);
+        pickDel.apply(routingProperties.transportNetworkWorking);
+        return pickDel.errors.toString();
     }
 
     // ------------------------------ STREET AND TRANSIT NETWORKS ----------------------------------------

@@ -27,6 +27,8 @@ Other assigning functions:
 \code{\link{assign_max_trip_duration}()},
 \code{\link{assign_mode}()},
 \code{\link{assign_osm_link_ids}()},
+\code{\link{assign_pickup_default_wait}()},
+\code{\link{assign_pickup_mode}()},
 \code{\link{assign_points_input}()},
 \code{\link{assign_shortest_path}()}
 }

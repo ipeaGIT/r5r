@@ -9,7 +9,7 @@ set_new_lts(r5r_network, new_lts)
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
-\item{new_carspeeds}{A df or sf polygon.}
+\item{new_lts}{A df or sf polygon.}
 }
 \value{
 Invisibly returns \code{TRUE}.
@@ -34,6 +34,7 @@ Other setting functions:
 \code{\link{set_new_congestion}()},
 \code{\link{set_output_dir}()},
 \code{\link{set_percentiles}()},
+\code{\link{set_pickup_delay}()},
 \code{\link{set_progress}()},
 \code{\link{set_speed}()},
 \code{\link{set_suboptimal_minutes}()},
