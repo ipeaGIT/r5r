@@ -11,7 +11,7 @@ edge_lts <- data.frame(
   )
 
 # sf with new LTS
-lts_lines <- readRDS(file.path(data_path, "poa_mls_lts.rds"))
+lts_lines <- readRDS(file.path(data_path, "poa_ls_lts.rds"))
 
 
 meta_fun <- function(

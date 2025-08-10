@@ -278,7 +278,7 @@ simulate a some cycling network intervetion. Here we simulate that local authori
 
 ```{r, message = FALSE}
 # read sf with congestion polygons
-lts_lines <- readRDS(file.path(data_path, "poa_mls_lts.rds"))
+lts_lines <- readRDS(file.path(data_path, "poa_ls_lts.rds"))
 
 # preview
 mapview::mapview(lts_lines, zcol="lts")
