@@ -220,8 +220,8 @@ validate_bad_osm_ids <- function(bad_ids_string) {
 
 #' Save speeds polygon to .geojson temporary file
 #'
-#' Support function that checks the input of speeds polygon passed to
-#' `build_custom_network()` and saves it to a `.geojson` temporary file.
+#' Support function that checks the input of speeds polygon and saves it to a
+#' `.geojson` temporary file.
 #'
 #' @param new_speeds_poly An sf polygon
 #'
@@ -254,8 +254,8 @@ congestion_poly2geojson <- function(new_speeds_poly){
 
   # Check column types and check input geometry
   checkmate::assert_character(new_speeds_poly$poly_id, any.missing = FALSE)
-  checkmate::assert_numeric(new_speeds_poly$scale, any.missing = FALSE)
-  checkmate::assert_integer(new_speeds_poly$priority, any.missing = FALSE)
+  checkmate::assert_numeric(new_speeds_poly$scale, any.missing = FALSE, lower = 0)
+  checkmate::assert_integer(new_speeds_poly$priority, any.missing = FALSE, lower = 0)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_speeds_poly))),
     choices = c("POLYGON", "MULTIPOLYGON"),
@@ -320,7 +320,7 @@ lts_lines2shp <- function(new_lts_lines){
   # Check column types and check input geometry
   checkmate::assert_character(new_lts_lines$line_id, any.missing = FALSE)
   checkmate::assert_integer(new_lts_lines$lts, any.missing = FALSE, lower = 1, upper = 4)
-  checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE)
+  checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE, lower = 0)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_lts_lines))),
     choices = c("LINESTRING", "MULTILINESTRING"),
@@ -346,3 +346,71 @@ lts_lines2shp <- function(new_lts_lines){
 
   if (file.exists(file_path)) { return(file_path)}
 }
+
+
+#' Save pickup polygon to .geojson temporary file
+#'
+#' Support function that checks the input of pickup polygons and saves it to a
+#' `.geojson` temporary file.
+#'
+#' @param pickup_polygons An sf polygon
+#'
+#' @family Support functions
+#'
+#' @return The path to a `.geojson` saved as a temporary file.
+#'
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+#'
+#' # read polygons for pickup
+#' pickup_polygons <- readRDS(
+#'   system.file("extdata/poa/poa_pickup_zones.rds", package = "r5r")
+#'   )
+#'
+#' geojson_path <- r5r:::pickup_poly2geojson(
+#'   pickup_polygons = pickup_polygons
+#'   )
+#'
+#' @keywords internal
+pickup_poly2geojson <- function(pickup_polygons){
+
+  # check input class
+  checkmate::assert_class(pickup_polygons, "sf")
+
+  # check input colnames
+  checkmate::assert_names(
+    x = names(pickup_polygons),
+    must.include = c("poly_id", "wait_time", "priority", "geometry")
+  )
+
+  # Check column types and check input geometry
+  checkmate::assert_character(pickup_polygons$poly_id, any.missing = FALSE)
+  checkmate::assert_numeric(pickup_polygons$wait_time, any.missing = FALSE)
+  checkmate::assert_integer(pickup_polygons$priority, any.missing = FALSE, lower = 0)
+  checkmate::assert_subset(
+    x = unique(as.character(sf::st_geometry_type(pickup_polygons))),
+    choices = c("POLYGON", "MULTIPOLYGON"),
+    empty.ok = FALSE
+  )
+
+  # check input spatial projection
+  if (sf::st_crs(pickup_polygons) != sf::st_crs(4326)) {
+    stop(
+      "The CRS of parameter `new_speeds` must be WGS 84 (EPSG 4326). ",
+      "Please use either sf::set_crs() to set it or ",
+      "sf::st_transform() to reproject it."
+    )
+  }
+
+  # save polygons to temp file
+  file_path <- tempfile(
+    pattern = 'r5r_pickup_poly',
+    fileext = ".geojson"
+  )
+
+  subset <- pickup_polygons[, c("poly_id", "wait_time", "priority", "geometry")]
+
+  sf::st_write(subset, file_path, quiet = TRUE)
+
+  if (file.exists(file_path)) { return(file_path)}
+}
+

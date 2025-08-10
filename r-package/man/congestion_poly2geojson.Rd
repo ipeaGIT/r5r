@@ -13,8 +13,8 @@ congestion_poly2geojson(new_speeds_poly)
 The path to a \code{.geojson} saved as a temporary file.
 }
 \description{
-Support function that checks the input of speeds polygon passed to
-\code{build_custom_network()} and saves it to a \code{.geojson} temporary file.
+Support function that checks the input of speeds polygon and saves it to a
+\code{.geojson} temporary file.
 }
 \examples{
 \dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -31,7 +31,8 @@ geojson_path <- r5r:::congestion_poly2geojson(
 }
 \seealso{
 Other Support functions: 
-\code{\link{lts_lines2shp}()}
+\code{\link{lts_lines2shp}()},
+\code{\link{pickup_poly2geojson}()}
 }
 \concept{Support functions}
 \keyword{internal}
