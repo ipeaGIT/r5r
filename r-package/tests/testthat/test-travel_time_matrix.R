@@ -25,6 +25,8 @@ tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    bike_speed = 12,
                    max_rides = 3,
                    max_lts = 2,
+                   new_carspeeds = NULL,
+                   carspeed_scale = 1,
                    draws_per_minute = 5L,
                    n_threads = Inf,
                    verbose = FALSE,
@@ -48,6 +50,8 @@ tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
     bike_speed = bike_speed,
     max_rides = max_rides,
     max_lts = max_lts,
+    new_carspeeds = new_carspeeds,
+    carspeed_scale = carspeed_scale,
     draws_per_minute = draws_per_minute,
     n_threads = n_threads,
     verbose = verbose,
@@ -288,6 +292,19 @@ test_that("returns ttm even if last call saved to dir", {
 
 
 test_that("using transit outside the gtfs dates throws an error", {
+  expect_error(
+    tester(r5r_network,
+           mode='transit',
+           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                           format = "%d-%m-%Y %H:%M:%S")
+    )
+  )
+})
+
+
+# tests scenarios -------------------------------------------------------------------
+
+test_that("scneario new car speeds", {
   expect_error(
     tester(r5r_network,
            mode='transit',
