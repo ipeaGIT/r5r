@@ -54,11 +54,11 @@
 <h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/build_network.html">build_network()</a></code> to replace <code><a href="../reference/setup_r5.html">setup_r5()</a></code>, which is being deprecated. Idiomatically <code>r5r_core</code> is now <code>r5r_network</code>.</li>
-<li>New function <code>build_custom_network()</code> to build a routable network. At the moment, the functions allows using modified OSM car speeds to account for different scenarios of traffic congestion and road closure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
-</li>
 <li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
 </li>
 <li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In practice, this means that these functions are now much faster when there are multiple origins to few destinations but only when there is no elevation <code>.tif</code> file in the data path. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
+</li>
+<li>All routing and accessibility functions now have new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code> and <code>new_lts</code>, which allow one to use custom car speeds and LTS levels for cycling, which allow one to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
 </li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>The routable transport network build with <code><a href="../reference/build_network.html">build_network()</a></code> and <code><a href="../reference/setup_r5.html">setup_r5()</a></code> and <code>build_modified_network</code> now have a their own class <code>"r5r_network"</code>, making the package more consistent and safer from errors <a href="https://github.com/ipeaGIT/r5r/pull/472" class="external-link">#472</a>.</li>
