@@ -4,12 +4,15 @@ import com.conveyal.r5.analyst.scenario.Modification;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.list.TShortList;
+import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.list.array.TLongArrayList;
 import gnu.trove.list.array.TShortArrayList;
 import gnu.trove.set.hash.TLongHashSet;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+
+import static com.conveyal.r5.streets.EdgeStore.EdgeFlag;
 
 public class RoadCongestionOSM extends Modification {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RoadCongestionOSM.class);
@@ -56,16 +59,19 @@ public class RoadCongestionOSM extends Modification {
 
         EdgeStore edgeStore = network.streetLayer.edgeStore;
         EdgeStore.Edge edge = edgeStore.getCursor();
+        network.streetLayer.edgeStore.flags = new TIntArrayList(network.streetLayer.edgeStore.flags);
 
         while (edge.advance()) {
             Float value = speedMap.get(edge.getOSMID());
 
-            if (value == null) {
-                edge.setSpeed((short) (edge.getSpeed() * defaultScaling));
-            } else if (absoluteMode) {
+            float scaling = (value == null) ? defaultScaling : value;
+
+            if (scaling == 0) {
+                edge.clearFlag(EdgeFlag.ALLOWS_CAR);
+            } else if (value != null && absoluteMode) {
                 edge.setSpeedKph(value);
             } else {
-                edge.setSpeed((short) (edge.getSpeed() * value)); // saving cm/sec
+                edge.setSpeed((short) (edge.getSpeed() * scaling));
             }
         }
 
