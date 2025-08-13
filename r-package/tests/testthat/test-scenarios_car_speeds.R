@@ -64,17 +64,13 @@ test_that("success in increasing travel times", {
     max_trip_duration = 60
     )
   # to do: r5r::accessibility
-
   # plot(det_pre['total_duration'])
   # mapview(network$edges) + network$vertices + det
 
-  # put all roads at 10% of their speed
-  mock_data <- data.frame(osm_id = 9999, max_speed = 9999, speed_type="scale")
-
-  # calculate travel times / access *before* changing road speeds
-  ttm_pos <- meta_fun(r5r::travel_time_matrix, new_carspeeds = mock_data, carspeed_scale = 0.1)
-  expanded_ttm_pos <- meta_fun(r5r::expanded_travel_time_matrix, new_carspeeds = mock_data, carspeed_scale = 0.1)
-  det_pos <- meta_fun(r5r::detailed_itineraries, new_carspeeds = mock_data, carspeed_scale = 0.5)
+  # changing CARSPEED_SCALE without changing new_carspeeds
+  ttm_pos <- meta_fun(r5r::travel_time_matrix, carspeed_scale = 0.1)
+  expanded_ttm_pos <- meta_fun(r5r::expanded_travel_time_matrix, carspeed_scale = 0.1)
+  det_pos <- meta_fun(r5r::detailed_itineraries, carspeed_scale = 0.5)
   arrival_ttm_pos <- r5r::arrival_travel_time_matrix(
     r5r_network = r5r_network,
     origins = point_orig,
@@ -82,7 +78,6 @@ test_that("success in increasing travel times", {
     mode = 'car',
     arrival_datetime = Sys.time(),
     max_trip_duration = 60,
-    new_carspeeds = mock_data,
     carspeed_scale = 0.1
   )
 
@@ -96,6 +91,10 @@ test_that("success in increasing travel times", {
   testthat::expect_true(det_pos$total_duration > det_pre$total_duration)
   # testthat::expect_true(det_pos$total_distance == det_pre$total_distance)
 
+  # setting NEW_CARSPEEDS without changing carspeed_scale
+  fast_carspeeds <- data.frame(osm_id = c(450002312, 390862071), max_speed = 1.5, speed_type = "scale")
+  ttm_3 <- meta_fun(r5r::travel_time_matrix, new_carspeeds = fast_carspeeds)
+  testthat::expect_true(ttm_3$travel_time_p50 < ttm_pre$travel_time_p50)
 })
 
 
@@ -137,15 +136,15 @@ test_that("errors due to incorrect input types", {
 
 test_that("errors error in the new_carspeeds column names", {
 
-  mock_data <- data.frame(osm_id = '9999', max_speed = 9999, speed_type="banana")
+  mock_data <- data.frame(osm_id = '27184648', max_speed = 10, speed_type="banana")
   testthat::expect_error(meta_fun(new_carspeeds =  mock_data))
 
   mock_data <- data.frame(my_osm_id = '9999', max_speed = 9999, speed_type="km/h")
   testthat::expect_error(meta_fun(new_carspeeds =  mock_data))
 
   mock_data <- data.frame(osm_id = '9999', max_speed = 9999, speed_type="km/h")
-  testthat::expect_error(meta_fun(new_carspeeds =  mock_data, carspeed_scale = Inf))
-  testthat::expect_error(meta_fun(new_carspeeds =  mock_data, carspeed_scale = 0))
+  testthat::expect_error(meta_fun(carspeed_scale = Inf))
+  testthat::expect_error(meta_fun(carspeed_scale = -1))
 
 })
 
