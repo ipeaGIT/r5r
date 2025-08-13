@@ -7,7 +7,7 @@ testthat::skip_on_cran()
 # test if setting max_speed to 0 closes the road
 
 # data.frame with new speed info
-new_carspeeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
+edge_speeds <- read.csv(file.path(data_path, "poa_osm_congestion.csv"))
 
 # sf with congestion polygons
 congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
@@ -97,7 +97,6 @@ test_that("success in increasing travel times", {
   testthat::expect_true(ttm_3$travel_time_p50 < ttm_pre$travel_time_p50)
 })
 
-
 # car speeds with polygons -------------------------------------------------------------------
 
 test_that("errors in congestion polygon", {
@@ -132,8 +131,6 @@ test_that("errors due to incorrect input types", {
 })
 
 
-
-
 test_that("errors error in the new_carspeeds column names", {
 
   mock_data <- data.frame(osm_id = '27184648', max_speed = 10, speed_type="banana")
@@ -142,19 +139,22 @@ test_that("errors error in the new_carspeeds column names", {
   mock_data <- data.frame(my_osm_id = '9999', max_speed = 9999, speed_type="km/h")
   testthat::expect_error(meta_fun(new_carspeeds =  mock_data))
 
-  mock_data <- data.frame(osm_id = '9999', max_speed = 9999, speed_type="km/h")
   testthat::expect_error(meta_fun(carspeed_scale = Inf))
   testthat::expect_error(meta_fun(carspeed_scale = -1))
 
 })
 
 
-# test_that("message for missing OSM ids", {
-#
-#   mock_data <- data.frame(osm_id = 9999, max_speed = 100, speed_type="km/h")
-#
-#   testthat::expect_message(
-#     meta_fun(new_carspeeds =  mock_data, carspeed_scale = 1),
-#     regexp = "Cannot find the following OSM IDs in network"
-#   )
-# })
+test_that("message for missing OSM ids", {
+
+  mock_data <- data.frame(osm_id = 45698769, max_speed = 100, speed_type="km/h")
+  log_file <- file.path(r5r_network@jcore$getLogPath())
+  expect_true(file.exists(log_file), info = paste("Log file not found at", log_file))
+
+  meta_fun(new_carspeeds = mock_data)
+  log <- readLines(log_file, warn = FALSE)
+  expect_true(
+    any(grepl("45698769", log, fixed = TRUE)),
+    info = "Did not find warning for a bad OSM Id in log"
+  )
+})
