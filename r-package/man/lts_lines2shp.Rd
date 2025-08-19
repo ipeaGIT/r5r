@@ -21,7 +21,7 @@ and saves it to a \code{.shp} temporary file.
 
 # read lines with new speeds
 new_lts_lines <- readRDS(
-  system.file("extdata/poa/poa_mls_lts.rds", package = "r5r")
+  system.file("extdata/poa/poa_ls_lts.rds", package = "r5r")
   )
 
 shp_path <- r5r:::lts_lines2shp(

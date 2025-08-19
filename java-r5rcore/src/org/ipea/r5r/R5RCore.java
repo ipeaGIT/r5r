@@ -5,32 +5,29 @@ import com.conveyal.gtfs.model.Service;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
-import com.conveyal.r5.analyst.scenario.ShapefileLts;
 import com.conveyal.r5.api.util.SearchType;
 import com.conveyal.r5.analyst.scenario.RoadCongestion;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
+import org.ipea.r5r.Scenario.R5RShapefileLts;
 import org.ipea.r5r.Scenario.RoadCongestionOSM;
 import org.ipea.r5r.Scenario.SetLtsOsm;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -602,6 +599,7 @@ public class R5RCore {
         congestion.priorityAttribute = priorityAttribute;
         congestion.nameAttribute = nameAttribute;
         congestion.defaultScaling = defaultScaling;
+
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
@@ -609,17 +607,11 @@ public class R5RCore {
 
     public String applyLtsPolygon(String filePath){
         Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
-        File file = fileJPath.toFile();
 
-        ShapefileLts lts = new ShapefileLts();
-        // Set the private 'localFile' field
-        try {
-            Field localFileField = ShapefileLts.class.getDeclaredField("localFile");
-            localFileField.setAccessible(true);
-            localFileField.set(lts, file);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            LOG.error("Failed to set localFile field when applying Polygon LTS", e);
-        }
+        R5RShapefileLts lts = new R5RShapefileLts();
+        lts.dataSourceId = FilenameUtils.removeExtension(fileJPath.toString());
+
+        lts.resolve(routingProperties.transportNetworkWorking);
         lts.apply(routingProperties.transportNetworkWorking);
         return lts.errors.toString();
     }
@@ -629,6 +621,7 @@ public class R5RCore {
         congestion.speedMap = speedMap;
         congestion.defaultScaling = defaultScaling;
         congestion.absoluteMode = absoluteMode;
+
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
@@ -637,6 +630,7 @@ public class R5RCore {
     public String applyLtsOsm(HashMap<Long, Integer> ltsMap){
         SetLtsOsm lts = new SetLtsOsm();
         lts.ltsMap = ltsMap;
+
         lts.resolve(routingProperties.transportNetworkWorking);
         lts.apply(routingProperties.transportNetworkWorking);
         return lts.errors.toString();

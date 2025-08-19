@@ -11,7 +11,7 @@ edge_lts <- data.frame(
   )
 
 # sf with new LTS
-lts_lines <- readRDS(file.path(data_path, "poa_mls_lts.rds"))
+lts_lines <- readRDS(file.path(data_path, "poa_ls_lts.rds"))
 
 
 meta_fun <- function(
@@ -32,8 +32,8 @@ meta_fun <- function(
 
 
 
-# car speeds with osm ids -------------------------------------------------------------------
-test_that("success in increasing travel times", {
+# LTS with osm ids -------------------------------------------------------------------
+test_that("success in increasing travel times with osm ids", {
 
   # calculate travel times / access *before* changing road speeds
   ttm_pre <- meta_fun(r5r::travel_time_matrix)
@@ -79,6 +79,53 @@ test_that("success in increasing travel times", {
 
 })
 
+
+# LTS with sf linestrings -------------------------------------------------------------------
+test_that("success in increasing travel times with sf linestrings", {
+
+  # calculate travel times / access *before* changing road speeds
+  ttm_pre <- meta_fun(r5r::travel_time_matrix)
+  expanded_ttm_pre <- meta_fun(r5r::expanded_travel_time_matrix)
+  det_pre <- meta_fun(r5r::detailed_itineraries)
+  arrival_ttm_pre <- r5r::arrival_travel_time_matrix(
+    r5r_network = r5r_network,
+    origins = pois[1,],
+    destinations = pois[13,],
+    mode = 'car',
+    arrival_datetime = Sys.time(),
+    max_trip_duration = 60
+  )
+  # to do: r5r::accessibility
+
+  # plot(det_pre['total_duration'])
+  # mapview(network$edges) + network$vertices + det
+
+
+  # calculate travel times / access *before* changing road speeds
+  ttm_pos <- meta_fun(r5r::travel_time_matrix, new_lts = lts_lines)
+  expanded_ttm_pos <- meta_fun(r5r::expanded_travel_time_matrix, new_lts = lts_lines)
+  det_pos <- meta_fun(r5r::detailed_itineraries, new_lts = lts_lines)
+  arrival_ttm_pos <- r5r::arrival_travel_time_matrix(
+    r5r_network = r5r_network,
+    origins = pois[1,],
+    destinations = pois[13,],
+    mode = 'BICYCLE',
+    arrival_datetime = Sys.time(),
+    max_trip_duration = 60,
+    new_lts = lts_lines
+  )
+
+
+  #  mapview::mapview(det_pre) + det_pos
+
+  # checking for longer travel times
+  testthat::expect_true(ttm_pos$travel_time_p50 < ttm_pre$travel_time_p50)
+  testthat::expect_true(all(expanded_ttm_pos$total_time < expanded_ttm_pre$total_time))
+  # testthat::expect_true(arrival_ttm_pos$total_time < arrival_ttm_pre$total_time)
+  testthat::expect_true(det_pos$total_duration < det_pre$total_duration)
+  testthat::expect_true(det_pos$total_distance < det_pre$total_distance)
+
+})
 
 # LTS with spatial sf -------------------------------------------------------------------
 

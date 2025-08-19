@@ -298,7 +298,7 @@ congestion_poly2geojson <- function(new_speeds_poly){
 #'
 #' # read lines with new speeds
 #' new_lts_lines <- readRDS(
-#'   system.file("extdata/poa/poa_mls_lts.rds", package = "r5r")
+#'   system.file("extdata/poa/poa_ls_lts.rds", package = "r5r")
 #'   )
 #'
 #' shp_path <- r5r:::lts_lines2shp(
@@ -323,7 +323,7 @@ lts_lines2shp <- function(new_lts_lines){
   checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_lts_lines))),
-    choices = c("LINESTRING", "MULTILINESTRING"),
+    choices = c("LINESTRING"),
     empty.ok = FALSE
   )
 
