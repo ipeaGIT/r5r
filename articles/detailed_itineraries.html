@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -78,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Trip planning with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-08-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/detailed_itineraries.Rmd" class="external-link"><code>vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="d-none name"><code>detailed_itineraries.Rmd</code></div>
@@ -123,8 +124,8 @@ detailed by trip segments, then we would strongly encourage you to use
 the <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function.</p>
 </div>
 <div class="section level2">
-<h2 id="build-routable-transport-network-with-setup_r5">2. Build routable transport network with
-<code>setup_r5()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-setup_r5"></a>
+<h2 id="build-routable-transport-network-with-build_network">2. Build routable transport network with
+<code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h2>
 <p>First, let’s load some libraries and build our multimodal transport
 network. In this example we’ll be using the a sample data set for the
@@ -141,7 +142,7 @@ city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <span></span>
 <span><span class="co"># build a routable transport network with r5r</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'walk'</span>, <span class="st">'transit'</span><span class="op">)</span></span>
@@ -174,7 +175,7 @@ arrival of the optimal route.</p>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># calculate detailed itineraries</span></span>
-<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span><span class="va">r5r_network</span>,</span>
 <span>                            origins <span class="op">=</span> <span class="va">origins</span>,</span>
 <span>                            destinations <span class="op">=</span> <span class="va">destinations</span>,</span>
 <span>                            mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -197,19 +198,19 @@ arrival of the optimal route.</p>
 <span><span class="co">#&gt; 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt; 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt;      to_lon option departure_time total_duration total_distance segment mode</span></span>
-<span><span class="co">#&gt; 1 -51.22875      1       14:09:10           36.2           9460       1 WALK</span></span>
-<span><span class="co">#&gt; 2 -51.22875      1       14:09:10           36.2           9460       2 RAIL</span></span>
-<span><span class="co">#&gt; 3 -51.22875      1       14:09:10           36.2           9460       3 WALK</span></span>
-<span><span class="co">#&gt; 4 -51.22875      1       14:09:10           36.2           9460       4  BUS</span></span>
-<span><span class="co">#&gt; 5 -51.22875      1       14:09:10           36.2           9460       5 WALK</span></span>
-<span><span class="co">#&gt; 6 -51.22875      2       14:09:10           43.9           8773       1 WALK</span></span>
+<span><span class="co">#&gt; 1 -51.22875      1       14:09:10           33.9           9460       1 WALK</span></span>
+<span><span class="co">#&gt; 2 -51.22875      1       14:09:10           33.9           9460       2 RAIL</span></span>
+<span><span class="co">#&gt; 3 -51.22875      1       14:09:10           33.9           9460       3 WALK</span></span>
+<span><span class="co">#&gt; 4 -51.22875      1       14:09:10           33.9           9460       4  BUS</span></span>
+<span><span class="co">#&gt; 5 -51.22875      1       14:09:10           33.9           9460       5 WALK</span></span>
+<span><span class="co">#&gt; 6 -51.22875      2       14:09:10           41.1           8755       1 WALK</span></span>
 <span><span class="co">#&gt;   segment_duration wait distance  route                       geometry</span></span>
-<span><span class="co">#&gt; 1              4.6  0.0      174        LINESTRING (-51.1981 -29.99...</span></span>
-<span><span class="co">#&gt; 2              6.6  1.3     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
-<span><span class="co">#&gt; 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
+<span><span class="co">#&gt; 1              4.5  0.0      174        LINESTRING (-51.1981 -29.99...</span></span>
+<span><span class="co">#&gt; 2              6.6  1.4     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
+<span><span class="co">#&gt; 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
 <span><span class="co">#&gt; 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span></span>
-<span><span class="co">#&gt; 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
-<span><span class="co">#&gt; 6              4.6  0.0      174        LINESTRING (-51.1981 -29.99...</span></span></code></pre></div>
+<span><span class="co">#&gt; 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
+<span><span class="co">#&gt; 6              4.5  0.0      174        LINESTRING (-51.1981 -29.99...</span></span></code></pre></div>
 <p>The output is a <code>data.frame sf</code> object, so we can easily
 visualize the results.</p>
 <div class="section level3">
@@ -222,10 +223,10 @@ results in <code>ggplot2</code>, you can also use the
 network used in the routing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
-<span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># extract public transport network</span></span>
-<span><span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="va">transit_net</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot</span></span>
 <span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -300,7 +301,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
@@ -314,7 +315,7 @@ page</a>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

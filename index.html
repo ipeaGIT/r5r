@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,7 @@
     <li><a class="dropdown-item" href="articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -108,10 +109,10 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>The package has seven <strong>fundamental functions</strong>:</p>
+<p>The package has seven <strong>fundamental functions</strong> :</p>
 <ol style="list-style-type: decimal">
 <li>
-<code><a href="reference/setup_r5.html">setup_r5()</a></code>
+<code><a href="reference/build_network.html">build_network()</a></code>
 <ul>
 <li>Downloads and stores locally an R5 Jar file (the Jar file is downloaded only once per installation)</li>
 <li>Builds a multimodal transport network given (1) a OpenStreetMap street network in <code>.pbf</code> format (<em>mandatory</em>), (2) one or more public transport networks in <code>GTFS.zip</code> format (optional), and (3) elevation data in <code>raster.tif</code> (optional).</li>
@@ -126,7 +127,13 @@
 <li>
 <code><a href="reference/travel_time_matrix.html">travel_time_matrix()</a></code>
 <ul>
-<li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs.</li>
+<li>Fast function that returns a simple <code>data.table</code> with travel time estimates between one or multiple origin destination pairs considering departure time.</li>
+</ul>
+</li>
+<li>
+<code><a href="reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>
+<ul>
+<li>Calculates travel time matrices between origin destination pairs considering a time of arrival. The output includes additional information such as the routes used and total time disaggregated by access, waiting, in-vehicle and transfer times.</li>
 </ul>
 </li>
 <li>
@@ -150,10 +157,11 @@
 <li>
 <code><a href="reference/isochrone.html">isochrone()</a></code>
 <ul>
-<li>Returns a <code>A ⁠POLYGON  "sf" "data.frame"</code> showing the area that can be reached from an origin point at a given travel time limit.</li>
+<li>Returns a <code>sf" "data.frame"</code> showing the area that can be reached from an origin point at a given travel time limit.</li>
 </ul>
 </li>
 </ol>
+<p><small><a href="https://ipeagit.github.io/r5r/reference/index.html">See more details about each function here</a></small></p>
 <p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info on how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">this vignette</a>.</p>
 <p>The package also includes a few <strong>support functions</strong>.</p>
 <ol style="list-style-type: decimal">
@@ -234,7 +242,7 @@
 <span></span>
 <span><span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span></span>
 <span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/build_network.html">build_network</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 2) load origin/destination points and set arguments</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span></span>
@@ -245,7 +253,7 @@
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3.1) calculate a travel time matrix</span></span>
-<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -254,7 +262,7 @@
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3.2) or get detailed info on multiple alternative routes</span></span>
-<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                            origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">370</span>, <span class="op">]</span>,</span>
 <span>                            destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">200</span>, <span class="op">]</span>,</span>
 <span>                            mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -265,7 +273,7 @@
 <span>                            drop_geometry <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 4) Calculate number of schools accessible within 20 minutes </span></span>
-<span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                        origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        opportunities_colname <span class="op">=</span> <span class="st">"schools"</span>,</span>
@@ -367,7 +375,7 @@
 <li>Marcus Saraiva <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6218-2338" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Rafael H. M. Pereira <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2125-7465" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Daniel Herszenhut <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8066-1105" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Carlos Kaue Vieira Braga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6104-7297" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Alex Magnus <br><small class="roles"> Author </small>   </li>
 <li>Matthew Wigginton Bhagat-Conway <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1210-2982" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Ipea - Institute for Applied Economic Research <br><small class="roles"> Copyright holder, funder </small>   </li>
 <li>Department of Geography &amp; Planning, University of Toronto <br><small class="roles"> Funder </small>   </li>
@@ -382,7 +390,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

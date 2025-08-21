@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +25,7 @@
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -49,7 +50,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="setup-network">Setup network<a class="anchor" aria-label="anchor" href="#setup-network"></a></h2>
+      <h2 id="building-routable-transport-network">Building routable transport network<a class="anchor" aria-label="anchor" href="#building-routable-transport-network"></a></h2>
 
 
 
@@ -61,10 +62,16 @@
 
       <dl><dt>
 
-          <code><a href="setup_r5.html">setup_r5()</a></code>
+          <code><a href="build_network.html">build_network()</a></code>
 
         </dt>
-        <dd>Create a transport network used for routing in R5</dd>
+        <dd>Build a transport network used for routing in R5</dd>
+      </dl><dl><dt>
+
+          <code><a href="setup_r5.html">setup_r5()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Create a transport network used for routing in R5 (deprecated)</dd>
       </dl></div><div class="section level2">
       <h2 id="accessibility">Accessibility<a class="anchor" aria-label="anchor" href="#accessibility"></a></h2>
 
@@ -98,7 +105,13 @@
           <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>
 
         </dt>
-        <dd>Calculate travel time matrix between origin destination pairs</dd>
+        <dd>Calculate travel time matrix between origin destination pairs considering a departure time</dd>
+      </dl><dl><dt>
+
+          <code><a href="arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>
+
+        </dt>
+        <dd>Calculate travel time matrix between origin destination pairs considering a time of arrival</dd>
       </dl><dl><dt>
 
           <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>
@@ -135,7 +148,7 @@
         </dt>
         <dd>Estimate isochrones from a given location</dd>
       </dl></div><div class="section level2">
-      <h2 id="extract-network-spatial-data">Extract Network spatial data<a class="anchor" aria-label="anchor" href="#extract-network-spatial-data"></a></h2>
+      <h2 id="extracting-transport-network-spatial-data">Extracting transport network spatial data<a class="anchor" aria-label="anchor" href="#extracting-transport-network-spatial-data"></a></h2>
 
 
 
@@ -150,7 +163,7 @@
           <code><a href="street_network_to_sf.html">street_network_to_sf()</a></code>
 
         </dt>
-        <dd>Extract OpenStreetMap network in sf format from a network.dat file</dd>
+        <dd>Extract OpenStreetMap network in sf format</dd>
       </dl><dl><dt>
 
           <code><a href="transit_network_to_sf.html">transit_network_to_sf()</a></code>
@@ -226,14 +239,14 @@
           <code><a href="stop_r5.html">stop_r5()</a></code>
 
         </dt>
-        <dd>Stop running r5r core</dd>
+        <dd>Stop running r5r network</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -78,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Accounting for monetary costs</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-08-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/fare_structure.Rmd" class="external-link"><code>vignettes/fare_structure.Rmd</code></a></small>
       <div class="d-none name"><code>fare_structure.Rmd</code></div>
@@ -192,12 +193,12 @@ system can be seen in the map below.</p>
 <span><span class="co"># set data path to directory containing your own data if not using the examples</span></span>
 <span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using cached network from from</span></span>
+<span><span class="co">#&gt;   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span></span>
 <span></span>
 <span><span class="co"># load transit network as an SF</span></span>
-<span><span class="va">transit_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<span><span class="va">transit_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transit_network_to_sf.html">transit_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># map</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -241,7 +242,7 @@ folder. These files can be edited outside the R session using external
 text editors and spreadsheet software, for user’s convenience.</li>
 </ul>
 <p>First, we need to call <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code>, providing
-three parameters: the current <code>r5r_core</code> object, a
+three parameters: the current <code>r5r_network</code> object, a
 <code>base_fare</code> used to populate the fare structure, and the
 <code>by</code> parameters that identifies what is the main property of
 the route that defines the different fares.</p>
@@ -253,7 +254,7 @@ rules of routes differ by <code>"AGENCY_ID"</code> or
 <code>"AGENCY_NAME"</code>, or simply set <code>by = "GENERIC"</code>
 when the entire system follows the same rules.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, </span>
+<code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_network</span>, </span>
 <span>                                       base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
 <span>                                       by <span class="op">=</span> <span class="st">"MODE"</span><span class="op">)</span></span></code></pre></div>
 <p>Now let’s check the contents of the <code>fare_structure</code>
@@ -394,7 +395,7 @@ and then can use as many services as she wants as long as she doesn’t
 exit the system;</li>
 <li>
 <code>allow_same_route_transfer</code>: a logical value indicating
-if a discounted transfer can be done between vehicles ??? of the same
+if a discounted transfer can be done between vehicles of the same
 route;</li>
 <li>
 <code>use_route_fare</code>: another logical value that indicates if
@@ -587,7 +588,7 @@ function.</p>
 <span><span class="co"># calculate travel times function</span></span>
 <span><span class="va">calculate_travel_times</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ttm_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">r5r_core</span>,</span>
+<span>    <span class="va">r5r_network</span>,</span>
 <span>    origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>    destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
@@ -684,7 +685,7 @@ unconstrained by monetary costs:</p>
 <code class="sourceCode R"><span><span class="co"># calculate accessibility function</span></span>
 <span><span class="va">calculate_accessibility</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fare</span>, <span class="va">fare_string</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">access_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span></span>
-<span>    <span class="va">r5r_core</span>,</span>
+<span>    <span class="va">r5r_network</span>,</span>
 <span>    origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>    destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>    mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span>,</span>
@@ -737,7 +738,7 @@ remove an existing <code>r5r</code> object and reallocate the memory it
 had been using, we use the <code>stop_r5</code> function followed by a
 call to Java’s garbage collector, as follows:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
 <a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
@@ -752,7 +753,7 @@ page</a>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

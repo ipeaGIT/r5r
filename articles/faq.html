@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul>
@@ -78,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>FAQ - Frequently Asked Questions</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-08-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/faq.Rmd" class="external-link"><code>vignettes/faq.Rmd</code></a></small>
       <div class="d-none name"><code>faq.Rmd</code></div>
@@ -114,10 +115,16 @@ to street nework data?<a class="anchor" aria-label="anchor" href="#is-it-possibl
 <details><summary>
 click to expand
 </summary><blockquote>
-<p>It is possible to edit the OpenStreetMap <code>.pbf</code> file
-before using it in <code>r5r</code> for example to remove or add roads,
-change speeds etc etc. To to this, you can edit the <code>.pbf</code>
-file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
+<p>Yes, all routing and accessibility functions in <code>r5r</code> have
+new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code>
+and <code>new_lts</code> which allow one to use custom car speeds and
+LTS levels for cycling. These parameters provide convient and efficient
+ways to build different scenarios of traffic congestion, road closure
+and interventions in cycling infrastructure. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
+vignette</a>. For other changes to the OSM network (e.g. including a new
+road link), you would need to edit the OpenStreetMap <code>.pbf</code>
+file direclty before using it in <code>r5r</code>. To to this, you can
+edit the <code>.pbf</code> file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
 (https://wiki.openstreetmap.org/wiki/JOSM)</a>. Mind you that the the
 OpenStreetMap tags can be changed but they cannot be removed from the
 data.</p>
@@ -219,7 +226,7 @@ origin-destination pair you queried.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -9,7 +9,7 @@ collection of .csv files inside a .zip file."><meta property="og:image" content=
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,6 +27,7 @@ collection of .csv files inside a .zip file."><meta property="og:image" content=
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -95,11 +96,11 @@ written to.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
+<span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_core</span>, base_fare <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span><span class="va">r5r_network</span>, base_fare <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"sample_fare_structure"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_fare_structure</span><span class="op">(</span><span class="va">fare_structure</span>, <span class="va">tmpfile</span><span class="op">)</span></span></span>
@@ -110,7 +111,7 @@ written to.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">

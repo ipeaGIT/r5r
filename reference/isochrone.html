@@ -17,7 +17,7 @@ to the centroids of all segments in the transport network."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@ to the centroids of all segments in the transport network."><meta property="og:i
     <li><a class="dropdown-item" href="../articles/fare_structure.html">Accounting for monetary costs</a></li>
     <li><a class="dropdown-item" href="../articles/isochrones.html">Isochrones</a></li>
     <li><a class="dropdown-item" href="../articles/pareto_frontier.html">Trade-offs between travel time and monetary cost</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Using custom OSM car speeds and LTS</a></li>
     <li><a class="dropdown-item" href="../articles/time_window.html">Using the time_window parameter</a></li>
     <li><a class="dropdown-item" href="../articles/travel_time_matrix.html">Travel time matrices</a></li>
   </ul></li>
@@ -72,7 +73,8 @@ to the centroids of all segments in the transport network.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">isochrone</span><span class="op">(</span></span>
-<span>  <span class="va">r5r_core</span>,</span>
+<span>  <span class="va">r5r_network</span>,</span>
+<span>  r5r_core <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">origins</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">"transit"</span>,</span>
 <span>  mode_egress <span class="op">=</span> <span class="st">"walk"</span>,</span>
@@ -100,9 +102,13 @@ to the centroids of all segments in the transport network.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
-<dd><p>An object to connect with the R5 routing engine, created with
-<code><a href="setup_r5.html">setup_r5()</a></code>.</p></dd>
+<dl><dt id="arg-r-r-network">r5r_network<a class="anchor" aria-label="anchor" href="#arg-r-r-network"></a></dt>
+<dd><p>A routable transport network created with <code><a href="build_network.html">build_network()</a></code>.</p></dd>
+
+
+<dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
+<dd><p>The <code>r5r_core</code> argument is deprecated as of r5r v2.3.0.
+Please use the <code>r5r_network</code> argument instead.</p></dd>
 
 
 <dt id="arg-origins">origins<a class="anchor" aria-label="anchor" href="#arg-origins"></a></dt>
@@ -250,7 +256,7 @@ synchronized among all active threads.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>POLYGON  "sf" "data.frame"</code> for each isochrone of each origin.</p>
+    <p>A <code>"sf" "data.frame"</code> for each isochrone of each origin.</p>
     </div>
     <div class="section level2">
     <h2 id="transport-modes">Transport modes<a class="anchor" aria-label="anchor" href="#transport-modes"></a></h2>
@@ -313,14 +319,15 @@ ignoring the timezone attribute.</p>
 
 
 
-<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and
-<code><a href="accessibility.html">accessibility()</a></code> functions use an <code>R5</code>-specific extension to the RAPTOR
-routing algorithm (see Conway et al., 2017). This RAPTOR extension uses a
-systematic sample of one departure per minute over the time window set by the
-user in the 'time_window' parameter. A detailed description of base RAPTOR
-can be found in Delling et al (2015). However, whenever the user includes
-transit fares inputs to these functions, they automatically switch to use an
-<code>R5</code>-specific extension to the McRAPTOR routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
+<p>The <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>,
+<code><a href="arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>  and <code><a href="accessibility.html">accessibility()</a></code> functions use an
+<code>R5</code>-specific extension to the RAPTOR routing algorithm (see Conway et al.,
+2017). This RAPTOR extension uses a systematic sample of one departure per
+minute over the time window set by the user in the 'time_window' parameter.
+A detailed description of base RAPTOR can be found in Delling et al (2015).
+However, whenever the user includes transit fares inputs to these functions,
+they automatically switch to use an <code>R5</code>-specific extension to the McRAPTOR
+routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
 on combined schedule and headway-based networks. Transportation Research
 Record, 2653(1), 45-53. <a href="https://doi.org/10.3141/2653-06" class="external-link">doi:10.3141/2653-06</a></p></li>
@@ -337,9 +344,9 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># build transport network</span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached network.dat from /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>
+<span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># load origin/point of interest</span></span></span>
 <span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -352,7 +359,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate polygon-based isochrone from origin</span></span></span>
 <span class="r-in"><span><span class="va">iso_poly</span> <span class="op">&lt;-</span> <span class="fu">isochrone</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  <span class="va">r5r_network</span>,</span></span>
 <span class="r-in"><span>  origins <span class="op">=</span> <span class="va">origin</span>,</span></span>
 <span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"walk"</span>,</span></span>
 <span class="r-in"><span>  polygon_output <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
@@ -364,18 +371,18 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 4 features and 2 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2422 ymin: -30.0778 xmax: -51.1602 ymax: -29.9966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2454 ymin: -30.082 xmax: -51.1554 ymax: -29.9966</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    id isochrone                       polygons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120 POLYGON ((-51.2412 -30.0724...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120 POLYGON ((-51.2125 -30.082,...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 bus_central_station        90 POLYGON ((-51.2421 -30.0365...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 bus_central_station        60 POLYGON ((-51.2421 -30.0365...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30 POLYGON ((-51.2314 -30.0287...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30 POLYGON ((-51.228 -30.0336,...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate line-based isochrone from origin</span></span></span>
 <span class="r-in"><span><span class="va">iso_lines</span> <span class="op">&lt;-</span> <span class="fu">isochrone</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">r5r_core</span>,</span></span>
+<span class="r-in"><span>  <span class="va">r5r_network</span>,</span></span>
 <span class="r-in"><span>  origins <span class="op">=</span> <span class="va">origin</span>,</span></span>
 <span class="r-in"><span>  mode <span class="op">=</span> <span class="st">"walk"</span>,</span></span>
 <span class="r-in"><span>  polygon_output <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
@@ -388,29 +395,29 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 6 features and 13 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: LINESTRING</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.18467 ymin: -30.05426 xmax: -51.17266 ymax: -30.02355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.17223 ymin: -30.03979 xmax: -51.16588 ymax: -30.02889</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edge_index   osm_id isochrone travel_time_p50 from_vertex to_vertex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        644 27238056       100             100         443       444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        645 27238056       100             100         444       443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       1048 27370379       100             100         717       718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       1049 27370379       100             100         718       717</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       1058 27370382       100             100         722       723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       1059 27370382       100             100         723       722</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        594 27234386       100             100         414       415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        595 27234386       100             100         415       414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        598 27234513       100             100         417       411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        599 27234513       100             100         411       417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       2072 28069055       100             100        1397      1398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       2073 28069055       100             100        1398      1397</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   street_class  length walk   car car_speed bicycle bicycle_lts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        OTHER 224.482 TRUE  TRUE    40.248    TRUE           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        OTHER 224.482 TRUE FALSE    40.248   FALSE           4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LINESTRING (-51.17282 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 LINESTRING (-51.17266 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 LINESTRING (-51.18231 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 LINESTRING (-51.18467 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 LINESTRING (-51.18424 -30.0...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 LINESTRING (-51.1839 -30.05...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LINESTRING (-51.16588 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 LINESTRING (-51.16876 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 LINESTRING (-51.1687 -30.03...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 LINESTRING (-51.17039 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 LINESTRING (-51.17223 -30.0...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 LINESTRING (-51.17027 -30.0...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot colors</span></span></span>
@@ -431,8 +438,8 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="isochrone-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_core</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_core has been successfully stopped.</span>
+<span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_network has been successfully stopped.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -440,7 +447,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Carlos Kaue Vieira Braga, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
+  <p>Developed by Marcus Saraiva, Rafael H. M. Pereira, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway, Ipea - Institute for Applied Economic Research, Department of Geography &amp; Planning, University of Toronto.</p>
 </div>
 
 <div class="pkgdown-footer-right">
