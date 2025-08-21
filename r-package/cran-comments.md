@@ -6,6 +6,7 @@ Duration: 11m 46.3s
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 # fixed urls in vignettes
+# the url is now online: https://ipeagit.github.io/r5r/articles/scenarios.html
 
 **Major changes**
 
