@@ -55,7 +55,7 @@ rJavaEnv::java_quick_install(version = 21)
 
 The package has seven **fundamental functions** :
 
-1. `setup_r5()`
+1. `build_network()`
    * Downloads and stores locally an R5 Jar file (the Jar file is downloaded only 
    once per installation)
    * Builds a multimodal transport network given (1) a OpenStreetMap street network in `.pbf`
@@ -102,8 +102,6 @@ The package has seven **fundamental functions** :
 obs. Most of these functions also allow users to account for monetary travel costs 
 when generating travel time matrices and accessibility estimates. More info on
 how to consider monetary costs can be found in [this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
-
-obs.2 The package also includes a convenient function `build_custom_network()` that allows one build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. [See this vignette](https://ipeagit.github.io/r5r/articles/build_custom_network.html).
 
 
 The package also includes a few **support functions**.
@@ -162,7 +160,7 @@ library(r5r)
 
 # 1) build transport network, pointing to the path where OSM and GTFS data are stored
 path <- system.file("extdata/poa", package = "r5r")
-r5r_core <- setup_r5(data_path = path, verbose = FALSE)
+r5r_network <- build_network(data_path = path, verbose = FALSE)
 
 # 2) load origin/destination points and set arguments
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
@@ -173,7 +171,7 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # 3.1) calculate a travel time matrix
-ttm <- travel_time_matrix(r5r_core = r5r_core,
+ttm <- travel_time_matrix(r5r_network = r5r_network,
                           origins = points,
                           destinations = points,
                           mode = mode,
@@ -182,7 +180,7 @@ ttm <- travel_time_matrix(r5r_core = r5r_core,
                           max_trip_duration = max_trip_duration)
 
 # 3.2) or get detailed info on multiple alternative routes
-det <- detailed_itineraries(r5r_core = r5r_core,
+det <- detailed_itineraries(r5r_network = r5r_network,
                             origins = points[370, ],
                             destinations = points[200, ],
                             mode = mode,
@@ -193,7 +191,7 @@ det <- detailed_itineraries(r5r_core = r5r_core,
                             drop_geometry = FALSE)
 
 # 4) Calculate number of schools accessible within 20 minutes 
-access <- accessibility(r5r_core = r5r_core,
+access <- accessibility(r5r_network = r5r_network,
                         origins = points,
                         destinations = points,
                         opportunities_colname = "schools",
