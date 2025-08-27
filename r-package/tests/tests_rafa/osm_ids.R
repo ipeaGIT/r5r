@@ -54,6 +54,7 @@ car_network[,
 head(car_network)
 
 
+# bring info about one-way or two-way
 data.table::setDT(edges)
 car_network[edges, on = .(way_id=osm_id), oneway := i.oneway]
 car_network$oneway
@@ -117,3 +118,8 @@ two_way_net_backwards <- car_network2 |>
 
 my_net <- rbind(one_way_net, two_way_net_forwards, two_way_net_backwards)
 my_net
+
+nrow(car_network2)
+nrow(my_net)
+
+# another alternative would be to use sfnetworks to remove simples edges wi
