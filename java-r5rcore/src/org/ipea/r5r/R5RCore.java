@@ -321,7 +321,7 @@ public class R5RCore {
 
     // ----------------------------------  TRAVEL TIME MATRIX  -----------------------------------------
 
-    public RDataFrame travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public byte[] travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -336,7 +336,7 @@ public class R5RCore {
 
     }
 
-    public RDataFrame travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public byte[] travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -351,7 +351,7 @@ public class R5RCore {
 
     }
 
-    public RDataFrame travelTimeMatrix(String fromId, double fromLat, double fromLon,
+    public byte[] travelTimeMatrix(String fromId, double fromLat, double fromLon,
                                                                            String toId, double toLat, double toLon,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -370,7 +370,7 @@ public class R5RCore {
 
     }
 
-    public RDataFrame travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
+    public byte[] travelTimeMatrix(String[] fromIds, double[] fromLats, double[] fromLons,
                                                                            String[] toIds, double[] toLats, double[] toLons,
                                                                            String directModes, String transitModes, String accessModes, String egressModes,
                                                                            String date, String departureTime,
@@ -383,7 +383,7 @@ public class R5RCore {
         travelTimeMatrixComputer.setDepartureDateTime(date, departureTime);
         travelTimeMatrixComputer.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        RDataFrame out = travelTimeMatrixComputer.run();
+        byte[] out = travelTimeMatrixComputer.run();
         this.routingProperties.reset();
         return out;
     }

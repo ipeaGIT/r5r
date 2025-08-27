@@ -11,6 +11,17 @@ import com.conveyal.r5.transit.TransportNetwork;
 import com.conveyal.r5.transit.path.RouteSequence;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.vector.IntVector;
+import org.apache.arrow.vector.VarCharVector;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.VectorUnloader;
+import org.apache.arrow.vector.ipc.message.ArrowRecordBatch;
+import org.apache.arrow.vector.types.FloatingPointPrecision;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.apache.arrow.vector.types.pojo.FieldType;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.ipea.r5r.R5.R5TravelTimeComputer;
 import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
@@ -18,13 +29,14 @@ import org.ipea.r5r.Utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class TravelTimeMatrixComputer extends R5Process {
+public class TravelTimeMatrixComputer extends ArrowR5Process {
 
     class PathBreakdown {
         String departureTime;
@@ -103,48 +115,72 @@ public class TravelTimeMatrixComputer extends R5Process {
     }
 
     @Override
-    protected RDataFrame runProcess(int index) throws ParseException {
+    protected BatchWithSeq runProcess(int index) throws ParseException {
         RegionalTask request = buildRequest(index);
-
         TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
-        RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
-        populateDataFrame(travelTimeResults, travelTimesTable);
+        return populateDataFrame(travelTimeResults, index);
 
-        if (travelTimesTable.nRow() > 0) {
-            return travelTimesTable;
+        // TODO check schema nonempty
+/*        if (nextRow > 0) {
+            return root;
         } else {
             return null;
-        }
+        }*/
     }
 
-    private void populateDataFrame(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
+    private BatchWithSeq populateDataFrame(OneOriginResult travelTimeResults, int originIndex) {
         if (this.routingProperties.expandedTravelTimes) {
-            populateExpandedResults(travelTimeResults, travelTimesTable);
+            // populateExpandedResults(travelTimeResults, travelTimesTable);
+            return null;
         } else {
-            populateRegularResults(travelTimeResults, travelTimesTable);
+            return populateRegularResults(travelTimeResults, originIndex);
         }
     }
 
-    private void populateRegularResults(OneOriginResult travelTimeResults, RDataFrame travelTimesTable) {
-        for (int destination = 0; destination < travelTimeResults.travelTimes.nPoints; destination++) {
-            if (travelTimeResults.travelTimes.getValues()[0][destination] <= maxTripDuration) {
+    private BatchWithSeq populateRegularResults(OneOriginResult travelTimeResults, int originIndex) {
+        try (BufferAllocator allocator = parentAllocator.newChildAllocator("worker"+originIndex, 0, Long.MAX_VALUE);
+                     VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)
+        ){
+            // Get Arrow Schema components
+            VarCharVector from_id = (VarCharVector) root.getVector("from_id");
+            VarCharVector to_id = (VarCharVector) root.getVector("to_id");
 
-                // add new row to data frame
-                travelTimesTable.append();
+            final ArrayList<IntVector> travel_time_p = new ArrayList<>();
+            for (int p : this.routingProperties.percentiles) {
+                String ps = String.format("%02d", p);
+                travel_time_p.add((IntVector) root.getVector("travel_time_p" + ps));
+            }
 
-                // set destination id
-                travelTimesTable.set("to_id", toIds[destination]);
+            // allocate initial capacity
+            final int nRows = travelTimeResults.travelTimes.nPoints;
+            from_id.setInitialCapacity(nRows); from_id.allocateNew();
+            to_id.setInitialCapacity(nRows); to_id.allocateNew();
+            for (IntVector v : travel_time_p) { v.setInitialCapacity(nRows); v.allocateNew(); }
+
+            final byte[] fromBytes = fromIds[originIndex].getBytes(StandardCharsets.UTF_8);
+
+            for (int d = 0; d < nRows; d++) {
+                from_id.set(d, fromBytes);
+                to_id.set(d, toIds[d].getBytes(StandardCharsets.UTF_8));
 
                 // set percentiles
-                for (int p = 0; p < this.routingProperties.percentiles.length; p++) {
-                    int tt = travelTimeResults.travelTimes.getValues()[p][destination];
-                    String ps = String.format("%02d", this.routingProperties.percentiles[p]);
+                for (int p = 0; p < travel_time_p.size(); p++) {
+                    int tt = travelTimeResults.travelTimes.getValues()[p][d];
                     if (tt <= maxTripDuration) {
-                        travelTimesTable.set("travel_time_p" + ps, tt);
+                        travel_time_p.get(p).set(d, tt);
+                    }
+                    else {
+                        travel_time_p.get(p).setNull(d);
                     }
                 }
             }
+
+            root.setRowCount(nRows);
+
+            ArrowRecordBatch batch = new VectorUnloader(root).getRecordBatch();
+
+            return new BatchWithSeq(originIndex, batch);
         }
     }
 
@@ -334,43 +370,34 @@ public class TravelTimeMatrixComputer extends R5Process {
         }
     }
 
-    @Override
-    protected RDataFrame buildDataFrameStructure(String fromId, int nRows) {
-        // Build return table
-        RDataFrame travelTimesTable = new RDataFrame(nRows);
-        travelTimesTable.addStringColumn("from_id", fromId);
-        travelTimesTable.addStringColumn("to_id", "");
-
-        if (!this.routingProperties.expandedTravelTimes) {
+    protected void buildSchemaStructure() {
+        List<Field> ttmColumns = new ArrayList<>();
+        ttmColumns.add(new Field("from_id", FieldType.notNullable(new ArrowType.Utf8()), null)); // default value fromId
+        ttmColumns.add(new Field("to_id", FieldType.notNullable(new ArrowType.Utf8()), null));
+        if (this.routingProperties.expandedTravelTimes) {
+            ttmColumns.add(new Field("departure_time", FieldType.notNullable(new ArrowType.Utf8()), null)); // default value ""
+            ttmColumns.add(new Field("draw_number", FieldType.notNullable(new ArrowType.Int(32, true)), null)); // default value 0
+            if (this.routingProperties.travelTimesBreakdown) {
+                ttmColumns.add(new Field("access_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+                ttmColumns.add(new Field("wait_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+                ttmColumns.add(new Field("ride_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+                ttmColumns.add(new Field("transfer_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+                ttmColumns.add(new Field("egress_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+            }
+            ttmColumns.add(new Field("routes", FieldType.notNullable(new ArrowType.Utf8()), null)); // default value ""
+            if (this.routingProperties.travelTimesBreakdown) {
+                ttmColumns.add(new Field("n_rides", FieldType.notNullable(new ArrowType.Int(32, true)), null)); // default value 0
+            }
+            ttmColumns.add(new Field("total_time", FieldType.notNullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)), null)); // default value 0.0
+        } else {
             // regular travel time matrix, with percentiles
             for (int p : this.routingProperties.percentiles) {
                 String ps = String.format("%02d", p);
-                travelTimesTable.addIntegerColumn("travel_time_p" + ps, Integer.MAX_VALUE);
+                ttmColumns.add(new Field("travel_time_p" + ps, FieldType.nullable(new ArrowType.Int(32, true)), null)); // default value Integer.MAX_VALUE
             }
-        } else {
-            // expanded travel time matrix, with minute by minute route information
-            travelTimesTable.addStringColumn("departure_time", "");
-            travelTimesTable.addIntegerColumn("draw_number", 0);
-
-            // if breakdown == true, return additional travel time information
-            if (this.routingProperties.travelTimesBreakdown) {
-                travelTimesTable.addDoubleColumn("access_time", 0.0);
-                travelTimesTable.addDoubleColumn("wait_time", 0.0);
-                travelTimesTable.addDoubleColumn("ride_time", 0.0);
-                travelTimesTable.addDoubleColumn("transfer_time", 0.0);
-                travelTimesTable.addDoubleColumn("egress_time", 0.0);
-            }
-
-            travelTimesTable.addStringColumn("routes", "");
-
-            if (this.routingProperties.travelTimesBreakdown) {
-                travelTimesTable.addIntegerColumn("n_rides", 0);
-            }
-
-            travelTimesTable.addDoubleColumn("total_time", 0.0);
         }
 
-        return travelTimesTable;
+        schema = new Schema(ttmColumns, null);
     }
 
     @Override
@@ -386,4 +413,15 @@ public class TravelTimeMatrixComputer extends R5Process {
         return request;
     }
 
+}
+
+
+final class BatchWithSeq {
+    final int seq;
+    final ArrowRecordBatch batch;
+
+    BatchWithSeq(int seq, ArrowRecordBatch batch) {
+        this.seq = seq;
+        this.batch = batch;
+    }
 }
