@@ -240,26 +240,10 @@ travel_time_matrix <- function(r5r_network,
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
-  travel_times <- java_to_dt(travel_times)
-
-  if (nrow(travel_times) > 0) {
-    # replace travel-times of nonviable trips with NAs.
-    # the first column with travel time information is column 3, because
-    # columns 1 and 2 contain the ids of OD point.
-    # the percentiles parameter indicates how many travel times columns we'll
-    # have
-    for (j in seq(from = 3, to = (length(percentiles) + 2))) {
-      data.table::set(
-        travel_times,
-        i = which(travel_times[[j]] > max_trip_duration),
-        j = j,
-        value = NA_integer_
-      )
-    }
-  }
+  travel_times <- arrow::read_ipc_stream(travel_times, as_data_frame = T)
 
   if (!verbose & progress) cat(" DONE!\n", file = stderr())
 
   if (!is.null(output_dir)) return(output_dir)
-  return(travel_times[])
+  return(travel_times)
 }

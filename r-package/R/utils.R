@@ -95,8 +95,9 @@ start_r5r_java <- function(data_path,
 
   r5_version <- paste0("-DR5_VER=", r5r_env$r5_jar_version)
   r5r_version <- paste0("-DR5R_VER=", utils::packageVersion("r5r"))
+  arrow_param <- "--add-opens=java.base/java.nio=ALL-UNNAMED"
 
-  rJava::.jinit(parameters = c(log_path, r5_version, r5r_version))
+  rJava::.jinit(parameters = c(log_path, r5_version, r5r_version, arrow_param))
 
   ver <- get_java_version()
 

@@ -139,9 +139,9 @@ public class TravelTimeMatrixComputer extends ArrowR5Process {
     }
 
     private BatchWithSeq populateRegularResults(OneOriginResult travelTimeResults, int originIndex) {
-        try (BufferAllocator allocator = parentAllocator.newChildAllocator("worker"+originIndex, 0, Long.MAX_VALUE);
-                     VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)
-        ){
+        BufferAllocator allocator = parentAllocator.newChildAllocator("worker"+originIndex, 0, Long.MAX_VALUE);
+        VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
+        try {
             // Get Arrow Schema components
             VarCharVector from_id = (VarCharVector) root.getVector("from_id");
             VarCharVector to_id = (VarCharVector) root.getVector("to_id");
@@ -161,18 +161,17 @@ public class TravelTimeMatrixComputer extends ArrowR5Process {
             final byte[] fromBytes = fromIds[originIndex].getBytes(StandardCharsets.UTF_8);
 
             for (int d = 0; d < nRows; d++) {
-                from_id.set(d, fromBytes);
-                to_id.set(d, toIds[d].getBytes(StandardCharsets.UTF_8));
+                from_id.setSafe(d, fromBytes);
+                to_id.setSafe(d, toIds[d].getBytes(StandardCharsets.UTF_8));
 
                 // set percentiles
                 for (int p = 0; p < travel_time_p.size(); p++) {
                     int tt = travelTimeResults.travelTimes.getValues()[p][d];
                     if (tt <= maxTripDuration) {
-                        travel_time_p.get(p).set(d, tt);
+                        travel_time_p.get(p).setSafe(d, tt);
                     }
-                    else {
-                        travel_time_p.get(p).setNull(d);
-                    }
+                    else travel_time_p.get(p).setNull(d);
+
                 }
             }
 
@@ -180,7 +179,13 @@ public class TravelTimeMatrixComputer extends ArrowR5Process {
 
             ArrowRecordBatch batch = new VectorUnloader(root).getRecordBatch();
 
-            return new BatchWithSeq(originIndex, batch);
+            root.close(); root = null;
+
+            return new BatchWithSeq(originIndex, batch, allocator);
+        } catch (Throwable t) {
+            try { if (root != null) root.close(); } finally { allocator.close(); }
+            LOG.error(String.valueOf(t));
+            throw t;
         }
     }
 
@@ -416,12 +421,22 @@ public class TravelTimeMatrixComputer extends ArrowR5Process {
 }
 
 
-final class BatchWithSeq {
+final class BatchWithSeq implements AutoCloseable {
     final int seq;
     final ArrowRecordBatch batch;
+    final BufferAllocator allocator;
 
-    BatchWithSeq(int seq, ArrowRecordBatch batch) {
+    BatchWithSeq(int seq, ArrowRecordBatch batch, BufferAllocator allocator) {
         this.seq = seq;
         this.batch = batch;
+        this.allocator = allocator;
+    }
+
+    @Override public void close() {
+        try {
+            batch.close();
+        } finally {
+            allocator.close();
+        }
     }
 }
