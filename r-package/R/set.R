@@ -527,9 +527,10 @@ set_suboptimal_minutes <- function(r5r_network,
 #'
 #' @param origins A data frame representing origin locations.
 #' @param destinations A data frame representing destination locations.
-#' @param mode_list A named list containing the routing modes:
+#' @param mode_list A named list containing the routing modes.
+#' @param data_path The data path used to build the network
 #'
-#' @return List origins and destinations unchanges or in swapper order
+#' @return List origins and destinations unchanged or in swapped order
 #'
 #' @family setting functions
 #'
@@ -550,6 +551,49 @@ reverse_if_direct_mode <- function(origins, destinations, mode_list, data_path) 
 
   return(list(origins = origins, destinations = destinations))
 }
+
+
+#' Reverse BACK Origins and Destinations for Direct Modes
+#'
+#' Swaps BACK the `origins` and `destinations` data frames if they were
+#' originally reversed by `reverse_if_direct_mode()`.
+#'
+#' @param travel_times A travel time matrix.
+#' @param origins A data frame representing origin locations.
+#' @param destinations A data frame representing destination locations.
+#' @param mode_list A named list containing the routing modes.
+#' @param data_path The data path used to build the network
+#'
+#' @return A df travel time matrix with origins and destinations unchanged or
+#'         in swapped order
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+reverse_back_if_direct_mode <- function(travel_times, origins, destinations, mode_list, data_path){
+
+  # In direct modes, reverse origin/destination to take advantage of R5's One to Many algorithm
+  if (
+    mode_list$transit_mode == "" &&
+    mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
+    nrow(origins) < nrow(destinations) &&
+    !exists_tiff(data_path) # only if no elevation data is present
+  ) {
+    # rename and redorder columns
+    data.table::setnames(
+      x = travel_times,
+      old = c('from_id', 'to_id'),
+      new = c('to_id', 'from_id')
+    )
+
+    travel_times <- data.table::setcolorder(travel_times, c('from_id', 'to_id'))
+  }
+
+    return(travel_times)
+
+}
+
+
 
 
 #' Set elevation
