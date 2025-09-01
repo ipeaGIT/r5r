@@ -24,10 +24,7 @@
 #' @return A `data.table` with four columns: `date`, `total_services`,
 #'   `active_services`, and `pct_active` (the proportion of active services).
 #'
-#' @export
-#'
-#' @examples
-#' \donttest{
+#' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
 #' data_path <- system.file("extdata/poa", package = "r5r")
 #' r5r_network <- build_network(data_path)
@@ -63,7 +60,7 @@
 #'   theme_classic(base_size = 16)
 #'
 #' stop_r5(r5r_network)
-#' }
+#' @export
 transit_availability <- function(
   r5r_network,
   r5r_core = deprecated(),
