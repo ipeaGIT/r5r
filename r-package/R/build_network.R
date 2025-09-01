@@ -83,7 +83,7 @@ build_network <- function(data_path,
     r5r_network <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
 
     cli::cli_inform(c(
-      i = "Using cached network from from {.path {dat_file}}."
+      i = "Using cached network from {.path {dat_file}}."
     ))
 
   } else {

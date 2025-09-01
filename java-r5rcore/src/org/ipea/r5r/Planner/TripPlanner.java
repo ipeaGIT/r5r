@@ -177,7 +177,7 @@ public class TripPlanner {
     }
 
     /**
-     * Finds access paths from from coordinate in request and adds all routers with paths to accessRouter map
+     * Finds access paths from coordinate in request and adds all routers with paths to accessRouter map
      * @param request
      */
     private HashMap<LegMode, StreetRouter> findAccessPaths(ProfileRequest request) {
