@@ -32,14 +32,14 @@
 #' # Example 1: Check a vector of specific dates
 #' # Let's check a regular weekday and a Sunday, where service may differ.
 #' dates_to_check <- c("2019-05-13", "2019-05-19")
-#' availability1 <- transit_availability(r5r_network, dates = dates_to_check)
+#' availability1 <- check_transit_availability(r5r_network, dates = dates_to_check)
 #' availability1
 #' #>          date total_services active_services pct_active
 #' #> 1: 2019-05-13           118             116  0.983050847
 #' #> 2: 2019-05-19           118               1  0.008474576
 #'
 #' # Example 2: Check a continuous date range using start_date and end_date
-#' availability2 <- transit_availability(
+#' availability2 <- check_transit_availability(
 #'   r5r_network,
 #'   start_date = "2019-01-01",
 #'   end_date = "2019-12-31"
@@ -61,7 +61,7 @@
 #'
 #' stop_r5(r5r_network)
 #' @export
-transit_availability <- function(
+check_transit_availability <- function(
   r5r_network,
   r5r_core = deprecated(),
   dates = NULL,

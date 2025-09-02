@@ -1,15 +1,15 @@
-# tests/testthat/test-transit_availability.R
+# tests/testthat/test-check_transit_availability.R
 
 # Individual skip is still good practice, though setup.R has a global one.
 testthat::skip_on_cran()
 
-context("transit_availability")
+context("check_transit_availability")
 
 # --- Expected Behavior ---
 
-test_that("transit_availability works with a vector of character dates", {
+test_that("check_transit_availability works with a vector of character dates", {
   dates_char <- c("2019-05-13", "2019-05-19") # Weekday and Sunday
-  result <- transit_availability(r5r_network, dates = dates_char)
+  result <- check_transit_availability(r5r_network, dates = dates_char)
 
   # Check output type and structure
   expect_s3_class(result, "data.table")
@@ -24,9 +24,9 @@ test_that("transit_availability works with a vector of character dates", {
   expect_equal(result$active_services, c(116L, 1L))
 })
 
-test_that("transit_availability works with a vector of Date objects", {
+test_that("check_transit_availability works with a vector of Date objects", {
   dates_obj <- as.Date(c("2019-05-13", "2019-05-19"))
-  result <- transit_availability(r5r_network, dates = dates_obj)
+  result <- check_transit_availability(r5r_network, dates = dates_obj)
 
   # Check structure and values
   expect_s3_class(result, "data.table")
@@ -35,10 +35,10 @@ test_that("transit_availability works with a vector of Date objects", {
   expect_equal(result$active_services, c(116L, 1L))
 })
 
-test_that("transit_availability works with a start_date/end_date range", {
+test_that("check_transit_availability works with a start_date/end_date range", {
   start <- "2019-05-18" # Saturday
   end <- "2019-05-20" # Monday
-  result <- transit_availability(
+  result <- check_transit_availability(
     r5r_network,
     start_date = start,
     end_date = end
@@ -52,8 +52,8 @@ test_that("transit_availability works with a start_date/end_date range", {
   expect_equal(result$active_services, c(1L, 1L, 116L))
 })
 
-test_that("transit_availability returns 0 active services for dates outside the GTFS calendar", {
-  result <- transit_availability(r5r_network, dates = "2025-01-01")
+test_that("check_transit_availability returns 0 active services for dates outside the GTFS calendar", {
+  result <- check_transit_availability(r5r_network, dates = "2025-01-01")
 
   expect_equal(result$active_services, 0L)
   expect_equal(result$pct_active, 0.0)
@@ -61,13 +61,13 @@ test_that("transit_availability returns 0 active services for dates outside the 
 
 # --- Expected Errors ---
 
-test_that("transit_availability throws errors for invalid arguments", {
+test_that("check_transit_availability throws errors for invalid arguments", {
   consolidated_error_msg <- "Incorrect date arguments provided."
 
   # Test cases for consolidated date argument logic
-  expect_error(transit_availability(r5r_network), consolidated_error_msg)
+  expect_error(check_transit_availability(r5r_network), consolidated_error_msg)
   expect_error(
-    transit_availability(
+    check_transit_availability(
       r5r_network,
       dates = "2019-01-01",
       start_date = "2019-01-01"
@@ -75,7 +75,7 @@ test_that("transit_availability throws errors for invalid arguments", {
     consolidated_error_msg
   )
   expect_error(
-    transit_availability(r5r_network, start_date = "2019-01-01"),
+    check_transit_availability(r5r_network, start_date = "2019-01-01"),
     consolidated_error_msg
   )
 
@@ -83,26 +83,26 @@ test_that("transit_availability throws errors for invalid arguments", {
 
   # Test for invalid format (slashes instead of dashes)
   expect_error(
-    transit_availability(r5r_network, dates = "2019/05/13"),
+    check_transit_availability(r5r_network, dates = "2019/05/13"),
     "Invalid date format found"
   )
 
   # Test for invalid format (day-month-year)
   expect_error(
-    transit_availability(r5r_network, dates = "13-05-2019"),
+    check_transit_availability(r5r_network, dates = "13-05-2019"),
     "Invalid date format found"
   )
 
   # Test for a logically impossible date (correct format but invalid value)
   # This test will now pass reliably.
   expect_error(
-    transit_availability(r5r_network, dates = "2025-02-29"), # 2025 is not a leap year
+    check_transit_availability(r5r_network, dates = "2025-02-29"), # 2025 is not a leap year
     "logically invalid"
   )
 
   # Test for start date after end date
   expect_error(
-    transit_availability(
+    check_transit_availability(
       r5r_network,
       start_date = "2019-05-20",
       end_date = "2019-05-18"
