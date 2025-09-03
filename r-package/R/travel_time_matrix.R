@@ -251,6 +251,10 @@ travel_time_matrix <- function(r5r_network,
 
   travel_times <- java_to_dt(travel_times)
 
+  # reverse order of origins destinations back
+  travel_times <- reverse_back_if_direct_mode(travel_times, origins, destinations, mode_list, data_path)
+
+
   if (nrow(travel_times) > 0) {
     # replace travel-times of nonviable trips with NAs.
     # the first column with travel time information is column 3, because

@@ -1,3 +1,12 @@
+# r5r 2.3.1 dev 
+
+**Bug fixes**
+
+- Revert back the order of origins destinations for Direct Modes. Fix implemented in travel_time_matrix(),
+`arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
+
+
+
 # r5r 2.3.0
 
 **Major changes**

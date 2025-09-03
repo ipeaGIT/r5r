@@ -51,7 +51,7 @@ test_that("'overwrite' parameter works correctly", {
   # since a network was already created, if overwrite = FALSE it should use it
   testthat::expect_message(
     r5r_network <- build_network(path, verbose = FALSE, temp_dir = TRUE),
-    regexp = "Using cached network from from"
+    regexp = "Using cached network from"
   )
 
   # but if overwrite = TRUE, then it should create a new network anyway
@@ -111,5 +111,3 @@ test_that("throws error if Java is not 21", {
 #
 #   )
 # }
-
-
