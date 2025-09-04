@@ -17,23 +17,29 @@ check_transit_availability(
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0. Please use the \code{r5r_network} argument instead.}
 
-\item{dates}{A vector of specific dates to be checked. Can be character strings in
-"YYYY-MM-DD" format, or objects of class \code{Date}. This argument cannot be used with \code{start_date} or \code{end_date}.}
+\item{dates}{A vector of specific dates to be checked. Can be character strings
+in #'   "YYYY-MM-DD" format, or objects of class \code{Date}. This argument
+cannot be used with \code{start_date} or \code{end_date}.}
 
 \item{start_date}{The start date for a continuous date range. Must be a single
-character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used with \code{end_date}.}
+character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used
+with \code{end_date}.}
 
 \item{end_date}{The end date for a continuous date range. Must be a single
-character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used with \code{start_date}.}
+character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used
+with \code{start_date}.}
 }
 \value{
 A \code{data.table} with four columns: \code{date}, \code{total_services},
 \code{active_services}, and \code{pct_active} (the proportion of active services).
 }
 \description{
-This function checks the number and proportion of public transport services from the GTFS feeds
-that are active on specified dates. This is useful to verify that the selected departure
-dates for routing analysis are valid and have adequate service levels. When routing with public transport, it is crucial to use a departure date where services are operational, as indicated in the GTFS \code{calendar.txt} file.
+This function checks the number and proportion of public transport services
+from the GTFS feeds in a \code{r5r_network} that are active on specified dates. This
+is useful to verify that the selected departure dates for routing analysis are
+valid and have adequate service levels. When routing with public transport, it
+is crucial to use a departure date where services are operational, as indicated
+in the GTFS \code{calendar.txt} file.
 }
 \details{
 You can specify the dates to check in two ways:
@@ -54,9 +60,6 @@ r5r_network <- build_network(data_path)
 dates_to_check <- c("2019-05-13", "2019-05-19")
 availability1 <- check_transit_availability(r5r_network, dates = dates_to_check)
 availability1
-#>          date total_services active_services pct_active
-#> 1: 2019-05-13           118             116  0.983050847
-#> 2: 2019-05-19           118               1  0.008474576
 
 # Example 2: Check a continuous date range using start_date and end_date
 availability2 <- check_transit_availability(
@@ -65,12 +68,6 @@ availability2 <- check_transit_availability(
   end_date = "2019-12-31"
 )
 availability2[121:124,]
-#>          date total_services active_services pct_active
-#>        <Date>          <int>           <int>       <num>
-#> 1: 2019-05-01            118              62 0.525423729
-#> 2: 2019-05-02            118             116 0.983050847
-#> 3: 2019-05-03            118             116 0.983050847
-#> 4: 2019-05-04            118               1 0.008474576
 
 # plot availability over the year
 library(ggplot2)

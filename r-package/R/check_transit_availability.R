@@ -1,9 +1,12 @@
 #' Check transit service availability by date
 #'
 #' @description
-#' This function checks the number and proportion of public transport services from the GTFS feeds
-#' that are active on specified dates. This is useful to verify that the selected departure
-#' dates for routing analysis are valid and have adequate service levels. When routing with public transport, it is crucial to use a departure date where services are operational, as indicated in the GTFS `calendar.txt` file.
+#' This function checks the number and proportion of public transport services
+#' from the GTFS feeds in a `r5r_network` that are active on specified dates. This
+#' is useful to verify that the selected departure dates for routing analysis are
+#' valid and have adequate service levels. When routing with public transport, it
+#' is crucial to use a departure date where services are operational, as indicated
+#' in the GTFS `calendar.txt` file.
 #'
 #' @details
 #' You can specify the dates to check in two ways:
@@ -15,14 +18,17 @@
 #'
 #' @param r5r_network A routable transport network created with `build_network()`.
 #' @param r5r_core The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the `r5r_network` argument instead.
-#' @param dates A vector of specific dates to be checked. Can be character strings in
-#'   "YYYY-MM-DD" format, or objects of class `Date`. This argument cannot be used with `start_date` or `end_date`.
+#' @param dates A vector of specific dates to be checked. Can be character strings
+#'        in #'   "YYYY-MM-DD" format, or objects of class `Date`. This argument
+#'        cannot be used with `start_date` or `end_date`.
 #' @param start_date The start date for a continuous date range. Must be a single
-#'   character string in "YYYY-MM-DD" format or a `Date` object. Must be used with `end_date`.
+#'        character string in "YYYY-MM-DD" format or a `Date` object. Must be used
+#'        with `end_date`.
 #' @param end_date The end date for a continuous date range. Must be a single
-#'   character string in "YYYY-MM-DD" format or a `Date` object. Must be used with `start_date`.
+#'        character string in "YYYY-MM-DD" format or a `Date` object. Must be used
+#'        with `start_date`.
 #' @return A `data.table` with four columns: `date`, `total_services`,
-#'   `active_services`, and `pct_active` (the proportion of active services).
+#'         `active_services`, and `pct_active` (the proportion of active services).
 #'
 #' @examplesIf identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 #' library(r5r)
@@ -34,9 +40,6 @@
 #' dates_to_check <- c("2019-05-13", "2019-05-19")
 #' availability1 <- check_transit_availability(r5r_network, dates = dates_to_check)
 #' availability1
-#' #>          date total_services active_services pct_active
-#' #> 1: 2019-05-13           118             116  0.983050847
-#' #> 2: 2019-05-19           118               1  0.008474576
 #'
 #' # Example 2: Check a continuous date range using start_date and end_date
 #' availability2 <- check_transit_availability(
@@ -45,12 +48,6 @@
 #'   end_date = "2019-12-31"
 #' )
 #' availability2[121:124,]
-#' #>          date total_services active_services pct_active
-#' #>        <Date>          <int>           <int>       <num>
-#' #> 1: 2019-05-01            118              62 0.525423729
-#' #> 2: 2019-05-02            118             116 0.983050847
-#' #> 3: 2019-05-03            118             116 0.983050847
-#' #> 4: 2019-05-04            118               1 0.008474576
 #'
 #' # plot availability over the year
 #' library(ggplot2)
@@ -61,13 +58,12 @@
 #'
 #' stop_r5(r5r_network)
 #' @export
-check_transit_availability <- function(
-  r5r_network,
-  r5r_core = deprecated(),
-  dates = NULL,
-  start_date = NULL,
-  end_date = NULL
-) {
+check_transit_availability <- function(r5r_network,
+                                       r5r_core = deprecated(),
+                                       dates = NULL,
+                                       start_date = NULL,
+                                       end_date = NULL
+                                       ) {
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
     cli::cli_warn(c(
