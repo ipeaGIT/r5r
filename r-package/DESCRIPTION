@@ -16,6 +16,8 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-6104-7297")),
     person("Luyu", "Liu", , "luyuliu@ufl.edu", role = "ctb",
            comment = c(ORCID = "0000-0002-6684-5570")),
+    person("Egor", "Kotov", , "kotov.egor@gmail.com", role = c("ctb"),
+           comment = c(ORCID = "0000-0001-6690-5345")),
     person("Daniel", "Snow", , "dan@sno.ws", role = "ctb"),
     person("Ipea - Institute for Applied Economic Research", role = c("cph", "fnd")),
     person("Department of Geography & Planning, University of Toronto", role ="fnd")

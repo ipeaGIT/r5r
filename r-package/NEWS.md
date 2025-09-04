@@ -1,10 +1,17 @@
 # r5r 2.3.1 dev 
 
+**Minor changes**
+
+- New support function `check_transit_availability()` that checks the number and proportion of public transport services from the GTFS feeds that are active on specified dates.
+
 **Bug fixes**
 
 - Revert back the order of origins destinations for Direct Modes. Fix implemented in travel_time_matrix(),
 `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
 
+**New contributors to r5r**
+
+- [Egor Kotov](https://github.com/e-kotov)
 
 
 # r5r 2.3.0
@@ -90,10 +97,12 @@
 - Updated the vignette on time window to explain how this parameter behaves when used in the `detailed_itineraries()` function.
 
 **Bug Fixes**
+
 - Fixed bug that prevented the use the `output_dir` parameter in the `detailed_itineraries(all_to_all = TRUE)` function. Closes [#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution ([PR #354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
 - Fixed bug that prevented  `detailed_itineraries` from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.
 
 **New contributors to r5r**
+
 - [Luyu Liu](https://github.com/luyuliu)
 
 
