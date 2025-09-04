@@ -37,6 +37,7 @@ stop_r5(r5r_network)
 \seealso{
 Other network functions: 
 \code{\link{find_snap}()},
+\code{\link{street_network_bbox}()},
 \code{\link{transit_network_to_sf}()}
 }
 \concept{network functions}

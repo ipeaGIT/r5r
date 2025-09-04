@@ -66,6 +66,7 @@ stop_r5(r5r_network)
 }
 \seealso{
 Other network functions: 
+\code{\link{street_network_bbox}()},
 \code{\link{street_network_to_sf}()},
 \code{\link{transit_network_to_sf}()}
 }
