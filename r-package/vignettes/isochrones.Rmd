@@ -87,16 +87,18 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate travel time matrix
-iso1 <- r5r::isochrone(r5r_network,
-                       origins = central_bus_stn,
-                       mode = mode,
-                       cutoffs = time_intervals,
-                       sample_size = 1,
-                       departure_datetime = departure_datetime,
-                       max_walk_time = max_walk_time,
-                       max_trip_duration = max_trip_duration,
-                       time_window = time_window,
-                       progress = FALSE)
+iso1 <- r5r::isochrone(
+  r5r_network,
+  origins = central_bus_stn,
+  mode = mode,
+  cutoffs = time_intervals,
+  sample_size = 1,
+  departure_datetime = departure_datetime,
+  max_walk_time = max_walk_time,
+  max_trip_duration = max_trip_duration,
+  time_window = time_window,
+  progress = FALSE
+  )
 
 ```
 As you can see, the `isochrone()` functions works very similarly to the `travel_time_matrix()` function, but instead of returning a table with travel time estimates, it returns a `POLYGON  "sf" "data.frame"` for each isochrone of each origin.
@@ -138,18 +140,19 @@ First, we calculate the travel times by public transport from the central bus st
 
 ```{r, message = FALSE}
 # calculate travel time matrix
-ttm <- travel_time_matrix(r5r_network,
-                          origins = central_bus_stn,
-                          destinations = points,
-                          mode = mode,
-                          departure_datetime = departure_datetime,
-                          max_walk_time = max_walk_time,
-                          max_trip_duration = max_trip_duration,
-                          time_window = time_window,
-                          progress = FALSE)
+ttm <- travel_time_matrix(
+  r5r_network,
+  origins = central_bus_stn,
+  destinations = points,
+  mode = mode,
+  departure_datetime = departure_datetime,
+  max_walk_time = max_walk_time,
+  max_trip_duration = max_trip_duration,
+  time_window = time_window,
+  progress = FALSE
+  )
 
 head(ttm)
-
 ```
 
 # 4.2 Spatial interpolation of travel times

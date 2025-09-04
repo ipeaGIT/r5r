@@ -188,8 +188,6 @@ accessibility <- function(r5r_network,
   # check inputs and set r5r options --------------------------------------
 
   checkmate::assert_class(r5r_network, "r5r_network")
-  r5r_network <- r5r_network@jcore
-
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   opportunities <- assign_opportunities(destinations, opportunities_colnames)
@@ -200,6 +198,8 @@ accessibility <- function(r5r_network,
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
+
+  r5r_network <- r5r_network@jcore
 
   # cap trip duration with cutoffs
   set_cutoffs(r5r_network, cutoffs, decay_function)

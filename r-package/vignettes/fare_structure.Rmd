@@ -437,8 +437,7 @@ calculate_accessibility <- function(fare, fare_string) {
     mode = c("WALK", "TRANSIT"),
     departure_datetime = as.POSIXct(
       "13-05-2019 14:00:00",
-      format = "%d-%m-%Y %H:%M:%S"
-    ),
+      format = "%d-%m-%Y %H:%M:%S"),
     time_window = 1,
     opportunities_colname = "healthcare",
     cutoffs = 40,

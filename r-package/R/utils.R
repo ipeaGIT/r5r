@@ -45,7 +45,7 @@ check_transit_availability_on_date <- function(r5r_network,
                                                departure_date){ # nocov start
 
   # check services Available on the departure date
-  services <- check_transit_availability(r5r_network, dates = departure$date)
+  services <- check_transit_availability(r5r_network, dates = departure_date)
   services_available <- services$pct_active
 
   if (services_available == 0 | is.na(services_available)) {

@@ -81,17 +81,19 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate accessibility
-access1 <- r5r::accessibility(r5r_network,
-                        origins = points,
-                        destinations = points,
-                        mode = mode,
-                        opportunities_colnames = c("schools", "healthcare"),
-                        decay_function = "step",
-                        cutoffs = travel_time_cutoff,
-                        departure_datetime = departure_datetime,
-                        max_walk_time = max_walk_time,
-                        time_window = time_window,
-                        progress = FALSE)
+access1 <- r5r::accessibility(
+  r5r_network,
+  origins = points,
+  destinations = points,
+  mode = mode,
+  opportunities_colnames = c("schools", "healthcare"),
+  decay_function = "step",
+  cutoffs = travel_time_cutoff,
+  departure_datetime = departure_datetime,
+  max_walk_time = max_walk_time,
+  time_window = time_window,
+  progress = FALSE
+  )
 
 head(access1)
 ```
@@ -106,31 +108,39 @@ The `{accessibility}` package provides a much more flexible approach to calculat
 
 ```{r, message = FALSE}
 # calculate travel time matrix
-ttm <- r5r::travel_time_matrix(r5r_network,
-                        origins = points,
-                        destinations = points,
-                        mode = mode,
-                        departure_datetime = departure_datetime,
-                        max_walk_time = max_walk_time,
-                        time_window = time_window,
-                        progress = FALSE)
+ttm <- r5r::travel_time_matrix(
+  r5r_network,
+  origins = points,
+  destinations = points,
+  mode = mode,
+  departure_datetime = departure_datetime,
+  max_walk_time = max_walk_time,
+  time_window = time_window,
+  progress = FALSE
+  )
+
 head(ttm)
 ```
 Now to calculate a traditional cumulative opportunity metric like we did above, we just need to call the `accessibility::cumulative_cutoff()` function, and pass our travel time matrix and land use data as input:
 
 ```{r, message = FALSE}
 # calculate accessibility
-access_edu <- accessibility::cumulative_cutoff(travel_matrix = ttm, 
-                                        land_use_data = points,
-                                        opportunity = 'schools',
-                                        travel_cost = 'travel_time_p50',
-                                        cutoff = 20)
+access_edu <- accessibility::cumulative_cutoff(
+  travel_matrix = ttm, 
+  land_use_data = points,
+  opportunity = 'schools',
+  travel_cost = 'travel_time_p50',
+  cutoff = 20
+  )
 
-access_health <- accessibility::cumulative_cutoff(travel_matrix = ttm, 
-                                        land_use_data = points,
-                                        opportunity = 'healthcare',
-                                        travel_cost = 'travel_time_p50',
-                                        cutoff = 20)
+access_health <- accessibility::cumulative_cutoff(
+  travel_matrix = ttm, 
+  land_use_data = points,
+  opportunity = 'healthcare',
+  travel_cost = 'travel_time_p50',
+  cutoff = 20
+  )
+
 head(access_edu)
 head(access_health)
 ```
