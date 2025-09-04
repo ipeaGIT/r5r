@@ -79,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2025-09-03</h4>
+            <h4 data-toc-skip class="date">2025-09-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/travel_time_matrix.Rmd" class="external-link"><code>vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="d-none name"><code>travel_time_matrix.Rmd</code></div>
@@ -157,12 +157,14 @@ monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articl
 this vignette</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
-<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
-<span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                          destinations <span class="op">=</span> <span class="va">points</span>,    </span>
-<span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
-<span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
-<span>                          departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span></span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
+<span>  <span class="va">r5r_network</span>,   </span>
+<span>  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>  destinations <span class="op">=</span> <span class="va">points</span>,    </span>
+<span>  mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           from_id                     to_id travel_time_p50</span></span>
@@ -206,12 +208,14 @@ in-vehicle and transfer times. Please note that setting
 data sets.</p>
 <p><em>A general call to expanded_travel_time_matrix()</em></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
-<span>                                    origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                                    destinations <span class="op">=</span> <span class="va">points</span>,    </span>
-<span>                                    mode <span class="op">=</span> <span class="va">mode</span>,</span>
-<span>                                    max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
-<span>                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span> <span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span></span>
+<span>  <span class="va">r5r_network</span>,   </span>
+<span>  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>  destinations <span class="op">=</span> <span class="va">points</span>,    </span>
+<span>  mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           from_id         to_id departure_time draw_number routes total_time</span></span>
@@ -229,13 +233,15 @@ data sets.</p>
 <p><em>Calling expanded_travel_time_matrix() with
 <code>breakdown = TRUE</code></em></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ettm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
-<span>                                    origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                                    destinations <span class="op">=</span> <span class="va">points</span>,    </span>
-<span>                                    mode <span class="op">=</span> <span class="va">mode</span>,</span>
-<span>                                    max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
-<span>                                    departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span>                                    breakdown <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ettm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span></span>
+<span>  <span class="va">r5r_network</span>,   </span>
+<span>  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>  destinations <span class="op">=</span> <span class="va">points</span>,    </span>
+<span>  mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>  breakdown <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ettm2</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           from_id         to_id departure_time draw_number access_time</span></span>
@@ -271,14 +277,16 @@ alternative departing each minute within the specified time window.
 Please note this function can be very memory intensive for large data
 sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ettm_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span><span class="va">r5r_network</span>,   </span>
-<span>                                           origins <span class="op">=</span> <span class="va">points</span>,</span>
-<span>                                           destinations <span class="op">=</span> <span class="va">points</span>,    </span>
-<span>                                           mode <span class="op">=</span> <span class="va">mode</span>,</span>
-<span>                                           max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
-<span>                                           departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
-<span>                                           breakdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                           time_window <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ettm_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span></span>
+<span>  <span class="va">r5r_network</span>,   </span>
+<span>  origins <span class="op">=</span> <span class="va">points</span>,</span>
+<span>  destinations <span class="op">=</span> <span class="va">points</span>,    </span>
+<span>  mode <span class="op">=</span> <span class="va">mode</span>,</span>
+<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
+<span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
+<span>  breakdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  time_window <span class="op">=</span> <span class="fl">10</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">ettm_window</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">25</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;           from_id               to_id departure_time draw_number access_time</span></span>
