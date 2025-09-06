@@ -92,12 +92,14 @@ The user can also customize many parameters such as:
 
 ```{r, message = FALSE}
 # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_network,   
-                          origins = points,
-                          destinations = points,    
-                          mode = mode,
-                          max_trip_duration = max_trip_duration,
-                          departure_datetime = departure_datetime )
+ttm <- travel_time_matrix(
+  r5r_network,   
+  origins = points,
+  destinations = points,    
+  mode = mode,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime
+  )
 
 head(ttm, n = 10)
 
@@ -116,12 +118,14 @@ Nonetheless, you may set the parameter `breakdown = TRUE` to gather much more in
 
 *A general call to expanded_travel_time_matrix()*
 ```{r, message = FALSE}
-ettm <- expanded_travel_time_matrix(r5r_network,   
-                                    origins = points,
-                                    destinations = points,    
-                                    mode = mode,
-                                    max_trip_duration = max_trip_duration,
-                                    departure_datetime = departure_datetime )
+ettm <- expanded_travel_time_matrix(
+  r5r_network,   
+  origins = points,
+  destinations = points,    
+  mode = mode,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime
+  )
 
 head(ettm, n = 10)
 ```
@@ -129,13 +133,15 @@ head(ettm, n = 10)
 *Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
 
 ```{r, message = FALSE}
-ettm2 <- expanded_travel_time_matrix(r5r_network,   
-                                    origins = points,
-                                    destinations = points,    
-                                    mode = mode,
-                                    max_trip_duration = max_trip_duration,
-                                    departure_datetime = departure_datetime,
-                                    breakdown = TRUE)
+ettm2 <- expanded_travel_time_matrix(
+  r5r_network,   
+  origins = points,
+  destinations = points,    
+  mode = mode,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime,
+  breakdown = TRUE
+  )
 
 head(ettm2, n = 10)
 ```
@@ -143,14 +149,16 @@ head(ettm2, n = 10)
 You will notice in the documentation that the `expanded_travel_time_matrix()` also has a `time_window` parameter. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
 ```{r, message = FALSE}
-ettm_window <- expanded_travel_time_matrix(r5r_network,   
-                                           origins = points,
-                                           destinations = points,    
-                                           mode = mode,
-                                           max_trip_duration = max_trip_duration,
-                                           departure_datetime = departure_datetime,
-                                           breakdown = TRUE,
-                                           time_window = 10)
+ettm_window <- expanded_travel_time_matrix(
+  r5r_network,   
+  origins = points,
+  destinations = points,    
+  mode = mode,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime,
+  breakdown = TRUE,
+  time_window = 10
+  )
 
 ettm_window[15:25,]
 ```

@@ -20,8 +20,6 @@ knitr::opts_chunk$set(
 ```
 
 
-
-
 # 1. Introduction 
 
 **r5r** has some extremely efficient functions to run multimodal routing and accessibility analysis. In general, though, these functions output only the essential information required by most transport planning applications and simulation models. Moreover, the algorithms behind these function return only the optimal route in terms of minimizing travel times and/or monetary costs. Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too.
@@ -79,14 +77,16 @@ departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 # calculate detailed itineraries
-det <- detailed_itineraries(r5r_network,
-                            origins = origins,
-                            destinations = destinations,
-                            mode = mode,
-                            departure_datetime = departure_datetime,
-                            max_walk_time = max_walk_time,
-                            suboptimal_minutes = 8,
-                            shortest_path = FALSE)
+det <- detailed_itineraries(
+  r5r_network,
+  origins = origins,
+  destinations = destinations,
+  mode = mode,
+  departure_datetime = departure_datetime,
+  max_walk_time = max_walk_time,
+  suboptimal_minutes = 8,
+  shortest_path = FALSE
+  )
 
 head(det)
 ```

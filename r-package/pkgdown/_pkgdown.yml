@@ -36,6 +36,7 @@ reference:
     - write_fare_structure
   - title: "Support functions"
   - contents:
+    - check_transit_availability
     - find_snap
     - r5r_sitrep
     - r5r_cache

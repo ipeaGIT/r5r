@@ -45,12 +45,8 @@ check_transit_availability_on_date <- function(r5r_network,
                                                departure_date){ # nocov start
 
   # check services Available on the departure date
-  services <- r5r_network$getTransitServicesByDate(departure_date)
-  services <- java_to_dt(services)
-
-  # count services available
-  data.table::setDT(services)
-  services_available <- services[, sum(active_on_date) / .N ]
+  services <- check_transit_availability(r5r_network, dates = departure_date)
+  services_available <- services$pct_active
 
   if (services_available == 0 | is.na(services_available)) {
     cli::cli_abort("There are no transit services available on the selected
