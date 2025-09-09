@@ -50,7 +50,7 @@ box
 vec <- street_network_bbox(r5r_network , output = "vector")
 vec
 
-stop_r5(r5r_net)
+stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

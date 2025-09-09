@@ -35,7 +35,7 @@
 #' vec <- street_network_bbox(r5r_network , output = "vector")
 #' vec
 #'
-#' stop_r5(r5r_net)
+#' stop_r5(r5r_network)
 #' @export
 street_network_bbox <- function(
   r5r_network,
