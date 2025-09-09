@@ -31,6 +31,9 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
+import org.locationtech.jts.geom.Envelope;
+
+
 public class R5RCore {
 
     public static final String R5_VERSION = System.getProperty("R5_VER", "7+, ERROR getting exact version");
@@ -759,5 +762,16 @@ public class R5RCore {
     /** Used to ensure user has passed a jobjRef to an R5R core in R. */
     public String identify(){
         return "I am an R5R core!";
+    }
+
+   /** Get the geographic envelope (bounding box) of the transport network's street layer as a primitive array. @return A double array with the coordinates in the order: [minX, maxX, minY, maxY]. */
+    public double[] getNetworkEnvelopeAsArray() {
+        Envelope envelope = this.routingProperties.getTransportNetworkBase().getEnvelope();
+        return new double[]{
+            envelope.getMinX(),
+            envelope.getMaxX(),
+            envelope.getMinY(),
+            envelope.getMaxY()
+        };
     }
 }
