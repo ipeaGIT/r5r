@@ -29,6 +29,7 @@ reference:
   - contents:
     - street_network_to_sf
     - transit_network_to_sf
+    - street_network_bbox
   - title: "Fare structure"
   - contents:
     - setup_fare_structure

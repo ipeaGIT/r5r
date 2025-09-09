@@ -21,18 +21,18 @@
 #' library(sf)
 #'
 #' data_path <- system.file("extdata/poa", package = "r5r")
-#' r5r_net <- build_network(data_path)
+#' r5r_network <- build_network(data_path)
 #'
 #' # Get the network's bounding box as an sf polygon (default)
-#' poly <- street_network_bbox(r5r_net)
+#' poly <- street_network_bbox(r5r_network, output = "polygon")
 #' plot(poly)
 #'
 #' # Get an sf bbox object (order is xmin, ymin, xmax, ymax)
-#' box <- street_network_bbox(r5r_net, output = "bbox")
+#' box <- street_network_bbox(r5r_network , output = "bbox")
 #' box
 #'
 #' # Get a simple named vector (order now also xmin, ymin, xmax, ymax)
-#' vec <- street_network_bbox(r5r_net, output = "vector")
+#' vec <- street_network_bbox(r5r_network , output = "vector")
 #' vec
 #'
 #' stop_r5(r5r_net)

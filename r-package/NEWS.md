@@ -1,8 +1,9 @@
-# r5r 2.3.1 dev 
+# r5r 2.4.0 dev 
 
 **Minor changes**
 
 - New support function `check_transit_availability()` that checks the number and proportion of public transport services from the GTFS feeds that are active on specified dates.
+- New support function `street_network_bbox()` that efficiently extracts the geographic bounding box of the transport network.
 
 **Bug fixes**
 
