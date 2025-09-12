@@ -40,7 +40,12 @@ public class TransitLayerWithShapes extends TransitLayer {
         }
 
         if (gtfs.patterns.isEmpty()) {
-            throw new IllegalArgumentException(String.format("Feed %s has no patterns, which means it is either empty or contains errors", gtfs.feedId));
+            throw new IllegalArgumentException(
+                String.format(
+                    "Feed %s has no patterns, which means it is either empty or contains errors. Consider using validate_gtfs from {gtfstools}.",
+                    gtfs.feedId
+                )
+            );
         }
 
         // checksum feed and add to checksum cache
