@@ -257,8 +257,9 @@ public class R5RCore {
 
         dataPath = dataFolder;
         Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
+        // network will be null if there were high priority errors
         TransportNetwork network = builder.checkAndLoadR5Network(path.toString());
-        this.routingProperties = new RoutingProperties(network);
+        this.routingProperties = network == null ? null : new RoutingProperties(network);
         this.gtfsErrors = builder.gtfsErrors;
     }
 
