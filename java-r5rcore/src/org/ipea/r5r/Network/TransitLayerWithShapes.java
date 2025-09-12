@@ -39,6 +39,10 @@ public class TransitLayerWithShapes extends TransitLayer {
             throw new DuplicateFeedException(gtfs.feedId);
         }
 
+        if (gtfs.patterns.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Feed %s has no patterns, which means it is either empty or contains errors", gtfs.feedId));
+        }
+
         // checksum feed and add to checksum cache
         feedChecksums.put(gtfs.feedId, gtfs.checksum);
 
