@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ParetoItineraryPlanner extends R5Process {
+public class ParetoItineraryPlanner extends R5DataFrameProcess {
 
     public static boolean travelAllowanceActive = true;
 

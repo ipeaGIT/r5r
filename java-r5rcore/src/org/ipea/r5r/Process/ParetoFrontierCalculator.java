@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-public class ParetoFrontierCalculator  extends R5Process {
+public class ParetoFrontierCalculator  extends R5DataFrameProcess {
 
     @Override
     protected boolean isOneToOne() {

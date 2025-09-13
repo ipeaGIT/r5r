@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 
-public class DetailedItineraryPlanner extends R5Process {
+public class DetailedItineraryPlanner extends R5DataFrameProcess {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DetailedItineraryPlanner.class);
 

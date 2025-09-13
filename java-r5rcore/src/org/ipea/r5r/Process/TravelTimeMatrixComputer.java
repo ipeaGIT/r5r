@@ -24,7 +24,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class TravelTimeMatrixComputer extends R5Process {
+public class TravelTimeMatrixComputer extends R5DataFrameProcess {
 
     class PathBreakdown {
         String departureTime;
