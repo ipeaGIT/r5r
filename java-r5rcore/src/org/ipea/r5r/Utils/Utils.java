@@ -6,7 +6,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
 import com.conveyal.r5.common.GeometryUtils;
-import org.ipea.r5r.Process.R5Process;
+import org.ipea.r5r.Process.R5DataFrameProcess;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.slf4j.LoggerFactory;
@@ -80,7 +80,7 @@ public class Utils {
         Utils.progress = progress;
 
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        Logger logger = loggerContext.getLogger(R5Process.class);
+        Logger logger = loggerContext.getLogger(R5DataFrameProcess.class);
 
         // Choose smallest # Level as that is the most verbose.
 

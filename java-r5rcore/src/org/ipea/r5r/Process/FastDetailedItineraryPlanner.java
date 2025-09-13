@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class FastDetailedItineraryPlanner extends R5Process {
+public class FastDetailedItineraryPlanner extends R5DataFrameProcess {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FastDetailedItineraryPlanner.class);
 

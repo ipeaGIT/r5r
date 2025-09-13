@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 
 import static java.lang.Math.max;
 
-public abstract class R5Process {
+public abstract class R5DataFrameProcess {
 
     protected final ForkJoinPool r5rThreadPool;
     protected final TransportNetwork transportNetwork;
@@ -63,9 +63,9 @@ public abstract class R5Process {
 
     protected abstract boolean isOneToOne();
 
-    private static final Logger LOG = LoggerFactory.getLogger(R5Process.class);
+    private static final Logger LOG = LoggerFactory.getLogger(R5DataFrameProcess.class);
 
-    public R5Process(ForkJoinPool threadPool, RoutingProperties routingProperties) {
+    public R5DataFrameProcess(ForkJoinPool threadPool, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = routingProperties.transportNetworkWorking;
         this.routingProperties = routingProperties;

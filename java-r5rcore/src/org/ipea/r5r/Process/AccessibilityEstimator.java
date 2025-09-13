@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 
-public class AccessibilityEstimator extends R5Process {
+public class AccessibilityEstimator extends R5DataFrameProcess {
 
     private DecayFunction decayFunction;
 
