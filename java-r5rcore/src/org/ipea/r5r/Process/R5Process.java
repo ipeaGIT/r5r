@@ -30,6 +30,7 @@ import com.conveyal.r5.analyst.cluster.RegionalTask;
 import com.conveyal.r5.analyst.scenario.Scenario;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.TransitModes;
+import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 
@@ -224,9 +225,13 @@ public abstract class R5Process<T, A> {
 
     protected abstract A mergeResults(List<T> processResults);
 
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = new RegionalTask();
-
+    /**
+     * Initialize a request with the parameters common to all request types.
+     * @param index
+     * @param request
+     * @throws ParseException
+     */
+    protected void initalizeRequest(int index, ProfileRequest request) throws ParseException {
         request.scenario = new Scenario();
         request.scenario.id = "id";
         request.scenarioId = request.scenario.id;
@@ -241,9 +246,6 @@ public abstract class R5Process<T, A> {
         request.maxBikeTime = maxBikeTime;
         request.maxCarTime = maxCarTime;
         request.maxTripDurationMinutes = maxTripDuration;
-        request.makeTauiSite = false;
-        request.recordTimes = true;
-        request.recordAccessibility = false;
         request.maxRides = routingProperties.maxRides;
         request.bikeTrafficStress = routingProperties.maxLevelTrafficStress;
 
@@ -262,11 +264,20 @@ public abstract class R5Process<T, A> {
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
         request.suboptimalMinutes = routingProperties.suboptimalMinutes;
 
-        request.percentiles = routingProperties.percentiles;
-
         request.inRoutingFareCalculator = routingProperties.fareCalculator;
         request.maxFare = Math.round(routingProperties.maxFare * 100.0f);
+    }
 
+    /**
+     * Build a RegionalTask, used in most processes.
+     */
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = new RegionalTask();
+        initalizeRequest(index, request);
+        request.makeTauiSite = false;
+        request.recordTimes = true;
+        request.recordAccessibility = false;
+        request.percentiles = routingProperties.percentiles;
         return request;
     }
 }
