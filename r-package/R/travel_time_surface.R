@@ -1,3 +1,12 @@
+setClass("travel_time_surface", slots=list(
+  matrix="matrix",
+  zoom="integer",
+  north="integer",
+  west="integer",
+  height="integer",
+  width="integer"
+))
+
 #' @export
 travel_time_surface <- function(r5r_network,
                                origins,
@@ -79,8 +88,7 @@ travel_time_surface <- function(r5r_network,
 
   surfaces <- rJava::.jcall(
     r5r_network,
-    # it's a list
-    "[Lcom/conveyal/r5/OneOriginResult;",
+    "[Lorg/ipea/r5r/RegularGridResult;",
     "travelTimeSurfaces",
     check=FALSE,
     origins$id, origins$lat, origins$lon,
@@ -101,5 +109,33 @@ travel_time_surface <- function(r5r_network,
     cli::cli_abort("Internal R5 error (see detailed message above)")
   }
 
-  return(surfaces)
+  return(lapply(surfaces, process_surfaces))
+}
+
+process_surfaces <- function (sfaces) {
+  result = list()
+
+  for (i in seq_along(sfaces$percentiles)) {
+    result[[sfaces$percentiles[i]]] = process_surface(
+      sfaces$values[i,],
+      sfaces$zoom, 
+      sfaces$west, 
+      sfaces$north,
+      sfaces$width,
+      sfaces$height
+      )  
+  }
+
+  return(result)
+}
+
+process_surface <- function (sface, zoom, west, north, width, height) {
+  new("travel_time_surface",
+    matrix=matrix(sface, height, width, byrow = TRUE),
+    zoom = zoom,
+    width = width,
+    height = height,
+    north = north,
+    west = west
+  )
 }

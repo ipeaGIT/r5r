@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
+import org.ipea.r5r.RegularGridResult;
 import org.ipea.r5r.RoutingProperties;
 import org.locationtech.jts.geom.Envelope;
 
@@ -14,7 +15,7 @@ import com.conveyal.r5.analyst.cluster.TravelTimeSurfaceTask;
 /**
  * This class produces regular grids of travel times, used in isochrones.
  */
-public class RegularGridProcess extends R5Process<OneOriginResult, OneOriginResult[]> {
+public class RegularGridProcess extends R5Process<RegularGridResult, RegularGridResult[]> {
     public WebMercatorExtents extents;
 
     public RegularGridProcess(ForkJoinPool threadPool, RoutingProperties routingProperties) {
@@ -28,7 +29,7 @@ public class RegularGridProcess extends R5Process<OneOriginResult, OneOriginResu
     }
 
     @Override
-    public OneOriginResult runProcess(int index) {
+    public RegularGridResult runProcess(int index) {
         TravelTimeSurfaceTask request = new TravelTimeSurfaceTask();
 
         try {
@@ -47,12 +48,14 @@ public class RegularGridProcess extends R5Process<OneOriginResult, OneOriginResu
         request.height = extents.height;
 
         TravelTimeComputer computer = new TravelTimeComputer(request, transportNetwork);
-        return computer.computeTravelTimes();
+        OneOriginResult result = computer.computeTravelTimes();
+
+        return new RegularGridResult(result.travelTimes, request);
     }
 
     @Override
-    protected OneOriginResult[] mergeResults(List<OneOriginResult> processResults) {
-        return processResults.toArray(new OneOriginResult[0]);
+    protected RegularGridResult[] mergeResults(List<RegularGridResult> processResults) {
+        return processResults.toArray(new RegularGridResult[0]);
     }
 
     // no destination pointsets
