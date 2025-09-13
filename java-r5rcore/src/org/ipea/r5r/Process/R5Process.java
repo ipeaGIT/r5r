@@ -34,8 +34,6 @@ import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 
-import static java.lang.Math.max;
-
 /**
  * T is the type returned for each task, A is the aggregate result. They may be the same in some cases.
  */
@@ -73,8 +71,6 @@ public abstract class R5Process<T, A> {
     protected int maxBikeTime;
     protected int maxCarTime;
     protected int maxTripDuration;
-
-    protected abstract boolean isOneToOne();
 
     public R5Process(ForkJoinPool threadPool, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;

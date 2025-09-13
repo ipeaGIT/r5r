@@ -21,6 +21,8 @@ public abstract class R5DataFrameProcess extends R5Process<RDataFrame, RDataFram
 
     private static final Logger LOG = LoggerFactory.getLogger(R5DataFrameProcess.class);
 
+    protected abstract boolean isOneToOne();
+
     @Override
     protected RDataFrame mergeResults (List<RDataFrame> processResults) {
         LOG.info("Consolidating results...");
