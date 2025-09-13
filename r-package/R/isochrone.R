@@ -13,11 +13,13 @@
 #'        `data.frame` containing the columns `id`, `lon` and `lat`.
 #' @param cutoffs numeric vector. Number of minutes to define the time span of
 #'        each Isochrone. Defaults to `c(0, 15, 30)`.
-#' @param sample_size numeric. Sample size of nodes in the transport network used
-#'        to estimate isochrones. Defaults to `0.8` (80% of all nodes in the
-#'        transport network). Value can range between `0.2` and `1`. Smaller
-#'        values increase computation speed but return results with lower
-#'        precision. This parameter has no effect when `polygon_output = FALSE`.
+#' @param zoom Resolution of the travel time surface used to create isochrones,
+#'        can be between 9 and 12. More detailed isochrones will result from
+#'        larger numbers, at the expense of compute time. Specifically, a raster
+#'        grid of travel times in the Web Mercator projection at this zoom level
+#'        is created, and the isochrones are interpolated from this grid. For
+#'        more information on how the grid cells are defined, see
+#'        \href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}
 #' @param mode A character vector. The transport modes allowed for access,
 #'        transfer and vehicle legs of the trips. Defaults to `WALK`. Please see
 #'        details for other options.
@@ -72,6 +74,7 @@
 #'        only travel through the quietest streets, while a value of 4 indicates
 #'        cyclists can travel through any road. Defaults to 2. Please see
 #'        details for more information.
+#' 
 #' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
@@ -162,6 +165,7 @@ isochrone <- function(r5r_network,
                       mode_egress = "walk",
                       cutoffs = c(0, 15, 30),
                       sample_size = 0.8,
+                      zoom = 12,
                       departure_datetime = Sys.time(),
                       polygon_output = TRUE,
                       time_window = 10L,
@@ -211,6 +215,10 @@ isochrone <- function(r5r_network,
 
   ## whether polygon- or line-based isochrones
   if (isTRUE(polygon_output)) {
+    # R5 only supports grids between zoom 9 and 12
+    checkmate::assert_numeric(zoom, lower=9, upper=12, len=1)
+
+    # create the travel time surfaces
     surfaces = travel_time_surface(r5r_network = r5r_network,
                               origins = origins,
                               mode = mode,
@@ -228,12 +236,15 @@ isochrone <- function(r5r_network,
                               max_lts = max_lts,
                               draws_per_minute = draws_per_minute,
                               n_threads = n_threads,
-                              verbose = verbose
+                              verbose = verbose,
+                              zoom = zoom
     )
 
     # convert surfaces to isochrones
-    isochrones = purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs)
-    return(sf::st_as_sf(purrr::list_rbind(isochrones)))
+    # this uses a few named functions to traverse down the nested list
+    # (percentiles inside origins)
+    isos <- purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs)
+    return(sf::st_as_sf(purrr::list_rbind(isos)))
   }
 
   if(isFALSE(polygon_output)){

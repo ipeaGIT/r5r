@@ -7,6 +7,11 @@ setClass("travel_time_surface", slots=list(
   width="integer"
 ))
 
+#' Compute travel time surfaces.
+#' 
+#' A travel time surface is a raster grid (in the Web Mercator projection)
+#' containing travel times from a specified point.
+#' 
 #' @export
 travel_time_surface <- function(r5r_network,
                                origins,
@@ -29,12 +34,15 @@ travel_time_surface <- function(r5r_network,
                                carspeed_scale = 1,
                                new_lts = NULL,
                                draws_per_minute = 5L,
+                               zoom = 12,
                                n_threads = Inf,
                                verbose = FALSE,
                                progress = FALSE
                       ) {
   # check inputs ------------------------------------------------------------
   checkmate::assert_class(r5r_network, "r5r_network")
+  # R5 only supports grids between zoom 9 and 12
+  checkmate::assert_numeric(zoom, lower=9, upper=12, len=1)
   r5r_network <- r5r_network@jcore
 
   origins <- assign_points_input(origins, "origins")
@@ -101,7 +109,8 @@ travel_time_surface <- function(r5r_network,
     max_walk_time,
     max_bike_time,
     max_car_time,
-    max_trip_duration
+    max_trip_duration,
+    as.integer(zoom)
   )
   ex <- rJava::.jgetEx(clear=TRUE)
   if (!is.null(ex)) {
@@ -109,9 +118,11 @@ travel_time_surface <- function(r5r_network,
     cli::cli_abort("Internal R5 error (see detailed message above)")
   }
 
+  # convert from java objects to R travel_time_surface class
   return(lapply(surfaces, process_surfaces))
 }
 
+# process each percentile of a travel time surface
 process_surfaces <- function (sfaces) {
   result = list()
 
@@ -130,6 +141,7 @@ process_surfaces <- function (sfaces) {
   return(result)
 }
 
+# process a single surface into an R object
 process_surface <- function (sface, zoom, west, north, width, height) {
   new("travel_time_surface",
     matrix=matrix(sface, height, width, byrow = TRUE),

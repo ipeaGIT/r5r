@@ -731,19 +731,20 @@ public class R5RCore {
     public RegularGridResult[] travelTimeSurfaces (String fromIds, double fromLats, double fromLons,
                     String directModes, String transitModes, String accessModes, String egressModes,
                     String date, String departureTime,
-                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
         return travelTimeSurfaces(new String[] { fromIds }, new double[] { fromLats }, new double[] { fromLons },
                     directModes, transitModes, accessModes, egressModes,
                     date, departureTime,
-                   maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
+                   maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration, zoom);
     }
 
     public RegularGridResult[] travelTimeSurfaces (String[] fromIds, double[] fromLats, double[] fromLons,
                     String directModes, String transitModes, String accessModes, String egressModes,
                     String date, String departureTime,
-                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
-
-        RegularGridProcess regularGridProcess = new RegularGridProcess(this.r5rThreadPool, this.routingProperties);
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
+        RegularGridProcess regularGridProcess = new RegularGridProcess(this.r5rThreadPool, this.routingProperties, zoom);
         regularGridProcess.setOrigins(fromIds, fromLats, fromLons);
         regularGridProcess.setModes(directModes, accessModes, transitModes, egressModes);
         regularGridProcess.setDepartureDateTime(date, departureTime);
