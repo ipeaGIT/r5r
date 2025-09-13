@@ -116,7 +116,8 @@ process_surfaces <- function (sfaces) {
   result = list()
 
   for (i in seq_along(sfaces$percentiles)) {
-    result[[sfaces$percentiles[i]]] = process_surface(
+    # R has issues with nonconsecutive ints being used as list indices, so use strings
+    result[[paste0("p", sfaces$percentiles[i])]] = process_surface(
       sfaces$values[i,],
       sfaces$zoom, 
       sfaces$west, 
