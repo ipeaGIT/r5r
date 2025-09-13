@@ -728,7 +728,7 @@ public class R5RCore {
     }
 
     // -------------------------------- GRIDDED ISOCHRONES ------------------------------------------
-    public OneOriginResult[] travelTimeSurfaces (String fromIds, double fromLats, double fromLons,
+    public RegularGridResult[] travelTimeSurfaces (String fromIds, double fromLats, double fromLons,
                     String directModes, String transitModes, String accessModes, String egressModes,
                     String date, String departureTime,
                     int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
@@ -738,7 +738,7 @@ public class R5RCore {
                    maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
     }
 
-    public OneOriginResult[] travelTimeSurfaces (String[] fromIds, double[] fromLats, double[] fromLons,
+    public RegularGridResult[] travelTimeSurfaces (String[] fromIds, double[] fromLats, double[] fromLons,
                     String directModes, String transitModes, String accessModes, String egressModes,
                     String date, String departureTime,
                     int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration) throws ExecutionException, InterruptedException {
@@ -749,7 +749,7 @@ public class R5RCore {
         regularGridProcess.setDepartureDateTime(date, departureTime);
         regularGridProcess.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
-        OneOriginResult[] out = regularGridProcess.run();
+        RegularGridResult[] out = regularGridProcess.run();
         this.routingProperties.reset();
         return out;
     }
