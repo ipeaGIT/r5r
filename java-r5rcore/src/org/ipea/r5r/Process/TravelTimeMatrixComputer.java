@@ -104,7 +104,7 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
@@ -374,8 +374,8 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.percentiles = this.routingProperties.percentiles;
         request.includePathResults = this.routingProperties.expandedTravelTimes;

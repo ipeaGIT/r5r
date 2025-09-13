@@ -26,7 +26,7 @@ public class ParetoFrontierCalculator  extends R5DataFrameProcess {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRegionalRequest(index);
+        RegionalTask request = buildRegionalTask(index);
         TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
 
         Map<Float, OneOriginResult> travelTimeResults = new HashMap<>();
@@ -95,8 +95,8 @@ public class ParetoFrontierCalculator  extends R5DataFrameProcess {
     }
 
     @Override
-    protected RegionalTask buildRegionalRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRegionalRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.destinationPointSetKeys = this.opportunities;
         request.destinationPointSets = destinationPoints;

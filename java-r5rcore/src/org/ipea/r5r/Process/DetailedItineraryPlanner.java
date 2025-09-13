@@ -56,7 +56,7 @@ public class DetailedItineraryPlanner extends R5DataFrameProcess {
 
     @Override
     public RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRegionalRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         ProfileResponse response = runQuery(index, request);
         if (response == null) return null;
@@ -100,8 +100,8 @@ public class DetailedItineraryPlanner extends R5DataFrameProcess {
     }
 
     @Override
-    protected RegionalTask buildRegionalRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRegionalRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.toLat = toLats[index];
         request.toLon = toLons[index];

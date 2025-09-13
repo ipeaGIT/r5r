@@ -32,7 +32,7 @@ public class ParetoItineraryPlanner extends R5DataFrameProcess {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRegionalRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         R5ParetoServer computer = new R5ParetoServer(request, transportNetwork);
         R5ParetoServer.ParetoReturn travelTimeResults = computer.handle();
@@ -142,8 +142,8 @@ public class ParetoItineraryPlanner extends R5DataFrameProcess {
     }
 
     @Override
-    protected RegionalTask buildRegionalRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRegionalRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.toLat = toLats[index];
         request.toLon = toLons[index];
