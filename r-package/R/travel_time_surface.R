@@ -34,7 +34,7 @@ travel_time_surface <- function(r5r_network,
                                carspeed_scale = 1,
                                new_lts = NULL,
                                draws_per_minute = 5L,
-                               zoom = 12,
+                               zoom = 10,
                                n_threads = Inf,
                                verbose = FALSE,
                                progress = FALSE
