@@ -28,7 +28,7 @@ public class FaretoDebug extends R5DataFrameProcess {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalRequest(index);
         request.fromLat = fromLats[0];
         request.fromLon = fromLons[0];
         request.toLat = toLats[0];

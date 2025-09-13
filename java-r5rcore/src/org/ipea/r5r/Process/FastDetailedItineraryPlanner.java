@@ -43,7 +43,7 @@ public class FastDetailedItineraryPlanner extends R5DataFrameProcess {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalRequest(index);
 
         TripPlanner computer = new TripPlanner(transportNetwork, request);
         computer.setOD(fromIds[index], toIds[index]);
@@ -158,8 +158,8 @@ public class FastDetailedItineraryPlanner extends R5DataFrameProcess {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalRequest(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalRequest(index);
 
         request.toLat = toLats[index];
         request.toLon = toLons[index];
