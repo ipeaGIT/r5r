@@ -56,7 +56,8 @@ Imports:
     sf (>= 1.0-12),
     sfheaders,
     utils,
-    zip
+    zip,
+    isoband
 Suggests:
     accessibility,
     covr,
