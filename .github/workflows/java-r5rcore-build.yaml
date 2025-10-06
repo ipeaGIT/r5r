@@ -3,8 +3,20 @@ name: Java R5RCore build
 on:
   push:
     paths:
+      - r-package/**
       - java-r5rcore/**
-      - .github/workflows/java-r5rcore-build.yaml
+      - .github/workflows/**
+    branches:
+      - master
+      - dev
+  pull_request:
+    paths:
+      - r-package/**
+      - java-r5rcore/**
+      - .github/workflows/**
+    branches:
+      - master
+      - dev
 
 jobs:
   build:
