@@ -26,7 +26,7 @@ jobs:
       - name: Install R packages
         run: |
           # not sure why this is necessary now, but it fails without it
-          options(repos=list(CRAN="https://cloud.r-project.org/"))
+          options(repos=list(CRAN="https://packagemanager.posit.co/cran/__linux__/noble/latest"))
           install.packages(c('devtools', 'remotes'))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
