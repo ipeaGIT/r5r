@@ -5,12 +5,12 @@ on:
     paths:
       - java-r5rcore/**
       - r-package/**
-      - .github/workflows/build-and-coverage.yaml
+      - .github/workflows/CI.yaml
   pull_request:
     paths:
       - java-r5rcore/**
       - r-package/**
-      - .github/workflows/build-and-coverage.yaml
+      - .github/workflows/CI.yaml
     branches:
       - dev
       - master
