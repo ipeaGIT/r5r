@@ -148,18 +148,18 @@ public class TripPlanner {
 
             if(streetRouter.setOrigin(request.fromLat, request.fromLon)) {
                 if(!streetRouter.setDestination(request.toLat, request.toLon)) {
-                    LOG.warn("Direct mode {} destination wasn't found!", mode);
+                    LOG.warn("Direct mode {} from {} to {} wasn't found! Problem at destination.", mode, fromId, toId);
                     continue;
                 }
                 streetRouter.route();
                 StreetRouter.State lastState = streetRouter.getState(streetRouter.getDestinationSplit());
                 if (lastState == null) {
-                    LOG.warn("Direct mode {} last state wasn't found", mode);
+                    LOG.warn("Direct mode {} from {} to {}! Last state wasn't found.", mode, fromId, toId);
                     continue;
                 }
                 streetPath = new StreetPath(lastState, transportNetwork, false);
             } else {
-                LOG.warn("Direct mode {} origin wasn't found!", mode);
+                LOG.warn("Direct mode {} from {} to {} wasn't found! Problem at origin.", mode, fromId, toId);
                 continue;
             }
 
@@ -199,7 +199,7 @@ public class TripPlanner {
                 //Searching for access paths
                 accessRouter.put(mode, streetRouter);
             } else {
-                LOG.warn("MODE:{}, Edge near the origin coordinate wasn't found. Routing didn't start!", mode);
+                LOG.warn("MODE:{}, Edge near the origin coordinate {} wasn't found. Routing didn't start!", mode, fromId);
             }
         }
 
@@ -231,7 +231,7 @@ public class TripPlanner {
                 LOG.info("Added {} egress stops for mode {}",stops.size(), mode);
 
             } else {
-                LOG.warn("MODE:{}, Edge near the origin coordinate wasn't found. Routing didn't start!", mode);
+                LOG.warn("MODE:{}, Edge near the origin coordinate {} wasn't found. Routing didn't start!", mode, fromId);
             }
         }
 

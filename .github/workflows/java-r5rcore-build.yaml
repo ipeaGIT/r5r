@@ -25,7 +25,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages(c('devtools', 'remotes'))
+          install.packages(c('devtools', 'remotes'), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
         working-directory: r-package
