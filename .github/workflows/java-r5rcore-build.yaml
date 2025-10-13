@@ -21,10 +21,11 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 #        with:
-#          use-public-rspm: true
+#          use-public-rspm: true # this no longer works as of September 2025
 
       - name: Install R packages
         run: |
+          # this specification is necessary for some reason as of September 2025
           options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"))
           install.packages(c('devtools', 'remotes'))
           remotes::install_deps(dependencies = TRUE)
