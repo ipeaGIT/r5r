@@ -78,17 +78,22 @@ public abstract class R5Process {
         int[] requestIndices = IntStream.range(0, nOrigins).toArray();
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
-        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel().
-                        mapToObj(index -> tryRunProcess(totalProcessed, index)).
-                        filter(Objects::nonNull).
-                        collect(Collectors.toList())).get();
+        try {
+            List<RDataFrame> processResults = r5rThreadPool.submit(() ->
+                    Arrays.stream(requestIndices).parallel().
+                            mapToObj(index -> tryRunProcess(totalProcessed, index)).
+                            filter(Objects::nonNull).
+                            collect(Collectors.toList())).get();
 
-        LOG.info(".. DONE!");
+            LOG.info(".. DONE!");
 
-        RDataFrame results = mergeResults(processResults);
+            RDataFrame results = mergeResults(processResults);
 
-        return results;
+            return results;
+        } catch(Exception e) {
+            LOG.error(e.toString());
+            throw e;
+        }
     }
 
     protected void buildDestinationPointSet() {
