@@ -91,7 +91,11 @@ public abstract class R5Process {
 
             return results;
         } catch(Exception e) {
-            LOG.error(e.toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            LOG.error(sw.toString());
+
             throw e;
         }
     }
