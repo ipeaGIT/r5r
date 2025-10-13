@@ -23,8 +23,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class NetworkBuilder {
 
@@ -206,11 +204,8 @@ public class NetworkBuilder {
     // we have access to the object.
     private GTFSFeed readFeed (String feedFile) {
         try {
-            // we use a directory to make sure that all sidecar files get deleted on exit
-            File tempDir = Files.createTempDirectory("gtfs").toFile();
-            File dbFile = new File(tempDir, "gtfs.db");
-            File dbpFile = new File(tempDir, "gtfs.db.p");
-
+            File dbFile = File.createTempFile("gtfs", ".db");
+            dbFile.deleteOnExit();
             GTFSFeed feed = GTFSFeed.newWritableFile(dbFile);
             feed.loadFromFile(new ZipFile(feedFile), null);
 
@@ -221,12 +216,6 @@ public class NetworkBuilder {
             parseGtfsErrors(feed);
 
             feed.close();
-
-            // clean up
-            // has to be done first, deleteOnExit deletes in reverse order and directories must be empty
-            tempDir.deleteOnExit();
-            dbFile.deleteOnExit();
-            dbpFile.deleteOnExit();
 
             // re-open read only (this loses the errors, see the example in R5 BundleController.java)
             return GTFSFeed.reopenReadOnly(dbFile);
