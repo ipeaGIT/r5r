@@ -4,7 +4,6 @@ import com.conveyal.analysis.datasource.DataSourceException;
 import com.conveyal.gtfs.GTFSFeed;
 import com.conveyal.gtfs.error.GTFSError;
 import com.conveyal.gtfs.validator.PostLoadValidator;
-import com.conveyal.gtfs.validator.model.Priority;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.r5.analyst.scenario.RasterCost;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
@@ -41,8 +40,6 @@ public class NetworkBuilder {
 
     public RDataFrame gtfsErrors = null;
 
-    public boolean highPriorityErrors = false;
-
     public TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
@@ -58,8 +55,7 @@ public class NetworkBuilder {
             }
         }
         // compatible versions, load network
-        // if there were high priority errors, though, don't return network - don't even tempt someone to use it.
-        return highPriorityErrors ? null : loadR5Network(dataFolder);
+        return loadR5Network(dataFolder);
     }
 
     public TransportNetwork loadR5Network(String dataFolder) throws Exception {
@@ -78,12 +74,8 @@ public class NetworkBuilder {
         Map<String, String> networkConfig = buildNetworkConfig();
 
         try {
-            // if there were high priority errors, network is unusable. Don't even serialize it as that might tempt someone
-            // to use it.
-            if (!highPriorityErrors) {
-                KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
-                writeNetworkSettings(dataFolder, networkConfig);
-            }
+            KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
+            writeNetworkSettings(dataFolder, networkConfig);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -264,10 +256,6 @@ public class NetworkBuilder {
             gtfsErrors.set("field", error.field);
             gtfsErrors.set("id", error.affectedEntityId);
             gtfsErrors.set("priority", error.getPriority().name());
-
-            if (error.getPriority() == Priority.HIGH) {
-                highPriorityErrors = true;
-            }
         }
     }
 
