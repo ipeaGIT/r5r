@@ -70,6 +70,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
+          git checkout ${{ github.head_ref }}
           git add r-package/inst/jar/r5r.jar
           git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
           git push
