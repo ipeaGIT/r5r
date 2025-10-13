@@ -47,8 +47,6 @@ public class R5RCore {
 
     private final String dataPath;
 
-    public final RDataFrame gtfsErrors;
-
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
     }
@@ -249,17 +247,13 @@ public class R5RCore {
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
         nativeElevationFunction = nativeElevationFunction.toUpperCase();
-
-        NetworkBuilder builder = new NetworkBuilder();
-
-        builder.useNativeElevation = !nativeElevationFunction.equals("NONE");
-        builder.elevationCostFunction = nativeElevationFunction;
+        NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
+        NetworkBuilder.elevationCostFunction = nativeElevationFunction;
 
         dataPath = dataFolder;
         Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
-        TransportNetwork network = builder.checkAndLoadR5Network(path.toString());
+        TransportNetwork network = NetworkBuilder.checkAndLoadR5Network(path.toString());
         this.routingProperties = new RoutingProperties(network);
-        this.gtfsErrors = builder.gtfsErrors;
     }
 
     // ---------------------------------------------------------------------------------------------------
