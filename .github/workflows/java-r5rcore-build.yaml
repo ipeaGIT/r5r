@@ -70,10 +70,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
-          git add r-package/inst/jar/r5r.jar
-          git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
+          
           if [ -n "${{ github.head_ref }}" ]; then
-            git push origin HEAD:${{ github.head_ref }}
+            # PR event: fetch and switch to the source branch
+            git fetch origin ${{ github.head_ref }}
+            git checkout ${{ github.head_ref }}
+            BRANCH=${{ github.head_ref }}
           else
-            git push origin HEAD:${GITHUB_REF_NAME}
+            # Push event: already on the branch
+            BRANCH=${GITHUB_REF_NAME}
           fi
+          
+          git add r-package/inst/jar/r5r.jar
+          git commit -m "Rebuild JAR for commit ${GITHUB_SHA}" || echo "No changes"
+          git push origin HEAD:$BRANCH --force-with-lease
