@@ -20,9 +20,6 @@ on:
 
 jobs:
   build:
-    env:
-      GH_TOKEN: ${{ github.token }}
-
     runs-on: ubuntu-latest
 
     # don't build on merges to master
@@ -57,8 +54,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
