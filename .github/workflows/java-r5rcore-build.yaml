@@ -73,4 +73,8 @@ jobs:
           mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
           git add r-package/inst/jar/r5r.jar
           git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
-          git push
+          if [ -n "${{ github.head_ref }}" ]; then
+            git push origin HEAD:${{ github.head_ref }}
+          else
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
