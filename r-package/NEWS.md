@@ -9,6 +9,7 @@
 
 - Revert back the order of origins destinations for Direct Modes. Fix implemented in travel_time_matrix(),
 `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- Reverse search optimization is now only applicable to walking
 
 **New contributors to r5r**
 
