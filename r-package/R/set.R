@@ -540,7 +540,7 @@ reverse_if_direct_mode <- function(origins, destinations, mode_list, data_path) 
   # In direct modes, reverse origin/destination to take advantage of R5's One to Many algorithm
   if (
     mode_list$transit_mode == "" &&
-    mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
+    mode_list$direct_modes %in% c("WALK") &&
     nrow(origins) > nrow(destinations) &&
     !exists_tiff(data_path) # only if no elevation data is present
     ) {
@@ -575,7 +575,7 @@ reverse_back_if_direct_mode <- function(travel_times, origins, destinations, mod
   # In direct modes, reverse origin/destination to take advantage of R5's One to Many algorithm
   if (
     mode_list$transit_mode == "" &&
-    mode_list$direct_modes %in% c("WALK", "BICYCLE") &&
+    mode_list$direct_modes %in% c("WALK") &&
     nrow(origins) < nrow(destinations) &&
     !exists_tiff(data_path) # only if no elevation data is present
   ) {
