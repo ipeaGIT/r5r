@@ -1,23 +1,14 @@
 on:
-  push:
-    paths:
-      - r-package/**
-      - .github/workflows/test-coverage.yaml
-    branches:
-      - dev
-      - master
-  pull_request:
-    paths:
-      - r-package/**
-      - .github/workflows/test-coverage.yaml
-    branches:
-      - dev
-      - master
+  workflow_run:
+    workflows: ["Java R5RCore build"]
+    types: [completed]
 
 name: test-coverage
 
 jobs:
   test-coverage:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     runs-on: ubuntu-22.04
 
     steps:

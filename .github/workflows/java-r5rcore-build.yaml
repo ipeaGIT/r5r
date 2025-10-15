@@ -3,14 +3,23 @@ name: Java R5RCore build
 on:
   push:
     paths:
+      - r-package/**
       - java-r5rcore/**
-      - .github/workflows/java-r5rcore-build.yaml
+      - .github/workflows/**
+    branches:
+      - master
+      - dev
+  pull_request:
+    paths:
+      - r-package/**
+      - java-r5rcore/**
+      - .github/workflows/**
+    branches:
+      - master
+      - dev
 
 jobs:
   build:
-    env:
-      GH_TOKEN: ${{ github.token }}
-
     runs-on: ubuntu-latest
 
     # don't build on merges to master
@@ -45,8 +54,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
@@ -59,6 +70,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
+          
+          if [ -n "${{ github.head_ref }}" ]; then
+            # PR event: fetch and switch to the source branch
+            git fetch origin ${{ github.head_ref }}
+            git checkout ${{ github.head_ref }}
+            BRANCH=${{ github.head_ref }}
+          else
+            # Push event: already on the branch
+            BRANCH=${GITHUB_REF_NAME}
+          fi
+          
           git add r-package/inst/jar/r5r.jar
-          git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
-          git push
+          git commit -m "Rebuild JAR for commit ${GITHUB_SHA}" || echo "No changes"
+          git push origin HEAD:$BRANCH --force-with-lease
