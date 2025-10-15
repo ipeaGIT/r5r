@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.analysis.components.WorkerComponents;
 import com.conveyal.gtfs.model.Service;
+import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
@@ -722,6 +723,34 @@ public class R5RCore {
         paretoFrontierCalculator.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
 
         RDataFrame out = paretoFrontierCalculator.run();
+        this.routingProperties.reset();
+        return out;
+    }
+
+    // -------------------------------- GRIDDED ISOCHRONES ------------------------------------------
+    public RegularGridResult[] travelTimeSurfaces (String fromIds, double fromLats, double fromLons,
+                    String directModes, String transitModes, String accessModes, String egressModes,
+                    String date, String departureTime,
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
+        return travelTimeSurfaces(new String[] { fromIds }, new double[] { fromLats }, new double[] { fromLons },
+                    directModes, transitModes, accessModes, egressModes,
+                    date, departureTime,
+                   maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration, zoom);
+    }
+
+    public RegularGridResult[] travelTimeSurfaces (String[] fromIds, double[] fromLats, double[] fromLons,
+                    String directModes, String transitModes, String accessModes, String egressModes,
+                    String date, String departureTime,
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
+        RegularGridProcess regularGridProcess = new RegularGridProcess(this.r5rThreadPool, this.routingProperties, zoom);
+        regularGridProcess.setOrigins(fromIds, fromLats, fromLons);
+        regularGridProcess.setModes(directModes, accessModes, transitModes, egressModes);
+        regularGridProcess.setDepartureDateTime(date, departureTime);
+        regularGridProcess.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
+
+        RegularGridResult[] out = regularGridProcess.run();
         this.routingProperties.reset();
         return out;
     }

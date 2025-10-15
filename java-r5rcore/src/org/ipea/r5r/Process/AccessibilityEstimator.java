@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 
-public class AccessibilityEstimator extends R5Process {
+public class AccessibilityEstimator extends R5DataFrameProcess {
 
     private DecayFunction decayFunction;
 
@@ -48,7 +48,7 @@ public class AccessibilityEstimator extends R5Process {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
@@ -107,8 +107,8 @@ public class AccessibilityEstimator extends R5Process {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.destinationPointSetKeys = this.opportunities;
         request.destinationPointSets = this.destinationPoints;
