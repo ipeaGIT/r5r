@@ -181,7 +181,9 @@ isochrone <- function(r5r_network,
                       percentiles = NULL,
                       n_threads = Inf,
                       verbose = FALSE,
-                      progress = TRUE
+                      progress = TRUE,
+                      # no longer used
+                      sample_size = deprecated()
                       ){
 
 
@@ -194,6 +196,13 @@ isochrone <- function(r5r_network,
     ))
 
     r5r_network <- r5r_core
+  }
+
+  # sample size no longer used
+  if (lifecycle::is_present(sample_size)) {
+    cli::cli_warn(c(
+      "!" = "The `sample_size` argument is no longer used and has no effect."
+    ))
   }
 
 # check inputs ------------------------------------------------------------
