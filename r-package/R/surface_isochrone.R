@@ -1,4 +1,4 @@
-#' Convert a travel time surface to an isochrone.
+# Convert a travel time surface to an isochrone.
 surface_isochrone <- function (travel_time_surface, cutoffs) {
   checkmate::check_class(travel_time_surface, "travel_time_surface")
 

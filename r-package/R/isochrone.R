@@ -314,8 +314,7 @@ isochrone <- function(r5r_network,
 
 
     # get the isocrhone from each origin
-    prep_iso <- ifelse(isTRUE(polygon_output), prep_iso_poly, prep_iso_lines)
-    iso_list <- lapply(X = unique(origins$id), FUN = prep_iso)
+    iso_list <- lapply(X = unique(origins$id), FUN = prep_iso_lines)
 
     # put output together
     iso <- data.table::rbindlist(iso_list)
