@@ -203,9 +203,6 @@ isochrone <- function(r5r_network,
   checkmate::assert_numeric(cutoffs, lower = 0)
   checkmate::assert_logical(polygon_output)
 
-  # check sample_size
-  checkmate::assert_numeric(sample_size, lower = 0.2, upper = 1, max.len = 1)
-
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
 
