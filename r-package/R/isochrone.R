@@ -164,7 +164,6 @@ isochrone <- function(r5r_network,
                       mode = "transit",
                       mode_egress = "walk",
                       cutoffs = c(0, 15, 30),
-                      sample_size = 0.8,
                       zoom = 10,
                       departure_datetime = Sys.time(),
                       polygon_output = TRUE,
@@ -179,7 +178,7 @@ isochrone <- function(r5r_network,
                       max_lts = 2,
                       draws_per_minute = 5L,
                       # TODO this is unused for line-based isos
-                      percentiles = 50L,
+                      percentiles = NULL,
                       n_threads = Inf,
                       verbose = FALSE,
                       progress = TRUE
@@ -215,6 +214,10 @@ isochrone <- function(r5r_network,
 
   ## whether polygon- or line-based isochrones
   if (isTRUE(polygon_output)) {
+    if (checkmate::test_null(percentiles)) {
+      percentiles = 50L
+    }
+
     # R5 only supports grids between zoom 9 and 12
     checkmate::assert_numeric(zoom, lower=9, upper=12, len=1)
 
@@ -248,6 +251,10 @@ isochrone <- function(r5r_network,
   }
 
   if(isFALSE(polygon_output)){
+
+    if (!checkmate::test_null(percentiles)) {
+      cli::cli_abort("Percentiles not supported for line-based isochrones")
+    }
 
     network_e <- r5r::street_network_to_sf(r5r_network)$edges
 
