@@ -243,8 +243,9 @@ isochrone <- function(r5r_network,
     # convert surfaces to isochrones
     # this uses a few named functions to traverse down the nested list
     # (percentiles inside origins)
-    isos <- purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs)
-    return(sf::st_as_sf(purrr::list_rbind(isos)))
+    isos <- purrr::list_rbind(purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs))
+    isos <- isos[, c("id", "isochrone", "percentile", "polygons")]
+    return(sf::st_as_sf(isos, sf_column_name="polygons"))
   }
 
   if(isFALSE(polygon_output)){
@@ -331,12 +332,12 @@ isochrone <- function(r5r_network,
 percentiles_to_isodt <- function (surfaceList, origin_id, cutoffs) {
   iso <- purrr::imap(surfaceList, percentile_to_isodt, cutoffs)
   iso <- purrr::list_rbind(iso)
-  iso$origin <- origin_id
+  iso$id <- origin_id
   return(iso)
 }
 
 percentile_to_isodt <- function(surface, percentile, cutoffs) {
   iso <- surface_isochrone(surface, cutoffs)
-  iso$percentiles <- percentile
+  iso$percentile <- percentile
   return(iso)
 }

@@ -23,7 +23,7 @@ surface_isochrone <- function (travel_time_surface, cutoffs) {
 
   iso <- data.table::data.table(sf::st_sf(
     isochrone = nonzero_cutoffs,
-    geometry = sf::st_make_valid(sf::st_sfc(isoband::iso_to_sfg(bands), crs=4326))
+    polygons = sf::st_make_valid(sf::st_sfc(isoband::iso_to_sfg(bands), crs=4326))
   ))
 
   iso <- iso[ order(-isochrone), ]
