@@ -84,6 +84,7 @@ setClass("travel_time_surface", slots=list(
 #' @template max_fare
 #' @template scenarios
 #' @template verbose
+#' @template percentiles
 #'
 #' @return A `"sf" "data.frame"` for each isochrone of each origin.
 #'
@@ -91,6 +92,7 @@ setClass("travel_time_surface", slots=list(
 #' @template lts_section
 #' @template datetime_parsing_section
 #' @template raptor_algorithm_section
+#'
 #'
 #' @family Isochrone
 #' 

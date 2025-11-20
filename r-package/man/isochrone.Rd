@@ -27,7 +27,8 @@ isochrone(
   percentiles = NULL,
   n_threads = Inf,
   verbose = FALSE,
-  progress = TRUE
+  progress = TRUE,
+  sample_size = deprecated()
 )
 }
 \arguments{
@@ -125,6 +126,21 @@ results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
 feed does not have a frequency table, r5r still allows for multiple runs
 over the set \code{time_window} but in a deterministic way.}
 
+\item{percentiles}{An integer vector (max length of 5). Specifies the
+percentile to use when returning accessibility estimates within the given
+time window. Please note that this parameter is applied to the travel time
+estimates that generate the accessibility results, and not to the
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see \code{R5} documentation at
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
+
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
 
@@ -140,6 +156,8 @@ the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
 messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
 computation efficiency, because the progress counter must be
 synchronized among all active threads.}
+
+\item{sample_size}{deprecated, no longer has any effect.}
 }
 \value{
 A \verb{"sf" "data.frame"} for each isochrone of each origin.

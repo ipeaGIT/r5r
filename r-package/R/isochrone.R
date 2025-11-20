@@ -74,7 +74,7 @@
 #'        only travel through the quietest streets, while a value of 4 indicates
 #'        cyclists can travel through any road. Defaults to 2. Please see
 #'        details for more information.
-#' 
+#' @template percentiles
 #' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
@@ -85,6 +85,7 @@
 #'        computation efficiency, because the progress counter must be
 #'        synchronized among all active threads.
 #' @template verbose
+#' @param sample_size deprecated, no longer has any effect.
 #'
 #' @return A `"sf" "data.frame"` for each isochrone of each origin.
 #'
