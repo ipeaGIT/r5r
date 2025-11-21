@@ -139,8 +139,7 @@ accessibility calculated from the median travel time. If a vector with
 length bigger than 1 is passed, the output contains an additional column
 that specifies the percentile of each accessibility estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see \code{R5} documentation at
-\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
+more details, please see \code{R5} documentation at \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
@@ -318,9 +317,5 @@ ggplot() +
 
 stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
-}
-\seealso{
-Other Isochrone: 
-\code{\link{travel_time_surface}}
 }
 \concept{Isochrone}

@@ -8,10 +8,10 @@ setClass("travel_time_surface", slots=list(
 ))
 
 #' Compute travel time surfaces.
-#' 
+#'
 #' @description A travel time surface is a raster grid (in the Web Mercator projection)
 #' containing travel times from a specified point.
-#' 
+#'
 #' @template r5r_network
 #' @param origins Either a `POINT sf` object with WGS84 CRS, or a
 #'        `data.frame` containing the columns `id`, `lon` and `lat`.
@@ -70,7 +70,7 @@ setClass("travel_time_surface", slots=list(
 #'        only travel through the quietest streets, while a value of 4 indicates
 #'        cyclists can travel through any road. Defaults to 2. Please see
 #'        details for more information.
-#' 
+#'
 #' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
@@ -94,9 +94,9 @@ setClass("travel_time_surface", slots=list(
 #' @template raptor_algorithm_section
 #'
 #'
-#' @family Isochrone
-#' 
-#' @export
+#' @family support functions
+#'
+#' @keywords internal
 travel_time_surface <- function(r5r_network,
                                origins,
                                zoom = 10,
@@ -214,12 +214,12 @@ process_surfaces <- function (sfaces) {
     # R has issues with nonconsecutive ints being used as list indices, so use strings
     result[[paste0("p", sfaces$percentiles[i])]] = process_surface(
       sfaces$values[i,],
-      sfaces$zoom, 
-      sfaces$west, 
+      sfaces$zoom,
+      sfaces$west,
       sfaces$north,
       sfaces$width,
       sfaces$height
-      )  
+      )
   }
 
   return(result)

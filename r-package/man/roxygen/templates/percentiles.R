@@ -10,5 +10,4 @@
 #'   length bigger than 1 is passed, the output contains an additional column
 #'   that specifies the percentile of each accessibility estimate. Due to
 #'   upstream restrictions, only 5 percentiles can be specified at a time. For
-#'   more details, please see `R5` documentation at
-#'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
+#'   more details, please see `R5` documentation at <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.

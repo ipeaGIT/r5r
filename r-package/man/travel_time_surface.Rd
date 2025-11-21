@@ -78,8 +78,7 @@ accessibility calculated from the median travel time. If a vector with
 length bigger than 1 is passed, the output contains an additional column
 that specifies the percentile of each accessibility estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see \code{R5} documentation at
-\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
+more details, please see \code{R5} documentation at \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
@@ -270,7 +269,13 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 
 \seealso{
-Other Isochrone: 
-\code{\link{isochrone}()}
+Other support functions: 
+\code{\link{exists_tiff}()},
+\code{\link{fileurl_from_metadata}()},
+\code{\link{start_r5r_java}()},
+\code{\link{stop_r5}()},
+\code{\link{tempdir_unique}()},
+\code{\link{validate_bad_osm_ids}()}
 }
-\concept{Isochrone}
+\concept{support functions}
+\keyword{internal}
