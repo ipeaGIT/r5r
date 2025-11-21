@@ -14,7 +14,8 @@
 #' @param cutoffs numeric vector. Number of minutes to define the time span of
 #'        each Isochrone. Defaults to `c(0, 15, 30)`.
 #' @param zoom Resolution of the travel time surface used to create isochrones,
-#'        can be between 9 and 12. More detailed isochrones will result from
+#'        can be between `9` and `12.` The default is `10` (which uses cells of
+#'        153 meters at the Equator). More detailed isochrones will result from
 #'        larger numbers, at the expense of compute time. Specifically, a raster
 #'        grid of travel times in the Web Mercator projection at this zoom level
 #'        is created, and the isochrones are interpolated from this grid. For

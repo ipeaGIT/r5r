@@ -71,7 +71,7 @@ information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz
 }
 
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files

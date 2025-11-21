@@ -52,7 +52,8 @@ from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 each Isochrone. Defaults to \code{c(0, 15, 30)}.}
 
 \item{zoom}{Resolution of the travel time surface used to create isochrones,
-can be between 9 and 12. More detailed isochrones will result from
+can be between \code{9} and \code{12.} The default is \code{10} (which uses cells of
+153 meters at the Equator). More detailed isochrones will result from
 larger numbers, at the expense of compute time. Specifically, a raster
 grid of travel times in the Web Mercator projection at this zoom level
 is created, and the isochrones are interpolated from this grid. For
@@ -255,7 +256,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 options(java.parameters = "-Xmx2G")
 library(r5r)
 library(ggplot2)
