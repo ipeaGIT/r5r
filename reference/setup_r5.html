@@ -102,8 +102,9 @@ a temporary directory. Defaults to <code>FALSE</code>.</p></dd>
 calculate impedance for walking and cycling based on street slopes.
 Available options include <code>TOBLER</code> (Default) and <code>MINETTI</code>, or <code>NONE</code>
 to ignore elevation. R5 loads elevation data from <code>.tif</code> files saved
-inside the <code>data_path</code> directory. See more info in the Details section
-below.</p></dd>
+inside the <code>data_path</code> directory. Elevation raster must be in WGS 84
+(EPSG:4326) coordinate reference system. See more info in the Details
+section below.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
@@ -138,8 +139,8 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other Build network:
-<code><a href="build_network.html">build_network</a>()</code>,
-<code><a href="download_r5.html">download_r5</a>()</code></p></div>
+<code><a href="build_network.html">build_network()</a></code>,
+<code><a href="download_r5.html">download_r5()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -164,7 +165,7 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
