@@ -46,11 +46,12 @@ Depends:
 Imports:
     checkmate,
     cli,
-    concaveman,
     data.table,
+    isoband,
     jsonlite,
     lifecycle,
     methods,
+    purrr,
     rJava (>= 0.9-10),
     rlang,
     sf (>= 1.0-12),

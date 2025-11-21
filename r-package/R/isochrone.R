@@ -13,11 +13,13 @@
 #'        `data.frame` containing the columns `id`, `lon` and `lat`.
 #' @param cutoffs numeric vector. Number of minutes to define the time span of
 #'        each Isochrone. Defaults to `c(0, 15, 30)`.
-#' @param sample_size numeric. Sample size of nodes in the transport network used
-#'        to estimate isochrones. Defaults to `0.8` (80% of all nodes in the
-#'        transport network). Value can range between `0.2` and `1`. Smaller
-#'        values increase computation speed but return results with lower
-#'        precision. This parameter has no effect when `polygon_output = FALSE`.
+#' @param zoom Resolution of the travel time surface used to create isochrones,
+#'        can be between 9 and 12. More detailed isochrones will result from
+#'        larger numbers, at the expense of compute time. Specifically, a raster
+#'        grid of travel times in the Web Mercator projection at this zoom level
+#'        is created, and the isochrones are interpolated from this grid. For
+#'        more information on how the grid cells are defined, see
+#'        \href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}
 #' @param mode A character vector. The transport modes allowed for access,
 #'        transfer and vehicle legs of the trips. Defaults to `WALK`. Please see
 #'        details for other options.
@@ -72,6 +74,7 @@
 #'        only travel through the quietest streets, while a value of 4 indicates
 #'        cyclists can travel through any road. Defaults to 2. Please see
 #'        details for more information.
+#' @template percentiles
 #' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
@@ -82,6 +85,7 @@
 #'        computation efficiency, because the progress counter must be
 #'        synchronized among all active threads.
 #' @template verbose
+#' @param sample_size deprecated, no longer has any effect.
 #'
 #' @return A `"sf" "data.frame"` for each isochrone of each origin.
 #'
@@ -161,7 +165,7 @@ isochrone <- function(r5r_network,
                       mode = "transit",
                       mode_egress = "walk",
                       cutoffs = c(0, 15, 30),
-                      sample_size = 0.8,
+                      zoom = 10,
                       departure_datetime = Sys.time(),
                       polygon_output = TRUE,
                       time_window = 10L,
@@ -174,9 +178,14 @@ isochrone <- function(r5r_network,
                       max_rides = 3,
                       max_lts = 2,
                       draws_per_minute = 5L,
+                      # TODO this is unused for line-based isos
+                      percentiles = NULL,
                       n_threads = Inf,
                       verbose = FALSE,
-                      progress = TRUE){
+                      progress = TRUE,
+                      # no longer used
+                      sample_size = deprecated()
+                      ){
 
 
   # deprecating r5r_core --------------------------------------
@@ -190,6 +199,13 @@ isochrone <- function(r5r_network,
     r5r_network <- r5r_core
   }
 
+  # sample size no longer used
+  if (lifecycle::is_present(sample_size)) {
+    cli::cli_warn(c(
+      "!" = "The `sample_size` argument is no longer used and has no effect."
+    ))
+  }
+
 # check inputs ------------------------------------------------------------
   checkmate::assert_class(r5r_network, "r5r_network")
 
@@ -197,35 +213,56 @@ isochrone <- function(r5r_network,
   checkmate::assert_numeric(cutoffs, lower = 0)
   checkmate::assert_logical(polygon_output)
 
-  # check sample_size
-  checkmate::assert_numeric(sample_size, lower = 0.2, upper = 1, max.len = 1)
-
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
 
   # sort cutoffs and include 0
   if (min(cutoffs) > 0) {cutoffs <- sort(c(0, cutoffs))}
 
-
-# IF no destinations input ------------------------------------------------------------
-
-
   ## whether polygon- or line-based isochrones
   if (isTRUE(polygon_output)) {
+    if (checkmate::test_null(percentiles)) {
+      percentiles = 50L
+    }
 
-    # use all network nodes as destination points
-    destinations = r5r::street_network_to_sf(r5r_network)$vertices
+    # R5 only supports grids between zoom 9 and 12
+    checkmate::assert_numeric(zoom, lower=9, upper=12, len=1)
 
-    # sample size: proportion of nodes to be considered
-    set.seed(42)
-    index_sample <- sample(1:nrow(destinations),
-                           size = nrow(destinations) * sample_size,
-                           replace = FALSE)
-    destinations <- destinations[index_sample,]
-    on.exit(rm(.Random.seed, envir=globalenv()))
+    # create the travel time surfaces
+    surfaces = travel_time_surface(r5r_network = r5r_network,
+                              origins = origins,
+                              mode = mode,
+                              mode_egress = mode_egress,
+                              departure_datetime = departure_datetime,
+                              time_window = time_window,
+                              percentiles = percentiles,
+                              max_walk_time = max_walk_time,
+                              max_bike_time = max_bike_time,
+                              max_car_time = max_car_time,
+                              max_trip_duration = max_trip_duration,
+                              walk_speed = walk_speed,
+                              bike_speed = bike_speed,
+                              max_rides = max_rides,
+                              max_lts = max_lts,
+                              draws_per_minute = draws_per_minute,
+                              n_threads = n_threads,
+                              verbose = verbose,
+                              zoom = zoom
+    )
+
+    # convert surfaces to isochrones
+    # this uses a few named functions to traverse down the nested list
+    # (percentiles inside origins)
+    isos <- purrr::list_rbind(purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs))
+    isos <- isos[, c("id", "isochrone", "percentile", "polygons")]
+    return(sf::st_as_sf(isos, sf_column_name="polygons"))
   }
 
   if(isFALSE(polygon_output)){
+
+    if (!checkmate::test_null(percentiles)) {
+      cli::cli_abort("Percentiles not supported for line-based isochrones")
+    }
 
     network_e <- r5r::street_network_to_sf(r5r_network)$edges
 
@@ -268,51 +305,6 @@ isochrone <- function(r5r_network,
     ttm[, isochrone := cut(x=travel_time_p50, breaks=cutoffs, labels=F)]
     ttm[, isochrone := cutoffs[cutoffs>0][isochrone]]
 
-    # check if there are at least 3 points to build a
-    if (isTRUE(polygon_output)) {
-
-      check_number_destinations <- ttm[, .(count= .N ), by=.(from_id, isochrone) ]
-      temp_ids <- subset(check_number_destinations, count<3)$from_id
-
-      if(length(temp_ids)>0){
-        stop(paste0("Problem in the following origin points: ",
-                    paste0(temp_ids, collapse = ', '),". These origin points are probably located in areas where the road density is too low to create proper isochrone polygons and/or the time cutoff is too short. In this case, we strongly recommend setting `polygon_output = FALSE` or setting longer cutoffs."))
-      }
-
-    }
-
-    ### fun to get isochrones for each origin
-    # polygon-based isochrones
-      prep_iso_poly <- function(orig){ # orig = '89a90128107ffff'
-
-      temp_ttm <- subset(ttm, from_id == orig)
-
-      # join ttm results to destinations
-      dest <- subset(destinations, id %in% temp_ttm$to_id)
-      data.table::setDT(dest)[, id := as.character(id)]
-      dest[temp_ttm, on=c('id' ='to_id'), c('travel_time_p50', 'isochrone') := list(i.travel_time_p50, i.isochrone)]
-
-      # build polygons with {concaveman}
-      # obs. {isoband} is much slower
-      dest <- sf::st_as_sf(dest)
-
-      get_poly <- function(cut){ # cut = 30
-        temp <- subset(dest, travel_time_p50 <= cut)
-
-        temp_iso <- concaveman::concaveman(temp)
-        temp_iso$isochrone <- cut
-        return(temp_iso)
-      }
-      iso_list <- lapply(X=cutoffs[cutoffs>0], FUN=get_poly)
-      iso <- data.table::rbindlist(iso_list)
-      iso[, id := orig]
-      iso <- iso[ order(-isochrone), ]
-      data.table::setcolorder(iso, c('id', 'isochrone'))
-      # iso <- sf::st_as_sf(iso)
-      # plot(iso)
-      return(iso)
-    }
-
 
     # line-based isochrones
       prep_iso_lines <- function(orig){ # orig = '89a90128107ffff'
@@ -333,8 +325,7 @@ isochrone <- function(r5r_network,
 
 
     # get the isocrhone from each origin
-    prep_iso <- ifelse(isTRUE(polygon_output), prep_iso_poly, prep_iso_lines)
-    iso_list <- lapply(X = unique(origins$id), FUN = prep_iso)
+    iso_list <- lapply(X = unique(origins$id), FUN = prep_iso_lines)
 
     # put output together
     iso <- data.table::rbindlist(iso_list)
@@ -345,3 +336,18 @@ isochrone <- function(r5r_network,
     class(iso) <- c("sf", "data.frame")
     return(iso)
   }
+
+
+# Helper function to handle multiple percentiles
+percentiles_to_isodt <- function (surfaceList, origin_id, cutoffs) {
+  iso <- purrr::imap(surfaceList, percentile_to_isodt, cutoffs)
+  iso <- purrr::list_rbind(iso)
+  iso$id <- origin_id
+  return(iso)
+}
+
+percentile_to_isodt <- function(surface, percentile, cutoffs) {
+  iso <- surface_isochrone(surface, cutoffs)
+  iso$percentile <- percentile
+  return(iso)
+}

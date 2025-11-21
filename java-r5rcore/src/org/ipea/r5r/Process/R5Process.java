@@ -1,33 +1,44 @@
 package org.ipea.r5r.Process;
 
-import com.conveyal.r5.analyst.FreeFormPointSet;
-import com.conveyal.r5.analyst.cluster.PathResult;
-import com.conveyal.r5.analyst.cluster.RegionalTask;
-import com.conveyal.r5.analyst.scenario.Scenario;
-import com.conveyal.r5.api.util.LegMode;
-import com.conveyal.r5.api.util.TransitModes;
-import com.conveyal.r5.profile.StreetMode;
-import com.conveyal.r5.transit.TransportNetwork;
-import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
-import org.ipea.r5r.RDataFrame;
-import org.ipea.r5r.RoutingProperties;
-import org.ipea.r5r.Utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.lang.Math.max;
+import org.ipea.r5r.RDataFrame;
+import org.ipea.r5r.RoutingProperties;
+import org.ipea.r5r.Utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class R5Process {
+import com.conveyal.r5.analyst.FreeFormPointSet;
+import com.conveyal.r5.analyst.cluster.RegionalTask;
+import com.conveyal.r5.analyst.scenario.Scenario;
+import com.conveyal.r5.api.util.LegMode;
+import com.conveyal.r5.api.util.TransitModes;
+import com.conveyal.r5.profile.ProfileRequest;
+import com.conveyal.r5.profile.StreetMode;
+import com.conveyal.r5.transit.TransportNetwork;
+
+/**
+ * T is the type returned for each task, A is the aggregate result. They may be the same in some cases.
+ */
+public abstract class R5Process<T, A> {
+    private static final Logger LOG = LoggerFactory.getLogger(R5Process.class);
 
     protected final ForkJoinPool r5rThreadPool;
     protected final TransportNetwork transportNetwork;
@@ -61,10 +72,6 @@ public abstract class R5Process {
     protected int maxCarTime;
     protected int maxTripDuration;
 
-    protected abstract boolean isOneToOne();
-
-    private static final Logger LOG = LoggerFactory.getLogger(R5Process.class);
-
     public R5Process(ForkJoinPool threadPool, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
         this.transportNetwork = routingProperties.transportNetworkWorking;
@@ -73,24 +80,34 @@ public abstract class R5Process {
         destinationPoints = null;
     }
 
-    public RDataFrame run() throws ExecutionException, InterruptedException {
+    public A run() throws ExecutionException, InterruptedException {
         buildDestinationPointSet();
-        int[] requestIndices = IntStream.range(0, nOrigins).toArray();
+        // TODO shouldn't this start at 0?
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
-        List<RDataFrame> processResults = r5rThreadPool.submit(() ->
-                Arrays.stream(requestIndices).parallel().
-                        mapToObj(index -> tryRunProcess(totalProcessed, index)).
-                        filter(Objects::nonNull).
-                        collect(Collectors.toList())).get();
+        // define callable separately so that Java compiler can check types
+        // h/t ChatGPT
+        Callable<List<T>> task = () ->
+                IntStream.range(0, nOrigins)
+                    .parallel()
+                    .mapToObj(index -> tryRunProcess(totalProcessed, index))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+        List<T> processResults = r5rThreadPool.submit(task).get();
 
         LOG.info(".. DONE!");
 
-        RDataFrame results = mergeResults(processResults);
+        A results = mergeResults(processResults);
 
         return results;
     }
 
+
+    /**
+     * This is protected so that if subclasses don't need a destination point set they can
+     * replace it with a no-op.
+     */
     protected void buildDestinationPointSet() {
         destinationPoints = new FreeFormPointSet[this.opportunities.length];
 
@@ -182,87 +199,35 @@ public abstract class R5Process {
         this.maxTripDuration = maxTripDuration;
     }
 
-    private RDataFrame tryRunProcess(AtomicInteger totalProcessed, int index) {
-        RDataFrame results = null;
+    protected T tryRunProcess(AtomicInteger totalProcessed, int index) {
+        T results = null;
         try {
-            long start = System.currentTimeMillis();
             results = runProcess(index);
-            long duration = max(System.currentTimeMillis() - start, 0L);
-
-            if (results != null & Utils.benchmark) {
-                results.addLongColumn("execution_time", duration);
-            }
-
-            if (Utils.saveOutputToCsv & results != null) {
-                String filename = getCsvFilename(index);
-                results.saveToCsv(filename);
-                results.clear();
-            }
-
-            int nProcessed = totalProcessed.getAndIncrement();
-            if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
-                LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
-            }
-        } catch (ParseException | FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            // re-throw as unchecked so we get an error on the R side
+            throw new RuntimeException();
         }
 
-        return Utils.saveOutputToCsv ? null : results;
-    }
-
-    private String getCsvFilename(int index) {
-        String filename;
-        if (this.isOneToOne()) {
-            // one-to-one functions, such as detailed itineraries
-            // save one file per origin-destination pair
-            filename = Utils.outputCsvFolder + "/from_" + fromIds[index] + "_to_" + toIds[index] +  ".csv";
-        } else {
-            // one-to-many functions, such as travel time matrix
-            // save one file per origin
-            filename = Utils.outputCsvFolder + "/from_" + fromIds[index] +  ".csv";
-        }
-        return filename;
-    }
-
-    protected abstract RDataFrame runProcess(int index) throws ParseException;
-
-    private RDataFrame mergeResults(List<RDataFrame> processResults) {
-        LOG.info("Consolidating results...");
-
-        int nRows;
-        nRows = processResults.stream()
-                .mapToInt(RDataFrame::nRow)
-                .sum();
-
-        RDataFrame mergedDataFrame = buildDataFrameStructure("", nRows);
-        if (Utils.benchmark) {
-            mergedDataFrame.addLongColumn("execution_time", 0L);
+        int nProcessed = totalProcessed.getAndIncrement();
+        if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
+            LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
         }
 
-        mergedDataFrame.getDataFrame().keySet().stream().parallel().forEach(
-                key -> {
-                    ArrayList<Object> destinationArray = mergedDataFrame.getDataFrame().get(key);
-                    processResults.forEach(
-                            dataFrame -> {
-                                ArrayList<Object> originArray = dataFrame.getDataFrame().get(key);
-                                destinationArray.addAll(originArray);
-
-                                originArray.clear();
-                            });
-                }
-        );
-        mergedDataFrame.updateRowCount();
-
-        LOG.info(" DONE!");
-
-        return mergedDataFrame;
+        return results;
     }
 
-    protected abstract RDataFrame buildDataFrameStructure(String fromId, int nRows);
+    protected abstract T runProcess(int index) throws ParseException;
 
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = new RegionalTask();
+    protected abstract A mergeResults(List<T> processResults);
 
+    /**
+     * Initialize a request with the parameters common to all request types.
+     * @param index
+     * @param request
+     * @throws ParseException
+     */
+    protected void initalizeRequest(int index, ProfileRequest request) throws ParseException {
         request.scenario = new Scenario();
         request.scenario.id = "id";
         request.scenarioId = request.scenario.id;
@@ -277,9 +242,6 @@ public abstract class R5Process {
         request.maxBikeTime = maxBikeTime;
         request.maxCarTime = maxCarTime;
         request.maxTripDurationMinutes = maxTripDuration;
-        request.makeTauiSite = false;
-        request.recordTimes = true;
-        request.recordAccessibility = false;
         request.maxRides = routingProperties.maxRides;
         request.bikeTrafficStress = routingProperties.maxLevelTrafficStress;
 
@@ -298,11 +260,20 @@ public abstract class R5Process {
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
         request.suboptimalMinutes = routingProperties.suboptimalMinutes;
 
-        request.percentiles = routingProperties.percentiles;
-
         request.inRoutingFareCalculator = routingProperties.fareCalculator;
         request.maxFare = Math.round(routingProperties.maxFare * 100.0f);
+    }
 
+    /**
+     * Build a RegionalTask, used in most processes.
+     */
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = new RegionalTask();
+        initalizeRequest(index, request);
+        request.makeTauiSite = false;
+        request.recordTimes = true;
+        request.recordAccessibility = false;
+        request.percentiles = routingProperties.percentiles;
         return request;
     }
 }
