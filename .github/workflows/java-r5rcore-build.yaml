@@ -22,9 +22,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # don't build on merges to master
-    if: ${{ !github.ref_protected }}
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up R
