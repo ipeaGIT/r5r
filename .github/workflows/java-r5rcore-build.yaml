@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - java-r5rcore/**
-      - .github/workflows/java-r5rcore-build.yaml
+      - r-package/**
+      - .github/workflows/**
 
 jobs:
   build:
