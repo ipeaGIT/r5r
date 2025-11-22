@@ -3,3 +3,6 @@
 
 # Interpret .rmd as R
 *.Rmd linguist-language=R
+
+# Avoid little jar merge conflicts
+r-package/inst/jar/r5r.jar merge=ours
