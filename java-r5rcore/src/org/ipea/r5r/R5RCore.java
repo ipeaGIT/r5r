@@ -33,7 +33,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import org.locationtech.jts.geom.Envelope;
 
-
+// VERY IMPORTANT CHANGE!
 public class R5RCore {
 
     public static final String R5_VERSION = System.getProperty("R5_VER", "7+, ERROR getting exact version");
