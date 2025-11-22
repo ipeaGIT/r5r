@@ -1,5 +1,6 @@
 #' Check and convert origin and destination inputs
 #'
+#'
 #' @param df Either a `data.frame` or a `POINT sf`.
 #' @param name Object name.
 #'
