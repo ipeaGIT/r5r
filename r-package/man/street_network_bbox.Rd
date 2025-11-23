@@ -31,7 +31,7 @@ routable transport network built with \code{\link[=build_network]{build_network(
 memory-efficient alternative to \code{sf::st_bbox(street_network_to_sf(r5r_net))}.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 library(sf)
 

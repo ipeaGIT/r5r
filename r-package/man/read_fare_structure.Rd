@@ -22,7 +22,7 @@ A fare structure object.
 Read a fare structure object from a file
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 path <- system.file("extdata/poa/fares/fares_poa.zip", package = "r5r")
 fare_structure <- read_fare_structure(path)
 \dontshow{\}) # examplesIf}

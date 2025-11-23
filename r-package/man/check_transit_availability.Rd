@@ -50,7 +50,7 @@ You can specify the dates to check in two ways:
 You must use one of these two methods, but not both in the same function call.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)

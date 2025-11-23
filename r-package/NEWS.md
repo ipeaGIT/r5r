@@ -1,14 +1,28 @@
 # r5r 2.4.0 dev 
 
+**Major changes**
+
+- The `isochrone()` function has gone through major changes which substantially
+improved polygon-based isochrones. The function now builds on top of a travel 
+time surface that uses a regular grid of points across the network (specifically 
+a grid of Web Mercator pixels) and then uses the marching squares algorithm to 
+generate the isochrone polygons. See detailed in the updated vignette. Closed 
+[#455](https://github.com/ipeaGIT/r5r/issues/455) and Closed [#495](https://github.com/ipeaGIT/r5r/issues/495).
+
 **Minor changes**
 
-- New support function `check_transit_availability()` that checks the number and proportion of public transport services from the GTFS feeds that are active on specified dates.
-- New support function `street_network_bbox()` that efficiently extracts the geographic bounding box of the transport network.
+- New support function `check_transit_availability()` that checks the number and 
+proportion of public transport services from the GTFS feeds that are active on 
+specified dates.
+- New support function `street_network_bbox()` that efficiently extracts the 
+geographic bounding box of the transport network.
 
 **Bug fixes**
 
-- Revert back the order of origins destinations for Direct Modes. Fix implemented in travel_time_matrix(),
-`arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- Revert back the order of origins destinations for Direct Modes. Fix implemented 
+`in travel_time_matrix()`, `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. 
+Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- Reverse search optimization is now only applicable to walking. Closes [#517](https://github.com/ipeaGIT/r5r/issues/517).
 
 **New contributors to r5r**
 

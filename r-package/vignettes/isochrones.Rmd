@@ -23,10 +23,13 @@ knitr::opts_chunk$set(
 
 An isochrone map shows how far one can travel from a given place within a certain amount of time. In other other words, it shows all the areas reachable from that place within a maximum travel time. This vignette shows how to calculate and visualize isochrones in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html) using a reproducible example. In this example, we will be using a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. Our aim here is to calculate several isochrones departing from the central bus station given different travel time thresholds. 
 
-There are two ways to calculate / visualize isochrones using `r5r`. The quick and easy option is using the `r5r::isochrone()` function. The other alternative requires one to first calculate travel time estimates, and then to do some spatial interpolation operations. We will cover both approaches in this vignette. 
+The `r5r::isochrone()` function allows you to build both polygon- and line-based 
+isochrones. We will cover both approaches in this vignette, where we will be 
+calculating isochrones by public transport from the central bus station in Porto Alegre.
 
-Before we start, we need to increase Java memory + load a few libraries, and to build routable transport network.
 
+Before we start, we need to increase Java memory + load a few libraries, and to  
+build routable  transport network.
 
 
 ***Warning:*** If you want to calculate how many opportunities (e.g. jobs, or schools or hospitals) are located inside each isochrone, we strongly recommend you NOT to use the `isochrone()` function. You will find much more efficient ways to do this in the [Accessibility vignette](https://ipeagit.github.io/r5r/articles/accessibility.html).
@@ -45,7 +48,6 @@ library(r5r)
 library(sf)
 library(data.table)
 library(ggplot2)
-library(interp)
 ```
 
 
@@ -59,14 +61,23 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
 ```
 
-
-# 3. Isochrone: quick and easy approach
-
-The quick and easy approach to estimate / visualize an isochrone is to use the `isochrone()` function built in the `r5r` package. In this example, we will be calculating the isochrones by public transport from the central bus station in Porto Alegre. The `isochrone()` function calculates isochrones considering the travel times from the origin point to a random sample of `80%` of all nodes in the transport network (default). The size of the sample can be fine tuned with the `sample_size` parameter. 
-
-With the code below, `r5r` determines the isochrones considering the median travel time of multiple travel time estimates calculated departing every minute over a 120-minute time window, between 2pm and 4pm.
+# 3. Calculating and visualizing isochrones 
 
 
+## 3.1 Polygon-based isochrones 
+
+The most common approach here is to create polygon-based isochrones. To do this,
+you need to pass the arguments `polygon_output = TRUE` and choose the `zoom` level.
+The polygon-based isochrone in {r5r} are built on top of a regular grid based on 
+[Web Mercator pixels](https://docs.conveyal.com/analysis/methodology#spatial-resolution). 
+The zoom level can be controlled with the `zoom` parameter; higher zooms lead to 
+more detailed isochrones at the expense of computational time. The default is 10 
+(which uses cells of 153m at the Equator). In large networks, high zooms may not 
+be possible and will give an error.
+
+With the code below, `r5r` determines the isochrones considering the median travel 
+time of multiple travel time estimates calculated departing every minute over a 
+60-minute time window, between 2pm and 4pm. 
 
 ```{r, message = FALSE}
 # read all points in the city
@@ -81,8 +92,8 @@ time_intervals <- seq(0, 100, 10)
 # routing inputs
 mode <- c("WALK", "TRANSIT")
 max_walk_time <- 30      # in minutes
-max_trip_duration <- 100 # in minutes
-time_window <- 120       # in minutes
+max_trip_duration <- 90  # in minutes
+time_window <- 60        # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -91,17 +102,18 @@ iso1 <- r5r::isochrone(
   r5r_network,
   origins = central_bus_stn,
   mode = mode,
+  polygon_output = TRUE, 
   cutoffs = time_intervals,
-  sample_size = 1,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
   max_trip_duration = max_trip_duration,
   time_window = time_window,
-  progress = FALSE
+  progress = FALSE,
+  zoom = 10
   )
 
 ```
-As you can see, the `isochrone()` functions works very similarly to the `travel_time_matrix()` function, but instead of returning a table with travel time estimates, it returns a `POLYGON  "sf" "data.frame"` for each isochrone of each origin.
+As you can see, the `isochrone()` functions works very similarly to the `travel_time_matrix()` function. However, instead of returning a table with travel time estimates, it returns a `POLYGON  "sf" "data.frame"` for each isochrone of each origin when you set `polygon_output = TRUE`.
 
 ```{r, message = FALSE}
 head(iso1)
@@ -121,30 +133,27 @@ ggplot() +
   geom_sf(data = iso1, aes(fill=factor(isochrone)), color = NA, alpha = .7) +
   geom_sf(data = main_roads, color = "gray55", size=0.01, alpha = 0.2) +
   geom_point(data = central_bus_stn, aes(x=lon, y=lat, color='Central bus\nstation')) +
-  # scale_fill_viridis_d(direction = -1, option = 'B') +
   scale_fill_manual(values = rev(colors) ) +
   scale_color_manual(values=c('Central bus\nstation'='black')) +
   labs(fill = "Travel time\n(in minutes)", color='') +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
+## 3.1 Line-based isochrones 
 
+Alternatively, you can build line-based isochrones by simply passing
+`polygon_output = FALSE` to the `isochrone()` function. Note that you do not need 
+the `zoom` parameter here, and that the output is `LINESTRING  "sf" "data.frame"`.
 
-# 4 Isochrone alternative
-
-This second approach to calculating isochrones with `r5r` takes a few more steps because it requires the spatial interpolation of travel time estimates, but it generates more refined maps. It takes two steps. 
-
-# 4.1 Calculate travel times
-
-First, we calculate the travel times by public transport from the central bus station in Porto Alegre to multiple destinations we input to the function. Here, we input the `points` data frame, which comprises the centroids of a hexagonal grid at a fine spatial resolution.
 
 ```{r, message = FALSE}
 # calculate travel time matrix
-ttm <- travel_time_matrix(
+iso2 <- r5r::isochrone(
   r5r_network,
   origins = central_bus_stn,
-  destinations = points,
   mode = mode,
+  polygon_output = FALSE, 
+  cutoffs = time_intervals,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
   max_trip_duration = max_trip_duration,
@@ -152,46 +161,19 @@ ttm <- travel_time_matrix(
   progress = FALSE
   )
 
-head(ttm)
+head(iso2)
+
 ```
 
-# 4.2 Spatial interpolation of travel times
 
-Now we need to bring the spatial coordinates information to our travel time matrix output `ttm`, and do some spatial interpolation of travel time estimates.
+Now it becomes super simple to visualize our isochrones on a map:
 
 ```{r, message = FALSE}
-# add coordinates of destinations to travel time matrix
-ttm[points, on=c('to_id' ='id'), `:=`(lon = i.lon, lat = i.lat)]
-
-# interpolate estimates to get spatially smooth result
-travel_times.interp <- with(na.omit(ttm), interp(lon, lat, travel_time_p50)) |>
-                        with(cbind(travel_time=as.vector(z),  # Column-major order
-                                   x=rep(x, times=length(y)),
-                                   y=rep(y, each=length(x)))) |>
-                            as.data.frame() |> na.omit()
-```
-
-
-With just a few more lines of code, we get our isochrones on a map:
-
-```{r, message = FALSE, out.width='100%'}
-# find isochrone's bounding box to crop the map below
-bb_x <- c(min(travel_times.interp$x), max(travel_times.interp$x))
-bb_y <- c(min(travel_times.interp$y), max(travel_times.interp$y))
-
-# plot
-ggplot(travel_times.interp) +
-  geom_sf(data = main_roads, color = "gray55", size=0.01, alpha = 0.7) +
-  geom_contour_filled(aes(x=x, y=y, z=travel_time), alpha=.7) +
-  geom_point(aes(x=lon, y=lat, color='Central bus\nstation'),
-             data=central_bus_stn) +
-  # scale_fill_viridis_d(direction = -1, option = 'B') +
-  scale_fill_manual(values = rev(colors) ) +
-  scale_color_manual(values=c('Central bus\nstation'='black')) +
-  scale_x_continuous(expand=c(0,0)) +
-  scale_y_continuous(expand=c(0,0)) +
-  coord_sf(xlim = bb_x, ylim = bb_y) +
-  labs(fill = "Travel time\n(in minutes)", color='') +
+ggplot() +
+  geom_sf(data = iso2, aes(color=factor(isochrone)), alpha = .7) +
+  scale_color_manual(values = rev(colors) ) +
+  geom_point(data = central_bus_stn, aes(x=lon, y=lat), color='black') +
+  labs(color = "Travel time\n(in minutes)", color='sadasd') +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
