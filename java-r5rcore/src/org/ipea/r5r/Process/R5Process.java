@@ -3,8 +3,6 @@ package org.ipea.r5r.Process;
 import java.io.*;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.ipea.r5r.RDataFrame;
 import org.ipea.r5r.RoutingProperties;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.Logger;
@@ -82,23 +79,23 @@ public abstract class R5Process<T, A> {
         AtomicInteger totalProcessed = new AtomicInteger(1);
 
         try {
-        // define callable separately so that Java compiler can check types
-        // h/t ChatGPT
-        Callable<List<T>> task = () ->
-                IntStream.range(0, nOrigins)
-                    .parallel()
-                    .mapToObj(index -> tryRunProcess(totalProcessed, index))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+            // define callable separately so that Java compiler can check types
+            // h/t ChatGPT
+            Callable<List<T>> task = () ->
+                    IntStream.range(0, nOrigins)
+                            .parallel()
+                            .mapToObj(index -> tryRunProcess(totalProcessed, index))
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
 
-        List<T> processResults = r5rThreadPool.submit(task).get();
+            List<T> processResults = r5rThreadPool.submit(task).get();
 
-        LOG.info(".. DONE!");
+            LOG.info(".. DONE!");
 
-        A results = mergeResults(processResults);
+            A results = mergeResults(processResults);
 
-        return results;
-        } catch(Exception e) {
+            return results;
+        } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
@@ -228,6 +225,7 @@ public abstract class R5Process<T, A> {
 
     /**
      * Initialize a request with the parameters common to all request types.
+     *
      * @param index
      * @param request
      * @throws ParseException
@@ -260,7 +258,7 @@ public abstract class R5Process<T, A> {
         secondsFromMidnight = Utils.getSecondsFromMidnight(departureTime);
 
         request.fromTime = secondsFromMidnight;
-        request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60) ;
+        request.toTime = secondsFromMidnight + (routingProperties.timeWindowSize * 60);
 
         request.monteCarloDraws = routingProperties.numberOfMonteCarloDraws;
         request.suboptimalMinutes = routingProperties.suboptimalMinutes;
