@@ -1,4 +1,3 @@
-#' Very important change!
 #' Calculate travel time matrix between origin destination pairs considering a
 #' departure time
 #'
