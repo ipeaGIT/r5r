@@ -214,7 +214,7 @@ public abstract class R5Process<T, A> {
             LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
         }
 
-        return results;
+        return null;
     }
 
     protected abstract T runProcess(int index) throws ParseException;
