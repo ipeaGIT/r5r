@@ -17,7 +17,7 @@ No return value, called for side effects.
 Stops running r5r network
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
@@ -33,6 +33,7 @@ Other support functions:
 \code{\link{fileurl_from_metadata}()},
 \code{\link{start_r5r_java}()},
 \code{\link{tempdir_unique}()},
+\code{\link{travel_time_surface}},
 \code{\link{validate_bad_osm_ids}()}
 }
 \concept{support functions}

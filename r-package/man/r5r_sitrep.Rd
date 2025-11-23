@@ -21,7 +21,7 @@ The function reports a list with the following information:
 }
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 r5r_sitrep()
 \dontshow{\}) # examplesIf}
 }

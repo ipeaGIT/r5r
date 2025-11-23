@@ -29,8 +29,9 @@ a temporary directory. Defaults to \code{FALSE}.}
 calculate impedance for walking and cycling based on street slopes.
 Available options include \code{TOBLER} (Default) and \code{MINETTI}, or \code{NONE}
 to ignore elevation. R5 loads elevation data from \code{.tif} files saved
-inside the \code{data_path} directory. See more info in the Details section
-below.}
+inside the \code{data_path} directory. Elevation raster must be in WGS 84
+(EPSG:4326) coordinate reference system. See more info in the Details
+section below.}
 
 \item{overwrite}{A logical. Whether to overwrite an existing \code{network.dat}
 or to use a cached file. Defaults to \code{FALSE} (i.e. use a cached
@@ -66,7 +67,7 @@ information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz
 }
 
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files

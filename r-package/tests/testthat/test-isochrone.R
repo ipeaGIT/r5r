@@ -11,7 +11,7 @@ departure_datetime <- as.POSIXct(
 tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
                    origins = pois[2,],
                    cutoffs = c(0, 30),
-                   sample_size = 0.8,
+                   zoom = 10,
                    mode = "WALK",
                    mode_egress = "WALK",
                    departure_datetime = Sys.time(),
@@ -31,7 +31,7 @@ tester <- function(r5r_network = get("r5r_network", envir = parent.frame()),
     r5r_network,
     origins = origins,
     cutoffs = cutoffs,
-    sample_size = sample_size,
+    zoom = zoom,
     mode = mode,
     mode_egress = mode_egress,
     departure_datetime = departure_datetime,
@@ -84,10 +84,9 @@ test_that("errors due to incorrect input types - other inputs", {
   expect_error(tester(cutoffs = "50"))
   expect_error(tester(cutoffs = -5))
   expect_error(tester(polygon_output = 'banana'))
-  expect_error(tester(sample_size = "50"))
-  expect_error(tester(sample_size = 2))
-  expect_error(tester(sample_size = .1))
-  expect_error(tester(sample_size = c(.3, .6)))
+  expect_error(tester(zoom=8))
+  expect_error(tester(zoom=13))
+  expect_error(tester(zoom="banana"))
 })
 
 
@@ -95,10 +94,11 @@ test_that("errors due to incorrect input types - other inputs", {
 test_that("output is an sf with correct columns", {
   iso <- tester()
   expect_s3_class(iso, "sf")
-  expect_identical(names(iso), c("id", "isochrone", "polygons"))
+  expect_identical(names(iso), c("id", "isochrone", "percentile", "polygons"))
   expect_type(iso$id, "character")
   expect_type(iso$isochrone, "double")
   expect_type(iso$polygons, "list")
+  print(class(iso$polygons[1]))
   expect_true("sfc_POLYGON" %in% class(iso$polygons[1]))
 
   # more cutoffs means more rows

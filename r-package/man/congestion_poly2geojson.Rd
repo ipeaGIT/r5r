@@ -17,7 +17,7 @@ Support function that checks the input of speeds polygon passed to
 \code{build_custom_network()} and saves it to a \code{.geojson} temporary file.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 
 # read polygons with new speeds
 congestion_poly <- readRDS(

@@ -11,7 +11,7 @@ isochrone(
   mode = "transit",
   mode_egress = "walk",
   cutoffs = c(0, 15, 30),
-  sample_size = 0.8,
+  zoom = 10,
   departure_datetime = Sys.time(),
   polygon_output = TRUE,
   time_window = 10L,
@@ -24,9 +24,11 @@ isochrone(
   max_rides = 3,
   max_lts = 2,
   draws_per_minute = 5L,
+  percentiles = NULL,
   n_threads = Inf,
   verbose = FALSE,
-  progress = TRUE
+  progress = TRUE,
+  sample_size = deprecated()
 )
 }
 \arguments{
@@ -49,11 +51,14 @@ from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \item{cutoffs}{numeric vector. Number of minutes to define the time span of
 each Isochrone. Defaults to \code{c(0, 15, 30)}.}
 
-\item{sample_size}{numeric. Sample size of nodes in the transport network used
-to estimate isochrones. Defaults to \code{0.8} (80\% of all nodes in the
-transport network). Value can range between \code{0.2} and \code{1}. Smaller
-values increase computation speed but return results with lower
-precision. This parameter has no effect when \code{polygon_output = FALSE}.}
+\item{zoom}{Resolution of the travel time surface used to create isochrones,
+can be between \code{9} and \code{12.} The default is \code{10} (which uses cells of
+153 meters at the Equator). More detailed isochrones will result from
+larger numbers, at the expense of compute time. Specifically, a raster
+grid of travel times in the Web Mercator projection at this zoom level
+is created, and the isochrones are interpolated from this grid. For
+more information on how the grid cells are defined, see
+\href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}}
 
 \item{departure_datetime}{A POSIXct object. Please note that the departure
 time only influences public transport legs. When working with public
@@ -122,6 +127,20 @@ results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
 feed does not have a frequency table, r5r still allows for multiple runs
 over the set \code{time_window} but in a deterministic way.}
 
+\item{percentiles}{An integer vector (max length of 5). Specifies the
+percentile to use when returning accessibility estimates within the given
+time window. Please note that this parameter is applied to the travel time
+estimates that generate the accessibility results, and not to the
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see \code{R5} documentation at \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
+
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
 
@@ -137,6 +156,8 @@ the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
 messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
 computation efficiency, because the progress counter must be
 synchronized among all active threads.}
+
+\item{sample_size}{deprecated, no longer has any effect.}
 }
 \value{
 A \verb{"sf" "data.frame"} for each isochrone of each origin.
@@ -234,7 +255,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 }
 
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 options(java.parameters = "-Xmx2G")
 library(r5r)
 library(ggplot2)

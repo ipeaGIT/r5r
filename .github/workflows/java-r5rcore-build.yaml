@@ -20,11 +20,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
+#        with:
+#          use-public-rspm: true # this no longer works as of September 2025
 
       - name: Install R packages
         run: |
+          # this specification is necessary for some reason as of September 2025
+          options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"))
           install.packages(c('devtools', 'remotes'))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
@@ -44,7 +46,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        uses: gradle/wrapper-validation-action@v2
       - name: Build with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
