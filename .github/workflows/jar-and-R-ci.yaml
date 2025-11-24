@@ -69,7 +69,7 @@ jobs:
 
     runs-on: ${{ matrix.config.os }}
 
-    name: R-CMD-check ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: R-CMD-check ${{ matrix.config.os }} (R ${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
@@ -89,6 +89,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Sync to latest HEAD including rebuilt JAR
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          git fetch origin $BRANCH
+          git checkout $BRANCH
+          git pull origin $BRANCH
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -145,6 +152,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Sync to latest HEAD including rebuilt JAR
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          git fetch origin $BRANCH
+          git checkout $BRANCH
+          git pull origin $BRANCH
+
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
@@ -174,6 +188,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Sync to latest HEAD including rebuilt JAR
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          git fetch origin $BRANCH
+          git checkout $BRANCH
+          git pull origin $BRANCH
+
       - uses: r-lib/actions/setup-r@v2
 
       - name: Java setup
@@ -187,13 +208,6 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
           working-directory: r-package
-
-      - name: Sync to latest state of the branch, get jar
-        run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          git fetch origin $BRANCH
-          git checkout $BRANCH
-          git pull origin $BRANCH
 
       - name: Test coverage
         run: |
