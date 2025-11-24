@@ -1,4 +1,4 @@
-name: Java R5RCore build
+name: CI
 
 on:
   push:
