@@ -112,7 +112,7 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
         populateDataFrame(travelTimeResults, travelTimesTable);
 
         if (travelTimesTable.nRow() > 0) {
-            return null;
+            return travelTimesTable;
         } else {
             return null;
         }
