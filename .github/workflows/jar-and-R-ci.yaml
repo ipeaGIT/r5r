@@ -188,6 +188,13 @@ jobs:
           needs: coverage
           working-directory: r-package
 
+      - name: Sync to latest state of the branch, get jar
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          git fetch origin $BRANCH
+          git checkout $BRANCH
+          git pull origin $BRANCH
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(
