@@ -92,7 +92,7 @@ jobs:
 
       - name: Sync to latest HEAD including rebuilt JAR
         run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
+          BRANCH="${{ github.ref_name }}"
           git fetch origin $BRANCH
           git checkout $BRANCH
           git pull origin $BRANCH
@@ -154,7 +154,7 @@ jobs:
 
       - name: Sync to latest HEAD including rebuilt JAR
         run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
+          BRANCH="${{ github.ref_name }}"
           git fetch origin $BRANCH
           git checkout $BRANCH
           git pull origin $BRANCH
@@ -190,7 +190,7 @@ jobs:
 
       - name: Sync to latest HEAD including rebuilt JAR
         run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
+          BRANCH="${{ github.ref_name }}"
           git fetch origin $BRANCH
           git checkout $BRANCH
           git pull origin $BRANCH
