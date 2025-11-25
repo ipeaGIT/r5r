@@ -57,12 +57,26 @@ jobs:
       - name: Create pull request
         # https://github.com/actions/checkout/pull/1184
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          mv java-r5rcore/build/libs/java-r5rcore-*.jar r-package/inst/jar/r5r.jar
-          git add r-package/inst/jar/r5r.jar
-          git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
-          git push
+          NEW_JAR="java-r5rcore/build/libs/java-r5rcore-*.jar"
+          TARGET_JAR="r-package/inst/jar/r5r.jar"
+        
+          new_sha=$(sha256sum $NEW_JAR | awk '{print $1}')
+          # ensure file exists and then compute sha
+          old_sha=$( [ -f "$TARGET_JAR" ] && sha256sum "$TARGET_JAR" | awk '{print $1}' || echo "" )
+        
+          # Only push if sha different
+          if [ "$new_sha" != "$old_sha" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        
+            echo "JAR changed — updating."
+            mv $NEW_JAR $TARGET_JAR
+            git add $TARGET_JAR
+            git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
+            git push
+          else
+            echo "JAR unchanged — skipping commit."
+          fi
 
   R-CMD-check:
     needs: build-jar
