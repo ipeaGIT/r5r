@@ -1,5 +1,5 @@
 #' Setup a fare structure to calculate the monetary costs of trips
-#'
+#' a
 #' Creates a basic fare structure that describes how transit fares should be
 #' calculated in [travel_time_matrix()], [expanded_travel_time_matrix()],
 #' [accessibility()] and [pareto_frontier()]. This fare structure can be
