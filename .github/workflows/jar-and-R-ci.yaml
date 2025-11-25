@@ -63,7 +63,10 @@ jobs:
           new_sha=$(sha256sum $NEW_JAR | awk '{print $1}')
           # ensure file exists and then compute sha
           old_sha=$( [ -f "$TARGET_JAR" ] && sha256sum "$TARGET_JAR" | awk '{print $1}' || echo "" )
-        
+          
+          echo "NEW: $new_sha"
+          echo "OLD: $old_sha"
+          
           # Only push if sha different
           if [ "$new_sha" != "$old_sha" ]; then
             git config user.name "github-actions[bot]"
