@@ -74,10 +74,10 @@ r5r_sitrep()
 #> [21] checkmate_2.3.3    RColorBrewer_1.1-3 S7_0.2.1           desc_1.4.3        
 #> [25] lifecycle_1.0.4    compiler_4.5.2     farver_2.1.2       brio_1.1.5        
 #> [29] textshaping_1.0.4  fontawesome_0.5.3  class_7.3-23       htmltools_0.5.8.1 
-#> [33] sass_0.4.10        yaml_2.3.10        pillar_1.11.1      pkgdown_2.2.0     
+#> [33] sass_0.4.10        yaml_2.3.11        pillar_1.11.1      pkgdown_2.2.0     
 #> [37] jquerylib_0.1.4    whisker_0.4.1      openssl_2.3.4      classInt_0.4-11   
 #> [41] cachem_1.1.0       wk_0.9.4           zip_2.3.3          tidyselect_1.2.1  
-#> [45] digest_0.6.39      sf_1.0-22          dplyr_1.1.4        purrr_1.2.0       
+#> [45] digest_0.6.39      sf_1.0-23          dplyr_1.1.4        purrr_1.2.0       
 #> [49] labeling_0.4.3     fastmap_1.2.0      grid_4.5.2         cli_3.6.5         
 #> [53] magrittr_2.0.4     e1071_1.7-16       withr_3.0.2        scales_1.4.0      
 #> [57] backports_1.5.0    rappdirs_0.3.3     rmarkdown_2.30     askpass_1.2.1     
