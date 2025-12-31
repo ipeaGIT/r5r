@@ -17,6 +17,7 @@ specified dates.
 - New support function `street_network_bbox()` that efficiently extracts the 
 geographic bounding box of the transport network.
 - When direct routing fails the log now mentions the name of the origin and 
+- More informative messages in case of Java error in R5. Closed [#515](https://github.com/ipeaGIT/r5r/issues/515).
 destination points to help the user debug. Closed [#519](https://github.com/ipeaGIT/r5r/issues/519).
 
 **Bug fixes**
