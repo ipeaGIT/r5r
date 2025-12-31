@@ -543,6 +543,8 @@ library(dlstats)
 library(data.table)
 
 
+x <- cran_stats(c('geobr', 'geocodebr', 'flightsbr', 'enderecobr'))
+
 x <- cran_stats(c('r5r', 'otpr', 'opentripplanner', 'gtfsrouter','dodgr'))
 #x <- cran_stats(c('geobr', 'aopdata', 'flightsbr'))
 
