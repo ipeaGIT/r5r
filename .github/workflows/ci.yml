@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     paths:
-      - java-r5rcore/**
       - r-package/**
       - .github/workflows/**
 
