@@ -2,6 +2,8 @@ java-api/out
 java-api/target
 java-r5/target
 r-package/.Rproj.user
+r-package/inst/jar/*
+!r-package/inst/jar/.gitkeep
 r-package/.Rhistory
 R5.jar
 r5r_core.jar
