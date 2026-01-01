@@ -5,6 +5,8 @@ plugins {
 tasks.withType(Jar).configureEach {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
+    archiveFileName.set("r5r.jar")
+    destinationDirectory.set(file("$rootDir/../r-package/inst/jar"))
 }
 
 group 'org.ipea'
