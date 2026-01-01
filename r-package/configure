@@ -2,6 +2,6 @@
 set -x
 
 (
-  cd src
+  cd java
   ./gradlew build
 )
