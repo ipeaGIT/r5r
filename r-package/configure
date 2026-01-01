@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
+set -x
 
 (
-  cd ../java-r5rcore
+  cd src
   ./gradlew build
 )
