@@ -6,7 +6,7 @@ tasks.withType(Jar).configureEach {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
     archiveFileName.set("r5r.jar")
-    destinationDirectory.set(file("inst/jar"))
+    destinationDirectory.set(file("../inst/jar"))
 }
 
 group 'org.ipea'
