@@ -8,82 +8,7 @@ on:
       - .github/workflows/**
 
 jobs:
-  build-jar:
-    env:
-      GH_TOKEN: ${{ github.token }}
-
-    runs-on: ubuntu-latest
-
-    # don't build on merges to master
-    if: ${{ !github.ref_protected }}
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-#        with:
-#          use-public-rspm: true # this no longer works as of September 2025
-
-      - name: Install R packages
-        run: |
-          # this specification is necessary for some reason as of September 2025
-          options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"))
-          install.packages(c('devtools', 'remotes'))
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
-        working-directory: r-package
-
-      - name: Install system dependencies
-        run: |
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
-        working-directory: r-package
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-        with:
-          arguments: build
-          build-root-directory: java-r5rcore
-
-      - name: Create pull request
-        # https://github.com/actions/checkout/pull/1184
-        run: |
-          NEW_JAR="java-r5rcore/build/libs/java-r5rcore-*.jar"
-          TARGET_JAR="r-package/inst/jar/r5r.jar"
-        
-          new_sha=$(sha256sum $NEW_JAR | awk '{print $1}')
-          # ensure file exists and then compute sha
-          old_sha=$( [ -f "$TARGET_JAR" ] && sha256sum "$TARGET_JAR" | awk '{print $1}' || echo "" )
-          
-          echo "NEW: $new_sha"
-          echo "OLD: $old_sha"
-          
-          # Only push if sha different
-          if [ "$new_sha" != "$old_sha" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        
-            echo "JAR changed — updating."
-            mv $NEW_JAR $TARGET_JAR
-            git add $TARGET_JAR
-            git commit -m "Rebuild JAR for commit ${GITHUB_SHA}"
-            git push
-          else
-            echo "JAR unchanged — skipping commit."
-          fi
-
   R-CMD-check:
-    needs: build-jar
-
     runs-on: ${{ matrix.config.os }}
 
     name: R-CMD-check ${{ matrix.config.os }} (R ${{ matrix.config.r }})
@@ -106,12 +31,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Sync to latest HEAD including rebuilt JAR
-        run: |
-          git fetch origin "${{ github.ref_name }}"
-          git checkout "${{ github.ref_name }}"
-          git pull origin "${{ github.ref_name }}"
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -147,8 +66,6 @@ jobs:
           working-directory: r-package
 
   R-CMD-check-CRAN:
-    needs: build-jar
-
     runs-on: ${{ matrix.config.os }}
 
     name: R-CMD-check-CRAN
@@ -167,12 +84,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Sync to latest HEAD including rebuilt JAR
-        run: |
-          git fetch origin "${{ github.ref_name }}"
-          git checkout "${{ github.ref_name }}"
-          git pull origin "${{ github.ref_name }}"
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -194,20 +105,12 @@ jobs:
           NOT_CRAN: false
 
   test-coverage:
-    needs: build-jar
-
     runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Sync to latest HEAD including rebuilt JAR
-        run: |
-          git fetch origin "${{ github.ref_name }}"
-          git checkout "${{ github.ref_name }}"
-          git pull origin "${{ github.ref_name }}"
 
       - uses: r-lib/actions/setup-r@v2
 
