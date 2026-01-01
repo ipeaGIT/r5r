@@ -228,7 +228,7 @@ process_surfaces <- function (sfaces) {
 # process a single surface into an R object
 process_surface <- function (sface, zoom, west, north, width, height) {
   methods::new("travel_time_surface",
-    matrix=matrix(sface, height, width, byrow = TRUE),
+    matrix=matrix(as.double(sface), height, width, byrow = TRUE),
     zoom = zoom,
     width = width,
     height = height,
