@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -x
+
+(
+  cd java
+  ./gradlew build
+)
