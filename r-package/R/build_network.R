@@ -127,18 +127,23 @@ build_network <- function(data_path,
     }
 
     errors = java_to_dt(r5r_network$gtfsErrors)
-    if (any(errors$priority == "HIGH")) {
-      cli::cli_alert_danger("High priority errors found; network will not be usable. Use gtfs_errors(r5r_network) to see them.")
-      # TODO some way to make it so the network can't be passed to any analysis functions but gtfs_errors still works?
-    } else {
-      if (nrow(errors) > 0) {
-        cli::cli_alert_warning("{nrow(errors)} errors found in GTFS. Use gtfs_errors(r5r_network) to see them.")
-      }
 
-      cli::cli_inform(c(
-        v = "Finished building network at {.path {data_path}}"
-      ))
+    # always write error file even when empty, so that if you fix errors the error file gets overwritten on rebuild
+    write.csv(errors, file.path(data_path, "gtfs_errors.csv"))
+
+    if (any(errors$priority == "HIGH")) {
+      cli::cli_abort(
+        "High priority GTFS errors found; network build failed. See gtfs_errors.csv in network directory for details."
+      )
+    } else if (nrow(errors) > 0) {
+        cli::cli_alert_warning(
+          "{nrow(errors)} errors found in GTFS. See gtfs_errors.csv in network directory for details."
+        )
     }
+
+    cli::cli_inform(c(
+      v = "Finished building network at {.path {data_path}}"
+    ))
   }
 
   return(wrap_r5r_network(r5r_network))
