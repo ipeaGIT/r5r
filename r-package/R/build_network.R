@@ -127,18 +127,22 @@ build_network <- function(data_path,
     }
 
     errors = java_to_dt(r5r_network$gtfsErrors)
+    errfile = file.path(data_path, "gtfs_errors.csv")
 
     # always write error file even when empty, so that if you fix errors the error file gets overwritten on rebuild
-    write.csv(errors, file.path(data_path, "gtfs_errors.csv"))
+    write.csv(errors, errfile)
 
     if (any(errors$priority == "HIGH")) {
-      cli::cli_abort(
-        "High priority GTFS errors found; network build failed. See gtfs_errors.csv in network directory for details."
-      )
+      cli::cli_abort(c(
+        "x"="High priority GTFS errors found; network build failed.",
+        "i" = "Use {.fn r5r::get_gtfs_errors} to see them, or review {.file {errfile}}."
+
+      ))
     } else if (nrow(errors) > 0) {
-        cli::cli_alert_warning(
-          "{nrow(errors)} errors found in GTFS. See gtfs_errors.csv in network directory for details."
-        )
+        cli::cli_inform(c(
+          "!" = "{nrow(errors)} errors found in GTFS.",
+          "i" = "Use {.fn r5r::get_gtfs_errors} to see them, or review {.file {errfile}}."
+        ))
     }
 
     cli::cli_inform(c(
