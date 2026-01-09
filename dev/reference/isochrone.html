@@ -17,7 +17,7 @@ to the centroids of all segments in the transport network."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.3.0.999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@ to the centroids of all segments in the transport network.</p>
 <span>  mode <span class="op">=</span> <span class="st">"transit"</span>,</span>
 <span>  mode_egress <span class="op">=</span> <span class="st">"walk"</span>,</span>
 <span>  cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">30</span><span class="op">)</span>,</span>
-<span>  sample_size <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  polygon_output <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  time_window <span class="op">=</span> <span class="fl">10L</span>,</span>
@@ -92,9 +92,11 @@ to the centroids of all segments in the transport network.</p>
 <span>  max_rides <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  max_lts <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>  percentiles <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  sample_size <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -133,12 +135,15 @@ from the last public transport. It can be either <code>WALK</code>, <code>BICYCL
 each Isochrone. Defaults to <code>c(0, 15, 30)</code>.</p></dd>
 
 
-<dt id="arg-sample-size">sample_size<a class="anchor" aria-label="anchor" href="#arg-sample-size"></a></dt>
-<dd><p>numeric. Sample size of nodes in the transport network used
-to estimate isochrones. Defaults to <code>0.8</code> (80% of all nodes in the
-transport network). Value can range between <code>0.2</code> and <code>1</code>. Smaller
-values increase computation speed but return results with lower
-precision. This parameter has no effect when <code>polygon_output = FALSE</code>.</p></dd>
+<dt id="arg-zoom">zoom<a class="anchor" aria-label="anchor" href="#arg-zoom"></a></dt>
+<dd><p>Resolution of the travel time surface used to create isochrones,
+can be between <code>9</code> and <code>12.</code> The default is <code>10</code> (which uses cells of
+153 meters at the Equator). More detailed isochrones will result from
+larger numbers, at the expense of compute time. Specifically, a raster
+grid of travel times in the Web Mercator projection at this zoom level
+is created, and the isochrones are interpolated from this grid. For
+more information on how the grid cells are defined, see
+<a href="https://docs.conveyal.com/analysis/methodology#zoom-levels" class="external-link">the R5 documentation.</a></p></dd>
 
 
 <dt id="arg-departure-datetime">departure_datetime<a class="anchor" aria-label="anchor" href="#arg-departure-datetime"></a></dt>
@@ -232,6 +237,22 @@ feed does not have a frequency table, r5r still allows for multiple runs
 over the set <code>time_window</code> but in a deterministic way.</p></dd>
 
 
+<dt id="arg-percentiles">percentiles<a class="anchor" aria-label="anchor" href="#arg-percentiles"></a></dt>
+<dd><p>An integer vector (max length of 5). Specifies the
+percentile to use when returning accessibility estimates within the given
+time window. Please note that this parameter is applied to the travel time
+estimates that generate the accessibility results, and not to the
+accessibility distribution itself (i.e. if the 25th percentile is
+specified, the accessibility is calculated from the 25th percentile travel
+time, which may or may not be equal to the 25th percentile of the
+accessibility distribution itself). Defaults to 50, returning the
+accessibility calculated from the median travel time. If a vector with
+length bigger than 1 is passed, the output contains an additional column
+that specifies the percentile of each accessibility estimate. Due to
+upstream restrictions, only 5 percentiles can be specified at a time. For
+more details, please see <code>R5</code> documentation at <a href="https://docs.conveyal.com/analysis/methodology#accounting-for-variability" class="external-link">https://docs.conveyal.com/analysis/methodology#accounting-for-variability</a>.</p></dd>
+
+
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
 <dd><p>An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (<code>Inf</code>).</p></dd>
@@ -252,6 +273,10 @@ the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code>
 messages. Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for
 computation efficiency, because the progress counter must be
 synchronized among all active threads.</p></dd>
+
+
+<dt id="arg-sample-size">sample_size<a class="anchor" aria-label="anchor" href="#arg-sample-size"></a></dt>
+<dd><p>deprecated, no longer has any effect.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -345,7 +370,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span><span class="co"># build transport network</span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># load origin/point of interest</span></span></span>
@@ -368,16 +393,16 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iso_poly</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 4 features and 2 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 4 features and 3 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.2454 ymin: -30.082 xmax: -51.1554 ymax: -29.9966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -51.25671 ymin: -30.08098 xmax: -51.15646 ymax: -29.98943</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    id isochrone                       polygons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120 POLYGON ((-51.2125 -30.082,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 bus_central_station        90 POLYGON ((-51.2421 -30.0365...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 bus_central_station        60 POLYGON ((-51.2421 -30.0365...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30 POLYGON ((-51.228 -30.0336,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    id isochrone percentile                       polygons</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 bus_central_station       120        p50 POLYGON ((-51.21277 -30.080...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 bus_central_station        90        p50 POLYGON ((-51.21071 -30.065...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 bus_central_station        60        p50 POLYGON ((-51.21414 -30.051...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 bus_central_station        30        p50 POLYGON ((-51.21552 -30.037...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate line-based isochrone from origin</span></span></span>
@@ -451,7 +476,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

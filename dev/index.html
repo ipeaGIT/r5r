@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.3.0.999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,7 @@
 <p>The package has seven <strong>fundamental functions</strong> :</p>
 <ol style="list-style-type: decimal">
 <li>
-<code><a href="reference/setup_r5.html">setup_r5()</a></code>
+<code><a href="reference/build_network.html">build_network()</a></code>
 <ul>
 <li>Downloads and stores locally an R5 Jar file (the Jar file is downloaded only once per installation)</li>
 <li>Builds a multimodal transport network given (1) a OpenStreetMap street network in <code>.pbf</code> format (<em>mandatory</em>), (2) one or more public transport networks in <code>GTFS.zip</code> format (optional), and (3) elevation data in <code>raster.tif</code> (optional).</li>
@@ -164,7 +164,6 @@
 </ol>
 <p><small><a href="https://ipeagit.github.io/r5r/reference/index.html">See more details about each function here</a></small></p>
 <p>obs. Most of these functions also allow users to account for monetary travel costs when generating travel time matrices and accessibility estimates. More info on how to consider monetary costs can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">this vignette</a>.</p>
-<p>obs.2 The package also includes a convenient function <code>build_custom_network()</code> that allows one build a routable network with modified OSM car speeds to account for different scenarios of traffic congestion and road closure. <a href="https://ipeagit.github.io/r5r/articles/build_custom_network.html">See this vignette</a>.</p>
 <p>The package also includes a few <strong>support functions</strong>.</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -244,7 +243,7 @@
 <span></span>
 <span><span class="co"># 1) build transport network, pointing to the path where OSM and GTFS data are stored</span></span>
 <span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
-<span><span class="va">r5r_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/setup_r5.html">setup_r5</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/build_network.html">build_network</a></span><span class="op">(</span>data_path <span class="op">=</span> <span class="va">path</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 2) load origin/destination points and set arguments</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa/poa_hexgrid.csv"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span><span class="op">)</span></span>
@@ -255,7 +254,7 @@
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3.1) calculate a travel time matrix</span></span>
-<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                          origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                          mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -264,7 +263,7 @@
 <span>                          max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3.2) or get detailed info on multiple alternative routes</span></span>
-<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">det</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/detailed_itineraries.html">detailed_itineraries</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                            origins <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">370</span>, <span class="op">]</span>,</span>
 <span>                            destinations <span class="op">=</span> <span class="va">points</span><span class="op">[</span><span class="fl">200</span>, <span class="op">]</span>,</span>
 <span>                            mode <span class="op">=</span> <span class="va">mode</span>,</span>
@@ -275,7 +274,7 @@
 <span>                            drop_geometry <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 4) Calculate number of schools accessible within 20 minutes </span></span>
-<span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_core <span class="op">=</span> <span class="va">r5r_core</span>,</span>
+<span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/accessibility.html">accessibility</a></span><span class="op">(</span>r5r_network <span class="op">=</span> <span class="va">r5r_network</span>,</span>
 <span>                        origins <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        destinations <span class="op">=</span> <span class="va">points</span>,</span>
 <span>                        opportunities_colname <span class="op">=</span> <span class="st">"schools"</span>,</span>
@@ -396,7 +395,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

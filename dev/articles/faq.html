@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.3.0.999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>FAQ - Frequently Asked Questions</h1>
             
-            <h4 data-toc-skip class="date">2025-08-19</h4>
+            <h4 data-toc-skip class="date">2026-01-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/faq.Rmd" class="external-link"><code>vignettes/faq.Rmd</code></a></small>
       <div class="d-none name"><code>faq.Rmd</code></div>
@@ -116,14 +116,16 @@ to street nework data?<a class="anchor" aria-label="anchor" href="#is-it-possibl
 <details><summary>
 click to expand
 </summary><blockquote>
-<p><code>r5r</code> includes a convenient function
-<code>build_custom_network()</code> that allows one to build a routable
-network with modified OSM car speeds to account for different scenarios
-of traffic congestion and road closure. <a href="https://ipeagit.github.io/r5r/articles/build_custom_network.html">See
-this vignette</a>. For other changes to the OSM network (e.g. including
-a new road link), you would need to edit the OpenStreetMap
-<code>.pbf</code> file direclty before using it in <code>r5r</code>. To
-to this, you can edit the <code>.pbf</code> file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
+<p>Yes, all routing and accessibility functions in <code>r5r</code> have
+new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code>
+and <code>new_lts</code> which allow one to use custom car speeds and
+LTS levels for cycling. These parameters provide convient and efficient
+ways to build different scenarios of traffic congestion, road closure
+and interventions in cycling infrastructure. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
+vignette</a>. For other changes to the OSM network (e.g. including a new
+road link), you would need to edit the OpenStreetMap <code>.pbf</code>
+file direclty before using it in <code>r5r</code>. To to this, you can
+edit the <code>.pbf</code> file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
 (https://wiki.openstreetmap.org/wiki/JOSM)</a>. Mind you that the the
 OpenStreetMap tags can be changed but they cannot be removed from the
 data.</p>
@@ -229,7 +231,7 @@ origin-destination pair you queried.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

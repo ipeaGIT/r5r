@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.0999999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.3.0.999</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,14 +51,29 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230-dev">r5r 2.3.0 dev<a class="anchor" aria-label="anchor" href="#r5r-230-dev"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.4.0" id="r5r-240-dev">r5r 2.4.0 dev<a class="anchor" aria-label="anchor" href="#r5r-240-dev"></a></h2>
+<p><strong>Major changes</strong></p>
+<ul><li>The <code><a href="../reference/isochrone.html">isochrone()</a></code> function has gone through major changes which substantially improved polygon-based isochrones. The function now builds on top of a travel time surface that uses a regular grid of points across the network (specifically a grid of Web Mercator pixels) and then uses the marching squares algorithm to generate the isochrone polygons. See detailed in the updated vignette. Closed <a href="https://github.com/ipeaGIT/r5r/issues/455" class="external-link">#455</a> and Closed <a href="https://github.com/ipeaGIT/r5r/issues/495" class="external-link">#495</a>.</li>
+</ul><p><strong>Minor changes</strong></p>
+<ul><li>New support function <code><a href="../reference/check_transit_availability.html">check_transit_availability()</a></code> that checks the number and proportion of public transport services from the GTFS feeds that are active on specified dates.</li>
+<li>New support function <code><a href="../reference/street_network_bbox.html">street_network_bbox()</a></code> that efficiently extracts the geographic bounding box of the transport network.</li>
+<li>More informative messages in case of Java error in R5. Closed <a href="https://github.com/ipeaGIT/r5r/issues/515" class="external-link">#515</a>.</li>
+<li>When direct routing fails the log now mentions the name of the origin and destination points to help the user debug. Closed <a href="https://github.com/ipeaGIT/r5r/issues/519" class="external-link">#519</a>.</li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>Revert back the order of origins destinations for Direct Modes. Fix implemented <code>in travel_time_matrix()</code>, <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> and <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/501" class="external-link">#501</a>.</li>
+<li>Reverse search optimization is now only applicable to walking. Closes <a href="https://github.com/ipeaGIT/r5r/issues/517" class="external-link">#517</a>.</li>
+</ul><p><strong>New contributors to r5r</strong></p>
+<ul><li><a href="https://github.com/e-kotov" class="external-link">Egor Kotov</a></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.0" id="r5r-230">r5r 2.3.0<a class="anchor" aria-label="anchor" href="#r5r-230"></a></h2><p class="text-muted">CRAN release: 2025-08-21</p>
 <p><strong>Major changes</strong></p>
 <ul><li>New function <code><a href="../reference/build_network.html">build_network()</a></code> to replace <code><a href="../reference/setup_r5.html">setup_r5()</a></code>, which is being deprecated. Idiomatically <code>r5r_core</code> is now <code>r5r_network</code>.</li>
 <li>New function <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes <a href="https://github.com/ipeaGIT/r5r/issues/291" class="external-link">#291</a>
 </li>
 <li>We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> and <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code>. In practice, this means that these functions are now much faster when there are multiple origins to few destinations but only when there is no elevation <code>.tif</code> file in the data path. Closes <a href="https://github.com/ipeaGIT/r5r/issues/450" class="external-link">#450</a>
 </li>
-<li>All routing and accessibility functions now have new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code> and <code>new_lts</code>, which allow one to use custom car speeds and LTS levels for cycling, which allow one to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
+<li>All routing and accessibility functions in <code>r5r</code> have new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code> and <code>new_lts</code> which allow one to use custom car speeds and LTS levels for cycling. These parameters provide convient and efficient ways to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>
 </li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>The routable transport network built with <code><a href="../reference/build_network.html">build_network()</a></code> and <code><a href="../reference/setup_r5.html">setup_r5()</a></code> now have their own class <code>"r5r_network"</code>, making the package more consistent and safer from errors <a href="https://github.com/ipeaGIT/r5r/pull/472" class="external-link">#472</a>.</li>
@@ -68,6 +83,7 @@
 <li>Removed date from r5r-log. You no longer have to delete the previous day’s log! <a href="https://github.com/ipeaGIT/r5r/pull/456" class="external-link">#456</a>
 </li>
 <li>Improved warning and error messages.</li>
+<li>r5r developers can now set <code>options(r5r.r5jar=...)</code> to use a local JAR instead of the R5 jar downloaded by r5r.</li>
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li>Fixed a bug where <code>network_settings.json</code> wasn’t showing the right version numbers <a href="https://github.com/ipeaGIT/r5r/pull/459" class="external-link">#459</a>. Version number now dynamically updated <a href="https://github.com/ipeaGIT/r5r/pull/456" class="external-link">#456</a>.</li>
 </ul><p><strong>New co-authors</strong></p>
@@ -121,9 +137,12 @@
 </li>
 <li>Improved documentation of parameter <code>suboptimal_minutes</code> in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
 <li>Updated the vignette on time window to explain how this parameter behaves when used in the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function.</li>
-</ul><p><strong>Bug Fixes</strong> - Fixed bug that prevented the use the <code>output_dir</code> parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR </a><a href="https://github.com/ipeaGIT/r5r/issues/354" class="external-link">#354</a>) from Luyu Liu. - Fixed bug that prevented <code>detailed_itineraries</code> from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.</p>
-<p><strong>New contributors to r5r</strong> - <a href="https://github.com/luyuliu" class="external-link">Luyu Liu</a></p>
-</div>
+</ul><p><strong>Bug Fixes</strong></p>
+<ul><li>Fixed bug that prevented the use the <code>output_dir</code> parameter in the <code>detailed_itineraries(all_to_all = TRUE)</code> function. Closes <a href="https://github.com/ipeaGIT/r5r/issues/327" class="external-link">#327</a> with a contribution (<a href="https://github.com/ipeaGIT/r5r/pull/354" class="external-link">PR </a><a href="https://github.com/ipeaGIT/r5r/issues/354" class="external-link">#354</a>) from Luyu Liu.</li>
+<li>Fixed bug that prevented <code>detailed_itineraries</code> from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.</li>
+</ul><p><strong>New contributors to r5r</strong></p>
+<ul><li><a href="https://github.com/luyuliu" class="external-link">Luyu Liu</a></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.0" id="r5r-110">r5r 1.1.0<a class="anchor" aria-label="anchor" href="#r5r-110"></a></h2><p class="text-muted">CRAN release: 2023-08-08</p>
 <p><strong>Major changes</strong></p>
@@ -325,7 +344,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

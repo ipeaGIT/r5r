@@ -1,0 +1,413 @@
+# Using custom OSM car speeds and LTS
+
+Abstract
+
+This vignette shows how to calculate travel times and accessibility with
+custom OSM car speeds and Level of Traffic Stress, which can be used to
+simulate different scenarios of traffic congestion and road closures, or
+interventions in cycling infrastructure.
+
+## 1. Introduction
+
+By default, routing by car in `R5` considers that vehicles travel at the
+legal speed limit in each OSM road edge. This is commonly referred to as
+a “free flow scenario”, without congestion. However, the average speed
+of car trips is different (usually slower) than the legal speed limit in
+most real case scenarios due to traffic conditions and driving behavior.
+Similarly, `R5` considers road speeds, road hierarchy and the quality of
+cycling infrastructure to infer the Level of Traffic Stress (LTS) of
+each road segment in the transportation network.
+
+This vignette shows how you can calculate travel times and accessibility
+using custom OSM car speeds or LTS, which can be used to simulate
+different scenarios of traffic congestion and road closures, or
+interventions in cycling infrastructure.
+
+In short, OSM car speeds and LTS values can be changed using two
+different strategies: (1) using a `data.frame` to apply changes to
+individual road segments, or (2) using a spatial `sf` to apply changes
+to certain roads within / touching the spatial simple feature. Let’s see
+how this works with a few examples using the a sample data set for the
+city of Porto Alegre (Brazil) included in `r5r`. First, let’s load a few
+libraries and build our rotatable transportation network.
+
+``` r
+# increase Java memory
+options(java.parameters = "-Xmx2G")
+
+# load libraries
+library(r5r)
+library(dplyr)
+library(data.table)
+library(ggplot2)
+
+# data path
+data_path <- system.file("extdata/poa", package = "r5r")
+
+# build network
+r5r_network <- r5r::build_network(
+  data_path = data_path,
+  verbose = FALSE
+  )
+```
+
+## 2. Changing car speeds
+
+All of the routing and accessibility functions in {r5r} now have the
+following parameters that allow one to use custom OSM car speeds.
+
+- `new_carspeeds`: here, users must pass either a `data.frame` that
+  indicates the new car speed for each OSM edge id, OR an
+  `sf data.frame` polygon that indicates the new car speed for all the
+  roads that fall within each polygon.
+- `carspeed_scale`: this parameter allows one to set the default car
+  speed for all of the road segments not specified in `new_carspeeds`.
+  By default, `carspeed_scale = NULL` and the speeds of the unlisted
+  roads are kept unchanged.
+
+Let’s see a couple examples.
+
+### 2.1 Changing car speeds by OSM edge
+
+In this first example, we will pass the new car speeds using a sample
+`data.frame` that comes with the package. Mind you that this data frame
+must contain the columns `"osm_id"`, `"max_speed"` and `"speed_type"`.
+The `"speed_type"` column is of class character where all values must be
+either `"scale"` or `"km/h"`, indicating whether the values in
+`"max_speed"` should be interpreted as percentages of original speeds
+(`"scale"`) or as absolute speeds (`"km/h"`). Like this:
+
+``` r
+# read data.frame with new car speeds
+edge_speed_factors <- read.csv(
+  file.path(data_path, "poa_osm_congestion.csv")
+  )
+
+head(edge_speed_factors)
+#>      osm_id max_speed speed_type
+#> 1  27184648       0.5      scale
+#> 2 762361901       0.5      scale
+#> 3 568609955       0.5      scale
+#> 4 709834913       0.5      scale
+#> 5 709834914       0.5      scale
+#> 6  77705540       0.5      scale
+```
+
+In this example, the values of the `"max_speed"` column are all set to
+`0.5` and `speed_type == "scale"`, which means that the driving speed of
+those OSM edges listed in the `data.frame` will be at 50% of the
+original speed in the OSM data.
+
+Now you can simply run any routing or accessibility function passing the
+parameters `new_carspeeds` and `carspeed_scale`:
+
+``` r
+# origins and destination points
+points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
+
+# travel time matrix
+ttm_congestion <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'car',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_carspeeds = edge_speed_factors,
+  carspeed_scale = 0.8
+)
+```
+
+Obs. Mind you that, even though we have set the speed factors to `0.5`,
+travel times might not become twice as long. This is because of how
+travel times by car are also affected by intersections, and how changes
+in the road speeds might also affect the route and hence the trip
+distance itself.
+
+Now let’s dive into a more realistic examples.
+
+#### 2.1.1 Setting different congestion levels by road hierarchy
+
+In this example, we’ll set different speed factors for roads of
+different hierarchy levels. We can assume for example that congestion
+levels tend to be more intense in roads of higher hierarchy. We can do
+this in two simple steps.
+
+First we need to do read the OSM data from our `.pbf` file, and to
+filter the OSM edges with the road types we want.
+
+``` r
+# path to OSM pbf
+pbf_path <- paste0(data_path, "/poa_osm.pbf")
+  
+# read layer of lines from pbf
+roads <- sf::st_read(
+  pbf_path, 
+  layer = 'lines', 
+  quiet = TRUE
+  )
+
+# Filter only road types of interest
+rt <- c("motorway", "primary", "secondary", "tertiary") 
+
+roads <- roads |>
+  select(osm_id, highway) |>
+  filter(highway %in% rt)
+
+head(roads)
+#> Simple feature collection with 6 features and 2 fields
+#> Geometry type: LINESTRING
+#> Dimension:     XY
+#> Bounding box:  xmin: -51.21315 ymin: -30.06624 xmax: -51.15025 ymax: -30.04939
+#> Geodetic CRS:  WGS 84
+#>     osm_id highway                       geometry
+#> 1 26786712 primary LINESTRING (-51.15164 -30.0...
+#> 2 26786730 primary LINESTRING (-51.17265 -30.0...
+#> 3 26786732 primary LINESTRING (-51.15025 -30.0...
+#> 4 26847798 primary LINESTRING (-51.21315 -30.0...
+#> 5 26936215 primary LINESTRING (-51.20818 -30.0...
+#> 6 26936224 primary LINESTRING (-51.20818 -30.0...
+```
+
+Here’s how the road network looks like.
+
+``` r
+# map
+plot(roads["highway"])
+```
+
+![](scenarios_files/figure-html/unnamed-chunk-6-1.png)
+
+Now we only need to add a new column `"max_speed"` with values
+conditioned on the road type, and make sure the `osm_id` is of class
+`numeric`. We also need to include the column `speed_type` to make it
+clear that max speeds should be interpreted as a `"scale"` factor. The
+`data.frame` looks like this:
+
+``` r
+new_edge_speeds <- roads |>
+  mutate( 
+    osm_id = as.numeric(osm_id),
+    max_speed = case_when(
+      highway == "motorway"  ~ 0.75,
+      highway == "primary"   ~ 0.8,
+      highway == "secondary" ~ 0.85,
+      highway == "tertiary"  ~ 0.9)) |>
+  sf::st_drop_geometry()
+
+new_edge_speeds$speed_type <- "scale"
+
+head(new_edge_speeds)
+#>     osm_id highway max_speed speed_type
+#> 1 26786712 primary       0.8      scale
+#> 2 26786730 primary       0.8      scale
+#> 3 26786732 primary       0.8      scale
+#> 4 26847798 primary       0.8      scale
+#> 5 26936215 primary       0.8      scale
+#> 6 26936224 primary       0.8      scale
+```
+
+That’s it. Now we can calculate travel times with the modified OSM car
+speeds.
+
+``` r
+# travel time matrix
+ttm_congestion <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'car',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_carspeeds = new_edge_speeds
+  )
+```
+
+#### 2.1.2 Applying the same speed factor to all roads
+
+In this example, we’ll simulate as if the speed limits of all roads were
+changed to 40 Km/h. To do this, we simply edit the `new_edge_speeds`
+table we created in our previous example to assign a 40 Km/h to each and
+every OSM id.
+
+``` r
+# edit table with custom speeds to 40 km/h
+new_edge_speeds40 <- new_edge_speeds |>
+  mutate(max_speed = 40,
+         speed_type = "km/h")
+  
+# travel time matrix
+ttm_congestion <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'car',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_carspeeds = new_edge_speeds40
+  )
+```
+
+#### Extra tip:
+
+- **Road closure**: one can simulate a road closure by setting the
+  `"max_speed"` value to `0`. This can be quite handy for studies that
+  try to measure the resilience of transport systems to network
+  disruptions.
+
+### 2.2 Changing car speeds with a spatial polygon
+
+If you do not want to set the speed factor for each individual OSM road
+edge, you can use one or more spatial polygons to set the new car speeds
+of all the roads within those polygons. In this example with the sample
+data from {r5r}, we have two polygons in the city of Porto Alegre. The
+first one covers the extended city center, and the second polygon covers
+a few important roads that connect two major avenues in the city.
+
+``` r
+# read sf with congestion polygons
+congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
+
+# preview
+mapview::mapview(congestion_poly, zcol="scale")
+```
+
+Mind you that this `sf data.frame` must have a few mandatory columns:
+
+- `"poly_id"`: a unique id for each polygon
+- `"scale"`: the speed scaling factor for each polygon. Notice that this
+  parameter only works with relative speed as percentages of original
+  speeds. It *does not* work with absolute speeds in km/h.
+- `"priority"`: a number ranking which polygon should be considered in
+  case of overlapping polygons.
+
+``` r
+head(congestion_poly)
+#> Simple feature collection with 2 features and 3 fields
+#> Geometry type: POLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -51.24537 ymin: -30.04352 xmax: -51.21426 ymax: -30.02548
+#> Geodetic CRS:  WGS 84
+#>   poly_id scale priority                       geometry
+#> 1       1   0.7        1 POLYGON ((-51.22463 -30.034...
+#> 2       2   0.8        2 POLYGON ((-51.21426 -30.034...
+```
+
+In this example, we are simulating a higher congestion level of the
+roads in the city center, which would be running at 70% of the legal
+speed limit, and a slightly better performance for the roads in the
+second polygon, running at 80% of the speed limit. Finally, we can set
+`carspeed_scale = 0.95` to simulate that all the other roads in the city
+would be running at 95%.
+
+``` r
+ttm_congestion <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'car',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_carspeeds = congestion_poly,
+  carspeed_scale = 0.95
+  )
+```
+
+And that’s it!
+
+## 3. Changing cycling LTS values
+
+There are two approaches to changing LTS, which are fairly similar to
+how we can change road speeds. This can be done either with a
+`data.frame` indicating the new LTS of each individual OSM edge id, or
+an `sf data.frame`. The key difference is that the sf object needs to be
+of type LINESTRING. R5 will then find the nearest road for each line and
+update its LTS value accordingly.
+
+### 3.1 Changing LTS by OSM edge
+
+Now let’s simulate the local government has implemented protected cycle
+lanes or tracks across a few designated roads in our transport network.
+Mind you that the `data.frame` must contain the column `"lts"`
+indicating the new LTS value.
+
+``` r
+# read data.frame with new lts
+edge_lts <- read.csv(
+  file.path(data_path, "poa_osm_lts.csv")
+  )
+
+head(edge_lts)
+#>      osm_id lts
+#> 1  27184648   1
+#> 2 762361901   1
+#> 3 568609955   1
+#> 4 709834913   1
+#> 5 709834914   1
+#> 6  77705540   1
+```
+
+Now we simply need to pass this `data.frame` with the new LTS values to
+the parameter `new_lts` in any routing/accessibility function:
+
+``` r
+ttm_new_lts <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'bicycle',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_lts = edge_lts
+  )
+```
+
+### 3.2. Changing LTS with a spatial polygon
+
+Alternatively, we can pass a `sf` linestring of the roads where we want
+to simulate a some cycling network intervetion. Here we simulate that
+local authorities would have build dedicated lanes along all secondary
+roads in the city.
+
+``` r
+# read sf with congestion polygons
+lts_lines <- readRDS(file.path(data_path, "poa_ls_lts.rds"))
+
+# preview
+mapview::mapview(lts_lines, zcol="lts")
+```
+
+Now we only need to pass this `sf` with the new LTS values to the
+`new_lts` parameter in any routing/accessibility function:
+
+``` r
+ttm_new_lts <- r5r::travel_time_matrix(
+  r5r_network = r5r_network,
+  origins = points,
+  destinations = points,
+  mode = 'bicycle',
+  departure_datetime = Sys.time(),
+  max_trip_duration = 30,
+  new_lts = lts_lines
+  )
+```
+
+## Cleaning up after usage
+
+`r5r` objects are still allocated to any amount of memory previously set
+after they are done with their calculations. In order to remove an
+existing `r5r` object and reallocate the memory it had been using, we
+use the `stop_r5` function followed by a call to Java’s garbage
+collector, as follows:
+
+``` r
+# stop an specific r5r network
+r5r::stop_r5(r5r_network)
+
+# or stop all r5r networks at once
+r5r::stop_r5()
+rJava::.jgc(R.gc = TRUE)
+```
+
+If you have any suggestions or want to report an error, please visit
+[the package GitHub page](https://github.com/ipeaGIT/r5r).

@@ -1,0 +1,32 @@
+# Assign drop geometry
+
+Check the drop geometry input.
+
+## Usage
+
+``` r
+assign_drop_geometry(drop_geometry)
+```
+
+## Arguments
+
+- drop_geometry:
+
+  A logical.
+
+## Value
+
+A logical.
+
+## See also
+
+Other assigning functions:
+[`assign_decay_function()`](https://ipeagit.github.io/r5r/dev/reference/assign_decay_function.md),
+[`assign_departure()`](https://ipeagit.github.io/r5r/dev/reference/assign_departure.md),
+[`assign_max_street_time()`](https://ipeagit.github.io/r5r/dev/reference/assign_max_street_time.md),
+[`assign_max_trip_duration()`](https://ipeagit.github.io/r5r/dev/reference/assign_max_trip_duration.md),
+[`assign_mode()`](https://ipeagit.github.io/r5r/dev/reference/assign_mode.md),
+[`assign_opportunities()`](https://ipeagit.github.io/r5r/dev/reference/assign_opportunities.md),
+[`assign_osm_link_ids()`](https://ipeagit.github.io/r5r/dev/reference/assign_osm_link_ids.md),
+[`assign_points_input()`](https://ipeagit.github.io/r5r/dev/reference/assign_points_input.md),
+[`assign_shortest_path()`](https://ipeagit.github.io/r5r/dev/reference/assign_shortest_path.md)

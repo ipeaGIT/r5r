@@ -28,6 +28,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/assign_points_input.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/assign_shortest_path.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/build_network.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/check_transit_availability.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/congestion_poly2geojson.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/download_r5.html</loc></url>
@@ -49,6 +50,7 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_network-class.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/r5r_sitrep.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/read_fare_structure.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/reverse_back_if_direct_mode.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/reverse_if_direct_mode.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_breakdown.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/set_cutoffs.html</loc></url>
@@ -74,10 +76,12 @@
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/setup_r5.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/start_r5r_java.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/stop_r5.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/street_network_bbox.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.html</loc></url>
+<url><loc>https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/validate_bad_osm_ids.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/wrap_r5r_network.html</loc></url>
 <url><loc>https://ipeagit.github.io/r5r/dev/reference/write_fare_structure.html</loc></url>
