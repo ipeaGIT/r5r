@@ -60,6 +60,9 @@
 - [`find_snap()`](https://ipeagit.github.io/r5r/dev/reference/find_snap.md)
   : Find snapped locations of input points on street network
 
+- [`get_gtfs_errors()`](https://ipeagit.github.io/r5r/dev/reference/get_gtfs_errors.md)
+  : Get GTFS eventual errors encountered in network building
+
 - [`r5r_sitrep()`](https://ipeagit.github.io/r5r/dev/reference/r5r_sitrep.md)
   : Generate an r5r situation report to help debug errors
 

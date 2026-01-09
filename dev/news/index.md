@@ -14,6 +14,12 @@
   detailed in the updated vignette. Closed
   [\#455](https://github.com/ipeaGIT/r5r/issues/455) and Closed
   [\#495](https://github.com/ipeaGIT/r5r/issues/495).
+- New support function
+  [`get_gtfs_errors()`](https://ipeagit.github.io/r5r/dev/reference/get_gtfs_errors.md)
+  to help diagnose eventual errors in the GTFS data that prevent
+  building the network. Closed
+  [\#431](https://github.com/ipeaGIT/r5r/issues/431) and
+  [\#541](https://github.com/ipeaGIT/r5r/issues/541).
 
 **Minor changes**
 

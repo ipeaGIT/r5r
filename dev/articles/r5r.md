@@ -210,14 +210,15 @@ files:
 ``` r
 data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)
-#>  [1] "fares"                      "network_settings.json"     
-#>  [3] "network.dat"                "poa_elevation.tif"         
-#>  [5] "poa_eptc.zip"               "poa_hexgrid.csv"           
-#>  [7] "poa_ls_lts.rds"             "poa_osm_congestion.csv"    
-#>  [9] "poa_osm_lts.csv"            "poa_osm.pbf"               
-#> [11] "poa_osm.pbf.mapdb"          "poa_osm.pbf.mapdb.p"       
-#> [13] "poa_points_of_interest.csv" "poa_poly_congestion.rds"   
-#> [15] "poa_trensurb.zip"           "r5r-log.log"
+#>  [1] "fares"                      "gtfs_errors.csv"           
+#>  [3] "network_settings.json"      "network.dat"               
+#>  [5] "poa_elevation.tif"          "poa_eptc.zip"              
+#>  [7] "poa_hexgrid.csv"            "poa_ls_lts.rds"            
+#>  [9] "poa_osm_congestion.csv"     "poa_osm_lts.csv"           
+#> [11] "poa_osm.pbf"                "poa_osm.pbf.mapdb"         
+#> [13] "poa_osm.pbf.mapdb.p"        "poa_points_of_interest.csv"
+#> [15] "poa_poly_congestion.rds"    "poa_trensurb.zip"          
+#> [17] "r5r-log.log"
 ```
 
 The points of interest data can be seen below. In this example, we will
