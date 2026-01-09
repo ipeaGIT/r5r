@@ -16,6 +16,7 @@ This is different from the built in tempdir() in that it does not return the sam
 Other support functions: 
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
 \code{\link{travel_time_surface}},

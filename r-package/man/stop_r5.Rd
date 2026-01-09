@@ -31,6 +31,7 @@ stop_r5(r5r_network)
 Other support functions: 
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{start_r5r_java}()},
 \code{\link{tempdir_unique}()},
 \code{\link{travel_time_surface}},
