@@ -29,6 +29,7 @@ reference:
   - contents:
     - street_network_to_sf
     - transit_network_to_sf
+    - street_network_bbox
   - title: "Fare structure"
   - contents:
     - setup_fare_structure
@@ -36,7 +37,9 @@ reference:
     - write_fare_structure
   - title: "Support functions"
   - contents:
+    - check_transit_availability
     - find_snap
+    - get_gtfs_errors
     - r5r_sitrep
     - r5r_cache
     - download_r5

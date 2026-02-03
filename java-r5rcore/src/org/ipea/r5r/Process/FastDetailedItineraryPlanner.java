@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class FastDetailedItineraryPlanner extends R5Process {
+public class FastDetailedItineraryPlanner extends R5DataFrameProcess {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FastDetailedItineraryPlanner.class);
 
@@ -43,7 +43,7 @@ public class FastDetailedItineraryPlanner extends R5Process {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         TripPlanner computer = new TripPlanner(transportNetwork, request);
         computer.setOD(fromIds[index], toIds[index]);
@@ -158,8 +158,8 @@ public class FastDetailedItineraryPlanner extends R5Process {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.toLat = toLats[index];
         request.toLon = toLons[index];

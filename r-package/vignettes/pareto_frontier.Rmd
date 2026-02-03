@@ -134,9 +134,11 @@ We can create `list` object with these fare rules with the support of the `setup
 
 ```{r}
 # create basic fare structure
-fare_structure <- setup_fare_structure(r5r_network, 
-                                       base_fare = 4.8,
-                                       by = "MODE")
+fare_structure <- setup_fare_structure(
+  r5r_network, 
+  base_fare = 4.8,
+  by = "MODE"
+  )
 
 # update the cost of bus and train fares
 fare_structure$fares_per_type[, fare := fcase(type == "BUS", 4.80,
@@ -183,17 +185,18 @@ destinations considering multiple cutoffs of monetary costs:
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
                                  format = "%d-%m-%Y %H:%M:%S")
 
-prtf <- pareto_frontier(r5r_network,
-                      origins = points,
-                      destinations = points,
-                      mode = c("WALK", "TRANSIT"),
-                      departure_datetime = departure_datetime,
-                      fare_structure = fare_structure,
-                      fare_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
-                      progress = TRUE
-                      )
-head(prtf)
+prtf <- pareto_frontier(
+  r5r_network,
+  origins = points,
+  destinations = points,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = departure_datetime,
+  fare_structure = fare_structure,
+  fare_cutoffs = c(1, 4.5, 4.8, 7.20, 8.37),
+  progress = TRUE
+  )
 
+head(prtf)
 ```
 
 

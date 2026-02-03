@@ -31,7 +31,7 @@ The path to the downloaded file.
 Downloads \code{R5.jar} and saves it locally, inside the package directory.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 download_r5(temp_dir = TRUE)

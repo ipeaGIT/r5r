@@ -23,7 +23,7 @@ deleted from local cache directory.
 Manage cached files from the r5r package
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 # download r5 JAR
 r5r::download_r5()
 

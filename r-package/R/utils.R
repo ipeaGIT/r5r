@@ -45,12 +45,8 @@ check_transit_availability_on_date <- function(r5r_network,
                                                departure_date){ # nocov start
 
   # check services Available on the departure date
-  services <- r5r_network$getTransitServicesByDate(departure_date)
-  services <- java_to_dt(services)
-
-  # count services available
-  data.table::setDT(services)
-  services_available <- services[, sum(active_on_date) / .N ]
+  services <- check_transit_availability(r5r_network, dates = departure_date)
+  services_available <- services$pct_active
 
   if (services_available == 0 | is.na(services_available)) {
     cli::cli_abort("There are no transit services available on the selected
@@ -137,18 +133,27 @@ start_r5r_java <- function(data_path,
   fileurl <- fileurl_from_metadata( r5r_env$r5_jar_version )
   filename <- basename(fileurl)
 
-  jar_file <- data.table::fifelse(
-    temp_dir,
-    file.path(tempdir(), filename),
-    file.path( r5r_env$cache_dir, filename)
-  )
+  if (is.null(getOption("r5r.r5jar"))) {
+    jar_file <- data.table::fifelse(
+      temp_dir,
+      file.path(tempdir(), filename),
+      file.path( r5r_env$cache_dir, filename)
+    )
 
-  # If there isn't a JAR already larger than 60MB, download it
-  if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
-    if (!verbose) message("Using cached R5 version from ", jar_file)
+    # If there isn't a JAR already larger than 60MB, download it
+    if (checkmate::test_file_exists(jar_file) && file.info(jar_file)$size > r5r_env$r5_jar_size) {
+      if (!verbose) message("Using cached R5 version from ", jar_file)
+    } else {
+      check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
+      if (is.null(check)) { return(invisible(NULL)) }
+    }
   } else {
-    check  <- download_r5(temp_dir = temp_dir, quiet = !verbose)
-    if (is.null(check)) { return(invisible(NULL)) }
+    jar_file <- getOption("r5r.r5jar")
+    if (checkmate::test_file_exists(jar_file)) {
+      message("Overriding default R5 with option r5r.r5jar, using ", jar_file)
+    } else {
+      stop(paste0("Cannot find r5 jar \"", jar_file, "\", specified in options(r5r.r5jar)"))
+    }
   }
 
   # R5 jar
@@ -298,7 +303,7 @@ congestion_poly2geojson <- function(new_speeds_poly){
 #'
 #' # read lines with new speeds
 #' new_lts_lines <- readRDS(
-#'   system.file("extdata/poa/poa_mls_lts.rds", package = "r5r")
+#'   system.file("extdata/poa/poa_ls_lts.rds", package = "r5r")
 #'   )
 #'
 #' shp_path <- r5r:::lts_lines2shp(
@@ -323,7 +328,7 @@ lts_lines2shp <- function(new_lts_lines){
   checkmate::assert_integer(new_lts_lines$priority, any.missing = FALSE, lower = 0)
   checkmate::assert_subset(
     x = unique(as.character(sf::st_geometry_type(new_lts_lines))),
-    choices = c("LINESTRING", "MULTILINESTRING"),
+    choices = c("LINESTRING"),
     empty.ok = FALSE
   )
 

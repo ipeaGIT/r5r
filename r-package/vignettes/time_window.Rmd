@@ -91,19 +91,20 @@ In this example we calculate the number of schools accessible from each location
 
 ```{r, message = FALSE}
 # estimate accessibility
-acc <- r5r::accessibility(r5r_network,   
-                          origins = points,
-                          destinations = points, 
-                          opportunities_colnames = 'schools',
-                          mode = mode,
-                          max_walk_time = max_walk_time,
-                          decay_function = "step",
-                          cutoffs = 45,
-                          departure_datetime = departure_datetime,
-                          progress = FALSE,
-                          time_window = 60,
-                          percentiles = c(10, 20, 50, 70, 80)
-                          )
+acc <- r5r::accessibility(
+  r5r_network,   
+  origins = points,
+  destinations = points, 
+  opportunities_colnames = 'schools',
+  mode = mode,
+  max_walk_time = max_walk_time,
+  decay_function = "step",
+  cutoffs = 45,
+  departure_datetime = departure_datetime,
+  progress = FALSE,
+  time_window = 60,
+  percentiles = c(10, 20, 50, 70, 80)
+  )
 
 head(acc, n = 10)
 
@@ -140,17 +141,18 @@ Now let's calculate all-to-all travel time estimates within a 60-minute time win
 
 ```{r, message = FALSE}
 # estimate travel time matrix
-ttm <- travel_time_matrix(r5r_network,   
-                          origins = points,
-                          destinations = points,    
-                          mode = mode,
-                          max_walk_time = max_walk_time,
-                          max_trip_duration = max_trip_duration,
-                          departure_datetime = departure_datetime,
-                          progress = TRUE,
-                          time_window = 60,
-                          percentiles = c(10, 20, 50, 70, 80)
-                          )
+ttm <- travel_time_matrix(
+  r5r_network,   
+  origins = points,
+  destinations = points,    
+  mode = mode,
+  max_walk_time = max_walk_time,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime,
+  progress = TRUE,
+  time_window = 60,
+  percentiles = c(10, 20, 50, 70, 80)
+  )
 
 head(ttm, n = 10)
 
@@ -167,15 +169,17 @@ The last row in the result above has a few `NA`s. This tell us that at least 50%
 Finally, we can also use the `time_window` in the `expanded_travel_time_matrix()` function. In this case, though, when the user sets a `time_window` value, the `expanded_travel_time_matrix()` will return the fastest route alternative departing each minute within the specified time window. Please note this function can be very memory intensive for large data sets and time windows.
 
 ```{r}
-ettm <- r5r::expanded_travel_time_matrix(r5r_network,   
-                                    origins = points[1:30,],
-                                    destinations = points[31:61,],    
-                                    mode = mode,
-                                    max_walk_time = max_walk_time,
-                                    max_trip_duration = max_trip_duration,
-                                    departure_datetime = departure_datetime,
-                                    progress = FALSE,
-                                    time_window = 20)
+ettm <- r5r::expanded_travel_time_matrix(
+  r5r_network,
+  origins = points[1:30,],
+  destinations = points[31:61,],    
+  mode = mode,
+  max_walk_time = max_walk_time,
+  max_trip_duration = max_trip_duration,
+  departure_datetime = departure_datetime,
+  progress = FALSE,
+  time_window = 20
+  )
 
 head(ettm, n = 10)
 

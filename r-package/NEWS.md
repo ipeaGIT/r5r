@@ -1,19 +1,56 @@
-# r5r 2.3.0 dev
+# r5r 2.4.0 dev 
+
+**Major changes**
+
+- The `isochrone()` function has gone through major changes which substantially
+improved polygon-based isochrones. The function now builds on top of a travel 
+time surface that uses a regular grid of points across the network (specifically 
+a grid of Web Mercator pixels) and then uses the marching squares algorithm to 
+generate the isochrone polygons. See detailed in the updated vignette. Closed 
+[#455](https://github.com/ipeaGIT/r5r/issues/455) and Closed [#495](https://github.com/ipeaGIT/r5r/issues/495).
+- New support function `get_gtfs_errors()` to help diagnose eventual errors in
+the GTFS data that prevent building the network. Closed [#431](https://github.com/ipeaGIT/r5r/issues/431) and [#541](https://github.com/ipeaGIT/r5r/issues/541).
+
+**Minor changes**
+
+- New support function `check_transit_availability()` that checks the number and 
+proportion of public transport services from the GTFS feeds that are active on 
+specified dates.
+- New support function `street_network_bbox()` that efficiently extracts the 
+geographic bounding box of the transport network.
+- More informative messages in case of Java error in R5. Closed [#515](https://github.com/ipeaGIT/r5r/issues/515).
+- When direct routing fails the log now mentions the name of the origin and 
+destination points to help the user debug. Closed [#519](https://github.com/ipeaGIT/r5r/issues/519).
+
+**Bug fixes**
+
+- Revert back the order of origins destinations for Direct Modes. Fix implemented 
+`in travel_time_matrix()`, `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. 
+Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- Reverse search optimization is now only applicable to walking. Closes [#517](https://github.com/ipeaGIT/r5r/issues/517).
+
+**New contributors to r5r**
+
+- [Egor Kotov](https://github.com/e-kotov)
+
+
+# r5r 2.3.0
 
 **Major changes**
 
 - New function `build_network()` to replace `setup_r5()`, which is being deprecated. Idiomatically `r5r_core` is now `r5r_network`.
 - New function `arrival_travel_time_matrix()` to calculate travel time matrix between origin destination pairs considering the time of arrival, instead of a depature time. Closes [#291](https://github.com/ipeaGIT/r5r/issues/291)
 - We have now implemented a reverse search optimization for direct transport modes (walking and cycling) in the functions `travel_time_matrix()`, `expanded_travel_time_matrix()` and `arrival_travel_time_matrix()`. In practice, this means that these functions are now much faster when there are multiple origins to few destinations but only when there is no elevation `.tif` file in the data path. Closes [#450](https://github.com/ipeaGIT/r5r/issues/450)
-- All routing and accessibility functions now have new parameters `new_carspeeds`, `carspeed_scale` and `new_lts`, which allow one to use custom car speeds and LTS levels for cycling, which allow one to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
+- All routing and accessibility functions in `r5r` have new parameters `new_carspeeds`, `carspeed_scale` and `new_lts` which allow one to use custom car speeds and LTS levels for cycling. These parameters provide convient and efficient ways to build different scenarios of traffic congestion, road closure and interventions in cycling infrastructure. Closes [#289](https://github.com/ipeaGIT/r5r/issues/289)
 
 **Minor changes**
 
-- The routable transport network build with `build_network()` and `setup_r5()` and `build_modified_network` now have a their own class `"r5r_network"`, making the package more consistent and safer from errors [#472](https://github.com/ipeaGIT/r5r/pull/472).
+- The routable transport network built with `build_network()` and `setup_r5()` now have their own class `"r5r_network"`, making the package more consistent and safer from errors [#472](https://github.com/ipeaGIT/r5r/pull/472).
 - Routing properties within r5r jar (aka little jar) are reset to default after a routing execution [#453](https://github.com/ipeaGIT/r5r/pull/453)
-- Less cluttering messages in R5R dialogue. Removed logback startup messages. `Verbose=F` now completly silences java output. `Verbose=T` only reports messages up to INFO level as opposed to up to DEBUG [#456](https://github.com/ipeaGIT/r5r/pull/456).
+- Less cluttering messages in r5r dialogue. Removed logback startup messages. `Verbose=F` now completly silences java output. `Verbose=T` only reports messages up to INFO level as opposed to up to DEBUG [#456](https://github.com/ipeaGIT/r5r/pull/456).
 - Removed date from r5r-log. You no longer have to delete the previous day's log! [#456](https://github.com/ipeaGIT/r5r/pull/456)
 - Improved warning and error messages.
+- r5r developers can now set `options(r5r.r5jar=...)` to use a local JAR instead of the R5 jar downloaded by r5r.
 
 **Bug fixes**
 
@@ -80,10 +117,12 @@
 - Updated the vignette on time window to explain how this parameter behaves when used in the `detailed_itineraries()` function.
 
 **Bug Fixes**
+
 - Fixed bug that prevented the use the `output_dir` parameter in the `detailed_itineraries(all_to_all = TRUE)` function. Closes [#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution ([PR #354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
 - Fixed bug that prevented  `detailed_itineraries` from working with frequency-based GTFS feeds. It should ONLY work with frequency-based GTFS feeds.
 
 **New contributors to r5r**
+
 - [Luyu Liu](https://github.com/luyuliu)
 
 

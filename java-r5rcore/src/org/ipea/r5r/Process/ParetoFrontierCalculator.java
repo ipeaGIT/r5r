@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-public class ParetoFrontierCalculator  extends R5Process {
+public class ParetoFrontierCalculator  extends R5DataFrameProcess {
 
     @Override
     protected boolean isOneToOne() {
@@ -26,7 +26,7 @@ public class ParetoFrontierCalculator  extends R5Process {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
         TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
 
         Map<Float, OneOriginResult> travelTimeResults = new HashMap<>();
@@ -95,8 +95,8 @@ public class ParetoFrontierCalculator  extends R5Process {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.destinationPointSetKeys = this.opportunities;
         request.destinationPointSets = destinationPoints;

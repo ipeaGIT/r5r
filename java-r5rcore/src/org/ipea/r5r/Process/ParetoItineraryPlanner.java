@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ParetoItineraryPlanner extends R5Process {
+public class ParetoItineraryPlanner extends R5DataFrameProcess {
 
     public static boolean travelAllowanceActive = true;
 
@@ -32,7 +32,7 @@ public class ParetoItineraryPlanner extends R5Process {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
 
         R5ParetoServer computer = new R5ParetoServer(request, transportNetwork);
         R5ParetoServer.ParetoReturn travelTimeResults = computer.handle();
@@ -142,8 +142,8 @@ public class ParetoItineraryPlanner extends R5Process {
     }
 
     @Override
-    protected RegionalTask buildRequest(int index) throws ParseException {
-        RegionalTask request = super.buildRequest(index);
+    protected RegionalTask buildRegionalTask(int index) throws ParseException {
+        RegionalTask request = super.buildRegionalTask(index);
 
         request.toLat = toLats[index];
         request.toLon = toLons[index];

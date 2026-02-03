@@ -161,13 +161,18 @@ travel_time_matrix <- function(r5r_network,
 
   # check inputs and set r5r options --------------------------------------
 
-  checkmate::assert_class(r5r_network, "r5r_network")
-  r5r_network <- r5r_network@jcore
-
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
+
+  # check availability of transit services on the selected date
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
+  }
+
+  checkmate::assert_class(r5r_network, "r5r_network")
+  r5r_network <- r5r_network@jcore
 
   # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
   data_path <- r5r_network$getDataPath()
@@ -175,10 +180,6 @@ travel_time_matrix <- function(r5r_network,
   origins <- res$origins
   destinations <- res$destinations
 
-  # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
-  }
 
   max_walk_time <- assign_max_street_time(
     max_walk_time,
@@ -251,6 +252,10 @@ travel_time_matrix <- function(r5r_network,
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
   travel_times <- java_to_dt(travel_times)
+
+  # reverse order of origins destinations back
+  travel_times <- reverse_back_if_direct_mode(travel_times, origins, destinations, mode_list, data_path)
+
 
   if (nrow(travel_times) > 0) {
     # replace travel-times of nonviable trips with NAs.

@@ -17,11 +17,11 @@ Support function that checks the input of LTS lines passed to
 and saves it to a \code{.shp} temporary file.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 
 # read lines with new speeds
 new_lts_lines <- readRDS(
-  system.file("extdata/poa/poa_mls_lts.rds", package = "r5r")
+  system.file("extdata/poa/poa_ls_lts.rds", package = "r5r")
   )
 
 shp_path <- r5r:::lts_lines2shp(

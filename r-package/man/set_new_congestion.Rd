@@ -21,6 +21,7 @@ Verifies if and which congestion mode to use and applies it.
 }
 \seealso{
 Other setting functions: 
+\code{\link{reverse_back_if_direct_mode}()},
 \code{\link{reverse_if_direct_mode}()},
 \code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},

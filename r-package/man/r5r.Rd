@@ -51,6 +51,7 @@ Other contributors:
 \itemize{
   \item Carlos Kaue Vieira Braga \email{kaue@kauebraga.dev} (\href{https://orcid.org/0000-0002-6104-7297}{ORCID}) [contributor]
   \item Luyu Liu \email{luyuliu@ufl.edu} (\href{https://orcid.org/0000-0002-6684-5570}{ORCID}) [contributor]
+  \item Egor Kotov \email{kotov.egor@gmail.com} (\href{https://orcid.org/0000-0001-6690-5345}{ORCID}) [contributor]
   \item Daniel Snow \email{dan@sno.ws} [contributor]
   \item Ipea - Institute for Applied Economic Research [copyright holder, funder]
   \item Department of Geography & Planning, University of Toronto [funder]

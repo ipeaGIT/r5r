@@ -41,7 +41,7 @@ setup_r5 <- function(data_path,
 
   # Deprecation warning --------------------------------------------------------
   cli::cli_warn(c(
-    "!" = "{.fn setup_r5} is being deprecated in *r5r* v2.3.0 and will be removed in a future release.",
+    "!" = "{.fn setup_r5} is being deprecated in *r5r* and will be removed in a future release.",
     "i" = "Please use {.fn r5r::build_network} instead."
   ))
 

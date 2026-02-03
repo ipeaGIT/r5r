@@ -2,6 +2,7 @@ package org.ipea.r5r;
 
 import com.conveyal.analysis.components.WorkerComponents;
 import com.conveyal.gtfs.model.Service;
+import com.conveyal.r5.OneOriginResult;
 import com.conveyal.r5.analyst.Grid;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.decay.*;
@@ -13,19 +14,19 @@ import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.ipea.r5r.Fares.FareStructure;
 import org.ipea.r5r.Fares.FareStructureBuilder;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
 import org.ipea.r5r.Modifications.R5RFileStorage;
 import org.ipea.r5r.Network.NetworkBuilder;
 import org.ipea.r5r.Process.*;
+import org.ipea.r5r.Scenario.R5RShapefileLts;
 import org.ipea.r5r.Scenario.RoadCongestionOSM;
 import org.ipea.r5r.Scenario.SetLtsOsm;
 import org.ipea.r5r.Utils.Utils;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -33,6 +34,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+
+import org.locationtech.jts.geom.Envelope;
+
 
 public class R5RCore {
 
@@ -46,6 +50,8 @@ public class R5RCore {
     private final RoutingProperties routingProperties;
 
     private final String dataPath;
+
+    public final RDataFrame gtfsErrors;
 
     public double getWalkSpeed() {
         return this.routingProperties.walkSpeed;
@@ -247,13 +253,18 @@ public class R5RCore {
         WorkerComponents.fileStorage = new R5RFileStorage(null);
 
         nativeElevationFunction = nativeElevationFunction.toUpperCase();
-        NetworkBuilder.useNativeElevation = !nativeElevationFunction.equals("NONE");
-        NetworkBuilder.elevationCostFunction = nativeElevationFunction;
+
+        NetworkBuilder builder = new NetworkBuilder();
+
+        builder.useNativeElevation = !nativeElevationFunction.equals("NONE");
+        builder.elevationCostFunction = nativeElevationFunction;
 
         dataPath = dataFolder;
         Path path = Paths.get(dataFolder).toAbsolutePath().normalize();
-        TransportNetwork network = NetworkBuilder.checkAndLoadR5Network(path.toString());
-        this.routingProperties = new RoutingProperties(network);
+        // network will be null if there were high priority errors
+        TransportNetwork network = builder.checkAndLoadR5Network(path.toString());
+        this.routingProperties = network == null ? null : new RoutingProperties(network);
+        this.gtfsErrors = builder.gtfsErrors;
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -602,6 +613,7 @@ public class R5RCore {
         congestion.priorityAttribute = priorityAttribute;
         congestion.nameAttribute = nameAttribute;
         congestion.defaultScaling = defaultScaling;
+
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
@@ -609,17 +621,11 @@ public class R5RCore {
 
     public String applyLtsPolygon(String filePath){
         Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
-        File file = fileJPath.toFile();
 
-        ShapefileLts lts = new ShapefileLts();
-        // Set the private 'localFile' field
-        try {
-            Field localFileField = ShapefileLts.class.getDeclaredField("localFile");
-            localFileField.setAccessible(true);
-            localFileField.set(lts, file);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            LOG.error("Failed to set localFile field when applying Polygon LTS", e);
-        }
+        R5RShapefileLts lts = new R5RShapefileLts();
+        lts.dataSourceId = FilenameUtils.removeExtension(fileJPath.toString());
+
+        lts.resolve(routingProperties.transportNetworkWorking);
         lts.apply(routingProperties.transportNetworkWorking);
         return lts.errors.toString();
     }
@@ -629,6 +635,7 @@ public class R5RCore {
         congestion.speedMap = speedMap;
         congestion.defaultScaling = defaultScaling;
         congestion.absoluteMode = absoluteMode;
+
         congestion.resolve(routingProperties.transportNetworkWorking);
         congestion.apply(routingProperties.transportNetworkWorking);
         return congestion.errors.toString();
@@ -637,6 +644,7 @@ public class R5RCore {
     public String applyLtsOsm(HashMap<Long, Integer> ltsMap){
         SetLtsOsm lts = new SetLtsOsm();
         lts.ltsMap = ltsMap;
+
         lts.resolve(routingProperties.transportNetworkWorking);
         lts.apply(routingProperties.transportNetworkWorking);
         return lts.errors.toString();
@@ -745,6 +753,34 @@ public class R5RCore {
         return out;
     }
 
+    // -------------------------------- GRIDDED ISOCHRONES ------------------------------------------
+    public RegularGridResult[] travelTimeSurfaces (String fromIds, double fromLats, double fromLons,
+                    String directModes, String transitModes, String accessModes, String egressModes,
+                    String date, String departureTime,
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
+        return travelTimeSurfaces(new String[] { fromIds }, new double[] { fromLats }, new double[] { fromLons },
+                    directModes, transitModes, accessModes, egressModes,
+                    date, departureTime,
+                   maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration, zoom);
+    }
+
+    public RegularGridResult[] travelTimeSurfaces (String[] fromIds, double[] fromLats, double[] fromLons,
+                    String directModes, String transitModes, String accessModes, String egressModes,
+                    String date, String departureTime,
+                    int maxWalkTime, int maxBikeTime, int maxCarTime, int maxTripDuration, int zoom)
+                    throws ExecutionException, InterruptedException {
+        RegularGridProcess regularGridProcess = new RegularGridProcess(this.r5rThreadPool, this.routingProperties, zoom);
+        regularGridProcess.setOrigins(fromIds, fromLats, fromLons);
+        regularGridProcess.setModes(directModes, accessModes, transitModes, egressModes);
+        regularGridProcess.setDepartureDateTime(date, departureTime);
+        regularGridProcess.setTripDuration(maxWalkTime, maxBikeTime, maxCarTime, maxTripDuration);
+
+        RegularGridResult[] out = regularGridProcess.run();
+        this.routingProperties.reset();
+        return out;
+    }
+
     // --------------------------------  UTILITY FUNCTIONS  -----------------------------------------
 
     // Returns list of public transport services active on a given date
@@ -781,5 +817,16 @@ public class R5RCore {
     /** Used to ensure user has passed a jobjRef to an R5R core in R. */
     public String identify(){
         return "I am an R5R core!";
+    }
+
+   /** Get the geographic envelope (bounding box) of the transport network's street layer as a primitive array. @return A double array with the coordinates in the order: [minX, maxX, minY, maxY]. */
+    public double[] getNetworkEnvelopeAsArray() {
+        Envelope envelope = this.routingProperties.getTransportNetworkBase().getEnvelope();
+        return new double[]{
+            envelope.getMinX(),
+            envelope.getMaxX(),
+            envelope.getMinY(),
+            envelope.getMaxY()
+        };
     }
 }

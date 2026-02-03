@@ -11,10 +11,12 @@ reverse_if_direct_mode(origins, destinations, mode_list, data_path)
 
 \item{destinations}{A data frame representing destination locations.}
 
-\item{mode_list}{A named list containing the routing modes:}
+\item{mode_list}{A named list containing the routing modes.}
+
+\item{data_path}{The data path used to build the network}
 }
 \value{
-List origins and destinations unchanges or in swapper order
+List origins and destinations unchanged or in swapped order
 }
 \description{
 Swaps the \code{origins} and \code{destinations} data frames if certain conditions are
@@ -25,6 +27,7 @@ origin points is greater than the number of destination points.
 }
 \seealso{
 Other setting functions: 
+\code{\link{reverse_back_if_direct_mode}()},
 \code{\link{set_breakdown}()},
 \code{\link{set_cutoffs}()},
 \code{\link{set_elevation}()},

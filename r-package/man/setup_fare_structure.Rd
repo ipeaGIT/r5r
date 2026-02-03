@@ -70,7 +70,7 @@ manually edited and adjusted to the existing rules in your study area, as
 long as they stick to some basic premises. Please see the \href{../doc/fare_structure.html}{fare-structure vignette} for more information.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 data_path <- system.file("extdata/poa", package = "r5r")

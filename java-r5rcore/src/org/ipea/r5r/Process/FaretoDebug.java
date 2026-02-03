@@ -13,7 +13,7 @@ import com.conveyal.r5.transit.TransportNetwork;
 /**
  * This outputs the Pareto itinerary planner results directly to JSON.
  */
-public class FaretoDebug extends R5Process {
+public class FaretoDebug extends R5DataFrameProcess {
     public FaretoDebug(ForkJoinPool threadPool,
             RoutingProperties routingProperties) {
         super(threadPool, routingProperties);
@@ -28,7 +28,7 @@ public class FaretoDebug extends R5Process {
 
     @Override
     protected RDataFrame runProcess(int index) throws ParseException {
-        RegionalTask request = buildRequest(index);
+        RegionalTask request = buildRegionalTask(index);
         request.fromLat = fromLats[0];
         request.fromLon = fromLons[0];
         request.toLat = toLats[0];

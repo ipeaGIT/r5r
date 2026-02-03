@@ -47,7 +47,7 @@ because some network edges are not available to specific modes (e.g. a
 pedestrian-only street cannot be used to snap car trips).
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
 library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
@@ -66,6 +66,7 @@ stop_r5(r5r_network)
 }
 \seealso{
 Other network functions: 
+\code{\link{street_network_bbox}()},
 \code{\link{street_network_to_sf}()},
 \code{\link{transit_network_to_sf}()}
 }

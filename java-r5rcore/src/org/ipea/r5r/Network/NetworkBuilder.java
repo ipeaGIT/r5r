@@ -2,6 +2,9 @@ package org.ipea.r5r.Network;
 
 import com.conveyal.analysis.datasource.DataSourceException;
 import com.conveyal.gtfs.GTFSFeed;
+import com.conveyal.gtfs.error.GTFSError;
+import com.conveyal.gtfs.validator.PostLoadValidator;
+import com.conveyal.gtfs.validator.model.Priority;
 import com.conveyal.osmlib.OSM;
 import com.conveyal.r5.analyst.scenario.RasterCost;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
@@ -10,6 +13,7 @@ import com.conveyal.r5.transit.TransferFinder;
 import com.conveyal.r5.transit.TransportNetwork;
 import org.apache.commons.io.FilenameUtils;
 import org.ipea.r5r.R5RCore;
+import org.ipea.r5r.RDataFrame;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,42 +23,50 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class NetworkBuilder {
 
-    public static boolean useNativeElevation = false;
-    public static String elevationCostFunction = "NONE";
+    public boolean useNativeElevation = false;
+    public String elevationCostFunction = "NONE";
 
-    private static List<String> gtfsFiles = new ArrayList<>();
-    private static String osmFilename;
+    private List<String> gtfsFiles = new ArrayList<>();
+    private String osmFilename;
 
-    private static OSM osmFile;
-    private static Stream<GTFSFeed> gtfsFeeds;
-    private static String tiffFile = "";
+    private OSM osmFile;
+    private Stream<GTFSFeed> gtfsFeeds;
+    private String tiffFile = "";
 
-    public static TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
+    public RDataFrame gtfsErrors = null;
+
+    public boolean highPriorityErrors = false;
+
+    public TransportNetwork checkAndLoadR5Network(String dataFolder) throws Exception {
         File file = new File(dataFolder, "network.dat");
         if (!file.isFile()) {
             // network.dat file does not exist. create!
-            NetworkBuilder.createR5Network(dataFolder);
+            createR5Network(dataFolder);
         } else {
             // network.dat file exists
             // check version
             if (!NetworkChecker.checkR5NetworkVersion(dataFolder)) {
                 // incompatible versions. try to create a new one
                 // network could not be loaded, probably due to incompatible versions. create a new one
-                NetworkBuilder.createR5Network(dataFolder);
+                createR5Network(dataFolder);
             }
         }
         // compatible versions, load network
-        return NetworkBuilder.loadR5Network(dataFolder);
+        // if there were high priority errors, though, don't return network - don't even tempt someone to use it.
+        return highPriorityErrors ? null : loadR5Network(dataFolder);
     }
 
-    public static TransportNetwork loadR5Network(String dataFolder) throws Exception {
+    public TransportNetwork loadR5Network(String dataFolder) throws Exception {
         return KryoNetworkSerializer.read(new File(dataFolder, "network.dat"));
     }
 
-    public static void createR5Network(String dataFolder) {
+    public void createR5Network(String dataFolder) {
         File dir = new File(dataFolder);
 
         cleanUpMapdb(dir);
@@ -66,14 +78,18 @@ public class NetworkBuilder {
         Map<String, String> networkConfig = buildNetworkConfig();
 
         try {
-            KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
-            writeNetworkSettings(dataFolder, networkConfig);
+            // if there were high priority errors, network is unusable. Don't even serialize it as that might tempt someone
+            // to use it.
+            if (!highPriorityErrors) {
+                KryoNetworkSerializer.write(tn, new File(dataFolder, "network.dat"));
+                writeNetworkSettings(dataFolder, networkConfig);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void writeNetworkSettings(String dataFolder, Map<String, String> networkConfig) throws IOException {
+    private void writeNetworkSettings(String dataFolder, Map<String, String> networkConfig) throws IOException {
         String json = "{" + networkConfig.entrySet().stream()
                 .map(e -> "\""+ e.getKey() + "\":\"" + e.getValue() + "\"")
                 .collect(Collectors.joining(", "))+"}";
@@ -84,7 +100,7 @@ public class NetworkBuilder {
         printWriter.close();
     }
 
-    private static Map<String, String> buildNetworkConfig() {
+    private Map<String, String> buildNetworkConfig() {
         Map<String, String> networkConfig = new LinkedHashMap<>();
 
         networkConfig.put("r5_version", R5RCore.R5_VERSION);
@@ -105,7 +121,7 @@ public class NetworkBuilder {
         return networkConfig;
     }
 
-    private static TransportNetwork createNetwork() {
+    private TransportNetwork createNetwork() {
         TransportNetwork network = new TransportNetwork();
 
         network.scenarioId = "r5r";
@@ -167,7 +183,7 @@ public class NetworkBuilder {
         return network;
     }
 
-    public static void loadDirectory(File directory) {
+    public void loadDirectory(File directory) {
         osmFilename = "";
         tiffFile = "";
         gtfsFiles.clear();
@@ -187,11 +203,75 @@ public class NetworkBuilder {
             if (name.endsWith(".tif") | name.endsWith(".tiff")) tiffFile = file.getAbsolutePath();
         }
 
+        initializeGtfsErrors();
+
         // Supply feeds with a stream, so they do not sit open in memory while other feeds are being processed.
-        gtfsFeeds = gtfsFiles.stream().map(GTFSFeed::readOnlyTempFileFromGtfs);
+        gtfsFeeds = gtfsFiles.stream().map(this::readFeed);
     }
 
-    private static void cleanUpMapdb(File dir) {
+    // read a feed and store errors
+    // We can't just use the R5 readOnlyTempFileFromGtfs, because then the errors get lost before
+    // we have access to the object.
+    private GTFSFeed readFeed (String feedFile) {
+        try {
+            // we use a directory to make sure that all sidecar files get deleted on exit
+            File tempDir = Files.createTempDirectory("gtfs").toFile();
+            File dbFile = new File(tempDir, "gtfs.db");
+            File dbpFile = new File(tempDir, "gtfs.db.p");
+
+            GTFSFeed feed = GTFSFeed.newWritableFile(dbFile);
+            feed.loadFromFile(new ZipFile(feedFile), null);
+
+            // add additional errors
+            new PostLoadValidator(feed).validate();
+
+            // parse errors
+            parseGtfsErrors(feed);
+
+            feed.close();
+
+            // clean up
+            // has to be done first, deleteOnExit deletes in reverse order and directories must be empty
+            tempDir.deleteOnExit();
+            dbFile.deleteOnExit();
+            dbpFile.deleteOnExit();
+
+            // re-open read only (this loses the errors, see the example in R5 BundleController.java)
+            return GTFSFeed.reopenReadOnly(dbFile);
+        } catch (Exception e) {
+            // re-throw as unchecked
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void initializeGtfsErrors() {
+        gtfsErrors = new RDataFrame();
+        gtfsErrors.addStringColumn("file", "");
+        // It's a long on the Java side
+        gtfsErrors.addIntegerColumn("line", -1);
+        gtfsErrors.addStringColumn("type", "");
+        gtfsErrors.addStringColumn("field", "");
+        gtfsErrors.addStringColumn("id", "");
+        gtfsErrors.addStringColumn("priority", "");
+    }
+
+    private void parseGtfsErrors(GTFSFeed feed) {
+        for (GTFSError error : feed.errors) {
+            gtfsErrors.append();
+            gtfsErrors.set("file", error.file);
+            gtfsErrors.set("line", (int) error.line);
+            gtfsErrors.set("type", error.errorType);
+            gtfsErrors.set("field", error.field);
+            gtfsErrors.set("id", error.affectedEntityId);
+            gtfsErrors.set("priority", error.getPriority().name());
+
+            if (error.getPriority() == Priority.HIGH) {
+                highPriorityErrors = true;
+            }
+        }
+    }
+
+    private void cleanUpMapdb(File dir) {
         // clean up older mapdb files
         File[] mapdbFiles = dir.listFiles((d, name) -> name.contains(".mapdb"));
 
