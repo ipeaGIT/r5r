@@ -12,7 +12,7 @@ travel_time_matrix(
   destinations,
   mode = "WALK",
   mode_egress = "WALK",
-  departure_datetime = Sys.time(),
+  departure_datetime = NULL,
   time_window = 10L,
   percentiles = 50L,
   max_walk_time = Inf,

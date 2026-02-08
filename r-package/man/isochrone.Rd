@@ -12,7 +12,7 @@ isochrone(
   mode_egress = "walk",
   cutoffs = c(0, 15, 30),
   zoom = 10,
-  departure_datetime = Sys.time(),
+  departure_datetime = NULL,
   polygon_output = TRUE,
   time_window = 10L,
   max_walk_time = Inf,
