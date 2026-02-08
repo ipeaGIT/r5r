@@ -86,7 +86,7 @@ arrival_travel_time_matrix <- function(r5r_network,
                                        destinations,
                                        mode = "WALK",
                                        mode_egress = "WALK",
-                                       arrival_datetime = Sys.time(),
+                                       arrival_datetime,
                                        breakdown = FALSE,
                                        max_walk_time = Inf,
                                        max_bike_time = Inf,
@@ -133,6 +133,11 @@ arrival_travel_time_matrix <- function(r5r_network,
   mode_list <- assign_mode(mode, mode_egress)
 
   # calculate departure datetime
+  checkmate::assert(
+    !is.null(arrival_datetime),
+    .var.name = "arrival_datetime",
+    msg = "You must pass an arrival_datetime to use arrival_travel_time_matrix"
+  )
   departure_datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
   departure <- assign_departure(departure_datetime)
 

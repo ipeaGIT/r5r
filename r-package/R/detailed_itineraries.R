@@ -102,7 +102,7 @@ detailed_itineraries <- function(r5r_network,
                                  destinations,
                                  mode = "WALK",
                                  mode_egress = "WALK",
-                                 departure_datetime = Sys.time(),
+                                 departure_datetime = NULL,
                                  time_window = 10L,
                                  suboptimal_minutes = 0L,
                                  max_walk_time = Inf,
@@ -157,7 +157,7 @@ detailed_itineraries <- function(r5r_network,
   destinations <- od_list$destinations
 
   mode_list <- assign_mode(mode, mode_egress)
-  departure <- assign_departure(departure_datetime)
+  departure <- assign_departure(departure_datetime, mode_list)
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
