@@ -425,3 +425,57 @@ assign_osm_link_ids <- function(osm_link_ids, drop_geometry) {
   return(osm_link_ids)
 }
 
+
+#' Returns which routing mode to apply pickup delay polygons on.
+#'
+#' @param pickup_polygons An sf polygon
+#'
+#' @family assigning functions
+#'
+#' @return Character. One of street routing modes.
+#'
+#' @keywords internal
+assign_pickup_mode <- function(pickup_polygons){
+
+  # check input class
+  checkmate::assert_class(pickup_polygons, "sf")
+
+  # check input colnames
+  checkmate::assert_names(
+    x = names(pickup_polygons),
+    must.include = c("mode")
+  )
+
+  checkmate::assert_true(length(unique(pickup_polygons$mode)) == 1 &&
+                           pickup_polygons$mode[1] %in% c("CAR", "BIKE", "WALK"))
+
+  return(pickup_polygons$mode[1])
+}
+
+
+#' Returns default_wait time to use when no delay polygon is found.
+#' -1 means area is not served at all.
+#'
+#' @param pickup_polygons An sf polygon
+#'
+#' @family assigning functions
+#'
+#' @return Numeric. Default wait
+#'
+#' @keywords internal
+assign_pickup_default_wait <- function(pickup_polygons){
+
+  # check input class
+  checkmate::assert_class(pickup_polygons, "sf")
+
+  # check input colnames
+  checkmate::assert_names(
+    x = names(pickup_polygons),
+    must.include = c("default_wait")
+  )
+
+  checkmate::assert_true(length(unique(pickup_polygons$default_wait)) == 1)
+  checkmate::assert_numeric(pickup_polygons$default_wait, any.missing = FALSE, lower = -1)
+
+  return(pickup_polygons$default_wait[1])
+}

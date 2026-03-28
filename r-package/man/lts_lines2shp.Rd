@@ -31,7 +31,8 @@ shp_path <- r5r:::lts_lines2shp(
 }
 \seealso{
 Other Support functions: 
-\code{\link{congestion_poly2geojson}()}
+\code{\link{congestion_poly2geojson}()},
+\code{\link{pickup_poly2geojson}()}
 }
 \concept{Support functions}
 \keyword{internal}

@@ -19,3 +19,6 @@
 #'        Alternatively, the `new_lts` parameter can receive an `sf data.frame`
 #'        with LINESTRING geometry. R5 will then find the nearest road for each
 #'        LINESTRING and update its LTS value accordingly.
+#' @param pickup_zones A `data.frame` specifying the pickup and drop-off zones
+#'        as well as their respective wait times for dynamic-transit or bike share.
+#'

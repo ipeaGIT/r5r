@@ -110,6 +110,7 @@ expanded_travel_time_matrix <- function(r5r_network,
                                         new_carspeeds = NULL,
                                         carspeed_scale = 1,
                                         new_lts = NULL,
+                                        pickup_zones = NULL,
                                         draws_per_minute = 5L,
                                         n_threads = Inf,
                                         verbose = FALSE,
@@ -199,6 +200,7 @@ expanded_travel_time_matrix <- function(r5r_network,
   # SCENARIOS -------------------------------------------
   set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
   set_new_lts(r5r_network, new_lts)
+  set_pickup_delay(r5r_network, pickup_zones)
 
 
   # call r5r_network method and process result -------------------------------

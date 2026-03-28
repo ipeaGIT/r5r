@@ -16,6 +16,7 @@ Determine the Java version installed locally
 Other java support functions: 
 \code{\link{dt_to_lts_map}()},
 \code{\link{dt_to_speed_map}()},
+\code{\link{dt_to_stops_map}()},
 \code{\link{java_to_dt}()}
 }
 \concept{java support functions}

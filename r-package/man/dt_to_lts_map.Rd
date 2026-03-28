@@ -21,6 +21,7 @@ levels a Java Map<Long, Integer> for use by r5r_network.
 \seealso{
 Other java support functions: 
 \code{\link{dt_to_speed_map}()},
+\code{\link{dt_to_stops_map}()},
 \code{\link{get_java_version}()},
 \code{\link{java_to_dt}()}
 }

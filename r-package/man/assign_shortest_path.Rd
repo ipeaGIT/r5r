@@ -25,6 +25,8 @@ Other assigning functions:
 \code{\link{assign_mode}()},
 \code{\link{assign_opportunities}()},
 \code{\link{assign_osm_link_ids}()},
+\code{\link{assign_pickup_default_wait}()},
+\code{\link{assign_pickup_mode}()},
 \code{\link{assign_points_input}()}
 }
 \concept{assigning functions}
