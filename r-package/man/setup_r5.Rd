@@ -67,7 +67,7 @@ information and analysis. 93 (1). \url{https://escholarship.org/uc/item/05r820mz
 }
 
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files
@@ -79,7 +79,6 @@ r5r_network <- build_network(data_path)
 }
 \seealso{
 Other Build network: 
-\code{\link{build_network}()},
-\code{\link{download_r5}()}
+\code{\link{build_network}()}
 }
 \concept{Build network}
