@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+(
+  cd src
+  ./gradlew build
+)

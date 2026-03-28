@@ -1,12 +1,13 @@
 plugins {
     id 'java'
+    id 'com.gradleup.shadow' version '9.4.1'
 }
 
 tasks.withType(Jar).configureEach {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
     archiveFileName.set("r5r.jar")
-    destinationDirectory.set(file("../inst/jar"))
+    destinationDirectory.set(file("../../inst/jar"))
 }
 
 group 'org.ipea'
@@ -45,8 +46,6 @@ dependencies {
 
     implementation 'net.sf.trove4j:trove4j:3.0.3'
 
-    implementation 'com.conveyal:r5:7.5'
-
     // Provides our logging API
     implementation 'org.slf4j:slf4j-api:2.0.7'
 
@@ -66,6 +65,8 @@ dependencies {
     implementation 'com.esotericsoftware:kryo:5.5.0'
 
     implementation files(getRJavaPath())
+
+    implementation project(':r5')
 }
 
 repositories {
@@ -76,4 +77,11 @@ repositories {
   mavenCentral()
   // Polyline encoder 0.2 is now in Maven repo
   maven { url 'https://maven.conveyal.com' }
+}
+
+shadowJar {
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+    mergeServiceFiles()
 }
