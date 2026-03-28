@@ -41,6 +41,7 @@ dependencies {
     implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geojsondatastore'
     implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geopkg'
     implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geotiff'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-image'
     // Provides the EPSG coordinate reference system catalog as an HSQL database.
     implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-epsg-hsql'
 
@@ -77,6 +78,17 @@ repositories {
   mavenCentral()
   // Polyline encoder 0.2 is now in Maven repo
   maven { url 'https://maven.conveyal.com' }
+}
+
+jar {
+    // For Java 11+ Modules, specify a module name to avoid errors instantiating JAI classes
+    manifest {
+        attributes 'Automatic-Module-Name': 'org.ipea.r5r',
+            'Build-Jdk-Spec': java.toolchain.languageVersion,
+            'Implementation-Title': 'R5R',
+            'Implementation-Vendor': 'Ipea',
+            'Implementation-Version': project.version
+    }
 }
 
 shadowJar {

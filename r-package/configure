@@ -3,5 +3,5 @@ set -x
 
 (
   cd java
-  ./gradlew build
+  ./gradlew shadowJar
 )
