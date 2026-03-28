@@ -24,9 +24,10 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          submodules: true
 
       # ensure our gradle wrapper is correct, https://github.com/gradle/actions/blob/main/docs/wrapper-validation.md
       - uses: gradle/actions/wrapper-validation@v5
