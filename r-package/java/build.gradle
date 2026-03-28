@@ -10,25 +10,16 @@ tasks.withType(Jar).configureEach {
 }
 
 group 'org.ipea'
-version '1.1.0999-SNAPSHOT'
+version '2.4.0-SNAPSHOT'
 
-// Build against the version of R5 that the current r5r download_r5 function will
-// grab
-def baos = new ByteArrayOutputStream()
-exec {
-    commandLine 'R', '--no-save', '-q', '-s', '-e', 'setwd(".."); devtools::load_all(quiet=T); cat(download_r5());'
-    standardOutput = baos
-}
-def r5Path = baos.toString()
-
-def rjava_baos = new ByteArrayOutputStream()
-exec {
+// Project.exec is removed in gradle 9 so this needs to be its own task
+def getRJavaPath = {
+  def result = providers.exec {
     commandLine 'R', '--no-save', '-q', '-s', '-e', 'cat(system.file("jri/JRI.jar", package="rJava"))'
-    standardOutput = rjava_baos
-}
-def rJavaPath = rjava_baos.toString()
+  }
 
-println(rJavaPath)
+  result.standardOutput.asText.get()
+}
 
 sourceSets {
     main {
@@ -39,6 +30,50 @@ sourceSets {
 }
 
 dependencies {
-    implementation files(r5Path)
-    implementation files(rJavaPath)
+    // GeoTools provides GIS functionality on top of JTS topology suite.
+    def geotoolsVersion = '25.2'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-main'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-opengis'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-referencing'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-shapefile'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-coverage'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geojsondatastore'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geopkg'
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-geotiff'
+    // Provides the EPSG coordinate reference system catalog as an HSQL database.
+    implementation group: 'org.geotools', version: geotoolsVersion, name: 'gt-epsg-hsql'
+
+    implementation 'net.sf.trove4j:trove4j:3.0.3'
+
+    implementation 'com.conveyal:r5:7.5'
+
+    // Provides our logging API
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
+    // Implementation of the logging API
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+
+    // JSON serialization and deserialization from and to Java objects
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+
+    // Provides some Kryo serializers for Guava and Trove collecitons.
+    // Also provides classes for testing that a round trip through serialization reproduces the same network.
+    // This is an external dependency (not merged into backend) because it's also used by OTP2.
+    implementation 'com.conveyal:kryo-tools:1.6.0'
+
+    // Ensure the versions of the next three dependencies match the transitive dependencies of kryo-tools.
+    implementation 'com.esotericsoftware:kryo:5.5.0'
+
+    implementation files(getRJavaPath())
+}
+
+repositories {
+  // copied from r5 build.gradle
+  // Do not use mavenLocal() which is only for interoperability with Maven, let Gradle manage its own cache.
+  // Put Open Source Geospatial before Maven Central to get JAI core, see https://stackoverflow.com/a/26993223
+  maven { url 'https://repo.osgeo.org/repository/release/' }
+  mavenCentral()
+  // Polyline encoder 0.2 is now in Maven repo
+  maven { url 'https://maven.conveyal.com' }
 }
