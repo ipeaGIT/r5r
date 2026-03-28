@@ -209,6 +209,7 @@ access <- accessibility(r5r_network = r5r_network,
                         decay_function = "step",
                         cutoffs = 21,
                         mode =  c("WALK", "TRANSIT"),
+                        departure_datetime = departure_datetime,
                         verbose = FALSE)
 ```
 
