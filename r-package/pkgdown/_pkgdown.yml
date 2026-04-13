@@ -41,6 +41,4 @@ reference:
     - find_snap
     - get_gtfs_errors
     - r5r_sitrep
-    - r5r_cache
-    - download_r5
     - stop_r5
