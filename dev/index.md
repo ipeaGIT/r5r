@@ -236,7 +236,7 @@ a simple and friendly R interface to R⁵, one of the fastest and most
 robust routing engines available.
 
 For ***Python*** users, you might want to check our sister package:
-[**r5py**](https://r5py.readthedocs.io/en/stable/)!
+[**r5py**](https://r5py.readthedocs.io/stable/)!
 
 ------------------------------------------------------------------------
 

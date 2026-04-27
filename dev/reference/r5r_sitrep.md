@@ -34,13 +34,13 @@ r5r_sitrep()
 #> [1] "7.4"
 #> 
 #> $java_version
-#> [1] "21.0.10"
+#> [1] "21.0.11"
 #> 
 #> $set_memory
 #> [1] "-Xmx2G"
 #> 
 #> $session_info
-#> R version 4.5.3 (2026-03-11)
+#> R version 4.6.0 (2026-04-24)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 22.04.5 LTS
 #> 
@@ -63,35 +63,35 @@ r5r_sitrep()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] ggplot2_4.0.2 r5r_2.3.0.999
+#> [1] ggplot2_4.0.3 r5r_2.3.0.999
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] gtable_0.3.6        xfun_0.57           bslib_0.10.0       
-#>  [4] httr2_1.2.2         htmlwidgets_1.6.4   processx_3.8.6     
-#>  [7] rJava_1.0-16        callr_3.7.6         vctrs_0.7.2        
-#> [10] tools_4.5.3         ps_1.9.1            generics_0.1.4     
-#> [13] curl_7.0.0          proxy_0.4-29        tibble_3.3.1       
+#>  [4] httr2_1.2.2         htmlwidgets_1.6.4   processx_3.9.0     
+#>  [7] rJava_1.0-18        callr_3.7.6         vctrs_0.7.3        
+#> [10] tools_4.6.0         ps_1.9.3            generics_0.1.4     
+#> [13] curl_7.1.0          proxy_0.4-29        tibble_3.3.1       
 #> [16] fansi_1.0.7         sfheaders_0.4.5     pkgconfig_2.0.3    
 #> [19] KernSmooth_2.23-26  data.table_1.18.2.1 checkmate_2.3.4    
-#> [22] RColorBrewer_1.1-3  S7_0.2.1            desc_1.4.3         
-#> [25] lifecycle_1.0.5     compiler_4.5.3      farver_2.1.2       
+#> [22] RColorBrewer_1.1-3  S7_0.2.2            desc_1.4.3         
+#> [25] lifecycle_1.0.5     compiler_4.6.0      farver_2.1.2       
 #> [28] brio_1.1.5          textshaping_1.0.5   fontawesome_0.5.3  
 #> [31] class_7.3-23        htmltools_0.5.9     sass_0.4.10        
 #> [34] yaml_2.3.12         pillar_1.11.1       pkgdown_2.2.0      
-#> [37] jquerylib_0.1.4     whisker_0.4.1       openssl_2.3.5      
+#> [37] jquerylib_0.1.4     whisker_0.4.1       openssl_2.4.0      
 #> [40] classInt_0.4-11     cachem_1.1.0        wk_0.9.5           
 #> [43] zip_2.3.3           tidyselect_1.2.1    digest_0.6.39      
-#> [46] sf_1.1-0            dplyr_1.2.0         purrr_1.2.1        
-#> [49] labeling_0.4.3      fastmap_1.2.0       grid_4.5.3         
-#> [52] cli_3.6.5           magrittr_2.0.4      e1071_1.7-17       
-#> [55] withr_3.0.2         scales_1.4.0        backports_1.5.0    
+#> [46] sf_1.1-0            dplyr_1.2.1         purrr_1.2.2        
+#> [49] labeling_0.4.3      fastmap_1.2.0       grid_4.6.0         
+#> [52] cli_3.6.6           magrittr_2.0.5      e1071_1.7-17       
+#> [55] withr_3.0.2         scales_1.4.0        backports_1.5.1    
 #> [58] rappdirs_0.3.4      rmarkdown_2.31      otel_0.2.0         
 #> [61] askpass_1.2.1       ragg_1.5.2          memoise_2.0.1      
 #> [64] evaluate_1.0.5      knitr_1.51          testthat_3.3.2     
-#> [67] s2_1.1.9            rlang_1.1.7         isoband_0.3.0      
-#> [70] Rcpp_1.1.1          downlit_0.4.5       glue_1.8.0         
+#> [67] s2_1.1.9            rlang_1.2.0         isoband_0.3.0      
+#> [70] Rcpp_1.1.1-1.1      downlit_0.4.5       glue_1.8.1         
 #> [73] DBI_1.3.0           xml2_1.5.2          rstudioapi_0.18.0  
 #> [76] jsonlite_2.0.0      R6_2.6.1            rJavaEnv_0.3.0     
-#> [79] units_1.0-1         systemfonts_1.3.2   fs_2.0.1           
+#> [79] units_1.0-1         systemfonts_1.3.2   fs_2.1.0           
 #> 
 ```
