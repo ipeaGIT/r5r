@@ -25,7 +25,7 @@ public class NetworkChecker {
      * This string should be changed to a new value each time the network storage format changes.
      * I considered using an ISO date string but that could get confusing when seen in filenames.
      */
-    public static final String NETWORK_FORMAT_VERSION = "nv3";
+    public static final String NETWORK_FORMAT_VERSION = "nv4";
 
     public static final byte[] HEADER = "R5NETWORK".getBytes();
 
@@ -52,8 +52,8 @@ public class NetworkChecker {
         LOG.info("Loading network from file format version {}, written by R5 commit {}", formatVersion, commit);
 
         if (!NETWORK_FORMAT_VERSION.equals(formatVersion)) {
-            LOG.error(String.format("File format version is %s, this R5 requires %s",
-                    formatVersion, NETWORK_FORMAT_VERSION));
+            LOG.warn("Network file format version is {}, this R5 requires {}; rebuilding network.",
+                    formatVersion, NETWORK_FORMAT_VERSION);
             return false;
         } else { return true; }
     }
