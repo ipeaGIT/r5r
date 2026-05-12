@@ -4,6 +4,9 @@
 
 **Major changes**
 
+- Using new version of R5 v7.5.1. Closed
+  [\#373](https://github.com/ipeaGIT/r5r/issues/373) and
+  [\#970](https://github.com/conveyal/r5/issues/970)
 - The
   [`isochrone()`](https://ipeagit.github.io/r5r/dev/reference/isochrone.md)
   function has gone through major changes which substantially improved
@@ -47,6 +50,8 @@
   Closes [\#501](https://github.com/ipeaGIT/r5r/issues/501).
 - Reverse search optimization is now only applicable to walking. Closes
   [\#517](https://github.com/ipeaGIT/r5r/issues/517).
+- Closed [\#373](https://github.com/ipeaGIT/r5r/issues/373)
+- Closed [\#970](https://github.com/conveyal/r5/issues/970)
 
 **New contributors to r5r**
 

@@ -478,7 +478,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Downloading R5 jar file to /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Finished building network at <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa</span></span>
-<span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">500</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"13-05-2019 14:00:00"</span>,</span></span>
@@ -499,11 +499,12 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a9012a3cfffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30             7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30             1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a9012809bffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901285cfffff     schools         50     30             5</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using a different decay function</span></span></span>
 <span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
@@ -521,11 +522,12 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a9012a3cfffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a9012809bffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30     3.9944818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a9012a3cfffff     schools         50     30     0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901295b7ffff     schools         50     30     6.9936155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901284a3ffff     schools         50     30     1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a9012809bffff     schools         50     30     0.0020933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901285cfffff     schools         50     30     4.8465894</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using several cutoff values</span></span></span>
 <span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
@@ -543,11 +545,11 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     15             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff     schools         50     30             4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a9012a3cfffff     schools         50     15             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a9012a3cfffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     15             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff     schools         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     15             3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff     schools         50     30             7</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculating access to different types of opportunities</span></span></span>
 <span class="r-in"><span><span class="va">access</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="op">(</span></span></span>
@@ -564,12 +566,12 @@ transit routing. Transportation Science, 49(3), 591-604.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 id opportunity percentile cutoff accessibility</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff  healthcare         50     30             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff     schools         50     30             4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff  healthcare         50     30             5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a9012a3cfffff     schools         50     30             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a9012a3cfffff  healthcare         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     30             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff  healthcare         50     30             1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901295b7ffff     schools         50     30             7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901295b7ffff  healthcare         50     30             7</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span> <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_network has been successfully stopped.</span>

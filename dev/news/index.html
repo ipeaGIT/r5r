@@ -53,7 +53,9 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.4.0" id="r5r-240-dev">r5r 2.4.0 dev<a class="anchor" aria-label="anchor" href="#r5r-240-dev"></a></h2>
 <p><strong>Major changes</strong></p>
-<ul><li>The <code><a href="../reference/isochrone.html">isochrone()</a></code> function has gone through major changes which substantially improved polygon-based isochrones. The function now builds on top of a travel time surface that uses a regular grid of points across the network (specifically a grid of Web Mercator pixels) and then uses the marching squares algorithm to generate the isochrone polygons. See detailed in the updated vignette. Closed <a href="https://github.com/ipeaGIT/r5r/issues/455" class="external-link">#455</a> and Closed <a href="https://github.com/ipeaGIT/r5r/issues/495" class="external-link">#495</a>.</li>
+<ul><li>Using new version of R5 v7.5.1. Closed <a href="https://github.com/ipeaGIT/r5r/issues/373" class="external-link">#373</a> and <a href="https://github.com/conveyal/r5/issues/970" class="external-link">#970</a>
+</li>
+<li>The <code><a href="../reference/isochrone.html">isochrone()</a></code> function has gone through major changes which substantially improved polygon-based isochrones. The function now builds on top of a travel time surface that uses a regular grid of points across the network (specifically a grid of Web Mercator pixels) and then uses the marching squares algorithm to generate the isochrone polygons. See detailed in the updated vignette. Closed <a href="https://github.com/ipeaGIT/r5r/issues/455" class="external-link">#455</a> and Closed <a href="https://github.com/ipeaGIT/r5r/issues/495" class="external-link">#495</a>.</li>
 <li>New support function <code><a href="../reference/get_gtfs_errors.html">get_gtfs_errors()</a></code> to help diagnose eventual errors in the GTFS data that prevent building the network. Closed <a href="https://github.com/ipeaGIT/r5r/issues/431" class="external-link">#431</a> and <a href="https://github.com/ipeaGIT/r5r/issues/541" class="external-link">#541</a>.</li>
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>New support function <code><a href="../reference/check_transit_availability.html">check_transit_availability()</a></code> that checks the number and proportion of public transport services from the GTFS feeds that are active on specified dates.</li>
@@ -63,6 +65,10 @@
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li>Revert back the order of origins destinations for Direct Modes. Fix implemented <code>in travel_time_matrix()</code>, <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> and <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>. Closes <a href="https://github.com/ipeaGIT/r5r/issues/501" class="external-link">#501</a>.</li>
 <li>Reverse search optimization is now only applicable to walking. Closes <a href="https://github.com/ipeaGIT/r5r/issues/517" class="external-link">#517</a>.</li>
+<li>Closed <a href="https://github.com/ipeaGIT/r5r/issues/373" class="external-link">#373</a>
+</li>
+<li>Closed <a href="https://github.com/conveyal/r5/issues/970" class="external-link">#970</a>
+</li>
 </ul><p><strong>New contributors to r5r</strong></p>
 <ul><li><a href="https://github.com/e-kotov" class="external-link">Egor Kotov</a></li>
 </ul></div>

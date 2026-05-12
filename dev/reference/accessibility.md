@@ -445,7 +445,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
 #> Downloading R5 jar file to /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ✔ Finished building network at /home/runner/work/_temp/Library/r5r/extdata/poa
-points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:5, ]
+points <- read.csv(file.path(data_path, "poa_hexgrid.csv"))[1:500, ]
 
 departure_datetime <- as.POSIXct(
   "13-05-2019 14:00:00",
@@ -466,11 +466,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30             0
+#> 1: 89a901291abffff     schools         50     30             4
 #> 2: 89a9012a3cfffff     schools         50     30             0
-#> 3: 89a901295b7ffff     schools         50     30             0
-#> 4: 89a901284a3ffff     schools         50     30             0
+#> 3: 89a901295b7ffff     schools         50     30             7
+#> 4: 89a901284a3ffff     schools         50     30             1
 #> 5: 89a9012809bffff     schools         50     30             0
+#> 6: 89a901285cfffff     schools         50     30             5
 
 # using a different decay function
 access <- accessibility(
@@ -488,11 +489,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30             0
-#> 2: 89a9012a3cfffff     schools         50     30             0
-#> 3: 89a901295b7ffff     schools         50     30             0
-#> 4: 89a901284a3ffff     schools         50     30             0
-#> 5: 89a9012809bffff     schools         50     30             0
+#> 1: 89a901291abffff     schools         50     30     3.9944818
+#> 2: 89a9012a3cfffff     schools         50     30     0.0000000
+#> 3: 89a901295b7ffff     schools         50     30     6.9936155
+#> 4: 89a901284a3ffff     schools         50     30     1.0000000
+#> 5: 89a9012809bffff     schools         50     30     0.0020933
+#> 6: 89a901285cfffff     schools         50     30     4.8465894
 
 # using several cutoff values
 access <- accessibility(
@@ -510,11 +512,11 @@ head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
 #> 1: 89a901291abffff     schools         50     15             0
-#> 2: 89a901291abffff     schools         50     30             0
+#> 2: 89a901291abffff     schools         50     30             4
 #> 3: 89a9012a3cfffff     schools         50     15             0
 #> 4: 89a9012a3cfffff     schools         50     30             0
-#> 5: 89a901295b7ffff     schools         50     15             0
-#> 6: 89a901295b7ffff     schools         50     30             0
+#> 5: 89a901295b7ffff     schools         50     15             3
+#> 6: 89a901295b7ffff     schools         50     30             7
 
 # calculating access to different types of opportunities
 access <- accessibility(
@@ -531,12 +533,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30             0
-#> 2: 89a901291abffff  healthcare         50     30             0
+#> 1: 89a901291abffff     schools         50     30             4
+#> 2: 89a901291abffff  healthcare         50     30             5
 #> 3: 89a9012a3cfffff     schools         50     30             0
 #> 4: 89a9012a3cfffff  healthcare         50     30             0
-#> 5: 89a901295b7ffff     schools         50     30             0
-#> 6: 89a901295b7ffff  healthcare         50     30             1
+#> 5: 89a901295b7ffff     schools         50     30             7
+#> 6: 89a901295b7ffff  healthcare         50     30             7
 
 stop_r5(r5r_network )
 #> r5r_network has been successfully stopped.
