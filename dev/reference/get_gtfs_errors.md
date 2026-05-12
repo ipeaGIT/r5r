@@ -46,5 +46,5 @@ r5r_network <- build_network(data_path)
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 
 get_gtfs_errors(r5r_network)
-#> Empty data.table (0 rows and 7 cols): V1,file,line,type,field,id...
+#> Empty data.table (0 rows and 6 cols): file,line,type,field,id,priority
 ```
