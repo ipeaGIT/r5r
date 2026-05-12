@@ -27,6 +27,7 @@ Other Support functions:
 ## Examples
 
 ``` r
+
 # read lines with new speeds
 new_lts_lines <- readRDS(
   system.file("extdata/poa/poa_ls_lts.rds", package = "r5r")

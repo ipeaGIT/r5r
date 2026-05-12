@@ -45,6 +45,7 @@ packages used in this vignette. Please note we allocate RAM memory to
 Java *before* loading our libraries.
 
 ``` r
+
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -59,6 +60,7 @@ with the path to the directory where OpenStreetMap and GTFS data are
 stored.
 
 ``` r
+
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not running this example
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -86,6 +88,7 @@ departing every minute over a 60-minute time window, between 2pm and
 4pm.
 
 ``` r
+
 # read all points in the city
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
@@ -128,6 +131,7 @@ estimates, it returns a `POLYGON "sf" "data.frame"` for each isochrone
 of each origin when you set `polygon_output = TRUE`.
 
 ``` r
+
 head(iso1)
 #> Simple feature collection with 6 features and 3 fields
 #> Geometry type: MULTIPOLYGON
@@ -139,13 +143,14 @@ head(iso1)
 #> 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16608 -...
 #> 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16745 -...
 #> 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17569 -...
-#> 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22498 -...
+#> 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.225 -30...
 #> 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.22787 -...
 ```
 
 Now it becomes super simple to visualize our isochrones on a map:
 
 ``` r
+
 # extract OSM network
 street_net <- street_network_to_sf(r5r_network)
 main_roads <- subset(street_net$edges, street_class %like% 'PRIMARY|SECONDARY')
@@ -174,6 +179,7 @@ function. Note that you do not need the `zoom` parameter here, and that
 the output is `LINESTRING "sf" "data.frame"`.
 
 ``` r
+
 # calculate travel time matrix
 iso2 <- r5r::isochrone(
   r5r_network,
@@ -221,6 +227,7 @@ head(iso2)
 Now it becomes super simple to visualize our isochrones on a map:
 
 ``` r
+
 ggplot() +
   geom_sf(data = iso2, aes(color=factor(isochrone)), alpha = .7) +
   scale_color_manual(values = rev(colors) ) +
@@ -241,6 +248,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

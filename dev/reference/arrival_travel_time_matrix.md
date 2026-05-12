@@ -379,9 +379,9 @@ head(arrival_ttm)
 #> 1:        0.0
 #> 2:       12.8
 #> 3:       10.7
-#> 4:       13.6
-#> 5:        3.2
-#> 6:       14.9
+#> 4:       13.7
+#> 5:        3.3
+#> 6:       15.0
 
 # when breakdown = TRUE the output contains much more information
 arrival_ttm2 <- arrival_travel_time_matrix(
@@ -408,9 +408,9 @@ head(arrival_ttm2)
 #> 1:       0.0       0.0             0         0.0 [WALK]       0        0.0
 #> 2:       1.9       1.6             0         6.2 LINHA1       1       12.8
 #> 3:       1.2       4.9             0         1.8   2441       1       10.7
-#> 4:       0.0       0.0             0         0.0 [WALK]       0       13.6
-#> 5:       0.0       0.0             0         0.0 [WALK]       0        3.2
-#> 6:       0.0       0.0             0         0.0 [WALK]       0       14.9
+#> 4:       0.0       0.0             0         0.0 [WALK]       0       13.7
+#> 5:       0.0       0.0             0         0.0 [WALK]       0        3.3
+#> 6:       0.0       0.0             0         0.0 [WALK]       0       15.0
 
 stop_r5(r5r_network)
 #> r5r_network has been successfully stopped.

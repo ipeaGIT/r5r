@@ -28,6 +28,7 @@ You can install [r5r](https://github.com/ipeaGIT/r5r) from CRAN, or the
 development version from github.
 
 ``` r
+
 # from CRAN
 install.packages('r5r')
 
@@ -50,6 +51,7 @@ The easiest way to install JDK is using the new
 [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
 ``` r
+
 # install {rJavaEnv} from CRAN
 install.packages("rJavaEnv")
 
@@ -78,6 +80,7 @@ processes, which is not enough for large queries using
 beginning of the script, as follows:
 
 ``` r
+
 options(java.parameters = "-Xmx2G")
 
 # By default, {r5r} uses all CPU cores available. If you want to limit the 
@@ -95,6 +98,7 @@ previous attempts.
 Then we can load the packages used in this vignette:
 
 ``` r
+
 library(r5r)
 library(sf)
 library(data.table)
@@ -208,6 +212,7 @@ files:
   transport system.
 
 ``` r
+
 data_path <- system.file("extdata/poa", package = "r5r")
 list.files(data_path)
 #>  [1] "fares"                      "gtfs_errors.csv"           
@@ -225,6 +230,7 @@ The points of interest data can be seen below. In this example, we will
 be looking at transport alternatives between some of those places.
 
 ``` r
+
 poi <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 head(poi)
 #>                     id       lat       lon
@@ -241,6 +247,7 @@ The data with origin destination pairs is shown below. In this example,
 we will be using 200 points randomly selected from this data set.
 
 ``` r
+
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
 # sample points
@@ -267,6 +274,7 @@ package directory for future use; and (2) combines the osm.pbf and
 gtfs.zip data sets to build a routable network object.
 
 ``` r
+
 # Indicate the path where OSM and GTFS data are stored
 r5r_network <- build_network(data_path = data_path)
 ```
@@ -282,6 +290,7 @@ visualizing
 Accessibility](https://ipeagit.github.io/r5r/articles/accessibility.html).
 
 ``` r
+
 # set departure datetime input
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
@@ -335,6 +344,7 @@ departure times. [More info on this
 vignette](https://ipeagit.github.io/r5r/articles/time_window.html).
 
 ``` r
+
 # set inputs
 mode <- c("WALK", "TRANSIT")
 max_walk_time <- 30 # minutes
@@ -376,6 +386,7 @@ waiting, in-vehicle and transfer times. Please note this function can be
 very memory intensive for large data sets.
 
 ``` r
+
 # calculate a travel time matrix
 ettm <- expanded_travel_time_matrix(
   r5r_network,
@@ -422,6 +433,7 @@ In this example below, we want to know some alternative routes between
 one origin/destination pair only.
 
 ``` r
+
 # set inputs
 origins <- poi[10,]
 destinations <- poi[12,]
@@ -455,19 +467,19 @@ head(det)
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:09:10           33.9           9460       1 WALK
-#> 2 -51.22875      1       14:09:10           33.9           9460       2 RAIL
-#> 3 -51.22875      1       14:09:10           33.9           9460       3 WALK
-#> 4 -51.22875      1       14:09:10           33.9           9460       4  BUS
-#> 5 -51.22875      1       14:09:10           33.9           9460       5 WALK
+#> 1 -51.22875      1       14:07:57           35.1           9460       1 WALK
+#> 2 -51.22875      1       14:07:57           35.1           9460       2 RAIL
+#> 3 -51.22875      1       14:07:57           35.1           9460       3 WALK
+#> 4 -51.22875      1       14:07:57           35.1           9460       4  BUS
+#> 5 -51.22875      1       14:07:57           35.1           9460       5 WALK
 #> 6 -51.22875      2       14:09:43           45.6           8766       1 WALK
 #>   segment_duration wait distance  route                       geometry
-#> 1              4.5  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  1.4     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 1              5.0  0.0      174        LINESTRING (-51.1981 -29.99...
+#> 2              6.6  2.1     4796 LINHA1 LINESTRING (-51.19763 -29.9...
 #> 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...
-#> 6              4.5  0.0      174        LINESTRING (-51.1981 -29.99...
+#> 6              5.0  0.0      174        LINESTRING (-51.1981 -29.99...
 ```
 
 The output is a `data.frame sf` object, so we can easily visualize the
@@ -482,6 +494,7 @@ use the
 function to extract the OSM street network used in the routing.
 
 ``` r
+
 # extract OSM network
 street_net <- r5r::street_network_to_sf(r5r_network)
 
@@ -508,6 +521,7 @@ it had been using, we use the `stop_r5` function followed by a call to
 Java’s garbage collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

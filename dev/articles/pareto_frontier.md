@@ -72,6 +72,7 @@ example we’ll be using the a sample data set for the city of Porto
 Alegre (Brazil) included in `r5r`.
 
 ``` r
+
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -113,6 +114,7 @@ use the fare structure of `5r5` can be found in [(this other
 vignette)](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 ``` r
+
 # create basic fare structure
 fare_structure <- setup_fare_structure(
   r5r_network, 
@@ -139,6 +141,7 @@ For convenience, we can save these fare rules as a `zip` file and load
 again for a future application.
 
 ``` r
+
 # save fare rules to temp file
 temp_fares <- tempfile(pattern = "fares_poa", fileext = ".zip")
 r5r::write_fare_structure(fare_structure, file_path = temp_fares)
@@ -159,6 +162,7 @@ all destinations considering multiple cutoffs of monetary costs:
 - \$8.37, which would allow for walking walking + bus + rail
 
 ``` r
+
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
                                  format = "%d-%m-%Y %H:%M:%S")
 
@@ -202,6 +206,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

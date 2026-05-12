@@ -38,6 +38,7 @@ packages used in this vignette. Please note we allocate RAM memory to
 Java *before* loading our libraries.
 
 ``` r
+
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -56,6 +57,7 @@ with the path to the directory where OpenStreetMap and GTFS data are
 stored.
 
 ``` r
+
 # system.file returns the directory with example data inside the r5r package
 # set data path to directory containing your own data if not running this example
 data_path <- system.file("extdata/poa", package = "r5r")
@@ -89,6 +91,7 @@ travel time matrix of the study area and manually computing
 accessibility.
 
 ``` r
+
 # read all points in the city
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
@@ -118,7 +121,7 @@ access1 <- r5r::accessibility(
 head(access1)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     20             4
+#> 1: 89a901291abffff     schools         50     20             3
 #> 2: 89a901291abffff  healthcare         50     20             6
 #> 3: 89a9012a3cfffff     schools         50     20             0
 #> 4: 89a9012a3cfffff  healthcare         50     20             0
@@ -147,6 +150,7 @@ matrix](https://ipeagit.github.io/r5r/articles/travel_time_matrix.html),
 which we calculate using `r5r`:
 
 ``` r
+
 # calculate travel time matrix
 ttm <- r5r::travel_time_matrix(
   r5r_network,
@@ -162,7 +166,7 @@ ttm <- r5r::travel_time_matrix(
 head(ttm)
 #>            from_id           to_id travel_time_p50
 #>             <char>          <char>           <int>
-#> 1: 89a901291abffff 89a901291abffff               1
+#> 1: 89a901291abffff 89a901291abffff               2
 #> 2: 89a901291abffff 89a9012a3cfffff              78
 #> 3: 89a901291abffff 89a901295b7ffff              45
 #> 4: 89a901291abffff 89a901284a3ffff              60
@@ -176,6 +180,7 @@ above, we just need to call the
 function, and pass our travel time matrix and land use data as input:
 
 ``` r
+
 # calculate accessibility
 access_edu <- accessibility::cumulative_cutoff(
   travel_matrix = ttm, 
@@ -196,6 +201,7 @@ access_health <- accessibility::cumulative_cutoff(
 #> in the final output.
 
 head(access_edu)
+#> Key: <id>
 #>                 id schools
 #>             <char>   <int>
 #> 1: 89a9012124fffff       2
@@ -205,6 +211,7 @@ head(access_edu)
 #> 5: 89a90128007ffff       7
 #> 6: 89a9012800bffff       9
 head(access_health)
+#> Key: <id>
 #>                 id healthcare
 #>             <char>      <int>
 #> 1: 89a9012124fffff          2
@@ -229,6 +236,7 @@ resolution. In this case, we basically need to retrieve the polygons of
 the spatial grid, and merge it with our accessibility estimates.
 
 ``` r
+
 # retrieve polygons of H3 spatial grid
 grid <- h3jsr::cell_to_polygon(points$id, simple = FALSE)
 
@@ -256,6 +264,7 @@ smoother spatial distribution. The code below demonstrates how to do
 that, producing a prettier map.
 
 ``` r
+
 # interpolate estimates to get spatially smooth result
 access_schools <- access1 %>% 
   filter(opportunity == "schools") %>%
@@ -308,6 +317,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
@@ -317,6 +327,6 @@ If you have any suggestions or want to report an error, please visit
 
 ### References
 
-Levinson, David, and et al. 2020. “Transport Access Manual: A Guide for
-Measuring Connection Between People and Places,” January.
+Levinson, David, and et al. 2020. *Transport Access Manual: A Guide for
+Measuring Connection Between People and Places*. January 1.
 <https://hdl.handle.net/2123/23733>.

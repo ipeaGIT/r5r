@@ -362,7 +362,7 @@ pf <- pareto_frontier(
 head(pf)
 #>            from_id           to_id percentile travel_time monetary_cost
 #>             <char>          <char>      <int>       <int>         <num>
-#> 1: 89a901291abffff 89a901291abffff         50           1           4.5
+#> 1: 89a901291abffff 89a901291abffff         50           2           4.5
 #> 2: 89a901291abffff 89a9012a3cfffff         50          72           9.0
 #> 3: 89a901291abffff 89a901295b7ffff         50          54           4.5
 #> 4: 89a901291abffff 89a901295b7ffff         50          53           4.8

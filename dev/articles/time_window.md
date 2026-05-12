@@ -24,8 +24,8 @@ temporal unit problem (MTUP) (Pereira 2019; Levinson and et al. 2020).
 This problem gets even more complicated when public transport GTFS feeds
 have a `frequencies.txt` table. In these cases, we cannot know the exact
 departure time of vehicles, what creates greater uncertainty for our
-travel time and accessibility estimates (Conway, Byrd, and van Eggermond
-2018; Stewart and Byrd 2022).
+travel time and accessibility estimates (Conway et al. 2018; Stewart and
+Byrd 2022).
 
 ### The solution
 
@@ -81,6 +81,7 @@ example we’ll be using the a sample data set for the city of São Paulo
 (Brazil) included in `r5r`.
 
 ``` r
+
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -122,6 +123,7 @@ In this example we’ll be using a cumulative accessibility metric
 `cutoffs = 45`.
 
 ``` r
+
 # estimate accessibility
 acc <- r5r::accessibility(
   r5r_network,   
@@ -148,7 +150,7 @@ head(acc, n = 10)
 #>  5: 89a8100c603ffff     schools         80     45             6
 #>  6: 89a8100c617ffff     schools         10     45            14
 #>  7: 89a8100c617ffff     schools         20     45            14
-#>  8: 89a8100c617ffff     schools         50     45            10
+#>  8: 89a8100c617ffff     schools         50     45            12
 #>  9: 89a8100c617ffff     schools         70     45             6
 #> 10: 89a8100c617ffff     schools         80     45             6
 ```
@@ -166,6 +168,7 @@ how accessibility levels might vary between 2pm and 3pm depending on the
 departure time within that 60-minute time window.
 
 ``` r
+
 # summarize
 df <- acc[, .(min_acc = min(accessibility),
               median = accessibility[which(percentile == 50)],
@@ -193,6 +196,7 @@ time window departing between 2pm and 3pm and see how the output looks
 like.
 
 ``` r
+
 # estimate travel time matrix
 ttm <- travel_time_matrix(
   r5r_network,   
@@ -257,6 +261,7 @@ the specified time window. Please note this function can be very memory
 intensive for large data sets and time windows.
 
 ``` r
+
 ettm <- r5r::expanded_travel_time_matrix(
   r5r_network,
   origins = points[1:30,],
@@ -284,16 +289,16 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       50.9
-#>  2:       46.4
-#>  3:       39.2
-#>  4:       42.1
-#>  5:       36.1
-#>  6:       53.8
-#>  7:       45.8
-#>  8:       46.3
-#>  9:       37.7
-#> 10:       41.7
+#>  1:       38.2
+#>  2:       43.8
+#>  3:       46.2
+#>  4:       46.0
+#>  5:       50.4
+#>  6:       42.4
+#>  7:       34.8
+#>  8:       46.0
+#>  9:       46.3
+#> 10:       46.8
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.
@@ -340,6 +345,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
@@ -354,8 +360,8 @@ Conway, Matthew Wigginton, Andrew Byrd, and Michael van Eggermond. 2018.
 Public Transport Sketch Planning.” *Journal of Transport and Land Use*
 11 (1). <https://doi.org/10.5198/jtlu.2018.1074>.
 
-Levinson, David, and et al. 2020. “Transport Access Manual: A Guide for
-Measuring Connection Between People and Places,” January.
+Levinson, David, and et al. 2020. *Transport Access Manual: A Guide for
+Measuring Connection Between People and Places*. January 1.
 <https://hdl.handle.net/2123/23733>.
 
 Pereira, Rafael H. M. 2019. “Future Accessibility Impacts of Transport
@@ -373,5 +379,5 @@ Transport Geography* 75 (February): 8–24.
 Stewart, Anson F, and Andrew M Byrd. 2022. “Half-(head)way There:
 Comparing Two Methods to Account for Public Transport Waiting Time in
 Accessibility Indicators.” *Environment and Planning B: Urban Analytics
-and City Science*, November, 23998083221137077.
+and City Science*, November 30, 23998083221137077.
 <https://doi.org/10.1177/23998083221137077>.

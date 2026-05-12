@@ -32,6 +32,7 @@ city of Porto Alegre (Brazil) included in `r5r`. First, let’s load a few
 libraries and build our rotatable transportation network.
 
 ``` r
+
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -78,6 +79,7 @@ either `"scale"` or `"km/h"`, indicating whether the values in
 (`"scale"`) or as absolute speeds (`"km/h"`). Like this:
 
 ``` r
+
 # read data.frame with new car speeds
 edge_speed_factors <- read.csv(
   file.path(data_path, "poa_osm_congestion.csv")
@@ -102,6 +104,7 @@ Now you can simply run any routing or accessibility function passing the
 parameters `new_carspeeds` and `carspeed_scale`:
 
 ``` r
+
 # origins and destination points
 points <- read.csv(file.path(data_path, "poa_points_of_interest.csv"))
 
@@ -137,6 +140,7 @@ First we need to do read the OSM data from our `.pbf` file, and to
 filter the OSM edges with the road types we want.
 
 ``` r
+
 # path to OSM pbf
 pbf_path <- paste0(data_path, "/poa_osm.pbf")
   
@@ -172,6 +176,7 @@ head(roads)
 Here’s how the road network looks like.
 
 ``` r
+
 # map
 plot(roads["highway"])
 ```
@@ -185,6 +190,7 @@ clear that max speeds should be interpreted as a `"scale"` factor. The
 `data.frame` looks like this:
 
 ``` r
+
 new_edge_speeds <- roads |>
   mutate( 
     osm_id = as.numeric(osm_id),
@@ -211,6 +217,7 @@ That’s it. Now we can calculate travel times with the modified OSM car
 speeds.
 
 ``` r
+
 # travel time matrix
 ttm_congestion <- r5r::travel_time_matrix(
   r5r_network = r5r_network,
@@ -231,6 +238,7 @@ table we created in our previous example to assign a 40 Km/h to each and
 every OSM id.
 
 ``` r
+
 # edit table with custom speeds to 40 km/h
 new_edge_speeds40 <- new_edge_speeds |>
   mutate(max_speed = 40,
@@ -265,6 +273,7 @@ first one covers the extended city center, and the second polygon covers
 a few important roads that connect two major avenues in the city.
 
 ``` r
+
 # read sf with congestion polygons
 congestion_poly <- readRDS(file.path(data_path, "poa_poly_congestion.rds"))
 
@@ -282,6 +291,7 @@ Mind you that this `sf data.frame` must have a few mandatory columns:
   case of overlapping polygons.
 
 ``` r
+
 head(congestion_poly)
 #> Simple feature collection with 2 features and 3 fields
 #> Geometry type: POLYGON
@@ -301,6 +311,7 @@ second polygon, running at 80% of the speed limit. Finally, we can set
 would be running at 95%.
 
 ``` r
+
 ttm_congestion <- r5r::travel_time_matrix(
   r5r_network = r5r_network,
   origins = points,
@@ -332,6 +343,7 @@ Mind you that the `data.frame` must contain the column `"lts"`
 indicating the new LTS value.
 
 ``` r
+
 # read data.frame with new lts
 edge_lts <- read.csv(
   file.path(data_path, "poa_osm_lts.csv")
@@ -351,6 +363,7 @@ Now we simply need to pass this `data.frame` with the new LTS values to
 the parameter `new_lts` in any routing/accessibility function:
 
 ``` r
+
 ttm_new_lts <- r5r::travel_time_matrix(
   r5r_network = r5r_network,
   origins = points,
@@ -370,6 +383,7 @@ local authorities would have build dedicated lanes along all secondary
 roads in the city.
 
 ``` r
+
 # read sf with congestion polygons
 lts_lines <- readRDS(file.path(data_path, "poa_ls_lts.rds"))
 
@@ -381,6 +395,7 @@ Now we only need to pass this `sf` with the new LTS values to the
 `new_lts` parameter in any routing/accessibility function:
 
 ``` r
+
 ttm_new_lts <- r5r::travel_time_matrix(
   r5r_network = r5r_network,
   origins = points,
@@ -401,6 +416,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 # stop an specific r5r network
 r5r::stop_r5(r5r_network)
 

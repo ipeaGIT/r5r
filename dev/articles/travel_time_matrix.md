@@ -29,6 +29,7 @@ this vignette. In this example we’ll be using the a sample data set for
 the city of Porto Alegre (Brazil) included in `r5r`.
 
 ``` r
+
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -70,6 +71,7 @@ speed - `max_fare`: maximum monetary cost in public transport. [See this
 vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 ``` r
+
 # estimate travel time matrix
 ttm <- travel_time_matrix(
   r5r_network,   
@@ -129,6 +131,7 @@ sets.
 *A general call to expanded_travel_time_matrix()*
 
 ``` r
+
 ettm <- expanded_travel_time_matrix(
   r5r_network,   
   origins = points,
@@ -156,6 +159,7 @@ head(ettm, n = 10)
 *Calling expanded_travel_time_matrix() with `breakdown = TRUE`*
 
 ``` r
+
 ettm2 <- expanded_travel_time_matrix(
   r5r_network,   
   origins = points,
@@ -203,6 +207,7 @@ the specified time window. Please note this function can be very memory
 intensive for large data sets and time windows.
 
 ``` r
+
 ettm_window <- expanded_travel_time_matrix(
   r5r_network,   
   origins = points,
@@ -274,6 +279,7 @@ function (you can also use `breakdown = TRUE`).
 
 ``` r
 
+
 arrival_datetime <- as.POSIXct(
  "13-05-2019 14:00:00",
  format = "%d-%m-%Y %H:%M:%S"
@@ -306,10 +312,10 @@ head(arrival_ttm, n = 10)
 #>  1:        0.0
 #>  2:       12.8
 #>  3:       10.7
-#>  4:       13.6
-#>  5:        3.2
-#>  6:       14.9
-#>  7:       15.5
+#>  4:       13.7
+#>  5:        3.3
+#>  6:       15.0
+#>  7:       15.6
 #>  8:       16.5
 #>  9:       20.2
 #> 10:       16.5
@@ -324,6 +330,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

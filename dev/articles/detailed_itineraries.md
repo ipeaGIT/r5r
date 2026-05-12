@@ -48,6 +48,7 @@ network. In this example we’ll be using the a sample data set for the
 city of Porto Alegre (Brazil) included in `r5r`.
 
 ``` r
+
 # increase Java memory
 options(java.parameters = "-Xmx2G")
 
@@ -84,6 +85,7 @@ case, `r5r` will consider sub-optimal routes that arrive up to 8 minutes
 after the arrival of the optimal route.
 
 ``` r
+
 # set inputs
 origins <- poi[10,]
 destinations <- poi[12,]
@@ -118,19 +120,19 @@ head(det)
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:09:10           33.9           9460       1 WALK
-#> 2 -51.22875      1       14:09:10           33.9           9460       2 RAIL
-#> 3 -51.22875      1       14:09:10           33.9           9460       3 WALK
-#> 4 -51.22875      1       14:09:10           33.9           9460       4  BUS
-#> 5 -51.22875      1       14:09:10           33.9           9460       5 WALK
-#> 6 -51.22875      2       14:09:10           41.1           8755       1 WALK
+#> 1 -51.22875      1       14:07:57           35.1           9460       1 WALK
+#> 2 -51.22875      1       14:07:57           35.1           9460       2 RAIL
+#> 3 -51.22875      1       14:07:57           35.1           9460       3 WALK
+#> 4 -51.22875      1       14:07:57           35.1           9460       4  BUS
+#> 5 -51.22875      1       14:07:57           35.1           9460       5 WALK
+#> 6 -51.22875      2       14:07:57           42.3           8755       1 WALK
 #>   segment_duration wait distance  route                       geometry
-#> 1              4.5  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  1.4     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 1              5.0  0.0      174        LINESTRING (-51.1981 -29.99...
+#> 2              6.6  2.1     4796 LINHA1 LINESTRING (-51.19763 -29.9...
 #> 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...
-#> 6              4.5  0.0      174        LINESTRING (-51.1981 -29.99...
+#> 6              5.0  0.0      174        LINESTRING (-51.1981 -29.99...
 ```
 
 The output is a `data.frame sf` object, so we can easily visualize the
@@ -144,6 +146,7 @@ use the `street_network_to_sf((` function to extract the OSM street
 network used in the routing.
 
 ``` r
+
 # extract OSM network
 street_net <- r5r::street_network_to_sf(r5r_network)
 
@@ -163,6 +166,7 @@ fig
 ![](detailed_itineraries_files/figure-html/unnamed-chunk-4-1.png)
 
 ``` r
+
 # SAVE image
 ggsave(plot = fig, filename = 'inst/img/vig_detailed_ggplot.png', 
        height = 5, width = 15, units='cm', dpi=200)
@@ -196,6 +200,7 @@ time tables. This can be easily done using the [`gtfstools`
 package](https://ipeagit.github.io/gtfstools/). Here is how:
 
 ``` r
+
 library(gtfstools)
 
 # location of your frequency-based GTFS
@@ -223,6 +228,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

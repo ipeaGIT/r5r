@@ -87,6 +87,7 @@ increase the memory available to Java and load the packages used in this
 vignette
 
 ``` r
+
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -105,6 +106,7 @@ city center to the neighboring northbound municipalities. That system
 can be seen in the map below.
 
 ``` r
+
 # setup and load Porto Alegre multimodal network into memory
 
 # system.file returns the directory with example data inside the r5r package
@@ -177,6 +179,7 @@ create a fare structure where fare rules of routes differ by
 the entire system follows the same rules.
 
 ``` r
+
 fare_structure <- setup_fare_structure(r5r_network, 
                                        base_fare = 4.8,
                                        by = "MODE")
@@ -186,6 +189,7 @@ Now let’s check the contents of the `fare_structure` object. We can see
 below that it is simply a `list` with a few properties and data.frames.
 
 ``` r
+
 head(fare_structure, n=7)
 #> $max_discounted_transfers
 #> [1] 1
@@ -288,6 +292,7 @@ Alegre.
 Here is how we can check or update the values of these components:
 
 ``` r
+
 fare_structure$max_discounted_transfers
 #> [1] 1
 fare_structure$transfer_time_allowance <- 60 # update transfer_time_allowance
@@ -316,6 +321,7 @@ data.frame contains five columns:
 - `fare`: the full fare price of this mode.
 
 ``` r
+
 fare_structure$fares_per_type
 #>      type unlimited_transfers allow_same_route_transfer use_route_fare  fare
 #>    <char>              <lgcl>                    <lgcl>         <lgcl> <num>
@@ -335,6 +341,7 @@ route T1 to another T1). We’ll do those changes below, using
 `data.table` notation.
 
 ``` r
+
 fare_structure$fares_per_type[type == "RAIL", unlimited_transfers := TRUE]
 fare_structure$fares_per_type[type == "RAIL", fare := 4.50]
 fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
@@ -343,6 +350,7 @@ fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 Checking the results below, everything looks OK:
 
 ``` r
+
 fare_structure$fares_per_type
 #> Index: <type>
 #>      type unlimited_transfers allow_same_route_transfer use_route_fare  fare
@@ -359,6 +367,7 @@ transfers between the modes specified in `first_leg` and `second_leg`
 columns.
 
 ``` r
+
 fare_structure$fares_per_transfer
 #>    first_leg second_leg  fare
 #>       <char>     <char> <num>
@@ -376,6 +385,7 @@ rules in Porto Alegre.
   of 7.20.
 
 ``` r
+
 # conditional update fare value
 fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare := 7.2]
 ```
@@ -385,6 +395,7 @@ fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare
   data.frame to account for that.
 
 ``` r
+
 # conditional update fare value
 fare_structure$fares_per_transfer[first_leg != second_leg, fare := 8.37]
 
@@ -401,6 +412,7 @@ fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_le
   will count to the global `max_discounted_transfers` allowance.
 
 ``` r
+
 # remove row
 fare_structure$fares_per_transfer <- fare_structure$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
 ```
@@ -409,6 +421,7 @@ Once all changes are applied, the `fare_per_transfer` data.frame should
 look like this:
 
 ``` r
+
 fare_structure$fares_per_transfer
 #>    first_leg second_leg  fare
 #>       <char>     <char> <num>
@@ -426,6 +439,7 @@ train routes in Porto Alegre. In case there a few special routes
 in this `fares_per_route` data.frame.
 
 ``` r
+
 tail(fare_structure$fares_per_route)
 #>    agency_id                                 agency_name  route_id
 #>       <char>                                      <char>    <char>
@@ -501,6 +515,7 @@ are accounted for, using the
 function.
 
 ``` r
+
 ## load input data
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 
@@ -544,6 +559,7 @@ a little longer to complete (`travel_time_500 > travel_time_unl`), and
 other trips cannot be completed at all (`travel_time_500 == NA`).
 
 ``` r
+
 tail(ttm, 10)
 #>             from_id           to_id travel_time_500 travel_time_unl
 #>              <char>          <char>           <int>           <int>
@@ -563,6 +579,7 @@ The plots below show the overall distribution of the travel time
 differences and unreachable destinations:
 
 ``` r
+
 # plot of overall travel time differences between limited and unlimited cost travel time matrices 
 time_difference = ttm[!is.na(travel_time_500), .(count = .N), 
                       by = .(travel_time_unl, travel_time_500)]
@@ -608,6 +625,7 @@ We’ll do that below, and compare the results the accessibility
 unconstrained by monetary costs:
 
 ``` r
+
 # calculate accessibility function
 calculate_accessibility <- function(fare, fare_string) {
   access_df <- accessibility(
@@ -647,6 +665,7 @@ Finally, we can plot the results and see how accessibility levels can
 differ quite substantially when we account for monetary costs.
 
 ``` r
+
 # plot accessibility maps
 ggplot(data = access) +
   geom_sf(aes(fill = accessibility), color=NA, size = 0.2) +
@@ -669,6 +688,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

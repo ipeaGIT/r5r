@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Accessibility</h1>
             
-            <h4 data-toc-skip class="date">2026-04-27</h4>
+            <h4 data-toc-skip class="date">2026-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/accessibility.Rmd" class="external-link"><code>vignettes/accessibility.Rmd</code></a></small>
       <div class="d-none name"><code>accessibility.Rmd</code></div>
@@ -98,8 +98,9 @@
 </h2>
 <p>Accessibility indicators measure the ease with which opportunities,
 such as jobs, can be reached by a traveler from a particular location
-<span class="citation">(Levinson and et al. 2020)</span>. This vignette
-shows how to calculate and visualize accessibility in R using the <a href="https://ipeagit.github.io/r5r/index.html"><code>r5r</code>
+<span class="citation">(<span class="nocase">Levinson and et al.</span>
+2020)</span>. This vignette shows how to calculate and visualize
+accessibility in R using the <a href="https://ipeagit.github.io/r5r/index.html"><code>r5r</code>
 package</a> using a reproducible example. In this example, we will be
 using a sample data set for the city of Porto Alegre (Brazil) included
 in <code>r5r</code>.</p>
@@ -198,7 +199,7 @@ manually computing accessibility.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             4</span></span>
+<span><span class="co">#&gt; 1: 89a901291abffff     schools         50     20             3</span></span>
 <span><span class="co">#&gt; 2: 89a901291abffff  healthcare         50     20             6</span></span>
 <span><span class="co">#&gt; 3: 89a9012a3cfffff     schools         50     20             0</span></span>
 <span><span class="co">#&gt; 4: 89a9012a3cfffff  healthcare         50     20             0</span></span>
@@ -237,7 +238,7 @@ time matrix</a>, which we calculate using <code>r5r</code>:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ttm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            from_id           to_id travel_time_p50</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;          &lt;char&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a901291abffff 89a901291abffff               1</span></span>
+<span><span class="co">#&gt; 1: 89a901291abffff 89a901291abffff               2</span></span>
 <span><span class="co">#&gt; 2: 89a901291abffff 89a9012a3cfffff              78</span></span>
 <span><span class="co">#&gt; 3: 89a901291abffff 89a901295b7ffff              45</span></span>
 <span><span class="co">#&gt; 4: 89a901291abffff 89a901284a3ffff              60</span></span>
@@ -268,6 +269,7 @@ travel time matrix and land use data as input:</p>
 <span><span class="co">#&gt; in the final output.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_edu</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Key: &lt;id&gt;</span></span>
 <span><span class="co">#&gt;                 id schools</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;   &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a9012124fffff       2</span></span>
@@ -277,6 +279,7 @@ travel time matrix and land use data as input:</p>
 <span><span class="co">#&gt; 5: 89a90128007ffff       7</span></span>
 <span><span class="co">#&gt; 6: 89a9012800bffff       9</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access_health</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Key: &lt;id&gt;</span></span>
 <span><span class="co">#&gt;                 id healthcare</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;      &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1: 89a9012124fffff          2</span></span>
@@ -385,11 +388,11 @@ page</a>.</p>
 <div class="section level3">
 <h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-levinson2020manual" class="csl-entry">
-Levinson, David, and et al. 2020. <span>“Transport Access Manual: A
-Guide for Measuring Connection Between People and Places,”</span>
-January. <a href="https://hdl.handle.net/2123/23733" class="external-link">https://hdl.handle.net/2123/23733</a>.
+<span class="nocase">Levinson, David, and et al.</span> 2020.
+<em>Transport Access Manual: A Guide for Measuring Connection Between
+People and Places</em>. January 1. <a href="https://hdl.handle.net/2123/23733" class="external-link">https://hdl.handle.net/2123/23733</a>.
 </div>
 </div>
 </div>

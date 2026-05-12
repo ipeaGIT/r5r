@@ -31,17 +31,17 @@ deleted from local cache directory.
 ``` r
 # download r5 JAR
 r5r::download_r5()
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.4.0/r5-v7.4-all.jar
-#> [1] "/home/runner/.cache/R/r5r/r5_jar_v7.4.0/r5-v7.4-all.jar"
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
+#> [1] "/home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar"
 
 # list all files cached
 r5r_cache(list_files = TRUE)
 #> Files currently cached:
-#> /home/runner/.cache/R/r5r/r5_jar_v7.4.0/r5-v7.4-all.jar
+#> /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 
 # delete r5 JAR
 r5r_cache(delete_file = 'r5-v7.0')
 #> The file 'r5-v7.0' is not cached.
 #> Files currently cached:
-#> /home/runner/.cache/R/r5r/r5_jar_v7.4.0/r5-v7.4-all.jar
+#> /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 ```

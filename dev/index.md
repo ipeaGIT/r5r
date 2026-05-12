@@ -37,6 +37,7 @@ code (java-api folder) that provides the interface to R⁵.
 You can install `r5r`:
 
 ``` r
+
 # from CRAN
 install.packages("r5r")
 
@@ -58,6 +59,7 @@ The easiest way to install JDK is using the new
 [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
 ``` r
+
 # install.packages('rJavaEnv')
 
 # check version of Java currently installed (if any) 
@@ -164,6 +166,7 @@ of the public transport and Open Street Map networks of Porto Alegre
 (Brazil). Three steps are required to use `r5r`, as follows.
 
 ``` r
+
 # allocate RAM memory to Java **before** loading the {r5r} library
 options(java.parameters = "-Xmx2G")
 
