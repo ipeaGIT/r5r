@@ -130,7 +130,7 @@ build_network <- function(data_path,
     errfile = file.path(data_path, "gtfs_errors.csv")
 
     # always write error file even when empty, so that if you fix errors the error file gets overwritten on rebuild
-    write.csv(errors, errfile)
+    data.table::fwrite(errors, errfile)
 
     if (any(errors$priority == "HIGH")) {
       cli::cli_abort(c(
