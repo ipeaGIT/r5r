@@ -6,6 +6,7 @@ import com.conveyal.gtfs.error.GTFSError;
 import com.conveyal.gtfs.validator.PostLoadValidator;
 import com.conveyal.gtfs.validator.model.Priority;
 import com.conveyal.osmlib.OSM;
+import com.conveyal.r5.analyst.cluster.TransportNetworkConfig;
 import com.conveyal.r5.analyst.scenario.RasterCost;
 import com.conveyal.r5.kryo.KryoNetworkSerializer;
 import com.conveyal.r5.streets.StreetLayer;
@@ -31,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class NetworkBuilder {
+    public static final String JSON_CONFIG_FILE = "config.json";
 
     public boolean useNativeElevation = false;
     public String elevationCostFunction = "NONE";
@@ -41,6 +43,7 @@ public class NetworkBuilder {
     private OSM osmFile;
     private Stream<GTFSFeed> gtfsFeeds;
     private String tiffFile = "";
+    private static TransportNetworkConfig transportNetworkConfig = null;
 
     public RDataFrame gtfsErrors = null;
 
@@ -121,6 +124,8 @@ public class NetworkBuilder {
         networkConfig.put("elevation_cost_function", elevationCostFunction);
         networkConfig.put("tiff_file_name", tiffFile);
 
+        networkConfig.put("transportNetworkConfig", transportNetworkConfig != null ? JSON_CONFIG_FILE : null);
+
         return networkConfig;
     }
 
@@ -128,13 +133,14 @@ public class NetworkBuilder {
         TransportNetwork network = new TransportNetwork();
 
         network.scenarioId = "r5r";
-        network.streetLayer = new StreetLayer();
+        network.streetLayer = new StreetLayer(transportNetworkConfig);
         network.streetLayer.loadFromOsm(osmFile);
         osmFile.close();
 
         network.streetLayer.parentNetwork = network;
         network.streetLayer.indexStreets();
 
+        // currently the TransitLayer has no config, so we do not pass in networkConfig
         network.transitLayer = new TransitLayer();
         // this replaces the old r5r TransitLayerWithShapes class; saving shapes now built in to r5.
         network.transitLayer.saveShapes = true;
@@ -220,6 +226,15 @@ public class NetworkBuilder {
             }
             if (name.endsWith(".zip")) gtfsFiles.add(file.getAbsolutePath());
             if (name.endsWith(".tif") | name.endsWith(".tiff")) tiffFile = file.getAbsolutePath();
+            if (name.equals(JSON_CONFIG_FILE)) {
+                try {
+                    // Use the R5 object mapper to make sure R5 config files are compatible (e.g. same case conventions)
+                    transportNetworkConfig = com.conveyal.analysis.util.JsonUtil.objectMapper.readValue(file, TransportNetworkConfig.class);
+                } catch (Exception e) {
+                    // re-throw, don't silently ignore a config file
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
         initializeGtfsErrors();
