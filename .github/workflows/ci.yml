@@ -3,6 +3,9 @@ name: CI
 on:
   push:
 
+  pull_request:
+
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
