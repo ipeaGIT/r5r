@@ -23,6 +23,7 @@ If no invalid IDs are found (i.e., input is \code{"[]"}), prints nothing.
 Other support functions: 
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
 \code{\link{tempdir_unique}()},

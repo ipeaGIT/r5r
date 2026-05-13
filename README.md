@@ -198,6 +198,7 @@ access <- accessibility(r5r_network = r5r_network,
                         decay_function = "step",
                         cutoffs = 21,
                         mode =  c("WALK", "TRANSIT"),
+                        departure_datetime = departure_datetime,
                         verbose = FALSE)
 ```
 
@@ -217,7 +218,7 @@ and accessibility. A key advantage of `r5r` is that is provides a simple and
 friendly R interface to R<sup>5</sup>, one of the fastest and most robust routing
 engines available.
 
-For ***Python*** users, you might want to check our sister package: [**r5py**](https://r5py.readthedocs.io/en/stable/)!
+For ***Python*** users, you might want to check our sister package: [**r5py**](https://r5py.readthedocs.io/stable/)!
 
 -----
 

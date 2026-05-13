@@ -2,12 +2,16 @@
 
 **Major changes**
 
+- Using new version of R5 v7.5.1. Closed [#373](https://github.com/ipeaGIT/r5r/issues/373) 
+and [#970](https://github.com/conveyal/r5/issues/970)
 - The `isochrone()` function has gone through major changes which substantially
 improved polygon-based isochrones. The function now builds on top of a travel 
 time surface that uses a regular grid of points across the network (specifically 
 a grid of Web Mercator pixels) and then uses the marching squares algorithm to 
 generate the isochrone polygons. See detailed in the updated vignette. Closed 
 [#455](https://github.com/ipeaGIT/r5r/issues/455) and Closed [#495](https://github.com/ipeaGIT/r5r/issues/495).
+- New support function `get_gtfs_errors()` to help diagnose eventual errors in
+the GTFS data that prevent building the network. Closed [#431](https://github.com/ipeaGIT/r5r/issues/431) and [#541](https://github.com/ipeaGIT/r5r/issues/541).
 
 **Minor changes**
 
@@ -26,6 +30,8 @@ destination points to help the user debug. Closed [#519](https://github.com/ipea
 `in travel_time_matrix()`, `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()`. 
 Closes [#501](https://github.com/ipeaGIT/r5r/issues/501).
 - Reverse search optimization is now only applicable to walking. Closes [#517](https://github.com/ipeaGIT/r5r/issues/517).
+- Closed [#373](https://github.com/ipeaGIT/r5r/issues/373) 
+- Closed [#970](https://github.com/conveyal/r5/issues/970)
 
 **New contributors to r5r**
 

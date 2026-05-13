@@ -1,7 +1,7 @@
 ## R CMD check results
 
-── R CMD check results ─────────────────────────────────────────────── r5r 2.3.0 ────
-Duration: 11m 46.3s
+── R CMD check results ─────────────────────────────────────────────────────────────── r5r 2.3.0.999 ────
+Duration: 9m 12.2s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 

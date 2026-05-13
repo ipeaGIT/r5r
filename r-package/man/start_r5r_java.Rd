@@ -28,6 +28,7 @@ the installed Java version is 21. If not, it stops with an informative error mes
 Other support functions: 
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{stop_r5}()},
 \code{\link{tempdir_unique}()},
 \code{\link{travel_time_surface}},

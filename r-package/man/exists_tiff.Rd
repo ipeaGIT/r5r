@@ -18,6 +18,7 @@ Check if there is an elevation data file in \code{.tif} format in a given data p
 \seealso{
 Other support functions: 
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
 \code{\link{tempdir_unique}()},

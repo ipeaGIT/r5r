@@ -272,6 +272,7 @@ transit routing. Transportation Science, 49(3), 591-604.
 Other support functions: 
 \code{\link{exists_tiff}()},
 \code{\link{fileurl_from_metadata}()},
+\code{\link{get_gtfs_errors}()},
 \code{\link{start_r5r_java}()},
 \code{\link{stop_r5}()},
 \code{\link{tempdir_unique}()},
