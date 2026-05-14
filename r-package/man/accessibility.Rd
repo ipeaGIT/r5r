@@ -12,7 +12,7 @@ accessibility(
   opportunities_colnames = "opportunities",
   mode = "WALK",
   mode_egress = "WALK",
-  departure_datetime = Sys.time(),
+  departure_datetime = NULL,
   time_window = 10L,
   percentiles = 50L,
   decay_function = "step",
