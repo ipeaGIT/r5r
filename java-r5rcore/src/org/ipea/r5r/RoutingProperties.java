@@ -46,8 +46,9 @@ public class RoutingProperties {
     public TransitLayer transitLayer = null;
     public SearchType searchType = SearchType.DEPART_FROM;
     private final TransportNetwork transportNetworkBase;
-    public TransportNetwork transportNetworkWorking;
+    private TransportNetwork transportNetworkWorking;
     private final Scenario dummyScenario = new DummyScenario();
+    boolean scenarioApplied = false;
 
     public void setFareCalculatorJson(String fareCalculatorJson) {
         // first, check to see if this is a built-in R5 fare calculator JSON representation
@@ -93,8 +94,18 @@ public class RoutingProperties {
         fareCalculator = null;
         searchType = SearchType.DEPART_FROM;
         transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
+        scenarioApplied = false;
         // do not reset transitLayer
     }
 
+    public TransportNetwork getTransportNetworkForScenario() {
+        scenarioApplied = true;
+        return transportNetworkWorking;
+    }
+
     public TransportNetwork getTransportNetworkBase(){ return transportNetworkBase; }
+
+    public TransportNetwork getTransportNetwork(){
+        return scenarioApplied ? transportNetworkWorking : transportNetworkBase;
+    }
 }
