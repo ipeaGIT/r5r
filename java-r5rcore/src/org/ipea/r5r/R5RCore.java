@@ -611,8 +611,8 @@ public class R5RCore {
         congestion.nameAttribute = nameAttribute;
         congestion.defaultScaling = defaultScaling;
 
-        congestion.resolve(routingProperties.transportNetworkWorking);
-        congestion.apply(routingProperties.transportNetworkWorking);
+        congestion.resolve(routingProperties.getTransportNetworkForScenario());
+        congestion.apply(routingProperties.getTransportNetworkForScenario());
         return congestion.errors.toString();
     }
 
@@ -622,8 +622,8 @@ public class R5RCore {
         R5RShapefileLts lts = new R5RShapefileLts();
         lts.dataSourceId = FilenameUtils.removeExtension(fileJPath.toString());
 
-        lts.resolve(routingProperties.transportNetworkWorking);
-        lts.apply(routingProperties.transportNetworkWorking);
+        lts.resolve(routingProperties.getTransportNetworkForScenario());
+        lts.apply(routingProperties.getTransportNetworkForScenario());
         return lts.errors.toString();
     }
 
@@ -633,8 +633,8 @@ public class R5RCore {
         congestion.defaultScaling = defaultScaling;
         congestion.absoluteMode = absoluteMode;
 
-        congestion.resolve(routingProperties.transportNetworkWorking);
-        congestion.apply(routingProperties.transportNetworkWorking);
+        congestion.resolve(routingProperties.getTransportNetworkForScenario());
+        congestion.apply(routingProperties.getTransportNetworkForScenario());
         return congestion.errors.toString();
     }
 
@@ -642,8 +642,8 @@ public class R5RCore {
         SetLtsOsm lts = new SetLtsOsm();
         lts.ltsMap = ltsMap;
 
-        lts.resolve(routingProperties.transportNetworkWorking);
-        lts.apply(routingProperties.transportNetworkWorking);
+        lts.resolve(routingProperties.getTransportNetworkForScenario());
+        lts.apply(routingProperties.getTransportNetworkForScenario());
         return lts.errors.toString();
     }
 
@@ -651,7 +651,7 @@ public class R5RCore {
 
     public List<RDataFrame> getStreetNetwork() {
         // Convert R5's road network to Simple Features objects
-        StreetNetwork streetNetwork = new StreetNetwork(routingProperties.transportNetworkWorking);
+        StreetNetwork streetNetwork = new StreetNetwork(routingProperties.getTransportNetwork());
 
         // Return a list of dataframes
         List<RDataFrame> transportNetworkList = new ArrayList<>();
