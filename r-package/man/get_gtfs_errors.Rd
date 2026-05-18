@@ -31,13 +31,13 @@ get_gtfs_errors(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other support functions: 
-\code{\link{exists_tiff}()},
-\code{\link{fileurl_from_metadata}()},
-\code{\link{start_r5r_java}()},
-\code{\link{stop_r5}()},
-\code{\link{tempdir_unique}()},
-\code{\link{travel_time_surface}},
-\code{\link{validate_bad_osm_ids}()}
+Other support functions:
+\code{\link[=exists_tiff]{exists_tiff()}},
+\code{\link[=fileurl_from_metadata]{fileurl_from_metadata()}},
+\code{\link[=start_r5r_java]{start_r5r_java()}},
+\code{\link[=stop_r5]{stop_r5()}},
+\code{\link[=tempdir_unique]{tempdir_unique()}},
+\code{\link[=travel_time_surface]{travel_time_surface()}},
+\code{\link[=validate_bad_osm_ids]{validate_bad_osm_ids()}}
 }
 \concept{support functions}
