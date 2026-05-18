@@ -47,7 +47,7 @@ public class RoutingProperties {
     public float maxFare = DEFAULT_MAX_FARE;
     public float[] fareCutoffs = DEFAULT_FARE_CUTOFFS;
     public InRoutingFareCalculator fareCalculator = null;
-    public TransitLayer transitLayer = null;
+    public TransitLayer transitLayer;
     public SearchType searchType = SearchType.DEPART_FROM;
     private final TransportNetwork transportNetworkBase;
     private TransportNetwork transportNetworkWorking;
@@ -72,7 +72,7 @@ public class RoutingProperties {
 
     public RoutingProperties(TransportNetwork network) {
         transportNetworkBase = network;
-        transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
+        transportNetworkWorking = null;
         transitLayer = network.transitLayer;
     }
 
@@ -97,13 +97,14 @@ public class RoutingProperties {
         maxFare = DEFAULT_MAX_FARE;
         fareCalculator = null;
         searchType = SearchType.DEPART_FROM;
-        transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
+        transportNetworkWorking = null;
         scenarioApplied = false;
         // do not reset transitLayer
     }
 
     public TransportNetwork getTransportNetworkForScenario() {
         scenarioApplied = true;
+        if (transportNetworkWorking == null) transportNetworkWorking = transportNetworkBase.scenarioCopy(dummyScenario);
         return transportNetworkWorking;
     }
 
