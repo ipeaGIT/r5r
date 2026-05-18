@@ -9,12 +9,16 @@ import com.conveyal.r5.transit.TransportNetwork;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ipea.r5r.Fares.RuleBasedInRoutingFareCalculator;
+import org.ipea.r5r.Process.R5Process;
 import org.ipea.r5r.Scenario.DummyScenario;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.ipea.r5r.JsonUtil.OBJECT_MAPPER;
 
 
 public class RoutingProperties {
+    private static final Logger LOG = LoggerFactory.getLogger(RoutingProperties.class);
 
     public static final float DEFAULT_WALK_SPEED = 1.0f;
     public static final float DEFAULT_BIKE_SPEED = 3.3f;
@@ -106,6 +110,9 @@ public class RoutingProperties {
     public TransportNetwork getTransportNetworkBase(){ return transportNetworkBase; }
 
     public TransportNetwork getTransportNetwork(){
-        return scenarioApplied ? transportNetworkWorking : transportNetworkBase;
+        if (scenarioApplied){
+            LOG.warn("A scenario has been applied. Unfortunately elevation data will be lost from the network. See issue #555.");
+            return transportNetworkWorking;
+        } else return transportNetworkBase;
     }
 }
