@@ -13,6 +13,16 @@
 ^inst/extdata/.*/.*\.mapdb\.p$
 ^\.github$
 ^inst/img
-^inst/jar/r5-.*\.jar$
+# The JAR will be included in the binary package, because it is not in .Rinstignore
+^inst/jar$
 ^man/figures
 ^cran-comments\.md$
+^java/r5r/build$
+^java/r5/build$
+^java/build$
+^java/r5r/.gradle$
+^java/r5/.gradle$
+^java/.gradle$
+
+# lots of big files used in r5 tests, which we don't need to run
+^java/r5/src/test$

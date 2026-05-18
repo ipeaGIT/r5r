@@ -20,7 +20,7 @@ network build fails, you won't have a network object, so you can also call
 this with the \code{data_path} to where the network is stored.
 }
 \examples{
-\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) withAutoprint(\{ # examplesIf}
+\dontshow{if (identical(tolower(Sys.getenv("NOT_CRAN")), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(r5r)
 
 # directory with street network and gtfs files

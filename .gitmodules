@@ -1,0 +1,3 @@
+[submodule "r-package/java/r5"]
+	path = r-package/java/r5
+	url = https://github.com/conveyal/r5.git

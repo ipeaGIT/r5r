@@ -699,7 +699,6 @@ Sys.setenv(NOT_CRAN = "true")
 
 
 # each function separately
-covr::function_coverage(fun=r5r::download_r5, test_file("tests/testthat/test-download_r5.R"))
 covr::function_coverage(fun=r5r::setup_r5, test_file("tests/testthat/test-setup_r5.R"))
 a <- covr::function_coverage(fun=r5r::travel_time_matrix, test_file("tests/testthat/test-travel_time_matrix.R"))
 a <- covr::function_coverage(fun=r5r::isochrone, test_file("tests/testthat/test-isochrone.R"))
@@ -714,10 +713,6 @@ a <- covr::function_coverage(fun=r5r:::set_verbose, test_file("tests/testthat/te
 
 covr::function_coverage(fun=r5r::street_network_to_sf, test_file("tests/testthat/test-street_network_to_sf.R"))
 covr::function_coverage(fun=r5r::transit_network_to_sf, test_file("tests/testthat/test-transit_network_to_sf.R"))
-
-
-a <- covr::function_coverage(fun=r5r::r5r_cache, test_file("tests/testthat/test-z_r5r_cache.R"))
-
 
 covr::function_coverage(fun=r5r::set_max_walk_distance, test_file("tests/testthat/test-utils.R"))
 covr::function_coverage(fun=r5r::posix_to_string, test_file("tests/testthat/test-utils.R"))
