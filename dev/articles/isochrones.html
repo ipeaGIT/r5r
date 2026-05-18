@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Isochrones">
 <meta name="robots" content="noindex">
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Isochrones</h1>
             
-            <h4 data-toc-skip class="date">2026-05-12</h4>
+            <h4 data-toc-skip class="date">2026-05-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/isochrones.Rmd" class="external-link"><code>vignettes/isochrones.Rmd</code></a></small>
       <div class="d-none name"><code>isochrones.Rmd</code></div>
@@ -215,10 +215,10 @@ origin when you set <code>polygon_output = TRUE</code>.</p>
 <span><span class="co">#&gt;                id isochrone percentile                       polygons</span></span>
 <span><span class="co">#&gt; 1 89a90128a8fffff       100        p50 MULTIPOLYGON (((-51.1496 -3...</span></span>
 <span><span class="co">#&gt; 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16608 -...</span></span>
-<span><span class="co">#&gt; 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16745 -...</span></span>
-<span><span class="co">#&gt; 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17569 -...</span></span>
-<span><span class="co">#&gt; 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.225 -30...</span></span>
-<span><span class="co">#&gt; 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.22787 -...</span></span></code></pre></div>
+<span><span class="co">#&gt; 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16882 -...</span></span>
+<span><span class="co">#&gt; 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17706 -...</span></span>
+<span><span class="co">#&gt; 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22513 -...</span></span>
+<span><span class="co">#&gt; 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.2265 -3...</span></span></code></pre></div>
 <p>Now it becomes super simple to visualize our isochrones on a map:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
@@ -269,10 +269,10 @@ here, and that the output is
 <span><span class="co">#&gt;   edge_index    osm_id isochrone travel_time_p50 from_vertex to_vertex</span></span>
 <span><span class="co">#&gt; 1      32820 289389686       100              98        7464     14753</span></span>
 <span><span class="co">#&gt; 2      32821 289389686       100              98       14753      7464</span></span>
-<span><span class="co">#&gt; 3      34254 326021940       100              97       15308     15309</span></span>
-<span><span class="co">#&gt; 4      34255 326021940       100              97       15309     15308</span></span>
-<span><span class="co">#&gt; 5      35888 337865739       100              97       15671     15690</span></span>
-<span><span class="co">#&gt; 6      35889 337865739       100              97       15690     15671</span></span>
+<span><span class="co">#&gt; 3      34254 326021940       100              98       15308     15309</span></span>
+<span><span class="co">#&gt; 4      34255 326021940       100              98       15309     15308</span></span>
+<span><span class="co">#&gt; 5      35888 337865739       100              98       15671     15690</span></span>
+<span><span class="co">#&gt; 6      35889 337865739       100              98       15690     15671</span></span>
 <span><span class="co">#&gt;   street_class  length  walk   car car_speed bicycle bicycle_lts</span></span>
 <span><span class="co">#&gt; 1        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>
 <span><span class="co">#&gt; 2        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>

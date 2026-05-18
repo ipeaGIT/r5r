@@ -369,19 +369,19 @@ head(arrival_ttm)
 #>          from_id               to_id departure_time draw_number routes
 #>           <char>              <char>         <char>       <int> <char>
 #> 1: public_market       public_market       13:59:00           1 [WALK]
-#> 2: public_market bus_central_station       13:46:00           1 LINHA1
-#> 3: public_market    gasometer_museum       13:46:00           1   2441
-#> 4: public_market santa_casa_hospital       13:46:00           1 [WALK]
+#> 2: public_market bus_central_station       13:45:00           1 LINHA1
+#> 3: public_market    gasometer_museum       13:45:00           1   2441
+#> 4: public_market santa_casa_hospital       13:44:00           1 [WALK]
 #> 5: public_market            townhall       13:56:00           1 [WALK]
-#> 6: public_market     piratini_palace       13:45:00           1 [WALK]
+#> 6: public_market     piratini_palace       13:42:00           1 [WALK]
 #>    total_time
 #>         <num>
 #> 1:        0.0
-#> 2:       12.8
-#> 3:       10.7
-#> 4:       13.7
-#> 5:        3.3
-#> 6:       15.0
+#> 2:       13.8
+#> 3:       11.7
+#> 4:       15.4
+#> 5:        3.6
+#> 6:       17.4
 
 # when breakdown = TRUE the output contains much more information
 arrival_ttm2 <- arrival_travel_time_matrix(
@@ -398,19 +398,19 @@ head(arrival_ttm2)
 #>          from_id               to_id departure_time draw_number access_time
 #>           <char>              <char>         <char>       <int>       <num>
 #> 1: public_market       public_market       13:59:00           1         0.0
-#> 2: public_market bus_central_station       13:46:00           1         3.1
-#> 3: public_market    gasometer_museum       13:46:00           1         2.8
-#> 4: public_market santa_casa_hospital       13:46:00           1         0.0
+#> 2: public_market bus_central_station       13:45:00           1         4.8
+#> 3: public_market    gasometer_museum       13:45:00           1         3.5
+#> 4: public_market santa_casa_hospital       13:44:00           1         0.0
 #> 5: public_market            townhall       13:56:00           1         0.0
-#> 6: public_market     piratini_palace       13:45:00           1         0.0
+#> 6: public_market     piratini_palace       13:42:00           1         0.0
 #>    wait_time ride_time transfer_time egress_time routes n_rides total_time
 #>        <num>     <num>         <num>       <num> <char>   <int>      <num>
 #> 1:       0.0       0.0             0         0.0 [WALK]       0        0.0
-#> 2:       1.9       1.6             0         6.2 LINHA1       1       12.8
-#> 3:       1.2       4.9             0         1.8   2441       1       10.7
-#> 4:       0.0       0.0             0         0.0 [WALK]       0       13.7
-#> 5:       0.0       0.0             0         0.0 [WALK]       0        3.3
-#> 6:       0.0       0.0             0         0.0 [WALK]       0       15.0
+#> 2:       1.2       1.6             0         6.2 LINHA1       1       13.8
+#> 3:       1.5       4.9             0         1.8   2441       1       11.7
+#> 4:       0.0       0.0             0         0.0 [WALK]       0       15.4
+#> 5:       0.0       0.0             0         0.0 [WALK]       0        3.6
+#> 6:       0.0       0.0             0         0.0 [WALK]       0       17.4
 
 stop_r5(r5r_network)
 #> r5r_network has been successfully stopped.

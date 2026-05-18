@@ -345,13 +345,13 @@ head(iso_poly)
 #> Simple feature collection with 4 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: -51.25671 ymin: -30.08098 xmax: -51.15646 ymax: -29.98943
+#> Bounding box:  xmin: -51.25671 ymin: -30.07741 xmax: -51.16196 ymax: -29.98943
 #> Geodetic CRS:  WGS 84
 #>                    id isochrone percentile                       polygons
-#> 1 bus_central_station       120        p50 POLYGON ((-51.21277 -30.080...
-#> 2 bus_central_station        90        p50 POLYGON ((-51.21071 -30.065...
-#> 3 bus_central_station        60        p50 POLYGON ((-51.2059 -30.0488...
-#> 4 bus_central_station        30        p50 POLYGON ((-51.21552 -30.037...
+#> 1 bus_central_station       120        p50 POLYGON ((-51.2114 -30.0762...
+#> 2 bus_central_station        90        p50 POLYGON ((-51.21208 -30.063...
+#> 3 bus_central_station        60        p50 POLYGON ((-51.2114 -30.0481...
+#> 4 bus_central_station        30        p50 POLYGON ((-51.21414 -30.034...
 
 
 # estimate line-based isochrone from origin
@@ -369,29 +369,29 @@ head(iso_lines)
 #> Simple feature collection with 6 features and 13 fields
 #> Geometry type: LINESTRING
 #> Dimension:     XY
-#> Bounding box:  xmin: -51.17223 ymin: -30.03979 xmax: -51.16588 ymax: -30.02889
+#> Bounding box:  xmin: -51.18467 ymin: -30.05426 xmax: -51.17266 ymax: -30.02355
 #> Geodetic CRS:  WGS 84
 #>   edge_index   osm_id isochrone travel_time_p50 from_vertex to_vertex
-#> 1        594 27234386       100             100         414       415
-#> 2        595 27234386       100             100         415       414
-#> 3        598 27234513       100             100         417       411
-#> 4        599 27234513       100             100         411       417
-#> 5       2072 28069055       100             100        1397      1398
-#> 6       2073 28069055       100             100        1398      1397
+#> 1        644 27238056       100             100         443       444
+#> 2        645 27238056       100             100         444       443
+#> 3       1048 27370379       100             100         717       718
+#> 4       1049 27370379       100             100         718       717
+#> 5       1058 27370382       100             100         722       723
+#> 6       1059 27370382       100             100         723       722
 #>   street_class  length walk   car car_speed bicycle bicycle_lts
-#> 1     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2
-#> 2     TERTIARY 276.717 TRUE  TRUE    39.996    TRUE           2
-#> 3        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2
-#> 4        OTHER 162.110 TRUE  TRUE    29.988    TRUE           2
-#> 5        OTHER 224.482 TRUE  TRUE    40.248    TRUE           4
-#> 6        OTHER 224.482 TRUE FALSE    40.248   FALSE           4
+#> 1     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2
+#> 2     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2
+#> 3        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 4        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 5        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
+#> 6        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
 #>                         geometry
-#> 1 LINESTRING (-51.16588 -30.0...
-#> 2 LINESTRING (-51.16876 -30.0...
-#> 3 LINESTRING (-51.1687 -30.03...
-#> 4 LINESTRING (-51.17039 -30.0...
-#> 5 LINESTRING (-51.17223 -30.0...
-#> 6 LINESTRING (-51.17027 -30.0...
+#> 1 LINESTRING (-51.17282 -30.0...
+#> 2 LINESTRING (-51.17266 -30.0...
+#> 3 LINESTRING (-51.18231 -30.0...
+#> 4 LINESTRING (-51.18467 -30.0...
+#> 5 LINESTRING (-51.18424 -30.0...
+#> 6 LINESTRING (-51.1839 -30.05...
 
 
 # plot colors

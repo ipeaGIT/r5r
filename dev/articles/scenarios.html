@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using custom OSM car speeds and LTS">
 <meta name="robots" content="noindex">
@@ -87,7 +87,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using custom OSM car speeds and LTS</h1>
             
-            <h4 data-toc-skip class="date">2026-05-12</h4>
+            <h4 data-toc-skip class="date">2026-05-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/scenarios.Rmd" class="external-link"><code>vignettes/scenarios.Rmd</code></a></small>
       <div class="d-none name"><code>scenarios.Rmd</code></div>
@@ -213,7 +213,9 @@ the parameters <code>new_carspeeds</code> and
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">edge_speed_factors</span>,</span>
 <span>  carspeed_scale <span class="op">=</span> <span class="fl">0.8</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 <p>Obs. Mind you that, even though we have set the speed factors to
 <code>0.5</code>, travel times might not become twice as long. This is
 because of how travel times by car are also affected by intersections,
@@ -328,7 +330,9 @@ assign a 40 Km/h to each and every OSM id.</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">new_edge_speeds40</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="extra-tip">Extra tip:<a class="anchor" aria-label="anchor" href="#extra-tip"></a>
@@ -399,7 +403,9 @@ in the city would be running at 95%.</p>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">congestion_poly</span>,</span>
 <span>  carspeed_scale <span class="op">=</span> <span class="fl">0.95</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 <p>And that’s it!</p>
 </div>
 </div>
@@ -445,7 +451,9 @@ routing/accessibility function:</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_lts <span class="op">=</span> <span class="va">edge_lts</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="changing-lts-with-a-spatial-polygon">3.2. Changing LTS with a spatial polygon<a class="anchor" aria-label="anchor" href="#changing-lts-with-a-spatial-polygon"></a>
@@ -473,7 +481,9 @@ function:</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_lts <span class="op">=</span> <span class="va">lts_lines</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

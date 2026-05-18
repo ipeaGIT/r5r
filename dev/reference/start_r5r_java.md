@@ -43,5 +43,5 @@ Other support functions:
 [`get_gtfs_errors()`](https://ipeagit.github.io/r5r/dev/reference/get_gtfs_errors.md),
 [`stop_r5()`](https://ipeagit.github.io/r5r/dev/reference/stop_r5.md),
 [`tempdir_unique()`](https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.md),
-[`travel_time_surface`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md),
+[`travel_time_surface()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md),
 [`validate_bad_osm_ids()`](https://ipeagit.github.io/r5r/dev/reference/validate_bad_osm_ids.md)

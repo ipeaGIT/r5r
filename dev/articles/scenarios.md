@@ -119,6 +119,8 @@ ttm_congestion <- r5r::travel_time_matrix(
   new_carspeeds = edge_speed_factors,
   carspeed_scale = 0.8
 )
+#> Warning: A scenario was used for this calculation. This may affect results for WALK or
+#> BICYCLE due to missing elevation. See issue #555.
 ```
 
 Obs. Mind you that, even though we have set the speed factors to `0.5`,
@@ -254,6 +256,8 @@ ttm_congestion <- r5r::travel_time_matrix(
   max_trip_duration = 30,
   new_carspeeds = new_edge_speeds40
   )
+#> Warning: A scenario was used for this calculation. This may affect results for WALK or
+#> BICYCLE due to missing elevation. See issue #555.
 ```
 
 #### Extra tip:
@@ -322,6 +326,8 @@ ttm_congestion <- r5r::travel_time_matrix(
   new_carspeeds = congestion_poly,
   carspeed_scale = 0.95
   )
+#> Warning: A scenario was used for this calculation. This may affect results for WALK or
+#> BICYCLE due to missing elevation. See issue #555.
 ```
 
 And that’s it!
@@ -373,6 +379,8 @@ ttm_new_lts <- r5r::travel_time_matrix(
   max_trip_duration = 30,
   new_lts = edge_lts
   )
+#> Warning: A scenario was used for this calculation. This may affect results for WALK or
+#> BICYCLE due to missing elevation. See issue #555.
 ```
 
 ### 3.2. Changing LTS with a spatial polygon
@@ -405,6 +413,8 @@ ttm_new_lts <- r5r::travel_time_matrix(
   max_trip_duration = 30,
   new_lts = lts_lines
   )
+#> Warning: A scenario was used for this calculation. This may affect results for WALK or
+#> BICYCLE due to missing elevation. See issue #555.
 ```
 
 ## Cleaning up after usage

@@ -363,11 +363,11 @@ head(pf)
 #>            from_id           to_id percentile travel_time monetary_cost
 #>             <char>          <char>      <int>       <int>         <num>
 #> 1: 89a901291abffff 89a901291abffff         50           2           4.5
-#> 2: 89a901291abffff 89a9012a3cfffff         50          72           9.0
-#> 3: 89a901291abffff 89a901295b7ffff         50          54           4.5
-#> 4: 89a901291abffff 89a901295b7ffff         50          53           4.8
-#> 5: 89a901291abffff 89a901295b7ffff         50          45           9.0
-#> 6: 89a901291abffff 89a901284a3ffff         50          59           4.8
+#> 2: 89a901291abffff 89a9012a3cfffff         50          73           9.0
+#> 3: 89a901291abffff 89a901295b7ffff         50          61           4.5
+#> 4: 89a901291abffff 89a901295b7ffff         50          55           4.8
+#> 5: 89a901291abffff 89a901295b7ffff         50          46           9.0
+#> 6: 89a901291abffff 89a901284a3ffff         50          61           4.8
 
 stop_r5(r5r_network)
 #> r5r_network has been successfully stopped.

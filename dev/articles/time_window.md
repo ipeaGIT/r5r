@@ -148,10 +148,10 @@ head(acc, n = 10)
 #>  3: 89a8100c603ffff     schools         50     45             7
 #>  4: 89a8100c603ffff     schools         70     45             6
 #>  5: 89a8100c603ffff     schools         80     45             6
-#>  6: 89a8100c617ffff     schools         10     45            15
-#>  7: 89a8100c617ffff     schools         20     45            14
-#>  8: 89a8100c617ffff     schools         50     45            13
-#>  9: 89a8100c617ffff     schools         70     45             7
+#>  6: 89a8100c617ffff     schools         10     45            14
+#>  7: 89a8100c617ffff     schools         20     45            13
+#>  8: 89a8100c617ffff     schools         50     45            10
+#>  9: 89a8100c617ffff     schools         70     45             6
 #> 10: 89a8100c617ffff     schools         80     45             6
 ```
 
@@ -289,16 +289,16 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       43.1
-#>  2:       41.2
-#>  3:       45.6
-#>  4:       49.1
-#>  5:       48.1
-#>  6:       43.4
-#>  7:       38.8
-#>  8:       39.9
-#>  9:       47.6
-#> 10:       49.0
+#>  1:       44.7
+#>  2:       34.8
+#>  3:       35.5
+#>  4:       48.2
+#>  5:       51.7
+#>  6:       39.5
+#>  7:       36.9
+#>  8:       43.4
+#>  9:       48.3
+#> 10:       47.4
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.
@@ -333,7 +333,7 @@ within the time window if the the user sets `shortest_path = FALSE`.
 [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
 cannot be computed for public transport trips if the the network uses a
 frequencies-based GTFS feed. In these cases, we suggest using
-[`gtfstools::frequencies_to_stop_times()`](https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html)
+[`gtfstools::frequencies_to_stop_times()`](https://rdrr.io/pkg/gtfstools/man/frequencies_to_stop_times.html)
 to create a suitable feed.
 
 ### Cleaning up after usage

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using the time_window parameter">
 <meta name="robots" content="noindex">
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2026-05-12</h4>
+            <h4 data-toc-skip class="date">2026-05-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="d-none name"><code>time_window.Rmd</code></div>
@@ -236,10 +236,10 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;  3: 89a8100c603ffff     schools         50     45             7</span></span>
 <span><span class="co">#&gt;  4: 89a8100c603ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
-<span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            15</span></span>
-<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            13</span></span>
-<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             7</span></span>
+<span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
+<span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            13</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
+<span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
 <p>This output is in long format, so the first 5 rows show the result
 for the same origin. In this case, we see that in only 10% of the trips
@@ -365,16 +365,16 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       43.1</span></span>
-<span><span class="co">#&gt;  2:       41.2</span></span>
-<span><span class="co">#&gt;  3:       45.6</span></span>
-<span><span class="co">#&gt;  4:       49.1</span></span>
-<span><span class="co">#&gt;  5:       48.1</span></span>
-<span><span class="co">#&gt;  6:       43.4</span></span>
-<span><span class="co">#&gt;  7:       38.8</span></span>
-<span><span class="co">#&gt;  8:       39.9</span></span>
-<span><span class="co">#&gt;  9:       47.6</span></span>
-<span><span class="co">#&gt; 10:       49.0</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       44.7</span></span>
+<span><span class="co">#&gt;  2:       34.8</span></span>
+<span><span class="co">#&gt;  3:       35.5</span></span>
+<span><span class="co">#&gt;  4:       48.2</span></span>
+<span><span class="co">#&gt;  5:       51.7</span></span>
+<span><span class="co">#&gt;  6:       39.5</span></span>
+<span><span class="co">#&gt;  7:       36.9</span></span>
+<span><span class="co">#&gt;  8:       43.4</span></span>
+<span><span class="co">#&gt;  9:       48.3</span></span>
+<span><span class="co">#&gt; 10:       47.4</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
@@ -402,7 +402,7 @@ if the the user sets <code>shortest_path = FALSE</code>.</p>
 <p><em>obs.</em> Mind you that <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>
 cannot be computed for public transport trips if the the network uses a
 frequencies-based GTFS feed. In these cases, we suggest using
-<code><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">gtfstools::frequencies_to_stop_times()</a></code> to create a suitable
+<code><a href="https://rdrr.io/pkg/gtfstools/man/frequencies_to_stop_times.html" class="external-link">gtfstools::frequencies_to_stop_times()</a></code> to create a suitable
 feed.</p>
 </div>
 <div class="section level3">

@@ -466,12 +466,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30             4
+#> 1: 89a901291abffff     schools         50     30             2
 #> 2: 89a9012a3cfffff     schools         50     30             0
-#> 3: 89a901295b7ffff     schools         50     30             7
+#> 3: 89a901295b7ffff     schools         50     30             6
 #> 4: 89a901284a3ffff     schools         50     30             1
 #> 5: 89a9012809bffff     schools         50     30             0
-#> 6: 89a901285cfffff     schools         50     30             5
+#> 6: 89a901285cfffff     schools         50     30             2
 
 # using a different decay function
 access <- accessibility(
@@ -489,12 +489,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30     3.9944818
-#> 2: 89a9012a3cfffff     schools         50     30     0.0000000
-#> 3: 89a901295b7ffff     schools         50     30     6.9936155
-#> 4: 89a901284a3ffff     schools         50     30     1.0000000
-#> 5: 89a9012809bffff     schools         50     30     0.0020933
-#> 6: 89a901285cfffff     schools         50     30     4.8465894
+#> 1: 89a901291abffff     schools         50     30      2.603443
+#> 2: 89a9012a3cfffff     schools         50     30      0.000000
+#> 3: 89a901295b7ffff     schools         50     30      5.988342
+#> 4: 89a901284a3ffff     schools         50     30      1.000000
+#> 5: 89a9012809bffff     schools         50     30      0.000000
+#> 6: 89a901285cfffff     schools         50     30      2.204184
 
 # using several cutoff values
 access <- accessibility(
@@ -512,11 +512,11 @@ head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
 #> 1: 89a901291abffff     schools         50     15             0
-#> 2: 89a901291abffff     schools         50     30             4
+#> 2: 89a901291abffff     schools         50     30             2
 #> 3: 89a9012a3cfffff     schools         50     15             0
 #> 4: 89a9012a3cfffff     schools         50     30             0
 #> 5: 89a901295b7ffff     schools         50     15             3
-#> 6: 89a901295b7ffff     schools         50     30             7
+#> 6: 89a901295b7ffff     schools         50     30             6
 
 # calculating access to different types of opportunities
 access <- accessibility(
@@ -533,12 +533,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a901291abffff     schools         50     30             4
+#> 1: 89a901291abffff     schools         50     30             2
 #> 2: 89a901291abffff  healthcare         50     30             5
 #> 3: 89a9012a3cfffff     schools         50     30             0
 #> 4: 89a9012a3cfffff  healthcare         50     30             0
-#> 5: 89a901295b7ffff     schools         50     30             7
-#> 6: 89a901295b7ffff  healthcare         50     30             7
+#> 5: 89a901295b7ffff     schools         50     30             6
+#> 6: 89a901295b7ffff  healthcare         50     30             4
 
 stop_r5(r5r_network )
 #> r5r_network has been successfully stopped.

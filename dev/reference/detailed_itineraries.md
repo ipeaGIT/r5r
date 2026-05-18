@@ -260,13 +260,17 @@ detailed_itineraries(
 
 - osm_link_ids:
 
-  A logical. Whether the output should include additional columns with
-  the OSM ids of the road segments used along the trip geometry.
-  Defaults to `FALSE`. Keep in mind that the `osm_id` for a road will be
-  returned even if the route uses a small stretch of the road (e.g. 5m
-  of a 600m street segment). If you want more precision you should use
-  the column `edge_id` which returns segments of the exact length used
-  in the trip, and you can later tie that back to the `osm_id`.
+  A logical. Whether the output should include additional columns:
+  `osm_id_list` for the OSM ids of the road segments used along the trip
+  geometry, and `board_stop_id` and `alight_stop_id` for the OSM ids of
+  transit boarding and alighting stops. Defaults to `FALSE`.
+
+  Keep in mind that `osm_id_list` will contain an id even if the route
+  only uses a small stretch of the road (e.g. 5m of a 600m street
+  segment). For more precision, use `edge_id_list`, which returns the
+  exact internal edge segments used in the trip. You can inspect these
+  edge ids and their associated properties, including OSM ids, with
+  [`street_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.md).
 
 - output_dir:
 
@@ -424,17 +428,17 @@ head(det)
 #> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           35.1           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           35.1           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           35.1           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           35.1           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           35.1           9460       5 WALK
+#> 1 -51.22875      1       14:07:57           37.4           9460       1 WALK
+#> 2 -51.22875      1       14:07:57           37.4           9460       2 RAIL
+#> 3 -51.22875      1       14:07:57           37.4           9460       3 WALK
+#> 4 -51.22875      1       14:07:57           37.4           9460       4  BUS
+#> 5 -51.22875      1       14:07:57           37.4           9460       5 WALK
 #>   segment_duration wait distance  route                       geometry
-#> 1              5.0  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  2.1     4796 LINHA1 LINESTRING (-51.19763 -29.9...
-#> 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...
+#> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
+#> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
-#> 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...
+#> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...
 
 stop_r5(r5r_network)
 #> r5r_network has been successfully stopped.

@@ -122,10 +122,10 @@ head(access1)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
 #> 1: 89a901291abffff     schools         50     20             3
-#> 2: 89a901291abffff  healthcare         50     20             6
+#> 2: 89a901291abffff  healthcare         50     20             5
 #> 3: 89a9012a3cfffff     schools         50     20             0
 #> 4: 89a9012a3cfffff  healthcare         50     20             0
-#> 5: 89a901295b7ffff     schools         50     20             8
+#> 5: 89a901295b7ffff     schools         50     20             6
 #> 6: 89a901295b7ffff  healthcare         50     20             4
 ```
 
@@ -176,7 +176,7 @@ head(ttm)
 
 Now to calculate a traditional cumulative opportunity metric like we did
 above, we just need to call the
-[`accessibility::cumulative_cutoff()`](https://ipeagit.github.io/accessibility/reference/cumulative_cutoff.html)
+[`accessibility::cumulative_cutoff()`](https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html)
 function, and pass our travel time matrix and land use data as input:
 
 ``` r
@@ -204,22 +204,22 @@ head(access_edu)
 #> Key: <id>
 #>                 id schools
 #>             <char>   <int>
-#> 1: 89a9012124fffff       2
+#> 1: 89a9012124fffff       1
 #> 2: 89a9012126bffff       4
 #> 3: 89a9012127bffff       2
-#> 4: 89a90128003ffff       9
-#> 5: 89a90128007ffff       7
-#> 6: 89a9012800bffff       9
+#> 4: 89a90128003ffff       8
+#> 5: 89a90128007ffff       5
+#> 6: 89a9012800bffff       8
 head(access_health)
 #> Key: <id>
 #>                 id healthcare
 #>             <char>      <int>
-#> 1: 89a9012124fffff          2
+#> 1: 89a9012124fffff          0
 #> 2: 89a9012126bffff          1
 #> 3: 89a9012127bffff          1
 #> 4: 89a90128003ffff          3
-#> 5: 89a90128007ffff          2
-#> 6: 89a9012800bffff          4
+#> 5: 89a90128007ffff          1
+#> 6: 89a9012800bffff          3
 ```
 
 ## 5. Map Accessibility

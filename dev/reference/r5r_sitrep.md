@@ -66,7 +66,7 @@ r5r_sitrep()
 #> [1] ggplot2_4.0.3 r5r_2.3.0.999
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] gtable_0.3.6       xfun_0.57          bslib_0.10.0       httr2_1.2.2       
+#>  [1] gtable_0.3.6       xfun_0.57          bslib_0.11.0       httr2_1.2.2       
 #>  [5] htmlwidgets_1.6.4  processx_3.9.0     rJava_1.0-18       callr_3.7.6       
 #>  [9] vctrs_0.7.3        tools_4.6.0        ps_1.9.3           generics_0.1.4    
 #> [13] curl_7.1.0         proxy_0.4-29       tibble_3.3.1       fansi_1.0.7       
@@ -75,7 +75,7 @@ r5r_sitrep()
 #> [25] lifecycle_1.0.5    compiler_4.6.0     farver_2.1.2       brio_1.1.5        
 #> [29] textshaping_1.0.5  fontawesome_0.5.3  class_7.3-23       htmltools_0.5.9   
 #> [33] sass_0.4.10        yaml_2.3.12        pillar_1.11.1      pkgdown_2.2.0     
-#> [37] jquerylib_0.1.4    whisker_0.4.1      openssl_2.4.0      classInt_0.4-11   
+#> [37] jquerylib_0.1.4    whisker_0.4.1      openssl_2.4.1      classInt_0.4-11   
 #> [41] cachem_1.1.0       wk_0.9.5           zip_2.3.3          tidyselect_1.2.1  
 #> [45] digest_0.6.39      sf_1.1-1           dplyr_1.2.1        purrr_1.2.2       
 #> [49] labeling_0.4.3     fastmap_1.2.0      grid_4.6.0         cli_3.6.6         

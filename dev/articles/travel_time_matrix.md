@@ -86,15 +86,15 @@ head(ttm, n = 10)
 #>           from_id                     to_id travel_time_p50
 #>            <char>                    <char>           <int>
 #>  1: public_market             public_market               0
-#>  2: public_market       bus_central_station              13
+#>  2: public_market       bus_central_station              14
 #>  3: public_market          gasometer_museum              12
-#>  4: public_market       santa_casa_hospital              13
+#>  4: public_market       santa_casa_hospital              15
 #>  5: public_market                  townhall               3
-#>  6: public_market           piratini_palace              14
-#>  7: public_market    metropolitan_cathedral              15
+#>  6: public_market           piratini_palace              17
+#>  7: public_market    metropolitan_cathedral              17
 #>  8: public_market          farroupilha_park              18
 #>  9: public_market moinhos_de_vento_hospital              20
-#> 10: public_market          farrapos_station              20
+#> 10: public_market          farrapos_station              21
 ```
 
 Now remember that travel time estimates can vary significantly across
@@ -222,30 +222,30 @@ ettm_window <- expanded_travel_time_matrix(
 ettm_window[15:25,]
 #>           from_id               to_id departure_time draw_number access_time
 #>            <char>              <char>         <char>       <int>       <num>
-#>  1: public_market bus_central_station       14:04:00           1         1.3
-#>  2: public_market bus_central_station       14:05:00           1         3.1
-#>  3: public_market bus_central_station       14:06:00           1         3.1
-#>  4: public_market bus_central_station       14:07:00           1         4.0
-#>  5: public_market bus_central_station       14:08:00           1         2.1
-#>  6: public_market bus_central_station       14:09:00           1         2.1
-#>  7: public_market    gasometer_museum       14:00:00           1         2.5
-#>  8: public_market    gasometer_museum       14:01:00           1         4.3
-#>  9: public_market    gasometer_museum       14:02:00           1         4.3
-#> 10: public_market    gasometer_museum       14:03:00           1         4.3
-#> 11: public_market    gasometer_museum       14:04:00           1         4.3
+#>  1: public_market bus_central_station       14:04:00           1         1.5
+#>  2: public_market bus_central_station       14:05:00           1         4.8
+#>  3: public_market bus_central_station       14:06:00           1         4.1
+#>  4: public_market bus_central_station       14:07:00           1         4.4
+#>  5: public_market bus_central_station       14:08:00           1         2.3
+#>  6: public_market bus_central_station       14:09:00           1         2.3
+#>  7: public_market    gasometer_museum       14:00:00           1         2.9
+#>  8: public_market    gasometer_museum       14:01:00           1         6.0
+#>  9: public_market    gasometer_museum       14:02:00           1         6.0
+#> 10: public_market    gasometer_museum       14:03:00           1         3.5
+#> 11: public_market    gasometer_museum       14:04:00           1         3.5
 #>     wait_time ride_time transfer_time egress_time routes n_rides total_time
 #>         <num>     <num>         <num>       <num> <char>   <int>      <num>
-#>  1:       1.7       3.5             0         6.7    525       1       13.2
-#>  2:       2.9       1.6             0         6.2 LINHA1       1       13.8
-#>  3:       1.9       1.6             0         6.2 LINHA1       1       12.8
-#>  4:       2.0       2.0             0         6.7    493       1       14.7
-#>  5:       4.9       1.1             0         7.4    D72       1       15.5
-#>  6:       3.9       1.1             0         7.4    D72       1       14.5
-#>  7:       1.5       4.5             0         1.8   2821       1       10.3
-#>  8:       4.7       4.3             0         1.8    346       1       15.1
-#>  9:       3.7       4.3             0         1.8    346       1       14.1
-#> 10:       2.7       4.3             0         1.8    346       1       13.1
-#> 11:       1.7       4.3             0         1.8    346       1       12.1
+#>  1:       1.5       3.5             0         6.7    525       1       13.2
+#>  2:       1.2       1.6             0         6.2 LINHA1       1       13.8
+#>  3:       1.9       2.0             0         6.7    495       1       14.7
+#>  4:       1.6       2.0             0         6.7    493       1       14.7
+#>  5:       4.7       1.1             0         7.4    D72       1       15.5
+#>  6:       3.7       1.1             0         7.4    D72       1       14.5
+#>  7:       1.1       4.5             0         1.8   2821       1       10.3
+#>  8:       3.0       4.3             0         1.8    346       1       15.1
+#>  9:       2.0       4.3             0         1.8    346       1       14.1
+#> 10:       3.5       4.9             0         1.8    244       1       13.7
+#> 11:       2.5       4.9             0         1.8    244       1       12.7
 ```
 
 ## 4. The `arrival_travel_time_matrix()` function
@@ -298,27 +298,27 @@ head(arrival_ttm, n = 10)
 #>           from_id                     to_id departure_time draw_number  routes
 #>            <char>                    <char>         <char>       <int>  <char>
 #>  1: public_market             public_market       13:59:00           1  [WALK]
-#>  2: public_market       bus_central_station       13:46:00           1  LINHA1
-#>  3: public_market          gasometer_museum       13:46:00           1    2441
-#>  4: public_market       santa_casa_hospital       13:46:00           1  [WALK]
+#>  2: public_market       bus_central_station       13:45:00           1  LINHA1
+#>  3: public_market          gasometer_museum       13:45:00           1    2441
+#>  4: public_market       santa_casa_hospital       13:44:00           1  [WALK]
 #>  5: public_market                  townhall       13:56:00           1  [WALK]
-#>  6: public_market           piratini_palace       13:45:00           1  [WALK]
-#>  7: public_market    metropolitan_cathedral       13:44:00           1  [WALK]
+#>  6: public_market           piratini_palace       13:42:00           1  [WALK]
+#>  7: public_market    metropolitan_cathedral       13:42:00           1  [WALK]
 #>  8: public_market          farroupilha_park       13:40:00           1     R41
 #>  9: public_market moinhos_de_vento_hospital       13:36:00           1 731|637
-#> 10: public_market          farrapos_station       13:36:00           1  LINHA1
+#> 10: public_market          farrapos_station       13:36:00           1     731
 #>     total_time
 #>          <num>
 #>  1:        0.0
-#>  2:       12.8
-#>  3:       10.7
-#>  4:       13.7
-#>  5:        3.3
-#>  6:       15.0
-#>  7:       15.6
+#>  2:       13.8
+#>  3:       11.7
+#>  4:       15.4
+#>  5:        3.6
+#>  6:       17.4
+#>  7:       18.0
 #>  8:       16.5
-#>  9:       20.2
-#> 10:       16.5
+#>  9:       20.3
+#> 10:       21.4
 ```
 
 #### Cleaning up after usage
