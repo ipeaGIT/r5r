@@ -67,7 +67,7 @@ public abstract class R5Process<T, A> {
 
     public R5Process(ForkJoinPool threadPool, RoutingProperties routingProperties) {
         this.r5rThreadPool = threadPool;
-        this.transportNetwork = routingProperties.transportNetworkWorking;
+        this.transportNetwork = routingProperties.getTransportNetwork();
         this.routingProperties = routingProperties;
 
         destinationPoints = null;

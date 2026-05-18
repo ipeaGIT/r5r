@@ -31,7 +31,7 @@ public class RegularGridProcess extends R5Process<RegularGridResult, RegularGrid
         
         // Calculate the extents of the transport network and request a pointset that size.
         // this will be fast after the first call as R5 transparently caches these pointsets.
-        Envelope env = routingProperties.transportNetworkWorking.getEnvelope();
+        Envelope env = routingProperties.getTransportNetwork().getEnvelope();
         extents = WebMercatorExtents.forWgsEnvelope(env, zoom);
     }
 

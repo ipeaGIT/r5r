@@ -635,7 +635,8 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
   checkmate::assert_class(new_carspeeds, "data.frame", null.ok = T)
   checkmate::assert_numeric(carspeed_scale, lower = 0, finite = TRUE, null.ok = F)
   if (!is.null(new_carspeeds) || carspeed_scale != 1){
-    cli::cli_inform(c(i = "Modifying carspeeds..."))
+    cli::cli_inform("Modifying carspeeds...")
+    cli::cli_warn("A scenario was used for this calculation. This may affect results for WALK or BICYCLE due to missing elevation. See issue #555.")
 
     if (inherits(new_carspeeds, "sf")) { # polygon mode
       geojson_path <- congestion_poly2geojson(new_carspeeds)
@@ -675,7 +676,8 @@ set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
 set_new_lts <- function(r5r_network, new_lts) {
   checkmate::assert_class(new_lts, "data.frame", null.ok = TRUE)
   if (!is.null(new_lts)){
-    cli::cli_inform(c(i = "Modifying LTS levels..."))
+    cli::cli_inform("Modifying LTS levels...")
+    cli::cli_warn("A scenario was used for this calculation. This may affect results for WALK or BICYCLE due to missing elevation. See issue #555.")
 
     if (inherits(new_lts, "sf")) { # polygon mode
       shp_path <- lts_lines2shp(new_lts)
