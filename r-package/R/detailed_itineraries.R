@@ -47,12 +47,17 @@
 #'   geometry of each trip leg or not. The default value of `FALSE` keeps the
 #'   geometry column in the result.
 #' @param osm_link_ids A logical. Whether the output should include additional
-#'   columns with the OSM ids of the road segments used along the trip geometry.
-#'   Defaults to `FALSE`. Keep in mind that the `osm_id` for a road will be
-#'   returned even if the route uses a small stretch of the road (e.g. 5m of a
-#'   600m street segment). If you want more precision you should use the column
-#'   `edge_id` which returns segments of the exact length used in the trip, and
-#'   you can later tie that back to the `osm_id`.
+#'   columns: `osm_id_list` for the OSM ids of the road
+#'   segments used along the trip geometry, and `board_stop_id` and
+#'   `alight_stop_id` for the OSM ids of transit boarding and alighting stops.
+#'   Defaults to `FALSE`.
+#'
+#'   Keep in mind that `osm_id_list` will contain an id even if the route only
+#'   uses a small stretch of the road (e.g. 5m of a 600m street segment). For
+#'   more precision, use `edge_id_list`, which returns the exact internal edge
+#'   segments used in the trip. You can inspect these edge ids and their
+#'   associated properties, including OSM ids, with
+#'   [street_network_to_sf()].
 #'
 #' @template transport_modes_section
 #' @template lts_section
