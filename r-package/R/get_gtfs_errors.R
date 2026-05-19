@@ -25,7 +25,7 @@
 get_gtfs_errors <- function (r5r_network) {
     checkmate::assert_multi_class(r5r_network, c("r5r_network", "character"))
 
-    if (class(r5r_network) == "r5r_network") {
+    if (inherits(r5r_network, "r5r_network")) {
       r5r_network = r5r_network@jcore$getDataPath()
     }
 
