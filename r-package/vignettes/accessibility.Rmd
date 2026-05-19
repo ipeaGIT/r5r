@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 Accessibility indicators measure the ease with which opportunities, such as jobs,
 can be reached by a traveler from a particular location [@levinson2020manual]. This vignette shows how to calculate and visualize accessibility in R using the [`r5r` package](https://ipeagit.github.io/r5r/index.html) using a reproducible example. In this example, we will be using a sample data set for the city of Porto Alegre (Brazil) included in `r5r`. 
 
-There are two ways to calculate / visualize accessibility using `r5r`. The quick and easy option is using the `r5r::accessibility()` function. The other alternative requires one to first calculate a travel time matrix, and then to use the [{accessibility} package](https://ipeagit.github.io/accessibility/). This is a more flexible options because the `{accessibility}` package provides a wider range of options of accessibility metrics. We will cover both approaches in this vignette. 
+There are two ways to calculate / visualize accessibility using `r5r`. The quick and easy option is using the `r5r::accessibility()` function. The other alternative requires one to first calculate a travel time matrix, and then to use the [{accessibility} package](https://ipea.github.io/accessibility/). This is a more flexible options because the `{accessibility}` package provides a wider range of options of accessibility metrics. We will cover both approaches in this vignette. 
 
 Before we start, we need to increase Java memory + load a few libraries, and to build routable transport network.
 
