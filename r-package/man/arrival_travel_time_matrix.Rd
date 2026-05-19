@@ -321,10 +321,10 @@ stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other routing:
-\code{\link[=detailed_itineraries]{detailed_itineraries()}},
-\code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
-\code{\link[=pareto_frontier]{pareto_frontier()}},
-\code{\link[=travel_time_matrix]{travel_time_matrix()}}
+Other routing: 
+\code{\link{detailed_itineraries}()},
+\code{\link{expanded_travel_time_matrix}()},
+\code{\link{pareto_frontier}()},
+\code{\link{travel_time_matrix}()}
 }
 \concept{routing}

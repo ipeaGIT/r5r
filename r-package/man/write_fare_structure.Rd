@@ -37,8 +37,8 @@ write_fare_structure(fare_structure, tmpfile)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other fare structure:
-\code{\link[=read_fare_structure]{read_fare_structure()}},
-\code{\link[=setup_fare_structure]{setup_fare_structure()}}
+Other fare structure: 
+\code{\link{read_fare_structure}()},
+\code{\link{setup_fare_structure}()}
 }
 \concept{fare structure}

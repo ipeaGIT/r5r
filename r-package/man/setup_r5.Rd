@@ -78,8 +78,8 @@ r5r_network <- build_network(data_path)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other Build network:
-\code{\link[=build_network]{build_network()}},
-\code{\link[=download_r5]{download_r5()}}
+Other Build network: 
+\code{\link{build_network}()},
+\code{\link{download_r5}()}
 }
 \concept{Build network}
