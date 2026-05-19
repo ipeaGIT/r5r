@@ -20,8 +20,8 @@ The quick and easy option is using the
 [`r5r::accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
 function. The other alternative requires one to first calculate a travel
 time matrix, and then to use the [{accessibility}
-package](https://ipeagit.github.io/accessibility/). This is a more
-flexible options because the
+package](https://ipea.github.io/accessibility/). This is a more flexible
+options because the
 [accessibility](https://github.com/ipeaGIT/accessibility) package
 provides a wider range of options of accessibility metrics. We will
 cover both approaches in this vignette.

@@ -183,7 +183,7 @@ Here are a few places from where you can download these data sets:
 - GTFS
   - [tidytransit](https://r-transit.github.io/tidytransit/) R package
   - [transitland](https://www.transit.land/) website
-  - [Mobility Database](https://database.mobilitydata.org/) website
+  - [Mobility Database](https://mobilitydatabase.org/) website
 - Elevation
   - [elevatr](https://github.com/USEPA/elevatr) R package
   - Nasa’s SRTMGL1 website
@@ -287,7 +287,7 @@ function. In this example, we calculate the number of schools and health
 care facilities accessible in less than 60 minutes by public transport
 and walking. More details in this vignette on [Calculating and
 visualizing
-Accessibility](https://ipeagit.github.io/r5r/articles/accessibility.html).
+Accessibility](https://ipea.github.io/r5r/articles/accessibility.html).
 
 ``` r
 

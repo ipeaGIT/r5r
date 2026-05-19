@@ -197,7 +197,7 @@ Please note that the
 functions does not run on frequency-based GTFS feeds. A simple hack to
 overcome this problem is to convert your GTFS data from frequencies to
 time tables. This can be easily done using the [`gtfstools`
-package](https://ipeagit.github.io/gtfstools/). Here is how:
+package](https://ipea.github.io/gtfstools/). Here is how:
 
 ``` r
 

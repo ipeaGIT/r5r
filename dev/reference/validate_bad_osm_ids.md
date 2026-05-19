@@ -32,4 +32,4 @@ Other support functions:
 [`start_r5r_java()`](https://ipeagit.github.io/r5r/dev/reference/start_r5r_java.md),
 [`stop_r5()`](https://ipeagit.github.io/r5r/dev/reference/stop_r5.md),
 [`tempdir_unique()`](https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.md),
-[`travel_time_surface()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md)
+[`travel_time_surface`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md)

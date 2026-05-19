@@ -27,7 +27,7 @@ Other support functions:
 [`get_gtfs_errors()`](https://ipeagit.github.io/r5r/dev/reference/get_gtfs_errors.md),
 [`start_r5r_java()`](https://ipeagit.github.io/r5r/dev/reference/start_r5r_java.md),
 [`tempdir_unique()`](https://ipeagit.github.io/r5r/dev/reference/tempdir_unique.md),
-[`travel_time_surface()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md),
+[`travel_time_surface`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md),
 [`validate_bad_osm_ids()`](https://ipeagit.github.io/r5r/dev/reference/validate_bad_osm_ids.md)
 
 ## Examples
