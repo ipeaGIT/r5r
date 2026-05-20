@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Trip planning with detailed_itineraries()">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0999</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Trip planning with detailed_itineraries()</h1>
             
-            <h4 data-toc-skip class="date">2025-11-28</h4>
+            <h4 data-toc-skip class="date">2026-05-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/detailed_itineraries.Rmd" class="external-link"><code>vignettes/detailed_itineraries.Rmd</code></a></small>
       <div class="d-none name"><code>detailed_itineraries.Rmd</code></div>
@@ -153,7 +153,7 @@ city of Porto Alegre (Brazil) included in <code>r5r</code>.</p>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load origin/destination points</span></span>
-<span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">poi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_points_of_interest.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="detailed-info-by-trip-segment-for-multiple-trip-alternatives">3. Detailed info by trip segment for multiple trip alternatives<a class="anchor" aria-label="anchor" href="#detailed-info-by-trip-segment-for-multiple-trip-alternatives"></a>
@@ -200,19 +200,19 @@ arrival of the optimal route.</p>
 <span><span class="co">#&gt; 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt; 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt;      to_lon option departure_time total_duration total_distance segment mode</span></span>
-<span><span class="co">#&gt; 1 -51.22875      1       14:09:10           33.9           9460       1 WALK</span></span>
-<span><span class="co">#&gt; 2 -51.22875      1       14:09:10           33.9           9460       2 RAIL</span></span>
-<span><span class="co">#&gt; 3 -51.22875      1       14:09:10           33.9           9460       3 WALK</span></span>
-<span><span class="co">#&gt; 4 -51.22875      1       14:09:10           33.9           9460       4  BUS</span></span>
-<span><span class="co">#&gt; 5 -51.22875      1       14:09:10           33.9           9460       5 WALK</span></span>
-<span><span class="co">#&gt; 6 -51.22875      2       14:09:10           41.1           8755       1 WALK</span></span>
+<span><span class="co">#&gt; 1 -51.22875      1       14:07:57           37.4           9460       1 WALK</span></span>
+<span><span class="co">#&gt; 2 -51.22875      1       14:07:57           37.4           9460       2 RAIL</span></span>
+<span><span class="co">#&gt; 3 -51.22875      1       14:07:57           37.4           9460       3 WALK</span></span>
+<span><span class="co">#&gt; 4 -51.22875      1       14:07:57           37.4           9460       4  BUS</span></span>
+<span><span class="co">#&gt; 5 -51.22875      1       14:07:57           37.4           9460       5 WALK</span></span>
+<span><span class="co">#&gt; 6 -51.22875      2       14:07:57           45.1           8773       1 WALK</span></span>
 <span><span class="co">#&gt;   segment_duration wait distance  route                       geometry</span></span>
-<span><span class="co">#&gt; 1              4.5  0.0      174        LINESTRING (-51.1981 -29.99...</span></span>
-<span><span class="co">#&gt; 2              6.6  1.4     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
-<span><span class="co">#&gt; 3              4.1  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
+<span><span class="co">#&gt; 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...</span></span>
+<span><span class="co">#&gt; 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
+<span><span class="co">#&gt; 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
 <span><span class="co">#&gt; 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span></span>
-<span><span class="co">#&gt; 5              2.6  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
-<span><span class="co">#&gt; 6              4.5  0.0      174        LINESTRING (-51.1981 -29.99...</span></span></code></pre></div>
+<span><span class="co">#&gt; 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
+<span><span class="co">#&gt; 6              5.1  0.0      174        LINESTRING (-51.1981 -29.99...</span></span></code></pre></div>
 <p>The output is a <code>data.frame sf</code> object, so we can easily
 visualize the results.</p>
 <div class="section level3">
@@ -238,7 +238,7 @@ network used in the routing.</p>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fig</span></span></code></pre></div>
-<p><img src="detailed_itineraries_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="100%"></p>
+<p><img src="detailed_itineraries_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># SAVE image</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>plot <span class="op">=</span> <span class="va">fig</span>, filename <span class="op">=</span> <span class="st">'inst/img/vig_detailed_ggplot.png'</span>, </span>
@@ -275,7 +275,7 @@ can simply set <code>drop_geometry = TRUE</code>.</li>
 <p>Please note that the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> functions
 does not run on frequency-based GTFS feeds. A simple hack to overcome
 this problem is to convert your GTFS data from frequencies to time
-tables. This can be easily done using the <a href="https://ipeagit.github.io/gtfstools/" class="external-link"><code>gtfstools</code>
+tables. This can be easily done using the <a href="https://ipea.github.io/gtfstools/" class="external-link"><code>gtfstools</code>
 package</a>. Here is how:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ipeagit.github.io/gtfstools/" class="external-link">gtfstools</a></span><span class="op">)</span></span>
@@ -284,13 +284,13 @@ package</a>. Here is how:</p>
 <span><span class="va">freq_gtfs_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/spo/spo.zip"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># read GTFS data</span></span>
-<span><span class="va">freq_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/read_gtfs.html" class="external-link">read_gtfs</a></span><span class="op">(</span><span class="va">freq_gtfs_file</span><span class="op">)</span></span>
+<span><span class="va">freq_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gtfstools/man/read_gtfs.html" class="external-link">read_gtfs</a></span><span class="op">(</span><span class="va">freq_gtfs_file</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># convert from frequencies to time tables</span></span>
-<span><span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/frequencies_to_stop_times.html" class="external-link">frequencies_to_stop_times</a></span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span></span>
+<span><span class="va">stop_times_gtfs</span> <span class="op">&lt;-</span> <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gtfstools/man/frequencies_to_stop_times.html" class="external-link">frequencies_to_stop_times</a></span><span class="op">(</span><span class="va">freq_gtfs</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># save it as a new GTFS.zip file</span></span>
-<span><span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,</span>
+<span><span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gtfstools/man/write_gtfs.html" class="external-link">write_gtfs</a></span><span class="op">(</span>gtfs <span class="op">=</span> <span class="va">stop_times_gtfs</span>,</span>
 <span>                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">'stop_times_gtfs'</span>, fileext <span class="op">=</span> <span class="st">'.zip'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>… and now you can use <code>r5r</code> on this
 <code>stop_times_gtfs.zip</code>.</p>

@@ -87,6 +87,7 @@ increase the memory available to Java and load the packages used in this
 vignette
 
 ``` r
+
 options(java.parameters = "-Xmx2G")
 
 library(r5r)
@@ -105,6 +106,7 @@ city center to the neighboring northbound municipalities. That system
 can be seen in the map below.
 
 ``` r
+
 # setup and load Porto Alegre multimodal network into memory
 
 # system.file returns the directory with example data inside the r5r package
@@ -177,6 +179,7 @@ create a fare structure where fare rules of routes differ by
 the entire system follows the same rules.
 
 ``` r
+
 fare_structure <- setup_fare_structure(r5r_network, 
                                        base_fare = 4.8,
                                        by = "MODE")
@@ -186,6 +189,7 @@ Now let’s check the contents of the `fare_structure` object. We can see
 below that it is simply a `list` with a few properties and data.frames.
 
 ``` r
+
 head(fare_structure, n=7)
 #> $max_discounted_transfers
 #> [1] 1
@@ -213,34 +217,34 @@ head(fare_structure, n=7)
 #> $fares_per_route
 #>      agency_id                                 agency_name  route_id
 #>         <char>                                      <char>    <char>
-#>   1:     TRENS                                    TRENSURB    LINHA1
-#>   2:     TRENS                                    TRENSURB LINHAAERO
-#>   3:      EPTC Empresa Publica de Transportes e Circulação      1112
-#>   4:      EPTC Empresa Publica de Transportes e Circulação       149
-#>   5:      EPTC Empresa Publica de Transportes e Circulação       165
+#>   1:      EPTC Empresa Publica de Transportes e Circulação      1112
+#>   2:      EPTC Empresa Publica de Transportes e Circulação       149
+#>   3:      EPTC Empresa Publica de Transportes e Circulação       165
+#>   4:      EPTC Empresa Publica de Transportes e Circulação       168
+#>   5:      EPTC Empresa Publica de Transportes e Circulação       173
 #>  ---                                                                
-#> 113:      EPTC Empresa Publica de Transportes e Circulação        T7
-#> 114:      EPTC Empresa Publica de Transportes e Circulação        T8
-#> 115:      EPTC Empresa Publica de Transportes e Circulação        T9
-#> 116:      EPTC Empresa Publica de Transportes e Circulação      TR60
-#> 117:      EPTC Empresa Publica de Transportes e Circulação      TR62
+#> 113:      EPTC Empresa Publica de Transportes e Circulação        T9
+#> 114:      EPTC Empresa Publica de Transportes e Circulação      TR60
+#> 115:      EPTC Empresa Publica de Transportes e Circulação      TR62
+#> 116:     TRENS                                    TRENSURB    LINHA1
+#> 117:     TRENS                                    TRENSURB LINHAAERO
 #>      route_short_name                           route_long_name   mode
 #>                <char>                                    <char> <char>
-#>   1:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL
-#>   2:             AREO                        AEROMOVEL TRENSURB   RAIL
-#>   3:             1112                         HIPICA / TRISTEZA    BUS
-#>   4:              149                                    ICARAI    BUS
-#>   5:              165                                     COHAB    BUS
+#>   1:             1112                         HIPICA / TRISTEZA    BUS
+#>   2:              149                                    ICARAI    BUS
+#>   3:              165                                     COHAB    BUS
+#>   4:              168                  BELEM NOVO(VIA TRISTEZA)    BUS
+#>   5:              173                                   CAMAQUA    BUS
 #>  ---                                                                  
-#> 113:               T7                     NILO / PRAIA DE BELAS    BUS
-#> 114:               T8                       CAMPUS  /  FARRAPOS    BUS
-#> 115:               T9                                       PUC    BUS
-#> 116:             TR60                         TRONCAL TRI‘NGULO    BUS
-#> 117:             TR62                          TRONCAL BALTAZAR    BUS
+#> 113:               T9                                       PUC    BUS
+#> 114:             TR60                         TRONCAL TRI‘NGULO    BUS
+#> 115:             TR62                          TRONCAL BALTAZAR    BUS
+#> 116:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL
+#> 117:             AREO                        AEROMOVEL TRENSURB   RAIL
 #>      route_fare fare_type
 #>           <num>    <char>
-#>   1:        4.8      RAIL
-#>   2:        4.8      RAIL
+#>   1:        4.8       BUS
+#>   2:        4.8       BUS
 #>   3:        4.8       BUS
 #>   4:        4.8       BUS
 #>   5:        4.8       BUS
@@ -248,8 +252,8 @@ head(fare_structure, n=7)
 #> 113:        4.8       BUS
 #> 114:        4.8       BUS
 #> 115:        4.8       BUS
-#> 116:        4.8       BUS
-#> 117:        4.8       BUS
+#> 116:        4.8      RAIL
+#> 117:        4.8      RAIL
 #> 
 #> $debug_settings
 #> $debug_settings$output_file
@@ -288,6 +292,7 @@ Alegre.
 Here is how we can check or update the values of these components:
 
 ``` r
+
 fare_structure$max_discounted_transfers
 #> [1] 1
 fare_structure$transfer_time_allowance <- 60 # update transfer_time_allowance
@@ -316,6 +321,7 @@ data.frame contains five columns:
 - `fare`: the full fare price of this mode.
 
 ``` r
+
 fare_structure$fares_per_type
 #>      type unlimited_transfers allow_same_route_transfer use_route_fare  fare
 #>    <char>              <lgcl>                    <lgcl>         <lgcl> <num>
@@ -335,6 +341,7 @@ route T1 to another T1). We’ll do those changes below, using
 `data.table` notation.
 
 ``` r
+
 fare_structure$fares_per_type[type == "RAIL", unlimited_transfers := TRUE]
 fare_structure$fares_per_type[type == "RAIL", fare := 4.50]
 fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
@@ -343,6 +350,7 @@ fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 Checking the results below, everything looks OK:
 
 ``` r
+
 fare_structure$fares_per_type
 #> Index: <type>
 #>      type unlimited_transfers allow_same_route_transfer use_route_fare  fare
@@ -359,6 +367,7 @@ transfers between the modes specified in `first_leg` and `second_leg`
 columns.
 
 ``` r
+
 fare_structure$fares_per_transfer
 #>    first_leg second_leg  fare
 #>       <char>     <char> <num>
@@ -376,6 +385,7 @@ rules in Porto Alegre.
   of 7.20.
 
 ``` r
+
 # conditional update fare value
 fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare := 7.2]
 ```
@@ -385,6 +395,7 @@ fare_structure$fares_per_transfer[first_leg == "BUS" & second_leg == "BUS", fare
   data.frame to account for that.
 
 ``` r
+
 # conditional update fare value
 fare_structure$fares_per_transfer[first_leg != second_leg, fare := 8.37]
 
@@ -401,6 +412,7 @@ fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_le
   will count to the global `max_discounted_transfers` allowance.
 
 ``` r
+
 # remove row
 fare_structure$fares_per_transfer <- fare_structure$fares_per_transfer[!(first_leg == "RAIL" & second_leg == "RAIL")]
 ```
@@ -409,6 +421,7 @@ Once all changes are applied, the `fare_per_transfer` data.frame should
 look like this:
 
 ``` r
+
 fare_structure$fares_per_transfer
 #>    first_leg second_leg  fare
 #>       <char>     <char> <num>
@@ -426,23 +439,32 @@ train routes in Porto Alegre. In case there a few special routes
 in this `fares_per_route` data.frame.
 
 ``` r
+
 tail(fare_structure$fares_per_route)
-#>    agency_id                                 agency_name route_id
-#>       <char>                                      <char>   <char>
-#> 1:      EPTC Empresa Publica de Transportes e Circulação       T6
-#> 2:      EPTC Empresa Publica de Transportes e Circulação       T7
-#> 3:      EPTC Empresa Publica de Transportes e Circulação       T8
-#> 4:      EPTC Empresa Publica de Transportes e Circulação       T9
-#> 5:      EPTC Empresa Publica de Transportes e Circulação     TR60
-#> 6:      EPTC Empresa Publica de Transportes e Circulação     TR62
-#>    route_short_name       route_long_name   mode route_fare fare_type
-#>              <char>                <char> <char>      <num>    <char>
-#> 1:               T6         TRANSVERSAL 6    BUS        4.8       BUS
-#> 2:               T7 NILO / PRAIA DE BELAS    BUS        4.8       BUS
-#> 3:               T8   CAMPUS  /  FARRAPOS    BUS        4.8       BUS
-#> 4:               T9                   PUC    BUS        4.8       BUS
-#> 5:             TR60     TRONCAL TRI‘NGULO    BUS        4.8       BUS
-#> 6:             TR62      TRONCAL BALTAZAR    BUS        4.8       BUS
+#>    agency_id                                 agency_name  route_id
+#>       <char>                                      <char>    <char>
+#> 1:      EPTC Empresa Publica de Transportes e Circulação        T8
+#> 2:      EPTC Empresa Publica de Transportes e Circulação        T9
+#> 3:      EPTC Empresa Publica de Transportes e Circulação      TR60
+#> 4:      EPTC Empresa Publica de Transportes e Circulação      TR62
+#> 5:     TRENS                                    TRENSURB    LINHA1
+#> 6:     TRENS                                    TRENSURB LINHAAERO
+#>    route_short_name                           route_long_name   mode route_fare
+#>              <char>                                    <char> <char>      <num>
+#> 1:               T8                       CAMPUS  /  FARRAPOS    BUS        4.8
+#> 2:               T9                                       PUC    BUS        4.8
+#> 3:             TR60                         TRONCAL TRI‘NGULO    BUS        4.8
+#> 4:             TR62                          TRONCAL BALTAZAR    BUS        4.8
+#> 5:           LINHA1 ESTACAO MERCADO ATE ESTACAO NOVO HAMBURGO   RAIL        4.8
+#> 6:             AREO                        AEROMOVEL TRENSURB   RAIL        4.8
+#>    fare_type
+#>       <char>
+#> 1:       BUS
+#> 2:       BUS
+#> 3:       BUS
+#> 4:       BUS
+#> 5:      RAIL
+#> 6:      RAIL
 ```
 
 Basic route information is taken directly from the GTFS data (agency,
@@ -493,6 +515,7 @@ are accounted for, using the
 function.
 
 ``` r
+
 ## load input data
 points <- read.csv(system.file("extdata/poa/poa_hexgrid.csv", package = "r5r"))
 
@@ -536,12 +559,13 @@ a little longer to complete (`travel_time_500 > travel_time_unl`), and
 other trips cannot be completed at all (`travel_time_500 == NA`).
 
 ``` r
+
 tail(ttm, 10)
 #>             from_id           to_id travel_time_500 travel_time_unl
 #>              <char>          <char>           <int>           <int>
 #>  1: 89a90166da7ffff 89a90129c2bffff              38              36
 #>  2: 89a90166da7ffff 89a90129aa7ffff              33              30
-#>  3: 89a90166da7ffff 89a90e93497ffff              32              32
+#>  3: 89a90166da7ffff 89a90e93497ffff              33              33
 #>  4: 89a90166da7ffff 89a90129807ffff              39              38
 #>  5: 89a90166da7ffff 89a90129b5bffff              34              34
 #>  6: 89a90166da7ffff 89a90129dd7ffff              37              37
@@ -555,6 +579,7 @@ The plots below show the overall distribution of the travel time
 differences and unreachable destinations:
 
 ``` r
+
 # plot of overall travel time differences between limited and unlimited cost travel time matrices 
 time_difference = ttm[!is.na(travel_time_500), .(count = .N), 
                       by = .(travel_time_unl, travel_time_500)]
@@ -600,6 +625,7 @@ We’ll do that below, and compare the results the accessibility
 unconstrained by monetary costs:
 
 ``` r
+
 # calculate accessibility function
 calculate_accessibility <- function(fare, fare_string) {
   access_df <- accessibility(
@@ -639,6 +665,7 @@ Finally, we can plot the results and see how accessibility levels can
 differ quite substantially when we account for monetary costs.
 
 ``` r
+
 # plot accessibility maps
 ggplot(data = access) +
   geom_sf(aes(fill = accessibility), color=NA, size = 0.2) +
@@ -661,6 +688,7 @@ use the `stop_r5` function followed by a call to Java’s garbage
 collector, as follows:
 
 ``` r
+
 r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```

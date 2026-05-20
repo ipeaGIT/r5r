@@ -23,6 +23,7 @@ exists_tiff(data_path)
 
 Other support functions:
 [`fileurl_from_metadata()`](https://ipeagit.github.io/r5r/reference/fileurl_from_metadata.md),
+[`get_gtfs_errors()`](https://ipeagit.github.io/r5r/reference/get_gtfs_errors.md),
 [`start_r5r_java()`](https://ipeagit.github.io/r5r/reference/start_r5r_java.md),
 [`stop_r5()`](https://ipeagit.github.io/r5r/reference/stop_r5.md),
 [`tempdir_unique()`](https://ipeagit.github.io/r5r/reference/tempdir_unique.md),

@@ -24,6 +24,7 @@ No return value, called for side effects.
 Other support functions:
 [`exists_tiff()`](https://ipeagit.github.io/r5r/reference/exists_tiff.md),
 [`fileurl_from_metadata()`](https://ipeagit.github.io/r5r/reference/fileurl_from_metadata.md),
+[`get_gtfs_errors()`](https://ipeagit.github.io/r5r/reference/get_gtfs_errors.md),
 [`start_r5r_java()`](https://ipeagit.github.io/r5r/reference/start_r5r_java.md),
 [`tempdir_unique()`](https://ipeagit.github.io/r5r/reference/tempdir_unique.md),
 [`travel_time_surface`](https://ipeagit.github.io/r5r/reference/travel_time_surface.md),

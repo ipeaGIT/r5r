@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using custom OSM car speeds and LTS">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.3.0999</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,11 +74,11 @@
 
 
 
-<link href="scenarios_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="scenarios_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="scenarios_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="scenarios_files/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="scenarios_files/leaflet-1.3.1/leaflet.js"></script><link href="scenarios_files/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="scenarios_files/proj4-2.6.2/proj4.min.js"></script><script src="scenarios_files/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="scenarios_files/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="scenarios_files/leaflet-binding-2.2.3/leaflet.js"></script><script src="scenarios_files/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script><script src="scenarios_files/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script><script src="scenarios_files/HomeButton-0.0.1/home-button.js"></script><script src="scenarios_files/HomeButton-0.0.1/easy-button-src.min.js"></script><link href="scenarios_files/congestion_poly___scale-CSS-0.0.1/congestion_poly___scale_home-button.css" rel="stylesheet">
+<script src="scenarios_files/leaflet-binding-2.2.3/leaflet.js"></script><script src="scenarios_files/leaflet-providers-3.0.0/leaflet-providers.js"></script><script src="scenarios_files/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script><script src="scenarios_files/HomeButton-0.0.1/home-button.js"></script><script src="scenarios_files/HomeButton-0.0.1/easy-button-src.min.js"></script><link href="scenarios_files/congestion_poly___scale-CSS-0.0.1/congestion_poly___scale_home-button.css" rel="stylesheet">
 <script src="scenarios_files/clipboard-0.0.1/setClipboardText.js"></script><link href="scenarios_files/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet">
 <link href="scenarios_files/mapviewCSS-0.0.1/mapview.css" rel="stylesheet">
 <link href="scenarios_files/lts_lines___lts-CSS-0.0.1/lts_lines___lts_home-button.css" rel="stylesheet">
@@ -86,7 +86,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using custom OSM car speeds and LTS</h1>
             
-            <h4 data-toc-skip class="date">2025-11-28</h4>
+            <h4 data-toc-skip class="date">2026-05-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/vignettes/scenarios.Rmd" class="external-link"><code>vignettes/scenarios.Rmd</code></a></small>
       <div class="d-none name"><code>scenarios.Rmd</code></div>
@@ -212,7 +212,9 @@ the parameters <code>new_carspeeds</code> and
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">edge_speed_factors</span>,</span>
 <span>  carspeed_scale <span class="op">=</span> <span class="fl">0.8</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 <p>Obs. Mind you that, even though we have set the speed factors to
 <code>0.5</code>, travel times might not become twice as long. This is
 because of how travel times by car are also affected by intersections,
@@ -263,7 +265,7 @@ file, and to filter the OSM edges with the road types we want.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># map</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roads</span><span class="op">[</span><span class="st">"highway"</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="scenarios_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="100%"></p>
+<p><img src="scenarios_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Now we only need to add a new column <code>"max_speed"</code> with
 values conditioned on the road type, and make sure the
 <code>osm_id</code> is of class <code>numeric</code>. We also need to
@@ -274,7 +276,7 @@ speeds should be interpreted as a <code>"scale"</code> factor. The
 <code class="sourceCode R"><span><span class="va">new_edge_speeds</span> <span class="op">&lt;-</span> <span class="va">roads</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span> </span>
 <span>    osm_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">osm_id</span><span class="op">)</span>,</span>
-<span>    max_speed <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    max_speed <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>      <span class="va">highway</span> <span class="op">==</span> <span class="st">"motorway"</span>  <span class="op">~</span> <span class="fl">0.75</span>,</span>
 <span>      <span class="va">highway</span> <span class="op">==</span> <span class="st">"primary"</span>   <span class="op">~</span> <span class="fl">0.8</span>,</span>
 <span>      <span class="va">highway</span> <span class="op">==</span> <span class="st">"secondary"</span> <span class="op">~</span> <span class="fl">0.85</span>,</span>
@@ -327,7 +329,9 @@ assign a 40 Km/h to each and every OSM id.</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">new_edge_speeds40</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="extra-tip">Extra tip:<a class="anchor" aria-label="anchor" href="#extra-tip"></a>
@@ -398,7 +402,9 @@ in the city would be running at 95%.</p>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_carspeeds <span class="op">=</span> <span class="va">congestion_poly</span>,</span>
 <span>  carspeed_scale <span class="op">=</span> <span class="fl">0.95</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 <p>And that’s it!</p>
 </div>
 </div>
@@ -444,7 +450,9 @@ routing/accessibility function:</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_lts <span class="op">=</span> <span class="va">edge_lts</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="changing-lts-with-a-spatial-polygon">3.2. Changing LTS with a spatial polygon<a class="anchor" aria-label="anchor" href="#changing-lts-with-a-spatial-polygon"></a>
@@ -472,7 +480,9 @@ function:</p>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_trip_duration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  new_lts <span class="op">=</span> <span class="va">lts_lines</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: A scenario was used for this calculation. This may affect results for WALK or</span></span>
+<span><span class="co">#&gt; BICYCLE due to missing elevation. See issue #555.</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

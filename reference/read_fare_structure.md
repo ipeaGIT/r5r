@@ -17,7 +17,7 @@ read_fare_structure(file_path, encoding = "UTF-8")
 - encoding:
 
   A string. Passed to
-  [`data.table::fread()`](https://rdatatable.gitlab.io/data.table/reference/fread.html),
+  [`data.table::fread()`](https://rdrr.io/pkg/data.table/man/fread.html),
   defaults to `"UTF-8"`. Other possible options are `"unknown"` and
   `"Latin-1"`. Please note that this is not used to re-encode the input,
   but to enable handling encoded strings in their native encoding.

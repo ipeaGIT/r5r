@@ -385,11 +385,11 @@ head(ttm)
 #>          from_id               to_id travel_time_p50
 #>           <char>              <char>           <int>
 #> 1: public_market       public_market               0
-#> 2: public_market bus_central_station              13
+#> 2: public_market bus_central_station              14
 #> 3: public_market    gasometer_museum              12
-#> 4: public_market santa_casa_hospital              13
+#> 4: public_market santa_casa_hospital              15
 #> 5: public_market            townhall               3
-#> 6: public_market     piratini_palace              14
+#> 6: public_market     piratini_palace              17
 
 # using a larger time window
 ttm <- travel_time_matrix(
@@ -405,11 +405,11 @@ head(ttm)
 #>          from_id               to_id travel_time_p50
 #>           <char>              <char>           <int>
 #> 1: public_market       public_market               0
-#> 2: public_market bus_central_station              13
-#> 3: public_market    gasometer_museum              12
-#> 4: public_market santa_casa_hospital              13
+#> 2: public_market bus_central_station              14
+#> 3: public_market    gasometer_museum              13
+#> 4: public_market santa_casa_hospital              15
 #> 5: public_market            townhall               3
-#> 6: public_market     piratini_palace              14
+#> 6: public_market     piratini_palace              17
 
 # selecting different percentiles
 ttm <- travel_time_matrix(
@@ -426,19 +426,19 @@ head(ttm)
 #>          from_id               to_id travel_time_p25 travel_time_p50
 #>           <char>              <char>           <int>           <int>
 #> 1: public_market       public_market               0               0
-#> 2: public_market bus_central_station              13              13
-#> 3: public_market    gasometer_museum              11              12
-#> 4: public_market santa_casa_hospital              13              13
+#> 2: public_market bus_central_station              13              14
+#> 3: public_market    gasometer_museum              12              13
+#> 4: public_market santa_casa_hospital              15              15
 #> 5: public_market            townhall               3               3
-#> 6: public_market     piratini_palace              14              14
+#> 6: public_market     piratini_palace              17              17
 #>    travel_time_p75
 #>              <int>
 #> 1:               0
 #> 2:              14
-#> 3:              13
-#> 4:              13
+#> 3:              14
+#> 4:              15
 #> 5:               3
-#> 6:              14
+#> 6:              17
 
 # use a fare structure and set a max fare to take monetary constraints into
 # account
@@ -459,11 +459,11 @@ head(ttm)
 #>          from_id               to_id travel_time_p50
 #>           <char>              <char>           <int>
 #> 1: public_market       public_market               0
-#> 2: public_market bus_central_station              13
-#> 3: public_market    gasometer_museum              12
-#> 4: public_market santa_casa_hospital              13
+#> 2: public_market bus_central_station              14
+#> 3: public_market    gasometer_museum              13
+#> 4: public_market santa_casa_hospital              15
 #> 5: public_market            townhall               3
-#> 6: public_market     piratini_palace              14
+#> 6: public_market     piratini_palace              17
 
 stop_r5(r5r_network)
 #> r5r_network has been successfully stopped.

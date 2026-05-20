@@ -37,6 +37,7 @@ code (java-api folder) that provides the interface to R⁵.
 You can install `r5r`:
 
 ``` r
+
 # from CRAN
 install.packages("r5r")
 
@@ -58,6 +59,7 @@ The easiest way to install JDK is using the new
 [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
 ``` r
+
 # install.packages('rJavaEnv')
 
 # check version of Java currently installed (if any) 
@@ -164,6 +166,7 @@ of the public transport and Open Street Map networks of Porto Alegre
 (Brazil). Three steps are required to use `r5r`, as follows.
 
 ``` r
+
 # allocate RAM memory to Java **before** loading the {r5r} library
 options(java.parameters = "-Xmx2G")
 
@@ -209,6 +212,7 @@ access <- accessibility(r5r_network = r5r_network,
                         decay_function = "step",
                         cutoffs = 21,
                         mode =  c("WALK", "TRANSIT"),
+                        departure_datetime = departure_datetime,
                         verbose = FALSE)
 ```
 
@@ -235,7 +239,7 @@ a simple and friendly R interface to R⁵, one of the fastest and most
 robust routing engines available.
 
 For ***Python*** users, you might want to check our sister package:
-[**r5py**](https://r5py.readthedocs.io/en/stable/)!
+[**r5py**](https://r5py.readthedocs.io/stable/)!
 
 ------------------------------------------------------------------------
 
