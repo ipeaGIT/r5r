@@ -7,6 +7,9 @@ Duration: 9m 28.6s
 
 # r5r 2.4.0 dev 
 
+- Fixed broken link to vignette
+- the following link works fine: https://escholarship.org/uc/item/05r820mz
+
 **Major changes**
 
 - Using new version of R5 v7.5.1. Closed [#373](https://github.com/ipeaGIT/r5r/issues/373) 
