@@ -142,7 +142,16 @@ assign_mode <- function(mode, mode_egress, style) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_departure <- function(datetime) {
+assign_departure <- function(datetime, mode_list) {
+  if (is.null(datetime)) {
+    if (mode_list$transit_mode == "") {
+      datetime <- Sys.time()
+    } else {
+      stop("When using a transit mode you must pass a departure_datetime", call. = FALSE)
+    }
+  }
+
+
   checkmate::assert_posixct(
     datetime,
     len = 1,

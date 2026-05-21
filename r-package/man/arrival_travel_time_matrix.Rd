@@ -12,7 +12,7 @@ arrival_travel_time_matrix(
   destinations,
   mode = "WALK",
   mode_egress = "WALK",
-  arrival_datetime = Sys.time(),
+  arrival_datetime,
   breakdown = FALSE,
   max_walk_time = Inf,
   max_bike_time = Inf,

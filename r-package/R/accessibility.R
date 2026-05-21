@@ -128,7 +128,7 @@ accessibility <- function(r5r_network,
                           opportunities_colnames = "opportunities",
                           mode = "WALK",
                           mode_egress = "WALK",
-                          departure_datetime = Sys.time(),
+                          departure_datetime = NULL,
                           time_window = 10L,
                           percentiles = 50L,
                           decay_function = "step",
@@ -179,7 +179,7 @@ accessibility <- function(r5r_network,
   destinations <- assign_points_input(destinations, "destinations")
   opportunities <- assign_opportunities(destinations, opportunities_colnames)
   mode_list <- assign_mode(mode, mode_egress)
-  departure <- assign_departure(departure_datetime)
+  departure <- assign_departure(departure_datetime, mode_list)
 
   # check availability of transit services on the selected date
   if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
