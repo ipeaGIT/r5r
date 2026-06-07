@@ -1,3 +1,5 @@
+- [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
+
 # r5r 2.4.0
 
 **Major changes**
