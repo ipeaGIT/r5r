@@ -1,3 +1,11 @@
+# r5r 2.4.1
+**Major changes**
+**Minor changes**
+
+- [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)
+
+**Bug fixes**
+
 # r5r 2.4.0
 
 **Major changes**
