@@ -1,3 +1,5 @@
+- [#549](https://github.com/ipeaGIT/r5r/pull/549) Remove default departure time from function parameters when not using a transit mode. Closed [#486](https://github.com/ipeaGIT/r5r/issues/486).
+
 # r5r 2.4.0 dev 
 
 **Major changes**
