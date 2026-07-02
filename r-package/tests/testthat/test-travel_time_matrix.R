@@ -301,4 +301,51 @@ test_that("using transit outside the gtfs dates throws an error", {
   )
 })
 
+test_that("max_fare excludes paid transit but keeps slower free walking alternatives", {
+  origins <- points[id == "89a901285cfffff"]
+  destinations <- points[id == "89a90128543ffff"]
 
+  walk <- travel_time_matrix(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    mode = "WALK",
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    max_trip_duration = 120
+  )
+
+  no_cap <- travel_time_matrix(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    fare_structure = fare_structure,
+    max_fare = Inf,
+    max_trip_duration = 120
+  )
+
+  zero_fare <- travel_time_matrix(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    fare_structure = fare_structure,
+    max_fare = 0,
+    max_trip_duration = 120
+  )
+
+  expect_equal(walk$travel_time_p50, 10)
+  expect_equal(no_cap$travel_time_p50, 8)
+  expect_equal(zero_fare$travel_time_p50, walk$travel_time_p50)
+
+  expect_true(no_cap$travel_time_p50 < walk$travel_time_p50)
+  expect_true(zero_fare$travel_time_p50 > no_cap$travel_time_p50)
+})

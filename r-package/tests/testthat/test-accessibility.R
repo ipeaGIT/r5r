@@ -224,3 +224,62 @@ test_that("using transit outside the gtfs dates throws an error", {
     )
   )
 })
+
+test_that("max_fare excludes paid transit from accessibility but keeps free walking access", {
+  origins <- points[id == "89a901285cfffff"]
+  destinations <- points[id == "89a90128543ffff"]
+  destinations[, opportunities := 1L]
+
+  walk <- accessibility(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    opportunities_colnames = "opportunities",
+    mode = "WALK",
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    decay_function = "step",
+    cutoffs = 9,
+    max_trip_duration = 120
+  )
+
+  no_cap <- accessibility(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    opportunities_colnames = "opportunities",
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    decay_function = "step",
+    cutoffs = 9,
+    fare_structure = fare_structure,
+    max_fare = Inf,
+    max_trip_duration = 120
+  )
+
+  zero_fare <- accessibility(
+    r5r_network = r5r_network,
+    origins = origins,
+    destinations = destinations,
+    opportunities_colnames = "opportunities",
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime,
+    time_window = 1L,
+    percentiles = 50L,
+    decay_function = "step",
+    cutoffs = 9,
+    fare_structure = fare_structure,
+    max_fare = 0,
+    max_trip_duration = 120
+  )
+
+  expect_equal(walk$accessibility, 0)
+  expect_equal(no_cap$accessibility, 1)
+  expect_equal(zero_fare$accessibility, walk$accessibility)
+
+  expect_true(no_cap$accessibility > walk$accessibility)
+  expect_true(zero_fare$accessibility < no_cap$accessibility)
+})
