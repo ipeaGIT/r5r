@@ -212,3 +212,73 @@ test_that("using transit outside the gtfs dates throws an error", {
     )
   )
 })
+
+test_that("arrival_travel_time_matrix selects latest feasible departure before requested arrival time", {
+  arrival_datetime <- as.POSIXct(
+    "13-05-2019 15:00:00",
+    format = "%d-%m-%Y %H:%M:%S"
+  )
+
+  max_trip_duration <- 60L
+  departure_datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
+
+  origin <- pois[id == "public_market"]
+  destination <- pois[id == "bus_central_station"]
+
+  arrive_by <- arrival_travel_time_matrix(
+    r5r_network,
+    origins = origin,
+    destinations = destination,
+    mode = c("WALK", "TRANSIT"),
+    arrival_datetime = arrival_datetime,
+    breakdown = TRUE,
+    max_trip_duration = max_trip_duration
+  )
+
+  expanded <- expanded_travel_time_matrix(
+    r5r_network,
+    origins = origin,
+    destinations = destination,
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime,
+    time_window = max_trip_duration,
+    breakdown = TRUE,
+    max_trip_duration = max_trip_duration
+  )
+
+  expanded <- data.table::copy(expanded)
+
+  expanded[
+    ,
+    departure_datetime := as.POSIXct(
+      paste(as.Date(departure_datetime), departure_time),
+      format = "%Y-%m-%d %H:%M:%S"
+    )
+  ]
+
+  expanded[
+    ,
+    estimated_arrival_datetime := departure_datetime + total_time * 60
+  ]
+
+  feasible <- expanded[
+    !is.na(total_time) & estimated_arrival_datetime <= arrival_datetime
+  ]
+
+  expected <- feasible[order(-departure_datetime)][1]
+
+  expect_equal(nrow(arrive_by), 1L)
+  expect_equal(arrive_by$departure_time, expected$departure_time)
+  expect_equal(arrive_by$routes, expected$routes)
+  expect_equal(arrive_by$n_rides, expected$n_rides)
+  expect_equal(arrive_by$total_time, expected$total_time, tolerance = 1e-6)
+
+  later_departures <- expanded[departure_datetime > expected$departure_datetime]
+
+  expect_true(
+    all(
+      is.na(later_departures$total_time) |
+        later_departures$estimated_arrival_datetime > arrival_datetime
+    )
+  )
+})
