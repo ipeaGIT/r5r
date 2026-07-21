@@ -1,3 +1,11 @@
+# r5r (development version)
+
+
+**Bug fixes**
+
+- Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
+
+
 # r5r 2.4.0
 
 **Major changes**

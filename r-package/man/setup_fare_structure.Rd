@@ -93,8 +93,8 @@ fare_structure$debug_settings <- ""
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other fare structure: 
-\code{\link{read_fare_structure}()},
-\code{\link{write_fare_structure}()}
+Other fare structure:
+\code{\link[=read_fare_structure]{read_fare_structure()}},
+\code{\link[=write_fare_structure]{write_fare_structure()}}
 }
 \concept{fare structure}

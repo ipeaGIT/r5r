@@ -360,10 +360,10 @@ stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other routing: 
-\code{\link{arrival_travel_time_matrix}()},
-\code{\link{detailed_itineraries}()},
-\code{\link{expanded_travel_time_matrix}()},
-\code{\link{pareto_frontier}()}
+Other routing:
+\code{\link[=arrival_travel_time_matrix]{arrival_travel_time_matrix()}},
+\code{\link[=detailed_itineraries]{detailed_itineraries()}},
+\code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
+\code{\link[=pareto_frontier]{pareto_frontier()}}
 }
 \concept{routing}

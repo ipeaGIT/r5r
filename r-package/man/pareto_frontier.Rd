@@ -304,10 +304,10 @@ stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other routing: 
-\code{\link{arrival_travel_time_matrix}()},
-\code{\link{detailed_itineraries}()},
-\code{\link{expanded_travel_time_matrix}()},
-\code{\link{travel_time_matrix}()}
+Other routing:
+\code{\link[=arrival_travel_time_matrix]{arrival_travel_time_matrix()}},
+\code{\link[=detailed_itineraries]{detailed_itineraries()}},
+\code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}},
+\code{\link[=travel_time_matrix]{travel_time_matrix()}}
 }
 \concept{routing}

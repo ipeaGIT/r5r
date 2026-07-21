@@ -522,8 +522,8 @@ set_suboptimal_minutes <- function(r5r_network,
 #' Swaps the `origins` and `destinations` data frames if certain conditions are
 #' met, specifically to optimize routing performance with R5's one-to-many
 #' algorithm. The function reverses the direction of analysis when the transit
-#' mode is empty and the direct modes are WALK or BICYCLE and when the number of
-#' origin points is greater than the number of destination points.
+#' mode is empty and the direct modes is WALK and when the number of origin
+#' points is greater than the number of destination points.
 #'
 #' @param origins A data frame representing origin locations.
 #' @param destinations A data frame representing destination locations.
@@ -547,9 +547,12 @@ reverse_if_direct_mode <- function(origins, destinations, mode_list, data_path) 
     temp <- origins
     origins <- destinations
     destinations <- temp
+
+    return(list(origins = origins, destinations = destinations))
   }
 
-  return(list(origins = origins, destinations = destinations))
+  # if origins and destinations are not reversed, simply return NULL
+  return(NULL)
 }
 
 
@@ -589,7 +592,8 @@ reverse_back_if_direct_mode <- function(travel_times, origins, destinations, mod
     travel_times <- data.table::setcolorder(travel_times, c('from_id', 'to_id'))
   }
 
-    return(travel_times)
+    ## no need to return object because data.table changes object in place
+    # return(travel_times)
 
 }
 
