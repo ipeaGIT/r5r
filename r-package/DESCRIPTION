@@ -80,4 +80,3 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 SystemRequirements: Java JDK (>= 21.0)
 Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3
