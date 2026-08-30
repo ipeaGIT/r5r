@@ -259,7 +259,7 @@ public class NetworkBuilder {
             return GTFSFeed.reopenReadOnly(dbFile);
         } catch (Exception e) {
             // re-throw as unchecked
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error while processing " + feedFile, e);
         }
     }
 
