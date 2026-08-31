@@ -39,6 +39,9 @@ Useful links:
 
 Authors:
 
+- Rafael H. M. Pereira <rafa.pereira.br@gmail.com>
+  ([ORCID](https://orcid.org/0000-0003-2125-7465))
+
 - Marcus Saraiva <marcus.saraiva@gmail.com>
   ([ORCID](https://orcid.org/0000-0001-6218-2338))
 

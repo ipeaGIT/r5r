@@ -1,6 +1,20 @@
 # Changelog
 
-## r5r 2.4.0 dev
+## r5r (development version)
+
+**Bug fixes**
+
+- Fix bug related to optimization of origins and destinations. Closes
+  again [\#501](https://github.com/ipeaGIT/r5r/issues/501).
+
+**Minor changes**
+
+- - [\#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when
+    building GTFS network with multiple feeds.
+
+## r5r 2.4.0
+
+CRAN release: 2026-05-20
 
 **Major changes**
 

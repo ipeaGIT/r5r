@@ -287,7 +287,7 @@ function. In this example, we calculate the number of schools and health
 care facilities accessible in less than 60 minutes by public transport
 and walking. More details in this vignette on [Calculating and
 visualizing
-Accessibility](https://ipea.github.io/r5r/articles/accessibility.html).
+Accessibility](https://ipeagit.github.io/r5r/articles/accessibility.html).
 
 ``` r
 

@@ -3,9 +3,9 @@
 Swaps the `origins` and `destinations` data frames if certain conditions
 are met, specifically to optimize routing performance with R5's
 one-to-many algorithm. The function reverses the direction of analysis
-when the transit mode is empty and the direct modes are WALK or BICYCLE
-and when the number of origin points is greater than the number of
-destination points.
+when the transit mode is empty and the direct modes is WALK and when the
+number of origin points is greater than the number of destination
+points.
 
 ## Usage
 
