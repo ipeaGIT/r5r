@@ -176,8 +176,10 @@ travel_time_matrix <- function(r5r_network,
   # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
   data_path <- r5r_network$getDataPath()
   res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
-  origins <- res$origins
-  destinations <- res$destinations
+  if (!is.null(res)) {
+    origins <- res$origins
+    destinations <- res$destinations
+  }
 
 
   max_walk_time <- assign_max_street_time(
@@ -252,8 +254,17 @@ travel_time_matrix <- function(r5r_network,
 
   travel_times <- java_to_dt(travel_times)
 
-  # reverse order of origins destinations back
-  travel_times <- reverse_back_if_direct_mode(travel_times, origins, destinations, mode_list, data_path)
+  # reverse order of origins destinations back ONLY if the order had been swapped before
+  if (!is.null(res)) {
+    reverse_back_if_direct_mode(
+      travel_times,
+      origins,
+      destinations,
+      mode_list,
+      data_path
+      )
+  }
+
 
 
   if (nrow(travel_times) > 0) {
