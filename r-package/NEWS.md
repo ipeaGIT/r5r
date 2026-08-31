@@ -4,6 +4,7 @@
 **Bug fixes**
 
 - Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
 
 **Minor changes**
 
