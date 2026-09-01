@@ -8,8 +8,8 @@
 
 **Minor changes**
 
-- - [#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when building GTFS network with multiple feeds.
-
+- [#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when building GTFS network with multiple feeds.
+- [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)
 
 # r5r 2.4.0
 
