@@ -65,9 +65,9 @@ stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other network functions: 
-\code{\link{street_network_bbox}()},
-\code{\link{street_network_to_sf}()},
-\code{\link{transit_network_to_sf}()}
+Other network functions:
+\code{\link[=street_network_bbox]{street_network_bbox()}},
+\code{\link[=street_network_to_sf]{street_network_to_sf()}},
+\code{\link[=transit_network_to_sf]{transit_network_to_sf()}}
 }
 \concept{network functions}

@@ -42,9 +42,9 @@ stop_r5(r5r_network)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other network functions: 
-\code{\link{find_snap}()},
-\code{\link{street_network_bbox}()},
-\code{\link{street_network_to_sf}()}
+Other network functions:
+\code{\link[=find_snap]{find_snap()}},
+\code{\link[=street_network_bbox]{street_network_bbox()}},
+\code{\link[=street_network_to_sf]{street_network_to_sf()}}
 }
 \concept{network functions}

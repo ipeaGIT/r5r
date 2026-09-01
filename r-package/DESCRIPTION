@@ -1,7 +1,7 @@
 Type: Package
 Package: r5r
 Title: Rapid Realistic Routing with 'R5'
-Version: 2.4.0
+Version: 2.4.0.9000
 Authors@R: c(
     person("Marcus", "Saraiva", , "marcus.saraiva@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-6218-2338")),
@@ -80,4 +80,3 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 SystemRequirements: Java JDK (>= 21.0)
 Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3

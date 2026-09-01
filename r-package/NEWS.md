@@ -1,10 +1,15 @@
-# r5r 2.4.1
-**Major changes**
-**Minor changes**
+# r5r (development version)
 
-- [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)
 
 **Bug fixes**
+
+- Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
+- [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
+
+**Minor changes**
+
+- [#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when building GTFS network with multiple feeds.
+- [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)
 
 # r5r 2.4.0
 
