@@ -148,18 +148,18 @@ public class TripPlanner {
 
             if(streetRouter.setOrigin(request.fromLat, request.fromLon)) {
                 if(!streetRouter.setDestination(request.toLat, request.toLon)) {
-                    LOG.warn("Direct mode {} from {} to {} wasn't found! Problem at destination.", mode, fromId, toId);
+                    LOG.warn("Trip from {} to {}. Direct mode {} to destination {} {} wasn't found.", mode, fromId, toId, request.toLat, request.toLon);
                     continue;
                 }
                 streetRouter.route();
                 StreetRouter.State lastState = streetRouter.getState(streetRouter.getDestinationSplit());
                 if (lastState == null) {
-                    LOG.warn("Direct mode {} from {} to {}! Last state wasn't found.", mode, fromId, toId);
+                    LOG.info("Trip from {} to {}. No direct {} path found from {} {} to {} {}.", fromId, toId, mode, request.fromLat, request.fromLon, request.toLat, request.toLon);
                     continue;
                 }
                 streetPath = new StreetPath(lastState, transportNetwork, false);
             } else {
-                LOG.warn("Direct mode {} from {} to {} wasn't found! Problem at origin.", mode, fromId, toId);
+                LOG.warn("Trip from {} to {}. Direct mode {} from origin {}, {} wasn't found.", fromId, toId, mode, request.fromLat, request.fromLon);
                 continue;
             }
 
