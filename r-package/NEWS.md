@@ -6,6 +6,7 @@
 - Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
 - Origins/destinations passed as `sf` objects that also carried `lon`/`lat` (or `x`/`y`) attribute columns were routed using those attribute columns instead of the point geometry. The geometry is now always used.
+- `travel_time_matrix()`, `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()` wrote CSV files with `from_id` and `to_id` swapped (and named after the destinations) when `output_dir` was used with walk-only routing, no elevation data and more origins than destinations. The internal origin/destination swap that speeds up such searches is now skipped whenever `output_dir` is set, so those runs may take longer than before.
 
 **Minor changes**
 
