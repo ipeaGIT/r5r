@@ -5,6 +5,7 @@
 
 - Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
+- Origins/destinations passed as `sf` objects that also carried `lon`/`lat` (or `x`/`y`) attribute columns were routed using those attribute columns instead of the point geometry. The geometry is now always used.
 
 **Minor changes**
 

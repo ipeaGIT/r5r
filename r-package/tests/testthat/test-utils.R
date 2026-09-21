@@ -122,6 +122,24 @@ test_that("assign_points_input output is coherent", {
   expect_equal(sf_points_output$lon, df_points_output$lon)
 })
 
+test_that("assign_points_input uses the geometry, not stale lon/lat or x/y columns", {
+  base <- as.data.frame(points)
+  sf_kept <- sf::st_as_sf(base, coords = c("lon", "lat"), crs = 4326, remove = FALSE)
+  sf_kept$lon <- sf_kept$lon + 1
+  sf_kept$lat <- sf_kept$lat + 1
+  out <- assign_points_input(sf_kept, "points")
+  expect_equal(out$lon, points$lon)
+  expect_equal(out$lat, points$lat)
+  expect_false(anyDuplicated(names(out)) > 0)
+
+  sf_xy <- sf::st_as_sf(base, coords = c("lon", "lat"), crs = 4326)
+  sf_xy$x <- 1
+  sf_xy$y <- 2
+  out_xy <- assign_points_input(sf_xy, "points")
+  expect_equal(out_xy$lon, points$lon)
+  expect_equal(out_xy$x, rep(1, nrow(points)))
+})
+
 
 
   # assign_decay_function -----------------------------------------------------

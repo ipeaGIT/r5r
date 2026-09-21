@@ -34,3 +34,10 @@ aws.xml
 docs/
 network_settings.json
 r-package/rjavaenv/
+
+# Claude Code workflow (local state) and machine-local Java setup
+quality_reports/
+.claude/settings.local.json
+.claude/state/
+rjavaenv/
+r-package/inst/extdata/*/gtfs_errors.csv

@@ -28,9 +28,15 @@ assign_points_input <- function(df, name) {
       )
     }
 
-    df <- sfheaders::sf_to_df(df, fill = TRUE)
+    # coordinates come from the geometry, never from attribute columns.
+    # sfheaders::sf_to_df() appends x/y next to any existing lon/lat (or x/y)
+    # attribute columns and df$lon would then pick the stale one.
+    # positional indexing: a 0-row sf gives a coords matrix without dimnames.
+    coords <- sf::st_coordinates(df)
+    df <- sf::st_drop_geometry(df)
+    df$lon <- coords[, 1L]
+    df$lat <- coords[, 2L]
     data.table::setDT(df)
-    data.table::setnames(df, c("x", "y"), c("lon", "lat"))
   }
 
   checkmate::assert_names(
