@@ -2,13 +2,16 @@
 #'
 #' @param df Either a `data.frame` or a `POINT sf`.
 #' @param name Object name.
+#' @param unique_ids A logical. Whether to raise an error when `df$id` has
+#'   duplicated values. Defaults to `TRUE`. Set to `FALSE` for row-paired
+#'   inputs, where the same point may legitimately appear in several rows.
 #'
 #' @return A `data.frame` with columns `id`, `lon` and `lat`.
 #'
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_points_input <- function(df, name) {
+assign_points_input <- function(df, name, unique_ids = TRUE) {
   if (!inherits(df, "data.frame")) {
     stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
   }
@@ -50,6 +53,26 @@ assign_points_input <- function(df, name) {
   if (!is.character(df$id)) {
     df$id <- as.character(df$id)
     warning("'", name, "$id' forcefully cast to character.")
+  }
+
+  # points with missing coordinates cannot be snapped to the network and are
+  # silently dropped by R5, so tell the user which ones they are
+  na_coords <- is.na(df$lon) | is.na(df$lat)
+  if (any(na_coords)) {
+    na_ids <- df$id[na_coords]
+    cli::cli_warn(c(
+      "!" = "{sum(na_coords)} point{?s} in {.arg {name}} {cli::qty(sum(na_coords))}{?has/have} missing {.field lon}/{.field lat} coordinates and will not be routed.",
+      "i" = "Affected id{?s}: {.val {na_ids}}."
+    ))
+  }
+
+  checkmate::assert_logical(unique_ids, len = 1, any.missing = FALSE)
+  if (unique_ids && anyDuplicated(df$id) > 0) {
+    dup_ids <- unique(df$id[duplicated(df$id)])
+    cli::cli_abort(c(
+      "{.arg {name}} must not contain duplicated ids.",
+      "x" = "Duplicated id{?s}: {.val {dup_ids}}."
+    ))
   }
 
   return(df)

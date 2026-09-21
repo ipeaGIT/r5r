@@ -213,7 +213,8 @@ set_percentiles <- function(r5r_network, percentiles) {
     finite = TRUE
   )
 
-  percentiles <- as.integer(percentiles)
+  # R5 requires ascending percentiles; output columns follow this order
+  percentiles <- sort(as.integer(percentiles))
 
   r5r_network$setPercentiles(percentiles)
 

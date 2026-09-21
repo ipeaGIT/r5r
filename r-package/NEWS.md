@@ -7,6 +7,10 @@
 - [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
 - Origins/destinations passed as `sf` objects that also carried `lon`/`lat` (or `x`/`y`) attribute columns were routed using those attribute columns instead of the point geometry. The geometry is now always used.
 - `travel_time_matrix()`, `arrival_travel_time_matrix()` and `expanded_travel_time_matrix()` wrote CSV files with `from_id` and `to_id` swapped (and named after the destinations) when `output_dir` was used with walk-only routing, no elevation data and more origins than destinations. The internal origin/destination swap that speeds up such searches is now skipped whenever `output_dir` is set, so those runs may take longer than before.
+- `percentiles` are now sorted in ascending order internally. Unsorted values (e.g. `c(75, 25)`) used to crash inside R5 with an uninformative Java error.
+- Origins/destinations with missing `lon`/`lat` coordinates now trigger a warning listing the affected ids. They used to be dropped silently.
+- Origins/destinations with duplicated `id` values now raise an error in all one-to-many functions, instead of returning ambiguous duplicated rows. `detailed_itineraries()` keeps accepting repeated ids in row-paired inputs (`all_to_all = FALSE`).
+- `FERRY` was missing from the list of transit modes that trigger the check for transit services on the departure date.
 
 **Minor changes**
 
