@@ -82,6 +82,31 @@ build_network <- function(data_path,
   if (checkmate::test_file_exists(dat_file) && !overwrite) {
     r5r_network <- rJava::.jnew("org.ipea.r5r.R5RCore", data_path, verbose, elevation)
 
+    # a stale network.dat can trigger a silent internal rebuild that fails on
+    # high priority GTFS errors, leaving routing properties uninitialized
+    core_is_usable <- tryCatch(
+      {
+        r5r_network$getWalkSpeed()
+        TRUE
+      },
+      error = function(e) FALSE
+    )
+
+    if (!core_is_usable) {
+      cli::cli_abort(c(
+        "x" = "Cached network at {.path {dat_file}} could not be loaded.",
+        "i" = paste(
+          "R5 likely attempted an internal rebuild because the cached network",
+          "format is incompatible, and that rebuild failed (e.g. due to high",
+          "priority GTFS errors)."
+        ),
+        "i" = paste(
+          "Rebuild explicitly with {.code build_network(data_path, overwrite = TRUE)}",
+          "to see the underlying error and a {.file gtfs_errors.csv} with details."
+        )
+      ))
+    }
+
     cli::cli_inform(c(
       i = "Using cached network from {.path {dat_file}}."
     ))

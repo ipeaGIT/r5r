@@ -5,6 +5,7 @@
 
 - Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
+- `build_network()` now detects and aborts with an informative message when a cached `network.dat` triggers a silent internal rebuild that fails on high priority GTFS errors, instead of silently returning an unusable `r5r_network` that only fails later with an opaque `NullPointerException` on the first routing call.
 
 **Minor changes**
 
