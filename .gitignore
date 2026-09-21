@@ -41,3 +41,4 @@ quality_reports/
 .claude/state/
 rjavaenv/
 r-package/inst/extdata/*/gtfs_errors.csv
+bash.exe.stackdump
