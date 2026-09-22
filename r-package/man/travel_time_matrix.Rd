@@ -72,7 +72,7 @@ B is 15 minutes, 25\% of all trips taken between these points within the
 specified time window are shorter than 15 minutes. Defaults to 50,
 returning the median travel time. If a vector with length bigger than 1 is
 passed, the output contains an additional column for each percentile
-specifying the percentile travel time estimate. each estimate. Due to
+specifying the percentile travel time estimate. Due to
 upstream restrictions, only 5 percentiles can be specified at a time. For
 more details, please see R5 documentation at
 \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
@@ -132,7 +132,9 @@ understand how this object is structured:
 \code{vignette("fare_structure", package = "r5r")}.}
 
 \item{max_fare}{A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.}
+calculating the fastest journey between each origin and destination pair.
+Defaults to \code{Inf} (no limit). A finite value requires a \code{fare_structure};
+an error is raised otherwise.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the new car speed for each OSM
 edge id. This table must contain columns \code{osm_id}, \code{max_speed}

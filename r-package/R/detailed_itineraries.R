@@ -155,8 +155,9 @@ detailed_itineraries <- function(r5r_network,
 
   checkmate::assert_class(r5r_network, "r5r_network")
 
-  origins <- assign_points_input(origins, "origins")
-  destinations <- assign_points_input(destinations, "destinations")
+  # row-paired inputs (all_to_all = FALSE) may legitimately repeat an id
+  origins <- assign_points_input(origins, "origins", unique_ids = all_to_all)
+  destinations <- assign_points_input(destinations, "destinations", unique_ids = all_to_all)
   od_list <- expand_od_pairs(origins, destinations, all_to_all)
   origins <- od_list$origins
   destinations <- od_list$destinations
@@ -165,7 +166,7 @@ detailed_itineraries <- function(r5r_network,
   departure <- assign_departure(departure_datetime)
 
   # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
@@ -218,7 +219,7 @@ detailed_itineraries <- function(r5r_network,
   set_verbose(r5r_network, verbose)
   set_progress(r5r_network, progress)
   set_fare_structure(r5r_network, fare_structure)
-  set_max_fare(r5r_network, max_fare)
+  set_max_fare(r5r_network, max_fare, fare_structure)
   set_output_dir(r5r_network, output_dir)
   set_suboptimal_minutes(
     r5r_network,

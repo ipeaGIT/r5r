@@ -58,7 +58,7 @@ All of the routing and accessibility functions in {r5r} now have the following p
 new car speed for each OSM edge id, OR an `sf data.frame` polygon that indicates 
 the new car speed for all the roads that fall within each polygon.
 - `carspeed_scale`: this parameter allows one to set the default car speed for all 
-of the road segments not specified in `new_carspeeds`. By default, `carspeed_scale = NULL` and the speeds of the unlisted roads are kept unchanged.
+of the road segments not specified in `new_carspeeds`. By default, `carspeed_scale = 1` and the speeds of the unlisted roads are kept unchanged.
 
 Let's see a couple examples.
 

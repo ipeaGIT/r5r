@@ -2,13 +2,16 @@
 #'
 #' @param df Either a `data.frame` or a `POINT sf`.
 #' @param name Object name.
+#' @param unique_ids A logical. Whether to raise an error when `df$id` has
+#'   duplicated values. Defaults to `TRUE`. Set to `FALSE` for row-paired
+#'   inputs, where the same point may legitimately appear in several rows.
 #'
 #' @return A `data.frame` with columns `id`, `lon` and `lat`.
 #'
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_points_input <- function(df, name) {
+assign_points_input <- function(df, name, unique_ids = TRUE) {
   if (!inherits(df, "data.frame")) {
     stop("'", name, "' must be either a 'data.frame' or a 'POINT sf'.")
   }
@@ -28,9 +31,15 @@ assign_points_input <- function(df, name) {
       )
     }
 
-    df <- sfheaders::sf_to_df(df, fill = TRUE)
+    # coordinates come from the geometry, never from attribute columns.
+    # sfheaders::sf_to_df() appends x/y next to any existing lon/lat (or x/y)
+    # attribute columns and df$lon would then pick the stale one.
+    # positional indexing: a 0-row sf gives a coords matrix without dimnames.
+    coords <- sf::st_coordinates(df)
+    df <- sf::st_drop_geometry(df)
+    df$lon <- coords[, 1L]
+    df$lat <- coords[, 2L]
     data.table::setDT(df)
-    data.table::setnames(df, c("x", "y"), c("lon", "lat"))
   }
 
   checkmate::assert_names(
@@ -44,6 +53,26 @@ assign_points_input <- function(df, name) {
   if (!is.character(df$id)) {
     df$id <- as.character(df$id)
     warning("'", name, "$id' forcefully cast to character.")
+  }
+
+  # points with missing coordinates cannot be snapped to the network and are
+  # silently dropped by R5, so tell the user which ones they are
+  na_coords <- is.na(df$lon) | is.na(df$lat)
+  if (any(na_coords)) {
+    na_ids <- df$id[na_coords]
+    cli::cli_warn(c(
+      "!" = "{sum(na_coords)} point{?s} in {.arg {name}} {cli::qty(sum(na_coords))}{?has/have} missing {.field lon}/{.field lat} coordinates and will not be routed.",
+      "i" = "Affected id{?s}: {.val {na_ids}}."
+    ))
+  }
+
+  checkmate::assert_logical(unique_ids, len = 1, any.missing = FALSE)
+  if (unique_ids && anyDuplicated(df$id) > 0) {
+    dup_ids <- unique(df$id[duplicated(df$id)])
+    cli::cli_abort(c(
+      "{.arg {name}} must not contain duplicated ids.",
+      "x" = "Duplicated id{?s}: {.val {dup_ids}}."
+    ))
   }
 
   return(df)
@@ -193,6 +222,13 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
     lower = 1,
     finite = FALSE
   )
+  if (is.finite(max_time)) {
+    checkmate::assert_count(
+      max_time,
+      positive = TRUE,
+      .var.name = paste0("max_", mode, "_time")
+    )
+  }
 
   checkmate::assert_number(
     speed,
@@ -200,7 +236,7 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
     .var.name = paste0(mode, "_speed")
   )
 
-  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+  checkmate::assert_count(max_trip_duration, positive = TRUE)
 
   if (speed <= 0) {
     stop(
@@ -233,7 +269,7 @@ assign_max_trip_duration <- function(max_trip_duration,
                                      modes,
                                      max_walk_time,
                                      max_bike_time) {
-  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+  checkmate::assert_count(max_trip_duration, positive = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
 
