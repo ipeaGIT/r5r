@@ -11,6 +11,8 @@
 - Origins/destinations with missing `lon`/`lat` coordinates now trigger a warning listing the affected ids. They used to be dropped silently.
 - Origins/destinations with duplicated `id` values now raise an error in all one-to-many functions, instead of returning ambiguous duplicated rows. `detailed_itineraries()` keeps accepting repeated ids in row-paired inputs (`all_to_all = FALSE`).
 - `FERRY` was missing from the list of transit modes that trigger the check for transit services on the departure date.
+- A finite `max_fare` passed without a `fare_structure` now raises an error instead of being silently ignored.
+- Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`, `max_trip_duration`, `time_window`, `percentiles`, `n_threads`, `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`, `suboptimal_minutes`) now reject non-integer values instead of silently truncating them.
 
 **Minor changes**
 

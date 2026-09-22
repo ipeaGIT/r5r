@@ -169,7 +169,7 @@ travel_time_surface <- function(r5r_network,
   set_verbose(r5r_network, verbose)
   set_progress(r5r_network, progress)
   set_fare_structure(r5r_network, fare_structure)
-  set_max_fare(r5r_network, max_fare)
+  set_max_fare(r5r_network, max_fare, fare_structure)
   set_expanded_travel_times(r5r_network, FALSE)
   set_breakdown(r5r_network, FALSE)
   r5r_network$setSearchType("DEPART_FROM")

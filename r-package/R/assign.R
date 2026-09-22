@@ -222,6 +222,13 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
     lower = 1,
     finite = FALSE
   )
+  if (is.finite(max_time)) {
+    checkmate::assert_count(
+      max_time,
+      positive = TRUE,
+      .var.name = paste0("max_", mode, "_time")
+    )
+  }
 
   checkmate::assert_number(
     speed,
@@ -229,7 +236,7 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
     .var.name = paste0(mode, "_speed")
   )
 
-  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+  checkmate::assert_count(max_trip_duration, positive = TRUE)
 
   if (speed <= 0) {
     stop(
@@ -262,7 +269,7 @@ assign_max_trip_duration <- function(max_trip_duration,
                                      modes,
                                      max_walk_time,
                                      max_bike_time) {
-  checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
+  checkmate::assert_count(max_trip_duration, positive = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
 

@@ -161,7 +161,9 @@ understand how this object is structured:
 \code{vignette("fare_structure", package = "r5r")}.}
 
 \item{max_fare}{A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.}
+calculating the fastest journey between each origin and destination pair.
+Defaults to \code{Inf} (no limit). A finite value requires a \code{fare_structure};
+an error is raised otherwise.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the new car speed for each OSM
 edge id. This table must contain columns \code{osm_id}, \code{max_speed}

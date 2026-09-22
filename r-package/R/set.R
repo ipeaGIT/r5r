@@ -62,6 +62,7 @@ set_progress <- function(r5r_network, progress) {
 #' @keywords internal
 set_n_threads <- function(r5r_network, n_threads) {
   checkmate::assert_number(n_threads, lower = 1)
+  if (is.finite(n_threads)) checkmate::assert_count(n_threads, positive = TRUE)
 
   if (is.infinite(n_threads)) {
     r5r_network$setNumberOfThreadsToMax()
@@ -88,7 +89,7 @@ set_n_threads <- function(r5r_network, n_threads) {
 #'
 #' @keywords internal
 set_max_lts <- function(r5r_network, max_lts) {
-  checkmate::assert_number(max_lts)
+  checkmate::assert_count(max_lts, positive = TRUE)
 
   if (max_lts < 1 | max_lts > 4) {
     stop(
@@ -118,7 +119,7 @@ set_max_lts <- function(r5r_network, max_lts) {
 #'
 #' @keywords internal
 set_max_rides <- function(r5r_network, max_rides) {
-  checkmate::assert_number(max_rides, lower = 1, finite = TRUE)
+  checkmate::assert_count(max_rides, positive = TRUE)
 
   r5r_network$setMaxRides(as.integer(max_rides))
 
@@ -180,7 +181,7 @@ set_speed <- function(r5r_network, speed, mode) {
 #'
 #' @keywords internal
 set_time_window <- function(r5r_network, time_window) {
-  checkmate::assert_number(time_window, lower = 1, finite = TRUE)
+  checkmate::assert_count(time_window, positive = TRUE)
 
   time_window <- as.integer(time_window)
 
@@ -203,14 +204,13 @@ set_time_window <- function(r5r_network, time_window) {
 #'
 #' @keywords internal
 set_percentiles <- function(r5r_network, percentiles) {
-  checkmate::assert_numeric(
+  checkmate::assert_integerish(
     percentiles,
     lower = 1,
     upper = 99,
     max.len = 5,
     unique = TRUE,
-    any.missing = FALSE,
-    finite = TRUE
+    any.missing = FALSE
   )
 
   # R5 requires ascending percentiles; output columns follow this order
@@ -237,7 +237,7 @@ set_percentiles <- function(r5r_network, percentiles) {
 #' @keywords internal
 set_monte_carlo_draws <- function(r5r_network, draws_per_minute, time_window) {
   # time_window is previously checked in set_time_window()
-  checkmate::assert_number(draws_per_minute, lower = 1, finite = TRUE)
+  checkmate::assert_count(draws_per_minute, positive = TRUE)
 
   draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
@@ -297,14 +297,24 @@ set_fare_structure <- function(r5r_network, fare_structure) {
 #'
 #' @template r5r_network
 #' @param max_fare A number.
+#' @template fare_structure
 #'
 #' @return Invisibly returns `TRUE`.
 #'
 #' @family setting functions
 #'
 #' @keywords internal
-set_max_fare <- function(r5r_network, max_fare) {
+set_max_fare <- function(r5r_network, max_fare, fare_structure) {
   checkmate::assert_number(max_fare, lower = 0)
+
+  # a finite max_fare only makes sense when fares are being calculated
+  if (is.finite(max_fare) && is.null(fare_structure)) {
+    cli::cli_abort(c(
+      "{.arg max_fare} requires a {.arg fare_structure}.",
+      "x" = "{.arg max_fare} is {.val {max_fare}} but {.arg fare_structure} is {.code NULL}, so no fares are calculated and the limit would be ignored.",
+      "i" = "Pass a fare structure (see {.fn setup_fare_structure}) or leave {.arg max_fare} as {.val {Inf}}."
+    ))
+  }
 
   # Inf values are not allowed in Java, so -1 is used to indicate when max_fare
   # is unconstrained
@@ -359,12 +369,11 @@ set_output_dir <- function(r5r_network, output_dir) {
 #'
 #' @keywords internal
 set_cutoffs <- function(r5r_network, cutoffs, decay_function) {
-  checkmate::assert_numeric(
+  checkmate::assert_integerish(
     cutoffs,
     min.len = 1,
     max.len = 12,
     any.missing = FALSE,
-    finite = TRUE,
     null.ok = TRUE
   )
 
@@ -494,7 +503,7 @@ set_suboptimal_minutes <- function(r5r_network,
                                    suboptimal_minutes,
                                    fare_structure,
                                    shortest_path) {
-  checkmate::assert_number(suboptimal_minutes, lower = 0, finite = TRUE)
+  checkmate::assert_count(suboptimal_minutes)
 
   if (!is.null(fare_structure) && suboptimal_minutes > 0) {
     stop(
@@ -637,8 +646,8 @@ set_elevation <- function(elevation) {
 #'
 #' @keywords internal
 set_new_congestion <- function(r5r_network, new_carspeeds, carspeed_scale) {
-  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = T)
-  checkmate::assert_numeric(carspeed_scale, lower = 0, finite = TRUE, null.ok = F)
+  checkmate::assert_class(new_carspeeds, "data.frame", null.ok = TRUE)
+  checkmate::assert_numeric(carspeed_scale, lower = 0, finite = TRUE, null.ok = FALSE)
   if (!is.null(new_carspeeds) || carspeed_scale != 1){
     cli::cli_inform("Modifying carspeeds...")
     cli::cli_warn("A scenario was used for this calculation. This may affect results for WALK or BICYCLE due to missing elevation. See issue #555.")

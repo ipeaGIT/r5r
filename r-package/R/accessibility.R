@@ -237,7 +237,7 @@ accessibility <- function(r5r_network,
   set_verbose(r5r_network, verbose)
   set_progress(r5r_network, progress)
   set_fare_structure(r5r_network, fare_structure)
-  set_max_fare(r5r_network, max_fare)
+  set_max_fare(r5r_network, max_fare, fare_structure)
   set_output_dir(r5r_network, output_dir)
 
   # SCENARIOS -------------------------------------------

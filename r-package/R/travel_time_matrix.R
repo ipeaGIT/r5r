@@ -22,7 +22,7 @@
 #'   specified time window are shorter than 15 minutes. Defaults to 50,
 #'   returning the median travel time. If a vector with length bigger than 1 is
 #'   passed, the output contains an additional column for each percentile
-#'   specifying the percentile travel time estimate. each estimate. Due to
+#'   specifying the percentile travel time estimate. Due to
 #'   upstream restrictions, only 5 percentiles can be specified at a time. For
 #'   more details, please see R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
@@ -223,7 +223,7 @@ travel_time_matrix <- function(r5r_network,
   set_verbose(r5r_network, verbose)
   set_progress(r5r_network, progress)
   set_fare_structure(r5r_network, fare_structure)
-  set_max_fare(r5r_network, max_fare)
+  set_max_fare(r5r_network, max_fare, fare_structure)
   set_output_dir(r5r_network, output_dir)
   set_expanded_travel_times(r5r_network, FALSE)
   set_breakdown(r5r_network, FALSE)

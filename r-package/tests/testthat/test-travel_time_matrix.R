@@ -319,3 +319,28 @@ test_that("duplicated ids in origins or destinations raise an error", {
   expect_error(tester(origins = pois_dup), regexp = "duplicated ids")
   expect_error(tester(destinations = pois_dup), regexp = "duplicated ids")
 })
+
+test_that("a finite max_fare requires a fare_structure", {
+  expect_error(tester(max_fare = 5, fare_structure = NULL), regexp = "fare_structure")
+  expect_s3_class(tester(max_fare = Inf, fare_structure = NULL), "data.table")
+})
+
+test_that("integer arguments reject non-integer values", {
+  expect_error(tester(max_walk_time = 15.5))
+  expect_error(tester(max_bike_time = 15.5))
+  expect_error(tester(max_trip_duration = 60.5))
+  expect_error(tester(time_window = 10.5))
+  expect_error(tester(percentiles = 50.7))
+  expect_error(tester(percentiles = c(25, 50.5)))
+  expect_error(tester(n_threads = 2.5))
+  expect_error(tester(max_rides = 2.5))
+  expect_error(tester(max_lts = 2.5))
+  expect_error(tester(draws_per_minute = 1.5))
+
+  # whole-number doubles and Inf where allowed still work
+  expect_s3_class(
+    tester(max_walk_time = 30, max_trip_duration = 60, time_window = 5,
+           n_threads = Inf, max_rides = 2, draws_per_minute = 1),
+    "data.table"
+  )
+})
