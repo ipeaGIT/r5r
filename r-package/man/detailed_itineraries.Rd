@@ -77,7 +77,8 @@ This argument emulates the real-life behaviour that makes people want to
 take a path that is technically not optimal in terms of travel time, for
 example, for some practical reasons (e.g. mode preference, safety, etc).
 In practice, the higher this value, the more itineraries will be returned
-in the final result.}
+in the final result. Values above 0 can only be used when \code{shortest_path}
+is \code{FALSE} and \code{fare_structure} is \code{NULL}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network
@@ -131,7 +132,11 @@ information.}
 
 \item{shortest_path}{A logical. Whether the function should only return the
 fastest itinerary between each origin and destination pair (the default)
-or multiple alternatives.}
+or multiple alternatives. The fastest itinerary is the one with the
+shortest travel time, measured from its own departure time, among all
+departures within \code{time_window}. With a large \code{time_window}, it may depart
+later and arrive later than other itineraries; use \code{time_window = 1} to
+get the itinerary with the earliest arrival for a given departure time.}
 
 \item{all_to_all}{A logical. Whether to query routes between the 1st origin
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
@@ -194,10 +199,14 @@ geometry of each trip leg or not. The default value of \code{FALSE} keeps the
 geometry column in the result.}
 
 \item{osm_link_ids}{A logical. Whether the output should include additional
-columns: \code{osm_id_list} for the OSM ids of the road
-segments used along the trip geometry, and \code{board_stop_id} and
-\code{alight_stop_id} for the OSM ids of transit boarding and alighting stops.
-Defaults to \code{FALSE}.
+columns: \code{osm_id_list} for the OSM ids of the road segments used along the
+trip geometry, \code{edge_id_list} for the ids of the internal street network
+edges used, and \code{board_stop_id} and \code{alight_stop_id} for the GTFS ids of
+transit boarding and alighting stops, prefixed by the feed name (e.g.
+\code{"poa_eptc:1649"}). \code{osm_id_list} and \code{edge_id_list} are character
+columns formatted as \code{"[id1, id2, ...]"}, and are \code{"[]"} for transit
+segments. Can only be \code{TRUE} when \code{drop_geometry} is \code{FALSE}. Defaults to
+\code{FALSE}.
 
 Keep in mind that \code{osm_id_list} will contain an id even if the route only
 uses a small stretch of the road (e.g. 5m of a 600m street segment). For
@@ -220,9 +229,32 @@ Please use the \code{r5r_network} argument instead.}
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
 origins and destinations. When \code{TRUE}, the output is a \code{data.table}. All
-distances are in meters and travel times are in minutes. If \code{output_dir}
-is not \code{NULL}, the function returns the path specified in that parameter,
-in which the \code{.csv} files containing the results are saved.
+distances are in meters and travel times are in minutes. Each row is one
+segment (trip leg) of one itinerary, with the columns:
+\itemize{
+\item \code{from_id}, \code{from_lat}, \code{from_lon}, \code{to_id}, \code{to_lat}, \code{to_lon}: the
+origin and destination of the pair;
+\item \code{option}: the itinerary number within the pair. Options are ordered
+with direct (non-transit) trips first, then by number of segments, then
+by duration, so \code{option} 1 is not necessarily the fastest one;
+\item \code{departure_time}: the departure time of the itinerary (\code{"HH:MM:SS"});
+\item \code{total_duration}, \code{total_distance}: duration and distance of the whole
+itinerary;
+\item \code{segment}, \code{mode}, \code{segment_duration}, \code{wait}, \code{distance}, \code{route}: the
+segment number, its transport mode, its in-motion duration, the waiting
+time before it, its distance and the transit route used (empty for
+non-transit segments);
+\item \code{total_fare}, \code{cumulative_fare}: only when a \code{fare_structure} is used;
+\item \code{osm_id_list}, \code{edge_id_list}, \code{board_stop_id}, \code{alight_stop_id}: only
+when \code{osm_link_ids} is \code{TRUE};
+\item \code{geometry}: only when \code{drop_geometry} is \code{FALSE}.
+}
+
+If \code{output_dir} is not \code{NULL}, the function returns the path specified in
+that parameter, in which the \code{.csv} files containing the results are
+saved. This function writes one file per origin-destination pair, named
+\verb{from_<origin id>_to_<destination id>.csv}, so pairs must be unique and
+ids cannot contain characters that are not allowed in file names.
 }
 \description{
 Returns detailed trip information between origin-destination pairs. The
