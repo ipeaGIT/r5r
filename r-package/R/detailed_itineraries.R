@@ -35,10 +35,15 @@
 #'   take a path that is technically not optimal in terms of travel time, for
 #'   example, for some practical reasons (e.g. mode preference, safety, etc).
 #'   In practice, the higher this value, the more itineraries will be returned
-#'   in the final result.
+#'   in the final result. Values above 0 can only be used when `shortest_path`
+#'   is `FALSE` and `fare_structure` is `NULL`.
 #' @param shortest_path A logical. Whether the function should only return the
 #'   fastest itinerary between each origin and destination pair (the default)
-#'   or multiple alternatives.
+#'   or multiple alternatives. The fastest itinerary is the one with the
+#'   shortest travel time, measured from its own departure time, among all
+#'   departures within `time_window`. With a large `time_window`, it may depart
+#'   later and arrive later than other itineraries; use `time_window = 1` to
+#'   get the itinerary with the earliest arrival for a given departure time.
 #' @param all_to_all A logical. Whether to query routes between the 1st origin
 #'   to the 1st destination, then the 2nd origin to the 2nd destination, and so
 #'   on (`FALSE`, the default) or to query routes between all origins to all
@@ -47,10 +52,14 @@
 #'   geometry of each trip leg or not. The default value of `FALSE` keeps the
 #'   geometry column in the result.
 #' @param osm_link_ids A logical. Whether the output should include additional
-#'   columns: `osm_id_list` for the OSM ids of the road
-#'   segments used along the trip geometry, and `board_stop_id` and
-#'   `alight_stop_id` for the OSM ids of transit boarding and alighting stops.
-#'   Defaults to `FALSE`.
+#'   columns: `osm_id_list` for the OSM ids of the road segments used along the
+#'   trip geometry, `edge_id_list` for the ids of the internal street network
+#'   edges used, and `board_stop_id` and `alight_stop_id` for the GTFS ids of
+#'   transit boarding and alighting stops, prefixed by the feed name (e.g.
+#'   `"poa_eptc:1649"`). `osm_id_list` and `edge_id_list` are character
+#'   columns formatted as `"[id1, id2, ...]"`, and are `"[]"` for transit
+#'   segments. Can only be `TRUE` when `drop_geometry` is `FALSE`. Defaults to
+#'   `FALSE`.
 #'
 #'   Keep in mind that `osm_id_list` will contain an id even if the route only
 #'   uses a small stretch of the road (e.g. 5m of a 600m street segment). For
@@ -67,9 +76,30 @@
 #' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
 #'   sf` with detailed information on the itineraries between the specified
 #'   origins and destinations. When `TRUE`, the output is a `data.table`. All
-#'   distances are in meters and travel times are in minutes. If `output_dir`
-#'   is not `NULL`, the function returns the path specified in that parameter,
-#'   in which the `.csv` files containing the results are saved.
+#'   distances are in meters and travel times are in minutes. Each row is one
+#'   segment (trip leg) of one itinerary, with the columns:
+#'   - `from_id`, `from_lat`, `from_lon`, `to_id`, `to_lat`, `to_lon`: the
+#'     origin and destination of the pair;
+#'   - `option`: the itinerary number within the pair. Options are ordered
+#'     with direct (non-transit) trips first, then by number of segments, then
+#'     by duration, so `option` 1 is not necessarily the fastest one;
+#'   - `departure_time`: the departure time of the itinerary (`"HH:MM:SS"`);
+#'   - `total_duration`, `total_distance`: duration and distance of the whole
+#'     itinerary;
+#'   - `segment`, `mode`, `segment_duration`, `wait`, `distance`, `route`: the
+#'     segment number, its transport mode, its in-motion duration, the waiting
+#'     time before it, its distance and the transit route used (empty for
+#'     non-transit segments);
+#'   - `total_fare`, `cumulative_fare`: only when a `fare_structure` is used;
+#'   - `osm_id_list`, `edge_id_list`, `board_stop_id`, `alight_stop_id`: only
+#'     when `osm_link_ids` is `TRUE`;
+#'   - `geometry`: only when `drop_geometry` is `FALSE`.
+#'
+#'   If `output_dir` is not `NULL`, the function returns the path specified in
+#'   that parameter, in which the `.csv` files containing the results are
+#'   saved. This function writes one file per origin-destination pair, named
+#'   `from_<origin id>_to_<destination id>.csv`, so pairs must be unique and
+#'   ids cannot contain characters that are not allowed in file names.
 #'
 #' @family routing
 #'
@@ -161,6 +191,22 @@ detailed_itineraries <- function(r5r_network,
   od_list <- expand_od_pairs(origins, destinations, all_to_all)
   origins <- od_list$origins
   destinations <- od_list$destinations
+
+  # with output_dir, each pair is written to a file named after its ids
+  if (!is.null(output_dir)) {
+    if (anyDuplicated(data.table::data.table(origins$id, destinations$id)) > 0) {
+      cli::cli_abort(
+        "With {.arg output_dir}, origin-destination pairs must be unique, because each pair is written to a file named {.file from_<id>_to_<id>.csv}."
+      )
+    }
+    bad_ids <- unique(grep('[/\\\\:*?"<>|]', c(origins$id, destinations$id), value = TRUE))
+    if (length(bad_ids) > 0) {
+      cli::cli_abort(c(
+        "With {.arg output_dir}, ids cannot contain characters that are not allowed in file names ({.code / \\ : * ? \" < > |}).",
+        "x" = "Invalid id{?s}: {.val {bad_ids}}."
+      ))
+    }
+  }
 
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)

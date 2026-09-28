@@ -93,7 +93,7 @@ test_that("detailed_itineraries adequately raises errors", {
   numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
   expect_error(default_tester(r5r_network, departure_datetime = "13-05-2019 14:00:00"))
-  expect_error(default_tester(r5r_network, numeric_datetime))
+  expect_error(default_tester(r5r_network, departure_datetime = numeric_datetime))
 
   # errors related to max_walk_time
   expect_error(default_tester(r5r_network, max_walk_time = "1"))
@@ -304,12 +304,37 @@ test_that("detailed_itineraries output is correct", {
 
 test_that("using transit outside the gtfs dates throws an error", {
   expect_error(
-    tester(r5r_network,
-           mode='transit',
-           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
-                                           format = "%d-%m-%Y %H:%M:%S")
-    )
+    default_tester(r5r_network,
+                   mode = "transit",
+                   departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                                   format = "%d-%m-%Y %H:%M:%S")
+    ),
+    "no transit services"
   )
+})
+
+test_that("zero-row inputs return an empty result", {
+  expect_equal(nrow(default_tester(r5r_network, origins = points[0, ], destinations = points[1, ])), 0)
+  expect_equal(nrow(default_tester(r5r_network, origins = points[1, ], destinations = points[0, ])), 0)
+})
+
+test_that("output_dir rejects repeated pairs and ids not allowed in file names", {
+  di_to_dir <- function(origins, destinations) {
+    detailed_itineraries(
+      r5r_network,
+      origins = origins,
+      destinations = destinations,
+      mode = "WALK",
+      departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+      output_dir = tempdir()
+    )
+  }
+
+  expect_error(di_to_dir(points[c(1, 1), ], points[c(2, 2), ]), "must be unique")
+
+  slash_origin <- points[1, ]
+  slash_origin$id <- "a/b"
+  expect_error(di_to_dir(slash_origin, points[2, ]), "a/b")
 })
 
 test_that("row-paired inputs may repeat ids, all-to-all inputs may not", {
