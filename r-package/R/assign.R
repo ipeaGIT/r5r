@@ -404,6 +404,16 @@ assign_decay_function <- function(decay_function, decay_value) {
     }
   }
 
+  # R5 takes the linear width as whole minutes, under one hour
+  if (decay_function == "linear") {
+    checkmate::assert_integerish(
+      decay_value,
+      lower = 1,
+      upper = 59,
+      .var.name = "decay_value"
+    )
+  }
+
   decay_function <- toupper(decay_function)
 
   # java does not accept NULL values, so if decay_value is NULL we assign a

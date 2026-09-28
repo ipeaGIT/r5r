@@ -177,6 +177,9 @@ test_that("assign_points_input errors on duplicated ids unless unique_ids = FALS
     expect_error(assign_decay_function(decay_function='bananas', decay_value=4))
     expect_error(assign_decay_function(decay_function= 444, decay_value=4))
     expect_error(assign_decay_function(decay_function= 'logistic', decay_value=0.4))
+    expect_error(assign_decay_function(decay_function= 'linear', decay_value=10.5))
+    expect_error(assign_decay_function(decay_function= 'linear', decay_value=60))
+    expect_type(assign_decay_function(decay_function= 'linear', decay_value=59), "list")
   })
 
   test_that("assign_decay_function expected behavior", {

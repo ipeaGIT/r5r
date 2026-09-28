@@ -27,8 +27,11 @@
 #'
 #' - **Fixed Exponential** (`"fixed_exponential"`): \cr
 #' This function is of the form `exp(-Lt)` where L is a single fixed decay
-#' constant in the range (0, 1). It is constrained to be positive to ensure
-#' weights decrease (rather than grow) with increasing travel time.
+#' constant in the range (0, 1) and t is the travel time in **seconds**. It is
+#' constrained to be positive to ensure weights decrease (rather than grow)
+#' with increasing travel time. Note that L is a per-second constant: to use a
+#' decay constant expressed per minute (e.g. from the literature), pass it
+#' divided by 60.
 #'   - Calibration: This function is controlled exclusively by the `L` constant,
 #'   given by the `decay_value` parameter. Values provided in `cutoffs` are
 #'   ignored.
@@ -44,4 +47,5 @@
 #' and a minimum time below which all travel is perceived to be equally easy.
 #'   - Calibration: The transition region is transposable and symmetric around
 #'   the `cutoffs` parameter values, taking `decay_value` minutes to taper down
-#'   from one to zero.
+#'   from one to zero. `decay_value` must be a whole number of minutes between
+#'   1 and 59.

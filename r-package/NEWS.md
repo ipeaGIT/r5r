@@ -15,12 +15,14 @@
 - `accessibility()` with the `logistic`, `exponential` and `linear` decay functions ignored every trip longer than `max(cutoffs)`, although these curves still give weight to such trips, so accessibility was underestimated. `max_trip_duration` is now capped by `max(cutoffs)` only for the `step` function (the cap was introduced in r5r 2.1.0, [#348](https://github.com/ipeaGIT/r5r/issues/348)). Results of the other decay functions change and are now larger.
 - `accessibility()` now accepts fractional opportunity values (e.g. population interpolated onto a grid). They used to be truncated to integers, so any value below 1 counted as 0. Missing values are treated as 0, now with a warning, and infinite values raise an error.
 - `cutoffs` in `accessibility()` are now validated (whole numbers between 1 and 120, no duplicates) and sorted in ascending order. Unsorted or out-of-range values used to crash inside R5 with an uninformative Java error, and duplicated values returned duplicated rows.
+- In `accessibility()`, the `decay_value` of the `linear` decay function is now required to be a whole number of minutes between 1 and 59. Fractional values used to be silently truncated by R5, and values of 60 or more crashed inside R5.
 - A finite `max_fare` passed without a `fare_structure` now raises an error instead of being silently ignored.
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`, `max_trip_duration`, `time_window`, `percentiles`, `n_threads`, `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`, `suboptimal_minutes`) now reject non-integer values instead of silently truncating them.
 - `build_network()` now detects and aborts with an informative message when a cached `network.dat` triggers a silent internal rebuild that fails on high priority GTFS errors, instead of silently returning an unusable `r5r_network` that only fails later with an opaque `NullPointerException` on the first routing call.
 
 **Minor changes**
 
+- The documentation of the `fixed_exponential` decay function in `accessibility()` now states that its decay constant is applied to travel times in seconds, so per-minute constants must be divided by 60.
 - [#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when building GTFS network with multiple feeds.
 - [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)
 

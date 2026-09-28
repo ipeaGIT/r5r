@@ -267,8 +267,11 @@ parameter, leaving only the standard deviation to configure through the
 }
 \item \strong{Fixed Exponential} (\code{"fixed_exponential"}): \cr
 This function is of the form \code{exp(-Lt)} where L is a single fixed decay
-constant in the range (0, 1). It is constrained to be positive to ensure
-weights decrease (rather than grow) with increasing travel time.
+constant in the range (0, 1) and t is the travel time in \strong{seconds}. It is
+constrained to be positive to ensure weights decrease (rather than grow)
+with increasing travel time. Note that L is a per-second constant: to use a
+decay constant expressed per minute (e.g. from the literature), pass it
+divided by 60.
 \itemize{
 \item Calibration: This function is controlled exclusively by the \code{L} constant,
 given by the \code{decay_value} parameter. Values provided in \code{cutoffs} are
@@ -285,7 +288,8 @@ and a minimum time below which all travel is perceived to be equally easy.
 \itemize{
 \item Calibration: The transition region is transposable and symmetric around
 the \code{cutoffs} parameter values, taking \code{decay_value} minutes to taper down
-from one to zero.
+from one to zero. \code{decay_value} must be a whole number of minutes between
+1 and 59.
 }
 }
 }
