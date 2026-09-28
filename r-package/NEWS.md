@@ -14,6 +14,7 @@
 - `max_car_time` now caps car-only trips, as `max_walk_time` and `max_bike_time` already did for walk-only and bike-only trips. It used to apply only to car access/egress legs of transit trips.
 - A finite `max_fare` passed without a `fare_structure` now raises an error instead of being silently ignored.
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`, `max_trip_duration`, `time_window`, `percentiles`, `n_threads`, `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`, `suboptimal_minutes`) now reject non-integer values instead of silently truncating them.
+- `build_network()` now detects and aborts with an informative message when a cached `network.dat` triggers a silent internal rebuild that fails on high priority GTFS errors, instead of silently returning an unusable `r5r_network` that only fails later with an opaque `NullPointerException` on the first routing call.
 
 **Minor changes**
 
