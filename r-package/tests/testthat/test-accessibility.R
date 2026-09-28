@@ -176,6 +176,32 @@ test_that("max_trip_duration is capped by cutoffs only for the step function", {
   )
 })
 
+test_that("fractional and missing opportunities are handled", {
+  dest <- data.table::copy(points)
+  dest[, frac := 0.6]
+  dest[, one := 1]
+  dest[, pop_na := as.double(population)]
+  dest[1:5, pop_na := NA]
+  dest[, pop_zero := pop_na]
+  dest[1:5, pop_zero := 0]
+
+  # fractional values are not truncated
+  frac <- tester(destinations = dest, opportunities_colname = "frac", cutoffs = 30)
+  ones <- tester(destinations = dest, opportunities_colname = "one", cutoffs = 30)
+  expect_true(any(frac$accessibility > 0))
+  expect_equal(frac$accessibility, 0.6 * ones$accessibility)
+
+  # missing values are treated as 0, with a warning
+  expect_warning(
+    with_na <- tester(destinations = dest, opportunities_colname = "pop_na"),
+    "missing"
+  )
+  with_zero <- tester(destinations = dest, opportunities_colname = "pop_zero")
+  expect_equal(with_na$accessibility, with_zero$accessibility)
+
+  expect_error(tester(destinations = dest[, inf := Inf], opportunities_colname = "inf"))
+})
+
 test_that("unsorted cutoffs are sorted", {
   unsorted <- tester(cutoffs = c(30, 15))
   sorted <- tester(cutoffs = c(15, 30))

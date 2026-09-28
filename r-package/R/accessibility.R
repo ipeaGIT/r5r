@@ -261,7 +261,7 @@ accessibility <- function(r5r_network,
   to_lon_arr <- rJava::.jarray(destinations$lon)
 
   opportunities_names <- rJava::.jarray(opportunities_colnames)
-  opportunities_values <- rJava::.jarray(opportunities, "[I")
+  opportunities_values <- rJava::.jarray(opportunities, "[D")
 
   accessibility <- r5r_network$accessibility(
     from_id_arr,

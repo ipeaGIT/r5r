@@ -68,7 +68,7 @@ In this example, we will be calculating the number of schools and public healthc
 With the code below we compute the number of schools and healthcare accessible considering median of multiple travel time estimates departing every minute over a 60-minute time window, between 2pm and 3pm. The `accessibility()` function can calculate access to multiple opportunities in a single call, which is much more efficient and convenient than producing a travel time matrix of the study area and manually computing accessibility.
 
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning = FALSE}
 # read all points in the city
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
