@@ -258,7 +258,9 @@ public class TripLeg {
                         StreetPath streetPath = new StreetPath(lastState, network, false);
                         streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
 
-                        this.legDurationSeconds = streetSegment.duration;
+                        // keep the transfer duration computed by RAPTOR (distance / walk speed), which
+                        // is the one used to filter and rank trips; the re-routed street path is only
+                        // used for geometry, distance and edge ids
                         fillDataTransitLeg(network, OSMLinkIds, streetSegment);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);

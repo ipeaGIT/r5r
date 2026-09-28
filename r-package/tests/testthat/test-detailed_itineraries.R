@@ -283,9 +283,25 @@ test_that("detailed_itineraries output is correct", {
   df <- default_tester(r5r_network, origins, destinations,
                        max_trip_duration = max_trip_duration, shortest_path = FALSE)
 
-  max_duration <- data.table::setDT(df)[, sum(segment_duration), by = .(from_id, to_id, option)][, max(V1)]
+  expect_true(max(df$total_duration) <= max_trip_duration + 0.1)
 
-  expect_true(max_duration < max_trip_duration)
+  # a transfer walk through a stop with a steep stop-to-street link used to be
+  # reported with an elevation-costed duration (40 min for 119 m), pushing this
+  # option to 73 min under a 40-min limit
+  df <- detailed_itineraries(
+    r5r_network,
+    origins = pois[pois$id == "gasometer_museum", ],
+    destinations = pois[pois$id == "beira_rio_stadium", ],
+    mode = c("WALK", "TRANSIT"),
+    departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+    time_window = 1,
+    max_trip_duration = 40L,
+    shortest_path = FALSE,
+    drop_geometry = TRUE
+  )
+  expect_true(max(df$total_duration) <= 40.1)
+  totals <- df[, .(legs = sum(segment_duration + wait), total = total_duration[1]), by = option]
+  expect_true(all(abs(totals$legs - totals$total) <= 0.3))
 
   # expect an empty data.table as output when no routes are found between the pairs
 
