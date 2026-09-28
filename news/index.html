@@ -103,6 +103,10 @@
 <li>
 <code>cutoffs</code> in <code><a href="../reference/accessibility.html">accessibility()</a></code> are now validated (whole numbers between 1 and 120, no duplicates) and sorted in ascending order. Unsorted or out-of-range values used to crash inside R5 with an uninformative Java error, and duplicated values returned duplicated rows.</li>
 <li>In <code><a href="../reference/accessibility.html">accessibility()</a></code>, the <code>decay_value</code> of the <code>linear</code> decay function is now required to be a whole number of minutes between 1 and 59. Fractional values used to be silently truncated by R5, and values of 60 or more crashed inside R5.</li>
+<li>
+<code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> with <code>output_dir</code> silently overwrote the file of a repeated origin-destination pair (allowed since row-paired inputs may repeat ids), and crashed with a Java error on ids containing characters not allowed in file names (e.g. <code>/</code>). It now raises an informative error in both cases.</li>
+<li>
+<code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> with zero-row <code>origins</code> or <code>destinations</code> crashed inside Java. It now returns an empty result.</li>
 <li>A finite <code>max_fare</code> passed without a <code>fare_structure</code> now raises an error instead of being silently ignored.</li>
 <li>Integer arguments (<code>max_walk_time</code>, <code>max_bike_time</code>, <code>max_car_time</code>, <code>max_trip_duration</code>, <code>time_window</code>, <code>percentiles</code>, <code>n_threads</code>, <code>max_rides</code>, <code>max_lts</code>, <code>draws_per_minute</code>, <code>cutoffs</code>, <code>suboptimal_minutes</code>) now reject non-integer values instead of silently truncating them.</li>
 <li>
@@ -110,6 +114,7 @@
 </ul><p><strong>Minor changes</strong></p>
 <ul><li>The deprecated <code>r5r_core</code> argument is now the last argument of every function. It used to be the second one, so positional calls such as <code>travel_time_matrix(r5r_network, origins, destinations)</code> bound <code>origins</code> to <code>r5r_core</code> and failed with a misleading deprecation warning and error.</li>
 <li>Documentation fixes: <code>carspeed_scale</code> defaults to <code>1</code> (not <code>NULL</code>), and the unsupported modes <code>BICYCLE_RENT</code> and <code>CAR_PARK</code> were removed from the list of transport modes.</li>
+<li>The documentation of <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> now lists the output columns and how itinerary options are ordered, and describes the <code>osm_link_ids</code> columns correctly (<code>board_stop_id</code> and <code>alight_stop_id</code> are feed-prefixed GTFS stop ids, not OSM ids; <code>edge_id_list</code> is also added). It also explains that <code>shortest_path = TRUE</code> picks the itinerary with the shortest travel time among all departures within <code>time_window</code> (not the earliest arrival), and that <code>suboptimal_minutes</code> requires <code>shortest_path = FALSE</code> and no <code>fare_structure</code>.</li>
 <li>The documentation of the <code>fixed_exponential</code> decay function in <code><a href="../reference/accessibility.html">accessibility()</a></code> now states that its decay constant is applied to travel times in seconds, so per-minute constants must be divided by 60.</li>
 <li>
 <a href="https://github.com/ipeaGIT/r5r/pull/571" class="external-link">#571</a> Update logging when building GTFS network with multiple feeds.</li>

@@ -188,7 +188,8 @@ This argument emulates the real-life behaviour that makes people want to
 take a path that is technically not optimal in terms of travel time, for
 example, for some practical reasons (e.g. mode preference, safety, etc).
 In practice, the higher this value, the more itineraries will be returned
-in the final result.</p></dd>
+in the final result. Values above 0 can only be used when <code>shortest_path</code>
+is <code>FALSE</code> and <code>fare_structure</code> is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-max-walk-time">max_walk_time<a class="anchor" aria-label="anchor" href="#arg-max-walk-time"></a></dt>
@@ -260,7 +261,11 @@ information.</p></dd>
 <dt id="arg-shortest-path">shortest_path<a class="anchor" aria-label="anchor" href="#arg-shortest-path"></a></dt>
 <dd><p>A logical. Whether the function should only return the
 fastest itinerary between each origin and destination pair (the default)
-or multiple alternatives.</p></dd>
+or multiple alternatives. The fastest itinerary is the one with the
+shortest travel time, measured from its own departure time, among all
+departures within <code>time_window</code>. With a large <code>time_window</code>, it may depart
+later and arrive later than other itineraries; use <code>time_window = 1</code> to
+get the itinerary with the earliest arrival for a given departure time.</p></dd>
 
 
 <dt id="arg-all-to-all">all_to_all<a class="anchor" aria-label="anchor" href="#arg-all-to-all"></a></dt>
@@ -345,10 +350,14 @@ geometry column in the result.</p></dd>
 
 <dt id="arg-osm-link-ids">osm_link_ids<a class="anchor" aria-label="anchor" href="#arg-osm-link-ids"></a></dt>
 <dd><p>A logical. Whether the output should include additional
-columns: <code>osm_id_list</code> for the OSM ids of the road
-segments used along the trip geometry, and <code>board_stop_id</code> and
-<code>alight_stop_id</code> for the OSM ids of transit boarding and alighting stops.
-Defaults to <code>FALSE</code>.</p>
+columns: <code>osm_id_list</code> for the OSM ids of the road segments used along the
+trip geometry, <code>edge_id_list</code> for the ids of the internal street network
+edges used, and <code>board_stop_id</code> and <code>alight_stop_id</code> for the GTFS ids of
+transit boarding and alighting stops, prefixed by the feed name (e.g.
+<code>"poa_eptc:1649"</code>). <code>osm_id_list</code> and <code>edge_id_list</code> are character
+columns formatted as <code>"[id1, id2, ...]"</code>, and are <code>"[]"</code> for transit
+segments. Can only be <code>TRUE</code> when <code>drop_geometry</code> is <code>FALSE</code>. Defaults to
+<code>FALSE</code>.</p>
 <p>Keep in mind that <code>osm_id_list</code> will contain an id even if the route only
 uses a small stretch of the road (e.g. 5m of a 600m street segment). For
 more precision, use <code>edge_id_list</code>, which returns the exact internal edge
@@ -376,9 +385,28 @@ Please use the <code>r5r_network</code> argument instead.</p></dd>
     <h2>Value</h2>
     <p>When <code>drop_geometry</code> is <code>FALSE</code>, the function outputs a <code>LINESTRING sf</code> with detailed information on the itineraries between the specified
 origins and destinations. When <code>TRUE</code>, the output is a <code>data.table</code>. All
-distances are in meters and travel times are in minutes. If <code>output_dir</code>
-is not <code>NULL</code>, the function returns the path specified in that parameter,
-in which the <code>.csv</code> files containing the results are saved.</p>
+distances are in meters and travel times are in minutes. Each row is one
+segment (trip leg) of one itinerary, with the columns:</p><ul><li><p><code>from_id</code>, <code>from_lat</code>, <code>from_lon</code>, <code>to_id</code>, <code>to_lat</code>, <code>to_lon</code>: the
+origin and destination of the pair;</p></li>
+<li><p><code>option</code>: the itinerary number within the pair. Options are ordered
+with direct (non-transit) trips first, then by number of segments, then
+by duration, so <code>option</code> 1 is not necessarily the fastest one;</p></li>
+<li><p><code>departure_time</code>: the departure time of the itinerary (<code>"HH:MM:SS"</code>);</p></li>
+<li><p><code>total_duration</code>, <code>total_distance</code>: duration and distance of the whole
+itinerary;</p></li>
+<li><p><code>segment</code>, <code>mode</code>, <code>segment_duration</code>, <code>wait</code>, <code>distance</code>, <code>route</code>: the
+segment number, its transport mode, its in-motion duration, the waiting
+time before it, its distance and the transit route used (empty for
+non-transit segments);</p></li>
+<li><p><code>total_fare</code>, <code>cumulative_fare</code>: only when a <code>fare_structure</code> is used;</p></li>
+<li><p><code>osm_id_list</code>, <code>edge_id_list</code>, <code>board_stop_id</code>, <code>alight_stop_id</code>: only
+when <code>osm_link_ids</code> is <code>TRUE</code>;</p></li>
+<li><p><code>geometry</code>: only when <code>drop_geometry</code> is <code>FALSE</code>.</p></li>
+</ul><p>If <code>output_dir</code> is not <code>NULL</code>, the function returns the path specified in
+that parameter, in which the <code>.csv</code> files containing the results are
+saved. This function writes one file per origin-destination pair, named
+<code>from_&lt;origin id&gt;_to_&lt;destination id&gt;.csv</code>, so pairs must be unique and
+ids cannot contain characters that are not allowed in file names.</p>
     </div>
     <div id="transport-modes">
     <h2>Transport modes</h2>
