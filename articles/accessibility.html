@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9001</span>
       </span>
     </div>
 
@@ -183,7 +183,7 @@ maximum travel time cutoff. This is what we’ll be calculating in this
 vignette using the parameter <code>decay_function = "step"</code>.</p>
 <p>In this example, we will be calculating the number of schools and
 public healthcare facilities accessible by public transport within a
-travel time of up to 20 minutes. The sample data provided contains
+travel time of less than 20 minutes. The sample data provided contains
 information on the spatial distribution of schools in Porto Alegre in
 the <code>points$schools</code> column, and healthcare facilities in the
 <code>points$healthcare</code> column.</p>
@@ -272,7 +272,11 @@ time matrix</a>, which we calculate using <code>r5r</code>:</p>
 <p>Now to calculate a traditional cumulative opportunity metric like we
 did above, we just need to call the
 <code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> function, and pass our
-travel time matrix and land use data as input:</p>
+travel time matrix and land use data as input. Note that
+<code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff()</a></code> also counts trips that take exactly the
+cutoff time, while <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> only counts trips
+strictly shorter than the cutoff, so the two estimates can differ
+slightly:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility</span></span>
 <span><span class="va">access_edu</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span></span>

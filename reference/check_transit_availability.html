@@ -22,7 +22,7 @@ in the GTFS calendar.txt file."><meta property="og:image" content="/logo.png"><!
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9001</span>
       </span>
     </div>
 
@@ -96,10 +96,10 @@ in the GTFS <code>calendar.txt</code> file.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_transit_availability</span><span class="op">(</span></span>
 <span>  <span class="va">r5r_network</span>,</span>
-<span>  r5r_core <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  dates <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  start_date <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  end_date <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  end_date <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  r5r_core <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -109,10 +109,6 @@ in the GTFS <code>calendar.txt</code> file.</p>
 
 <dl><dt id="arg-r-r-network">r5r_network<a class="anchor" aria-label="anchor" href="#arg-r-r-network"></a></dt>
 <dd><p>A routable transport network created with <code><a href="build_network.html">build_network()</a></code>.</p></dd>
-
-
-<dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
-<dd><p>The <code>r5r_core</code> argument is deprecated as of r5r v2.3.0. Please use the <code>r5r_network</code> argument instead.</p></dd>
 
 
 <dt id="arg-dates">dates<a class="anchor" aria-label="anchor" href="#arg-dates"></a></dt>
@@ -131,6 +127,10 @@ with <code>end_date</code>.</p></dd>
 <dd><p>The end date for a continuous date range. Must be a single
 character string in "YYYY-MM-DD" format or a <code>Date</code> object. Must be used
 with <code>start_date</code>.</p></dd>
+
+
+<dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
+<dd><p>The <code>r5r_core</code> argument is deprecated as of r5r v2.3.0. Please use the <code>r5r_network</code> argument instead.</p></dd>
 
 </dl></div>
     <div id="value">

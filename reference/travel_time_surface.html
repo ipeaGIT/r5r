@@ -18,7 +18,7 @@ containing travel times from a specified point."><meta property="og:image" conte
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9001</span>
       </span>
     </div>
 
@@ -268,14 +268,14 @@ car speed for all the roads that fall within each polygon. In this case,
 the table must contain the columns <code>poly_id</code> with a unique id for
 each polygon, <code>scale</code> with the new speed scaling factors and
 <code>priority</code>, which is a number ranking which polygon should be
-considered in case of overlapping polygons. See more into in the
-<code>link to congestion vignette</code>.</p></dd>
+considered in case of overlapping polygons. See more info in the
+scenarios vignette (<code><a href="../articles/scenarios.html">vignette("scenarios", package = "r5r")</a></code>).</p></dd>
 
 
 <dt id="arg-carspeed-scale">carspeed_scale<a class="anchor" aria-label="anchor" href="#arg-carspeed-scale"></a></dt>
-<dd><p>Numeric. The default car speed to use for road segments
-not specified in <code>new_carspeeds</code>. By default, it is <code>NULL</code> and the speeds
-of the unlisted roads are kept unchanged.</p></dd>
+<dd><p>Numeric. The scaling factor applied to the car speed
+of road segments not specified in <code>new_carspeeds</code>. Defaults to <code>1</code>,
+which keeps the speeds of the unlisted roads unchanged.</p></dd>
 
 
 <dt id="arg-new-lts">new_lts<a class="anchor" aria-label="anchor" href="#arg-new-lts"></a></dt>
@@ -331,8 +331,7 @@ synchronized among all active threads.</p></dd>
 include:</p><ul><li><p><strong>Transit modes:</strong> <code>TRAM</code>, <code>SUBWAY</code>, <code>RAIL</code>, <code>BUS</code>, <code>FERRY</code>, <code>CABLE_CAR</code>,
 <code>GONDOLA</code>, <code>FUNICULAR</code>. The option <code>TRANSIT</code> automatically considers all
 public transport modes available.</p></li>
-<li><p><strong>Non transit modes:</strong> <code>WALK</code>, <code>BICYCLE</code>, <code>CAR</code>, <code>BICYCLE_RENT</code>,
-<code>CAR_PARK</code>.</p></li>
+<li><p><strong>Non transit modes:</strong> <code>WALK</code>, <code>BICYCLE</code>, <code>CAR</code>.</p></li>
 </ul></div>
     <div id="level-of-traffic-stress-lts-">
     <h2>Level of Traffic Stress (LTS)</h2>

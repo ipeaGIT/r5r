@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">r5r</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0.9001</span>
       </span>
     </div>
 
@@ -96,12 +96,22 @@
 <code>FERRY</code> was missing from the list of transit modes that trigger the check for transit services on the departure date.</li>
 <li>
 <code>max_car_time</code> now caps car-only trips, as <code>max_walk_time</code> and <code>max_bike_time</code> already did for walk-only and bike-only trips. It used to apply only to car access/egress legs of transit trips.</li>
+<li>
+<code><a href="../reference/accessibility.html">accessibility()</a></code> with the <code>logistic</code>, <code>exponential</code> and <code>linear</code> decay functions ignored every trip longer than <code>max(cutoffs)</code>, although these curves still give weight to such trips, so accessibility was underestimated. <code>max_trip_duration</code> is now capped by <code>max(cutoffs)</code> only for the <code>step</code> function (the cap was introduced in r5r 2.1.0, <a href="https://github.com/ipeaGIT/r5r/issues/348" class="external-link">#348</a>). Results of the other decay functions change and are now larger.</li>
+<li>
+<code><a href="../reference/accessibility.html">accessibility()</a></code> now accepts fractional opportunity values (e.g. population interpolated onto a grid). They used to be truncated to integers, so any value below 1 counted as 0. Missing values are treated as 0, now with a warning, and infinite values raise an error.</li>
+<li>
+<code>cutoffs</code> in <code><a href="../reference/accessibility.html">accessibility()</a></code> are now validated (whole numbers between 1 and 120, no duplicates) and sorted in ascending order. Unsorted or out-of-range values used to crash inside R5 with an uninformative Java error, and duplicated values returned duplicated rows.</li>
+<li>In <code><a href="../reference/accessibility.html">accessibility()</a></code>, the <code>decay_value</code> of the <code>linear</code> decay function is now required to be a whole number of minutes between 1 and 59. Fractional values used to be silently truncated by R5, and values of 60 or more crashed inside R5.</li>
 <li>A finite <code>max_fare</code> passed without a <code>fare_structure</code> now raises an error instead of being silently ignored.</li>
 <li>Integer arguments (<code>max_walk_time</code>, <code>max_bike_time</code>, <code>max_car_time</code>, <code>max_trip_duration</code>, <code>time_window</code>, <code>percentiles</code>, <code>n_threads</code>, <code>max_rides</code>, <code>max_lts</code>, <code>draws_per_minute</code>, <code>cutoffs</code>, <code>suboptimal_minutes</code>) now reject non-integer values instead of silently truncating them.</li>
 <li>
 <code><a href="../reference/build_network.html">build_network()</a></code> now detects and aborts with an informative message when a cached <code>network.dat</code> triggers a silent internal rebuild that fails on high priority GTFS errors, instead of silently returning an unusable <code>r5r_network</code> that only fails later with an opaque <code>NullPointerException</code> on the first routing call.</li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>
+<ul><li>The deprecated <code>r5r_core</code> argument is now the last argument of every function. It used to be the second one, so positional calls such as <code>travel_time_matrix(r5r_network, origins, destinations)</code> bound <code>origins</code> to <code>r5r_core</code> and failed with a misleading deprecation warning and error.</li>
+<li>Documentation fixes: <code>carspeed_scale</code> defaults to <code>1</code> (not <code>NULL</code>), and the unsupported modes <code>BICYCLE_RENT</code> and <code>CAR_PARK</code> were removed from the list of transport modes.</li>
+<li>The documentation of the <code>fixed_exponential</code> decay function in <code><a href="../reference/accessibility.html">accessibility()</a></code> now states that its decay constant is applied to travel times in seconds, so per-minute constants must be divided by 60.</li>
+<li>
 <a href="https://github.com/ipeaGIT/r5r/pull/571" class="external-link">#571</a> Update logging when building GTFS network with multiple feeds.</li>
 <li>
 <a href="https://github.com/ipeaGIT/r5r/pull/568" class="external-link">#568</a> Update logging for direct trip router. Closed <a href="https://github.com/ipeaGIT/r5r/issues/557" class="external-link">#557</a>
@@ -195,7 +205,7 @@
 <li>By using the JDK 21, this version of r5r also fixed an incompatibility with MAC ARM processors. Closed <a href="https://github.com/ipeaGIT/r5r/issues/315" class="external-link">#315</a>
 </li>
 </ul><p><strong>Minor changes</strong></p>
-<ul><li>In the <code><a href="../reference/accessibility.html">accessibility()</a></code> function, the value of <code>max_trip_duration</code> is now capped by the max value passed to the <code>cutoffs</code> parameter. Closes <a href="https://github.com/ipeaGIT/r5r/issues/348" class="external-link">#342</a>.</li>
+<ul><li>In the <code><a href="../reference/accessibility.html">accessibility()</a></code> function, the value of <code>max_trip_duration</code> is now capped by the max value passed to the <code>cutoffs</code> parameter. Closes <a href="https://github.com/ipeaGIT/r5r/issues/348" class="external-link">#348</a>.</li>
 <li>Updated documentation of parameter <code>max_walk_time</code> to make it clear that in walk-only trips, whenever <code>max_walk_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
 </li>
 <li>Updated documentation of parameter <code>max_bike_time</code> to make it clear that in bicycle-only trips, whenever <code>max_bike_time</code> differs from <code>max_trip_duration</code>, the lowest value is considered. Closes <a href="https://github.com/ipeaGIT/r5r/issues/353" class="external-link">#353</a>
