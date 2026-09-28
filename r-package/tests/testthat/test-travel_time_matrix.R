@@ -325,6 +325,14 @@ test_that("a finite max_fare requires a fare_structure", {
   expect_s3_class(tester(max_fare = Inf, fare_structure = NULL), "data.table")
 })
 
+test_that("origins and destinations can be passed positionally", {
+  expect_no_warning(
+    ttm <- travel_time_matrix(r5r_network, pois, pois, mode = "WALK",
+                              departure_datetime = departure_datetime)
+  )
+  expect_s3_class(ttm, "data.table")
+})
+
 test_that("max_car_time caps car-only trips", {
   ttm <- travel_time_matrix(
     r5r_network,

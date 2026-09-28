@@ -22,6 +22,8 @@
 
 **Minor changes**
 
+- The deprecated `r5r_core` argument is now the last argument of every function. It used to be the second one, so positional calls such as `travel_time_matrix(r5r_network, origins, destinations)` bound `origins` to `r5r_core` and failed with a misleading deprecation warning and error.
+- Documentation fixes: `carspeed_scale` defaults to `1` (not `NULL`), and the unsupported modes `BICYCLE_RENT` and `CAR_PARK` were removed from the list of transport modes.
 - The documentation of the `fixed_exponential` decay function in `accessibility()` now states that its decay constant is applied to travel times in seconds, so per-minute constants must be divided by 60.
 - [#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when building GTFS network with multiple feeds.
 - [#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for direct trip router. Closed [#557](https://github.com/ipeaGIT/r5r/issues/557)

@@ -6,18 +6,15 @@
 \usage{
 setup_fare_structure(
   r5r_network,
-  r5r_core = deprecated(),
   base_fare,
   by = "MODE",
   debug_path = NULL,
-  debug_info = NULL
+  debug_info = NULL,
+  r5r_core = deprecated()
 )
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
-
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
 
 \item{base_fare}{A numeric. A base value used to populate the fare
 structure.}
@@ -58,6 +55,9 @@ calculating the routes. This imposes a performance penalty when tracking
 debug information (but has the positive effect of returning a larger
 sample of itineraries, which might help finding some implementation issues
 on the fare structure).}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A fare structure object.

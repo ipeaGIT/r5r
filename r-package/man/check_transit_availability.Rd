@@ -6,16 +6,14 @@
 \usage{
 check_transit_availability(
   r5r_network,
-  r5r_core = deprecated(),
   dates = NULL,
   start_date = NULL,
-  end_date = NULL
+  end_date = NULL,
+  r5r_core = deprecated()
 )
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{build_network()}.}
-
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0. Please use the \code{r5r_network} argument instead.}
 
 \item{dates}{A vector of specific dates to be checked. Can be character strings
 in #'   "YYYY-MM-DD" format, or objects of class \code{Date}. This argument
@@ -28,6 +26,8 @@ with \code{end_date}.}
 \item{end_date}{The end date for a continuous date range. Must be a single
 character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used
 with \code{start_date}.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0. Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with four columns: \code{date}, \code{total_services},

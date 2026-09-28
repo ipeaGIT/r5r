@@ -145,12 +145,12 @@ car speed for all the roads that fall within each polygon. In this case,
 the table must contain the columns \code{poly_id} with a unique id for
 each polygon, \code{scale} with the new speed scaling factors and
 \code{priority}, which is a number ranking which polygon should be
-considered in case of overlapping polygons. See more into in the
-\verb{link to congestion vignette}.}
+considered in case of overlapping polygons. See more info in the
+scenarios vignette (\code{vignette("scenarios", package = "r5r")}).}
 
-\item{carspeed_scale}{Numeric. The default car speed to use for road segments
-not specified in \code{new_carspeeds}. By default, it is \code{NULL} and the speeds
-of the unlisted roads are kept unchanged.}
+\item{carspeed_scale}{Numeric. The scaling factor applied to the car speed
+of road segments not specified in \code{new_carspeeds}. Defaults to \code{1},
+which keeps the speeds of the unlisted roads unchanged.}
 
 \item{new_lts}{A \code{data.frame} specifying the new LTS levels for each OSM edge
 id. The table must contain columns \code{osm_id} and \code{lts}.
@@ -198,8 +198,7 @@ include:
 \item \strong{Transit modes:} \code{TRAM}, \code{SUBWAY}, \code{RAIL}, \code{BUS}, \code{FERRY}, \code{CABLE_CAR},
 \code{GONDOLA}, \code{FUNICULAR}. The option \code{TRANSIT} automatically considers all
 public transport modes available.
-\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}, \code{BICYCLE_RENT},
-\code{CAR_PARK}.
+\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}.
 }
 }
 

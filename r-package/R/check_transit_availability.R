@@ -59,10 +59,10 @@
 #' stop_r5(r5r_network)
 #' @export
 check_transit_availability <- function(r5r_network,
-                                       r5r_core = deprecated(),
                                        dates = NULL,
                                        start_date = NULL,
-                                       end_date = NULL
+                                       end_date = NULL,
+                                       r5r_core = deprecated()
                                        ) {
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
