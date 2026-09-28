@@ -53,12 +53,15 @@ setClass("travel_time_surface", slots=list(
 #'        to _another_ 15 minutes to reach the destination after leaving
 #'        transit). Defaults to `Inf`, no limit.
 #' @param max_car_time An integer. The maximum driving time (in minutes) to
-#'        access and egress the transit network. Defaults to no restrictions, as
-#'        long as `max_trip_duration` is respected. The max time is considered
+#'        access and egress the transit network, or to complete car-only
+#'        trips. Defaults to no restrictions, as long as `max_trip_duration`
+#'        is respected. The max time is considered
 #'        separately for each leg (e.g. if you set `max_car_time` to 15 minutes,
 #'        you could potentially drive up to 15 minutes to reach transit, and up
 #'        to _another_ 15 minutes to reach the destination after leaving transit).
-#'        Defaults to `Inf`, no limit.
+#'        Defaults to `Inf`, no limit. In car-only trips, whenever
+#'        `max_car_time` differs from `max_trip_duration`, the lowest value is
+#'        considered.
 #' @param max_trip_duration An integer. The maximum trip duration in minutes.
 #'        Defaults to 120 minutes (2 hours).
 #' @param walk_speed A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
@@ -155,7 +158,8 @@ travel_time_surface <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
   set_time_window(r5r_network, time_window)

@@ -220,7 +220,8 @@ accessibility <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
 

@@ -203,7 +203,8 @@ detailed_itineraries <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
   shortest_path <- assign_shortest_path(shortest_path)
   drop_geometry <- assign_drop_geometry(drop_geometry)

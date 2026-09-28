@@ -268,7 +268,8 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
 assign_max_trip_duration <- function(max_trip_duration,
                                      modes,
                                      max_walk_time,
-                                     max_bike_time) {
+                                     max_bike_time,
+                                     max_car_time) {
   checkmate::assert_count(max_trip_duration, positive = TRUE)
 
   max_trip_duration <- as.integer(max_trip_duration)
@@ -279,6 +280,9 @@ assign_max_trip_duration <- function(max_trip_duration,
     }
     if (modes$direct_modes == "BICYCLE" & max_bike_time < max_trip_duration) {
       max_trip_duration <- max_bike_time
+    }
+    if (modes$direct_modes == "CAR" & max_car_time < max_trip_duration) {
+      max_trip_duration <- max_car_time
     }
   }
 

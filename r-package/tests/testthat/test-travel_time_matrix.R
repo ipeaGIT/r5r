@@ -325,6 +325,19 @@ test_that("a finite max_fare requires a fare_structure", {
   expect_s3_class(tester(max_fare = Inf, fare_structure = NULL), "data.table")
 })
 
+test_that("max_car_time caps car-only trips", {
+  ttm <- travel_time_matrix(
+    r5r_network,
+    origins = pois,
+    destinations = pois,
+    mode = "CAR",
+    departure_datetime = departure_datetime,
+    max_car_time = 10
+  )
+  expect_true(nrow(ttm) > 0)
+  expect_true(max(ttm$travel_time_p50, na.rm = TRUE) <= 10)
+})
+
 test_that("integer arguments reject non-integer values", {
   expect_error(tester(max_walk_time = 15.5))
   expect_error(tester(max_bike_time = 15.5))

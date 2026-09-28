@@ -179,7 +179,8 @@ arrival_travel_time_matrix <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
   set_time_window(r5r_network, max_trip_duration)
