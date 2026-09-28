@@ -193,6 +193,7 @@ accessibility <- function(r5r_network,
   }
 
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   decay_list <- assign_decay_function(decay_function, decay_value)
 

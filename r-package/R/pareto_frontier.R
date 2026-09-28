@@ -144,6 +144,7 @@ pareto_frontier <- function(r5r_network,
 
   checkmate::assert_class(r5r_network, "r5r_network")
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   max_walk_time <- assign_max_street_time(
     max_walk_time,
