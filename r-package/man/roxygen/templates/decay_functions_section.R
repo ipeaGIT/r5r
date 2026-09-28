@@ -33,8 +33,7 @@
 #' decay constant expressed per minute (e.g. from the literature), pass it
 #' divided by 60.
 #'   - Calibration: This function is controlled exclusively by the `L` constant,
-#'   given by the `decay_value` parameter. Values provided in `cutoffs` are
-#'   ignored.
+#'   given by the `decay_value` parameter. `cutoffs` must be `NULL`.
 #'
 #' - **Half-life Exponential Decay** (`"exponential"`): \cr
 #' This is similar to the fixed-exponential option above, but in this case the

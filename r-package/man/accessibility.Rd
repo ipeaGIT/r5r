@@ -97,14 +97,15 @@ parameters.}
 \item{cutoffs}{A numeric vector (maximum length of 12). This parameter has
 different effects for each decay function: it indicates the cutoff times
 in minutes when calculating cumulative opportunities accessibility with
-the \code{step} function, the median (or inflection point) of the decay curves
-in the \code{logistic} and \code{linear} functions, and the half-life in the
-\code{exponential} function. It has no effect when using the
-\code{fixed_exponential} function. Values must be whole numbers between 1 and
-120 minutes (R5's limit) and are sorted in ascending order.}
+the \code{step} function (only trips strictly shorter than the cutoff are
+counted), the median (or inflection point) of the decay curves in the
+\code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
+function. It must be \code{NULL} when using the \code{fixed_exponential} function.
+Values must be whole numbers between 1 and 120 minutes (R5's limit) and
+are sorted in ascending order.}
 
 \item{decay_value}{A number. Extra parameter to be passed to the selected
-\code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
+\code{decay_function}. Must be \code{NULL} when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
@@ -226,13 +227,17 @@ RAM memory.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.
-This \code{data.table} contain columns listing the origin id, the type of
-opportunities to which accessibility was calculated, the travel time
-percentile considered in the accessibility estimate and the specified
-cutoff values (except in when \code{decay_function} is \code{fixed_exponential}, in
-which case the \code{cutoff} parameter is not used). If \code{output_dir} is not
-\code{NULL}, the function returns the path specified in that parameter, in
-which the \code{.csv} files containing the results are saved.
+This \code{data.table} contains the columns \code{id} (origin id), \code{opportunity}
+(the type of opportunities to which accessibility was calculated),
+\code{percentile} (the travel time percentile considered in the estimate),
+\code{cutoff} (the specified cutoff values, except when \code{decay_function} is
+\code{fixed_exponential}, in which case the \code{cutoff} parameter is not used) and
+\code{accessibility} (the accessibility estimate). Origins that cannot be
+snapped to the street network get an accessibility of 0 (see
+\code{\link[=find_snap]{find_snap()}}). If \code{output_dir} is not \code{NULL}, the function returns the
+path specified in that parameter, in which the \code{.csv} files containing
+the results are saved. With \code{fixed_exponential}, these files keep a
+\code{cutoff} column filled with the placeholder value \code{0}.
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.
@@ -274,8 +279,7 @@ decay constant expressed per minute (e.g. from the literature), pass it
 divided by 60.
 \itemize{
 \item Calibration: This function is controlled exclusively by the \code{L} constant,
-given by the \code{decay_value} parameter. Values provided in \code{cutoffs} are
-ignored.
+given by the \code{decay_value} parameter. \code{cutoffs} must be \code{NULL}.
 }
 \item \strong{Half-life Exponential Decay} (\code{"exponential"}): \cr
 This is similar to the fixed-exponential option above, but in this case the

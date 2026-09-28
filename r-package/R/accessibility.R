@@ -25,23 +25,28 @@
 #' @param cutoffs A numeric vector (maximum length of 12). This parameter has
 #'   different effects for each decay function: it indicates the cutoff times
 #'   in minutes when calculating cumulative opportunities accessibility with
-#'   the `step` function, the median (or inflection point) of the decay curves
-#'   in the `logistic` and `linear` functions, and the half-life in the
-#'   `exponential` function. It has no effect when using the
-#'   `fixed_exponential` function. Values must be whole numbers between 1 and
-#'   120 minutes (R5's limit) and are sorted in ascending order.
+#'   the `step` function (only trips strictly shorter than the cutoff are
+#'   counted), the median (or inflection point) of the decay curves in the
+#'   `logistic` and `linear` functions, and the half-life in the `exponential`
+#'   function. It must be `NULL` when using the `fixed_exponential` function.
+#'   Values must be whole numbers between 1 and 120 minutes (R5's limit) and
+#'   are sorted in ascending order.
 #' @param decay_value A number. Extra parameter to be passed to the selected
-#'   `decay_function`. Has no effects when `decay_function` is either `step` or
+#'   `decay_function`. Must be `NULL` when `decay_function` is either `step` or
 #'   `exponential`.
 #'
 #' @return A `data.table` with accessibility estimates for all origin points.
-#'   This `data.table` contain columns listing the origin id, the type of
-#'   opportunities to which accessibility was calculated, the travel time
-#'   percentile considered in the accessibility estimate and the specified
-#'   cutoff values (except in when `decay_function` is `fixed_exponential`, in
-#'   which case the `cutoff` parameter is not used). If `output_dir` is not
-#'   `NULL`, the function returns the path specified in that parameter, in
-#'   which the `.csv` files containing the results are saved.
+#'   This `data.table` contains the columns `id` (origin id), `opportunity`
+#'   (the type of opportunities to which accessibility was calculated),
+#'   `percentile` (the travel time percentile considered in the estimate),
+#'   `cutoff` (the specified cutoff values, except when `decay_function` is
+#'   `fixed_exponential`, in which case the `cutoff` parameter is not used) and
+#'   `accessibility` (the accessibility estimate). Origins that cannot be
+#'   snapped to the street network get an accessibility of 0 (see
+#'   [find_snap()]). If `output_dir` is not `NULL`, the function returns the
+#'   path specified in that parameter, in which the `.csv` files containing
+#'   the results are saved. With `fixed_exponential`, these files keep a
+#'   `cutoff` column filled with the placeholder value `0`.
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section

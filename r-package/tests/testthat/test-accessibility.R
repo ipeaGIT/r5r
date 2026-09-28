@@ -106,7 +106,7 @@ test_that("adequately raises errors", {
   numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
   expect_error(tester(departure_datetime = "13-05-2019 14:00:00"))
-  expect_error(tester(numeric_datetime))
+  expect_error(tester(departure_datetime = numeric_datetime))
 
 
 
@@ -135,7 +135,7 @@ test_that("adequately raises errors", {
   expect_error(tester(percentiles = 1:6))
 
   # decay_function
-  expect_error(tester(decay_function = "fixed_exponential"))
+  expect_error(tester(decay_function = "fixed_exponential", cutoffs = NULL))
   expect_error(tester(decay_function = "bananas"))
   expect_error(tester(opportunities_colname = "bananas"))
   expect_error(tester(cutoffs = "bananas"))

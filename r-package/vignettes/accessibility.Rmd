@@ -63,7 +63,7 @@ r5r_network <- build_network(data_path)
 
 There are different types of accessibility metrics. One of the simplest ones is the cumulative-opportunity metric, which counts the number of opportunities accessible from each location considering a maximum travel time cutoff. This is what we'll be calculating in this vignette using the parameter `decay_function = "step"`.
 
-In this example, we will be calculating the number of schools and public healthcare facilities accessible by public transport within a travel time of up to 20 minutes. The sample data provided contains information on the spatial distribution of schools in Porto Alegre in the `points$schools` column, and healthcare facilities in the `points$healthcare` column. 
+In this example, we will be calculating the number of schools and public healthcare facilities accessible by public transport within a travel time of less than 20 minutes. The sample data provided contains information on the spatial distribution of schools in Porto Alegre in the `points$schools` column, and healthcare facilities in the `points$healthcare` column. 
 
 With the code below we compute the number of schools and healthcare accessible considering median of multiple travel time estimates departing every minute over a 60-minute time window, between 2pm and 3pm. The `accessibility()` function can calculate access to multiple opportunities in a single call, which is much more efficient and convenient than producing a travel time matrix of the study area and manually computing accessibility.
 
@@ -121,7 +121,7 @@ ttm <- r5r::travel_time_matrix(
 
 head(ttm)
 ```
-Now to calculate a traditional cumulative opportunity metric like we did above, we just need to call the `accessibility::cumulative_cutoff()` function, and pass our travel time matrix and land use data as input:
+Now to calculate a traditional cumulative opportunity metric like we did above, we just need to call the `accessibility::cumulative_cutoff()` function, and pass our travel time matrix and land use data as input. Note that `cumulative_cutoff()` also counts trips that take exactly the cutoff time, while `r5r::accessibility()` only counts trips strictly shorter than the cutoff, so the two estimates can differ slightly:
 
 ```{r, message = FALSE}
 # calculate accessibility
