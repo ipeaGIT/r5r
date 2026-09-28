@@ -498,7 +498,7 @@ public class R5RCore {
 
     public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                     String[] toIds, double[] toLats, double[] toLons,
-                                    String[] opportunities, int[][] opportunityCounts,
+                                    String[] opportunities, double[][] opportunityCounts,
                                     String decayFunction, double decayValue,
                                     String directModes, String transitModes, String accessModes, String egressModes,
                                     String date, String departureTime,

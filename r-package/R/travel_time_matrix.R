@@ -112,7 +112,6 @@
 #'
 #' @export
 travel_time_matrix <- function(r5r_network,
-                               r5r_core = deprecated(),
                                origins,
                                destinations,
                                mode = "WALK",
@@ -137,7 +136,8 @@ travel_time_matrix <- function(r5r_network,
                                n_threads = Inf,
                                verbose = FALSE,
                                progress = FALSE,
-                               output_dir = NULL) {
+                               output_dir = NULL,
+                               r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {

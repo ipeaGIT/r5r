@@ -46,7 +46,7 @@ public abstract class R5Process<T, A> {
     protected double[] toLats;
     protected double[] toLons;
     protected String[] opportunities;
-    protected int[][] opportunityCounts;
+    protected double[][] opportunityCounts;
     protected int nDestinations;
 
     protected FreeFormPointSet[] destinationPoints;
@@ -128,7 +128,7 @@ public abstract class R5Process<T, A> {
                 for (double toLon : toLons) {
                     pointStream.writeDouble(toLon);
                 }
-                for (int opportunity : opportunityCounts[i]) {
+                for (double opportunity : opportunityCounts[i]) {
                     pointStream.writeDouble(opportunity);
                 }
             } catch (IOException e) {
@@ -152,7 +152,7 @@ public abstract class R5Process<T, A> {
     }
 
     public void setDestinations(String[] toIds, double[] toLats, double[] toLons) {
-        int[][] opportunityCounts = new int[1][toIds.length];
+        double[][] opportunityCounts = new double[1][toIds.length];
         for (int i = 0; i < toIds.length; i++) opportunityCounts[0][i] = 0;
 
         String[] opportunities = new String[]{"all"};
@@ -160,7 +160,7 @@ public abstract class R5Process<T, A> {
         setDestinations(toIds, toLats, toLons, opportunities, opportunityCounts);
     }
 
-    public void setDestinations(String[] toIds, double[] toLats, double[] toLons, String[] opportunities, int[][] opportunityCounts) {
+    public void setDestinations(String[] toIds, double[] toLats, double[] toLons, String[] opportunities, double[][] opportunityCounts) {
         this.toIds = toIds;
         this.toLats = toLats;
         this.toLons = toLons;

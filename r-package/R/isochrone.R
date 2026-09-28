@@ -164,7 +164,6 @@
 #'
 #' @export
 isochrone <- function(r5r_network,
-                      r5r_core = deprecated(),
                       origins,
                       mode = "transit",
                       mode_egress = "walk",
@@ -188,7 +187,8 @@ isochrone <- function(r5r_network,
                       verbose = FALSE,
                       progress = TRUE,
                       # no longer used
-                      sample_size = deprecated()
+                      sample_size = deprecated(),
+                      r5r_core = deprecated()
                       ){
 
 

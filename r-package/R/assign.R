@@ -319,9 +319,22 @@ assign_opportunities <- function(destinations, opportunities_colnames) {
   opportunities_data <- lapply(
     opportunities_colnames,
     function(colname) {
-      checkmate::assert_numeric(destinations[[colname]])
+      checkmate::assert_numeric(
+        destinations[[colname]],
+        finite = TRUE,
+        .var.name = colname
+      )
 
-      opp_array <- as.integer(destinations[[colname]])
+      opp_array <- as.double(destinations[[colname]])
+
+      # R5 cannot handle missing values, which would turn every sum into NaN
+      if (anyNA(opp_array)) {
+        cli::cli_warn(
+          "{.arg {colname}} has {sum(is.na(opp_array))} missing value{?s}, treated as 0."
+        )
+        opp_array[is.na(opp_array)] <- 0
+      }
+
       opp_array <- rJava::.jarray(opp_array)
 
       opp_array
@@ -389,6 +402,16 @@ assign_decay_function <- function(decay_function, decay_value) {
         decay_function, "."
       )
     }
+  }
+
+  # R5 takes the linear width as whole minutes, under one hour
+  if (decay_function == "linear") {
+    checkmate::assert_integerish(
+      decay_value,
+      lower = 1,
+      upper = 59,
+      .var.name = "decay_value"
+    )
   }
 
   decay_function <- toupper(decay_function)

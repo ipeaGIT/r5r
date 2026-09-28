@@ -73,11 +73,11 @@
 #'
 #' @export
 setup_fare_structure <- function(r5r_network,
-                                 r5r_core = deprecated(),
                                  base_fare,
                                  by = "MODE",
                                  debug_path = NULL,
-                                 debug_info = NULL) {
+                                 debug_info = NULL,
+                                 r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {

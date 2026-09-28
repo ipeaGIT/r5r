@@ -6,7 +6,6 @@
 \usage{
 pareto_frontier(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   destinations,
   mode = c("WALK", "TRANSIT"),
@@ -27,14 +26,12 @@ pareto_frontier(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  output_dir = NULL
+  output_dir = NULL,
+  r5r_core = deprecated()
 )
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
-
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
 
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -166,6 +163,9 @@ function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents \code{r5r} from loading them to
 RAM memory.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with the travel time and monetary cost Pareto frontier
@@ -191,8 +191,7 @@ include:
 \item \strong{Transit modes:} \code{TRAM}, \code{SUBWAY}, \code{RAIL}, \code{BUS}, \code{FERRY}, \code{CABLE_CAR},
 \code{GONDOLA}, \code{FUNICULAR}. The option \code{TRANSIT} automatically considers all
 public transport modes available.
-\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}, \code{BICYCLE_RENT},
-\code{CAR_PARK}.
+\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}.
 }
 }
 

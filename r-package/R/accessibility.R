@@ -25,22 +25,28 @@
 #' @param cutoffs A numeric vector (maximum length of 12). This parameter has
 #'   different effects for each decay function: it indicates the cutoff times
 #'   in minutes when calculating cumulative opportunities accessibility with
-#'   the `step` function, the median (or inflection point) of the decay curves
-#'   in the `logistic` and `linear` functions, and the half-life in the
-#'   `exponential` function. It has no effect when using the
-#'   `fixed_exponential` function.
+#'   the `step` function (only trips strictly shorter than the cutoff are
+#'   counted), the median (or inflection point) of the decay curves in the
+#'   `logistic` and `linear` functions, and the half-life in the `exponential`
+#'   function. It must be `NULL` when using the `fixed_exponential` function.
+#'   Values must be whole numbers between 1 and 120 minutes (R5's limit) and
+#'   are sorted in ascending order.
 #' @param decay_value A number. Extra parameter to be passed to the selected
-#'   `decay_function`. Has no effects when `decay_function` is either `step` or
+#'   `decay_function`. Must be `NULL` when `decay_function` is either `step` or
 #'   `exponential`.
 #'
 #' @return A `data.table` with accessibility estimates for all origin points.
-#'   This `data.table` contain columns listing the origin id, the type of
-#'   opportunities to which accessibility was calculated, the travel time
-#'   percentile considered in the accessibility estimate and the specified
-#'   cutoff values (except in when `decay_function` is `fixed_exponential`, in
-#'   which case the `cutoff` parameter is not used). If `output_dir` is not
-#'   `NULL`, the function returns the path specified in that parameter, in
-#'   which the `.csv` files containing the results are saved.
+#'   This `data.table` contains the columns `id` (origin id), `opportunity`
+#'   (the type of opportunities to which accessibility was calculated),
+#'   `percentile` (the travel time percentile considered in the estimate),
+#'   `cutoff` (the specified cutoff values, except when `decay_function` is
+#'   `fixed_exponential`, in which case the `cutoff` parameter is not used) and
+#'   `accessibility` (the accessibility estimate). Origins that cannot be
+#'   snapped to the street network get an accessibility of 0 (see
+#'   [find_snap()]). If `output_dir` is not `NULL`, the function returns the
+#'   path specified in that parameter, in which the `.csv` files containing
+#'   the results are saved. With `fixed_exponential`, these files keep a
+#'   `cutoff` column filled with the placeholder value `0`.
 #'
 #' @template decay_functions_section
 #' @template transport_modes_section
@@ -122,7 +128,6 @@
 #'
 #' @export
 accessibility <- function(r5r_network,
-                          r5r_core = deprecated(),
                           origins,
                           destinations,
                           opportunities_colnames = "opportunities",
@@ -151,7 +156,8 @@ accessibility <- function(r5r_network,
                           n_threads = Inf,
                           verbose = FALSE,
                           progress = FALSE,
-                          output_dir = NULL) {
+                          output_dir = NULL,
+                          r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
@@ -188,14 +194,18 @@ accessibility <- function(r5r_network,
 
   r5r_network <- r5r_network@jcore
 
+  decay_list <- assign_decay_function(decay_function, decay_value)
+
   # cap trip duration with cutoffs
   set_cutoffs(r5r_network, cutoffs, decay_function)
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if(!is.null(cutoffs)){
-    max_trip_duration <- ifelse(max_trip_duration > max(cutoffs), max(cutoffs), max_trip_duration)
-
     if(max_trip_duration < max(cutoffs)){stop("'max_trip_duration' cannot be shorter than 'max(cutoffs)'")}
+
+    # only the step function ignores trips longer than the cutoffs; the other
+    # decay functions still weight them
+    if (decay_function == "step") max_trip_duration <- max(cutoffs)
   }
 
   max_walk_time <- assign_max_street_time(
@@ -223,9 +233,6 @@ accessibility <- function(r5r_network,
     max_bike_time,
     max_car_time
   )
-
-
-  decay_list <- assign_decay_function(decay_function, decay_value)
 
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
@@ -259,7 +266,7 @@ accessibility <- function(r5r_network,
   to_lon_arr <- rJava::.jarray(destinations$lon)
 
   opportunities_names <- rJava::.jarray(opportunities_colnames)
-  opportunities_values <- rJava::.jarray(opportunities, "[I")
+  opportunities_values <- rJava::.jarray(opportunities, "[D")
 
   accessibility <- r5r_network$accessibility(
     from_id_arr,

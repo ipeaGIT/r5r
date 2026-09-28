@@ -102,7 +102,6 @@
 #' stop_r5(r5r_network)
 #' @export
 detailed_itineraries <- function(r5r_network,
-                                 r5r_core = deprecated(),
                                  origins,
                                  destinations,
                                  mode = "WALK",
@@ -130,7 +129,8 @@ detailed_itineraries <- function(r5r_network,
                                  progress = FALSE,
                                  drop_geometry = FALSE,
                                  osm_link_ids = FALSE,
-                                 output_dir = NULL) {
+                                 output_dir = NULL,
+                                 r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {

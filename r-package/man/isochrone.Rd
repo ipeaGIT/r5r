@@ -6,7 +6,6 @@
 \usage{
 isochrone(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   mode = "transit",
   mode_egress = "walk",
@@ -28,14 +27,12 @@ isochrone(
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE,
-  sample_size = deprecated()
+  sample_size = deprecated(),
+  r5r_core = deprecated()
 )
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
-
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
 
 \item{origins}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -161,6 +158,9 @@ computation efficiency, because the progress counter must be
 synchronized among all active threads.}
 
 \item{sample_size}{deprecated, no longer has any effect.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A \verb{"sf" "data.frame"} for each isochrone of each origin.
@@ -182,8 +182,7 @@ include:
 \item \strong{Transit modes:} \code{TRAM}, \code{SUBWAY}, \code{RAIL}, \code{BUS}, \code{FERRY}, \code{CABLE_CAR},
 \code{GONDOLA}, \code{FUNICULAR}. The option \code{TRANSIT} automatically considers all
 public transport modes available.
-\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}, \code{BICYCLE_RENT},
-\code{CAR_PARK}.
+\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}.
 }
 }
 

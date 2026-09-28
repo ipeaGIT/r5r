@@ -6,7 +6,6 @@
 \usage{
 accessibility(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   destinations,
   opportunities_colnames = "opportunities",
@@ -35,14 +34,12 @@ accessibility(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  output_dir = NULL
+  output_dir = NULL,
+  r5r_core = deprecated()
 )
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
-
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
 
 \item{origins, destinations}{Either a \verb{POINT sf} object with WGS84 CRS, or a
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
@@ -97,13 +94,15 @@ parameters.}
 \item{cutoffs}{A numeric vector (maximum length of 12). This parameter has
 different effects for each decay function: it indicates the cutoff times
 in minutes when calculating cumulative opportunities accessibility with
-the \code{step} function, the median (or inflection point) of the decay curves
-in the \code{logistic} and \code{linear} functions, and the half-life in the
-\code{exponential} function. It has no effect when using the
-\code{fixed_exponential} function.}
+the \code{step} function (only trips strictly shorter than the cutoff are
+counted), the median (or inflection point) of the decay curves in the
+\code{logistic} and \code{linear} functions, and the half-life in the \code{exponential}
+function. It must be \code{NULL} when using the \code{fixed_exponential} function.
+Values must be whole numbers between 1 and 120 minutes (R5's limit) and
+are sorted in ascending order.}
 
 \item{decay_value}{A number. Extra parameter to be passed to the selected
-\code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or
+\code{decay_function}. Must be \code{NULL} when \code{decay_function} is either \code{step} or
 \code{exponential}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
@@ -178,12 +177,12 @@ car speed for all the roads that fall within each polygon. In this case,
 the table must contain the columns \code{poly_id} with a unique id for
 each polygon, \code{scale} with the new speed scaling factors and
 \code{priority}, which is a number ranking which polygon should be
-considered in case of overlapping polygons. See more into in the
-\verb{link to congestion vignette}.}
+considered in case of overlapping polygons. See more info in the
+scenarios vignette (\code{vignette("scenarios", package = "r5r")}).}
 
-\item{carspeed_scale}{Numeric. The default car speed to use for road segments
-not specified in \code{new_carspeeds}. By default, it is \code{NULL} and the speeds
-of the unlisted roads are kept unchanged.}
+\item{carspeed_scale}{Numeric. The scaling factor applied to the car speed
+of road segments not specified in \code{new_carspeeds}. Defaults to \code{1},
+which keeps the speeds of the unlisted roads unchanged.}
 
 \item{new_lts}{A \code{data.frame} specifying the new LTS levels for each OSM edge
 id. The table must contain columns \code{osm_id} and \code{lts}.
@@ -222,16 +221,23 @@ function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents \code{r5r} from loading them to
 RAM memory.}
+
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Please use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with accessibility estimates for all origin points.
-This \code{data.table} contain columns listing the origin id, the type of
-opportunities to which accessibility was calculated, the travel time
-percentile considered in the accessibility estimate and the specified
-cutoff values (except in when \code{decay_function} is \code{fixed_exponential}, in
-which case the \code{cutoff} parameter is not used). If \code{output_dir} is not
-\code{NULL}, the function returns the path specified in that parameter, in
-which the \code{.csv} files containing the results are saved.
+This \code{data.table} contains the columns \code{id} (origin id), \code{opportunity}
+(the type of opportunities to which accessibility was calculated),
+\code{percentile} (the travel time percentile considered in the estimate),
+\code{cutoff} (the specified cutoff values, except when \code{decay_function} is
+\code{fixed_exponential}, in which case the \code{cutoff} parameter is not used) and
+\code{accessibility} (the accessibility estimate). Origins that cannot be
+snapped to the street network get an accessibility of 0 (see
+\code{\link[=find_snap]{find_snap()}}). If \code{output_dir} is not \code{NULL}, the function returns the
+path specified in that parameter, in which the \code{.csv} files containing
+the results are saved. With \code{fixed_exponential}, these files keep a
+\code{cutoff} column filled with the placeholder value \code{0}.
 }
 \description{
 Fast computation of access to opportunities given a selected decay function.
@@ -266,12 +272,14 @@ parameter, leaving only the standard deviation to configure through the
 }
 \item \strong{Fixed Exponential} (\code{"fixed_exponential"}): \cr
 This function is of the form \code{exp(-Lt)} where L is a single fixed decay
-constant in the range (0, 1). It is constrained to be positive to ensure
-weights decrease (rather than grow) with increasing travel time.
+constant in the range (0, 1) and t is the travel time in \strong{seconds}. It is
+constrained to be positive to ensure weights decrease (rather than grow)
+with increasing travel time. Note that L is a per-second constant: to use a
+decay constant expressed per minute (e.g. from the literature), pass it
+divided by 60.
 \itemize{
 \item Calibration: This function is controlled exclusively by the \code{L} constant,
-given by the \code{decay_value} parameter. Values provided in \code{cutoffs} are
-ignored.
+given by the \code{decay_value} parameter. \code{cutoffs} must be \code{NULL}.
 }
 \item \strong{Half-life Exponential Decay} (\code{"exponential"}): \cr
 This is similar to the fixed-exponential option above, but in this case the
@@ -284,7 +292,8 @@ and a minimum time below which all travel is perceived to be equally easy.
 \itemize{
 \item Calibration: The transition region is transposable and symmetric around
 the \code{cutoffs} parameter values, taking \code{decay_value} minutes to taper down
-from one to zero.
+from one to zero. \code{decay_value} must be a whole number of minutes between
+1 and 59.
 }
 }
 }
@@ -298,8 +307,7 @@ include:
 \item \strong{Transit modes:} \code{TRAM}, \code{SUBWAY}, \code{RAIL}, \code{BUS}, \code{FERRY}, \code{CABLE_CAR},
 \code{GONDOLA}, \code{FUNICULAR}. The option \code{TRANSIT} automatically considers all
 public transport modes available.
-\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}, \code{BICYCLE_RENT},
-\code{CAR_PARK}.
+\item \strong{Non transit modes:} \code{WALK}, \code{BICYCLE}, \code{CAR}.
 }
 }
 

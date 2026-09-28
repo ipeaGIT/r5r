@@ -427,7 +427,7 @@ Now, we can answer questions like "how many health care facilities one can acces
 in 60 minutes using public transport, on a R\$5.00 budget?". We'll do that below, 
 and compare the results the accessibility unconstrained by monetary costs: 
 
-```{r}
+```{r, warning = FALSE}
 # calculate accessibility function
 calculate_accessibility <- function(fare, fare_string) {
   access_df <- accessibility(
