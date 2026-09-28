@@ -139,6 +139,9 @@ test_that("adequately raises errors", {
   expect_error(tester(decay_function = "bananas"))
   expect_error(tester(opportunities_colname = "bananas"))
   expect_error(tester(cutoffs = "bananas"))
+  expect_error(tester(cutoffs = 0))
+  expect_error(tester(cutoffs = 121))
+  expect_error(tester(cutoffs = c(15, 15)))
   expect_error(tester(decay_value = "bananas"))
   expect_error(
     tester(decay_function = "fixed_exponential", decay_value = 0.5, cutoffs = 30)
@@ -151,6 +154,33 @@ test_that("adequately raises errors", {
 
 # adequate behavior ------------------------------------------------------
 
+test_that("max_trip_duration is capped by cutoffs only for the step function", {
+  acc_sum <- function(...) {
+    sum(tester(destinations = points, opportunities_colname = "population", ...)$accessibility)
+  }
+
+  # step ignores trips longer than the cutoff
+  expect_equal(
+    acc_sum(cutoffs = 30, max_trip_duration = 30),
+    acc_sum(cutoffs = 30, max_trip_duration = 120)
+  )
+
+  # the other decay functions still weight trips longer than the cutoff
+  expect_gt(
+    acc_sum(decay_function = "logistic", cutoffs = 30, decay_value = 10, max_trip_duration = 120),
+    acc_sum(decay_function = "logistic", cutoffs = 30, decay_value = 10, max_trip_duration = 30)
+  )
+  expect_gt(
+    acc_sum(decay_function = "exponential", cutoffs = 30, max_trip_duration = 120),
+    acc_sum(decay_function = "exponential", cutoffs = 30, max_trip_duration = 30)
+  )
+})
+
+test_that("unsorted cutoffs are sorted", {
+  unsorted <- tester(cutoffs = c(30, 15))
+  sorted <- tester(cutoffs = c(15, 30))
+  expect_identical(unsorted, sorted)
+})
 
 test_that("output is correct", {
 

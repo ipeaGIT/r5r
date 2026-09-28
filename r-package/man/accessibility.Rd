@@ -100,7 +100,8 @@ in minutes when calculating cumulative opportunities accessibility with
 the \code{step} function, the median (or inflection point) of the decay curves
 in the \code{logistic} and \code{linear} functions, and the half-life in the
 \code{exponential} function. It has no effect when using the
-\code{fixed_exponential} function.}
+\code{fixed_exponential} function. Values must be whole numbers between 1 and
+120 minutes (R5's limit) and are sorted in ascending order.}
 
 \item{decay_value}{A number. Extra parameter to be passed to the selected
 \code{decay_function}. Has no effects when \code{decay_function} is either \code{step} or

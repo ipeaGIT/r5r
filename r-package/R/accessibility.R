@@ -28,7 +28,8 @@
 #'   the `step` function, the median (or inflection point) of the decay curves
 #'   in the `logistic` and `linear` functions, and the half-life in the
 #'   `exponential` function. It has no effect when using the
-#'   `fixed_exponential` function.
+#'   `fixed_exponential` function. Values must be whole numbers between 1 and
+#'   120 minutes (R5's limit) and are sorted in ascending order.
 #' @param decay_value A number. Extra parameter to be passed to the selected
 #'   `decay_function`. Has no effects when `decay_function` is either `step` or
 #'   `exponential`.
@@ -188,14 +189,18 @@ accessibility <- function(r5r_network,
 
   r5r_network <- r5r_network@jcore
 
+  decay_list <- assign_decay_function(decay_function, decay_value)
+
   # cap trip duration with cutoffs
   set_cutoffs(r5r_network, cutoffs, decay_function)
   checkmate::assert_number(max_trip_duration, lower = 1, finite = TRUE)
 
   if(!is.null(cutoffs)){
-    max_trip_duration <- ifelse(max_trip_duration > max(cutoffs), max(cutoffs), max_trip_duration)
-
     if(max_trip_duration < max(cutoffs)){stop("'max_trip_duration' cannot be shorter than 'max(cutoffs)'")}
+
+    # only the step function ignores trips longer than the cutoffs; the other
+    # decay functions still weight them
+    if (decay_function == "step") max_trip_duration <- max(cutoffs)
   }
 
   max_walk_time <- assign_max_street_time(
@@ -223,9 +228,6 @@ accessibility <- function(r5r_network,
     max_bike_time,
     max_car_time
   )
-
-
-  decay_list <- assign_decay_function(decay_function, decay_value)
 
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)

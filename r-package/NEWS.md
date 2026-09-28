@@ -12,6 +12,8 @@
 - Origins/destinations with duplicated `id` values now raise an error in all one-to-many functions, instead of returning ambiguous duplicated rows. `detailed_itineraries()` keeps accepting repeated ids in row-paired inputs (`all_to_all = FALSE`).
 - `FERRY` was missing from the list of transit modes that trigger the check for transit services on the departure date.
 - `max_car_time` now caps car-only trips, as `max_walk_time` and `max_bike_time` already did for walk-only and bike-only trips. It used to apply only to car access/egress legs of transit trips.
+- `accessibility()` with the `logistic`, `exponential` and `linear` decay functions ignored every trip longer than `max(cutoffs)`, although these curves still give weight to such trips, so accessibility was underestimated. `max_trip_duration` is now capped by `max(cutoffs)` only for the `step` function (the cap was introduced in r5r 2.1.0, [#348](https://github.com/ipeaGIT/r5r/issues/348)). Results of the other decay functions change and are now larger.
+- `cutoffs` in `accessibility()` are now validated (whole numbers between 1 and 120, no duplicates) and sorted in ascending order. Unsorted or out-of-range values used to crash inside R5 with an uninformative Java error, and duplicated values returned duplicated rows.
 - A finite `max_fare` passed without a `fare_structure` now raises an error instead of being silently ignored.
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`, `max_trip_duration`, `time_window`, `percentiles`, `n_threads`, `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`, `suboptimal_minutes`) now reject non-integer values instead of silently truncating them.
 
@@ -145,7 +147,7 @@ update.
 
 **Minor changes**
 
-- In the `accessibility()` function, the value of `max_trip_duration` is now capped by the max value passed to the `cutoffs` parameter. Closes [#342](https://github.com/ipeaGIT/r5r/issues/348).
+- In the `accessibility()` function, the value of `max_trip_duration` is now capped by the max value passed to the `cutoffs` parameter. Closes [#348](https://github.com/ipeaGIT/r5r/issues/348).
 - Updated documentation of parameter `max_walk_time` to make it clear that in walk-only trips, whenever `max_walk_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
 - Updated documentation of parameter `max_bike_time` to make it clear that in bicycle-only trips, whenever `max_bike_time` differs from `max_trip_duration`, the lowest value is considered. Closes [#353](https://github.com/ipeaGIT/r5r/issues/353)
 - Improved documentation of parameter `suboptimal_minutes` in the `detailed_itineraries()` function.

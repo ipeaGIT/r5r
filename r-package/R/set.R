@@ -371,9 +371,12 @@ set_output_dir <- function(r5r_network, output_dir) {
 set_cutoffs <- function(r5r_network, cutoffs, decay_function) {
   checkmate::assert_integerish(
     cutoffs,
+    lower = 1,
+    upper = 120,
     min.len = 1,
     max.len = 12,
     any.missing = FALSE,
+    unique = TRUE,
     null.ok = TRUE
   )
 
@@ -396,7 +399,8 @@ set_cutoffs <- function(r5r_network, cutoffs, decay_function) {
   if (is.null(cutoffs)) {
     cutoffs <- 0L
   } else {
-    cutoffs <- as.integer(cutoffs)
+    # R5 requires ascending cutoffs
+    cutoffs <- sort(as.integer(cutoffs))
   }
 
   r5r_network$setCutoffs(cutoffs)
