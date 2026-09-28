@@ -182,7 +182,7 @@ accessibility <- function(r5r_network,
   departure <- assign_departure(departure_datetime)
 
   # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
@@ -220,7 +220,8 @@ accessibility <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
 
@@ -237,7 +238,7 @@ accessibility <- function(r5r_network,
   set_verbose(r5r_network, verbose)
   set_progress(r5r_network, progress)
   set_fare_structure(r5r_network, fare_structure)
-  set_max_fare(r5r_network, max_fare)
+  set_max_fare(r5r_network, max_fare, fare_structure)
   set_output_dir(r5r_network, output_dir)
 
   # SCENARIOS -------------------------------------------

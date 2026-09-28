@@ -311,3 +311,29 @@ test_that("using transit outside the gtfs dates throws an error", {
     )
   )
 })
+
+test_that("row-paired inputs may repeat ids, all-to-all inputs may not", {
+  paired_origins <- points[c(1, 1, 2), ]
+  paired_destinations <- points[c(2, 3, 3), ]
+
+  expect_s3_class(
+    detailed_itineraries(
+      r5r_network,
+      origins = paired_origins,
+      destinations = paired_destinations,
+      departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+      all_to_all = FALSE
+    ),
+    "sf"
+  )
+  expect_error(
+    detailed_itineraries(
+      r5r_network,
+      origins = paired_origins,
+      destinations = paired_destinations,
+      departure_datetime = as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"),
+      all_to_all = TRUE
+    ),
+    regexp = "duplicated ids"
+  )
+})

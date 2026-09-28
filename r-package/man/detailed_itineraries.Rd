@@ -105,12 +105,14 @@ the destination after leaving transit. In bicycle-only trips, whenever
 considered.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as \code{max_trip_duration} is respected. The max time is considered separately
-for each leg (e.g. if you set \code{max_car_time} to 15 minutes, you could
-potentially drive up to 15 minutes to reach transit, and up to \emph{another} 15
-minutes to reach the destination after leaving transit). Defaults to \code{Inf},
-no limit.}
+access and egress the transit network, or to complete car-only trips.
+Defaults to no restrictions, as long as \code{max_trip_duration} is respected.
+The max time is considered separately for each leg (e.g. if you set
+\code{max_car_time} to 15 minutes, you could potentially drive up to 15 minutes
+to reach transit, and up to \emph{another} 15 minutes to reach the destination
+after leaving transit). Defaults to \code{Inf}, no limit. In car-only trips,
+whenever \code{max_car_time} differs from \code{max_trip_duration}, the lowest value
+is considered.}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
 Defaults to 120 minutes (2 hours).}
@@ -146,7 +148,9 @@ understand how this object is structured:
 \code{vignette("fare_structure", package = "r5r")}.}
 
 \item{max_fare}{A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.}
+calculating the fastest journey between each origin and destination pair.
+Defaults to \code{Inf} (no limit). A finite value requires a \code{fare_structure};
+an error is raised otherwise.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the new car speed for each OSM
 edge id. This table must contain columns \code{osm_id}, \code{max_speed}

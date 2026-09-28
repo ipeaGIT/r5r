@@ -202,7 +202,7 @@ The data with origin destination pairs is shown below. In this example, we will 
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
 # sample points
-sampled_rows <- sample(1:nrow(points), 200, replace=TRUE)
+sampled_rows <- sample(1:nrow(points), 200, replace = FALSE)
 points <- points[ sampled_rows, ]
 head(points)
 ```
