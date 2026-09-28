@@ -107,7 +107,7 @@ R</h1>
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2026-09-22</h4>
+            <h4 data-toc-skip class="date">2026-09-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/r5r.Rmd" class="external-link"><code>vignettes/r5r.Rmd</code></a></small>
       <div class="hidden name"><code>r5r.Rmd</code></div>
@@ -366,7 +366,7 @@ set.</p>
 <code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># sample points</span></span>
-<span><span class="va">sampled_rows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">sampled_rows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span>, <span class="fl">200</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">points</span><span class="op">[</span> <span class="va">sampled_rows</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id       lon       lat population schools  jobs healthcare</span></span>
@@ -422,12 +422,12 @@ and visualizing Accessibility</a>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">access</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 id opportunity percentile cutoff accessibility</span></span>
 <span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;      &lt;int&gt;  &lt;int&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 89a90128427ffff     schools         50     60            26</span></span>
-<span><span class="co">#&gt; 2: 89a90128427ffff  healthcare         50     60            34</span></span>
-<span><span class="co">#&gt; 3: 89a9012980fffff     schools         50     60            23</span></span>
-<span><span class="co">#&gt; 4: 89a9012980fffff  healthcare         50     60            28</span></span>
-<span><span class="co">#&gt; 5: 89a90128043ffff     schools         50     60            30</span></span>
-<span><span class="co">#&gt; 6: 89a90128043ffff  healthcare         50     60            37</span></span></code></pre></div>
+<span><span class="co">#&gt; 1: 89a90128427ffff     schools         50     60            27</span></span>
+<span><span class="co">#&gt; 2: 89a90128427ffff  healthcare         50     60            27</span></span>
+<span><span class="co">#&gt; 3: 89a9012980fffff     schools         50     60            22</span></span>
+<span><span class="co">#&gt; 4: 89a9012980fffff  healthcare         50     60            23</span></span>
+<span><span class="co">#&gt; 5: 89a90128043ffff     schools         50     60            31</span></span>
+<span><span class="co">#&gt; 6: 89a90128043ffff  healthcare         50     60            29</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="routing-analysis">4.3 Routing analysis<a class="anchor" aria-label="anchor" href="#routing-analysis"></a>

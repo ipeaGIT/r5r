@@ -85,6 +85,19 @@
 <li>
 <a href="https://github.com/ipeaGIT/r5r/pull/569" class="external-link">#569</a> Fix broken source links in documentation website. Closed <a href="https://github.com/ipeaGIT/r5r/issues/527" class="external-link">#527</a>
 </li>
+<li>Origins/destinations passed as <code>sf</code> objects that also carried <code>lon</code>/<code>lat</code> (or <code>x</code>/<code>y</code>) attribute columns were routed using those attribute columns instead of the point geometry. The geometry is now always used.</li>
+<li>
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="../reference/arrival_travel_time_matrix.html">arrival_travel_time_matrix()</a></code> and <code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> wrote CSV files with <code>from_id</code> and <code>to_id</code> swapped (and named after the destinations) when <code>output_dir</code> was used with walk-only routing, no elevation data and more origins than destinations. The internal origin/destination swap that speeds up such searches is now skipped whenever <code>output_dir</code> is set, so those runs may take longer than before.</li>
+<li>
+<code>percentiles</code> are now sorted in ascending order internally. Unsorted values (e.g. <code>c(75, 25)</code>) used to crash inside R5 with an uninformative Java error.</li>
+<li>Origins/destinations with missing <code>lon</code>/<code>lat</code> coordinates now trigger a warning listing the affected ids. They used to be dropped silently.</li>
+<li>Origins/destinations with duplicated <code>id</code> values now raise an error in all one-to-many functions, instead of returning ambiguous duplicated rows. <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> keeps accepting repeated ids in row-paired inputs (<code>all_to_all = FALSE</code>).</li>
+<li>
+<code>FERRY</code> was missing from the list of transit modes that trigger the check for transit services on the departure date.</li>
+<li>
+<code>max_car_time</code> now caps car-only trips, as <code>max_walk_time</code> and <code>max_bike_time</code> already did for walk-only and bike-only trips. It used to apply only to car access/egress legs of transit trips.</li>
+<li>A finite <code>max_fare</code> passed without a <code>fare_structure</code> now raises an error instead of being silently ignored.</li>
+<li>Integer arguments (<code>max_walk_time</code>, <code>max_bike_time</code>, <code>max_car_time</code>, <code>max_trip_duration</code>, <code>time_window</code>, <code>percentiles</code>, <code>n_threads</code>, <code>max_rides</code>, <code>max_lts</code>, <code>draws_per_minute</code>, <code>cutoffs</code>, <code>suboptimal_minutes</code>) now reject non-integer values instead of silently truncating them.</li>
 <li>
 <code><a href="../reference/build_network.html">build_network()</a></code> now detects and aborts with an informative message when a cached <code>network.dat</code> triggers a silent internal rebuild that fails on high priority GTFS errors, instead of silently returning an unusable <code>r5r_network</code> that only fails later with an opaque <code>NullPointerException</code> on the first routing call.</li>
 </ul><p><strong>Minor changes</strong></p>

@@ -84,7 +84,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">assign_points_input</span><span class="op">(</span><span class="va">df</span>, <span class="va">name</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">assign_points_input</span><span class="op">(</span><span class="va">df</span>, <span class="va">name</span>, unique_ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -97,6 +97,12 @@
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>Object name.</p></dd>
+
+
+<dt id="arg-unique-ids">unique_ids<a class="anchor" aria-label="anchor" href="#arg-unique-ids"></a></dt>
+<dd><p>A logical. Whether to raise an error when <code>df$id</code> has
+duplicated values. Defaults to <code>TRUE</code>. Set to <code>FALSE</code> for row-paired
+inputs, where the same point may legitimately appear in several rows.</p></dd>
 
 </dl></div>
     <div id="value">

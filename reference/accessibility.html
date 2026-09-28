@@ -242,12 +242,14 @@ considered.</p></dd>
 
 <dt id="arg-max-car-time">max_car_time<a class="anchor" aria-label="anchor" href="#arg-max-car-time"></a></dt>
 <dd><p>An integer. The maximum driving time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as long
-as <code>max_trip_duration</code> is respected. The max time is considered separately
-for each leg (e.g. if you set <code>max_car_time</code> to 15 minutes, you could
-potentially drive up to 15 minutes to reach transit, and up to <em>another</em> 15
-minutes to reach the destination after leaving transit). Defaults to <code>Inf</code>,
-no limit.</p></dd>
+access and egress the transit network, or to complete car-only trips.
+Defaults to no restrictions, as long as <code>max_trip_duration</code> is respected.
+The max time is considered separately for each leg (e.g. if you set
+<code>max_car_time</code> to 15 minutes, you could potentially drive up to 15 minutes
+to reach transit, and up to <em>another</em> 15 minutes to reach the destination
+after leaving transit). Defaults to <code>Inf</code>, no limit. In car-only trips,
+whenever <code>max_car_time</code> differs from <code>max_trip_duration</code>, the lowest value
+is considered.</p></dd>
 
 
 <dt id="arg-max-trip-duration">max_trip_duration<a class="anchor" aria-label="anchor" href="#arg-max-trip-duration"></a></dt>
@@ -288,7 +290,9 @@ understand how this object is structured:
 
 <dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
 <dd><p>A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.</p></dd>
+calculating the fastest journey between each origin and destination pair.
+Defaults to <code>Inf</code> (no limit). A finite value requires a <code>fare_structure</code>;
+an error is raised otherwise.</p></dd>
 
 
 <dt id="arg-new-carspeeds">new_carspeeds<a class="anchor" aria-label="anchor" href="#arg-new-carspeeds"></a></dt>

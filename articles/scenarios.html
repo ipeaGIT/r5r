@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using custom OSM car speeds and LTS</h1>
             
-            <h4 data-toc-skip class="date">2026-09-22</h4>
+            <h4 data-toc-skip class="date">2026-09-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/scenarios.Rmd" class="external-link"><code>vignettes/scenarios.Rmd</code></a></small>
       <div class="hidden name"><code>scenarios.Rmd</code></div>
@@ -186,9 +186,8 @@ car speed for all the roads that fall within each polygon.</li>
 <li>
 <code>carspeed_scale</code>: this parameter allows one to set the
 default car speed for all of the road segments not specified in
-<code>new_carspeeds</code>. By default,
-<code>carspeed_scale = NULL</code> and the speeds of the unlisted roads
-are kept unchanged.</li>
+<code>new_carspeeds</code>. By default, <code>carspeed_scale = 1</code>
+and the speeds of the unlisted roads are kept unchanged.</li>
 </ul>
 <p>Let’s see a couple examples.</p>
 <div class="section level3">
