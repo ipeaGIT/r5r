@@ -120,7 +120,8 @@ public class TripPlanner {
             tripList = List.of(tripList.stream().min(Comparator.comparingInt(Trip::getTotalDurationSeconds)).get());
         }
 
-        for (Trip trip : trips.values()) {
+        // build street paths and geometries only for the trips that are returned
+        for (Trip trip : tripList) {
             trip.augment(accessRouter, egressRouter, transportNetwork, request, OSMLinkIds);
         }
 
@@ -148,7 +149,7 @@ public class TripPlanner {
 
             if(streetRouter.setOrigin(request.fromLat, request.fromLon)) {
                 if(!streetRouter.setDestination(request.toLat, request.toLon)) {
-                    LOG.warn("Trip from {} to {}. Direct mode {} to destination {} {} wasn't found.", mode, fromId, toId, request.toLat, request.toLon);
+                    LOG.warn("Trip from {} to {}. Direct mode {} to destination {} {} wasn't found.", fromId, toId, mode, request.toLat, request.toLon);
                     continue;
                 }
                 streetRouter.route();
@@ -231,7 +232,7 @@ public class TripPlanner {
                 LOG.info("Added {} egress stops for mode {}",stops.size(), mode);
 
             } else {
-                LOG.warn("MODE:{}, Edge near the origin coordinate {} wasn't found. Routing didn't start!", mode, fromId);
+                LOG.warn("MODE:{}, Edge near the destination coordinate {} wasn't found. Routing didn't start!", mode, toId);
             }
         }
 
