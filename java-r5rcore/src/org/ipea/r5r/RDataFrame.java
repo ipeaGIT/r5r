@@ -223,11 +223,20 @@ public class RDataFrame {
                 row = new StringJoiner(",");
 
                 for (String c:columnNames) {
-                    row.add(String.valueOf(dataFrame.get(c).get(i)));
+                    row.add(csvField(String.valueOf(dataFrame.get(c).get(i))));
                 }
                 pw.println(row);
             }
         }
+    }
+
+    // quotes a value that contains a comma, a double quote or a line break
+    // (e.g. WKT geometries, lists of ids), doubling any quotes inside it (RFC 4180)
+    private static String csvField(String value) {
+        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
     }
 }
 

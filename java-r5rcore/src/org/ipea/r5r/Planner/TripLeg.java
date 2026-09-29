@@ -39,8 +39,10 @@ public class TripLeg {
     private String boardStopId = "";
     private String alightStopId = "";
 
-    private int fromStop;
-    private int toStop;
+    // stop indices of transfer legs; -1 (not a stop) for access, egress and direct legs,
+    // since 0 is a valid stop index
+    private int fromStop = -1;
+    private int toStop = -1;
 
     private int boardStopPosition;
     private int alightStopPosition;
@@ -227,7 +229,7 @@ public class TripLeg {
 
         } else {
             // street path between stops
-            if (this.fromStop > 0 & this.toStop > 0) {
+            if (this.fromStop >= 0 & this.toStop >= 0) {
                 StreetSegment streetSegment = transferPaths.get(this.fromStop, this.toStop);
 
                 if (streetSegment == null) {
@@ -258,7 +260,9 @@ public class TripLeg {
                         StreetPath streetPath = new StreetPath(lastState, network, false);
                         streetSegment = new StreetSegment(streetPath, LegMode.WALK, network.streetLayer);
 
-                        this.legDurationSeconds = streetSegment.duration;
+                        // keep the transfer duration computed by RAPTOR (distance / walk speed), which
+                        // is the one used to filter and rank trips; the re-routed street path is only
+                        // used for geometry, distance and edge ids
                         fillDataTransitLeg(network, OSMLinkIds, streetSegment);
 
                         transferPaths.put(this.fromStop, this.toStop, streetSegment);
