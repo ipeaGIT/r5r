@@ -251,7 +251,7 @@ we will be using 200 points randomly selected from this data set.
 points <- fread(file.path(data_path, "poa_hexgrid.csv"))
 
 # sample points
-sampled_rows <- sample(1:nrow(points), 200, replace=TRUE)
+sampled_rows <- sample(1:nrow(points), 200, replace = FALSE)
 points <- points[ sampled_rows, ]
 head(points)
 #>                 id       lon       lat population schools  jobs healthcare
@@ -310,12 +310,12 @@ access <- accessibility(
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>
-#> 1: 89a90128427ffff     schools         50     60            26
-#> 2: 89a90128427ffff  healthcare         50     60            34
-#> 3: 89a9012980fffff     schools         50     60            23
-#> 4: 89a9012980fffff  healthcare         50     60            28
-#> 5: 89a90128043ffff     schools         50     60            30
-#> 6: 89a90128043ffff  healthcare         50     60            37
+#> 1: 89a90128427ffff     schools         50     60            27
+#> 2: 89a90128427ffff  healthcare         50     60            27
+#> 3: 89a9012980fffff     schools         50     60            22
+#> 4: 89a9012980fffff  healthcare         50     60            23
+#> 5: 89a90128043ffff     schools         50     60            31
+#> 6: 89a90128043ffff  healthcare         50     60            29
 ```
 
 ### 4.3 Routing analysis
@@ -467,16 +467,16 @@ head(det)
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           37.4           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           37.4           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           37.4           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           37.4           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           37.4           9460       5 WALK
-#> 6 -51.22875      2       14:09:43           48.7           8779       1 WALK
+#> 1 -51.22875      1       14:07:57           35.6           9460       1 WALK
+#> 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL
+#> 3 -51.22875      1       14:07:57           35.6           9460       3 WALK
+#> 4 -51.22875      1       14:07:57           35.6           9460       4  BUS
+#> 5 -51.22875      1       14:07:57           35.6           9460       5 WALK
+#> 6 -51.22875      2       14:09:43           46.0           8779       1 WALK
 #>   segment_duration wait distance  route                       geometry
 #> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
 #> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
-#> 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...
+#> 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...
 #> 6              5.1  0.0      174        LINESTRING (-51.1981 -29.99...

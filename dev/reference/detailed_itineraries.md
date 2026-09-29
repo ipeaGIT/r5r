@@ -15,7 +15,6 @@ routing functions included in the package.
 ``` r
 detailed_itineraries(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   destinations,
   mode = "WALK",
@@ -43,7 +42,8 @@ detailed_itineraries(
   progress = FALSE,
   drop_geometry = FALSE,
   osm_link_ids = FALSE,
-  output_dir = NULL
+  output_dir = NULL,
+  r5r_core = deprecated()
 )
 ```
 
@@ -53,11 +53,6 @@ detailed_itineraries(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - origins, destinations:
 
@@ -109,7 +104,9 @@ detailed_itineraries(
   makes people want to take a path that is technically not optimal in
   terms of travel time, for example, for some practical reasons (e.g.
   mode preference, safety, etc). In practice, the higher this value, the
-  more itineraries will be returned in the final result.
+  more itineraries will be returned in the final result. Values above 0
+  can only be used when `shortest_path` is `FALSE` and `fare_structure`
+  is `NULL`.
 
 - max_walk_time:
 
@@ -140,12 +137,14 @@ detailed_itineraries(
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network. Defaults to no restrictions, as long as
-  `max_trip_duration` is respected. The max time is considered
-  separately for each leg (e.g. if you set `max_car_time` to 15 minutes,
-  you could potentially drive up to 15 minutes to reach transit, and up
-  to *another* 15 minutes to reach the destination after leaving
-  transit). Defaults to `Inf`, no limit.
+  the transit network, or to complete car-only trips. Defaults to no
+  restrictions, as long as `max_trip_duration` is respected. The max
+  time is considered separately for each leg (e.g. if you set
+  `max_car_time` to 15 minutes, you could potentially drive up to 15
+  minutes to reach transit, and up to *another* 15 minutes to reach the
+  destination after leaving transit). Defaults to `Inf`, no limit. In
+  car-only trips, whenever `max_car_time` differs from
+  `max_trip_duration`, the lowest value is considered.
 
 - max_trip_duration:
 
@@ -177,7 +176,12 @@ detailed_itineraries(
 
   A logical. Whether the function should only return the fastest
   itinerary between each origin and destination pair (the default) or
-  multiple alternatives.
+  multiple alternatives. The fastest itinerary is the one with the
+  shortest travel time, measured from its own departure time, among all
+  departures within `time_window`. With a large `time_window`, it may
+  depart later and arrive later than other itineraries; use
+  `time_window = 1` to get the itinerary with the earliest arrival for a
+  given departure time.
 
 - all_to_all:
 
@@ -198,7 +202,9 @@ detailed_itineraries(
 - max_fare:
 
   A number. The maximum value that trips can cost when calculating the
-  fastest journey between each origin and destination pair.
+  fastest journey between each origin and destination pair. Defaults to
+  `Inf` (no limit). A finite value requires a `fare_structure`; an error
+  is raised otherwise.
 
 - new_carspeeds:
 
@@ -213,14 +219,14 @@ detailed_itineraries(
   table must contain the columns `poly_id` with a unique id for each
   polygon, `scale` with the new speed scaling factors and `priority`,
   which is a number ranking which polygon should be considered in case
-  of overlapping polygons. See more into in the
-  `link to congestion vignette`.
+  of overlapping polygons. See more info in the scenarios vignette
+  ([`vignette("scenarios", package = "r5r")`](https://ipeagit.github.io/r5r/dev/articles/scenarios.md)).
 
 - carspeed_scale:
 
-  Numeric. The default car speed to use for road segments not specified
-  in `new_carspeeds`. By default, it is `NULL` and the speeds of the
-  unlisted roads are kept unchanged.
+  Numeric. The scaling factor applied to the car speed of road segments
+  not specified in `new_carspeeds`. Defaults to `1`, which keeps the
+  speeds of the unlisted roads unchanged.
 
 - new_lts:
 
@@ -262,8 +268,13 @@ detailed_itineraries(
 
   A logical. Whether the output should include additional columns:
   `osm_id_list` for the OSM ids of the road segments used along the trip
-  geometry, and `board_stop_id` and `alight_stop_id` for the OSM ids of
-  transit boarding and alighting stops. Defaults to `FALSE`.
+  geometry, `edge_id_list` for the ids of the internal street network
+  edges used, and `board_stop_id` and `alight_stop_id` for the GTFS ids
+  of transit boarding and alighting stops, prefixed by the feed name
+  (e.g. `"poa_eptc:1649"`). `osm_id_list` and `edge_id_list` are
+  character columns formatted as `"[id1, id2, ...]"`, and are `"[]"` for
+  transit segments. Can only be `TRUE` when `drop_geometry` is `FALSE`.
+  Defaults to `FALSE`.
 
   Keep in mind that `osm_id_list` will contain an id even if the route
   only uses a small stretch of the road (e.g. 5m of a 600m street
@@ -282,14 +293,48 @@ detailed_itineraries(
   because writing the results directly to disk prevents `r5r` from
   loading them to RAM memory.
 
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
+
 ## Value
 
 When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING sf`
 with detailed information on the itineraries between the specified
 origins and destinations. When `TRUE`, the output is a `data.table`. All
-distances are in meters and travel times are in minutes. If `output_dir`
-is not `NULL`, the function returns the path specified in that
-parameter, in which the `.csv` files containing the results are saved.
+distances are in meters and travel times are in minutes. Each row is one
+segment (trip leg) of one itinerary, with the columns:
+
+- `from_id`, `from_lat`, `from_lon`, `to_id`, `to_lat`, `to_lon`: the
+  origin and destination of the pair;
+
+- `option`: the itinerary number within the pair. Options are ordered
+  with direct (non-transit) trips first, then by number of segments,
+  then by duration, so `option` 1 is not necessarily the fastest one;
+
+- `departure_time`: the departure time of the itinerary (`"HH:MM:SS"`);
+
+- `total_duration`, `total_distance`: duration and distance of the whole
+  itinerary;
+
+- `segment`, `mode`, `segment_duration`, `wait`, `distance`, `route`:
+  the segment number, its transport mode, its in-motion duration, the
+  waiting time before it, its distance and the transit route used (empty
+  for non-transit segments);
+
+- `total_fare`, `cumulative_fare`: only when a `fare_structure` is used;
+
+- `osm_id_list`, `edge_id_list`, `board_stop_id`, `alight_stop_id`: only
+  when `osm_link_ids` is `TRUE`;
+
+- `geometry`: only when `drop_geometry` is `FALSE`.
+
+If `output_dir` is not `NULL`, the function returns the path specified
+in that parameter, in which the `.csv` files containing the results are
+saved. This function writes one file per origin-destination pair, named
+`from_<origin id>_to_<destination id>.csv`, so pairs must be unique and
+ids cannot contain characters that are not allowed in file names.
 
 ## Transport modes
 
@@ -300,8 +345,7 @@ include:
   `CABLE_CAR`, `GONDOLA`, `FUNICULAR`. The option `TRANSIT`
   automatically considers all public transport modes available.
 
-- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`, `BICYCLE_RENT`,
-  `CAR_PARK`.
+- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`.
 
 ## Level of Traffic Stress (LTS)
 
@@ -428,15 +472,15 @@ head(det)
 #> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           37.4           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           37.4           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           37.4           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           37.4           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           37.4           9460       5 WALK
+#> 1 -51.22875      1       14:07:57           35.6           9460       1 WALK
+#> 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL
+#> 3 -51.22875      1       14:07:57           35.6           9460       3 WALK
+#> 4 -51.22875      1       14:07:57           35.6           9460       4  BUS
+#> 5 -51.22875      1       14:07:57           35.6           9460       5 WALK
 #>   segment_duration wait distance  route                       geometry
 #> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
 #> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
-#> 3              5.7  0.0      256        LINESTRING (-51.22827 -30.0...
+#> 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...
 

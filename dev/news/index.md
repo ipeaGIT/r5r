@@ -6,11 +6,150 @@
 
 - Fix bug related to optimization of origins and destinations. Closes
   again [\#501](https://github.com/ipeaGIT/r5r/issues/501).
+- [\#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source
+  links in documentation website. Closed
+  [\#527](https://github.com/ipeaGIT/r5r/issues/527)
+- Origins/destinations passed as `sf` objects that also carried
+  `lon`/`lat` (or `x`/`y`) attribute columns were routed using those
+  attribute columns instead of the point geometry. The geometry is now
+  always used.
+- [`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md),
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+  and
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+  wrote CSV files with `from_id` and `to_id` swapped (and named after
+  the destinations) when `output_dir` was used with walk-only routing,
+  no elevation data and more origins than destinations. The internal
+  origin/destination swap that speeds up such searches is now skipped
+  whenever `output_dir` is set, so those runs may take longer than
+  before.
+- `percentiles` are now sorted in ascending order internally. Unsorted
+  values (e.g. `c(75, 25)`) used to crash inside R5 with an
+  uninformative Java error.
+- Origins/destinations with missing `lon`/`lat` coordinates now trigger
+  a warning listing the affected ids. They used to be dropped silently.
+- Origins/destinations with duplicated `id` values now raise an error in
+  all one-to-many functions, instead of returning ambiguous duplicated
+  rows.
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  keeps accepting repeated ids in row-paired inputs
+  (`all_to_all = FALSE`).
+- `FERRY` was missing from the list of transit modes that trigger the
+  check for transit services on the departure date.
+- `max_car_time` now caps car-only trips, as `max_walk_time` and
+  `max_bike_time` already did for walk-only and bike-only trips. It used
+  to apply only to car access/egress legs of transit trips.
+- [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+  with the `logistic`, `exponential` and `linear` decay functions
+  ignored every trip longer than `max(cutoffs)`, although these curves
+  still give weight to such trips, so accessibility was underestimated.
+  `max_trip_duration` is now capped by `max(cutoffs)` only for the
+  `step` function (the cap was introduced in r5r 2.1.0,
+  [\#348](https://github.com/ipeaGIT/r5r/issues/348)). Results of the
+  other decay functions change and are now larger.
+- [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+  now accepts fractional opportunity values (e.g. population
+  interpolated onto a grid). They used to be truncated to integers, so
+  any value below 1 counted as 0. Missing values are treated as 0, now
+  with a warning, and infinite values raise an error.
+- `cutoffs` in
+  [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+  are now validated (whole numbers between 1 and 120, no duplicates) and
+  sorted in ascending order. Unsorted or out-of-range values used to
+  crash inside R5 with an uninformative Java error, and duplicated
+  values returned duplicated rows.
+- In
+  [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md),
+  the `decay_value` of the `linear` decay function is now required to be
+  a whole number of minutes between 1 and 59. Fractional values used to
+  be silently truncated by R5, and values of 60 or more crashed inside
+  R5.
+- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  reported transfer walks with a duration re-computed by the street
+  router instead of the one R5 used to find, filter and rank the
+  itineraries. On networks built with elevation data this could give
+  impossible timelines (e.g. 40 minutes to walk 119 m followed by a
+  normal wait) and itineraries longer than `max_trip_duration`, and
+  `shortest_path = TRUE` could pick an option whose reported duration
+  was not the shortest. Transfer walks now keep R5’s duration (walking
+  distance / `walk_speed`), consistent with
+  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md)
+  and
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md).
+- In
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md),
+  transfer walks from or to the stop with internal index 0 (the first
+  stop of the transit network) kept a straight line between the two
+  stops as geometry, a straight-line distance and no OSM or edge ids.
+  They are now routed on the street network like all other transfers.
+- CSV files written with `output_dir` did not quote text values, so any
+  value containing a comma broke the file. This made every file written
+  by
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  unreadable (its WKT `geometry` and its `osm_id_list` / `edge_id_list`
+  columns always contain commas), and broke the files of any routing
+  function when an id or route name contained a comma. Such values are
+  now quoted following the CSV standard (RFC 4180); files without such
+  values are unchanged.
+- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  with `output_dir` silently overwrote the file of a repeated
+  origin-destination pair (allowed since row-paired inputs may repeat
+  ids), and crashed with a Java error on ids containing characters not
+  allowed in file names (e.g. `/`). It now raises an informative error
+  in both cases.
+- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  with zero-row `origins` or `destinations` crashed inside Java. It now
+  returns an empty result.
+- A finite `max_fare` passed without a `fare_structure` now raises an
+  error instead of being silently ignored.
+- Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`,
+  `max_trip_duration`, `time_window`, `percentiles`, `n_threads`,
+  `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`,
+  `suboptimal_minutes`) now reject non-integer values instead of
+  silently truncating them.
+- [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md)
+  now detects and aborts with an informative message when a cached
+  `network.dat` triggers a silent internal rebuild that fails on high
+  priority GTFS errors, instead of silently returning an unusable
+  `r5r_network` that only fails later with an opaque
+  `NullPointerException` on the first routing call.
 
 **Minor changes**
 
-- - [\#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when
-    building GTFS network with multiple feeds.
+- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  now builds street paths and geometries only for the itineraries it
+  returns, instead of for every candidate found by the router (including
+  those later dropped by `max_trip_duration` or `shortest_path`).
+  Results are identical. In benchmarks with the Porto Alegre sample
+  data, the gain in computation time was within run-to-run noise, since
+  most of the time is spent in the routing search itself.
+- The deprecated `r5r_core` argument is now the last argument of every
+  function. It used to be the second one, so positional calls such as
+  `travel_time_matrix(r5r_network, origins, destinations)` bound
+  `origins` to `r5r_core` and failed with a misleading deprecation
+  warning and error.
+- Documentation fixes: `carspeed_scale` defaults to `1` (not `NULL`),
+  and the unsupported modes `BICYCLE_RENT` and `CAR_PARK` were removed
+  from the list of transport modes.
+- The documentation of
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+  now lists the output columns and how itinerary options are ordered,
+  and describes the `osm_link_ids` columns correctly (`board_stop_id`
+  and `alight_stop_id` are feed-prefixed GTFS stop ids, not OSM ids;
+  `edge_id_list` is also added). It also explains that
+  `shortest_path = TRUE` picks the itinerary with the shortest travel
+  time among all departures within `time_window` (not the earliest
+  arrival), and that `suboptimal_minutes` requires
+  `shortest_path = FALSE` and no `fare_structure`.
+- The documentation of the `fixed_exponential` decay function in
+  [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+  now states that its decay constant is applied to travel times in
+  seconds, so per-minute constants must be divided by 60.
+- [\#571](https://github.com/ipeaGIT/r5r/pull/571) Update logging when
+  building GTFS network with multiple feeds.
+- [\#568](https://github.com/ipeaGIT/r5r/pull/568) Update logging for
+  direct trip router. Closed
+  [\#557](https://github.com/ipeaGIT/r5r/issues/557)
 
 ## r5r 2.4.0
 
@@ -166,14 +305,8 @@ CRAN release: 2025-05-22
 **Minor changes**
 
 - r5r now throws an informative error message when the geographic extent
-  of input data exceeds limit of 975000 km2. Closes issues
-  [\#389](https://github.com/ipeaGIT/r5r/issues/389),
-  [\#405](https://github.com/ipeaGIT/r5r/issues/405),
-  [\#406](https://github.com/ipeaGIT/r5r/issues/406),
-  [\#407](https://github.com/ipeaGIT/r5r/issues/407),
-  [\#412](https://github.com/ipeaGIT/r5r/issues/412) and
-  [\#421](https://github.com/ipeaGIT/r5r/issues/421). Thanks to PR
-  [\#426](https://github.com/ipeaGIT/r5r/issues/426) by Alex Magnus.
+  of input data exceeds limit of 975000 km2. Closes issues \#389, \#405,
+  \#406, \#407, \#412 and \#421. Thanks to PR \#426 by Alex Magnus.
 - removed JRI dependency in r5r little jar. This helps debugging issues
   in Java without the need of using R. The side effect is that r5r now
   creates an `r5rlog` file in the data path.
@@ -240,7 +373,7 @@ CRAN release: 2024-04-11
   [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
   function, the value of `max_trip_duration` is now capped by the max
   value passed to the `cutoffs` parameter. Closes
-  [\#342](https://github.com/ipeaGIT/r5r/issues/348).
+  [\#348](https://github.com/ipeaGIT/r5r/issues/348).
 - Updated documentation of parameter `max_walk_time` to make it clear
   that in walk-only trips, whenever `max_walk_time` differs from
   `max_trip_duration`, the lowest value is considered. Closes
@@ -262,8 +395,7 @@ CRAN release: 2024-04-11
 - Fixed bug that prevented the use the `output_dir` parameter in the
   `detailed_itineraries(all_to_all = TRUE)` function. Closes
   [\#327](https://github.com/ipeaGIT/r5r/issues/327) with a contribution
-  ([PR](https://github.com/ipeaGIT/r5r/pull/354)
-  [\#354](https://github.com/ipeaGIT/r5r/issues/354)) from Luyu Liu.
+  ([PR \#354](https://github.com/ipeaGIT/r5r/pull/354)) from Luyu Liu.
 - Fixed bug that prevented `detailed_itineraries` from working with
   frequency-based GTFS feeds. It should ONLY work with frequency-based
   GTFS feeds.
@@ -517,17 +649,14 @@ CRAN release: 2021-10-26
 - Improved documentation of parameter `departure_datetime` to clarify
   the parameter must be set to local time. Closes
   [\#188](https://github.com/ipeaGIT/r5r/issues/188)
-- Improved documentation regarding personalized LTS values.
-  [Closes](https://github.com/ipeaGIT/r5r/issues/190)
-  [\#190](https://github.com/ipeaGIT/r5r/issues/190).
+- Improved documentation regarding personalized LTS values. [Closes
+  \#190](https://github.com/ipeaGIT/r5r/issues/190).
 - Improved documentation of
   [`transit_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.md)
-  regarding stops that are not snapped to road network.
-  [Closes](https://github.com/ipeaGIT/r5r/issues/192)
-  [\#192](https://github.com/ipeaGIT/r5r/issues/192).
+  regarding stops that are not snapped to road network. [Closes
+  \#192](https://github.com/ipeaGIT/r5r/issues/192).
 - Improved documentation of `max_walking_dist` and `max_cycling_dist`
-  parameters. [Closes](https://github.com/ipeaGIT/r5r/issues/193)
-  [\#193](https://github.com/ipeaGIT/r5r/issues/193).
+  parameters. [Closes \#193](https://github.com/ipeaGIT/r5r/issues/193).
 - Started raising an error if the CRS of origins/destinations is not
   WGS 84. Closes [\#201](https://github.com/ipeaGIT/r5r/issues/201).
 
@@ -639,7 +768,7 @@ CRAN release: 2021-03-09
   vignette](https://ipeagit.github.io/r5r/articles/r5r.html) to list
   only files that are included in the package installation. Closes
   [\#111](https://github.com/ipeaGIT/r5r/issues/111).
-- Fixed conflict with [geobr](https://ipeagit.github.io/geobr/) package
+- Fixed conflict with [geobr](https://ipea.github.io/geobr/) package
   when downloading metadata. Closed
   [\#137](https://github.com/ipeaGIT/r5r/issues/137).
 - Fixed a bug when when parsing date and time from `departure_datetime`
@@ -660,8 +789,7 @@ CRAN release: 2021-01-08
 **Minor changes**
 
 - r5r does not save the medatada file in the package directory anymore,
-  following CRAN’s policies. Closed
-  [\#136](https://github.com/ipeaGIT/r5r/issues/136).
+  following CRAN’s policies. Closed \#136.
 
 ## r5r 0.3-1
 
@@ -669,12 +797,10 @@ CRAN release: 2021-01-07
 
 **Minor changes**
 
-- Allow for combination of bicycle and public transport. Closed
-  [\#135](https://github.com/ipeaGIT/r5r/issues/135).
+- Allow for combination of bicycle and public transport. Closed \#135.
 - Added new parameter `mode_egress` to routing functions, so that users
   can explicitly set the transport mode used after egress from public
-  transport (walk, car or bicycle). Closed
-  [\#63](https://github.com/ipeaGIT/r5r/issues/63).
+  transport (walk, car or bicycle). Closed \#63.
 - Allow for using the r5r package off-line, provided the user has
   successfully ran
   [`setup_r5()`](https://ipeagit.github.io/r5r/dev/reference/setup_r5.md)
@@ -687,15 +813,13 @@ CRAN release: 2021-01-05
 **Major changes**
 
 - Added Conveyal’s R5 repo as a git submodule. This will help improve
-  the long term integration between r5r and R5. Closed
-  [\#105](https://github.com/ipeaGIT/r5r/issues/105).
+  the long term integration between r5r and R5. Closed \#105.
 - Internal changes to make r5r compatible with R5 latest version 6.0.1.
 
 **Minor changes**
 
 - Added columns with population and number of schools in sample data set
-  of Porto Alegre to allow for accessibility examples. Closed
-  [\#128](https://github.com/ipeaGIT/r5r/issues/128).
+  of Porto Alegre to allow for accessibility examples. Closed \#128.
 - The `percentiles` parameter in the `travel_time_matrix` function now
   only accepts up to 5 cut points due to changes in R5.
 
@@ -708,12 +832,11 @@ CRAN release: 2020-11-30
 - Expanded number of routes in the sample GTFS for Porto Alegre,
   allowing for more complex/realistic examples.
 - Fixes format of columns of the output of `travel_matrix_function` when
-  the user sets `time_window` parameter. Closes
-  [\#127](https://github.com/ipeaGIT/r5r/issues/127).
+  the user sets `time_window` parameter. Closes \#127.
 - Remove repeated bus route alternatives from the output from
   `detailed_itineraries`
 - Explicitly link destination points to street network before starting.
-  Closes [\#121](https://github.com/ipeaGIT/r5r/issues/121)
+  Closes \#121
 
 ## r5r 0.2-0
 
@@ -725,17 +848,13 @@ CRAN release: 2020-10-20
   `percentiles` it now calculates travel times for multiple departure
   times each minute within a given time window. For now, the function
   automatically set the number of Monte Carlo Draws to 5 times the size
-  of `time_window`. Closes
-  [\#104](https://github.com/ipeaGIT/r5r/issues/104) and
-  [\#118](https://github.com/ipeaGIT/r5r/issues/118)
+  of `time_window`. Closes \#104 and \#118
 
 **Minor changes**
 
-- Added a sample of frequency-based GTFS for Sao Paulo. Closed
-  [\#116](https://github.com/ipeaGIT/r5r/issues/116)
+- Added a sample of frequency-based GTFS for Sao Paulo. Closed \#116
 - Improved documentation of routing functions adding more info on the
-  routing algorithms used in R5. Closes
-  [\#114](https://github.com/ipeaGIT/r5r/issues/114)
+  routing algorithms used in R5. Closes \#114
 
 ## r5r v0.1-1
 

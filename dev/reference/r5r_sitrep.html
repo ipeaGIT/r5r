@@ -21,7 +21,7 @@ The user's Session Info.
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.4.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.4.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,6 @@ The user's Session Info.
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipeaGIT/r5r/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -61,7 +60,7 @@ The user's Session Info.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate an r5r situation report to help debug errors</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/R/r5r_sitrep.R" class="external-link"><code>R/r5r_sitrep.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/R/r5r_sitrep.R" class="external-link"><code>R/r5r_sitrep.R</code></a></small>
       <div class="d-none name"><code>r5r_sitrep.Rd</code></div>
     </div>
 
@@ -88,13 +87,13 @@ and R5 Jar in use, the memory set to Java and user's Session Info.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">r5r_sitrep</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r5r_package_version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ‘2.4.0.9000’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ‘2.4.0.9001’</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r5_jar_version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "7.5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $java_version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "21.0.12"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "21.0.12.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $set_memory</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "-Xmx2G"</span>
@@ -123,10 +122,10 @@ and R5 Jar in use, the memory set to Java and user's Session Info.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> other attached packages:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ggplot2_4.0.3  r5r_2.4.0.9000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ggplot2_4.0.3  r5r_2.4.0.9001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> loaded via a namespace (and not attached):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] gtable_0.3.6        xfun_0.60           bslib_0.12.0       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] gtable_0.3.6        xfun_0.61           bslib_0.12.0       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [4] httr2_1.3.0         htmlwidgets_1.6.4   processx_3.9.0     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] rJava_1.0-18        callr_3.8.0         vctrs_0.7.3        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10] tools_4.6.1         ps_1.9.3            generics_0.1.4     </span>
@@ -141,13 +140,13 @@ and R5 Jar in use, the memory set to Java and user's Session Info.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [37] jquerylib_0.1.4     whisker_0.4.1       openssl_2.4.2      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [40] classInt_0.4-11     cachem_1.1.0        wk_0.9.5           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [43] zip_3.0.2           tidyselect_1.2.1    digest_0.6.39      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [46] sf_1.1-2            dplyr_1.2.1         purrr_1.2.2        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [46] sf_1.1-3            dplyr_1.2.1         purrr_1.2.2        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [49] labeling_0.4.3      fastmap_1.2.0       grid_4.6.1         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [52] cli_3.6.6           magrittr_2.0.5      e1071_1.7-17       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [55] withr_3.0.3         scales_1.4.0        backports_1.5.1    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [58] rmarkdown_2.31      otel_0.2.0          askpass_1.2.1      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [58] rmarkdown_2.32      otel_0.2.0          askpass_1.2.1      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [61] ragg_1.5.2          memoise_2.0.1       evaluate_1.0.5     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [64] knitr_1.51          testthat_3.3.2      s2_1.1.11          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [64] knitr_1.52          testthat_3.3.2      s2_1.1.13          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [67] rlang_1.3.0         isoband_0.3.0       Rcpp_1.1.2         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [70] downlit_0.4.5       glue_1.8.1          DBI_1.3.0          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [73] xml2_1.6.0          rstudioapi_0.19.0   jsonlite_2.0.0     </span>

@@ -18,10 +18,10 @@ used to snap car trips).
 ``` r
 find_snap(
   r5r_network,
-  r5r_core = deprecated(),
   points,
   radius = 1600,
-  mode = "WALK"
+  mode = "WALK",
+  r5r_core = deprecated()
 )
 ```
 
@@ -31,11 +31,6 @@ find_snap(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - points:
 
@@ -51,6 +46,11 @@ find_snap(
 
   A string. Which mode to consider when trying to snap the points to the
   network. Defaults to `WALK`, also allows `BICYCLE` and `CAR`.
+
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
 
 ## Value
 

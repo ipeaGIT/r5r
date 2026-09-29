@@ -75,9 +75,9 @@ the parameter `decay_function = "step"`.
 
 In this example, we will be calculating the number of schools and public
 healthcare facilities accessible by public transport within a travel
-time of up to 20 minutes. The sample data provided contains information
-on the spatial distribution of schools in Porto Alegre in the
-`points$schools` column, and healthcare facilities in the
+time of less than 20 minutes. The sample data provided contains
+information on the spatial distribution of schools in Porto Alegre in
+the `points$schools` column, and healthcare facilities in the
 `points$healthcare` column.
 
 With the code below we compute the number of schools and healthcare
@@ -177,7 +177,13 @@ head(ttm)
 Now to calculate a traditional cumulative opportunity metric like we did
 above, we just need to call the
 [`accessibility::cumulative_cutoff()`](https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html)
-function, and pass our travel time matrix and land use data as input:
+function, and pass our travel time matrix and land use data as input.
+Note that
+[`cumulative_cutoff()`](https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html)
+also counts trips that take exactly the cutoff time, while
+[`r5r::accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+only counts trips strictly shorter than the cutoff, so the two estimates
+can differ slightly:
 
 ``` r
 

@@ -8,7 +8,6 @@ function.
 ``` r
 accessibility(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   destinations,
   opportunities_colnames = "opportunities",
@@ -37,7 +36,8 @@ accessibility(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  output_dir = NULL
+  output_dir = NULL,
+  r5r_core = deprecated()
 )
 ```
 
@@ -47,11 +47,6 @@ accessibility(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - origins, destinations:
 
@@ -126,15 +121,17 @@ accessibility(
   A numeric vector (maximum length of 12). This parameter has different
   effects for each decay function: it indicates the cutoff times in
   minutes when calculating cumulative opportunities accessibility with
-  the `step` function, the median (or inflection point) of the decay
-  curves in the `logistic` and `linear` functions, and the half-life in
-  the `exponential` function. It has no effect when using the
-  `fixed_exponential` function.
+  the `step` function (only trips strictly shorter than the cutoff are
+  counted), the median (or inflection point) of the decay curves in the
+  `logistic` and `linear` functions, and the half-life in the
+  `exponential` function. It must be `NULL` when using the
+  `fixed_exponential` function. Values must be whole numbers between 1
+  and 120 minutes (R5's limit) and are sorted in ascending order.
 
 - decay_value:
 
   A number. Extra parameter to be passed to the selected
-  `decay_function`. Has no effects when `decay_function` is either
+  `decay_function`. Must be `NULL` when `decay_function` is either
   `step` or `exponential`.
 
 - max_walk_time:
@@ -166,12 +163,14 @@ accessibility(
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network. Defaults to no restrictions, as long as
-  `max_trip_duration` is respected. The max time is considered
-  separately for each leg (e.g. if you set `max_car_time` to 15 minutes,
-  you could potentially drive up to 15 minutes to reach transit, and up
-  to *another* 15 minutes to reach the destination after leaving
-  transit). Defaults to `Inf`, no limit.
+  the transit network, or to complete car-only trips. Defaults to no
+  restrictions, as long as `max_trip_duration` is respected. The max
+  time is considered separately for each leg (e.g. if you set
+  `max_car_time` to 15 minutes, you could potentially drive up to 15
+  minutes to reach transit, and up to *another* 15 minutes to reach the
+  destination after leaving transit). Defaults to `Inf`, no limit. In
+  car-only trips, whenever `max_car_time` differs from
+  `max_trip_duration`, the lowest value is considered.
 
 - max_trip_duration:
 
@@ -211,7 +210,9 @@ accessibility(
 - max_fare:
 
   A number. The maximum value that trips can cost when calculating the
-  fastest journey between each origin and destination pair.
+  fastest journey between each origin and destination pair. Defaults to
+  `Inf` (no limit). A finite value requires a `fare_structure`; an error
+  is raised otherwise.
 
 - new_carspeeds:
 
@@ -226,14 +227,14 @@ accessibility(
   table must contain the columns `poly_id` with a unique id for each
   polygon, `scale` with the new speed scaling factors and `priority`,
   which is a number ranking which polygon should be considered in case
-  of overlapping polygons. See more into in the
-  `link to congestion vignette`.
+  of overlapping polygons. See more info in the scenarios vignette
+  ([`vignette("scenarios", package = "r5r")`](https://ipeagit.github.io/r5r/dev/articles/scenarios.md)).
 
 - carspeed_scale:
 
-  Numeric. The default car speed to use for road segments not specified
-  in `new_carspeeds`. By default, it is `NULL` and the speeds of the
-  unlisted roads are kept unchanged.
+  Numeric. The scaling factor applied to the car speed of road segments
+  not specified in `new_carspeeds`. Defaults to `1`, which keeps the
+  speeds of the unlisted roads unchanged.
 
 - new_lts:
 
@@ -285,16 +286,26 @@ accessibility(
   because writing the results directly to disk prevents `r5r` from
   loading them to RAM memory.
 
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
+
 ## Value
 
 A `data.table` with accessibility estimates for all origin points. This
-`data.table` contain columns listing the origin id, the type of
-opportunities to which accessibility was calculated, the travel time
-percentile considered in the accessibility estimate and the specified
-cutoff values (except in when `decay_function` is `fixed_exponential`,
-in which case the `cutoff` parameter is not used). If `output_dir` is
-not `NULL`, the function returns the path specified in that parameter,
-in which the `.csv` files containing the results are saved.
+`data.table` contains the columns `id` (origin id), `opportunity` (the
+type of opportunities to which accessibility was calculated),
+`percentile` (the travel time percentile considered in the estimate),
+`cutoff` (the specified cutoff values, except when `decay_function` is
+`fixed_exponential`, in which case the `cutoff` parameter is not used)
+and `accessibility` (the accessibility estimate). Origins that cannot be
+snapped to the street network get an accessibility of 0 (see
+[`find_snap()`](https://ipeagit.github.io/r5r/dev/reference/find_snap.md)).
+If `output_dir` is not `NULL`, the function returns the path specified
+in that parameter, in which the `.csv` files containing the results are
+saved. With `fixed_exponential`, these files keep a `cutoff` column
+filled with the placeholder value `0`.
 
 ## Decay functions
 
@@ -327,13 +338,15 @@ to use it (inside parentheses) are listed below:
 
 - **Fixed Exponential** (`"fixed_exponential"`):  
   This function is of the form `exp(-Lt)` where L is a single fixed
-  decay constant in the range (0, 1). It is constrained to be positive
-  to ensure weights decrease (rather than grow) with increasing travel
-  time.
+  decay constant in the range (0, 1) and t is the travel time in
+  **seconds**. It is constrained to be positive to ensure weights
+  decrease (rather than grow) with increasing travel time. Note that L
+  is a per-second constant: to use a decay constant expressed per minute
+  (e.g. from the literature), pass it divided by 60.
 
   - Calibration: This function is controlled exclusively by the `L`
-    constant, given by the `decay_value` parameter. Values provided in
-    `cutoffs` are ignored.
+    constant, given by the `decay_value` parameter. `cutoffs` must be
+    `NULL`.
 
 - **Half-life Exponential Decay** (`"exponential"`):  
   This is similar to the fixed-exponential option above, but in this
@@ -348,7 +361,8 @@ to use it (inside parentheses) are listed below:
 
   - Calibration: The transition region is transposable and symmetric
     around the `cutoffs` parameter values, taking `decay_value` minutes
-    to taper down from one to zero.
+    to taper down from one to zero. `decay_value` must be a whole number
+    of minutes between 1 and 59.
 
 ## Transport modes
 
@@ -359,8 +373,7 @@ include:
   `CABLE_CAR`, `GONDOLA`, `FUNICULAR`. The option `TRANSIT`
   automatically considers all public transport modes available.
 
-- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`, `BICYCLE_RENT`,
-  `CAR_PARK`.
+- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`.
 
 ## Level of Traffic Stress (LTS)
 
@@ -530,6 +543,7 @@ access <- accessibility(
   cutoffs = 30,
   max_trip_duration = 30
 )
+#> Warning: `healthcare` has 4 missing values, treated as 0.
 head(access)
 #>                 id opportunity percentile cutoff accessibility
 #>             <char>      <char>      <int>  <int>         <num>

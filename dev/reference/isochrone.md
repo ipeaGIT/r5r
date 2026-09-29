@@ -12,7 +12,6 @@ centroids of all segments in the transport network.
 ``` r
 isochrone(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   mode = "transit",
   mode_egress = "walk",
@@ -34,7 +33,8 @@ isochrone(
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE,
-  sample_size = deprecated()
+  sample_size = deprecated(),
+  r5r_core = deprecated()
 )
 ```
 
@@ -44,11 +44,6 @@ isochrone(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - origins:
 
@@ -131,12 +126,14 @@ isochrone(
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network. Defaults to no restrictions, as long as
-  `max_trip_duration` is respected. The max time is considered
-  separately for each leg (e.g. if you set `max_car_time` to 15 minutes,
-  you could potentially drive up to 15 minutes to reach transit, and up
-  to *another* 15 minutes to reach the destination after leaving
-  transit). Defaults to `Inf`, no limit.
+  the transit network, or to complete car-only trips. Defaults to no
+  restrictions, as long as `max_trip_duration` is respected. The max
+  time is considered separately for each leg (e.g. if you set
+  `max_car_time` to 15 minutes, you could potentially drive up to 15
+  minutes to reach transit, and up to *another* 15 minutes to reach the
+  destination after leaving transit). Defaults to `Inf`, no limit. In
+  car-only trips, whenever `max_car_time` differs from
+  `max_trip_duration`, the lowest value is considered.
 
 - max_trip_duration:
 
@@ -217,6 +214,11 @@ isochrone(
 
   deprecated, no longer has any effect.
 
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
+
 ## Value
 
 A `"sf" "data.frame"` for each isochrone of each origin.
@@ -230,8 +232,7 @@ include:
   `CABLE_CAR`, `GONDOLA`, `FUNICULAR`. The option `TRANSIT`
   automatically considers all public transport modes available.
 
-- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`, `BICYCLE_RENT`,
-  `CAR_PARK`.
+- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`.
 
 ## Level of Traffic Stress (LTS)
 

@@ -18,11 +18,11 @@ more information.
 ``` r
 setup_fare_structure(
   r5r_network,
-  r5r_core = deprecated(),
   base_fare,
   by = "MODE",
   debug_path = NULL,
-  debug_info = NULL
+  debug_info = NULL,
+  r5r_core = deprecated()
 )
 ```
 
@@ -32,11 +32,6 @@ setup_fare_structure(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - base_fare:
 
@@ -89,6 +84,11 @@ setup_fare_structure(
   (but has the positive effect of returning a larger sample of
   itineraries, which might help finding some implementation issues on
   the fare structure).
+
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
 
 ## Value
 

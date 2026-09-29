@@ -5,7 +5,7 @@ Check and convert origin and destination inputs
 ## Usage
 
 ``` r
-assign_points_input(df, name)
+assign_points_input(df, name, unique_ids = TRUE)
 ```
 
 ## Arguments
@@ -17,6 +17,12 @@ assign_points_input(df, name)
 - name:
 
   Object name.
+
+- unique_ids:
+
+  A logical. Whether to raise an error when `df$id` has duplicated
+  values. Defaults to `TRUE`. Set to `FALSE` for row-paired inputs,
+  where the same point may legitimately appear in several rows.
 
 ## Value
 

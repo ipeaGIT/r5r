@@ -11,7 +11,6 @@ sets and time windows.
 ``` r
 expanded_travel_time_matrix(
   r5r_network,
-  r5r_core = deprecated(),
   origins,
   destinations,
   mode = "WALK",
@@ -34,7 +33,8 @@ expanded_travel_time_matrix(
   n_threads = Inf,
   verbose = FALSE,
   progress = FALSE,
-  output_dir = NULL
+  output_dir = NULL,
+  r5r_core = deprecated()
 )
 ```
 
@@ -44,11 +44,6 @@ expanded_travel_time_matrix(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - origins, destinations:
 
@@ -122,12 +117,14 @@ expanded_travel_time_matrix(
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network. Defaults to no restrictions, as long as
-  `max_trip_duration` is respected. The max time is considered
-  separately for each leg (e.g. if you set `max_car_time` to 15 minutes,
-  you could potentially drive up to 15 minutes to reach transit, and up
-  to *another* 15 minutes to reach the destination after leaving
-  transit). Defaults to `Inf`, no limit.
+  the transit network, or to complete car-only trips. Defaults to no
+  restrictions, as long as `max_trip_duration` is respected. The max
+  time is considered separately for each leg (e.g. if you set
+  `max_car_time` to 15 minutes, you could potentially drive up to 15
+  minutes to reach transit, and up to *another* 15 minutes to reach the
+  destination after leaving transit). Defaults to `Inf`, no limit. In
+  car-only trips, whenever `max_car_time` differs from
+  `max_trip_duration`, the lowest value is considered.
 
 - max_trip_duration:
 
@@ -168,14 +165,14 @@ expanded_travel_time_matrix(
   table must contain the columns `poly_id` with a unique id for each
   polygon, `scale` with the new speed scaling factors and `priority`,
   which is a number ranking which polygon should be considered in case
-  of overlapping polygons. See more into in the
-  `link to congestion vignette`.
+  of overlapping polygons. See more info in the scenarios vignette
+  ([`vignette("scenarios", package = "r5r")`](https://ipeagit.github.io/r5r/dev/articles/scenarios.md)).
 
 - carspeed_scale:
 
-  Numeric. The default car speed to use for road segments not specified
-  in `new_carspeeds`. By default, it is `NULL` and the speeds of the
-  unlisted roads are kept unchanged.
+  Numeric. The scaling factor applied to the car speed of road segments
+  not specified in `new_carspeeds`. Defaults to `1`, which keeps the
+  speeds of the unlisted roads unchanged.
 
 - new_lts:
 
@@ -227,6 +224,11 @@ expanded_travel_time_matrix(
   because writing the results directly to disk prevents `r5r` from
   loading them to RAM memory.
 
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
+
 ## Value
 
 A `data.table` with travel time estimates (in minutes) and the routes
@@ -253,8 +255,7 @@ include:
   `CABLE_CAR`, `GONDOLA`, `FUNICULAR`. The option `TRANSIT`
   automatically considers all public transport modes available.
 
-- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`, `BICYCLE_RENT`,
-  `CAR_PARK`.
+- **Non transit modes:** `WALK`, `BICYCLE`, `CAR`.
 
 ## Level of Traffic Stress (LTS)
 

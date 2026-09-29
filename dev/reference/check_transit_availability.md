@@ -13,10 +13,10 @@ date where services are operational, as indicated in the GTFS
 ``` r
 check_transit_availability(
   r5r_network,
-  r5r_core = deprecated(),
   dates = NULL,
   start_date = NULL,
-  end_date = NULL
+  end_date = NULL,
+  r5r_core = deprecated()
 )
 ```
 
@@ -26,11 +26,6 @@ check_transit_availability(
 
   A routable transport network created with
   [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
-
-- r5r_core:
-
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
-  `r5r_network` argument instead.
 
 - dates:
 
@@ -49,6 +44,11 @@ check_transit_availability(
   The end date for a continuous date range. Must be a single character
   string in "YYYY-MM-DD" format or a `Date` object. Must be used with
   `start_date`.
+
+- r5r_core:
+
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  `r5r_network` argument instead.
 
 ## Value
 

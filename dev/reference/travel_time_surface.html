@@ -9,7 +9,7 @@ containing travel times from a specified point."><meta property="og:image" conte
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.4.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.4.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,6 @@ containing travel times from a specified point."><meta property="og:image" conte
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipeaGIT/r5r/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -49,7 +48,7 @@ containing travel times from a specified point."><meta property="og:image" conte
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Compute travel time surfaces.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/master/R/travel_time_surface.R" class="external-link"><code>R/travel_time_surface.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/R/travel_time_surface.R" class="external-link"><code>R/travel_time_surface.R</code></a></small>
       <div class="d-none name"><code>travel_time_surface.Rd</code></div>
     </div>
 
@@ -178,12 +177,15 @@ transit). Defaults to <code>Inf</code>, no limit.</p></dd>
 
 <dt id="arg-max-car-time">max_car_time<a class="anchor" aria-label="anchor" href="#arg-max-car-time"></a></dt>
 <dd><p>An integer. The maximum driving time (in minutes) to
-access and egress the transit network. Defaults to no restrictions, as
-long as <code>max_trip_duration</code> is respected. The max time is considered
+access and egress the transit network, or to complete car-only
+trips. Defaults to no restrictions, as long as <code>max_trip_duration</code>
+is respected. The max time is considered
 separately for each leg (e.g. if you set <code>max_car_time</code> to 15 minutes,
 you could potentially drive up to 15 minutes to reach transit, and up
 to <em>another</em> 15 minutes to reach the destination after leaving transit).
-Defaults to <code>Inf</code>, no limit.</p></dd>
+Defaults to <code>Inf</code>, no limit. In car-only trips, whenever
+<code>max_car_time</code> differs from <code>max_trip_duration</code>, the lowest value is
+considered.</p></dd>
 
 
 <dt id="arg-max-trip-duration">max_trip_duration<a class="anchor" aria-label="anchor" href="#arg-max-trip-duration"></a></dt>
@@ -222,7 +224,9 @@ understand how this object is structured:
 
 <dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
 <dd><p>A number. The maximum value that trips can cost when
-calculating the fastest journey between each origin and destination pair.</p></dd>
+calculating the fastest journey between each origin and destination pair.
+Defaults to <code>Inf</code> (no limit). A finite value requires a <code>fare_structure</code>;
+an error is raised otherwise.</p></dd>
 
 
 <dt id="arg-new-carspeeds">new_carspeeds<a class="anchor" aria-label="anchor" href="#arg-new-carspeeds"></a></dt>
@@ -237,14 +241,14 @@ car speed for all the roads that fall within each polygon. In this case,
 the table must contain the columns <code>poly_id</code> with a unique id for
 each polygon, <code>scale</code> with the new speed scaling factors and
 <code>priority</code>, which is a number ranking which polygon should be
-considered in case of overlapping polygons. See more into in the
-<code>link to congestion vignette</code>.</p></dd>
+considered in case of overlapping polygons. See more info in the
+scenarios vignette (<code><a href="../articles/scenarios.html">vignette("scenarios", package = "r5r")</a></code>).</p></dd>
 
 
 <dt id="arg-carspeed-scale">carspeed_scale<a class="anchor" aria-label="anchor" href="#arg-carspeed-scale"></a></dt>
-<dd><p>Numeric. The default car speed to use for road segments
-not specified in <code>new_carspeeds</code>. By default, it is <code>NULL</code> and the speeds
-of the unlisted roads are kept unchanged.</p></dd>
+<dd><p>Numeric. The scaling factor applied to the car speed
+of road segments not specified in <code>new_carspeeds</code>. Defaults to <code>1</code>,
+which keeps the speeds of the unlisted roads unchanged.</p></dd>
 
 
 <dt id="arg-new-lts">new_lts<a class="anchor" aria-label="anchor" href="#arg-new-lts"></a></dt>
@@ -300,8 +304,7 @@ synchronized among all active threads.</p></dd>
 include:</p><ul><li><p><strong>Transit modes:</strong> <code>TRAM</code>, <code>SUBWAY</code>, <code>RAIL</code>, <code>BUS</code>, <code>FERRY</code>, <code>CABLE_CAR</code>,
 <code>GONDOLA</code>, <code>FUNICULAR</code>. The option <code>TRANSIT</code> automatically considers all
 public transport modes available.</p></li>
-<li><p><strong>Non transit modes:</strong> <code>WALK</code>, <code>BICYCLE</code>, <code>CAR</code>, <code>BICYCLE_RENT</code>,
-<code>CAR_PARK</code>.</p></li>
+<li><p><strong>Non transit modes:</strong> <code>WALK</code>, <code>BICYCLE</code>, <code>CAR</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="level-of-traffic-stress-lts-">Level of Traffic Stress (LTS)<a class="anchor" aria-label="anchor" href="#level-of-traffic-stress-lts-"></a></h2>

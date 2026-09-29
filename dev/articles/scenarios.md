@@ -63,8 +63,8 @@ following parameters that allow one to use custom OSM car speeds.
   roads that fall within each polygon.
 - `carspeed_scale`: this parameter allows one to set the default car
   speed for all of the road segments not specified in `new_carspeeds`.
-  By default, `carspeed_scale = NULL` and the speeds of the unlisted
-  roads are kept unchanged.
+  By default, `carspeed_scale = 1` and the speeds of the unlisted roads
+  are kept unchanged.
 
 Let’s see a couple examples.
 
