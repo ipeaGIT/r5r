@@ -2,17 +2,20 @@
 #'
 #' @description Fast computation of isochrones from a given location. The
 #' function can return either polygon-based or line-based isochrones.
-#' Polygon-based isochrones are generated as concave polygons based on the
-#' travel times from the trip origin to all nodes in the transport network.
-#' Meanwhile, line-based isochronesare based on travel times from each origin
-#' to the centroids of all segments in the transport network.
+#' Polygon-based isochrones are generated from a travel time surface: travel
+#' times from each origin to the centres of a regular grid of Web Mercator
+#' pixels (see `zoom`), from which the isochrone polygons are interpolated with
+#' the marching squares algorithm. Meanwhile, line-based isochrones are based on
+#' travel times from each origin to the centroids of all segments in the
+#' transport network.
 #'
 #' @template r5r_network
 #' @template r5r_core
 #' @param origins Either a `POINT sf` object with WGS84 CRS, or a
 #'        `data.frame` containing the columns `id`, `lon` and `lat`.
 #' @param cutoffs numeric vector. Number of minutes to define the time span of
-#'        each Isochrone. Defaults to `c(0, 15, 30)`.
+#'        each Isochrone. Defaults to `c(0, 15, 30)`. Values are sorted and
+#'        duplicates are removed; at least one value must be greater than 0.
 #' @param zoom Resolution of the travel time surface used to create isochrones,
 #'        can be between `9` and `12.` The default is `10` (which uses cells of
 #'        153 meters at the Equator). More detailed isochrones will result from
@@ -22,7 +25,7 @@
 #'        more information on how the grid cells are defined, see
 #'        \href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}
 #' @param mode A character vector. The transport modes allowed for access,
-#'        transfer and vehicle legs of the trips. Defaults to `WALK`. Please see
+#'        transfer and vehicle legs of the trips. Defaults to `TRANSIT`. Please see
 #'        details for other options.
 #' @param mode_egress A character vector. The transport mode used after egress
 #'        from the last public transport. It can be either `WALK`, `BICYCLE` or
@@ -34,8 +37,8 @@
 #'        how datetimes are parsed.
 #' @param polygon_output A Logical. If `TRUE`, the function outputs
 #'        polygon-based isochrones (the default) based on travel times from each
-#'        origin to a sample of a random  sample nodes in the transport network
-#'        (see parameter `sample_size`). If `FALSE`, the function outputs
+#'        origin to a regular grid of points (see parameter `zoom`). If `FALSE`,
+#'        the function outputs
 #'        line-based isochrones based on travel times from each origin to the
 #'        centroids of all segments in the transport network.
 #' @param time_window An integer. The time window in minutes for which `r5r`
@@ -67,8 +70,8 @@
 #'        Defaults to `Inf`, no limit. In car-only trips, whenever
 #'        `max_car_time` differs from `max_trip_duration`, the lowest value is
 #'        considered.
-#' @param max_trip_duration An integer. The maximum trip duration in minutes.
-#'        Defaults to 120 minutes (2 hours).
+#' @param max_trip_duration Ignored. The maximum trip duration is set
+#'        internally from `max(cutoffs)`.
 #' @param walk_speed A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
 #' @param bike_speed A numeric. Average cycling speed in km/h. Defaults to 12 km/h.
 #' @param max_rides An integer. The maximum number of public transport rides
@@ -83,7 +86,7 @@
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
 #' @param progress A logical. Whether to show a progress counter when running
-#'        the router. Defaults to `FALSE`. Only works when `verbose` is set to
+#'        the router. Defaults to `TRUE`. Only works when `verbose` is set to
 #'        `FALSE`, so the progress counter does not interfere with `R5`'s output
 #'        messages. Setting `progress` to `TRUE` may impose a small penalty for
 #'        computation efficiency, because the progress counter must be
@@ -91,7 +94,16 @@
 #' @template verbose
 #' @param sample_size deprecated, no longer has any effect.
 #'
-#' @return A `"sf" "data.frame"` for each isochrone of each origin.
+#' @return A `"sf" "data.frame"`. With `polygon_output = TRUE`, one `POLYGON`
+#'         or `MULTIPOLYGON` per origin, percentile and cutoff, with columns
+#'         `id` (origin id), `isochrone` (cutoff in minutes), `percentile` (a
+#'         string such as `"p50"`) and `polygons`. Each polygon covers the whole
+#'         area reached from 0 up to its cutoff, so polygons of larger cutoffs
+#'         contain those of smaller ones. With `polygon_output = FALSE`, one
+#'         `LINESTRING` per street segment reached, with columns `id` (origin
+#'         id), `edge_index`, `osm_id`, `isochrone` (the smallest cutoff at or
+#'         above the segment's travel time, i.e. bands are intervals),
+#'         `travel_time_p50` and `geometry`.
 #'
 #' @template transport_modes_section
 #' @template lts_section
@@ -214,14 +226,15 @@ isochrone <- function(r5r_network,
   checkmate::assert_class(r5r_network, "r5r_network")
 
   # check cutoffs
-  checkmate::assert_numeric(cutoffs, lower = 0)
+  checkmate::assert_numeric(cutoffs, lower = 0, finite = TRUE, any.missing = FALSE, min.len = 1)
   checkmate::assert_logical(polygon_output)
 
   # max cutoff is used as max_trip_duration
   max_trip_duration = as.integer(max(cutoffs))
 
-  # sort cutoffs and include 0
-  if (min(cutoffs) > 0) {cutoffs <- sort(c(0, cutoffs))}
+  # sort cutoffs, remove duplicates and include 0
+  cutoffs <- sort(unique(c(0, cutoffs)))
+  if (length(cutoffs) < 2) cli::cli_abort("{.arg cutoffs} must contain at least one value greater than 0.")
 
   ## whether polygon- or line-based isochrones
   if (isTRUE(polygon_output)) {
@@ -243,7 +256,8 @@ isochrone <- function(r5r_network,
                               max_walk_time = max_walk_time,
                               max_bike_time = max_bike_time,
                               max_car_time = max_car_time,
-                              max_trip_duration = max_trip_duration,
+                              # route past max(cutoffs) so the outer band is interpolated like the inner ones
+                              max_trip_duration = max_trip_duration + 10L,
                               walk_speed = walk_speed,
                               bike_speed = bike_speed,
                               max_rides = max_rides,
@@ -257,7 +271,7 @@ isochrone <- function(r5r_network,
     # convert surfaces to isochrones
     # this uses a few named functions to traverse down the nested list
     # (percentiles inside origins)
-    isos <- purrr::list_rbind(purrr::map2(surfaces, origins$id, percentiles_to_isodt, cutoffs))
+    isos <- purrr::list_rbind(purrr::map2(surfaces, as.character(origins$id), percentiles_to_isodt, cutoffs))
     isos <- isos[, c("id", "isochrone", "percentile", "polygons")]
     return(sf::st_as_sf(isos, sf_column_name="polygons"))
   }
@@ -270,7 +284,7 @@ isochrone <- function(r5r_network,
 
     network_e <- r5r::street_network_to_sf(r5r_network)$edges
 
-    destinations <- sf::st_centroid(network_e)
+    destinations <- sf::st_centroid(sf::st_set_agr(network_e, "constant"))
     }
 
   # rename id col
@@ -322,7 +336,8 @@ isochrone <- function(r5r_network,
        # temp_iso <- sf::st_as_sf(temp_iso)
 
       temp_iso <- temp_iso[order(-isochrone, -travel_time_p50)]
-      data.table::setcolorder(temp_iso, c('edge_index', 'osm_id', 'isochrone', 'travel_time_p50'))
+      temp_iso[, id := as.character(orig)]
+      data.table::setcolorder(temp_iso, c('id', 'edge_index', 'osm_id', 'isochrone', 'travel_time_p50'))
       # plot(temp_iso)
       return(temp_iso)
     }

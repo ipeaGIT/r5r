@@ -77,7 +77,7 @@ be possible and will give an error.
 
 With the code below, `r5r` determines the isochrones considering the median travel 
 time of multiple travel time estimates calculated departing every minute over a 
-60-minute time window, between 2pm and 4pm. 
+60-minute time window, between 2pm and 3pm.
 
 ```{r, message = FALSE}
 # read all points in the city
@@ -92,7 +92,6 @@ time_intervals <- seq(0, 100, 10)
 # routing inputs
 mode <- c("WALK", "TRANSIT")
 max_walk_time <- 30      # in minutes
-max_trip_duration <- 90  # in minutes
 time_window <- 60        # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
@@ -106,7 +105,6 @@ iso1 <- r5r::isochrone(
   cutoffs = time_intervals,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
-  max_trip_duration = max_trip_duration,
   time_window = time_window,
   progress = FALSE,
   zoom = 10
@@ -139,7 +137,7 @@ ggplot() +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
-## 3.1 Line-based isochrones 
+## 3.2 Line-based isochrones 
 
 Alternatively, you can build line-based isochrones by simply passing
 `polygon_output = FALSE` to the `isochrone()` function. Note that you do not need 
@@ -156,7 +154,6 @@ iso2 <- r5r::isochrone(
   cutoffs = time_intervals,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
-  max_trip_duration = max_trip_duration,
   time_window = time_window,
   progress = FALSE
   )
@@ -173,7 +170,7 @@ ggplot() +
   geom_sf(data = iso2, aes(color=factor(isochrone)), alpha = .7) +
   scale_color_manual(values = rev(colors) ) +
   geom_point(data = central_bus_stn, aes(x=lon, y=lat), color='black') +
-  labs(color = "Travel time\n(in minutes)", color='sadasd') +
+  labs(color = "Travel time\n(in minutes)") +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```
