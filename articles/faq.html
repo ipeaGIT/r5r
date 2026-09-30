@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>FAQ - Frequently Asked Questions</h1>
             
-            <h4 data-toc-skip class="date">2026-09-29</h4>
+            <h4 data-toc-skip class="date">2026-09-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/faq.Rmd" class="external-link"><code>vignettes/faq.Rmd</code></a></small>
       <div class="d-none name"><code>faq.Rmd</code></div>
@@ -108,8 +108,8 @@ walking time “as the crow flies” in the routing.</p>
 </details>
 </div>
 <div class="section level2">
-<h2 id="is-it-possible-to-run-r5r-with-custom-modifications-to-street-nework-data">2. Is it possible to run <code>r5r</code> with custom modifications
-to street nework data?<a class="anchor" aria-label="anchor" href="#is-it-possible-to-run-r5r-with-custom-modifications-to-street-nework-data"></a>
+<h2 id="is-it-possible-to-run-r5r-with-custom-modifications-to-street-network-data">2. Is it possible to run <code>r5r</code> with custom modifications
+to street network data?<a class="anchor" aria-label="anchor" href="#is-it-possible-to-run-r5r-with-custom-modifications-to-street-network-data"></a>
 </h2>
 <details><summary>
 click to expand
@@ -117,14 +117,14 @@ click to expand
 <p>Yes, all routing and accessibility functions in <code>r5r</code> have
 new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code>
 and <code>new_lts</code> which allow one to use custom car speeds and
-LTS levels for cycling. These parameters provide convient and efficient
-ways to build different scenarios of traffic congestion, road closure
-and interventions in cycling infrastructure. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
+LTS levels for cycling. These parameters provide convenient and
+efficient ways to build different scenarios of traffic congestion, road
+closure and interventions in cycling infrastructure. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
 vignette</a>. For other changes to the OSM network (e.g. including a new
 road link), you would need to edit the OpenStreetMap <code>.pbf</code>
-file direclty before using it in <code>r5r</code>. To to this, you can
+file directly before using it in <code>r5r</code>. To to this, you can
 edit the <code>.pbf</code> file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
-(https://wiki.openstreetmap.org/wiki/JOSM)</a>. Mind you that the the
+(https://wiki.openstreetmap.org/wiki/JOSM)</a>. Mind you that the
 OpenStreetMap tags can be changed but they cannot be removed from the
 data.</p>
 </blockquote>
@@ -160,7 +160,7 @@ hardcoded upstream in R5 so we cannot change it in r5r. The advised
 <code>OpenStreetMap.pbf</code> to a smaller area of interest. One can do
 this using the <a href="https://wiki.openstreetmap.org/wiki/Osmosis" class="external-link">Osmosis</a> software.
 The code below illustrates how to do this by calling Osmosis from within
-R. You need to donwload the Osmosis program to your computer. The latest
+R. You need to download the Osmosis program to your computer. The latest
 releases can be downloaded from <a href="https://github.com/openstreetmap/osmosis/releases" class="external-link">here</a>. Next,
 you can use this step-by-step illustrated in the example below:</p>
 </blockquote>
@@ -177,7 +177,7 @@ you can use this step-by-step illustrated in the example below:</p>
 <span></span>
 <span><span class="co"># prepare call to osmosis</span></span>
 <span><span class="va">osmosis_cmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s --read-pbf %s --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf %s"</span>,</span>
-<span>                       <span class="va">osmosis_path</span>, <span class="va">large_pbf_path</span>, </span>
+<span>                       <span class="va">osmosis_path</span>, <span class="va">large_pbf_path</span>,</span>
 <span>                       <span class="va">area_bbox</span><span class="op">@</span><span class="va">xmin</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">ymin</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">xmax</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">ymax</span>,</span>
 <span>                       <span class="va">smaller_pbf</span><span class="op">)</span></span>
 <span></span>

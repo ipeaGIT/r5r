@@ -16,23 +16,23 @@ click to expand
 > the input point to the snapped location. So R5 is accounting for this
 > walking time “as the crow flies” in the routing.
 
-## 2. Is it possible to run `r5r` with custom modifications to street nework data?
+## 2. Is it possible to run `r5r` with custom modifications to street network data?
 
 click to expand
 
 > Yes, all routing and accessibility functions in `r5r` have new
 > parameters `new_carspeeds`, `carspeed_scale` and `new_lts` which allow
 > one to use custom car speeds and LTS levels for cycling. These
-> parameters provide convient and efficient ways to build different
+> parameters provide convenient and efficient ways to build different
 > scenarios of traffic congestion, road closure and interventions in
 > cycling infrastructure. [See this
 > vignette](https://ipeagit.github.io/r5r/articles/scenarios.html). For
 > other changes to the OSM network (e.g. including a new road link), you
-> would need to edit the OpenStreetMap `.pbf` file direclty before using
+> would need to edit the OpenStreetMap `.pbf` file directly before using
 > it in `r5r`. To to this, you can edit the `.pbf` file with [JOSM
 > (https://wiki.openstreetmap.org/wiki/JOSM)](https://wiki.openstreetmap.org/wiki/JOSM).
-> Mind you that the the OpenStreetMap tags can be changed but they
-> cannot be removed from the data.
+> Mind you that the OpenStreetMap tags can be changed but they cannot be
+> removed from the data.
 
 ## 3. Why are the output results of `time_travel_matrix()` and `detailed_itineraries()` different?
 
@@ -57,7 +57,7 @@ click to expand
 > `OpenStreetMap.pbf` to a smaller area of interest. One can do this
 > using the [Osmosis](https://wiki.openstreetmap.org/wiki/Osmosis)
 > software. The code below illustrates how to do this by calling Osmosis
-> from within R. You need to donwload the Osmosis program to your
+> from within R. You need to download the Osmosis program to your
 > computer. The latest releases can be downloaded from
 > [here](https://github.com/openstreetmap/osmosis/releases). Next, you
 > can use this step-by-step illustrated in the example below:
@@ -75,7 +75,7 @@ click to expand
 
     # prepare call to osmosis
     osmosis_cmd <- sprintf("%s --read-pbf %s --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf %s",
-                           osmosis_path, large_pbf_path, 
+                           osmosis_path, large_pbf_path,
                            area_bbox@xmin, area_bbox@ymin, area_bbox@xmax, area_bbox@ymax,
                            smaller_pbf)
 

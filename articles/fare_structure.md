@@ -180,7 +180,7 @@ the entire system follows the same rules.
 
 ``` r
 
-fare_structure <- setup_fare_structure(r5r_network, 
+fare_structure <- setup_fare_structure(r5r_network,
                                        base_fare = 4.8,
                                        by = "MODE")
 ```
@@ -330,9 +330,9 @@ fare_structure$fares_per_type
 ```
 
 We need to do a few small changes in the `fares_per_type` table to
-accomodate the fare rules of Porto Alegre. In the `"RAIL"` mode, we need
-to set `unlimited_transfers` and `allow_same_route_transfer` to `TRUE`,
-and update `fare` to 4.50. In the `"BUS"` mode, we can let the
+accommodate the fare rules of Porto Alegre. In the `"RAIL"` mode, we
+need to set `unlimited_transfers` and `allow_same_route_transfer` to
+`TRUE`, and update `fare` to 4.50. In the `"BUS"` mode, we can let the
 `allow_same_route_transfer` set to its default `FALSE` value, because
 even though there is a discount for transfers between buses (which is
 set in the following section), that discount is not valid when
@@ -572,8 +572,8 @@ differences and unreachable destinations:
 
 ``` r
 
-# plot of overall travel time differences between limited and unlimited cost travel time matrices 
-time_difference = ttm[!is.na(travel_time_500), .(count = .N), 
+# plot of overall travel time differences between limited and unlimited cost travel time matrices
+time_difference = ttm[!is.na(travel_time_500), .(count = .N),
                       by = .(travel_time_unl, travel_time_500)]
 
 p1 <- ggplot(time_difference, aes(y = travel_time_unl, x = travel_time_500)) +
@@ -597,7 +597,7 @@ p2 <- ggplot(unreachable, aes(x=travel_time_unl, y=perc)) +
   geom_col() +
   coord_flip() +
   scale_x_continuous(breaks = seq(0, 45, 5)) +
-  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2), 
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
                      labels = paste0(seq(0, 100, 20), "%")) +
   theme_light() +
   labs(x = "travel time (minutes)\nwithout monetary cost restriction",

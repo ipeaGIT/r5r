@@ -117,7 +117,7 @@ vignette)](https://ipeagit.github.io/r5r/articles/fare_structure.html).
 
 # create basic fare structure
 fare_structure <- setup_fare_structure(
-  r5r_network, 
+  r5r_network,
   base_fare = 4.8,
   by = "MODE"
   )
@@ -126,7 +126,7 @@ fare_structure <- setup_fare_structure(
 fare_structure$fares_per_type[, fare := fcase(type == "BUS", 4.80,
                                              type == "RAIL", 4.50)]
 
-# update the cost of tranfers
+# update the cost of transfers
 fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
                                                  first_leg != second_leg, 8.37)]
 
@@ -163,7 +163,7 @@ all destinations considering multiple cutoffs of monetary costs:
 
 ``` r
 
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 prtf <- pareto_frontier(
