@@ -54,17 +54,20 @@ datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
-Defaults to 10 minutes. The function returns the result based on median
-travel times. Please read the time window vignette for more details on its
-usage \code{vignette("time_window", package = "r5r")}}
+Defaults to 10 minutes. The output has one row per departure minute (and
+per Monte Carlo draw, see \code{draws_per_minute}). Please read the time window
+vignette for more details on its usage
+\code{vignette("time_window", package = "r5r")}}
 
 \item{breakdown}{A logical. Whether to include detailed information about
 each trip in the output. If \code{FALSE} (the default), the output lists the
 total time between each origin-destination pair and the routes used to
 complete the trip for each minute of the specified time window. If \code{TRUE},
-the output includes the total access, waiting, in-vehicle and transfer
-time of each trip. Please note that setting this parameter to \code{TRUE} makes
-the function significantly slower.}
+the output also includes the access, waiting, in-vehicle, transfer and
+egress time of each trip, and its number of public transport rides. For
+trips made only by walking, cycling or driving (\code{routes} equal to
+\verb{[WALK]}, \verb{[BICYCLE]} or \verb{[CAR]}), these components are all \code{0} and
+\code{total_time} holds the whole trip.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network
@@ -187,7 +190,26 @@ completely absent from the final output if no trips could be completed in
 any of the minutes of the time window. If for a single pair trips could be
 completed in some of the minutes of the time window, but not for all of
 them, the minutes in which trips couldn't be completed will have \code{NA}
-travel time and routes used. If \code{output_dir} is not \code{NULL}, the function
+travel time and routes used. A pair may also appear with \code{NA} in every
+minute, when its only trips are slightly longer than \code{max_trip_duration}
+(e.g. walk-only trips, whose time to walk between the point and the
+street network is added after the limit is applied).
+
+The output has the columns \code{from_id}, \code{to_id}, \code{departure_time},
+\code{draw_number}, \code{routes} and \code{total_time}, plus \code{access_time},
+\code{wait_time}, \code{ride_time}, \code{transfer_time}, \code{egress_time} and \code{n_rides}
+when \code{breakdown = TRUE}. \code{routes} lists the public transport routes used,
+separated by \code{|}, or the street mode (e.g. \verb{[WALK]}) for trips that do
+not use public transport. \code{draw_number} only labels the draws of a
+departure minute; their order is arbitrary.
+
+Travel times are reported with a precision of 0.1 minute, and trips
+longer than \code{max_trip_duration} get \code{NA}. \code{travel_time_matrix()} rounds
+travel times down to whole minutes, so it can report trips that are up to
+0.9 minute over \code{max_trip_duration} which are \code{NA} here. With walk-,
+bike- or car-only \code{mode}, travel times are whole minutes.
+
+If \code{output_dir} is not \code{NULL}, the function
 returns the path specified in that parameter, in which the \code{.csv} files
 containing the results are saved.
 }

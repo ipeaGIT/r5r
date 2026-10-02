@@ -52,9 +52,11 @@ from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 each trip in the output. If \code{FALSE} (the default), the output lists the
 total time between each origin-destination pair and the routes used to
 complete the trip for each minute of the specified time window. If \code{TRUE},
-the output includes the total access, waiting, in-vehicle and transfer
-time of each trip. Please note that setting this parameter to \code{TRUE} makes
-the function significantly slower.}
+the output also includes the access, waiting, in-vehicle, transfer and
+egress time of each trip, and its number of public transport rides. For
+trips made only by walking, cycling or driving (\code{routes} equal to
+\verb{[WALK]}, \verb{[BICYCLE]} or \verb{[CAR]}), these components are all \code{0} and
+\code{total_time} holds the whole trip.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, to make transfers within the network

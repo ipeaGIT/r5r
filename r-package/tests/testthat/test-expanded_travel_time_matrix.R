@@ -207,10 +207,11 @@ test_that("output is correct", {
 
 test_that("using transit outside the gtfs dates throws an error", {
   expect_error(
-    tester(r5r_network,
-           mode='transit',
-           departure_datetime = as.POSIXct("13-05-2025 14:00:00",
-                                           format = "%d-%m-%Y %H:%M:%S")
-    )
+    default_tester(r5r_network,
+                   mode='transit',
+                   departure_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                                   format = "%d-%m-%Y %H:%M:%S")
+    ),
+    "no transit services"
   )
 })
