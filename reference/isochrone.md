@@ -2,10 +2,12 @@
 
 Fast computation of isochrones from a given location. The function can
 return either polygon-based or line-based isochrones. Polygon-based
-isochrones are generated as concave polygons based on the travel times
-from the trip origin to all nodes in the transport network. Meanwhile,
-line-based isochronesare based on travel times from each origin to the
-centroids of all segments in the transport network.
+isochrones are generated from a travel time surface: travel times from
+each origin to the centres of a regular grid of Web Mercator pixels (see
+`zoom`), from which the isochrone polygons are interpolated with the
+marching squares algorithm. Meanwhile, line-based isochrones are based
+on travel times from each origin to the centroids of all segments in the
+transport network.
 
 ## Usage
 
@@ -53,8 +55,8 @@ isochrone(
 - mode:
 
   A character vector. The transport modes allowed for access, transfer
-  and vehicle legs of the trips. Defaults to `WALK`. Please see details
-  for other options.
+  and vehicle legs of the trips. Defaults to `TRANSIT`. Please see
+  details for other options.
 
 - mode_egress:
 
@@ -65,7 +67,8 @@ isochrone(
 - cutoffs:
 
   numeric vector. Number of minutes to define the time span of each
-  Isochrone. Defaults to `c(0, 15, 30)`.
+  Isochrone. Defaults to `c(0, 15, 30)`. Values are sorted and
+  duplicates are removed; at least one value must be greater than 0.
 
 - zoom:
 
@@ -89,11 +92,10 @@ isochrone(
 - polygon_output:
 
   A Logical. If `TRUE`, the function outputs polygon-based isochrones
-  (the default) based on travel times from each origin to a sample of a
-  random sample nodes in the transport network (see parameter
-  `sample_size`). If `FALSE`, the function outputs line-based isochrones
-  based on travel times from each origin to the centroids of all
-  segments in the transport network.
+  (the default) based on travel times from each origin to a regular grid
+  of points (see parameter `zoom`). If `FALSE`, the function outputs
+  line-based isochrones based on travel times from each origin to the
+  centroids of all segments in the transport network.
 
 - time_window:
 
@@ -137,8 +139,8 @@ isochrone(
 
 - max_trip_duration:
 
-  An integer. The maximum trip duration in minutes. Defaults to 120
-  minutes (2 hours).
+  Ignored. The maximum trip duration is set internally from
+  `max(cutoffs)`.
 
 - walk_speed:
 
@@ -204,7 +206,7 @@ isochrone(
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
+  Defaults to `TRUE`. Only works when `verbose` is set to `FALSE`, so
   the progress counter does not interfere with `R5`'s output messages.
   Setting `progress` to `TRUE` may impose a small penalty for
   computation efficiency, because the progress counter must be
@@ -221,7 +223,16 @@ isochrone(
 
 ## Value
 
-A `"sf" "data.frame"` for each isochrone of each origin.
+A `"sf" "data.frame"`. With `polygon_output = TRUE`, one `POLYGON` or
+`MULTIPOLYGON` per origin, percentile and cutoff, with columns `id`
+(origin id), `isochrone` (cutoff in minutes), `percentile` (a string
+such as `"p50"`) and `polygons`. Each polygon covers the whole area
+reached from 0 up to its cutoff, so polygons of larger cutoffs contain
+those of smaller ones. With `polygon_output = FALSE`, one `LINESTRING`
+per street segment reached, with columns `id` (origin id), `edge_index`,
+`osm_id`, `isochrone` (the smallest cutoff at or above the segment's
+travel time, i.e. bands are intervals), `travel_time_p50` and
+`geometry`.
 
 ## Transport modes
 
@@ -346,13 +357,13 @@ head(iso_poly)
 #> Simple feature collection with 4 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: -51.25671 ymin: -30.07741 xmax: -51.16196 ymax: -29.98943
+#> Bounding box:  xmin: -51.25603 ymin: -30.0783 xmax: -51.16081 ymax: -29.99003
 #> Geodetic CRS:  WGS 84
 #>                    id isochrone percentile                       polygons
-#> 1 bus_central_station       120        p50 POLYGON ((-51.2114 -30.0762...
-#> 2 bus_central_station        90        p50 POLYGON ((-51.21208 -30.063...
-#> 3 bus_central_station        60        p50 POLYGON ((-51.2114 -30.0481...
-#> 4 bus_central_station        30        p50 POLYGON ((-51.21414 -30.034...
+#> 1 bus_central_station       120        p50 POLYGON ((-51.21071 -30.076...
+#> 2 bus_central_station        90        p50 POLYGON ((-51.2114 -30.0637...
+#> 3 bus_central_station        60        p50 POLYGON ((-51.21071 -30.048...
+#> 4 bus_central_station        30        p50 POLYGON ((-51.21346 -30.035...
 
 
 # estimate line-based isochrone from origin
@@ -364,28 +375,27 @@ iso_lines <- isochrone(
   departure_datetime = departure_datetime,
   cutoffs = seq(0, 100, 25)
   )
-#> Warning: st_centroid assumes attributes are constant over geometries
 
 head(iso_lines)
-#> Simple feature collection with 6 features and 13 fields
+#> Simple feature collection with 6 features and 14 fields
 #> Geometry type: LINESTRING
 #> Dimension:     XY
 #> Bounding box:  xmin: -51.18467 ymin: -30.05426 xmax: -51.17266 ymax: -30.02355
 #> Geodetic CRS:  WGS 84
-#>   edge_index   osm_id isochrone travel_time_p50 from_vertex to_vertex
-#> 1        644 27238056       100             100         443       444
-#> 2        645 27238056       100             100         444       443
-#> 3       1048 27370379       100             100         717       718
-#> 4       1049 27370379       100             100         718       717
-#> 5       1058 27370382       100             100         722       723
-#> 6       1059 27370382       100             100         723       722
-#>   street_class  length walk   car car_speed bicycle bicycle_lts
-#> 1     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2
-#> 2     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2
-#> 3        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
-#> 4        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
-#> 5        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
-#> 6        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
+#>                    id edge_index   osm_id isochrone travel_time_p50 from_vertex
+#> 1 bus_central_station        644 27238056       100             100         443
+#> 2 bus_central_station        645 27238056       100             100         444
+#> 3 bus_central_station       1048 27370379       100             100         717
+#> 4 bus_central_station       1049 27370379       100             100         718
+#> 5 bus_central_station       1058 27370382       100             100         722
+#> 6 bus_central_station       1059 27370382       100             100         723
+#>   to_vertex street_class  length walk   car car_speed bicycle bicycle_lts
+#> 1       444     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2
+#> 2       443     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2
+#> 3       718        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 4       717        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 5       723        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
+#> 6       722        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
 #>                         geometry
 #> 1 LINESTRING (-51.17282 -30.0...
 #> 2 LINESTRING (-51.17266 -30.0...

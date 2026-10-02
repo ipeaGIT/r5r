@@ -85,7 +85,7 @@ networks, high zooms may not be possible and will give an error.
 With the code below, `r5r` determines the isochrones considering the
 median travel time of multiple travel time estimates calculated
 departing every minute over a 60-minute time window, between 2pm and
-4pm.
+3pm.
 
 ``` r
 
@@ -101,7 +101,6 @@ time_intervals <- seq(0, 100, 10)
 # routing inputs
 mode <- c("WALK", "TRANSIT")
 max_walk_time <- 30      # in minutes
-max_trip_duration <- 90  # in minutes
 time_window <- 60        # in minutes
 departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
@@ -115,7 +114,6 @@ iso1 <- r5r::isochrone(
   cutoffs = time_intervals,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
-  max_trip_duration = max_trip_duration,
   time_window = time_window,
   progress = FALSE,
   zoom = 10
@@ -136,15 +134,15 @@ head(iso1)
 #> Simple feature collection with 6 features and 3 fields
 #> Geometry type: MULTIPOLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: -51.2677 ymin: -30.11306 xmax: -51.13312 ymax: -29.98943
+#> Bounding box:  xmin: -51.26701 ymin: -30.11365 xmax: -51.13243 ymax: -29.99003
 #> Geodetic CRS:  WGS 84
 #>                id isochrone percentile                       polygons
-#> 1 89a90128a8fffff       100        p50 MULTIPOLYGON (((-51.1496 -3...
-#> 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16608 -...
-#> 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16882 -...
-#> 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17706 -...
-#> 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22513 -...
-#> 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.2265 -3...
+#> 1 89a90128a8fffff       100        p50 MULTIPOLYGON (((-51.14891 -...
+#> 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16493 -...
+#> 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16814 -...
+#> 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17638 -...
+#> 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22444 -...
+#> 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.22581 -...
 ```
 
 Now it becomes super simple to visualize our isochrones on a map:
@@ -169,7 +167,7 @@ ggplot() +
   theme(axis.title = element_blank())
 ```
 
-![](isochrones_files/figure-html/unnamed-chunk-6-1.png) \## 3.1
+![](isochrones_files/figure-html/unnamed-chunk-6-1.png) \## 3.2
 Line-based isochrones
 
 Alternatively, you can build line-based isochrones by simply passing
@@ -189,32 +187,30 @@ iso2 <- r5r::isochrone(
   cutoffs = time_intervals,
   departure_datetime = departure_datetime,
   max_walk_time = max_walk_time,
-  max_trip_duration = max_trip_duration,
   time_window = time_window,
   progress = FALSE
   )
-#> Warning: st_centroid assumes attributes are constant over geometries
 
 head(iso2)
-#> Simple feature collection with 6 features and 13 fields
+#> Simple feature collection with 6 features and 14 fields
 #> Geometry type: LINESTRING
 #> Dimension:     XY
 #> Bounding box:  xmin: -51.20291 ymin: -30.10872 xmax: -51.1844 ymax: -30.09557
 #> Geodetic CRS:  WGS 84
-#>   edge_index    osm_id isochrone travel_time_p50 from_vertex to_vertex
-#> 1      32820 289389686       100              98        7464     14753
-#> 2      32821 289389686       100              98       14753      7464
-#> 3      34254 326021940       100              98       15308     15309
-#> 4      34255 326021940       100              98       15309     15308
-#> 5      35888 337865739       100              98       15671     15690
-#> 6      35889 337865739       100              98       15690     15671
-#>   street_class  length  walk   car car_speed bicycle bicycle_lts
-#> 1        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2
-#> 2        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2
-#> 3        OTHER 227.438  TRUE FALSE    40.248    TRUE           1
-#> 4        OTHER 227.438  TRUE FALSE    40.248    TRUE           1
-#> 5        OTHER  87.668 FALSE FALSE    40.248   FALSE           1
-#> 6        OTHER  87.668 FALSE FALSE    40.248   FALSE           1
+#>                id edge_index    osm_id isochrone travel_time_p50 from_vertex
+#> 1 89a90128a8fffff      32820 289389686       100              98        7464
+#> 2 89a90128a8fffff      32821 289389686       100              98       14753
+#> 3 89a90128a8fffff      34254 326021940       100              98       15308
+#> 4 89a90128a8fffff      34255 326021940       100              98       15309
+#> 5 89a90128a8fffff      35888 337865739       100              98       15671
+#> 6 89a90128a8fffff      35889 337865739       100              98       15690
+#>   to_vertex street_class  length  walk   car car_speed bicycle bicycle_lts
+#> 1     14753        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2
+#> 2      7464        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2
+#> 3     15309        OTHER 227.438  TRUE FALSE    40.248    TRUE           1
+#> 4     15308        OTHER 227.438  TRUE FALSE    40.248    TRUE           1
+#> 5     15690        OTHER  87.668 FALSE FALSE    40.248   FALSE           1
+#> 6     15671        OTHER  87.668 FALSE FALSE    40.248   FALSE           1
 #>                         geometry
 #> 1 LINESTRING (-51.19973 -30.1...
 #> 2 LINESTRING (-51.20291 -30.1...
@@ -232,7 +228,7 @@ ggplot() +
   geom_sf(data = iso2, aes(color=factor(isochrone)), alpha = .7) +
   scale_color_manual(values = rev(colors) ) +
   geom_point(data = central_bus_stn, aes(x=lon, y=lat), color='black') +
-  labs(color = "Travel time\n(in minutes)", color='sadasd') +
+  labs(color = "Travel time\n(in minutes)") +
   theme_minimal() +
   theme(axis.title = element_blank())
 ```

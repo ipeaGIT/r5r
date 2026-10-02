@@ -145,12 +145,12 @@ head(acc, n = 10)
 #>              <char>      <char>      <int>  <int>         <num>
 #>  1: 89a8100c603ffff     schools         10     45            13
 #>  2: 89a8100c603ffff     schools         20     45            13
-#>  3: 89a8100c603ffff     schools         50     45             6
+#>  3: 89a8100c603ffff     schools         50     45             7
 #>  4: 89a8100c603ffff     schools         70     45             6
 #>  5: 89a8100c603ffff     schools         80     45             6
 #>  6: 89a8100c617ffff     schools         10     45            14
 #>  7: 89a8100c617ffff     schools         20     45            14
-#>  8: 89a8100c617ffff     schools         50     45            12
+#>  8: 89a8100c617ffff     schools         50     45             9
 #>  9: 89a8100c617ffff     schools         70     45             6
 #> 10: 89a8100c617ffff     schools         80     45             6
 ```
@@ -289,16 +289,16 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       49.4
-#>  2:       39.0
-#>  3:       38.4
-#>  4:       42.3
-#>  5:       45.0
-#>  6:       49.9
-#>  7:       52.3
-#>  8:       51.5
-#>  9:       42.3
-#> 10:       43.3
+#>  1:       46.6
+#>  2:       48.7
+#>  3:       46.9
+#>  4:       37.6
+#>  5:       37.3
+#>  6:       49.8
+#>  7:       49.0
+#>  8:       40.1
+#>  9:       36.8
+#> 10:       45.0
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.

@@ -105,8 +105,36 @@
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`,
   `max_trip_duration`, `time_window`, `percentiles`, `n_threads`,
   `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`,
-  `suboptimal_minutes`) now reject non-integer values instead of
-  silently truncating them.
+  `suboptimal_minutes`, and `zoom` in
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md))
+  now reject non-integer values instead of silently truncating them.
+- Polygon-based isochrones from
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
+  were shifted by half a grid cell to the north-west (about 94 m at the
+  default `zoom = 10` in Porto Alegre), because R5’s travel times,
+  computed at the centre of each Web Mercator pixel, were placed at the
+  pixel’s corner. Polygons are now in the right place.
+- In polygon-based
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md),
+  the polygon of the largest cutoff was cut short, because routing
+  stopped exactly at that cutoff and its boundary could not be
+  interpolated like the others. Its size therefore depended on the other
+  cutoffs requested (e.g. the 30-minute transit isochrone was up to 19%
+  smaller with `cutoffs = 30` than with `cutoffs = c(30, 60)`). Routing
+  now continues 10 minutes past the largest cutoff, so the largest
+  polygons get larger.
+- Line-based
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
+  (`polygon_output = FALSE`) assigned segments to the wrong band when
+  `cutoffs` were not in ascending order, and crashed with duplicated
+  `cutoffs`. `cutoffs` are now sorted and deduplicated, and must be
+  finite, non-missing and include a value greater than 0.
+- Line-based
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
+  now returns an `id` column with the origin id, so results for several
+  origins can be told apart. The `id` column is now always character in
+  both outputs (it used to keep the input type in polygon output), and
+  the `st_centroid` warning on every line-based call is gone.
 - [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
   now detects and aborts with an informative message when a cached
   `network.dat` triggers a silent internal rebuild that fails on high
@@ -141,6 +169,13 @@
   time among all departures within `time_window` (not the earliest
   arrival), and that `suboptimal_minutes` requires
   `shortest_path = FALSE` and no `fare_structure`.
+- The documentation of
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
+  now describes the Web Mercator grid method, lists the output columns,
+  explains that polygon bands are cumulative while line bands are
+  intervals, gives the right defaults of `mode` and `progress`, and
+  states that `max_trip_duration` is ignored (it is set from
+  `max(cutoffs)`). The isochrones vignette was fixed accordingly.
 - The documentation of the `fixed_exponential` decay function in
   [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
   now states that its decay constant is applied to travel times in
