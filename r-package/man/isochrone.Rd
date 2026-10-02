@@ -38,7 +38,7 @@ isochrone(
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
 \item{mode}{A character vector. The transport modes allowed for access,
-transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+transfer and vehicle legs of the trips. Defaults to \code{TRANSIT}. Please see
 details for other options.}
 
 \item{mode_egress}{A character vector. The transport mode used after egress
@@ -46,7 +46,8 @@ from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
 \item{cutoffs}{numeric vector. Number of minutes to define the time span of
-each Isochrone. Defaults to \code{c(0, 15, 30)}.}
+each Isochrone. Defaults to \code{c(0, 15, 30)}. Values are sorted and
+duplicates are removed; at least one value must be greater than 0.}
 
 \item{zoom}{Resolution of the travel time surface used to create isochrones,
 can be between \code{9} and \code{12.} The default is \code{10} (which uses cells of
@@ -65,8 +66,8 @@ how datetimes are parsed.}
 
 \item{polygon_output}{A Logical. If \code{TRUE}, the function outputs
 polygon-based isochrones (the default) based on travel times from each
-origin to a sample of a random  sample nodes in the transport network
-(see parameter \code{sample_size}). If \code{FALSE}, the function outputs
+origin to a regular grid of points (see parameter \code{zoom}). If \code{FALSE},
+the function outputs
 line-based isochrones based on travel times from each origin to the
 centroids of all segments in the transport network.}
 
@@ -103,8 +104,8 @@ Defaults to \code{Inf}, no limit. In car-only trips, whenever
 \code{max_car_time} differs from \code{max_trip_duration}, the lowest value is
 considered.}
 
-\item{max_trip_duration}{An integer. The maximum trip duration in minutes.
-Defaults to 120 minutes (2 hours).}
+\item{max_trip_duration}{Ignored. The maximum trip duration is set
+internally from \code{max(cutoffs)}.}
 
 \item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.}
 
@@ -151,7 +152,7 @@ detailed output, which can be useful for debugging issues not caught by
 \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
+the router. Defaults to \code{TRUE}. Only works when \code{verbose} is set to
 \code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
 messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
 computation efficiency, because the progress counter must be
@@ -163,15 +164,26 @@ synchronized among all active threads.}
 Please use the \code{r5r_network} argument instead.}
 }
 \value{
-A \verb{"sf" "data.frame"} for each isochrone of each origin.
+A \verb{"sf" "data.frame"}. With \code{polygon_output = TRUE}, one \code{POLYGON}
+or \code{MULTIPOLYGON} per origin, percentile and cutoff, with columns
+\code{id} (origin id), \code{isochrone} (cutoff in minutes), \code{percentile} (a
+string such as \code{"p50"}) and \code{polygons}. Each polygon covers the whole
+area reached from 0 up to its cutoff, so polygons of larger cutoffs
+contain those of smaller ones. With \code{polygon_output = FALSE}, one
+\code{LINESTRING} per street segment reached, with columns \code{id} (origin
+id), \code{edge_index}, \code{osm_id}, \code{isochrone} (the smallest cutoff at or
+above the segment's travel time, i.e. bands are intervals),
+\code{travel_time_p50} and \code{geometry}.
 }
 \description{
 Fast computation of isochrones from a given location. The
 function can return either polygon-based or line-based isochrones.
-Polygon-based isochrones are generated as concave polygons based on the
-travel times from the trip origin to all nodes in the transport network.
-Meanwhile, line-based isochronesare based on travel times from each origin
-to the centroids of all segments in the transport network.
+Polygon-based isochrones are generated from a travel time surface: travel
+times from each origin to the centres of a regular grid of Web Mercator
+pixels (see \code{zoom}), from which the isochrone polygons are interpolated with
+the marching squares algorithm. Meanwhile, line-based isochrones are based on
+travel times from each origin to the centroids of all segments in the
+transport network.
 }
 \section{Transport modes}{
 
