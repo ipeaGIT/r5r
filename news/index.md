@@ -135,6 +135,15 @@
   origins can be told apart. The `id` column is now always character in
   both outputs (it used to keep the input type in polygon output), and
   the `st_centroid` warning on every line-based call is gone.
+- [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  searched departures in the wrong time window for walk-, bike- or
+  car-only trips when `max_walk_time`, `max_bike_time` or `max_car_time`
+  was lower than `max_trip_duration`. The search window was set from
+  `max_trip_duration` before it was lowered to that limit, so trips
+  arrived well before `arrival_datetime` (e.g. with `mode = "WALK"`,
+  `max_trip_duration = 120` and `max_walk_time = 20`, departures between
+  12:00 and 12:19 for an arrival at 14:00, instead of between 13:40 and
+  13:59).
 - [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
   now detects and aborts with an informative message when a cached
   `network.dat` triggers a silent internal rebuild that fails on high
@@ -169,6 +178,24 @@
   time among all departures within `time_window` (not the earliest
   arrival), and that `suboptimal_minutes` requires
   `shortest_path = FALSE` and no `fare_structure`.
+- The documentation of
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  now describes its output correctly (one row per pair reachable in
+  time, with the latest departure; pairs not reachable in time are
+  absent), explains that `max_trip_duration` also sets the search
+  window, and documents the `"24:MM:SS"` departure times after midnight
+  and the whole-minute precision of walk-, bike- or car-only trips.
+- The documentation of
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  now lists the output columns and the format of `routes`, explains that
+  the time components of `breakdown = TRUE` are `0` for trips without
+  public transport, why some pairs can appear with `NA` in every minute,
+  and why a few trips just over `max_trip_duration` are `NA` here
+  although
+  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+  reports them. It no longer states that `time_window` results are based
+  on median travel times, nor that `breakdown = TRUE` makes the function
+  significantly slower.
 - The documentation of
   [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
   now describes the Web Mercator grid method, lists the output columns,

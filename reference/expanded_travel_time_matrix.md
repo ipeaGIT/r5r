@@ -74,8 +74,9 @@ expanded_travel_time_matrix(
 
   An integer. The time window in minutes for which `r5r` will calculate
   multiple travel time matrices departing each minute. Defaults to 10
-  minutes. The function returns the result based on median travel times.
-  Please read the time window vignette for more details on its usage
+  minutes. The output has one row per departure minute (and per Monte
+  Carlo draw, see `draws_per_minute`). Please read the time window
+  vignette for more details on its usage
   [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md)
 
 - breakdown:
@@ -84,9 +85,11 @@ expanded_travel_time_matrix(
   the output. If `FALSE` (the default), the output lists the total time
   between each origin-destination pair and the routes used to complete
   the trip for each minute of the specified time window. If `TRUE`, the
-  output includes the total access, waiting, in-vehicle and transfer
-  time of each trip. Please note that setting this parameter to `TRUE`
-  makes the function significantly slower.
+  output also includes the access, waiting, in-vehicle, transfer and
+  egress time of each trip, and its number of public transport rides.
+  For trips made only by walking, cycling or driving (`routes` equal to
+  `[WALK]`, `[BICYCLE]` or `[CAR]`), these components are all `0` and
+  `total_time` holds the whole trip.
 
 - max_walk_time:
 
@@ -242,9 +245,29 @@ A pair is completely absent from the final output if no trips could be
 completed in any of the minutes of the time window. If for a single pair
 trips could be completed in some of the minutes of the time window, but
 not for all of them, the minutes in which trips couldn't be completed
-will have `NA` travel time and routes used. If `output_dir` is not
-`NULL`, the function returns the path specified in that parameter, in
-which the `.csv` files containing the results are saved.
+will have `NA` travel time and routes used. A pair may also appear with
+`NA` in every minute, when its only trips are slightly longer than
+`max_trip_duration` (e.g. walk-only trips, whose time to walk between
+the point and the street network is added after the limit is applied).
+
+The output has the columns `from_id`, `to_id`, `departure_time`,
+`draw_number`, `routes` and `total_time`, plus `access_time`,
+`wait_time`, `ride_time`, `transfer_time`, `egress_time` and `n_rides`
+when `breakdown = TRUE`. `routes` lists the public transport routes
+used, separated by `|`, or the street mode (e.g. `[WALK]`) for trips
+that do not use public transport. `draw_number` only labels the draws of
+a departure minute; their order is arbitrary.
+
+Travel times are reported with a precision of 0.1 minute, and trips
+longer than `max_trip_duration` get `NA`.
+[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+rounds travel times down to whole minutes, so it can report trips that
+are up to 0.9 minute over `max_trip_duration` which are `NA` here. With
+walk-, bike- or car-only `mode`, travel times are whole minutes.
+
+If `output_dir` is not `NULL`, the function returns the path specified
+in that parameter, in which the `.csv` files containing the results are
+saved.
 
 ## Transport modes
 

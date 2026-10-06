@@ -133,9 +133,10 @@ datetimes are parsed.</p></dd>
 <dt id="arg-time-window">time_window<a class="anchor" aria-label="anchor" href="#arg-time-window"></a></dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
-Defaults to 10 minutes. The function returns the result based on median
-travel times. Please read the time window vignette for more details on its
-usage <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
+Defaults to 10 minutes. The output has one row per departure minute (and
+per Monte Carlo draw, see <code>draws_per_minute</code>). Please read the time window
+vignette for more details on its usage
+<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
 
 
 <dt id="arg-breakdown">breakdown<a class="anchor" aria-label="anchor" href="#arg-breakdown"></a></dt>
@@ -143,9 +144,11 @@ usage <code><a href="../articles/time_window.html">vignette("time_window", packa
 each trip in the output. If <code>FALSE</code> (the default), the output lists the
 total time between each origin-destination pair and the routes used to
 complete the trip for each minute of the specified time window. If <code>TRUE</code>,
-the output includes the total access, waiting, in-vehicle and transfer
-time of each trip. Please note that setting this parameter to <code>TRUE</code> makes
-the function significantly slower.</p></dd>
+the output also includes the access, waiting, in-vehicle, transfer and
+egress time of each trip, and its number of public transport rides. For
+trips made only by walking, cycling or driving (<code>routes</code> equal to
+<code>[WALK]</code>, <code>[BICYCLE]</code> or <code>[CAR]</code>), these components are all <code>0</code> and
+<code>total_time</code> holds the whole trip.</p></dd>
 
 
 <dt id="arg-max-walk-time">max_walk_time<a class="anchor" aria-label="anchor" href="#arg-max-walk-time"></a></dt>
@@ -304,7 +307,23 @@ completely absent from the final output if no trips could be completed in
 any of the minutes of the time window. If for a single pair trips could be
 completed in some of the minutes of the time window, but not for all of
 them, the minutes in which trips couldn't be completed will have <code>NA</code>
-travel time and routes used. If <code>output_dir</code> is not <code>NULL</code>, the function
+travel time and routes used. A pair may also appear with <code>NA</code> in every
+minute, when its only trips are slightly longer than <code>max_trip_duration</code>
+(e.g. walk-only trips, whose time to walk between the point and the
+street network is added after the limit is applied).</p>
+<p>The output has the columns <code>from_id</code>, <code>to_id</code>, <code>departure_time</code>,
+<code>draw_number</code>, <code>routes</code> and <code>total_time</code>, plus <code>access_time</code>,
+<code>wait_time</code>, <code>ride_time</code>, <code>transfer_time</code>, <code>egress_time</code> and <code>n_rides</code>
+when <code>breakdown = TRUE</code>. <code>routes</code> lists the public transport routes used,
+separated by <code>|</code>, or the street mode (e.g. <code>[WALK]</code>) for trips that do
+not use public transport. <code>draw_number</code> only labels the draws of a
+departure minute; their order is arbitrary.</p>
+<p>Travel times are reported with a precision of 0.1 minute, and trips
+longer than <code>max_trip_duration</code> get <code>NA</code>. <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code> rounds
+travel times down to whole minutes, so it can report trips that are up to
+0.9 minute over <code>max_trip_duration</code> which are <code>NA</code> here. With walk-,
+bike- or car-only <code>mode</code>, travel times are whole minutes.</p>
+<p>If <code>output_dir</code> is not <code>NULL</code>, the function
 returns the path specified in that parameter, in which the <code>.csv</code> files
 containing the results are saved.</p>
     </div>

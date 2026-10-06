@@ -4,13 +4,15 @@ Computation of travel time estimates between one or multiple origin
 destination pairs considering a time of arrival. This function considers
 a time of arrival set by the user. The function returns the travel time
 of the trip with the latest departure time that arrives before the
-arrival time set by the user. If you want to calculate travel times
-considering a departure time, have a' look at the
+arrival time set by the user. Departures are searched minute by minute
+between `arrival_datetime - max_trip_duration` and `arrival_datetime`,
+so `max_trip_duration` also sets the search window. If you want to
+calculate travel times considering a departure time, have a look at the
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
 function. This function is a wrapper around
 [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md).
-On one hand, this means this the output of this function has more
-columns (more info) compared the output of
+On one hand, this means the output of this function has more columns
+(more info) compared to the output of
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md).
 On the other hand, this function can be very memory intensive if the
 user allows for really long max trip duration.
@@ -80,9 +82,11 @@ arrival_travel_time_matrix(
   the output. If `FALSE` (the default), the output lists the total time
   between each origin-destination pair and the routes used to complete
   the trip for each minute of the specified time window. If `TRUE`, the
-  output includes the total access, waiting, in-vehicle and transfer
-  time of each trip. Please note that setting this parameter to `TRUE`
-  makes the function significantly slower.
+  output also includes the access, waiting, in-vehicle, transfer and
+  egress time of each trip, and its number of public transport rides.
+  For trips made only by walking, cycling or driving (`routes` equal to
+  `[WALK]`, `[BICYCLE]` or `[CAR]`), these components are all `0` and
+  `total_time` holds the whole trip.
 
 - max_walk_time:
 
@@ -227,20 +231,20 @@ arrival_travel_time_matrix(
 
 ## Value
 
-A `data.table` with travel time estimates (in minutes) and the routes
-used in each trip between origin and destination pairs, for each minute
-of the specified time window. Each set of origin, destination and
-departure minute can appear up to N times, where N is the number of
-Monte Carlo draws specified in the function arguments (please note that
-this only applies when the GTFS feeds that describe the transit network
-include a frequencies table, otherwise only a single draw is performed).
-A pair is completely absent from the final output if no trips could be
-completed in any of the minutes of the time window. If for a single pair
-trips could be completed in some of the minutes of the time window, but
-not for all of them, the minutes in which trips couldn't be completed
-will have `NA` travel time and routes used. If `output_dir` is not
-`NULL`, the function returns the path specified in that parameter, in
-which the `.csv` files containing the results are saved.
+A `data.table` with one row per origin-destination pair that can be
+reached by `arrival_datetime`, describing the trip with the latest
+departure that still arrives in time: its `departure_time`, the `routes`
+used and its `total_time` (in minutes), plus the columns added by
+`breakdown = TRUE` (see
+[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)).
+Pairs that cannot be reached in time are absent from the output. When
+the search window crosses midnight, departure times after midnight are
+reported as `"24:MM:SS"`, and only the public transport services of the
+departure day are considered. Trips made only by walking, cycling or
+driving have travel times in whole minutes, so they can arrive up to 59
+seconds after `arrival_datetime`. If `output_dir` is not `NULL`, the
+function returns the path specified in that parameter, in which the
+`.csv` files containing the results are saved.
 
 ## Transport modes
 
