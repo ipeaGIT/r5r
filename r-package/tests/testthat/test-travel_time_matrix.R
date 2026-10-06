@@ -365,3 +365,17 @@ test_that("integer arguments reject non-integer values", {
     "data.table"
   )
 })
+
+test_that("output_dir CSVs leave percentiles over max_trip_duration empty", {
+  f <- function(od = NULL) travel_time_matrix(
+    r5r_network, pois, pois, mode = c("WALK", "TRANSIT"), departure_datetime = departure_datetime,
+    percentiles = c(5, 95), max_trip_duration = 30, time_window = 30, n_threads = 2, progress = FALSE,
+    output_dir = od)
+  od <- tempfile("r5r_csv_"); dir.create(od); on.exit(unlink(od, recursive = TRUE), add = TRUE)
+  mem <- f(); f(od)
+  csv <- data.table::rbindlist(lapply(list.files(od, full.names = TRUE), data.table::fread,
+    na.strings = "", colClasses = list(character = c("from_id", "to_id"))))
+  data.table::setkey(mem, from_id, to_id); data.table::setkey(csv, from_id, to_id)
+  expect_true(anyNA(mem$travel_time_p95))
+  expect_true(isTRUE(all.equal(as.data.frame(csv), as.data.frame(mem), check.attributes = FALSE)))
+})

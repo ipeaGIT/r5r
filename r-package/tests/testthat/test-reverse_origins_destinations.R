@@ -129,3 +129,13 @@ check_csv_orientation(travel_time_matrix)
 check_csv_orientation(arrival_travel_time_matrix)
 check_csv_orientation(expanded_travel_time_matrix)
 
+
+test_that("walk-only runs with more than 5000 origins skip the swap and work", {
+  # spo has no elevation .tif, so the walk-only origin/destination swap applies there
+  big <- data.table::rbindlist(rep(list(spo_points[, .(id, lon, lat)]), 16))[1:5001][, id := as.character(.I)]
+  r <- expanded_travel_time_matrix(spo_network, big, spo_points[1:3, ], mode = "WALK",
+    departure_datetime = departure_datetime, max_trip_duration = 10, time_window = 1,
+    n_threads = 2, progress = FALSE)
+  expect_true(nrow(r) > 0)
+  expect_true(all(r$from_id %in% big$id) && all(r$to_id %in% spo_points$id[1:3]))
+})

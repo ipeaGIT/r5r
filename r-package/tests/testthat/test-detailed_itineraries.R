@@ -436,3 +436,14 @@ test_that("row-paired inputs may repeat ids, all-to-all inputs may not", {
     regexp = "duplicated ids"
   )
 })
+
+test_that("leg geometries have no repeated consecutive vertices", {
+  di <- detailed_itineraries(r5r_network, pois[1:5, ], pois[1:5, ], mode = c("WALK", "TRANSIT"),
+    departure_datetime = departure_datetime, max_trip_duration = 60, all_to_all = TRUE,
+    shortest_path = TRUE, n_threads = 2, progress = FALSE)
+  rep_v <- vapply(sf::st_geometry(di), function(g) {
+    m <- sf::st_coordinates(g)[, 1:2, drop = FALSE]
+    nrow(m) > 2 && any(rowSums(abs(diff(m))) == 0)
+  }, logical(1))
+  expect_false(any(rep_v))
+})
