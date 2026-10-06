@@ -223,7 +223,7 @@ public class RDataFrame {
                 row = new StringJoiner(",");
 
                 for (String c:columnNames) {
-                    row.add(csvField(String.valueOf(dataFrame.get(c).get(i))));
+                    row.add(csvField(Objects.toString(dataFrame.get(c).get(i), ""))); // null (NA) -> empty field
                 }
                 pw.println(row);
             }

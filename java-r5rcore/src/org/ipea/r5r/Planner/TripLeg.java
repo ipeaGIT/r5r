@@ -15,6 +15,7 @@ import com.conveyal.r5.transit.TripPattern;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import org.ipea.r5r.Utils.Utils;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateArrays;
 import org.locationtech.jts.geom.LineString;
 
 import java.util.ArrayList;
@@ -117,7 +118,11 @@ public class TripLeg {
     }
 
     public LineString getGeometry() {
-        return geometry;
+        // consecutive transit hops share their stop and street paths can repeat points; s2 rejects
+        // repeated vertices. A line of identical points is kept as is (a 1-point LINESTRING is invalid)
+        Coordinate[] coords = CoordinateArrays.removeRepeatedPoints(geometry.getCoordinates());
+        return coords.length >= 2 && coords.length < geometry.getNumPoints()
+                ? geometry.getFactory().createLineString(coords) : geometry;
     }
 
     public static TripLeg newDirectLeg(String mode, StreetSegment streetSegment, EdgeStore edgeStore) {

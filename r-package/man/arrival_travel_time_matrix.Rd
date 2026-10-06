@@ -162,7 +162,7 @@ results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents \code{r5r} from loading them to
-RAM memory.}
+RAM memory. Missing values (\code{NA}) are written as empty fields.}
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
 Please use the \code{r5r_network} argument instead.}
@@ -196,6 +196,8 @@ travel times considering a departure time, have a look at the
 function has more columns (more info) compared to the output of
 \code{\link[=travel_time_matrix]{travel_time_matrix()}}. On the other hand, this function can be very memory
 intensive if the user allows for really long max trip duration.
+\code{destinations} can have at most 5000 rows, a limit of R5 for detailed path
+information; split larger sets into chunks.
 }
 \section{Transport modes}{
 

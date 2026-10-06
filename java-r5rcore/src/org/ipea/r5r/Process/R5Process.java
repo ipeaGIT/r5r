@@ -208,7 +208,7 @@ public abstract class R5Process<T, A> {
         } catch (Exception e) {
             e.printStackTrace();
             // re-throw as unchecked so we get an error on the R side
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
 
         int nProcessed = totalProcessed.getAndIncrement();
