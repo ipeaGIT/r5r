@@ -131,6 +131,7 @@ travel_time_surface <- function(r5r_network,
   # R5 only supports grids between zoom 9 and 12
   checkmate::assert_int(zoom, lower = 9, upper = 12)
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   origins <- assign_points_input(origins, "origins")
   mode_list <- assign_mode(mode, mode_egress)

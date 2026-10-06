@@ -171,6 +171,7 @@ expanded_travel_time_matrix <- function(r5r_network,
 
   checkmate::assert_class(r5r_network, "r5r_network")
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm.
   # skipped when output_dir is set: Java writes the CSVs with the swapped from_id/to_id and names

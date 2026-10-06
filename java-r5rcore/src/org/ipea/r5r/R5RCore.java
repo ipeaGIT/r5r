@@ -601,6 +601,13 @@ public class R5RCore {
 
     // ------------------------------ SCENARIOS ----------------------------------------
 
+    // Discards the scenario network and restores the default routing properties.
+    // Called from R on exit of every routing function, so that nothing set for a
+    // call that fails (in R or in Java) leaks into the next call.
+    public void resetRoutingProperties() {
+        this.routingProperties.reset();
+    }
+
     public String applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
         Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();
 
