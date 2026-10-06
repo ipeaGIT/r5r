@@ -39,6 +39,7 @@ r-package/rjavaenv/
 quality_reports/
 .claude/settings.local.json
 .claude/state/
+CLAUDE.local.md
 rjavaenv/
 r-package/inst/extdata/*/gtfs_errors.csv
 bash.exe.stackdump
