@@ -620,7 +620,7 @@ reverse_back_if_direct_mode <- function(travel_times, origins, destinations, mod
 #'
 #' @param elevation Character.
 #'
-#' @return Character. Corretly formatted elevation.
+#' @return Character. Correctly formatted elevation.
 #' @family setting functions
 #'
 #' @keywords internal

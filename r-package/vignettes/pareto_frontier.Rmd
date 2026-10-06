@@ -5,8 +5,8 @@ output: rmarkdown::html_vignette
 abstract: "This vignette shows how to use the `pareto_frontier()` function to examine the trade-offs between travel time and monetary cost in travel time matrices in r5r."
 urlcolor: blue
 vignette: >
-  %\VignetteIndexEntry{Trade-offs between travel time and monetary cost} 
-  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{Trade-offs between travel time and monetary cost}
+  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 bibliography: references.json
 ---
@@ -23,22 +23,22 @@ knitr::opts_chunk$set(
 # 1. Introduction
 
 In most cases, transport routing models find either the fastest or the lowest-cost
-routes that connect places in a given transport network. Sometimes, though, we 
-might want a more sophisticated analysis that considers both the time and monetary 
-costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge 
-for routing models because of the trade-offs between the objectives of minimizing 
+routes that connect places in a given transport network. Sometimes, though, we
+might want a more sophisticated analysis that considers both the time and monetary
+costs that public transport passengers have to face. The problem here is that simultaneously accounting for both time and monetary costs is a major challenge
+for routing models because of the trade-offs between the objectives of minimizing
 trip duration and cost [@conway2019getting].
 
-To address this problem, `r5r` has a function called `pareto_frontier()`, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette 
-uses a reproducible example to demonstrate how to use `pareto_frontier()` and 
+To address this problem, `r5r` has a function called `pareto_frontier()`, which calculates the most efficient route possibilities between origin destination pairs considering multiple combinations of travel time and monetary costs. This vignette
+uses a reproducible example to demonstrate how to use `pareto_frontier()` and
 interpret its results.
 
 
 
 ## 2. What the `pareto_frontier` means.
 
-Imagine a hypothetical journey from A to B. There are multiple route alternatives 
-between this origin and destination with varying combinations of travel time and 
+Imagine a hypothetical journey from A to B. There are multiple route alternatives
+between this origin and destination with varying combinations of travel time and
 cost (figure below).
 
 * Walking from A to B would be the **cheapest** option but it would take 50 minutes.
@@ -48,23 +48,23 @@ cost (figure below).
     * two buses with one transfer, $5 for 29 min.
     * taking the subway after walking to the station , $6 for 20 min.
 
-This figure illustrates the Pareto frontier of alternative routes from A to B. In 
-other words, it shows the most optimal set of route alternatives between A and B. 
-There are certainly other route options, but there is no other option that is both 
+This figure illustrates the Pareto frontier of alternative routes from A to B. In
+other words, it shows the most optimal set of route alternatives between A and B.
+There are certainly other route options, but there is no other option that is both
 faster and cheaper at the same time.
 
 ```{r, echo = FALSE, fig.width=7, fig.height=4}
 library(ggplot2)
 
 # data.frame
-df <- structure(list(option = c(1, 2, 3, 4, 5), 
-                     modes = c("Walk", "Bus","Bus + Bus", "Subway", "Bus + Subway"), 
-                     time = c(50, 35, 29, 20, 15), 
-                     cost = c(0, 3, 5, 6, 8)), class = "data.frame", 
+df <- structure(list(option = c(1, 2, 3, 4, 5),
+                     modes = c("Walk", "Bus","Bus + Bus", "Subway", "Bus + Subway"),
+                     time = c(50, 35, 29, 20, 15),
+                     cost = c(0, 3, 5, 6, 8)), class = "data.frame",
                 row.names = c(NA, -5L))
 
 # figure
-ggplot(data=df, aes(x=cost, y=time, label = modes)) + 
+ggplot(data=df, aes(x=cost, y=time, label = modes)) +
   geom_step(linetype = "dashed") +
   geom_point() +
   geom_text(color='gray30', hjust = -.2, nudge_x = 0.05, angle = 45) +
@@ -77,12 +77,12 @@ ggplot(data=df, aes(x=cost, y=time, label = modes)) +
 
 <br>
 
-This kind of abstraction allows us to have a better grasp of the trade-offs between travel time and monetary cost passengers face when using public transport. It also 
-allows us to calculate cumulative-opportunity accessibility metrics with cutoffs 
-for both time and cost (e.g. the number of jobs reachable from a given origin with 
+This kind of abstraction allows us to have a better grasp of the trade-offs between travel time and monetary cost passengers face when using public transport. It also
+allows us to calculate cumulative-opportunity accessibility metrics with cutoffs
+for both time and cost (e.g. the number of jobs reachable from a given origin with
 limits of 40 minutes and $5) (ref paper by Matt and Anson).
 
-Let's see a couple concrete examples showing how `r5r` can calculate the Pareto 
+Let's see a couple concrete examples showing how `r5r` can calculate the Pareto
 frontier for multiple origins.
 
 
@@ -91,8 +91,8 @@ frontier for multiple origins.
 
 ### 3.1 Build routable transport network with `build_network()`
 
-First, let's build the network and create the routing inputs. In this example 
-we'll be using the a sample data set for the city of Porto Alegre (Brazil) 
+First, let's build the network and create the routing inputs. In this example
+we'll be using the a sample data set for the city of Porto Alegre (Brazil)
 included in `r5r`.
 
 ```{r, message = FALSE}
@@ -121,8 +121,8 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 ### 3.2 Set up the fare structure
 
-Now we need to set what are the fare rules of our public transport system. These 
-rules will be used by `R5` to calculate the monetary cost of alternative routes. 
+Now we need to set what are the fare rules of our public transport system. These
+rules will be used by `R5` to calculate the monetary cost of alternative routes.
 In the case of Porto Alegre, the fare rules are as follows:
 * Each bus ticket costs R$ 4.80.
 *  Riding a second bus adds `$` 2.40 to the total cost. Subsequent bus rides cost the full ticket price of $ 4.80.
@@ -135,7 +135,7 @@ We can create `list` object with these fare rules with the support of the `setup
 ```{r}
 # create basic fare structure
 fare_structure <- setup_fare_structure(
-  r5r_network, 
+  r5r_network,
   base_fare = 4.8,
   by = "MODE"
   )
@@ -144,7 +144,7 @@ fare_structure <- setup_fare_structure(
 fare_structure$fares_per_type[, fare := fcase(type == "BUS", 4.80,
                                              type == "RAIL", 4.50)]
 
-# update the cost of tranfers
+# update the cost of transfers
 fare_structure$fares_per_transfer[, fare := fcase(first_leg == "BUS" & second_leg == "BUS", 7.2,
                                                  first_leg != second_leg, 8.37)]
 
@@ -156,7 +156,7 @@ fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 
 ```
 
-For convenience, we can save these fare rules as a `zip` file and load again for 
+For convenience, we can save these fare rules as a `zip` file and load again for
 a future application.
 
 
@@ -172,7 +172,7 @@ fare_structure <- r5r::read_fare_structure(file.path(data_path, "fares/fares_poa
 
 ### 3.3 Calculating a `pareto_frontier()`.
 
-In this example, we calculate the Pareto frontier from all origins to all 
+In this example, we calculate the Pareto frontier from all origins to all
 destinations considering multiple cutoffs of monetary costs:
 
 * $1, which would only allow for walking trips
@@ -182,7 +182,7 @@ destinations considering multiple cutoffs of monetary costs:
 * $8.37, which would allow for walking walking + bus + rail
 
 ```{r}
-departure_datetime <- as.POSIXct("13-05-2019 14:00:00", 
+departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                  format = "%d-%m-%Y %H:%M:%S")
 
 prtf <- pareto_frontier(
@@ -200,16 +200,16 @@ head(prtf)
 ```
 
 
-For the sake of illustration, let's check the optimum route alternatives from 
-the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the 
-Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without 
+For the sake of illustration, let's check the optimum route alternatives from
+the Farrapos train station to (a) the Praia de Belas shopping mall and (b) the
+Moinhos hospital. An optimum route alternative means that one cannot make a faster trip without
 increasing costs, and one cannot make a cheaper trip without increasing travel time.
 
 
 ```{r, echo = FALSE, fig.width=7, fig.height=4, warning=FALSE}
 # select origin and destinations
 pf2 <- dplyr::filter(prtf, to_id == 'farrapos_station'  &
-                       from_id %in% c('moinhos_de_vento_hospital', 
+                       from_id %in% c('moinhos_de_vento_hospital',
                                       'praia_de_belas_shopping_center'))
 
 # recode modes
@@ -220,11 +220,11 @@ pf2[, modes := fcase(monetary_cost == 1,   'Walk',
                      monetary_cost == 8.37, 'Bus + Train')]
 
 # plot
-ggplot(data=pf2, aes(x=monetary_cost, y=travel_time, color=from_id, label = modes)) + 
+ggplot(data=pf2, aes(x=monetary_cost, y=travel_time, color=from_id, label = modes)) +
   geom_step(linetype = "dashed") +
   geom_point() +
   geom_text(color='gray30', hjust = -.2, nudge_x = 0.05, angle = 45) +
-  labs(title='Pareto frontier of alternative routes from Farrapos station to:', 
+  labs(title='Pareto frontier of alternative routes from Farrapos station to:',
        subtitle = 'Praia de Belas shopping mall and Moinhos hospital',
        color='Destination') +
   scale_x_continuous(name="Travel cost ($)", breaks=seq(0,12,2)) +
