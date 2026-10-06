@@ -168,18 +168,17 @@ RAM memory.}
 Please use the \code{r5r_network} argument instead.}
 }
 \value{
-A \code{data.table} with travel time estimates (in minutes) and the
-routes used in each trip between origin and destination pairs, for each
-minute of the specified time window. Each set of origin, destination and
-departure minute can appear up to N times, where N is the number of Monte
-Carlo draws specified in the function arguments (please note that this
-only applies when the GTFS feeds that describe the transit network include
-a frequencies table, otherwise only a single draw is performed). A pair is
-completely absent from the final output if no trips could be completed in
-any of the minutes of the time window. If for a single pair trips could be
-completed in some of the minutes of the time window, but not for all of
-them, the minutes in which trips couldn't be completed will have \code{NA}
-travel time and routes used. If \code{output_dir} is not \code{NULL}, the function
+A \code{data.table} with one row per origin-destination pair that can be
+reached by \code{arrival_datetime}, describing the trip with the latest
+departure that still arrives in time: its \code{departure_time}, the \code{routes}
+used and its \code{total_time} (in minutes), plus the columns added by
+\code{breakdown = TRUE} (see \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}}). Pairs that
+cannot be reached in time are absent from the output. When the search
+window crosses midnight, departure times after midnight are reported as
+\code{"24:MM:SS"}, and only the public transport services of the departure
+day are considered. Trips made only by walking, cycling or driving have
+travel times in whole minutes, so they can arrive up to 59 seconds after
+\code{arrival_datetime}. If \code{output_dir} is not \code{NULL}, the function
 returns the path specified in that parameter, in which the \code{.csv} files
 containing the results are saved.
 }
@@ -188,11 +187,14 @@ Computation of travel time estimates between one or multiple origin
 destination pairs considering a time of arrival. This function considers a
 time of arrival set by the user. The function returns the travel time of the
 trip with the latest departure time that arrives before the arrival time set
-by the user. If you want to calculate travel times considering a departure
-time, have a' look at the \code{\link[=travel_time_matrix]{travel_time_matrix()}} function. This function is a
-wrapper around \code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}}. On one hand, this means this
-the output of this function has more columns (more info) compared the output
-of \code{\link[=travel_time_matrix]{travel_time_matrix()}}. On the other hand, this function can be very memory
+by the user. Departures are searched minute by minute between
+\code{arrival_datetime - max_trip_duration} and \code{arrival_datetime}, so
+\code{max_trip_duration} also sets the search window. If you want to calculate
+travel times considering a departure time, have a look at the
+\code{\link[=travel_time_matrix]{travel_time_matrix()}} function. This function is a wrapper around
+\code{\link[=expanded_travel_time_matrix]{expanded_travel_time_matrix()}}. On one hand, this means the output of this
+function has more columns (more info) compared to the output of
+\code{\link[=travel_time_matrix]{travel_time_matrix()}}. On the other hand, this function can be very memory
 intensive if the user allows for really long max trip duration.
 }
 \section{Transport modes}{

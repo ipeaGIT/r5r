@@ -5,28 +5,30 @@
 #' destination pairs considering a time of arrival. This function considers a
 #' time of arrival set by the user. The function returns the travel time of the
 #' trip with the latest departure time that arrives before the arrival time set
-#' by the user. If you want to calculate travel times considering a departure
-#' time, have a' look at the [travel_time_matrix()] function. This function is a
-#' wrapper around [expanded_travel_time_matrix()]. On one hand, this means this
-#' the output of this function has more columns (more info) compared the output
-#' of [travel_time_matrix()]. On the other hand, this function can be very memory
+#' by the user. Departures are searched minute by minute between
+#' `arrival_datetime - max_trip_duration` and `arrival_datetime`, so
+#' `max_trip_duration` also sets the search window. If you want to calculate
+#' travel times considering a departure time, have a look at the
+#' [travel_time_matrix()] function. This function is a wrapper around
+#' [expanded_travel_time_matrix()]. On one hand, this means the output of this
+#' function has more columns (more info) compared to the output of
+#' [travel_time_matrix()]. On the other hand, this function can be very memory
 #' intensive if the user allows for really long max trip duration.
 #'
 #' @inheritParams expanded_travel_time_matrix
 #' @param arrival_datetime A POSIXct object.
 #'
-#' @return A `data.table` with travel time estimates (in minutes) and the
-#'   routes used in each trip between origin and destination pairs, for each
-#'   minute of the specified time window. Each set of origin, destination and
-#'   departure minute can appear up to N times, where N is the number of Monte
-#'   Carlo draws specified in the function arguments (please note that this
-#'   only applies when the GTFS feeds that describe the transit network include
-#'   a frequencies table, otherwise only a single draw is performed). A pair is
-#'   completely absent from the final output if no trips could be completed in
-#'   any of the minutes of the time window. If for a single pair trips could be
-#'   completed in some of the minutes of the time window, but not for all of
-#'   them, the minutes in which trips couldn't be completed will have `NA`
-#'   travel time and routes used. If `output_dir` is not `NULL`, the function
+#' @return A `data.table` with one row per origin-destination pair that can be
+#'   reached by `arrival_datetime`, describing the trip with the latest
+#'   departure that still arrives in time: its `departure_time`, the `routes`
+#'   used and its `total_time` (in minutes), plus the columns added by
+#'   `breakdown = TRUE` (see [expanded_travel_time_matrix()]). Pairs that
+#'   cannot be reached in time are absent from the output. When the search
+#'   window crosses midnight, departure times after midnight are reported as
+#'   `"24:MM:SS"`, and only the public transport services of the departure
+#'   day are considered. Trips made only by walking, cycling or driving have
+#'   travel times in whole minutes, so they can arrive up to 59 seconds after
+#'   `arrival_datetime`. If `output_dir` is not `NULL`, the function
 #'   returns the path specified in that parameter, in which the `.csv` files
 #'   containing the results are saved.
 #'
@@ -132,31 +134,7 @@ arrival_travel_time_matrix <- function(r5r_network,
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
 
-  # calculate departure datetime
-  departure_datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
-  departure <- assign_departure(departure_datetime)
-
-  # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
-    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
-  }
-
-  r5r_network <- r5r_network@jcore
-
-  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm.
-  # skipped when output_dir is set: Java writes the CSVs with the swapped from_id/to_id and names
-  # the files after the swapped origins, and the swap is only undone in the in-memory result
-  data_path <- r5r_network$getDataPath()
-  res <- NULL
-  if (is.null(output_dir)) {
-    res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
-  }
-  if (!is.null(res)) {
-    origins <- res$origins
-    destinations <- res$destinations
-  }
-
-
+  # set before the departure datetime, which depends on the final max_trip_duration
   max_walk_time <- assign_max_street_time(
     max_walk_time,
     walk_speed,
@@ -182,6 +160,31 @@ arrival_travel_time_matrix <- function(r5r_network,
     max_bike_time,
     max_car_time
   )
+
+  # calculate departure datetime
+  departure_datetime <- arrival_datetime - as.difftime(max_trip_duration, units = "mins")
+  departure <- assign_departure(departure_datetime)
+
+  # check availability of transit services on the selected date
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
+    check_transit_availability_on_date(r5r_network, departure_date = departure$date)
+  }
+
+  r5r_network <- r5r_network@jcore
+
+  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm.
+  # skipped when output_dir is set: Java writes the CSVs with the swapped from_id/to_id and names
+  # the files after the swapped origins, and the swap is only undone in the in-memory result
+  data_path <- r5r_network$getDataPath()
+  res <- NULL
+  if (is.null(output_dir)) {
+    res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
+  }
+  if (!is.null(res)) {
+    origins <- res$origins
+    destinations <- res$destinations
+  }
+
 
   set_time_window(r5r_network, max_trip_duration)
   set_monte_carlo_draws(r5r_network, draws_per_minute, max_trip_duration)

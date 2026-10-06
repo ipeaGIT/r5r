@@ -85,7 +85,7 @@ test_that("adequately raises errors", {
   numeric_datetime <- as.numeric(as.POSIXct("13-05-2019 14:00:00", format = "%d-%m-%Y %H:%M:%S"))
 
   expect_error(default_tester(r5r_network, arrival_datetime = "13-05-2019 14:00:00"))
-  expect_error(default_tester(r5r_network, numeric_datetime))
+  expect_error(default_tester(r5r_network, arrival_datetime = numeric_datetime))
 
 
   # error with breakdown
@@ -205,10 +205,20 @@ test_that("output is correct", {
 
 test_that("using transit outside the gtfs dates throws an error", {
   expect_error(
-    tester(r5r_network,
-           mode='transit',
-           arrival_datetime = as.POSIXct("13-05-2025 14:00:00",
-                                           format = "%d-%m-%Y %H:%M:%S")
-    )
+    default_tester(r5r_network,
+                   mode='transit',
+                   arrival_datetime = as.POSIXct("13-05-2025 14:00:00",
+                                                 format = "%d-%m-%Y %H:%M:%S")
+    ),
+    "no transit services"
   )
+})
+
+test_that("search window follows max_walk_time in walk-only trips", {
+  # max_trip_duration is lowered to max_walk_time, so departures must be
+  # searched in the 20 minutes before the arrival time
+  df <- default_tester(r5r_network, mode = "WALK", max_trip_duration = 120L,
+                       max_walk_time = 20)
+  expect_true(nrow(df) > 0)
+  expect_true(all(df$departure_time >= "13:40:00"))
 })
