@@ -11,7 +11,9 @@ travel_time_matrix() function. This function is a wrapper around
 expanded_travel_time_matrix(). On one hand, this means the output of this
 function has more columns (more info) compared to the output of
 travel_time_matrix(). On the other hand, this function can be very memory
-intensive if the user allows for really long max trip duration."><meta property="og:description" content="Computation of travel time estimates between one or multiple origin
+intensive if the user allows for really long max trip duration.
+destinations can have at most 5000 rows, a limit of R5 for detailed path
+information; split larger sets into chunks."><meta property="og:description" content="Computation of travel time estimates between one or multiple origin
 destination pairs considering a time of arrival. This function considers a
 time of arrival set by the user. The function returns the travel time of the
 trip with the latest departure time that arrives before the arrival time set
@@ -23,7 +25,9 @@ travel_time_matrix() function. This function is a wrapper around
 expanded_travel_time_matrix(). On one hand, this means the output of this
 function has more columns (more info) compared to the output of
 travel_time_matrix(). On the other hand, this function can be very memory
-intensive if the user allows for really long max trip duration."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"></head><body>
+intensive if the user allows for really long max trip duration.
+destinations can have at most 5000 rows, a limit of R5 for detailed path
+information; split larger sets into chunks."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -87,7 +91,9 @@ travel times considering a departure time, have a look at the
 <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>. On one hand, this means the output of this
 function has more columns (more info) compared to the output of
 <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>. On the other hand, this function can be very memory
-intensive if the user allows for really long max trip duration.</p>
+intensive if the user allows for really long max trip duration.
+<code>destinations</code> can have at most 5000 rows, a limit of R5 for detailed path
+information; split larger sets into chunks.</p>
     </div>
 
     <div class="section level2">
@@ -296,7 +302,7 @@ results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents <code>r5r</code> from loading them to
-RAM memory.</p></dd>
+RAM memory. Missing values (<code>NA</code>) are written as empty fields.</p></dd>
 
 
 <dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>

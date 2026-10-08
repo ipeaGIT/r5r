@@ -284,7 +284,8 @@ accessibility(
   returns the path specified in this parameter. This parameter is
   particularly useful when running on memory-constrained settings
   because writing the results directly to disk prevents `r5r` from
-  loading them to RAM memory.
+  loading them to RAM memory. Missing values (`NA`) are written as empty
+  fields.
 
 - r5r_core:
 

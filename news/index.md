@@ -156,6 +156,44 @@
   priority GTFS errors, instead of silently returning an unusable
   `r5r_network` that only fails later with an opaque
   `NullPointerException` on the first routing call.
+- With `output_dir`, the CSV files written by
+  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  and
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  held `2147483647` and a `[WALK]` route for trips longer than
+  `max_trip_duration`, where the in-memory result has `NA`. These cells
+  are now empty fields, so the files match the in-memory result.
+- [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  and
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  failed with walk-only routing and more than 5000 origins, because the
+  internal origin/destination swap turned them into more than 5000
+  destinations, R5’s limit for path details. Java errors raised while
+  routing now reach R with their original message (e.g. R5’s
+  5000-destination limit) instead of an empty
+  `java.lang.RuntimeException`.
+- [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  and
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  mixed up public transport trips departing at exactly 00:00:00 with
+  walk-, bike- or car-only trips: the first minute returned extra rows
+  with an empty `departure_time`. Each departure minute now has one row
+  per draw.
+- [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  stopped searching earlier departures at the first minute with no trip,
+  so pairs that could still arrive in time by leaving earlier were
+  missing (7 of 221 pairs among the Porto Alegre points of interest). It
+  also compared arrivals using durations rounded to 0.1 minute, which
+  accepted trips up to 3 seconds late and could reject trips arriving on
+  time; it now uses the exact duration.
+- Leg geometries of
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+  repeated a vertex at every intermediate public transport stop (and in
+  some walk legs), so
+  [`sf::st_is_valid()`](https://r-spatial.github.io/sf/reference/valid.html)
+  returned `FALSE` under s2. Repeated consecutive vertices are now
+  removed; shapes and `distance` are unchanged.
 
 **Minor changes**
 

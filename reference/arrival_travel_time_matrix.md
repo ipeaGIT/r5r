@@ -15,7 +15,9 @@ On one hand, this means the output of this function has more columns
 (more info) compared to the output of
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md).
 On the other hand, this function can be very memory intensive if the
-user allows for really long max trip duration.
+user allows for really long max trip duration. `destinations` can have
+at most 5000 rows, a limit of R5 for detailed path information; split
+larger sets into chunks.
 
 ## Usage
 
@@ -222,7 +224,8 @@ arrival_travel_time_matrix(
   returns the path specified in this parameter. This parameter is
   particularly useful when running on memory-constrained settings
   because writing the results directly to disk prevents `r5r` from
-  loading them to RAM memory.
+  loading them to RAM memory. Missing values (`NA`) are written as empty
+  fields.
 
 - r5r_core:
 

@@ -4,7 +4,9 @@ Detailed computation of travel time estimates between one or multiple
 origin destination pairs. Results show the travel time of the fastest
 route alternative departing each minute within a specified time window.
 Please note this function can be very memory intensive for large data
-sets and time windows.
+sets and time windows. `destinations` can have at most 5000 rows, a
+limit of R5 for detailed path information; split larger sets into
+chunks.
 
 ## Usage
 
@@ -225,7 +227,8 @@ expanded_travel_time_matrix(
   returns the path specified in this parameter. This parameter is
   particularly useful when running on memory-constrained settings
   because writing the results directly to disk prevents `r5r` from
-  loading them to RAM memory.
+  loading them to RAM memory. Missing values (`NA`) are written as empty
+  fields.
 
 - r5r_core:
 

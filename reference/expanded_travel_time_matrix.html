@@ -3,11 +3,13 @@
 destination pairs. Results show the travel time of the fastest route
 alternative departing each minute within a specified time window. Please
 note this function can be very memory intensive for large data sets and time
-windows."><meta property="og:description" content="Detailed computation of travel time estimates between one or multiple origin
+windows. destinations can have at most 5000 rows, a limit of R5 for
+detailed path information; split larger sets into chunks."><meta property="og:description" content="Detailed computation of travel time estimates between one or multiple origin
 destination pairs. Results show the travel time of the fastest route
 alternative departing each minute within a specified time window. Please
 note this function can be very memory intensive for large data sets and time
-windows."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"></head><body>
+windows. destinations can have at most 5000 rows, a limit of R5 for
+detailed path information; split larger sets into chunks."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -63,7 +65,8 @@ windows."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.
 destination pairs. Results show the travel time of the fastest route
 alternative departing each minute within a specified time window. Please
 note this function can be very memory intensive for large data sets and time
-windows.</p>
+windows. <code>destinations</code> can have at most 5000 rows, a limit of R5 for
+detailed path information; split larger sets into chunks.</p>
     </div>
 
     <div class="section level2">
@@ -286,7 +289,7 @@ results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents <code>r5r</code> from loading them to
-RAM memory.</p></dd>
+RAM memory. Missing values (<code>NA</code>) are written as empty fields.</p></dd>
 
 
 <dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
