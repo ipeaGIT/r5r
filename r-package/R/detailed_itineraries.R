@@ -217,6 +217,7 @@ detailed_itineraries <- function(r5r_network,
   }
 
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   # detailed itineraries via public transport cannot be computed on frequencies-based GTFS
   if (mode_list$transit_mode != "" & r5r_network$hasFrequencies()) {
