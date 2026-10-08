@@ -8,10 +8,13 @@ import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.TObjectIntMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
@@ -64,8 +67,8 @@ public class TripPlanner {
             accessRouter = findAccessPaths(request);
             egressRouter = findEgressPaths(request);
 
-            Map<LegMode, TIntIntMap> accessTimes = accessRouter.entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getReachedStops()));
+            AccessTimes accessTimes = new AccessTimes(); // resets R5's target pruning per draw, see AccessTimes
+            accessRouter.forEach((mode, r) -> accessTimes.put(mode, r.getReachedStops()));
             Map<LegMode, TIntIntMap> egressTimes = egressRouter.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getReachedStops()));
 
@@ -81,14 +84,37 @@ public class TripPlanner {
                         // in fact, we have been moving in the opposite direction with leap-second smearing
                         departureTime + request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
             } else {
-                listSupplier = (t) -> new SuboptimalDominatingList(Math.max(request.suboptimalMinutes, 0));
+                // R5 keeps states up to the end of the time window + max_trip_duration for every draw, but plan() drops
+                // trips longer than max_trip_duration from the draw's departure t: reject those states early, as the
+                // FareDominatingList above does with its maxClockTime
+                // with shortest_path only the fastest trip is returned, so the limit shrinks to the duration of the best
+                // trip found so far: direct trips, then each draw's arrivals at the destination (stop == -1)
+                final int[] maxDuration = {request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE};
+                if (shortestPath) trips.values().forEach(trip -> maxDuration[0] = Math.min(maxDuration[0], trip.getTotalDurationSeconds()));
+                listSupplier = (t) -> new SuboptimalDominatingList(Math.max(request.suboptimalMinutes, 0)) {
+                    @Override
+                    public boolean add(McRaptorSuboptimalPathProfileRouter.McRaptorState state) {
+                        if (state.time - t > maxDuration[0] || !super.add(state)) return false;
+                        if (shortestPath && state.stop == -1) maxDuration[0] = Math.min(maxDuration[0], state.time - t);
+                        return true;
+                    }
+                };
             }
 
             McRaptorSuboptimalPathProfileRouter router = new McRaptorSuboptimalPathProfileRouter(transportNetwork,
                     request, accessTimes, egressTimes, listSupplier,
                     null, true);
 
+            int maxFare = request.maxFare;
+            if (request.inRoutingFareCalculator == null) {
+                request.maxFare = -1; // turns on R5's target pruning, see AccessTimes
+                accessTimes.bestTimesAtTarget = bestTimesAtTarget(router);
+            }
             router.route();
+            request.maxFare = maxFare; // the fare filter below needs the original value
+            if (accessTimes.bestTimesAtTarget != null && accessTimes.draws != request.monteCarloDraws) {
+                throw new IllegalStateException("R5's McRAPTOR router no longer works as TripPlanner.AccessTimes expects");
+            }
 
             for (TIntObjectIterator<Collection<McRaptorSuboptimalPathProfileRouter.McRaptorState>> it =
                  router.finalStatesByDepartureTime.iterator(); it.hasNext();) {
@@ -239,4 +265,45 @@ public class TripPlanner {
         return egressRouter;
     }
 
+    /**
+     * Access times given to R5's McRAPTOR router. They also make R5's target pruning safe for r5r.
+     * <p>
+     * R5 drops a state that arrives later than the best arrival at the destination found so far (plus
+     * suboptimal_minutes), but only when request.maxFare &lt; 0 (McRaptorSuboptimalPathProfileRouter.addState, R5 v7.5).
+     * Without a fare structure r5r passes maxFare = Integer.MAX_VALUE, so this pruning was off and every Monte Carlo
+     * draw searched the whole network up to max_trip_duration. plan() therefore sets maxFare = -1 during route().
+     * <p>
+     * R5 keeps that best arrival (private field bestTimesAtTargetByAccessMode) across draws, so an early draw would
+     * prune the trips of later draws and change results. route() calls accessTimes.forEach() exactly once per draw,
+     * after bestStates.clear() and before any state of the draw is added, so clearing the field there limits the
+     * pruning to the current draw. Pruned states can only lead to arrivals that the destination bag drops anyway, so
+     * results are identical to the unpruned search.
+     * <p>
+     * Re-check on every R5 upgrade: the field name (a rename fails loudly in bestTimesAtTarget()); the maxFare &lt; 0
+     * condition in addState (if it changes, pruning is silently off: slower, same results); and the forEach() call
+     * once per draw (checked against monteCarloDraws after route()).
+     */
+    private static final class AccessTimes extends HashMap<LegMode, TIntIntMap> {
+        TObjectIntMap<?> bestTimesAtTarget; // R5's bestTimesAtTargetByAccessMode, null when pruning is off
+        int draws;
+
+        @Override
+        public void forEach(BiConsumer<? super LegMode, ? super TIntIntMap> action) {
+            if (bestTimesAtTarget != null) {
+                bestTimesAtTarget.clear(); // its no-entry value is Integer.MAX_VALUE: "no arrival yet"
+                draws++;
+            }
+            super.forEach(action);
+        }
+    }
+
+    private static TObjectIntMap<?> bestTimesAtTarget(McRaptorSuboptimalPathProfileRouter router) {
+        try {
+            Field field = McRaptorSuboptimalPathProfileRouter.class.getDeclaredField("bestTimesAtTargetByAccessMode");
+            field.setAccessible(true);
+            return (TObjectIntMap<?>) field.get(router);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("R5's McRAPTOR router no longer works as TripPlanner.AccessTimes expects", e);
+        }
+    }
 }
