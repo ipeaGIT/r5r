@@ -100,6 +100,12 @@
 - [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
   with zero-row `origins` or `destinations` crashed inside Java. It now
   returns an empty result.
+- A routing call that failed after a scenario (`new_carspeeds`,
+  `carspeed_scale` or `new_lts`) had been applied left that scenario,
+  and the other routing settings of the call, active in the routing
+  engine, so the next call silently returned scenario results. All
+  routing functions now reset the routing settings when they exit,
+  including on error.
 - A finite `max_fare` passed without a `fare_structure` now raises an
   error instead of being silently ignored.
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`,
