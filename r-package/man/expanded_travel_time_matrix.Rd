@@ -173,7 +173,7 @@ results for each origin in the specified directory. In such case, the
 function returns the path specified in this parameter. This parameter is
 particularly useful when running on memory-constrained settings because
 writing the results directly to disk prevents \code{r5r} from loading them to
-RAM memory.}
+RAM memory. Missing values (\code{NA}) are written as empty fields.}
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
 Please use the \code{r5r_network} argument instead.}
@@ -218,7 +218,8 @@ Detailed computation of travel time estimates between one or multiple origin
 destination pairs. Results show the travel time of the fastest route
 alternative departing each minute within a specified time window. Please
 note this function can be very memory intensive for large data sets and time
-windows.
+windows. \code{destinations} can have at most 5000 rows, a limit of R5 for
+detailed path information; split larger sets into chunks.
 }
 \section{Transport modes}{
 
