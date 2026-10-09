@@ -92,7 +92,8 @@ start_r5r_java <- function(data_path,
   r5_version <- paste0("-DR5_VER=", r5r_env$r5_jar_version)
   r5r_version <- paste0("-DR5R_VER=", utils::packageVersion("r5r"))
 
-  rJava::.jinit(parameters = c(log_path, r5_version, r5r_version))
+  # passing `parameters` replaces .jinit()'s default, so keep the user's options(java.parameters)
+  rJava::.jinit(parameters = c(getOption("java.parameters"), log_path, r5_version, r5r_version))
 
   ver <- get_java_version()
 
