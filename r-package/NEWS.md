@@ -3,6 +3,7 @@
 
 **Bug fixes**
 
+- Java memory set with `options(java.parameters = "-Xmx...")` before `library(r5r)` was ignored since r5r v2.2.0, so Java always ran with its default maximum heap (a quarter of the machine's RAM, capped at about 30 GB). r5r started Java with its own parameters only (log path and versions), which replaced the user's. They are now combined, so the memory limit and any other Java options set by the user take effect again.
 - Fix bug related to optimization of origins and destinations. Closes again [#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source links in documentation website. Closed [#527](https://github.com/ipeaGIT/r5r/issues/527)
 - Origins/destinations passed as `sf` objects that also carried `lon`/`lat` (or `x`/`y`) attribute columns were routed using those attribute columns instead of the point geometry. The geometry is now always used.
