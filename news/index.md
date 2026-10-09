@@ -4,6 +4,13 @@
 
 **Bug fixes**
 
+- Java memory set with `options(java.parameters = "-Xmx...")` before
+  [`library(r5r)`](https://github.com/ipeaGIT/r5r) was ignored since r5r
+  v2.2.0, so Java always ran with its default maximum heap (a quarter of
+  the machine’s RAM, capped at about 30 GB). r5r started Java with its
+  own parameters only (log path and versions), which replaced the
+  user’s. They are now combined, so the memory limit and any other Java
+  options set by the user take effect again.
 - Fix bug related to optimization of origins and destinations. Closes
   again [\#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [\#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source
@@ -197,6 +204,21 @@
 
 **Minor changes**
 
+- Car-only and bicycle-only routing in
+  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md),
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md),
+  [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+  and
+  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+  is 2.5 to 4 times faster. After each car or bicycle search, r5r ran a
+  second search on foot that R5 only needs to reach public transport
+  stops. Bicycle results are unchanged. Car-only trips can no longer end
+  with a walk that `max_walk_time` did not limit (e.g. against a one-way
+  street), so some car travel times are now longer (3% of
+  origin-destination pairs in the Porto Alegre sample data, by 1 to 8
+  minutes), now consistent with
+  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md).
 - [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
   now builds street paths and geometries only for the itineraries it
   returns, instead of for every candidate found by the router (including
@@ -204,6 +226,22 @@
   Results are identical. In benchmarks with the Porto Alegre sample
   data, the gain in computation time was within run-to-run noise, since
   most of the time is spent in the routing search itself.
+- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+  with public transport is about 1.5 times faster with
+  `max_trip_duration = 60`, 2.4 times faster with `time_window = 30`,
+  and about 4 times faster with the defaults (`max_trip_duration = 120`,
+  `shortest_path = TRUE`), and its peak memory use is lower. R5’s router
+  can stop exploring routes that already arrive later than the best
+  arrival found at the destination, but r5r had this turned off whenever
+  no `fare_structure` was used. It is now on, applied separately to each
+  departure time within `time_window`, and routes longer than
+  `max_trip_duration` from their own departure time (or, with
+  `shortest_path = TRUE`, longer than the fastest itinerary already
+  found) are dropped during the search instead of afterwards. The
+  itineraries returned are unchanged; only with `suboptimal_minutes > 0`
+  can the `option` numbers of two itineraries with exactly the same
+  duration and number of segments be swapped. Routing with a
+  `fare_structure` is unchanged.
 - The deprecated `r5r_core` argument is now the last argument of every
   function. It used to be the second one, so positional calls such as
   `travel_time_matrix(r5r_network, origins, destinations)` bound
