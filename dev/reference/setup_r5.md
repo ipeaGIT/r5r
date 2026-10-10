@@ -3,11 +3,11 @@
 **\[deprecated\]**
 
 `setup_r5()` was renamed to
-[`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md)
+[`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md)
 to create a more consistent API. **`setup_r5()` is being deprecated**
-after *r5r* v2.3.0 and will be **removed in a future release**. Please
-switch to
-[`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
+after *r5r* v2.3.0 and will be **removed in a future release**. Use
+[`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md)
+instead.
 
 ## Usage
 
@@ -31,9 +31,8 @@ setup_r5(
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - temp_dir:
@@ -58,8 +57,7 @@ setup_r5(
 
 ## Value
 
-A `r5r_network` object representing the built network to connect with
-`R5` routing engine.
+An `r5r_network` object, used by r5r's routing and support functions.
 
 ## Elevation
 
@@ -87,8 +85,8 @@ below:
 ## See also
 
 Other Build network:
-[`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md),
-[`download_r5()`](https://ipeagit.github.io/r5r/dev/reference/download_r5.md)
+[`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md),
+[`download_r5()`](https://ipea.github.io/r5r/dev/reference/download_r5.md)
 
 ## Examples
 
@@ -100,6 +98,7 @@ data_path <- system.file("extdata/poa", package = "r5r")
 
 # `setup_r5()` has been deprecated, please switch to `build_network()`
 r5r_network <- build_network(data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 ```

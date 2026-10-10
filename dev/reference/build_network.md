@@ -8,8 +8,8 @@ more public transport GTFS feeds (in `.zip` format), when used for
 public transport routing, and a `.tif` file describing the elevation
 profile of the study area. If there is more than one GTFS feed in the
 directory, all feeds are automatically merged. If there is already a
-`'network.dat'` file in the directory, the function will simply read it
-and load it to memory (unless specified not to do so).
+`'network.dat'` file in the directory, the function reads it instead
+(see `overwrite`).
 
 ## Usage
 
@@ -33,9 +33,8 @@ build_network(
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - temp_dir:
@@ -60,8 +59,7 @@ build_network(
 
 ## Value
 
-A `r5r_network` object representing the built network to connect with
-`R5` routing engine.
+An `r5r_network` object, used by r5r's routing and support functions.
 
 ## Elevation
 
@@ -89,8 +87,8 @@ below:
 ## See also
 
 Other Build network:
-[`download_r5()`](https://ipeagit.github.io/r5r/dev/reference/download_r5.md),
-[`setup_r5()`](https://ipeagit.github.io/r5r/dev/reference/setup_r5.md)
+[`download_r5()`](https://ipea.github.io/r5r/dev/reference/download_r5.md),
+[`setup_r5()`](https://ipea.github.io/r5r/dev/reference/setup_r5.md)
 
 ## Examples
 
@@ -101,6 +99,7 @@ library(r5r)
 data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_network <- build_network(data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 ```

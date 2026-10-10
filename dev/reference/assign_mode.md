@@ -6,7 +6,7 @@ direct and access/egress modes are allowed at a time.
 ## Usage
 
 ``` r
-assign_mode(mode, mode_egress, style)
+assign_mode(mode, mode_egress)
 ```
 
 ## Arguments
@@ -26,12 +26,12 @@ A list with the transport modes to be used in the routing.
 ## See also
 
 Other assigning functions:
-[`assign_decay_function()`](https://ipeagit.github.io/r5r/dev/reference/assign_decay_function.md),
-[`assign_departure()`](https://ipeagit.github.io/r5r/dev/reference/assign_departure.md),
-[`assign_drop_geometry()`](https://ipeagit.github.io/r5r/dev/reference/assign_drop_geometry.md),
-[`assign_max_street_time()`](https://ipeagit.github.io/r5r/dev/reference/assign_max_street_time.md),
-[`assign_max_trip_duration()`](https://ipeagit.github.io/r5r/dev/reference/assign_max_trip_duration.md),
-[`assign_opportunities()`](https://ipeagit.github.io/r5r/dev/reference/assign_opportunities.md),
-[`assign_osm_link_ids()`](https://ipeagit.github.io/r5r/dev/reference/assign_osm_link_ids.md),
-[`assign_points_input()`](https://ipeagit.github.io/r5r/dev/reference/assign_points_input.md),
-[`assign_shortest_path()`](https://ipeagit.github.io/r5r/dev/reference/assign_shortest_path.md)
+[`assign_decay_function()`](https://ipea.github.io/r5r/dev/reference/assign_decay_function.md),
+[`assign_departure()`](https://ipea.github.io/r5r/dev/reference/assign_departure.md),
+[`assign_drop_geometry()`](https://ipea.github.io/r5r/dev/reference/assign_drop_geometry.md),
+[`assign_max_street_time()`](https://ipea.github.io/r5r/dev/reference/assign_max_street_time.md),
+[`assign_max_trip_duration()`](https://ipea.github.io/r5r/dev/reference/assign_max_trip_duration.md),
+[`assign_opportunities()`](https://ipea.github.io/r5r/dev/reference/assign_opportunities.md),
+[`assign_osm_link_ids()`](https://ipea.github.io/r5r/dev/reference/assign_osm_link_ids.md),
+[`assign_points_input()`](https://ipea.github.io/r5r/dev/reference/assign_points_input.md),
+[`assign_shortest_path()`](https://ipea.github.io/r5r/dev/reference/assign_shortest_path.md)

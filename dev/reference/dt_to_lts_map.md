@@ -23,6 +23,6 @@ A speedMap (Java HashMap\<Long, Integer\>)
 ## See also
 
 Other java support functions:
-[`dt_to_speed_map()`](https://ipeagit.github.io/r5r/dev/reference/dt_to_speed_map.md),
-[`get_java_version()`](https://ipeagit.github.io/r5r/dev/reference/get_java_version.md),
-[`java_to_dt()`](https://ipeagit.github.io/r5r/dev/reference/java_to_dt.md)
+[`dt_to_speed_map()`](https://ipea.github.io/r5r/dev/reference/dt_to_speed_map.md),
+[`get_java_version()`](https://ipea.github.io/r5r/dev/reference/get_java_version.md),
+[`java_to_dt()`](https://ipea.github.io/r5r/dev/reference/java_to_dt.md)

@@ -23,7 +23,7 @@ r5r_cache(list_files = TRUE, delete_file = NULL)
 
 ## Value
 
-A message indicating which file exist and/or which ones have been
+A message indicating which files exist and/or which ones have been
 deleted from local cache directory.
 
 ## Examples

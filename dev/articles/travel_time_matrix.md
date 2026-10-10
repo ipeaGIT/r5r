@@ -7,26 +7,21 @@ expanded_travel_time_matrix() functions in r5r.
 
 ## 1. Introduction
 
-Some of the most common tasks in transport planning and modeling involve
-require having good quality data with travel time estimates between
-origins and destinations. `R5` is incredibly fast in generating
-realistic door-to-door travel time estimates in multimodal transport
-systems.
+Many transport planning and modeling tasks need travel time estimates
+between origins and destinations. `R5` computes realistic door-to-door
+travel times in multimodal networks very fast, and `r5r` offers three
+functions for it:
 
-The `r5r` package has two functions that allow users to leverage the
-computing power of `R5`: -
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md) -
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md) -
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+- [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
+- [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+- [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
 
-This vignette shows a reproducible example to explain how these two
-functions work and the differences between them.
+This vignette shows, with a reproducible example, how they work and how
+they differ.
 
 ## 2. Build routable transport network with `build_network()`
 
-First, let’s build the multimodal transport network we’ll be using in
-this vignette. In this example we’ll be using the a sample data set for
-the city of Porto Alegre (Brazil) included in `r5r`.
+We use the Porto Alegre (Brazil) sample data included in `r5r`.
 
 ``` r
 
@@ -56,19 +51,17 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 
 ## 3. The `travel_time_matrix()` function
 
-The
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md)
-function provides a simple and really fast way to calculate the travel
-time between all possible origin destination pairs at a given departure
-time using a given transport mode.
+[`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
+quickly computes travel times between all origin/destination pairs for a
+departure time and transport mode. Other parameters include:
 
-The user can also customize many parameters such as: -
-`max_trip_duration`: maximum trip duration - `max_rides`: maximum number
-of transfer in the public transport system - `max_walk_time` and
-`max_bike_time`: maximum walking or cycling time to and from public
-transport - `walk_speed` and `bike_speed`: maximum walking or cycling
-speed - `max_fare`: maximum monetary cost in public transport. [See this
-vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
+- `max_trip_duration`: maximum trip duration
+- `max_rides`: maximum number of public transport rides
+- `max_walk_time` and `max_bike_time`: maximum walking or cycling time
+  to and from public transport
+- `walk_speed` and `bike_speed`: average walking or cycling speed (km/h)
+- `max_fare`: maximum monetary cost in public transport. [See this
+  vignette](https://ipea.github.io/r5r/articles/fare_structure.html).
 
 ``` r
 
@@ -97,36 +90,20 @@ head(ttm, n = 10)
 #> 10: public_market          farrapos_station              21
 ```
 
-Now remember that travel time estimates can vary significantly across
-the day because of variations in public transport service levels. In
-order to account for this, you might want to calculate multiple travel
-time matrices departing at different times.
-
-This can be done very efficiently by using the `time_window` and
-`percentile` parameters in the
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md)
-function. When these parameters are set, R⁵ will automatically compute
-multiple travel times estimates considering multiple departures per
-minute within the `time_window` selected by the user. [More information
-about this functionality can found in this
-vignette](https://ipeagit.github.io/r5r/articles/time_window.html).
+Travel times can vary significantly across the day with public transport
+service levels. The `time_window` and `percentiles` parameters handle
+this efficiently: R⁵ computes travel times for departures every minute
+within `time_window` and returns the selected percentiles ([time window
+vignette](https://ipea.github.io/r5r/articles/time_window.html)).
 
 ## 4. The `expanded_travel_time_matrix()` function
 
-Sometimes, we want to know more than simply the total travel time from A
-to B. This is when the
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-function comes in. By default, the output of this function will also
-tell which public transport routes were taken between each origin
-destination pair.
-
-Nonetheless, you may set the parameter `breakdown = TRUE` to gather much
-more info for each trip. In this case,
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-will tell the number of transfers used to complete each trip and their
-total access, waiting, in-vehicle and transfer times. Please note that
-setting `breakdown = TRUE` can make the function slower for large data
-sets.
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+returns more than the total travel time: by default, it also lists the
+public transport routes taken between each origin/destination pair. With
+`breakdown = TRUE`, it adds each trip’s number of public transport rides
+and its access, waiting, in-vehicle, transfer and egress times, which
+can be slower for large data sets.
 
 *A general call to expanded_travel_time_matrix()*
 
@@ -197,14 +174,10 @@ head(ettm2, n = 10)
 #> 10:         0         0             0           0 [WALK]       0          0
 ```
 
-You will notice in the documentation that the
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-also has a `time_window` parameter. In this case, though, when the user
-sets a `time_window` value, the
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-will return the fastest route alternative departing each minute within
-the specified time window. Please note this function can be very memory
-intensive for large data sets and time windows.
+Over its `time_window` (10 minutes by default),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+returns the fastest route departing at each minute. This can be very
+memory intensive for large data sets and time windows.
 
 ``` r
 
@@ -248,32 +221,25 @@ ettm_window[15:25,]
 #> 11:       2.5       4.9             0         1.8    244       1       12.7
 ```
 
-## 4. The `arrival_travel_time_matrix()` function
+## 5. The `arrival_travel_time_matrix()` function
 
-Both of the functions
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
 and
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-consider a **departure** time set by the user. In some cases, though,
-you might need to calculate travel times considering an **arrival
-time**. For such cases, you can use
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/arrival_travel_time_matrix.md).
-In this function, you need to set the latest arrival time desired and a
-maximum trip duration. The function returns the travel time of the trip
-with the latest departure time that arrives before the arrival time.
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+take a **departure** time. To route by **arrival** time, use
+[`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md):
+given the latest acceptable arrival time and a maximum trip duration, it
+returns the travel time of the trip with the latest departure that still
+arrives in time.
 
-This function is useful when modeling user behavior in situations where
-arriving by a specific time is important, such as getting to work or
-school for a set start time (e.g., 9 a.m.). In these scenarios, it is
-often most convenient for a person to take the latest possible departure
-that still ensures arrival before their required start time, rather than
-choosing the trip with the shortest travel time but arriving much
-earlier and waiting unnecessarily at the destination.
+This models trips where arriving by a set time matters, such as getting
+to work or school by 9 a.m.: people usually take the latest departure
+that gets them there on time, not the fastest trip that leaves them
+waiting at the destination.
 
-Note that the output of this function includes more information with
-additional columns, like in the
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
-function (you can also use `breakdown = TRUE`).
+As in
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),
+the output has additional columns (and `breakdown = TRUE` is available).
 
 *A general call to arrival_travel_time_matrix()*
 
@@ -323,11 +289,8 @@ head(arrival_ttm, n = 10)
 
 #### Cleaning up after usage
 
-`r5r` objects are still allocated to any amount of memory previously set
-after they are done with their calculations. In order to remove an
-existing `r5r` object and reallocate the memory it had been using, we
-use the `stop_r5` function followed by a call to Java’s garbage
-collector, as follows:
+Stop the network and run Java’s garbage collector to free the memory it
+used:
 
 ``` r
 
@@ -336,6 +299,6 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).
 
 ### References

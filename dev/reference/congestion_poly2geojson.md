@@ -22,7 +22,7 @@ The path to a `.geojson` saved as a temporary file.
 ## See also
 
 Other Support functions:
-[`lts_lines2shp()`](https://ipeagit.github.io/r5r/dev/reference/lts_lines2shp.md)
+[`lts_lines2shp()`](https://ipea.github.io/r5r/dev/reference/lts_lines2shp.md)
 
 ## Examples
 

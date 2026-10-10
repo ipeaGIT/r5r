@@ -2,10 +2,12 @@
 
 Fast computation of isochrones from a given location. The function can
 return either polygon-based or line-based isochrones. Polygon-based
-isochrones are generated as concave polygons based on the travel times
-from the trip origin to all nodes in the transport network. Meanwhile,
-line-based isochronesare based on travel times from each origin to the
-centroids of all segments in the transport network.
+isochrones are generated from a travel time surface: travel times from
+each origin to the centres of a regular grid of Web Mercator pixels (see
+`zoom`), from which the isochrone polygons are interpolated with the
+marching squares algorithm. Line-based isochrones are based on travel
+times from each origin to the centroids of all segments in the transport
+network.
 
 ## Usage
 
@@ -43,7 +45,7 @@ isochrone(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 
 - origins:
 
@@ -53,8 +55,8 @@ isochrone(
 - mode:
 
   A character vector. The transport modes allowed for access, transfer
-  and vehicle legs of the trips. Defaults to `WALK`. Please see details
-  for other options.
+  and vehicle legs of the trips. Defaults to `TRANSIT`. See details for
+  other options.
 
 - mode_egress:
 
@@ -64,89 +66,84 @@ isochrone(
 
 - cutoffs:
 
-  numeric vector. Number of minutes to define the time span of each
-  Isochrone. Defaults to `c(0, 15, 30)`.
+  A numeric vector. The travel times, in minutes, that delimit the
+  isochrones. Defaults to `c(0, 15, 30)`. Values are sorted and
+  duplicates are removed; at least one value must be greater than 0.
 
 - zoom:
 
-  Resolution of the travel time surface used to create isochrones, can
-  be between `9` and `12.` The default is `10` (which uses cells of 153
-  meters at the Equator). More detailed isochrones will result from
-  larger numbers, at the expense of compute time. Specifically, a raster
-  grid of travel times in the Web Mercator projection at this zoom level
-  is created, and the isochrones are interpolated from this grid. For
-  more information on how the grid cells are defined, see [the R5
+  A number between 9 and 12. The Web Mercator zoom level of the travel
+  time grid from which polygon isochrones are interpolated (only used
+  when `polygon_output = TRUE`). Higher values give more detailed
+  isochrones but take longer to compute. Defaults to 10 (cells of about
+  153 meters at the Equator). For how grid cells are defined, see [the
+  R5
   documentation.](https://docs.conveyal.com/analysis/methodology#zoom-levels)
 
 - departure_datetime:
 
-  A POSIXct object. Please note that the departure time only influences
-  public transport legs. When working with public transport networks,
-  please check the `calendar.txt` within your GTFS feeds for valid
-  dates. Please see details for further information on how datetimes are
-  parsed.
+  A POSIXct object. Only affects public transport legs; when routing
+  with public transport, it must fall within the service period of the
+  GTFS feeds (`calendar.txt`; see
+  [`check_transit_availability()`](https://ipea.github.io/r5r/dev/reference/check_transit_availability.md)).
+  Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
+  details for how datetimes are parsed.
 
 - polygon_output:
 
   A Logical. If `TRUE`, the function outputs polygon-based isochrones
-  (the default) based on travel times from each origin to a sample of a
-  random sample nodes in the transport network (see parameter
-  `sample_size`). If `FALSE`, the function outputs line-based isochrones
-  based on travel times from each origin to the centroids of all
-  segments in the transport network.
+  (the default) based on travel times from each origin to a regular grid
+  of points (see parameter `zoom`). If `FALSE`, the function outputs
+  line-based isochrones based on travel times from each origin to the
+  centroids of all segments in the transport network.
 
 - time_window:
 
-  An integer. The time window in minutes for which `r5r` will calculate
-  multiple travel time matrices departing each minute. Defaults to 10
-  minutes. The function returns the result based on median travel times.
-  Please read the time window vignette for more details on its usage
-  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/dev/articles/time_window.md)
+  An integer. The time window in minutes. Departures are simulated every
+  minute from `departure_datetime` until `time_window` minutes later,
+  and travel times are summarized over these departures using
+  `percentiles` (the median by default). Defaults to 10. See
+  [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/dev/articles/time_window.md).
 
 - max_walk_time:
 
   An integer. The maximum walking time (in minutes) to access and egress
-  the transit network, or to make transfers within the network. Defaults
-  to no restrictions, as long as `max_trip_duration` is respected. The
-  max time is considered separately for each leg (e.g. if you set
-  `max_walk_time` to 15, you could potentially walk up to 15 minutes to
-  reach transit, and up to *another* 15 minutes to reach the destination
-  after leaving transit). Defaults to `Inf`, no limit.
+  the transit network, make transfers, or complete walk-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In walk-only trips, the lower of
+  `max_walk_time` and `max_trip_duration` applies.
 
 - max_bike_time:
 
   An integer. The maximum cycling time (in minutes) to access and egress
-  the transit network. Defaults to no restrictions, as long as
-  `max_trip_duration` is respected. The max time is considered
-  separately for each leg (e.g. if you set `max_bike_time` to 15
-  minutes, you could potentially cycle up to 15 minutes to reach
-  transit, and up to *another* 15 minutes to reach the destination after
-  leaving transit). Defaults to `Inf`, no limit.
+  the transit network, make transfers, or complete bicycle-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In bicycle-only trips, the lower
+  of `max_bike_time` and `max_trip_duration` applies.
 
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network, or to complete car-only trips. Defaults to no
-  restrictions, as long as `max_trip_duration` is respected. The max
-  time is considered separately for each leg (e.g. if you set
-  `max_car_time` to 15 minutes, you could potentially drive up to 15
-  minutes to reach transit, and up to *another* 15 minutes to reach the
-  destination after leaving transit). Defaults to `Inf`, no limit. In
-  car-only trips, whenever `max_car_time` differs from
-  `max_trip_duration`, the lowest value is considered.
+  the transit network, or to complete car-only trips. Applies to each
+  leg separately (e.g. `15` allows up to 15 minutes to reach transit and
+  another 15 after leaving it). Defaults to `Inf` (no limit besides
+  `max_trip_duration`). In car-only trips, the lower of `max_car_time`
+  and `max_trip_duration` applies.
 
 - max_trip_duration:
 
-  An integer. The maximum trip duration in minutes. Defaults to 120
-  minutes (2 hours).
+  Ignored. The maximum trip duration is set internally from
+  `max(cutoffs)`.
 
 - walk_speed:
 
-  A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
+  A numeric. Average walk speed in km/h. Defaults to 3.6.
 
 - bike_speed:
 
-  A numeric. Average cycling speed in km/h. Defaults to 12 km/h.
+  A numeric. Average cycling speed in km/h. Defaults to 12.
 
 - max_rides:
 
@@ -158,14 +155,12 @@ isochrone(
   An integer between 1 and 4. The maximum level of traffic stress that
   cyclists will tolerate. A value of 1 means cyclists will only travel
   through the quietest streets, while a value of 4 indicates cyclists
-  can travel through any road. Defaults to 2. Please see details for
-  more information.
+  can travel through any road. Defaults to 2. See details.
 
 - draws_per_minute:
 
-  An integer. The number of Monte Carlo draws to perform per time window
-  minute when calculating travel time matrices and when estimating
-  accessibility. Defaults to 5. This would mean 300 draws in a 60-minute
+  An integer. The number of Monte Carlo draws to perform per minute of
+  `time_window`. Defaults to 5. This would mean 300 draws in a 60-minute
   time window, for example. This parameter only affects the results when
   the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed
   does not have a frequency table, r5r still allows for multiple runs
@@ -173,42 +168,29 @@ isochrone(
 
 - percentiles:
 
-  An integer vector (max length of 5). Specifies the percentile to use
-  when returning accessibility estimates within the given time window.
-  Please note that this parameter is applied to the travel time
-  estimates that generate the accessibility results, and not to the
-  accessibility distribution itself (i.e. if the 25th percentile is
-  specified, the accessibility is calculated from the 25th percentile
-  travel time, which may or may not be equal to the 25th percentile of
-  the accessibility distribution itself). Defaults to 50, returning the
-  accessibility calculated from the median travel time. If a vector with
-  length bigger than 1 is passed, the output contains an additional
-  column that specifies the percentile of each accessibility estimate.
-  Due to upstream restrictions, only 5 percentiles can be specified at a
-  time. For more details, please see `R5` documentation at
-  <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
+  An integer vector (max length of 5). The travel time percentiles
+  within `time_window` used to build the isochrones, one set of polygons
+  per percentile. Defaults to 50 (the median travel time). Only used
+  when `polygon_output = TRUE`; must be `NULL` for line-based
+  isochrones.
 
 - n_threads:
 
   An integer. The number of threads to use when running the router in
-  parallel. Defaults to use all available threads (`Inf`).
+  parallel. Defaults to `Inf` (all available threads).
 
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
-  the progress counter does not interfere with `R5`'s output messages.
-  Setting `progress` to `TRUE` may impose a small penalty for
-  computation efficiency, because the progress counter must be
-  synchronized among all active threads.
+  Defaults to `TRUE`. Only works when `verbose` is `FALSE`. May slightly
+  slow computation, as the counter is synchronized across threads.
 
 - sample_size:
 
@@ -216,12 +198,21 @@ isochrone(
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
 
-A `"sf" "data.frame"` for each isochrone of each origin.
+A `"sf" "data.frame"`. With `polygon_output = TRUE`, one `POLYGON` or
+`MULTIPOLYGON` per origin, percentile and cutoff, with columns `id`
+(origin id), `isochrone` (cutoff in minutes), `percentile` (a string
+such as `"p50"`) and `polygons`. Each polygon covers the whole area
+reached from 0 up to its cutoff, so polygons of larger cutoffs contain
+those of smaller ones. With `polygon_output = FALSE`, one `LINESTRING`
+per street segment reached, with columns `id` (origin id), `edge_index`,
+`osm_id`, `isochrone` (the smallest cutoff at or above the segment's
+travel time, i.e. bands are intervals), `travel_time_p50` and
+`geometry`.
 
 ## Transport modes
 
@@ -236,15 +227,15 @@ include:
 
 ## Level of Traffic Stress (LTS)
 
-When cycling is enabled in `R5` (by passing the value `BIKE` to either
-`mode` or `mode_egress`), setting `max_lts` will allow cycling only on
-streets with a given level of danger/stress. Setting `max_lts` to 1, for
-example, will allow cycling only on separated bicycle infrastructure or
-low-traffic streets and routing will revert to walking when traversing
-any links with LTS exceeding 1. Setting `max_lts` to 3 will allow
-cycling on links with LTS 1, 2 or 3. Routing also reverts to walking if
-the street segment is tagged as non-bikable in OSM (e.g. a staircase),
-independently of the specified max LTS.
+When cycling is enabled in `R5` (by passing the value `BICYCLE` to
+either `mode` or `mode_egress`), setting `max_lts` will allow cycling
+only on streets with a given level of danger/stress. Setting `max_lts`
+to 1, for example, will allow cycling only on separated bicycle
+infrastructure or low-traffic streets and routing will revert to walking
+when traversing any links with LTS exceeding 1. Setting `max_lts` to 3
+will allow cycling on links with LTS 1, 2 or 3. Routing also reverts to
+walking if the street segment is tagged as non-bikable in OSM (e.g. a
+staircase), independently of the specified max LTS.
 
 The default methodology for assigning LTS values to network edges is
 based on commonly tagged attributes of OSM ways. See more info about LTS
@@ -286,11 +277,11 @@ perhaps surprisingly, ignoring the timezone attribute.
 ## Routing algorithm
 
 The
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),
+[`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
 and
-[`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
 functions use an `R5`-specific extension to the RAPTOR routing algorithm
 (see Conway et al., 2017). This RAPTOR extension uses a systematic
 sample of one departure per minute over the time window set by the user
@@ -320,6 +311,7 @@ library(ggplot2)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path = data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 
@@ -346,13 +338,13 @@ head(iso_poly)
 #> Simple feature collection with 4 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: -51.25671 ymin: -30.07741 xmax: -51.16196 ymax: -29.98943
+#> Bounding box:  xmin: -51.25603 ymin: -30.0783 xmax: -51.16081 ymax: -29.99003
 #> Geodetic CRS:  WGS 84
 #>                    id isochrone percentile                       polygons
-#> 1 bus_central_station       120        p50 POLYGON ((-51.2114 -30.0762...
-#> 2 bus_central_station        90        p50 POLYGON ((-51.21208 -30.063...
-#> 3 bus_central_station        60        p50 POLYGON ((-51.2114 -30.0481...
-#> 4 bus_central_station        30        p50 POLYGON ((-51.21414 -30.034...
+#> 1 bus_central_station       120        p50 POLYGON ((-51.21071 -30.076...
+#> 2 bus_central_station        90        p50 POLYGON ((-51.2114 -30.0637...
+#> 3 bus_central_station        60        p50 POLYGON ((-51.21071 -30.048...
+#> 4 bus_central_station        30        p50 POLYGON ((-51.21346 -30.035...
 
 
 # estimate line-based isochrone from origin
@@ -364,28 +356,27 @@ iso_lines <- isochrone(
   departure_datetime = departure_datetime,
   cutoffs = seq(0, 100, 25)
   )
-#> Warning: st_centroid assumes attributes are constant over geometries
 
 head(iso_lines)
-#> Simple feature collection with 6 features and 13 fields
+#> Simple feature collection with 6 features and 14 fields
 #> Geometry type: LINESTRING
 #> Dimension:     XY
 #> Bounding box:  xmin: -51.18467 ymin: -30.05426 xmax: -51.17266 ymax: -30.02355
 #> Geodetic CRS:  WGS 84
-#>   edge_index   osm_id isochrone travel_time_p50 from_vertex to_vertex
-#> 1        644 27238056       100             100         443       444
-#> 2        645 27238056       100             100         444       443
-#> 3       1048 27370379       100             100         717       718
-#> 4       1049 27370379       100             100         718       717
-#> 5       1058 27370382       100             100         722       723
-#> 6       1059 27370382       100             100         723       722
-#>   street_class  length walk   car car_speed bicycle bicycle_lts
-#> 1     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2
-#> 2     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2
-#> 3        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
-#> 4        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
-#> 5        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
-#> 6        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
+#>                    id edge_index   osm_id isochrone travel_time_p50 from_vertex
+#> 1 bus_central_station        644 27238056       100             100         443
+#> 2 bus_central_station        645 27238056       100             100         444
+#> 3 bus_central_station       1048 27370379       100             100         717
+#> 4 bus_central_station       1049 27370379       100             100         718
+#> 5 bus_central_station       1058 27370382       100             100         722
+#> 6 bus_central_station       1059 27370382       100             100         723
+#>   to_vertex street_class  length walk   car car_speed bicycle bicycle_lts
+#> 1       444     TERTIARY  78.580 TRUE  TRUE    39.996    TRUE           2
+#> 2       443     TERTIARY  78.580 TRUE FALSE    39.996   FALSE           2
+#> 3       718        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 4       717        OTHER 242.560 TRUE  TRUE    40.248    TRUE           4
+#> 5       723        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
+#> 6       722        OTHER  85.916 TRUE  TRUE    40.248    TRUE           2
 #>                         geometry
 #> 1 LINESTRING (-51.17282 -30.0...
 #> 2 LINESTRING (-51.17266 -30.0...

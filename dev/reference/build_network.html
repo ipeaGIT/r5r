@@ -6,16 +6,16 @@ saved to. The directory must contain only one street network file (in
 GTFS feeds (in .zip format), when used for public transport routing, and a
 .tif file describing the elevation profile of the study area. If there is
 more than one GTFS feed in the directory, all feeds are automatically merged.
-If there is already a 'network.dat' file in the directory, the function will
-simply read it and load it to memory (unless specified not to do so)."><meta property="og:description" content="Builds a multimodal transport network used for routing in R5, combining
+If there is already a 'network.dat' file in the directory, the function
+reads it instead (see overwrite)."><meta property="og:description" content="Builds a multimodal transport network used for routing in R5, combining
 multiple data inputs present in the directory where the network should be
 saved to. The directory must contain only one street network file (in
 .osm.pbf format). It may optionally contain one or more public transport
 GTFS feeds (in .zip format), when used for public transport routing, and a
 .tif file describing the elevation profile of the study area. If there is
 more than one GTFS feed in the directory, all feeds are automatically merged.
-If there is already a 'network.dat' file in the directory, the function will
-simply read it and load it to memory (unless specified not to do so)."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
+If there is already a 'network.dat' file in the directory, the function
+reads it instead (see overwrite)."><meta property="og:image" content="https://ipea.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -62,7 +62,7 @@ simply read it and load it to memory (unless specified not to do so)."><meta pro
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Build a transport network used for routing in R5</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/R/build_network.R" class="external-link"><code>R/build_network.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/R/build_network.R" class="external-link"><code>R/build_network.R</code></a></small>
       <div class="d-none name"><code>build_network.Rd</code></div>
     </div>
 
@@ -74,8 +74,8 @@ saved to. The directory must contain only one street network file (in
 GTFS feeds (in <code>.zip</code> format), when used for public transport routing, and a
 <code>.tif</code> file describing the elevation profile of the study area. If there is
 more than one GTFS feed in the directory, all feeds are automatically merged.
-If there is already a <code>'network.dat'</code> file in the directory, the function will
-simply read it and load it to memory (unless specified not to do so).</p>
+If there is already a <code>'network.dat'</code> file in the directory, the function
+reads it instead (see <code>overwrite</code>).</p>
     </div>
 
     <div class="section level2">
@@ -100,10 +100,9 @@ stored and where the built <code>network.dat</code> will be saved.</p></dd>
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>A logical. Whether to show <code>R5</code> informative messages when
-running the function. Defaults to <code>FALSE</code> (please note that in such case
-<code>R5</code> error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows
-detailed output, which can be useful for debugging issues not caught by
-<code>r5r</code>.</p></dd>
+running the function. Defaults to <code>FALSE</code> (<code>R5</code> error messages are still
+shown). <code>TRUE</code> shows detailed output, useful for debugging issues not
+caught by <code>r5r</code>.</p></dd>
 
 
 <dt id="arg-temp-dir">temp_dir<a class="anchor" aria-label="anchor" href="#arg-temp-dir"></a></dt>
@@ -129,8 +128,8 @@ network).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>r5r_network</code> object representing the built network to connect with
-<code>R5</code> routing engine.</p>
+    <p>An <code>r5r_network</code> object, used by r5r's routing and support
+functions.</p>
     </div>
     <div class="section level2">
     <h2 id="elevation">Elevation<a class="anchor" aria-label="anchor" href="#elevation"></a></h2>
@@ -159,12 +158,13 @@ information and analysis. 93 (1). <a href="https://escholarship.org/uc/item/05r8
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># directory with street network and gtfs files</span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu">build_network</span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 </code></pre></div>

@@ -1,12 +1,10 @@
 # Check transit service availability by date
 
-This function checks the number and proportion of public transport
-services from the GTFS feeds in a `r5r_network` that are active on
-specified dates. This is useful to verify that the selected departure
-dates for routing analysis are valid and have adequate service levels.
-When routing with public transport, it is crucial to use a departure
-date where services are operational, as indicated in the GTFS
-`calendar.txt` file.
+Counts the public transport services in the GTFS feeds of a
+`r5r_network` that are active on given dates, and their proportion of
+all services. Use it to pick a departure date with adequate service:
+public transport routing only finds trips on dates when services run
+(per the GTFS `calendar.txt`).
 
 ## Usage
 
@@ -25,13 +23,13 @@ check_transit_availability(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 
 - dates:
 
   A vector of specific dates to be checked. Can be character strings in
-  \#' "YYYY-MM-DD" format, or objects of class `Date`. This argument
-  cannot be used with `start_date` or `end_date`.
+  "YYYY-MM-DD" format, or objects of class `Date`. This argument cannot
+  be used with `start_date` or `end_date`.
 
 - start_date:
 
@@ -47,7 +45,7 @@ check_transit_availability(
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
@@ -73,6 +71,7 @@ call.
 library(r5r)
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

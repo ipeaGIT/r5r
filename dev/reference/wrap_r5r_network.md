@@ -21,4 +21,4 @@ wrap_r5r_network(jcore)
 ## See also
 
 Other r5r_network:
-[`r5r_network-class`](https://ipeagit.github.io/r5r/dev/reference/r5r_network-class.md)
+[`r5r_network-class`](https://ipea.github.io/r5r/dev/reference/r5r_network-class.md)

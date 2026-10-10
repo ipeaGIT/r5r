@@ -17,10 +17,10 @@ Path. Returns the path of the created temporary directory
 ## See also
 
 Other support functions:
-[`exists_tiff()`](https://ipeagit.github.io/r5r/dev/reference/exists_tiff.md),
-[`fileurl_from_metadata()`](https://ipeagit.github.io/r5r/dev/reference/fileurl_from_metadata.md),
-[`get_gtfs_errors()`](https://ipeagit.github.io/r5r/dev/reference/get_gtfs_errors.md),
-[`start_r5r_java()`](https://ipeagit.github.io/r5r/dev/reference/start_r5r_java.md),
-[`stop_r5()`](https://ipeagit.github.io/r5r/dev/reference/stop_r5.md),
-[`travel_time_surface()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_surface.md),
-[`validate_bad_osm_ids()`](https://ipeagit.github.io/r5r/dev/reference/validate_bad_osm_ids.md)
+[`exists_tiff()`](https://ipea.github.io/r5r/dev/reference/exists_tiff.md),
+[`fileurl_from_metadata()`](https://ipea.github.io/r5r/dev/reference/fileurl_from_metadata.md),
+[`get_gtfs_errors()`](https://ipea.github.io/r5r/dev/reference/get_gtfs_errors.md),
+[`start_r5r_java()`](https://ipea.github.io/r5r/dev/reference/start_r5r_java.md),
+[`stop_r5()`](https://ipea.github.io/r5r/dev/reference/stop_r5.md),
+[`travel_time_surface()`](https://ipea.github.io/r5r/dev/reference/travel_time_surface.md),
+[`validate_bad_osm_ids()`](https://ipea.github.io/r5r/dev/reference/validate_bad_osm_ids.md)

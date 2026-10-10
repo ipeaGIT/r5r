@@ -30,7 +30,7 @@ find_snap(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 
 - points:
 
@@ -49,7 +49,7 @@ find_snap(
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
@@ -62,9 +62,9 @@ could not be snapped show `NA` coordinates and `found = FALSE`.
 ## See also
 
 Other network functions:
-[`street_network_bbox()`](https://ipeagit.github.io/r5r/dev/reference/street_network_bbox.md),
-[`street_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.md),
-[`transit_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.md)
+[`street_network_bbox()`](https://ipea.github.io/r5r/dev/reference/street_network_bbox.md),
+[`street_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/street_network_to_sf.md),
+[`transit_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/transit_network_to_sf.md)
 
 ## Examples
 
@@ -73,6 +73,7 @@ library(r5r)
 
 path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path = path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 points <- read.csv(file.path(path, "poa_hexgrid.csv"))

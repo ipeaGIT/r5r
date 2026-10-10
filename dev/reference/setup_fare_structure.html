@@ -3,11 +3,11 @@
 calculated in travel_time_matrix(), expanded_travel_time_matrix(),
 accessibility() and pareto_frontier(). This fare structure can be
 manually edited and adjusted to the existing rules in your study area, as
-long as they stick to some basic premises. Please see the fare-structure vignette for more information."><meta property="og:description" content="Creates a basic fare structure that describes how transit fares should be
+long as they stick to some basic premises. See the fare-structure vignette."><meta property="og:description" content="Creates a basic fare structure that describes how transit fares should be
 calculated in travel_time_matrix(), expanded_travel_time_matrix(),
 accessibility() and pareto_frontier(). This fare structure can be
 manually edited and adjusted to the existing rules in your study area, as
-long as they stick to some basic premises. Please see the fare-structure vignette for more information."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
+long as they stick to some basic premises. See the fare-structure vignette."><meta property="og:image" content="https://ipea.github.io/r5r/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -54,7 +54,7 @@ long as they stick to some basic premises. Please see the fare-structure vignett
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Setup a fare structure to calculate the monetary costs of trips</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/R/fare_structure.R" class="external-link"><code>R/fare_structure.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/R/fare_structure.R" class="external-link"><code>R/fare_structure.R</code></a></small>
       <div class="d-none name"><code>setup_fare_structure.Rd</code></div>
     </div>
 
@@ -63,7 +63,7 @@ long as they stick to some basic premises. Please see the fare-structure vignett
 calculated in <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>,
 <code><a href="accessibility.html">accessibility()</a></code> and <code><a href="pareto_frontier.html">pareto_frontier()</a></code>. This fare structure can be
 manually edited and adjusted to the existing rules in your study area, as
-long as they stick to some basic premises. Please see the <a href="../doc/fare_structure.html">fare-structure vignette</a> for more information.</p>
+long as they stick to some basic premises. See the <a href="../doc/fare_structure.html">fare-structure vignette</a>.</p>
     </div>
 
     <div class="section level2">
@@ -100,8 +100,8 @@ a given city cost $5). <code>AGENCY</code> is used when the agency that operates
 route is what determines its price (i.e. when two different routes/modes
 operated by a single agency cost the same; note that you can also use
 <code>AGENCY_NAME</code>, if the agency_ids listed in your GTFS cannot be easily
-interpreted). <code>GENERIC</code> is used when all the routes cost the same. Please
-note that this classification can later be edited to better suit your
+interpreted). <code>GENERIC</code> is used when all the routes cost the same. This
+classification can later be edited to better suit your
 needs (when, for example, two types of buses cost the same, but one offers
 discounts after riding the subway and the other one doesn't), but this
 parameter may save you some work.</p></dd>
@@ -118,25 +118,19 @@ specified file. How each itinerary is described is controlled by
 
 <dt id="arg-debug-info">debug_info<a class="anchor" aria-label="anchor" href="#arg-debug-info"></a></dt>
 <dd><p>Either a string (when <code>debug_path</code> is a path) or <code>NULL</code>
-(the default). Doesn't have any effect if <code>debug_path</code> is <code>NULL</code>. When a
-string, accepts the values <code>MODE</code>, <code>ROUTE</code> and <code>MODE_ROUTE</code>. These values
-dictates how itinerary information is written to the output. Let's suppose
-we have an itinerary composed by two transit legs: first a subway leg
-whose route_id is 001, and then a bus legs whose route_id is 007. If
-<code>debug_info</code> is <code>MODE</code>, then this itinerary will be described as
-<code>SUBWAY|BUS</code>. If <code>ROUTE</code>, as <code>001|007</code>. If <code>MODE_ROUTE</code>, as <code>SUBWAY 001|BUS 007</code>. Please note that the final debug information will contain
-not only the itineraries that were in fact used in the itineraries
-returned in <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="accessibility.html">accessibility()</a></code> and
-<code><a href="pareto_frontier.html">pareto_frontier()</a></code>, but all the itineraries that <code>R5</code> checked when
-calculating the routes. This imposes a performance penalty when tracking
-debug information (but has the positive effect of returning a larger
-sample of itineraries, which might help finding some implementation issues
-on the fare structure).</p></dd>
+(the default). Ignored if <code>debug_path</code> is <code>NULL</code>. One of <code>MODE</code>, <code>ROUTE</code>
+or <code>MODE_ROUTE</code>, setting how each itinerary is written. E.g. a subway leg
+on route 001 followed by a bus leg on route 007 is written as
+<code>SUBWAY|BUS</code>, <code>001|007</code> or <code>SUBWAY 001|BUS 007</code>, respectively. The debug
+output lists all itineraries <code>R5</code> checked when calculating routes, not
+only those returned by <code><a href="travel_time_matrix.html">travel_time_matrix()</a></code>, <code><a href="accessibility.html">accessibility()</a></code> and
+<code><a href="pareto_frontier.html">pareto_frontier()</a></code>. This slows computation, but the larger sample of
+itineraries helps find issues in the fare structure.</p></dd>
 
 
 <dt id="arg-r-r-core">r5r_core<a class="anchor" aria-label="anchor" href="#arg-r-r-core"></a></dt>
 <dd><p>The <code>r5r_core</code> argument is deprecated as of r5r v2.3.0.
-Please use the <code>r5r_network</code> argument instead.</p></dd>
+Use the <code>r5r_network</code> argument instead.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -152,10 +146,11 @@ Please use the <code>r5r_network</code> argument instead.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>

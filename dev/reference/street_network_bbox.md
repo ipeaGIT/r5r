@@ -2,7 +2,7 @@
 
 Extracts the geographic bounding box of the street network layer from a
 routable transport network built with
-[`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md)).
+[`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 It is a fast and memory-efficient alternative to
 `sf::st_bbox(street_network_to_sf(r5r_net))`.
 
@@ -21,7 +21,7 @@ street_network_bbox(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 
 - output:
 
@@ -30,7 +30,7 @@ street_network_bbox(
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
@@ -44,9 +44,9 @@ system (EPSG: 4326).
 ## See also
 
 Other network functions:
-[`find_snap()`](https://ipeagit.github.io/r5r/dev/reference/find_snap.md),
-[`street_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.md),
-[`transit_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.md)
+[`find_snap()`](https://ipea.github.io/r5r/dev/reference/find_snap.md),
+[`street_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/street_network_to_sf.md),
+[`transit_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/transit_network_to_sf.md)
 
 ## Examples
 
@@ -57,6 +57,7 @@ library(sf)
 
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

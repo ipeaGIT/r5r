@@ -79,9 +79,9 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Isochrones</h1>
             
-            <h4 data-toc-skip class="date">2026-09-29</h4>
+            <h4 data-toc-skip class="date">2026-10-10</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/isochrones.Rmd" class="external-link"><code>vignettes/isochrones.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/vignettes/isochrones.Rmd" class="external-link"><code>vignettes/isochrones.Rmd</code></a></small>
       <div class="d-none name"><code>isochrones.Rmd</code></div>
     </div>
 
@@ -95,29 +95,17 @@
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>An isochrone map shows how far one can travel from a given place
-within a certain amount of time. In other other words, it shows all the
-areas reachable from that place within a maximum travel time. This
-vignette shows how to calculate and visualize isochrones in R using the
-<a href="https://ipeagit.github.io/r5r/index.html"><code>r5r</code>
-package</a> using a reproducible example. In this example, we will be
-using a sample data set for the city of Porto Alegre (Brazil) included
-in <code>r5r</code>. Our aim here is to calculate several isochrones
-departing from the central bus station given different travel time
-thresholds.</p>
-<p>The <code><a href="../reference/isochrone.html">r5r::isochrone()</a></code> function allows you to build both
-polygon- and line-based isochrones. We will cover both approaches in
-this vignette, where we will be calculating isochrones by public
-transport from the central bus station in Porto Alegre.</p>
-<p>Before we start, we need to increase Java memory + load a few
-libraries, and to<br>
-build routable transport network.</p>
-<p><strong><em>Warning:</em></strong> If you want to calculate how many
-opportunities (e.g. jobs, or schools or hospitals) are located inside
-each isochrone, we strongly recommend you NOT to use the
-<code><a href="../reference/isochrone.html">isochrone()</a></code> function. You will find much more efficient
-ways to do this in the <a href="https://ipeagit.github.io/r5r/articles/accessibility.html">Accessibility
-vignette</a>.</p>
+<p>An isochrone shows all areas reachable from a place within a maximum
+travel time. This vignette uses the <a href="https://ipea.github.io/r5r/index.html"><code>r5r</code>
+package</a> and the Porto Alegre (Brazil) sample data included in it to
+calculate and map public transport isochrones from the city’s central
+bus station at several travel time thresholds.
+<code><a href="../reference/isochrone.html">r5r::isochrone()</a></code> builds both polygon- and line-based
+isochrones; we cover both.</p>
+<p><strong><em>Warning:</em></strong> to count opportunities (e.g. jobs,
+schools or hospitals) within each isochrone, we strongly recommend NOT
+using <code><a href="../reference/isochrone.html">isochrone()</a></code>. The <a href="https://ipea.github.io/r5r/articles/accessibility.html">Accessibility
+vignette</a> shows much more efficient ways.</p>
 </div>
 <div class="section level2">
 <h2 id="build-routable-transport-network-with-build_network">2. Build routable transport network with
@@ -126,19 +114,16 @@ vignette</a>.</p>
 <div class="section level4">
 <h4 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
 </h4>
-<p>First, we need to increase the memory available to Java and load the
-packages used in this vignette. Please note we allocate RAM memory to
-Java <em>before</em> loading our libraries.</p>
+<p>Set Java memory before loading the packages (<a href="https://ipea.github.io/r5r/articles/r5r.html#usage">why</a>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p>To build a routable transport network with <code>r5r</code>, the user
-needs to call <code><a href="../reference/build_network.html">build_network()</a></code> with the path to the
-directory where OpenStreetMap and GTFS data are stored.</p>
+<p><code><a href="../reference/build_network.html">build_network()</a></code> takes the directory holding the
+OpenStreetMap and GTFS data:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
 <span><span class="co"># set data path to directory containing your own data if not running this example</span></span>
@@ -153,20 +138,15 @@ directory where OpenStreetMap and GTFS data are stored.</p>
 <div class="section level3">
 <h3 id="polygon-based-isochrones">3.1 Polygon-based isochrones<a class="anchor" aria-label="anchor" href="#polygon-based-isochrones"></a>
 </h3>
-<p>The most common approach here is to create polygon-based isochrones.
-To do this, you need to pass the arguments
-<code>polygon_output = TRUE</code> and choose the <code>zoom</code>
-level. The polygon-based isochrone in {r5r} are built on top of a
-regular grid based on <a href="https://docs.conveyal.com/analysis/methodology#spatial-resolution" class="external-link">Web
-Mercator pixels</a>. The zoom level can be controlled with the
-<code>zoom</code> parameter; higher zooms lead to more detailed
-isochrones at the expense of computational time. The default is 10
-(which uses cells of 153m at the Equator). In large networks, high zooms
-may not be possible and will give an error.</p>
-<p>With the code below, <code>r5r</code> determines the isochrones
-considering the median travel time of multiple travel time estimates
-calculated departing every minute over a 60-minute time window, between
-2pm and 4pm.</p>
+<p>Polygon-based isochrones are the most common: set
+<code>polygon_output = TRUE</code>. The polygons are built on a regular
+grid of <a href="https://docs.conveyal.com/analysis/methodology#spatial-resolution" class="external-link">Web
+Mercator pixels</a> whose resolution is set by <code>zoom</code>. Higher
+zooms give more detailed isochrones but take longer, and may fail with
+an error in large networks. The default, 10, uses cells of 153 m at the
+Equator.</p>
+<p>Below, isochrones use the median travel time of departures every
+minute over a 60-minute window (2pm to 3pm).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read all points in the city</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
@@ -180,7 +160,6 @@ calculated departing every minute over a 60-minute time window, between
 <span><span class="co"># routing inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span></span>
 <span><span class="va">max_walk_time</span> <span class="op">&lt;-</span> <span class="fl">30</span>      <span class="co"># in minutes</span></span>
-<span><span class="va">max_trip_duration</span> <span class="op">&lt;-</span> <span class="fl">90</span>  <span class="co"># in minutes</span></span>
 <span><span class="va">time_window</span> <span class="op">&lt;-</span> <span class="fl">60</span>        <span class="co"># in minutes</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
@@ -194,31 +173,30 @@ calculated departing every minute over a 60-minute time window, between
 <span>  cutoffs <span class="op">=</span> <span class="va">time_intervals</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
-<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
 <span>  time_window <span class="op">=</span> <span class="va">time_window</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  zoom <span class="op">=</span> <span class="fl">10</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>As you can see, the <code><a href="../reference/isochrone.html">isochrone()</a></code> functions works very
-similarly to the <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> function. However,
-instead of returning a table with travel time estimates, it returns a
-<code>POLYGON  "sf" "data.frame"</code> for each isochrone of each
-origin when you set <code>polygon_output = TRUE</code>.</p>
+<p><code><a href="../reference/isochrone.html">isochrone()</a></code> works like
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>, but with
+<code>polygon_output = TRUE</code> it returns an <code>sf</code>
+data.frame with one <code>POLYGON</code>/<code>MULTIPOLYGON</code> per
+origin, cutoff and percentile:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iso1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Simple feature collection with 6 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: -51.2677 ymin: -30.11306 xmax: -51.13312 ymax: -29.98943</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -51.26701 ymin: -30.11365 xmax: -51.13243 ymax: -29.99003</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt;                id isochrone percentile                       polygons</span></span>
-<span><span class="co">#&gt; 1 89a90128a8fffff       100        p50 MULTIPOLYGON (((-51.1496 -3...</span></span>
-<span><span class="co">#&gt; 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16608 -...</span></span>
-<span><span class="co">#&gt; 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16882 -...</span></span>
-<span><span class="co">#&gt; 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17706 -...</span></span>
-<span><span class="co">#&gt; 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22513 -...</span></span>
-<span><span class="co">#&gt; 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.2265 -3...</span></span></code></pre></div>
-<p>Now it becomes super simple to visualize our isochrones on a map:</p>
+<span><span class="co">#&gt; 1 89a90128a8fffff       100        p50 MULTIPOLYGON (((-51.14891 -...</span></span>
+<span><span class="co">#&gt; 2 89a90128a8fffff        90        p50 MULTIPOLYGON (((-51.16493 -...</span></span>
+<span><span class="co">#&gt; 3 89a90128a8fffff        80        p50 MULTIPOLYGON (((-51.16814 -...</span></span>
+<span><span class="co">#&gt; 4 89a90128a8fffff        70        p50 MULTIPOLYGON (((-51.17638 -...</span></span>
+<span><span class="co">#&gt; 5 89a90128a8fffff        60        p50 MULTIPOLYGON (((-51.22444 -...</span></span>
+<span><span class="co">#&gt; 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.22581 -...</span></span></code></pre></div>
+<p>Mapping the isochrones:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract OSM network</span></span>
 <span><span class="va">street_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/street_network_to_sf.html">street_network_to_sf</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
@@ -237,12 +215,10 @@ origin when you set <code>polygon_output = TRUE</code>.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="isochrones_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%">
-## 3.1 Line-based isochrones</p>
-<p>Alternatively, you can build line-based isochrones by simply passing
-<code>polygon_output = FALSE</code> to the <code><a href="../reference/isochrone.html">isochrone()</a></code>
-function. Note that you do not need the <code>zoom</code> parameter
-here, and that the output is
-<code>LINESTRING  "sf" "data.frame"</code>.</p>
+## 3.2 Line-based isochrones</p>
+<p>For line-based isochrones, set <code>polygon_output = FALSE</code>
+(no <code>zoom</code> needed). The output is a <code>LINESTRING</code>
+<code>sf</code> data.frame.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate travel time matrix</span></span>
 <span><span class="va">iso2</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/isochrone.html">isochrone</a></span><span class="op">(</span></span>
@@ -253,32 +229,30 @@ here, and that the output is
 <span>  cutoffs <span class="op">=</span> <span class="va">time_intervals</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="va">departure_datetime</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="va">max_walk_time</span>,</span>
-<span>  max_trip_duration <span class="op">=</span> <span class="va">max_trip_duration</span>,</span>
 <span>  time_window <span class="op">=</span> <span class="va">time_window</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iso2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Simple feature collection with 6 features and 13 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 6 features and 14 fields</span></span>
 <span><span class="co">#&gt; Geometry type: LINESTRING</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -51.20291 ymin: -30.10872 xmax: -51.1844 ymax: -30.09557</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
-<span><span class="co">#&gt;   edge_index    osm_id isochrone travel_time_p50 from_vertex to_vertex</span></span>
-<span><span class="co">#&gt; 1      32820 289389686       100              98        7464     14753</span></span>
-<span><span class="co">#&gt; 2      32821 289389686       100              98       14753      7464</span></span>
-<span><span class="co">#&gt; 3      34254 326021940       100              98       15308     15309</span></span>
-<span><span class="co">#&gt; 4      34255 326021940       100              98       15309     15308</span></span>
-<span><span class="co">#&gt; 5      35888 337865739       100              98       15671     15690</span></span>
-<span><span class="co">#&gt; 6      35889 337865739       100              98       15690     15671</span></span>
-<span><span class="co">#&gt;   street_class  length  walk   car car_speed bicycle bicycle_lts</span></span>
-<span><span class="co">#&gt; 1        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>
-<span><span class="co">#&gt; 2        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>
-<span><span class="co">#&gt; 3        OTHER 227.438  TRUE FALSE    40.248    TRUE           1</span></span>
-<span><span class="co">#&gt; 4        OTHER 227.438  TRUE FALSE    40.248    TRUE           1</span></span>
-<span><span class="co">#&gt; 5        OTHER  87.668 FALSE FALSE    40.248   FALSE           1</span></span>
-<span><span class="co">#&gt; 6        OTHER  87.668 FALSE FALSE    40.248   FALSE           1</span></span>
+<span><span class="co">#&gt;                id edge_index    osm_id isochrone travel_time_p50 from_vertex</span></span>
+<span><span class="co">#&gt; 1 89a90128a8fffff      32820 289389686       100              98        7464</span></span>
+<span><span class="co">#&gt; 2 89a90128a8fffff      32821 289389686       100              98       14753</span></span>
+<span><span class="co">#&gt; 3 89a90128a8fffff      34254 326021940       100              98       15308</span></span>
+<span><span class="co">#&gt; 4 89a90128a8fffff      34255 326021940       100              98       15309</span></span>
+<span><span class="co">#&gt; 5 89a90128a8fffff      35888 337865739       100              98       15671</span></span>
+<span><span class="co">#&gt; 6 89a90128a8fffff      35889 337865739       100              98       15690</span></span>
+<span><span class="co">#&gt;   to_vertex street_class  length  walk   car car_speed bicycle bicycle_lts</span></span>
+<span><span class="co">#&gt; 1     14753        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>
+<span><span class="co">#&gt; 2      7464        OTHER 374.345  TRUE  TRUE    39.996    TRUE           2</span></span>
+<span><span class="co">#&gt; 3     15309        OTHER 227.438  TRUE FALSE    40.248    TRUE           1</span></span>
+<span><span class="co">#&gt; 4     15308        OTHER 227.438  TRUE FALSE    40.248    TRUE           1</span></span>
+<span><span class="co">#&gt; 5     15690        OTHER  87.668 FALSE FALSE    40.248   FALSE           1</span></span>
+<span><span class="co">#&gt; 6     15671        OTHER  87.668 FALSE FALSE    40.248   FALSE           1</span></span>
 <span><span class="co">#&gt;                         geometry</span></span>
 <span><span class="co">#&gt; 1 LINESTRING (-51.19973 -30.1...</span></span>
 <span><span class="co">#&gt; 2 LINESTRING (-51.20291 -30.1...</span></span>
@@ -286,30 +260,26 @@ here, and that the output is
 <span><span class="co">#&gt; 4 LINESTRING (-51.18581 -30.1...</span></span>
 <span><span class="co">#&gt; 5 LINESTRING (-51.19704 -30.0...</span></span>
 <span><span class="co">#&gt; 6 LINESTRING (-51.19686 -30.0...</span></span></code></pre></div>
-<p>Now it becomes super simple to visualize our isochrones on a map:</p>
+<p>Mapping the isochrones:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iso2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">isochrone</span><span class="op">)</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="va">colors</span><span class="op">)</span> <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">central_bus_stn</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">lon</span>, y<span class="op">=</span><span class="va">lat</span><span class="op">)</span>, color<span class="op">=</span><span class="st">'black'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Travel time\n(in minutes)"</span>, color<span class="op">=</span><span class="st">'sadasd'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Travel time\n(in minutes)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="isochrones_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory
-previously set after they are done with their calculations. In order to
-remove an existing <code>r5r</code> object and reallocate the memory it
-had been using, we use the <code>stop_r5</code> function followed by a
-call to Java’s garbage collector, as follows:</p>
+<p>Stop the network and run Java’s garbage collector to free the memory
+it used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
-<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
-page</a>.</p>
+<a href="https://github.com/ipea/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>
 </div>

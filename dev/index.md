@@ -5,9 +5,9 @@ Version](https://www.r-pkg.org/badges/version/r5r)](https://CRAN.R-project.org/p
 [![CRAN/METACRAN Total
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/r5r?color=blue)](https://CRAN.R-project.org/package=r5r)
 [![R build
-status](https://github.com/ipeaGIT/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/r5r/actions)
+status](https://github.com/ipea/r5r/workflows/R-CMD-check/badge.svg)](https://github.com/ipea/r5r/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/ipeaGIT/r5r/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ipeaGIT/r5r?branch=master)
+coverage](https://codecov.io/gh/ipea/r5r/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ipea/r5r?branch=master)
 [![Lifecycle:
 maturing](https://lifecycle.r-lib.org/articles/figures/lifecycle-stable.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Publication](https://img.shields.io/badge/DOI-10.32866%2F001c.21262-yellow)](https://doi.org/10.32866/001c.21262)
@@ -23,9 +23,9 @@ routing engine developed independently by
 generate detailed routing analysis or calculate travel time matrices and
 accessibility using seamless parallel computing. See a detailed
 demonstration of `r5r` in the [intro
-Vignette](https://ipeagit.github.io/r5r/articles/r5r.html). More details
+Vignette](https://ipea.github.io/r5r/articles/r5r.html). More details
 about **r5r** can be found on the [package
-webpage](https://ipeagit.github.io/r5r/index.html) or on this
+webpage](https://ipea.github.io/r5r/index.html) or on this
 [paper](https://doi.org/10.32866/001c.21262). Over time, `r5r` might be
 expanded to incorporate other functionality from R⁵.
 
@@ -43,7 +43,7 @@ install.packages("r5r")
 
 # dev version with latest features
 utils::remove.packages('r5r')
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+devtools::install_github("ipea/r5r", subdir = "r-package")
 ```
 
 Please bear in mind that you need to have *Java Development Kit (JDK)
@@ -73,64 +73,64 @@ rJavaEnv::java_quick_install(version = 21)
 
 The package has seven **fundamental functions** :
 
-1.  [`build_network()`](https://ipeagit.github.io/r5r/dev/reference/build_network.md)
+1.  [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md)
     - Downloads and stores locally an R5 Jar file (the Jar file is
       downloaded only once per installation)
     - Builds a multimodal transport network given (1) a OpenStreetMap
       street network in `.pbf` format (*mandatory*), (2) one or more
       public transport networks in `GTFS.zip` format (optional), and (3)
       elevation data in `raster.tif` (optional).
-2.  [`accessibility()`](https://ipeagit.github.io/r5r/dev/reference/accessibility.md)
+2.  [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
     - Fast computation of access to opportunities. The function returns
       a `data.table` with accessibility estimates for all origin points
       by transport mode given a selected decay function. Multiple decay
       functions are available, including step (cumulative
       opportunities), logistic, fixed exponential and linear.
-3.  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/travel_time_matrix.md)
+3.  [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
     - Fast function that returns a simple `data.table` with travel time
       estimates between one or multiple origin destination pairs
       considering departure time.
-4.  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+4.  [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
     - Calculates travel time matrices between origin destination pairs
       considering a time of arrival. The output includes additional
       information such as the routes used and total time disaggregated
       by access, waiting, in-vehicle and transfer times.
-5.  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+5.  [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
     - Calculates travel time matrices between origin destination pairs
       with additional information such as routes used and total time
       disaggregated by access, waiting, in-vehicle and transfer times.
-6.  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+6.  [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
     - Returns a `data.frame sf LINESTRINGs` with one or multiple
       alternative routes between one or multiple origin destination
       pairs. The data output brings detailed information on transport
       mode, travel time, walk distance etc for each trip segment.
-7.  [`pareto_frontier()`](https://ipeagit.github.io/r5r/dev/reference/pareto_frontier.md)
+7.  [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
     - Returns a `data.table` with the travel time and monetary cost of
       multiple route alternatives for specified origin-destination
       pairs.
-8.  [`isochrone()`](https://ipeagit.github.io/r5r/dev/reference/isochrone.md)
+8.  [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
     - Returns a `sf" "data.frame"` showing the area that can be reached
       from an origin point at a given travel time limit.
 
 [See more details about each function
-here](https://ipeagit.github.io/r5r/reference/index.html)
+here](https://ipea.github.io/r5r/reference/index.html)
 
 obs. Most of these functions also allow users to account for monetary
 travel costs when generating travel time matrices and accessibility
 estimates. More info on how to consider monetary costs can be found in
 [this
-vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
+vignette](https://ipea.github.io/r5r/articles/fare_structure.html).
 
 The package also includes a few **support functions**.
 
-1.  [`street_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/street_network_to_sf.md)
+1.  [`street_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/street_network_to_sf.md)
     - Extract OpenStreetMap network in sf format from a `network.dat`
       file.
-2.  [`transit_network_to_sf()`](https://ipeagit.github.io/r5r/dev/reference/transit_network_to_sf.md)
+2.  [`transit_network_to_sf()`](https://ipea.github.io/r5r/dev/reference/transit_network_to_sf.md)
     - Extract transit network in sf format from a `network.dat` file.
-3.  [`find_snap()`](https://ipeagit.github.io/r5r/dev/reference/find_snap.md)
+3.  [`find_snap()`](https://ipea.github.io/r5r/dev/reference/find_snap.md)
     - Find snapped locations of input points on street network.
-4.  [`r5r_sitrep()`](https://ipeagit.github.io/r5r/dev/reference/r5r_sitrep.md)
+4.  [`r5r_sitrep()`](https://ipea.github.io/r5r/dev/reference/r5r_sitrep.md)
     - Generate a situation report to help debug eventual errors.
 
 ### Data requirements:
@@ -160,10 +160,10 @@ Here are a few places from where you can download these data sets:
 ### Demonstration on sample data
 
 See a detailed demonstration of `r5r` in this [intro
-Vignette](https://ipeagit.github.io/r5r/articles/r5r.html). To
-illustrate functionality, the package includes a small sample data set
-of the public transport and Open Street Map networks of Porto Alegre
-(Brazil). Three steps are required to use `r5r`, as follows.
+Vignette](https://ipea.github.io/r5r/articles/r5r.html). To illustrate
+functionality, the package includes a small sample data set of the
+public transport and Open Street Map networks of Porto Alegre (Brazil).
+Three steps are required to use `r5r`, as follows.
 
 ``` r
 

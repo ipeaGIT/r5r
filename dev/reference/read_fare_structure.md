@@ -19,8 +19,8 @@ read_fare_structure(file_path, encoding = "UTF-8")
   A string. Passed to
   [`data.table::fread()`](https://rdrr.io/pkg/data.table/man/fread.html),
   defaults to `"UTF-8"`. Other possible options are `"unknown"` and
-  `"Latin-1"`. Please note that this is not used to re-encode the input,
-  but to enable handling encoded strings in their native encoding.
+  `"Latin-1"`. This is not used to re-encode the input, but to enable
+  handling encoded strings in their native encoding.
 
 ## Value
 
@@ -29,8 +29,8 @@ A fare structure object.
 ## See also
 
 Other fare structure:
-[`setup_fare_structure()`](https://ipeagit.github.io/r5r/dev/reference/setup_fare_structure.md),
-[`write_fare_structure()`](https://ipeagit.github.io/r5r/dev/reference/write_fare_structure.md)
+[`setup_fare_structure()`](https://ipea.github.io/r5r/dev/reference/setup_fare_structure.md),
+[`write_fare_structure()`](https://ipea.github.io/r5r/dev/reference/write_fare_structure.md)
 
 ## Examples
 

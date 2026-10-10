@@ -79,9 +79,9 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using the time_window parameter</h1>
             
-            <h4 data-toc-skip class="date">2026-09-29</h4>
+            <h4 data-toc-skip class="date">2026-10-10</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/vignettes/time_window.Rmd" class="external-link"><code>vignettes/time_window.Rmd</code></a></small>
       <div class="d-none name"><code>time_window.Rmd</code></div>
     </div>
 
@@ -98,67 +98,47 @@
 <div class="section level3">
 <h3 id="the-problem">The problem<a class="anchor" aria-label="anchor" href="#the-problem"></a>
 </h3>
-<p>To calculate the travel time from A to B, or to calculate the
-accessibility level at a given location, one has to select a departure
-time. However, travel time and accessibility estimates can differ
-significantly at different departure times because of how public
-transport service levels vary across the day <span class="citation">(Stepniak et al. 2019)</span>. Even a small difference,
-say leaving at <code>10:00am</code> or <code>10:04am</code> might
-importantly change travel time and accessibility estimates depending on
-when a person departs relative to when a public transport vehicle
-arrives, and how well transfers are coordinated given a service
-timetable. This is a very common issue related to the modifiable
-temporal unit problem (MTUP) <span class="citation">(Pereira 2019; <span class="nocase">Levinson and et al.</span> 2020)</span>.</p>
-<p>This problem gets even more complicated when public transport GTFS
-feeds have a <code>frequencies.txt</code> table. In these cases, we
-cannot know the exact departure time of vehicles, what creates greater
-uncertainty for our travel time and accessibility estimates <span class="citation">(Conway et al. 2018; Stewart and Byrd 2022)</span>.</p>
+<p>Travel time and accessibility estimates require a departure time, and
+they can differ significantly across departure times because public
+transport service levels vary across the day <span class="citation">(Stepniak et al. 2019)</span>. Even leaving at
+<code>10:00am</code> instead of <code>10:04am</code> can change results
+considerably, depending on when vehicles arrive and how well transfers
+are coordinated. This relates to the modifiable temporal unit problem
+(MTUP) <span class="citation">(Pereira 2019; <span class="nocase">Levinson and et al.</span> 2020)</span>.</p>
+<p>The uncertainty is greater when GTFS feeds have a
+<code>frequencies.txt</code> table, because exact vehicle departure
+times are unknown <span class="citation">(Conway et al. 2018; Stewart
+and Byrd 2022)</span>.</p>
 </div>
 <div class="section level3">
 <h3 id="the-solution">The solution<a class="anchor" aria-label="anchor" href="#the-solution"></a>
 </h3>
-<p>A common strategy to overcome this problem is to calculate travel
-times and accessibilities at multiple departure times sampled over a
-time window, and then take the average or median value. Now you may ask,
-but how many departure times should I use? You might also be thinking
-that doing multiple repeated routing analysis can be cumbersome and take
-a lot of time. Right?</p>
-<p>Here is where <code>r5r</code> comes in. Both the
-<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code>and <code><a href="../reference/accessibility.html">accessibility()</a></code>
-functions have a parameter called <code>time_window</code>. When this
-parameter is set, R<sup>5</sup> will automatically compute multiple
-travel times / accessibility estimates considering multiple departures
-per minute within the <code>time_window</code> selected by the user.</p>
-<p>This vignette shows a reproducible example to explain how one can use
-the <code>time_window</code> and interpret the results.</p>
+<p>A common strategy is to compute estimates for multiple departure
+times over a time window and take the average or median. Repeating the
+routing for each departure is slow, though.</p>
+<p>In <code>r5r</code>, functions such as
+<code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> and <code><a href="../reference/accessibility.html">accessibility()</a></code> have
+a <code>time_window</code> parameter that does this in a single call.
+This vignette shows how to use it and interpret the results.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="how-the-time_window-works-and-how-to-interpret-the-results-">2. How the <code>time_window</code> works and how to interpret the
 results.<a class="anchor" aria-label="anchor" href="#how-the-time_window-works-and-how-to-interpret-the-results-"></a>
 </h2>
-<p>As mentioned above, when <code>time_window</code> is set,
-R<sup>5</sup> computes multiple travel times / accessibility estimates
-starting at the specified <code>departure_datetime</code> and within the
-<code>time_window</code> selected by the user. By default,
-<code>r5r</code> will generate one estimate per minute. Nonetheless,
-users can set a number to the <code>draws_per_minute</code> parameter
-that will change the number of Monte Carlo draws to perform per time
-window minute. The default value of <code>draws_per_minute</code> is 5,
-which mean 300 draws in a 60 minutes time window, for example. For a
-detailed discussion on the effect of number of draws on result
-stability, see Stewart et al <span class="citation">(2022)</span>.</p>
-<p>In this case, there isn’t a single estimate of travel time /
-accessibility, but a distribution of several estimates that reflect the
-travel time / accessibility uncertainties in the specified time window.
-To get our heads around so many estimates, we can use the
-<code>percentiles</code> parameter to specify the percentiles of the
-distribution we are interested in. For example, if we select the 25th
-travel time percentile and the results show that the travel time
-estimate between A and B is 15 minutes, this means that 25% of all trips
-taken between these points within the specified time window are shorter
-than 15 minutes.</p>
-<p>Let’s see a couple concrete examples now.</p>
+<p>With <code>time_window</code>, R<sup>5</sup> computes an estimate for
+a departure every minute from <code>departure_datetime</code> until the
+end of the window. If the GTFS feeds have a <code>frequencies.txt</code>
+table, <code>draws_per_minute</code> sets the number of Monte Carlo
+draws per minute (default 5, i.e. 300 draws in a 60-minute window);
+without frequencies, departures are deterministic and
+<code>draws_per_minute</code> does not affect results. For the effect of
+the number of draws on result stability, see Stewart et al <span class="citation">(2022)</span>.</p>
+<p>The result is not a single estimate but a distribution reflecting the
+uncertainty within the window. The <code>percentiles</code> parameter
+selects which percentiles to return. For example, a 25th-percentile
+travel time of 15 minutes from A to B means that 25% of trips departing
+within the window are shorter than 15 minutes.</p>
 </div>
 <div class="section level2">
 <h2 id="demonstration-of-time_window-">3. Demonstration of <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-time_window-"></a>
@@ -167,15 +147,14 @@ than 15 minutes.</p>
 <h3 id="build-routable-transport-network-with-build_network">3.1 Build routable transport network with
 <code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h3>
-<p>First, let’s build the network and create the routing inputs. In this
-example we’ll be using the a sample data set for the city of São Paulo
-(Brazil) included in <code>r5r</code>.</p>
+<p>We use the São Paulo (Brazil) sample data included in
+<code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load libraries</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -196,20 +175,13 @@ example we’ll be using the a sample data set for the city of São Paulo
 <span><span class="co"># departure datetime</span></span>
 <span><span class="va">departure_datetime</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>, </span>
 <span>                                format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span></code></pre></div>
-<p>ps. Please keep in mind that the Monte Carlo draws in
-<code>time_window</code> only affects the results when the GTFS feeds
-contain a <code>frequencies.txt</code> table. If the GTFS feed does not
-have a frequency table, r5r still allow for multiple runs over the set
-<code>time_window</code> in a deterministic way.</p>
 </div>
 <div class="section level3">
 <h3 id="accessibility-with-time_window-">3.2 Accessibility with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#accessibility-with-time_window-"></a>
 </h3>
-<p>In this example we calculate the number of schools accessible from
-each location within a 60-minute time window departing between 2pm and
-3pm. In this example we’ll be using a cumulative accessibility metric
-<code>decay_function = "step"</code> with a max time threshold of 45
-minutes <code>cutoffs = 45</code>.</p>
+<p>Number of schools reachable from each location within 45 minutes
+(<code>decay_function = "step"</code>, <code>cutoffs = 45</code>), for
+departures between 2pm and 3pm (<code>time_window = 60</code>):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate accessibility</span></span>
 <span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span></span>
@@ -237,19 +209,18 @@ minutes <code>cutoffs = 45</code>.</p>
 <span><span class="co">#&gt;  5: 89a8100c603ffff     schools         80     45             6</span></span>
 <span><span class="co">#&gt;  6: 89a8100c617ffff     schools         10     45            14</span></span>
 <span><span class="co">#&gt;  7: 89a8100c617ffff     schools         20     45            14</span></span>
-<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45             9</span></span>
+<span><span class="co">#&gt;  8: 89a8100c617ffff     schools         50     45            10</span></span>
 <span><span class="co">#&gt;  9: 89a8100c617ffff     schools         70     45             6</span></span>
 <span><span class="co">#&gt; 10: 89a8100c617ffff     schools         80     45             6</span></span></code></pre></div>
-<p>This output is in long format, so the first 5 rows show the result
-for the same origin. In this case, we see that in only 10% of the trips
-departing from that origin between 2pm and 3pm a person would be able to
-access up to 111 schools. Meanwhile, 50% of the times she would only
-access 79 schools. By contrast, the accessibility from the other origin
-shown in the output above is 0, meaning there are no schools accessible
-from that location given the max travel time of 45 minutes.</p>
-<p>We can use a plot like the one below to visualize this uncertainty in
-how accessibility levels might vary between 2pm and 3pm depending on the
-departure time within that 60-minute time window.</p>
+<p>The output is in long format, one row per origin and percentile, so
+the first 5 rows refer to the same origin. The 10th percentile counts
+the schools reachable in at least 10% of departures, the 50th those
+reachable in at least half of them; so accessibility never increases as
+the percentile rises. An accessibility of 0 means no school is reachable
+within 45 minutes.</p>
+<p>The plot shows, for each origin (sorted by median), the range of
+accessibility between the 10th and 80th percentiles, with the median as
+a dot:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># summarize</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">acc</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>min_acc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">accessibility</span><span class="op">)</span>,</span>
@@ -272,9 +243,7 @@ departure time within that 60-minute time window.</p>
 <div class="section level3">
 <h3 id="travel-time-matrix-with-time_window-">3.3 Travel time matrix with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#travel-time-matrix-with-time_window-"></a>
 </h3>
-<p>Now let’s calculate all-to-all travel time estimates within a
-60-minute time window departing between 2pm and 3pm and see how the
-output looks like.</p>
+<p>All-to-all travel times for departures between 2pm and 3pm:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
@@ -315,27 +284,20 @@ output looks like.</p>
 <span><span class="co">#&gt;  8:              14              14              14</span></span>
 <span><span class="co">#&gt;  9:              16              16              16</span></span>
 <span><span class="co">#&gt; 10:              24              24              24</span></span></code></pre></div>
-<p>Now let’s look at the 2nd row of the output above. This output tell
-us that only 10% of the trips between 2pm and 3pm for that
-origin-destination pair took 39 minutes or less. Meanwhile, 50% of those
-trips took up tp 45 minutes and 80% of them were 48-minute long or
-shorter.</p>
-<p>The last row in the result above has a few <code>NA</code>s. This
-tell us that at least 50% of all simulated trips between 2pm and 3pm for
-that origin-destination pair could not be completed because they took
-longer than the <code>max_trip_duration</code> we have set (90
-minutes).</p>
+<p>Each <code>travel_time_pXX</code> column gives the travel time within
+which XX% of the trips departing between 2pm and 3pm are completed:
+<code>travel_time_p10</code> for the fastest 10%,
+<code>travel_time_p50</code> the median, and so on. An <code>NA</code>
+means fewer than XX% of the trips arrive within
+<code>max_trip_duration</code> (90 minutes).</p>
 </div>
 <div class="section level3">
 <h3 id="expanded-travel-time-matrix-with-time_window-">3.4 Expanded travel time matrix with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#expanded-travel-time-matrix-with-time_window-"></a>
 </h3>
-<p>Finally, we can also use the <code>time_window</code> in the
-<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> function. In this case,
-though, when the user sets a <code>time_window</code> value, the
-<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> will return the fastest route
-alternative departing each minute within the specified time window.
-Please note this function can be very memory intensive for large data
-sets and time windows.</p>
+<p>With <code>time_window</code>,
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code> returns the fastest route
+departing at each minute of the window, instead of percentiles. It can
+be very memory intensive for large data sets and time windows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ettm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">r5r_network</span>,</span>
@@ -364,60 +326,51 @@ sets and time windows.</p>
 <span><span class="co">#&gt; 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10</span></span>
 <span><span class="co">#&gt;     total_time</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:       38.8</span></span>
-<span><span class="co">#&gt;  2:       36.2</span></span>
-<span><span class="co">#&gt;  3:       36.7</span></span>
-<span><span class="co">#&gt;  4:       43.4</span></span>
-<span><span class="co">#&gt;  5:       51.3</span></span>
-<span><span class="co">#&gt;  6:       37.1</span></span>
-<span><span class="co">#&gt;  7:       38.5</span></span>
-<span><span class="co">#&gt;  8:       34.8</span></span>
-<span><span class="co">#&gt;  9:       45.9</span></span>
-<span><span class="co">#&gt; 10:       47.9</span></span></code></pre></div>
+<span><span class="co">#&gt;  1:       37.2</span></span>
+<span><span class="co">#&gt;  2:       41.9</span></span>
+<span><span class="co">#&gt;  3:       37.2</span></span>
+<span><span class="co">#&gt;  4:       46.9</span></span>
+<span><span class="co">#&gt;  5:       51.0</span></span>
+<span><span class="co">#&gt;  6:       40.5</span></span>
+<span><span class="co">#&gt;  7:       43.4</span></span>
+<span><span class="co">#&gt;  8:       48.7</span></span>
+<span><span class="co">#&gt;  9:       53.5</span></span>
+<span><span class="co">#&gt; 10:       47.7</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detailed-itineraries-with-time_window-">3.5 Detailed itineraries with <code>time_window</code>.<a class="anchor" aria-label="anchor" href="#detailed-itineraries-with-time_window-"></a>
 </h3>
-<p>In the <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> function, the number of
-Monte Carlo draws per minute is hardcoded to 1. This means that the
-function simulates only one departure per minute within the
-<code>time_window</code>. So if you set a <code>time_window</code> of 10
-minutes, it would simulate 10 departures, one in each minute. This is
-largely because the <code>time_window</code> behaves slightly
-differently here.</p>
-<p>See, functions like <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> or
-<code><a href="../reference/accessibility.html">accessibility()</a></code>, for example, return estimates of travel
-times or accessibility. In these cases, when we use the
-<code>time_window</code> parameter, these functions output selected
-percentiles of those values generated based on the distribution of all
-estimates that result from the multiple trip simulations.</p>
-<p>The <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>, on the other hand, does not
-return travel times or accessibility estimates. It returns alternatives
-of trip journeys. In this case, when we use the <code>time_window</code>
-parameter, the function will return the optimal trip itinerary found
-within the time window. It can also return the optimal route along with
-multiple sub-optimal journey alternatives found within the time window
-if the the user sets <code>shortest_path = FALSE</code>.</p>
-<p><em>obs.</em> Mind you that <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code>
-cannot be computed for public transport trips if the the network uses a
-frequencies-based GTFS feed. In these cases, we suggest using
+<p><code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> returns itineraries rather than
+travel time or accessibility percentiles. With <code>time_window</code>,
+it returns the fastest itinerary: the shortest travel time measured from
+its own departure, so it may depart and arrive later than others (use
+<code>time_window = 1</code> for the earliest arrival). With
+<code>shortest_path = FALSE</code>, it also returns sub-optimal
+alternatives.</p>
+<p>Its number of draws per minute is fixed at 1: it simulates about one
+departure per minute of <code>time_window</code>, at random seconds
+(consecutive departures are 30 to 90 seconds apart, and the same
+departure times are used in every call with the same origin). So a
+10-minute <code>time_window</code> simulates about 10 departures. Each
+departure is routed separately, and with the default
+<code>suboptimal_minutes = 0</code> only the itineraries arriving
+earliest are kept for each departure, even if a slower one has fewer
+transfers.</p>
+<p><em>obs.</em> <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> cannot route public
+transport trips on frequency-based GTFS feeds; use
 <code><a href="https://rdrr.io/pkg/gtfstools/man/frequencies_to_stop_times.html" class="external-link">gtfstools::frequencies_to_stop_times()</a></code> to create a suitable
 feed.</p>
 </div>
 <div class="section level3">
 <h3 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h3>
-<p><code>r5r</code> objects are still allocated to any amount of memory
-previously set after they are done with their calculations. In order to
-remove an existing <code>r5r</code> object and reallocate the memory it
-had been using, we use the <code>stop_r5</code> function followed by a
-call to Java’s garbage collector, as follows:</p>
+<p>Stop the network and run Java’s garbage collector to free the memory
+it used:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
-<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
-page</a>.</p>
+<a href="https://github.com/ipea/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>
 <div class="section level2 unnumbered">

@@ -1,7 +1,7 @@
 # Expand origin-destination pairs
 
 This function is used in
-[`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md)
+[`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
 to update the `origins` and `destinations` datasets.
 
 ## Usage
@@ -15,14 +15,14 @@ expand_od_pairs(origins, destinations, all_to_all)
 - origins:
 
   Passed by
-  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md).
+  [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md).
 
 - destinations:
 
   Passed by
-  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md).
+  [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md).
 
 - all_to_all:
 
   Passed by
-  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/dev/reference/detailed_itineraries.md).
+  [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md).
