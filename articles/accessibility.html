@@ -94,25 +94,19 @@
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Accessibility indicators measure the ease with which opportunities,
-such as jobs, can be reached by a traveler from a particular location
-<span class="citation">(<span class="nocase">Levinson and et al.</span>
-2020)</span>. This vignette shows how to calculate and visualize
-accessibility in R using the <a href="https://ipeagit.github.io/r5r/index.html"><code>r5r</code>
-package</a> using a reproducible example. In this example, we will be
-using a sample data set for the city of Porto Alegre (Brazil) included
-in <code>r5r</code>.</p>
-<p>There are two ways to calculate / visualize accessibility using
-<code>r5r</code>. The quick and easy option is using the
-<code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> function. The other alternative
-requires one to first calculate a travel time matrix, and then to use
-the <a href="https://ipea.github.io/accessibility/" class="external-link">{accessibility}
-package</a>. This is a more flexible options because the
-<a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package provides a wider range of options
-of accessibility metrics. We will cover both approaches in this
-vignette.</p>
-<p>Before we start, we need to increase Java memory + load a few
-libraries, and to build routable transport network.</p>
+<p>Accessibility indicators measure how easily opportunities, such as
+jobs, can be reached from a given location <span class="citation">(<span class="nocase">Levinson and et al.</span> 2020)</span>. This vignette
+calculates and maps accessibility with the <a href="https://ipeagit.github.io/r5r/index.html"><code>r5r</code>
+package</a>, using the Porto Alegre (Brazil) sample data included in
+<code>r5r</code>, in two ways:</p>
+<ul>
+<li>
+<strong>quick:</strong> <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code>;</li>
+<li>
+<strong>flexible:</strong> an <code>r5r</code> travel time matrix
+passed to the <a href="https://ipea.github.io/accessibility/" class="external-link">{accessibility}
+package</a>, which offers a wider range of metrics.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="build-routable-transport-network-with-build_network">2. Build routable transport network with
@@ -121,9 +115,7 @@ libraries, and to build routable transport network.</p>
 <div class="section level4">
 <h4 id="increase-java-memory-and-load-libraries">Increase Java memory and load libraries<a class="anchor" aria-label="anchor" href="#increase-java-memory-and-load-libraries"></a>
 </h4>
-<p>First, we need to increase the memory available to Java and load the
-packages used in this vignette. Please note we allocate RAM memory to
-Java <em>before</em> loading our libraries.</p>
+<p>Set Java memory before loading the packages (<a href="https://ipeagit.github.io/r5r/articles/r5r.html#usage">why</a>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
@@ -135,9 +127,8 @@ Java <em>before</em> loading our libraries.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interp</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://obrl-soil.github.io/h3jsr/" class="external-link">h3jsr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p>To build a routable transport network with <code>r5r</code>, the user
-needs to call <code><a href="../reference/build_network.html">build_network()</a></code> with the path to the
-directory where OpenStreetMap and GTFS data are stored.</p>
+<p><code><a href="../reference/build_network.html">build_network()</a></code> takes the directory holding the
+OpenStreetMap and GTFS data:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file returns the directory with example data inside the r5r package</span></span>
 <span><span class="co"># set data path to directory containing your own data if not running this example</span></span>
@@ -149,24 +140,16 @@ directory where OpenStreetMap and GTFS data are stored.</p>
 <div class="section level2">
 <h2 id="accessibility-quick-and-easy-approach">3. Accessibility: quick and easy approach<a class="anchor" aria-label="anchor" href="#accessibility-quick-and-easy-approach"></a>
 </h2>
-<p>There are different types of accessibility metrics. One of the
-simplest ones is the cumulative-opportunity metric, which counts the
-number of opportunities accessible from each location considering a
-maximum travel time cutoff. This is what we’ll be calculating in this
-vignette using the parameter <code>decay_function = "step"</code>.</p>
-<p>In this example, we will be calculating the number of schools and
-public healthcare facilities accessible by public transport within a
-travel time of less than 20 minutes. The sample data provided contains
-information on the spatial distribution of schools in Porto Alegre in
-the <code>points$schools</code> column, and healthcare facilities in the
-<code>points$healthcare</code> column.</p>
-<p>With the code below we compute the number of schools and healthcare
-accessible considering median of multiple travel time estimates
-departing every minute over a 60-minute time window, between 2pm and
-3pm. The <code><a href="../reference/accessibility.html">accessibility()</a></code> function can calculate access to
-multiple opportunities in a single call, which is much more efficient
-and convenient than producing a travel time matrix of the study area and
-manually computing accessibility.</p>
+<p>One of the simplest accessibility metrics is the
+cumulative-opportunity metric: the number of opportunities reachable
+within a travel time cutoff (<code>decay_function = "step"</code>).</p>
+<p>Here we count the schools (<code>points$schools</code>) and public
+healthcare facilities (<code>points$healthcare</code>) reachable by
+public transport in less than 20 minutes, using the median travel time
+of departures every minute over a 60-minute window (2pm to 3pm).
+<code><a href="../reference/accessibility.html">accessibility()</a></code> handles several opportunity types in one
+call, which is much more efficient than computing a travel time matrix
+and aggregating it yourself.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read all points in the city</span></span>
 <span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"poa_hexgrid.csv"</span><span class="op">)</span><span class="op">)</span></span>
@@ -203,23 +186,19 @@ manually computing accessibility.</p>
 <span><span class="co">#&gt; 4: 89a9012a3cfffff  healthcare         50     20             0</span></span>
 <span><span class="co">#&gt; 5: 89a901295b7ffff     schools         50     20             6</span></span>
 <span><span class="co">#&gt; 6: 89a901295b7ffff  healthcare         50     20             4</span></span></code></pre></div>
-<p>Mind you that the <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> also allow users
-to calculate gravity-based accessibility metrics, which can be
-calculated by setting the <code>decay_function</code> to one of the
-following: <code>"exponential"</code> <code>"fixed_exponential"</code>,
-<code>"linear"</code> or <code>"logistic"</code>. Nonetheless, there are
-several other types of accessibility metrics not implemented in R5,
-including floating catchment area metrics, travel cost to closest N
-opportunities, time interval based cumulative opportunity, etc. This is
-where the <a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package comes in.</p>
+<p><code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> also computes gravity-based
+metrics: set <code>decay_function</code> to <code>"exponential"</code>,
+<code>"fixed_exponential"</code>, <code>"linear"</code> or
+<code>"logistic"</code>. Metrics not implemented in R5, such as floating
+catchment area, travel cost to the closest N opportunities or
+time-interval cumulative opportunities, are available in the
+<a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package.</p>
 </div>
 <div class="section level2">
 <h2 id="accessibility-flexible-approach">4. Accessibility: flexible approach<a class="anchor" aria-label="anchor" href="#accessibility-flexible-approach"></a>
 </h2>
-<p>The <a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package provides a much more
-flexible approach to calculate accessibility estimates. A key input here
-is a <a href="https://ipeagit.github.io/r5r/articles/travel_time_matrix.html">travel
-time matrix</a>, which we calculate using <code>r5r</code>:</p>
+<p>The <a href="https://github.com/ipeaGIT/accessibility" class="external-link">accessibility</a> package takes a <a href="https://ipeagit.github.io/r5r/articles/travel_time_matrix.html">travel
+time matrix</a>, which we compute with <code>r5r</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate travel time matrix</span></span>
 <span><span class="va">ttm</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/travel_time_matrix.html">travel_time_matrix</a></span><span class="op">(</span></span>
@@ -242,14 +221,11 @@ time matrix</a>, which we calculate using <code>r5r</code>:</p>
 <span><span class="co">#&gt; 4: 89a901291abffff 89a901284a3ffff              60</span></span>
 <span><span class="co">#&gt; 5: 89a901291abffff 89a9012809bffff              47</span></span>
 <span><span class="co">#&gt; 6: 89a901291abffff 89a901285cfffff              38</span></span></code></pre></div>
-<p>Now to calculate a traditional cumulative opportunity metric like we
-did above, we just need to call the
-<code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> function, and pass our
-travel time matrix and land use data as input. Note that
-<code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff()</a></code> also counts trips that take exactly the
-cutoff time, while <code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> only counts trips
-strictly shorter than the cutoff, so the two estimates can differ
-slightly:</p>
+<p><code><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">accessibility::cumulative_cutoff()</a></code> computes the same
+cumulative metric from the travel time matrix and land use data. It also
+counts trips that take exactly the cutoff time, while
+<code><a href="../reference/accessibility.html">r5r::accessibility()</a></code> counts only trips strictly shorter
+than it, so the two estimates can differ slightly:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate accessibility</span></span>
 <span><span class="va">access_edu</span> <span class="op">&lt;-</span> <span class="fu">accessibility</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html" class="external-link">cumulative_cutoff</a></span><span class="op">(</span></span>
@@ -294,17 +270,13 @@ slightly:</p>
 <div class="section level2">
 <h2 id="map-accessibility">5. Map Accessibility<a class="anchor" aria-label="anchor" href="#map-accessibility"></a>
 </h2>
-<p>The final step is mapping the accessibility results calculated
-earlier. We can use at least two different approaches to map our
-accessibility estimates.</p>
+<p>Two ways to map the estimates:</p>
 <div class="section level3">
 <h3 id="choropleth-maps">5.1 Choropleth maps<a class="anchor" aria-label="anchor" href="#choropleth-maps"></a>
 </h3>
-<p>The first approach is to use choropleth maps. In our example, each
-point of reference is the centroid of a H3 hexagonal grid at a fine
-spatial resolution. In this case, we basically need to retrieve the
-polygons of the spatial grid, and merge it with our accessibility
-estimates.</p>
+<p>Each point is the centroid of a fine-resolution H3 hexagon, so we
+retrieve the hexagon polygons and join the accessibility estimates to
+them.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># retrieve polygons of H3 spatial grid</span></span>
 <span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu">h3jsr</span><span class="fu">::</span><span class="fu"><a href="https://obrl-soil.github.io/h3jsr/reference/cell_to_polygon.html" class="external-link">cell_to_polygon</a></span><span class="op">(</span><span class="va">points</span><span class="op">$</span><span class="va">id</span>, simple <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -326,10 +298,8 @@ estimates.</p>
 <div class="section level3">
 <h3 id="spatial-interpolation">5.2 Spatial interpolation<a class="anchor" aria-label="anchor" href="#spatial-interpolation"></a>
 </h3>
-<p>An alternative approach is to use our accessibility estimates for
-each reference point and do some spatial interpolation so we can have a
-smoother spatial distribution. The code below demonstrates how to do
-that, producing a prettier map.</p>
+<p>Alternatively, interpolate the point estimates to get a smoother
+surface:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interpolate estimates to get spatially smooth result</span></span>
 <span><span class="va">access_schools</span> <span class="op">&lt;-</span> <span class="va">access1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -374,11 +344,8 @@ that, producing a prettier map.</p>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory
-previously set after they are done with their calculations. In order to
-remove an existing <code>r5r</code> object and reallocate the memory it
-had been using, we use the <code>stop_r5</code> function followed by a
-call to Java’s garbage collector, as follows:</p>
+<p>Stop the network and run Java’s garbage collector to free the memory
+it used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>

@@ -115,30 +115,29 @@ to street network data?<a class="anchor" aria-label="anchor" href="#is-it-possib
 click to expand
 </summary><blockquote>
 <p>Yes, all routing and accessibility functions in <code>r5r</code> have
-new parameters <code>new_carspeeds</code>, <code>carspeed_scale</code>
+the parameters <code>new_carspeeds</code>, <code>carspeed_scale</code>
 and <code>new_lts</code> which allow one to use custom car speeds and
 LTS levels for cycling. These parameters provide convenient and
 efficient ways to build different scenarios of traffic congestion, road
 closure and interventions in cycling infrastructure. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
 vignette</a>. For other changes to the OSM network (e.g. including a new
 road link), you would need to edit the OpenStreetMap <code>.pbf</code>
-file directly before using it in <code>r5r</code>. To to this, you can
+file directly before using it in <code>r5r</code>. To do this, you can
 edit the <code>.pbf</code> file with <a href="https://wiki.openstreetmap.org/wiki/JOSM" class="external-link">JOSM
-(https://wiki.openstreetmap.org/wiki/JOSM)</a>. Mind you that the
-OpenStreetMap tags can be changed but they cannot be removed from the
-data.</p>
+(https://wiki.openstreetmap.org/wiki/JOSM)</a>. OpenStreetMap tags can
+be changed but not removed.</p>
 </blockquote>
 </details>
 </div>
 <div class="section level2">
-<h2 id="why-are-the-output-results-of-time_travel_matrix-and-detailed_itineraries-different">3. Why are the output results of <code>time_travel_matrix()</code>
-and <code>detailed_itineraries()</code> different?<a class="anchor" aria-label="anchor" href="#why-are-the-output-results-of-time_travel_matrix-and-detailed_itineraries-different"></a>
+<h2 id="why-are-the-output-results-of-travel_time_matrix-and-detailed_itineraries-different">3. Why are the output results of <code>travel_time_matrix()</code>
+and <code>detailed_itineraries()</code> different?<a class="anchor" aria-label="anchor" href="#why-are-the-output-results-of-travel_time_matrix-and-detailed_itineraries-different"></a>
 </h2>
 <details><summary>
 click to expand
 </summary><blockquote>
-<p>The functions <code>time_travel_matrix()</code> (and
-<code>expanded_time_travel_matrix</code>) and
+<p>The functions <code><a href="../reference/travel_time_matrix.html">travel_time_matrix()</a></code> (and
+<code><a href="../reference/expanded_travel_time_matrix.html">expanded_travel_time_matrix()</a></code>) and
 <code><a href="../reference/detailed_itineraries.html">detailed_itineraries()</a></code> use different routing algorithms, as
 explained in the documentation of these functions. As such, we advise
 not to use or combine the output of these functions.</p>
@@ -152,17 +151,13 @@ limit” mean? and what to do about it?<a class="anchor" aria-label="anchor" hre
 <details><summary>
 click to expand
 </summary><blockquote>
-<p>If you an error message says something like: <em>“Geographic extent
-of street layer (5315196 km2) exceeds limit of 975000 km2”</em>. This
-means the your study area is too large. Unfortunately, this is a limit
-hardcoded upstream in R5 so we cannot change it in r5r. The advised
-<strong>solution</strong> here would be to reduce the extent of the
-<code>OpenStreetMap.pbf</code> to a smaller area of interest. One can do
-this using the <a href="https://wiki.openstreetmap.org/wiki/Osmosis" class="external-link">Osmosis</a> software.
-The code below illustrates how to do this by calling Osmosis from within
-R. You need to download the Osmosis program to your computer. The latest
-releases can be downloaded from <a href="https://github.com/openstreetmap/osmosis/releases" class="external-link">here</a>. Next,
-you can use this step-by-step illustrated in the example below:</p>
+<p>An error like <em>“Geographic extent of street layer (5315196 km2)
+exceeds limit of 975000 km2”</em> means your study area is too large.
+The limit is hardcoded in R5, so r5r cannot change it. The
+<strong>solution</strong> is to crop the <code>OpenStreetMap.pbf</code>
+to your area of interest, e.g. with <a href="https://wiki.openstreetmap.org/wiki/Osmosis" class="external-link">Osmosis</a>. Download
+the <a href="https://github.com/openstreetmap/osmosis/releases" class="external-link">latest
+Osmosis release</a>, then call it from R:</p>
 </blockquote>
 <pre><code><span><span class="co"># get the bounding box of your study area</span></span>
 <span><span class="va">study_area_polygon</span> <span class="op">&lt;-</span> <span class="fu">geobr</span><span class="fu">::</span><span class="fu">read_state</span><span class="op">(</span>code_state <span class="op">=</span> <span class="st">"ES"</span><span class="op">)</span></span>
@@ -178,7 +173,7 @@ you can use this step-by-step illustrated in the example below:</p>
 <span><span class="co"># prepare call to osmosis</span></span>
 <span><span class="va">osmosis_cmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s --read-pbf %s --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf %s"</span>,</span>
 <span>                       <span class="va">osmosis_path</span>, <span class="va">large_pbf_path</span>,</span>
-<span>                       <span class="va">area_bbox</span><span class="op">@</span><span class="va">xmin</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">ymin</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">xmax</span>, <span class="va">area_bbox</span><span class="op">@</span><span class="va">ymax</span>,</span>
+<span>                       <span class="va">area_bbox</span><span class="op">[</span><span class="st">"xmin"</span><span class="op">]</span>, <span class="va">area_bbox</span><span class="op">[</span><span class="st">"ymin"</span><span class="op">]</span>, <span class="va">area_bbox</span><span class="op">[</span><span class="st">"xmax"</span><span class="op">]</span>, <span class="va">area_bbox</span><span class="op">[</span><span class="st">"ymax"</span><span class="op">]</span>,</span>
 <span>                       <span class="va">smaller_pbf</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># call to osmosis</span></span>
@@ -191,11 +186,11 @@ you can use this step-by-step illustrated in the example below:</p>
 <details><summary>
 click to expand
 </summary><blockquote>
-<p>By default, R5 considers the max speed limit of each road as set in
-OpenStreetMap data. Unfortunately, there is currently no easy way to
-change the car speeds of road segments from within R. Although you could
-probably do that by editing the osm.pbf file using other programs. See
-issue <a href="https://github.com/ipeaGIT/r5r/issues/289" class="external-link">#289</a>.</p>
+<p>Yes. By default, R5 considers the max speed limit of each road as set
+in OpenStreetMap data. You can change car speeds from within R with the
+<code>new_carspeeds</code> and <code>carspeed_scale</code> parameters of
+the routing functions. <a href="https://ipeagit.github.io/r5r/articles/scenarios.html">See this
+vignette</a>.</p>
 </blockquote>
 </details>
 </div>

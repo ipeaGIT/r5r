@@ -36,18 +36,15 @@ install.packages('r5r')
 devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
 ```
 
-Please bear in mind that you need to have *Java Development Kit (JDK)
-21* installed on your computer to use
-[r5r](https://github.com/ipeaGIT/r5r). No worries, you don’t have to pay
-for it. There are numerous open-source JDK implementations, and you only
-need to install one JDK. Here are a few options:
+[r5r](https://github.com/ipeaGIT/r5r) requires the *Java Development Kit
+(JDK) 21*. Any free, open-source JDK works, for example:
 
 - [Adoptium/Eclipse Temurin](https://adoptium.net/) (our preferred
   option)
 - [Amazon Corretto](https://aws.amazon.com/corretto/)
 - [Oracle OpenJDK](https://jdk.java.net/21/).
 
-The easiest way to install JDK is using the new
+The easiest way to install JDK 21 is with the
 [{rJavaEnv}](https://www.ekotov.pro/rJavaEnv/) package in R:
 
 ``` r
@@ -71,13 +68,11 @@ rJavaEnv::java_check_version_rjava()
 
 ## 3. Usage
 
-First, we need to increase the memory available to Java. This has to be
-done **before** loading the [r5r](https://github.com/ipeaGIT/r5r)
-library because, by default, `R` allocates only 512MB of memory for Java
-processes, which is not enough for large queries using
-[r5r](https://github.com/ipeaGIT/r5r). To increase available memory to
-2GB, for example, we need to set the `java.parameters` option at the
-beginning of the script, as follows:
+First, set the memory available to Java with the `java.parameters`
+option (2 GB is enough for the sample data). Do this **before** loading
+[r5r](https://github.com/ipeaGIT/r5r) or any other Java-based package:
+`rJava` starts the Java Virtual Machine only once per R session, so
+later changes only take effect after restarting R.
 
 ``` r
 
@@ -87,13 +82,6 @@ options(java.parameters = "-Xmx2G")
 # number of CPUs to 4, for example, you can run:  
 options(java.parameters = c("-Xmx2G", "-XX:ActiveProcessorCount=4"))
 ```
-
-Note: It’s very important to allocate enough memory before loading
-[r5r](https://github.com/ipeaGIT/r5r) or any other Java-based package,
-since `rJava` starts a Java Virtual Machine only once for each R
-session. It might be useful to restart your R session and execute the
-code above right after, if you notice that you haven’t succeeded in your
-previous attempts.
 
 Then we can load the packages used in this vignette:
 
@@ -105,63 +93,31 @@ library(data.table)
 library(ggplot2)
 ```
 
-The [r5r](https://github.com/ipeaGIT/r5r) package has seven
-**fundamental functions**:
+[r5r](https://github.com/ipeaGIT/r5r) has eight **fundamental
+functions**:
 
-1.  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
-    to build a routable transport network;
+| Function | Returns |
+|----|----|
+| [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md) | A routable multimodal transport network |
+| [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md) | Access to opportunities from each origin, given a decay function |
+| [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md) | Travel times between origin/destination pairs for a departure time |
+| [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md) | Travel times for an arrival time, with routes used (and a time breakdown with `breakdown = TRUE`) |
+| [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md) | Travel times per departure minute, with routes used (and a time breakdown with `breakdown = TRUE`) |
+| [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md) | One or more alternative routes per origin/destination pair, detailed by trip segment |
+| [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md) | The trade-off between travel time and monetary cost of route alternatives |
+| [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md) | Areas reachable from an origin within given travel times |
 
-2.  [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
-    for fast computation of access to opportunities considering a
-    selected decay function;
+Most of them can also account for monetary travel costs ([fare structure
+vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html)).
 
-3.  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-    for fast computation of travel time estimates between
-    origin/destination pairs considering departure time;
+**Support functions**:
 
-4.  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
-    for calculating travel time matrices between origin destination
-    pairs considering a time of arrival. The output includes additional
-    information such as the routes used and total time disaggregated by
-    access, waiting, in-vehicle and transfer times.
-
-5.  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
-    for calculating travel matrices between origin destination pairs
-    with additional information such as routes used and total time
-    disaggregated by access, waiting, in-vehicle and transfer times.
-
-6.  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-    to get detailed information on one or multiple alternative routes
-    between origin/destination pairs.
-
-7.  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
-    for analyzing the trade-off between the travel time and monetary
-    costs of multiple route alternatives between origin/destination
-    pairs.
-
-8.  [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-    to estimate the polygons of the areas that can be reached from an
-    origin point at different travel time limits.
-
-Most of these functions also allow users to account for monetary travel
-costs when generating travel time matrices and accessibility estimates.
-More info about how to consider monetary costs can be found in [this
-vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
-
-The package also includes a few **support functions**.
-
-1.  [`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md)
-    to extract OpenStreetMap network in sf format from a `network.dat`
-    file.
-
-2.  [`transit_network_to_sf()`](https://ipeagit.github.io/r5r/reference/transit_network_to_sf.md)
-    to extract transit network in sf format from a `network.dat` file.
-
-3.  [`find_snap()`](https://ipeagit.github.io/r5r/reference/find_snap.md)
-    to find snapped locations of input points on street network.
-
-4.  [`r5r_sitrep()`](https://ipeagit.github.io/r5r/reference/r5r_sitrep.md)
-    to generate a situation report to help debug eventual errors.
+| Function | Returns |
+|----|----|
+| [`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md) | The OpenStreetMap street network of a `network.dat` file, as `sf` |
+| [`transit_network_to_sf()`](https://ipeagit.github.io/r5r/reference/transit_network_to_sf.md) | The public transport network of a `network.dat` file, as `sf` |
+| [`find_snap()`](https://ipeagit.github.io/r5r/reference/find_snap.md) | Where input points snap to the street network |
+| [`r5r_sitrep()`](https://ipeagit.github.io/r5r/reference/r5r_sitrep.md) | A situation report to help debug errors |
 
 ### 3.1 Data requirements:
 
@@ -188,17 +144,12 @@ Here are a few places from where you can download these data sets:
   - [elevatr](https://github.com/USEPA/elevatr) R package
   - Nasa’s SRTMGL1 website
 
-Let’s have a quick look at how [r5r](https://github.com/ipeaGIT/r5r)
-works using a sample data set.
-
 ## 4. Demonstration on sample data
 
 ### Data
 
-To illustrate the functionalities of
-[r5r](https://github.com/ipeaGIT/r5r), the package includes a small
-sample data for the city of Porto Alegre (Brazil). It includes seven
-files:
+[r5r](https://github.com/ipeaGIT/r5r) includes sample data for Porto
+Alegre (Brazil):
 
 - An OpenStreetMap network: `poa_osm.pbf`
 - Two public transport feeds: `poa_eptc.zip` and `poa_trensurb.zip`
@@ -226,8 +177,7 @@ list.files(data_path)
 #> [17] "r5r-log.log"
 ```
 
-The points of interest data can be seen below. In this example, we will
-be looking at transport alternatives between some of those places.
+Points of interest, used below as origins and destinations:
 
 ``` r
 
@@ -243,8 +193,7 @@ head(poi)
 #> 6:     piratini_palace -30.03363 -51.23068
 ```
 
-The data with origin destination pairs is shown below. In this example,
-we will be using 200 points randomly selected from this data set.
+Hexagonal grid points; we use a random sample of 200:
 
 ``` r
 
@@ -266,12 +215,10 @@ head(points)
 
 ### 4.1 Building routable transport network with `build_network()`
 
-The first step is to build the multimodal transport network used for
-routing in R⁵. This is done with the `build_network` function. This
-function does two things: (1) downloads/updates a compiled JAR file of
-R⁵ and stores it locally in the [r5r](https://github.com/ipeaGIT/r5r)
-package directory for future use; and (2) combines the osm.pbf and
-gtfs.zip data sets to build a routable network object.
+[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
+(1) downloads the R⁵ JAR (on first use or when the R⁵ version changes)
+and caches it locally; and (2) combines the `.pbf`, GTFS `.zip` and
+optional elevation `.tif` files in `data_path` into a routable network.
 
 ``` r
 
@@ -281,13 +228,11 @@ r5r_network <- build_network(data_path = data_path)
 
 ### 4.2 Accessibility analysis
 
-The fastest way to calculate accessibility estimates is using the
 [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
-function. In this example, we calculate the number of schools and health
-care facilities accessible in less than 60 minutes by public transport
-and walking. More details in this vignette on [Calculating and
-visualizing
-Accessibility](https://ipeagit.github.io/r5r/articles/accessibility.html).
+is the fastest way to estimate accessibility. Here we count the schools
+and healthcare facilities reachable in less than 60 minutes by public
+transport and walking ([accessibility
+vignette](https://ipeagit.github.io/r5r/articles/accessibility.html)).
 
 ``` r
 
@@ -328,20 +273,15 @@ and
 
 #### Fast many to many travel time matrix
 
-The
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-function is a really simple and fast function to compute travel time
-estimates between one or multiple origin/destination pairs. The
-origin/destination input can be either a spatial `sf POINT` object, or a
-`data.frame` containing the columns `id, lon, lat`. The function also
-receives as inputs the *max walking distance*, in meters, and the *max
-trip duration*, in minutes. Resulting travel times are also output in
-minutes.
+computes travel times between origin/destination pairs. Origins and
+destinations can be an `sf POINT` object or a `data.frame` with columns
+`id`, `lon` and `lat`. `max_walk_time` and `max_trip_duration` are in
+minutes, as are the resulting travel times.
 
-This function also allows users to very efficiently capture the travel
-time uncertainties inside a given time window considering multiple
-departure times. [More info on this
-vignette](https://ipeagit.github.io/r5r/articles/time_window.html).
+It can also capture travel time variation across departures within a
+time window ([time window
+vignette](https://ipeagit.github.io/r5r/articles/time_window.html)).
 
 ``` r
 
@@ -376,14 +316,12 @@ head(ttm)
 
 #### Expanded travel time matrix with minute-by-minute estimates
 
-For those interested in more detailed outputs, the
 [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
-works very similarly with
+works like
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-but it brings much more information. It estimates for each origin
-destination pair the routes used and total time disaggregated by access,
-waiting, in-vehicle and transfer times. Please note this function can be
-very memory intensive for large data sets.
+but also returns, for each origin/destination pair, the routes used and
+(with `breakdown = TRUE`) the access, waiting, in-vehicle and transfer
+times. It can be very memory intensive for large data sets.
 
 ``` r
 
@@ -420,17 +358,13 @@ head(ettm)
 
 #### Detailed itineraries
 
-Most routing packages only return the fastest route. A key advantage of
-the
+Most routing packages return only the fastest route.
 [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-function is that is allows for fast routing analysis while providing
-multiple alternative routes between origin destination pairs. The output
-also brings detailed information for each route alternative at the trip
-segment level, including the transport mode, waiting times, travel time
-and distance of each trip segment.
+can also return alternative routes between origin/destination pairs,
+detailed by trip segment: transport mode, waiting time, travel time and
+distance.
 
-In this example below, we want to know some alternative routes between
-one origin/destination pair only.
+Below, alternative routes for a single origin/destination pair:
 
 ``` r
 
@@ -482,16 +416,13 @@ head(det)
 #> 6              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
 ```
 
-The output is a `data.frame sf` object, so we can easily visualize the
-results.
+The output is an `sf` data.frame, ready to map.
 
 ##### Visualize results
 
-**Static visualization** with `ggplot2` package: To provide a geographic
-context for the visualization of the results in `ggplot2`, you can also
-use the
 [`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md)
-function to extract the OSM street network used in the routing.
+extracts the OSM street network used in routing, to give the map
+geographic context:
 
 ``` r
 
@@ -513,12 +444,8 @@ ggplot() +
 
 #### Cleaning up after usage
 
-[r5r](https://github.com/ipeaGIT/r5r) objects are still allocated to any
-amount of memory previously set after they are done with their
-calculations. In order to remove an existing
-[r5r](https://github.com/ipeaGIT/r5r) object and reallocate the memory
-it had been using, we use the `stop_r5` function followed by a call to
-Java’s garbage collector, as follows:
+Stop the network and run Java’s garbage collector to free the memory it
+used:
 
 ``` r
 

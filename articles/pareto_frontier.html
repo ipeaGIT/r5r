@@ -95,56 +95,45 @@
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In most cases, transport routing models find either the fastest or
-the lowest-cost routes that connect places in a given transport network.
-Sometimes, though, we might want a more sophisticated analysis that
-considers both the time and monetary costs that public transport
-passengers have to face. The problem here is that simultaneously
-accounting for both time and monetary costs is a major challenge for
-routing models because of the trade-offs between the objectives of
-minimizing trip duration and cost <span class="citation">(Conway and
-Stewart 2019)</span>.</p>
-<p>To address this problem, <code>r5r</code> has a function called
-<code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code>, which calculates the most efficient
-route possibilities between origin destination pairs considering
-multiple combinations of travel time and monetary costs. This vignette
-uses a reproducible example to demonstrate how to use
-<code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> and interpret its results.</p>
+<p>Routing models usually find either the fastest or the cheapest route.
+Accounting for both time and monetary cost at once is hard, because
+minimizing trip duration and minimizing cost are competing objectives
+<span class="citation">(Conway and Stewart 2019)</span>. To address this
+problem, <code>r5r</code>’s <code><a href="../reference/pareto_frontier.html">pareto_frontier()</a></code> returns the
+most efficient combinations of travel time and monetary cost between
+origin/destination pairs. This vignette shows, with a reproducible
+example, how to use it and interpret its results.</p>
 <div class="section level3">
 <h3 id="what-the-pareto_frontier-means-">2. What the <code>pareto_frontier</code> means.<a class="anchor" aria-label="anchor" href="#what-the-pareto_frontier-means-"></a>
 </h3>
-<p>Imagine a hypothetical journey from A to B. There are multiple route
-alternatives between this origin and destination with varying
-combinations of travel time and cost (figure below).</p>
+<p>Imagine a trip from A to B with several route alternatives (figure
+below):</p>
 <ul>
-<li>Walking from A to B would be the <strong>cheapest</strong> option
-but it would take 50 minutes.</li>
-<li>The <strong>fastest</strong> option would be to take a bus to a
-subway station and transfer to the subway. This option would only take
-15 minutes, but it would cost $8.</li>
-<li>There are some intermediary alternatives, such as taking:
+<li>Walking is the <strong>cheapest</strong> option but takes 50
+minutes.</li>
+<li>Bus + subway is the <strong>fastest</strong>: 15 minutes for R$
+8.</li>
+<li>In between:
 <ul>
-<li>a single bus, $3 for 35 min.</li>
-<li>two buses with one transfer, $5 for 29 min.</li>
-<li>taking the subway after walking to the station , $6 for 20 min.</li>
+<li>a single bus: R$ 3, 35 min;</li>
+<li>two buses with one transfer: R$ 5, 29 min;</li>
+<li>walking to the subway: R$ 6, 20 min.</li>
 </ul>
 </li>
 </ul>
-<p>This figure illustrates the Pareto frontier of alternative routes
-from A to B. In other words, it shows the most optimal set of route
-alternatives between A and B. There are certainly other route options,
-but there is no other option that is both faster and cheaper at the same
-time.</p>
+<p>These options form the <strong>Pareto frontier</strong> of routes
+from A to B: no route is both faster and cheaper than any route on the
+frontier. On the frontier, a trip cannot be made faster without costing
+more, nor cheaper without taking longer.</p>
 <p><img src="pareto_frontier_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="100%"></p>
 <p><br></p>
-<p>This kind of abstraction allows us to have a better grasp of the
-trade-offs between travel time and monetary cost passengers face when
-using public transport. It also allows us to calculate
-cumulative-opportunity accessibility metrics with cutoffs for both time
-and cost (e.g. the number of jobs reachable from a given origin with
-limits of 40 minutes and $5) (ref paper by Matt and Anson).</p>
-<p>Let’s see a couple concrete examples showing how <code>r5r</code> can
-calculate the Pareto frontier for multiple origins.</p>
+<p>The frontier shows the time-cost trade-offs that public transport
+passengers face. It also supports cumulative-opportunity accessibility
+metrics with both time and cost cutoffs (e.g. the number of jobs
+reachable within 40 minutes and R$ 5) <span class="citation">(Conway and
+Stewart 2019)</span>. Let’s see a couple concrete examples showing how
+<code>r5r</code> can calculate the Pareto frontier for multiple
+origins.</p>
 </div>
 <div class="section level3">
 <h3 id="demonstration-of-pareto_frontier-">3. Demonstration of <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#demonstration-of-pareto_frontier-"></a>
@@ -153,9 +142,8 @@ calculate the Pareto frontier for multiple origins.</p>
 <h4 id="build-routable-transport-network-with-build_network">3.1 Build routable transport network with
 <code>build_network()</code><a class="anchor" aria-label="anchor" href="#build-routable-transport-network-with-build_network"></a>
 </h4>
-<p>First, let’s build the network and create the routing inputs. In this
-example we’ll be using the a sample data set for the city of Porto
-Alegre (Brazil) included in <code>r5r</code>.</p>
+<p>We use the Porto Alegre (Brazil) sample data included in
+<code>r5r</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># increase Java memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
@@ -180,65 +168,36 @@ Alegre (Brazil) included in <code>r5r</code>.</p>
 <div class="section level4">
 <h4 id="set-up-the-fare-structure">3.2 Set up the fare structure<a class="anchor" aria-label="anchor" href="#set-up-the-fare-structure"></a>
 </h4>
-<p>Now we need to set what are the fare rules of our public transport
-system. These rules will be used by <code>R5</code> to calculate the
-monetary cost of alternative routes. In the case of Porto Alegre, the
-fare rules are as follows: * Each bus ticket costs R$ 4.80. * Riding a
-second bus adds <code>$</code> 2.40 to the total cost. Subsequent bus
-rides cost the full ticket price of $ 4.80. * Each train ticket costs $
-4.50. Once a passenger enters a train station, she can take an unlimited
-amount of train trips as long as she doesn’t leave a station. * The
-integrated fare between bus and train has a 10% discount, which totals $
-8.37.</p>
-<p>We can create <code>list</code> object with these fare rules with the
-support of the <code><a href="../reference/setup_fare_structure.html">setup_fare_structure()</a></code> function as shown in
-the code below. A detailed explanation of how to use the fare structure
-of <code>5r5</code> can be found in <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">(this
-other vignette)</a>.</p>
+<p><code>R5</code> computes the monetary cost of each route from the
+fare rules of the public transport system. In Porto Alegre:</p>
+<ul>
+<li>A bus ticket costs R$ 4.80.</li>
+<li>A second bus ride adds R$ 2.40; subsequent bus rides cost the full
+R$ 4.80.</li>
+<li>A train ticket costs R$ 4.50, with unlimited train rides as long as
+the passenger does not leave the stations.</li>
+<li>The integrated bus + train fare has a 10% discount, totalling R$
+8.37.</li>
+</ul>
+<p>A fare structure with these rules ships with <code>r5r</code>, so we
+simply read it. The <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">fare
+structure vignette</a> shows how to build one step by step.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># create basic fare structure</span></span>
-<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_fare_structure.html">setup_fare_structure</a></span><span class="op">(</span></span>
-<span>  <span class="va">r5r_network</span>,</span>
-<span>  base_fare <span class="op">=</span> <span class="fl">4.8</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"MODE"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># update the cost of bus and train fares</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">4.80</span>,</span>
-<span>                                             <span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="fl">4.50</span><span class="op">)</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># update the cost of transfers</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_transfer</span><span class="op">[</span>, <span class="va">fare</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/fcase.html" class="external-link">fcase</a></span><span class="op">(</span><span class="va">first_leg</span> <span class="op">==</span> <span class="st">"BUS"</span> <span class="op">&amp;</span> <span class="va">second_leg</span> <span class="op">==</span> <span class="st">"BUS"</span>, <span class="fl">7.2</span>,</span>
-<span>                                                 <span class="va">first_leg</span> <span class="op">!=</span> <span class="va">second_leg</span>, <span class="fl">8.37</span><span class="op">)</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># update transfer_time_allowance to 60 minutes</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">transfer_time_allowance</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
-<span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">unlimited_transfers</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
-<span><span class="va">fare_structure</span><span class="op">$</span><span class="va">fares_per_type</span><span class="op">[</span><span class="va">type</span> <span class="op">==</span> <span class="st">"RAIL"</span>, <span class="va">allow_same_route_transfer</span> <span class="op">:=</span> <span class="cn">TRUE</span><span class="op">]</span></span></code></pre></div>
-<p>For convenience, we can save these fare rules as a <code>zip</code>
-file and load again for a future application.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># save fare rules to temp file</span></span>
-<span><span class="va">temp_fares</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fares_poa"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span>
-<span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/write_fare_structure.html">write_fare_structure</a></span><span class="op">(</span><span class="va">fare_structure</span>, file_path <span class="op">=</span> <span class="va">temp_fares</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/read_fare_structure.html">read_fare_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"fares/fares_poa.zip"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fare_structure</span> <span class="op">&lt;-</span> <span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/read_fare_structure.html">read_fare_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"fares/fares_poa.zip"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="calculating-a-pareto_frontier-">3.3 Calculating a <code>pareto_frontier()</code>.<a class="anchor" aria-label="anchor" href="#calculating-a-pareto_frontier-"></a>
 </h4>
-<p>In this example, we calculate the Pareto frontier from all origins to
-all destinations considering multiple cutoffs of monetary costs:</p>
+<p>We compute the Pareto frontier from all origins to all destinations
+with these monetary cost cutoffs:</p>
 <ul>
-<li>$1, which would only allow for walking trips</li>
-<li>$4.5, which would only allow for rail trips</li>
-<li>$4.8, which would allow for a single bus trip</li>
-<li>$7.20, which would allow for bus + bus</li>
-<li>$8.37, which would allow for walking walking + bus + rail</li>
+<li>R$ 1.00: walking only</li>
+<li>R$ 4.50: a train trip</li>
+<li>R$ 4.80: a single bus trip</li>
+<li>R$ 7.20: bus + bus</li>
+<li>R$ 8.37: bus + train</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">departure_datetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"13-05-2019 14:00:00"</span>,</span>
 <span>                                 format <span class="op">=</span> <span class="st">"%d-%m-%Y %H:%M:%S"</span><span class="op">)</span></span>
 <span></span>
@@ -263,22 +222,17 @@ all destinations considering multiple cutoffs of monetary costs:</p>
 <span><span class="co">#&gt; 4: public_market bus_central_station         50          14           4.8</span></span>
 <span><span class="co">#&gt; 5: public_market    gasometer_museum         50          29           1.0</span></span>
 <span><span class="co">#&gt; 6: public_market    gasometer_museum         50          13           4.8</span></span></code></pre></div>
-<p>For the sake of illustration, let’s check the optimum route
-alternatives from the Farrapos train station to (a) the Praia de Belas
-shopping mall and (b) the Moinhos hospital. An optimum route alternative
-means that one cannot make a faster trip without increasing costs, and
-one cannot make a cheaper trip without increasing travel time.</p>
-<p><img src="pareto_frontier_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
+<p>For illustration, the Pareto frontiers between the Farrapos train
+station and (a) the Praia de Belas shopping mall and (b) the Moinhos
+hospital:</p>
+<p><img src="pareto_frontier_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level4">
 <h4 id="cleaning-up-after-usage">Cleaning up after usage<a class="anchor" aria-label="anchor" href="#cleaning-up-after-usage"></a>
 </h4>
-<p><code>r5r</code> objects are still allocated to any amount of memory
-previously set after they are done with their calculations. In order to
-remove an existing <code>r5r</code> object and reallocate the memory it
-had been using, we use the <code>stop_r5</code> function followed by a
-call to Java’s garbage collector, as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>Stop the network and run Java’s garbage collector to free the memory
+it used:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit

@@ -4,8 +4,8 @@
 
 **Major changes**
 
-- Faster routing. Compared with r5r 2.4.0 on the Porto Alegre and São
-  Paulo sample data, car-only
+- Faster routing. In end-to-end benchmarks against r5r 2.4.0 on the
+  Porto Alegre and São Paulo sample data, car-only
   [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
   [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md),
   [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
@@ -13,20 +13,24 @@
   [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
   are 2 to 7 times faster (bicycle-only 2.5 to 4 times), and
   [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-  with public transport is 2 to 4 times faster. Details in the minor
-  changes below.
+  with public transport and no `fare_structure` is 2 to 4 times faster.
+  Details in the minor changes below.
 
 **Bug fixes**
 
 - Java memory set with `options(java.parameters = "-Xmx...")` before
   [`library(r5r)`](https://github.com/ipeaGIT/r5r) was ignored since r5r
   v2.2.0, so Java always ran with its default maximum heap (a quarter of
-  the machine’s RAM, capped at about 30 GB). r5r started Java with its
-  own parameters only (log path and versions), which replaced the
-  user’s. They are now combined, so the memory limit and any other Java
-  options set by the user take effect again.
-- Fix bug related to optimization of origins and destinations. Closes
-  again [\#501](https://github.com/ipeaGIT/r5r/issues/501).
+  the machine’s RAM, capped at about 30 GB). The memory limit and any
+  other Java options set by the user now take effect again.
+- [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  and
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  returned `from_id` and `to_id` swapped with walk-only routing, no
+  elevation data and fewer origins than destinations (introduced in r5r
+  2.4.0). Closes again
+  [\#501](https://github.com/ipeaGIT/r5r/issues/501).
 - [\#569](https://github.com/ipeaGIT/r5r/pull/569) Fix broken source
   links in documentation website. Closed
   [\#527](https://github.com/ipeaGIT/r5r/issues/527)
@@ -40,10 +44,8 @@
   [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
   wrote CSV files with `from_id` and `to_id` swapped (and named after
   the destinations) when `output_dir` was used with walk-only routing,
-  no elevation data and more origins than destinations. The internal
-  origin/destination swap that speeds up such searches is now skipped
-  whenever `output_dir` is set, so those runs may take longer than
-  before.
+  no elevation data and more origins than destinations. This is fixed,
+  but such runs with `output_dir` may now take longer.
 - `percentiles` are now sorted in ascending order internally. Unsorted
   values (e.g. `c(75, 25)`) used to crash inside R5 with an
   uninformative Java error.
@@ -86,23 +88,20 @@
   be silently truncated by R5, and values of 60 or more crashed inside
   R5.
 - [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-  reported transfer walks with a duration re-computed by the street
-  router instead of the one R5 used to find, filter and rank the
-  itineraries. On networks built with elevation data this could give
-  impossible timelines (e.g. 40 minutes to walk 119 m followed by a
-  normal wait) and itineraries longer than `max_trip_duration`, and
-  `shortest_path = TRUE` could pick an option whose reported duration
-  was not the shortest. Transfer walks now keep R5’s duration (walking
-  distance / `walk_speed`), consistent with
+  reported transfer-walk durations that differed from those used to find
+  and rank itineraries. On networks built with elevation data this could
+  give impossible timelines (e.g. 40 minutes to walk 119 m followed by a
+  normal wait), itineraries longer than `max_trip_duration` and, with
+  `shortest_path = TRUE`, an option that was not the shortest. Transfer
+  walks now take walking distance / `walk_speed`, consistent with
   [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
   and
   [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md).
 - In
   [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md),
-  transfer walks from or to the stop with internal index 0 (the first
-  stop of the transit network) kept a straight line between the two
-  stops as geometry, a straight-line distance and no OSM or edge ids.
-  They are now routed on the street network like all other transfers.
+  transfer walks from or to the first stop of the transit network had a
+  straight-line geometry and distance and no OSM or edge ids. They are
+  now routed on the street network like all other transfers.
 - CSV files written with `output_dir` did not quote text values, so any
   value containing a comma broke the file. This made every file written
   by
@@ -151,13 +150,11 @@
   pixel’s corner. Polygons are now in the right place.
 - In polygon-based
   [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md),
-  the polygon of the largest cutoff was cut short, because routing
-  stopped exactly at that cutoff and its boundary could not be
-  interpolated like the others. Its size therefore depended on the other
-  cutoffs requested (e.g. the 30-minute transit isochrone was up to 19%
-  smaller with `cutoffs = 30` than with `cutoffs = c(30, 60)`). Routing
-  now continues 10 minutes past the largest cutoff, so the largest
-  polygons get larger.
+  the polygon of the largest cutoff was cut short, so its size depended
+  on the other cutoffs requested (e.g. the 30-minute transit isochrone
+  was up to 19% smaller with `cutoffs = 30` than with
+  `cutoffs = c(30, 60)`). It is now complete, so the largest polygons
+  get larger (routing now runs 10 minutes past the largest cutoff).
 - Line-based
   [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
   (`polygon_output = FALSE`) assigned segments to the wrong band when
@@ -173,9 +170,8 @@
 - [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
   searched departures in the wrong time window for walk-, bike- or
   car-only trips when `max_walk_time`, `max_bike_time` or `max_car_time`
-  was lower than `max_trip_duration`. The search window was set from
-  `max_trip_duration` before it was lowered to that limit, so trips
-  arrived well before `arrival_datetime` (e.g. with `mode = "WALK"`,
+  was lower than `max_trip_duration`. Trips arrived well before
+  `arrival_datetime` (e.g. with `mode = "WALK"`,
   `max_trip_duration = 120` and `max_walk_time = 20`, departures between
   12:00 and 12:19 for an arrival at 14:00, instead of between 13:40 and
   13:59).
@@ -196,12 +192,12 @@
 - [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
   and
   [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
-  failed with walk-only routing and more than 5000 origins, because the
-  internal origin/destination swap turned them into more than 5000
-  destinations, R5’s limit for path details. Java errors raised while
-  routing now reach R with their original message (e.g. R5’s
-  5000-destination limit) instead of an empty
-  `java.lang.RuntimeException`.
+  failed with walk-only routing, no elevation data and more than 5000
+  origins, even with 5000 or fewer destinations (R5’s limit for path
+  details). This now works.
+- Java errors raised while routing now reach R with their original
+  message (e.g. R5’s 5000-destination limit for path details) instead of
+  an empty `java.lang.RuntimeException`.
 - [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
   and
   [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
@@ -233,37 +229,30 @@
   [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
   and
   [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
-  is 2.5 to 4 times faster. After each car or bicycle search, r5r ran a
-  second search on foot that R5 only needs to reach public transport
-  stops. Bicycle results are unchanged. Car-only trips can no longer end
-  with a walk that `max_walk_time` did not limit (e.g. against a one-way
-  street), so some car travel times are now longer (3% of
+  is 2.5 to 4 times faster in a benchmark of this change alone (part of
+  the overall gain in Major changes), as r5r no longer runs an unneeded
+  search on foot. Bicycle results are unchanged. Car-only trips can no
+  longer end with a walk not limited by `max_walk_time` (e.g. against a
+  one-way street), so some car travel times are now longer (3% of
   origin-destination pairs in the Porto Alegre sample data, by 1 to 8
   minutes), now consistent with
   [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md).
+- [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+  [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+  and
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+  return large results faster: passing an all-to-all matrix of the Porto
+  Alegre sample grid (1.47 million rows) from Java to R went from 0.76
+  to 0.13 seconds. Results are unchanged.
 - [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-  now builds street paths and geometries only for the itineraries it
-  returns, instead of for every candidate found by the router (including
-  those later dropped by `max_trip_duration` or `shortest_path`).
-  Results are identical. In benchmarks with the Porto Alegre sample
-  data, the gain in computation time was within run-to-run noise, since
-  most of the time is spent in the routing search itself.
-- [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
-  with public transport is about 1.5 times faster with
-  `max_trip_duration = 60`, 2.4 times faster with `time_window = 30`,
-  and about 4 times faster with the defaults (`max_trip_duration = 120`,
-  `shortest_path = TRUE`), and its peak memory use is lower. R5’s router
-  can stop exploring routes that already arrive later than the best
-  arrival found at the destination, but r5r had this turned off whenever
-  no `fare_structure` was used. It is now on, applied separately to each
-  departure time within `time_window`, and routes longer than
-  `max_trip_duration` from their own departure time (or, with
-  `shortest_path = TRUE`, longer than the fastest itinerary already
-  found) are dropped during the search instead of afterwards. The
-  itineraries returned are unchanged; only with `suboptimal_minutes > 0`
-  can the `option` numbers of two itineraries with exactly the same
-  duration and number of segments be swapped. Routing with a
-  `fare_structure` is unchanged.
+  with public transport and no `fare_structure` is about 1.5 times
+  faster with `max_trip_duration = 60`, 2.4 times faster with
+  `time_window = 30`, and about 4 times faster with the defaults
+  (`max_trip_duration = 120`, `shortest_path = TRUE`), and uses less
+  memory. The itineraries returned are unchanged, except that with
+  `suboptimal_minutes > 0` the `option` numbers of two itineraries with
+  exactly the same duration and number of segments can be swapped.
+  Routing with a `fare_structure` is unchanged.
 - The deprecated `r5r_core` argument is now the last argument of every
   function. It used to be the second one, so positional calls such as
   `travel_time_matrix(r5r_network, origins, destinations)` bound
@@ -295,28 +284,27 @@
 - The documentation of
   [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
   now describes its output correctly (one row per pair reachable in
-  time, with the latest departure; pairs not reachable in time are
-  absent), explains that `max_trip_duration` also sets the search
-  window, and documents the `"24:MM:SS"` departure times after midnight
-  and the whole-minute precision of walk-, bike- or car-only trips.
+  time, with the latest departure; other pairs are absent), explains
+  that `max_trip_duration` also sets the search window, and documents
+  `"24:MM:SS"` departure times after midnight and the whole-minute
+  precision of walk-, bike- or car-only trips.
 - The documentation of
   [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
-  now lists the output columns and the format of `routes`, explains that
-  the time components of `breakdown = TRUE` are `0` for trips without
-  public transport, why some pairs can appear with `NA` in every minute,
-  and why a few trips just over `max_trip_duration` are `NA` here
-  although
+  now lists the output columns, explains `routes`, that the
+  `breakdown = TRUE` time components are `0` for trips without public
+  transport, why a pair can be `NA` in every minute and why a few trips
+  just over `max_trip_duration` are `NA` here although
   [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-  reports them. It no longer states that `time_window` results are based
-  on median travel times, nor that `breakdown = TRUE` makes the function
-  significantly slower.
+  reports them, and no longer claims that `time_window` results use
+  median travel times or that `breakdown = TRUE` is significantly
+  slower.
 - The documentation of
   [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-  now describes the Web Mercator grid method, lists the output columns,
-  explains that polygon bands are cumulative while line bands are
-  intervals, gives the right defaults of `mode` and `progress`, and
-  states that `max_trip_duration` is ignored (it is set from
-  `max(cutoffs)`). The isochrones vignette was fixed accordingly.
+  now describes the Web Mercator grid method, the output columns
+  (polygon bands are cumulative, line bands are intervals), the right
+  defaults of `mode` and `progress`, and that `max_trip_duration` is
+  ignored (set from `max(cutoffs)`); the isochrones vignette was
+  corrected to match.
 - The documentation of the `fixed_exponential` decay function in
   [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
   now states that its decay constant is applied to travel times in

@@ -9,9 +9,8 @@ and
 [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md).
 This fare structure can be manually edited and adjusted to the existing
 rules in your study area, as long as they stick to some basic premises.
-Please see the [fare-structure
-vignette](https://ipeagit.github.io/r5r/doc/fare_structure.md) for more
-information.
+See the [fare-structure
+vignette](https://ipeagit.github.io/r5r/doc/fare_structure.md).
 
 ## Usage
 
@@ -48,10 +47,10 @@ setup_fare_structure(
   different routes/modes operated by a single agency cost the same; note
   that you can also use `AGENCY_NAME`, if the agency_ids listed in your
   GTFS cannot be easily interpreted). `GENERIC` is used when all the
-  routes cost the same. Please note that this classification can later
-  be edited to better suit your needs (when, for example, two types of
-  buses cost the same, but one offers discounts after riding the subway
-  and the other one doesn't), but this parameter may save you some work.
+  routes cost the same. This classification can later be edited to
+  better suit your needs (when, for example, two types of buses cost the
+  same, but one offers discounts after riding the subway and the other
+  one doesn't), but this parameter may save you some work.
 
 - debug_path:
 
@@ -65,29 +64,22 @@ setup_fare_structure(
 - debug_info:
 
   Either a string (when `debug_path` is a path) or `NULL` (the default).
-  Doesn't have any effect if `debug_path` is `NULL`. When a string,
-  accepts the values `MODE`, `ROUTE` and `MODE_ROUTE`. These values
-  dictates how itinerary information is written to the output. Let's
-  suppose we have an itinerary composed by two transit legs: first a
-  subway leg whose route_id is 001, and then a bus legs whose route_id
-  is 007. If `debug_info` is `MODE`, then this itinerary will be
-  described as `SUBWAY|BUS`. If `ROUTE`, as `001|007`. If `MODE_ROUTE`,
-  as `SUBWAY 001|BUS 007`. Please note that the final debug information
-  will contain not only the itineraries that were in fact used in the
-  itineraries returned in
+  Ignored if `debug_path` is `NULL`. One of `MODE`, `ROUTE` or
+  `MODE_ROUTE`, setting how each itinerary is written. E.g. a subway leg
+  on route 001 followed by a bus leg on route 007 is written as
+  `SUBWAY|BUS`, `001|007` or `SUBWAY 001|BUS 007`, respectively. The
+  debug output lists all itineraries `R5` checked when calculating
+  routes, not only those returned by
   [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
   [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
   and
-  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md),
-  but all the itineraries that `R5` checked when calculating the routes.
-  This imposes a performance penalty when tracking debug information
-  (but has the positive effect of returning a larger sample of
-  itineraries, which might help finding some implementation issues on
-  the fare structure).
+  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md).
+  This slows computation, but the larger sample of itineraries helps
+  find issues in the fare structure.
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value

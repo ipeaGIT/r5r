@@ -20,7 +20,7 @@ click to expand
 
 click to expand
 
-> Yes, all routing and accessibility functions in `r5r` have new
+> Yes, all routing and accessibility functions in `r5r` have the
 > parameters `new_carspeeds`, `carspeed_scale` and `new_lts` which allow
 > one to use custom car speeds and LTS levels for cycling. These
 > parameters provide convenient and efficient ways to build different
@@ -29,17 +29,19 @@ click to expand
 > vignette](https://ipeagit.github.io/r5r/articles/scenarios.html). For
 > other changes to the OSM network (e.g. including a new road link), you
 > would need to edit the OpenStreetMap `.pbf` file directly before using
-> it in `r5r`. To to this, you can edit the `.pbf` file with [JOSM
+> it in `r5r`. To do this, you can edit the `.pbf` file with [JOSM
 > (https://wiki.openstreetmap.org/wiki/JOSM)](https://wiki.openstreetmap.org/wiki/JOSM).
-> Mind you that the OpenStreetMap tags can be changed but they cannot be
-> removed from the data.
+> OpenStreetMap tags can be changed but not removed.
 
-## 3. Why are the output results of `time_travel_matrix()` and `detailed_itineraries()` different?
+## 3. Why are the output results of `travel_time_matrix()` and `detailed_itineraries()` different?
 
 click to expand
 
-> The functions `time_travel_matrix()` (and
-> `expanded_time_travel_matrix`) and
+> The functions
+> [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+> (and
+> [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md))
+> and
 > [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
 > use different routing algorithms, as explained in the documentation of
 > these functions. As such, we advise not to use or combine the output
@@ -49,18 +51,14 @@ click to expand
 
 click to expand
 
-> If you an error message says something like: *“Geographic extent of
-> street layer (5315196 km2) exceeds limit of 975000 km2”*. This means
-> the your study area is too large. Unfortunately, this is a limit
-> hardcoded upstream in R5 so we cannot change it in r5r. The advised
-> **solution** here would be to reduce the extent of the
-> `OpenStreetMap.pbf` to a smaller area of interest. One can do this
-> using the [Osmosis](https://wiki.openstreetmap.org/wiki/Osmosis)
-> software. The code below illustrates how to do this by calling Osmosis
-> from within R. You need to download the Osmosis program to your
-> computer. The latest releases can be downloaded from
-> [here](https://github.com/openstreetmap/osmosis/releases). Next, you
-> can use this step-by-step illustrated in the example below:
+> An error like *“Geographic extent of street layer (5315196 km2)
+> exceeds limit of 975000 km2”* means your study area is too large. The
+> limit is hardcoded in R5, so r5r cannot change it. The **solution** is
+> to crop the `OpenStreetMap.pbf` to your area of interest, e.g. with
+> [Osmosis](https://wiki.openstreetmap.org/wiki/Osmosis). Download the
+> [latest Osmosis
+> release](https://github.com/openstreetmap/osmosis/releases), then call
+> it from R:
 
     # get the bounding box of your study area
     study_area_polygon <- geobr::read_state(code_state = "ES")
@@ -76,7 +74,7 @@ click to expand
     # prepare call to osmosis
     osmosis_cmd <- sprintf("%s --read-pbf %s --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf %s",
                            osmosis_path, large_pbf_path,
-                           area_bbox@xmin, area_bbox@ymin, area_bbox@xmax, area_bbox@ymax,
+                           area_bbox["xmin"], area_bbox["ymin"], area_bbox["xmax"], area_bbox["ymax"],
                            smaller_pbf)
 
     # call to osmosis
@@ -86,12 +84,11 @@ click to expand
 
 click to expand
 
-> By default, R5 considers the max speed limit of each road as set in
-> OpenStreetMap data. Unfortunately, there is currently no easy way to
-> change the car speeds of road segments from within R. Although you
-> could probably do that by editing the osm.pbf file using other
-> programs. See issue
-> [\#289](https://github.com/ipeaGIT/r5r/issues/289).
+> Yes. By default, R5 considers the max speed limit of each road as set
+> in OpenStreetMap data. You can change car speeds from within R with
+> the `new_carspeeds` and `carspeed_scale` parameters of the routing
+> functions. [See this
+> vignette](https://ipeagit.github.io/r5r/articles/scenarios.html).
 
 ## 6. Why do I get identical results by public transport and walking?
 

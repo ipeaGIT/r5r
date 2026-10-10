@@ -19,8 +19,7 @@ that `r5r` depends on.
 
 ## Usage
 
-Please check the vignettes on the
-[website](https://ipeagit.github.io/r5r/).
+See the vignettes on the [website](https://ipeagit.github.io/r5r/).
 
 ## See also
 

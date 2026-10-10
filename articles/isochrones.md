@@ -7,42 +7,28 @@ the `r5r` package.
 
 ## 1. Introduction
 
-An isochrone map shows how far one can travel from a given place within
-a certain amount of time. In other other words, it shows all the areas
-reachable from that place within a maximum travel time. This vignette
-shows how to calculate and visualize isochrones in R using the [`r5r`
-package](https://ipeagit.github.io/r5r/index.html) using a reproducible
-example. In this example, we will be using a sample data set for the
-city of Porto Alegre (Brazil) included in `r5r`. Our aim here is to
-calculate several isochrones departing from the central bus station
-given different travel time thresholds.
-
-The
+An isochrone shows all areas reachable from a place within a maximum
+travel time. This vignette uses the [`r5r`
+package](https://ipeagit.github.io/r5r/index.html) and the Porto Alegre
+(Brazil) sample data included in it to calculate and map public
+transport isochrones from the city’s central bus station at several
+travel time thresholds.
 [`r5r::isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-function allows you to build both polygon- and line-based isochrones. We
-will cover both approaches in this vignette, where we will be
-calculating isochrones by public transport from the central bus station
-in Porto Alegre.
+builds both polygon- and line-based isochrones; we cover both.
 
-Before we start, we need to increase Java memory + load a few libraries,
-and to  
-build routable transport network.
-
-***Warning:*** If you want to calculate how many opportunities
-(e.g. jobs, or schools or hospitals) are located inside each isochrone,
-we strongly recommend you NOT to use the
-[`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-function. You will find much more efficient ways to do this in the
-[Accessibility
-vignette](https://ipeagit.github.io/r5r/articles/accessibility.html).
+***Warning:*** to count opportunities (e.g. jobs, schools or hospitals)
+within each isochrone, we strongly recommend NOT using
+[`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md).
+The [Accessibility
+vignette](https://ipeagit.github.io/r5r/articles/accessibility.html)
+shows much more efficient ways.
 
 ## 2. Build routable transport network with `build_network()`
 
 #### Increase Java memory and load libraries
 
-First, we need to increase the memory available to Java and load the
-packages used in this vignette. Please note we allocate RAM memory to
-Java *before* loading our libraries.
+Set Java memory before loading the packages
+([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
 
 ``` r
 
@@ -54,10 +40,8 @@ library(data.table)
 library(ggplot2)
 ```
 
-To build a routable transport network with `r5r`, the user needs to call
 [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
-with the path to the directory where OpenStreetMap and GTFS data are
-stored.
+takes the directory holding the OpenStreetMap and GTFS data:
 
 ``` r
 
@@ -72,20 +56,16 @@ r5r_network <- build_network(data_path)
 
 ### 3.1 Polygon-based isochrones
 
-The most common approach here is to create polygon-based isochrones. To
-do this, you need to pass the arguments `polygon_output = TRUE` and
-choose the `zoom` level. The polygon-based isochrone in {r5r} are built
-on top of a regular grid based on [Web Mercator
-pixels](https://docs.conveyal.com/analysis/methodology#spatial-resolution).
-The zoom level can be controlled with the `zoom` parameter; higher zooms
-lead to more detailed isochrones at the expense of computational time.
-The default is 10 (which uses cells of 153m at the Equator). In large
-networks, high zooms may not be possible and will give an error.
+Polygon-based isochrones are the most common: set
+`polygon_output = TRUE`. The polygons are built on a regular grid of
+[Web Mercator
+pixels](https://docs.conveyal.com/analysis/methodology#spatial-resolution)
+whose resolution is set by `zoom`. Higher zooms give more detailed
+isochrones but take longer, and may fail with an error in large
+networks. The default, 10, uses cells of 153 m at the Equator.
 
-With the code below, `r5r` determines the isochrones considering the
-median travel time of multiple travel time estimates calculated
-departing every minute over a 60-minute time window, between 2pm and
-3pm.
+Below, isochrones use the median travel time of departures every minute
+over a 60-minute window (2pm to 3pm).
 
 ``` r
 
@@ -120,13 +100,11 @@ iso1 <- r5r::isochrone(
   )
 ```
 
-As you can see, the
 [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-functions works very similarly to the
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-function. However, instead of returning a table with travel time
-estimates, it returns a `POLYGON "sf" "data.frame"` for each isochrone
-of each origin when you set `polygon_output = TRUE`.
+works like
+[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+but with `polygon_output = TRUE` it returns an `sf` data.frame with one
+`POLYGON`/`MULTIPOLYGON` per origin, cutoff and percentile:
 
 ``` r
 
@@ -145,7 +123,7 @@ head(iso1)
 #> 6 89a90128a8fffff        50        p50 MULTIPOLYGON (((-51.22581 -...
 ```
 
-Now it becomes super simple to visualize our isochrones on a map:
+Mapping the isochrones:
 
 ``` r
 
@@ -170,11 +148,8 @@ ggplot() +
 ![](isochrones_files/figure-html/unnamed-chunk-6-1.png) \## 3.2
 Line-based isochrones
 
-Alternatively, you can build line-based isochrones by simply passing
-`polygon_output = FALSE` to the
-[`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-function. Note that you do not need the `zoom` parameter here, and that
-the output is `LINESTRING "sf" "data.frame"`.
+For line-based isochrones, set `polygon_output = FALSE` (no `zoom`
+needed). The output is a `LINESTRING` `sf` data.frame.
 
 ``` r
 
@@ -220,7 +195,7 @@ head(iso2)
 #> 6 LINESTRING (-51.19686 -30.0...
 ```
 
-Now it becomes super simple to visualize our isochrones on a map:
+Mapping the isochrones:
 
 ``` r
 
@@ -237,11 +212,8 @@ ggplot() +
 
 #### Cleaning up after usage
 
-`r5r` objects are still allocated to any amount of memory previously set
-after they are done with their calculations. In order to remove an
-existing `r5r` object and reallocate the memory it had been using, we
-use the `stop_r5` function followed by a call to Java’s garbage
-collector, as follows:
+Stop the network and run Java’s garbage collector to free the memory it
+used:
 
 ``` r
 

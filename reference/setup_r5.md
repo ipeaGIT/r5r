@@ -5,9 +5,9 @@
 `setup_r5()` was renamed to
 [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
 to create a more consistent API. **`setup_r5()` is being deprecated**
-after *r5r* v2.3.0 and will be **removed in a future release**. Please
-switch to
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+after *r5r* v2.3.0 and will be **removed in a future release**. Use
+[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
+instead.
 
 ## Usage
 
@@ -31,9 +31,8 @@ setup_r5(
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - temp_dir:
@@ -58,8 +57,7 @@ setup_r5(
 
 ## Value
 
-A `r5r_network` object representing the built network to connect with
-`R5` routing engine.
+An `r5r_network` object, used by r5r's routing and support functions.
 
 ## Elevation
 

@@ -8,8 +8,8 @@ more public transport GTFS feeds (in `.zip` format), when used for
 public transport routing, and a `.tif` file describing the elevation
 profile of the study area. If there is more than one GTFS feed in the
 directory, all feeds are automatically merged. If there is already a
-`'network.dat'` file in the directory, the function will simply read it
-and load it to memory (unless specified not to do so).
+`'network.dat'` file in the directory, the function reads it instead
+(see `overwrite`).
 
 ## Usage
 
@@ -33,9 +33,8 @@ build_network(
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - temp_dir:
@@ -60,8 +59,7 @@ build_network(
 
 ## Value
 
-A `r5r_network` object representing the built network to connect with
-`R5` routing engine.
+An `r5r_network` object, used by r5r's routing and support functions.
 
 ## Elevation
 

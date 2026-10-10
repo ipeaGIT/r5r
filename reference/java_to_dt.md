@@ -5,7 +5,7 @@ Converts a Java object returned by r5r_network to an R `data.table`
 ## Usage
 
 ``` r
-java_to_dt(obj)
+java_to_dt(obj, ids = NULL)
 ```
 
 ## Arguments
@@ -13,6 +13,14 @@ java_to_dt(obj)
 - obj:
 
   A Java Object reference
+
+- ids:
+
+  An optional named list of character vectors, e.g.
+  `list(from_id = origins$id, to_id = destinations$id)`, holding the ids
+  sent to Java. String columns named here are transferred as integer
+  positions in these vectors, which is much faster than transferring one
+  Java string per row.
 
 ## Value
 

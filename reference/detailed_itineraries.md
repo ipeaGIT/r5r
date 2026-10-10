@@ -1,14 +1,10 @@
 # Detailed itineraries between origin-destination pairs
 
-Returns detailed trip information between origin-destination pairs. The
-output includes the waiting and moving time in each trip leg, as well as
-some info such as the distance traveled, the routes used and the
-geometry of each leg. Please note that this function was originally
-conceptualized as a trip planning functionality, similar to other
-commercial and non-commercial APIs and apps (e.g. Moovit, Google's
-Directions API, OpenTripPlanning's PlannerResource API). Thus, it
-consumes much more time and memory than the other (more analytical)
-routing functions included in the package.
+Returns detailed trip information between origin-destination pairs: the
+waiting and moving time, distance, route and geometry of each trip leg.
+Designed for trip planning (like Google's Directions API or
+OpenTripPlanner), it takes much more time and memory than the package's
+other, more analytical, routing functions.
 
 ## Usage
 
@@ -62,8 +58,8 @@ detailed_itineraries(
 - mode:
 
   A character vector. The transport modes allowed for access, transfer
-  and vehicle legs of the trips. Defaults to `WALK`. Please see details
-  for other options.
+  and vehicle legs of the trips. Defaults to `WALK`. See details for
+  other options.
 
 - mode_egress:
 
@@ -73,101 +69,80 @@ detailed_itineraries(
 
 - departure_datetime:
 
-  A POSIXct object. Please note that the departure time only influences
-  public transport legs. When working with public transport networks,
-  please check the `calendar.txt` within your GTFS feeds for valid
-  dates. Please see details for further information on how datetimes are
-  parsed.
+  A POSIXct object. Only affects public transport legs; when routing
+  with public transport, it must fall within the service period of the
+  GTFS feeds (`calendar.txt`; see
+  [`check_transit_availability()`](https://ipeagit.github.io/r5r/reference/check_transit_availability.md)).
+  Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
+  details for how datetimes are parsed.
 
 - time_window:
 
   An integer. The time window in minutes for which `r5r` will calculate
-  multiple itineraries. Defaults to 10 minutes. Departures are simulated
-  at about one per minute on average, at random seconds (consecutive
-  departures are 30 to 90 seconds apart), and the same departure times
-  are used in every call with the same origin. Each departure is routed
-  separately, so an itinerary may appear or disappear when
-  `departure_datetime` changes by one minute, depending on whether a
-  simulated departure still catches a faster connection. If the same
-  sequence of routes appear in different departures of the time window,
-  only the fastest of them will be kept in the output. This happens
-  because the result is not aggregated by percentile, as opposed to
-  other routing functions in the package. Because of that, the output
-  may contain trips departing after the specified `departure_datetime`,
-  but still within the time window. Please read the time window vignette
-  for more details on how this argument affects the results of each
-  routing function:
+  multiple itineraries. Defaults to 10. Departures are simulated at
+  random seconds, about one per minute (30 to 90 seconds apart), with
+  the same departure times in every call with the same origin. Each
+  departure is routed separately, so an itinerary may appear or
+  disappear when `departure_datetime` changes by one minute, depending
+  on whether a departure still catches a faster connection. Unlike other
+  routing functions, results are not aggregated by percentile: when the
+  same sequence of routes appears in several departures, only the
+  fastest is kept, so the output may contain trips departing after
+  `departure_datetime` but within the window. See
   [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md).
 
 - suboptimal_minutes:
 
-  A number. The difference in minutes that each non-optimal RAPTOR
-  branch can have from the optimal branch without being disregarded by
-  the routing algorithm. If, for example, users set
-  `suboptimal_minutes = 10`, the routing algorithm will consider
-  sub-optimal routes that arrive up to 10 minutes after the arrival of
-  the optimal one. The comparison is made separately for each departure
-  within `time_window` and is based on arrival time only: a route that
-  arrives later than this margin is discarded even if it has fewer
-  transfers. With the default `suboptimal_minutes = 0`, only routes
-  arriving at the earliest time are kept for each departure. This
-  argument emulates the real-life behaviour that makes people want to
-  take a path that is technically not optimal in terms of travel time,
-  for example, for some practical reasons (e.g. mode preference, safety,
-  etc). In practice, the higher this value, the more itineraries will be
-  returned in the final result. Values above 0 can only be used when
-  `shortest_path` is `FALSE` and `fare_structure` is `NULL`.
+  A number. How many minutes after the optimal arrival a non-optimal
+  RAPTOR branch may arrive and still be kept (e.g. with `10`, routes
+  arriving up to 10 minutes after the fastest one are considered). The
+  comparison is made separately for each departure within `time_window`
+  and uses arrival time only: a route beyond this margin is discarded
+  even if it has fewer transfers. The default, `0`, keeps only routes
+  arriving at the earliest time for each departure. Higher values return
+  more itineraries, emulating people who take a slower route for
+  practical reasons (e.g. mode preference, safety). Values above 0 can
+  only be used when `shortest_path` is `FALSE` and `fare_structure` is
+  `NULL`.
 
 - max_walk_time:
 
   An integer. The maximum walking time (in minutes) to access and egress
-  the transit network, to make transfers within the network or to
-  complete walk-only trips. Defaults to no restrictions (numeric value
-  of `Inf`), as long as `max_trip_duration` is respected. When routing
-  transit trips, the max time is considered separately for each leg
-  (e.g. if you set `max_walk_time` to 15, you could get trips with an up
-  to 15 minutes walk leg to reach transit and another up to 15 minutes
-  walk leg to reach the destination after leaving transit. In walk-only
-  trips, whenever `max_walk_time` differs from `max_trip_duration`, the
-  lowest value is considered.
+  the transit network, make transfers, or complete walk-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In walk-only trips, the lower of
+  `max_walk_time` and `max_trip_duration` applies.
 
 - max_bike_time:
 
   An integer. The maximum cycling time (in minutes) to access and egress
-  the transit network, to make transfers within the network or to
-  complete bicycle-only trips. Defaults to no restrictions (numeric
-  value of `Inf`), as long as `max_trip_duration` is respected. When
-  routing transit trips, the max time is considered separately for each
-  leg (e.g. if you set `max_bike_time` to 15, you could get trips with
-  an up to 15 minutes cycle leg to reach transit and another up to 15
-  minutes cycle leg to reach the destination after leaving transit. In
-  bicycle-only trips, whenever `max_bike_time` differs from
-  `max_trip_duration`, the lowest value is considered.
+  the transit network, make transfers, or complete bicycle-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In bicycle-only trips, the lower
+  of `max_bike_time` and `max_trip_duration` applies.
 
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network, or to complete car-only trips. Defaults to no
-  restrictions, as long as `max_trip_duration` is respected. The max
-  time is considered separately for each leg (e.g. if you set
-  `max_car_time` to 15 minutes, you could potentially drive up to 15
-  minutes to reach transit, and up to *another* 15 minutes to reach the
-  destination after leaving transit). Defaults to `Inf`, no limit. In
-  car-only trips, whenever `max_car_time` differs from
-  `max_trip_duration`, the lowest value is considered.
+  the transit network, or to complete car-only trips. Applies to each
+  leg separately (e.g. `15` allows up to 15 minutes to reach transit and
+  another 15 after leaving it). Defaults to `Inf` (no limit besides
+  `max_trip_duration`). In car-only trips, the lower of `max_car_time`
+  and `max_trip_duration` applies.
 
 - max_trip_duration:
 
-  An integer. The maximum trip duration in minutes. Defaults to 120
-  minutes (2 hours).
+  An integer. The maximum trip duration in minutes. Defaults to 120.
 
 - walk_speed:
 
-  A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
+  A numeric. Average walk speed in km/h. Defaults to 3.6.
 
 - bike_speed:
 
-  A numeric. Average cycling speed in km/h. Defaults to 12 km/h.
+  A numeric. Average cycling speed in km/h. Defaults to 12.
 
 - max_rides:
 
@@ -179,8 +154,7 @@ detailed_itineraries(
   An integer between 1 and 4. The maximum level of traffic stress that
   cyclists will tolerate. A value of 1 means cyclists will only travel
   through the quietest streets, while a value of 4 indicates cyclists
-  can travel through any road. Defaults to 2. Please see details for
-  more information.
+  can travel through any road. Defaults to 2. See details.
 
 - shortest_path:
 
@@ -204,10 +178,9 @@ detailed_itineraries(
 
   A fare structure object, following the convention set in
   [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md).
-  This object describes how transit fares should be calculated. Please
-  see the fare structure vignette to understand how this object is
-  structured:
-  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md).
+  This object describes how transit fares should be calculated. See
+  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md)
+  for its structure.
 
 - max_fare:
 
@@ -249,30 +222,26 @@ detailed_itineraries(
 - n_threads:
 
   An integer. The number of threads to use when running the router in
-  parallel. Defaults to use all available threads (Inf).
+  parallel. Defaults to `Inf` (all available threads).
 
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
-  the progress counter does not interfere with `R5`'s output messages.
-  Setting `progress` to `TRUE` may impose a small penalty for
-  computation efficiency, because the progress counter must be
-  synchronized among all active threads.
+  Defaults to `FALSE`. Only works when `verbose` is `FALSE`. May
+  slightly slow computation, as the counter is synchronized across
+  threads.
 
 - drop_geometry:
 
-  A logical. Whether the output should include the geometry of each trip
-  leg or not. The default value of `FALSE` keeps the geometry column in
-  the result.
+  A logical. Whether to drop the geometry of each trip leg from the
+  output. Defaults to `FALSE` (geometry kept).
 
 - osm_link_ids:
 
@@ -295,18 +264,15 @@ detailed_itineraries(
 
 - output_dir:
 
-  Either `NULL` or a path to an existing directory. When not `NULL` (the
-  default), the function will write one `.csv` file with the results for
-  each origin in the specified directory. In such case, the function
-  returns the path specified in this parameter. This parameter is
-  particularly useful when running on memory-constrained settings
-  because writing the results directly to disk prevents `r5r` from
-  loading them to RAM memory. Missing values (`NA`) are written as empty
-  fields.
+  Either `NULL` (the default) or a path to an existing directory. When a
+  path is given, the function writes the results as `.csv` files to that
+  directory and returns the path instead of the results. Useful in
+  memory-constrained settings, as results are not loaded into RAM.
+  Missing values (`NA`) are written as empty fields.
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
@@ -360,15 +326,15 @@ include:
 
 ## Level of Traffic Stress (LTS)
 
-When cycling is enabled in `R5` (by passing the value `BIKE` to either
-`mode` or `mode_egress`), setting `max_lts` will allow cycling only on
-streets with a given level of danger/stress. Setting `max_lts` to 1, for
-example, will allow cycling only on separated bicycle infrastructure or
-low-traffic streets and routing will revert to walking when traversing
-any links with LTS exceeding 1. Setting `max_lts` to 3 will allow
-cycling on links with LTS 1, 2 or 3. Routing also reverts to walking if
-the street segment is tagged as non-bikable in OSM (e.g. a staircase),
-independently of the specified max LTS.
+When cycling is enabled in `R5` (by passing the value `BICYCLE` to
+either `mode` or `mode_egress`), setting `max_lts` will allow cycling
+only on streets with a given level of danger/stress. Setting `max_lts`
+to 1, for example, will allow cycling only on separated bicycle
+infrastructure or low-traffic streets and routing will revert to walking
+when traversing any links with LTS exceeding 1. Setting `max_lts` to 3
+will allow cycling on links with LTS 1, 2 or 3. Routing also reverts to
+walking if the street segment is tagged as non-bikable in OSM (e.g. a
+staircase), independently of the specified max LTS.
 
 The default methodology for assigning LTS values to network edges is
 based on commonly tagged attributes of OSM ways. See more info about LTS

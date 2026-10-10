@@ -8,83 +8,54 @@ matrices and accessibility estimates with the `r5r` package.
 
 ## 1. Introduction
 
-Considering the monetary costs of public transport trips in the
-calculation of travel time matrices and accessibility estimates is a
-major challenge faced by researchers and planning practitioners. Each
-public transport system can have its own set of rules for calculating
-fares, with varying levels of complexity. Moreover, there are important
-trade offs between travel time and monetary costs across multiple trip
-alternatives and are currently not captured by any multimodal routing
-engine, except for R5.
+Accounting for the monetary cost of public transport trips in travel
+time matrices and accessibility estimates is a major challenge. Fare
+rules vary across systems and can be complex, and the trade-offs between
+travel time and cost across trip alternatives are not captured by any
+multimodal routing engine except R5.
 
-R5 has native capabilities and an open architecture for creating and
-including fare structures in routing models, making it possible to
-estimate travel time matrices and accessibility estimates simultaneously
-considering different combinations of time and monetary cost cutoffs.
-The main challenge, however, is that a specific fare structure for each
-city needs to be programmed in Java and tightly integrated into R5,
-making this functionality out of reach for those who do not know how to
-code in Java (i.e. most of us!).
-
-To help tackle this challenge, `r5r` has a simple generic rule-based
-fare structure that can be configured via a predefined set of properties
-and rules that can be set directly from R or using external tools such
-as text editors and spreadsheets. This approach currently available in
-`r5r` is able to account for the monetary costs of public transport
-systems that follow a simple set of fare rules according to which the
+R5 can combine time and monetary cost cutoffs, but each city’s fare
+structure must be programmed in Java and integrated into R5. Instead,
+`r5r` offers a generic rule-based fare structure that you configure from
+R, or with a text editor or spreadsheet. It covers systems where the
 cost of a journey depends on combinations of modes (see details below).
 
-**This vignette shows the features of `r5r`s fare structure. It also
-uses a reproducible example to demonstrate how to configure the fare
-structure to account for monetary costs when generating travel time
-matrices and accessibility estimates with `r5r`**.
+**This vignette describes `r5r`’s fare structure and shows, with a
+reproducible example, how to configure it to account for monetary costs
+in travel time matrices and accessibility estimates.**
 
 ### 1.1 Details
 
-A common feature among many public transport services is the possibility
-of discounted transfers, when passengers can use a single ticket for a
-trip composed of multiple rides sometimes combining different transport
-modes. Such trips usually come with a discount in the second or
-subsequent fares, as well as a limit on the number of discounted
-transfers the user can make and/or a time limit for using that discount.
-This is the type of fare structure currently covered by `r5r`.
+**Supported:** discounted transfers. A single ticket covers a trip of
+several rides, possibly on different modes, with a discount on the
+second or subsequent fares, optionally limited in the number of
+discounted transfers and/or in time. Fares can differ by mode, agency or
+route (see `by` and `use_route_fare` below).
 
-We acknowledge that there are several types fare rules that vary from
-one public transport system to another. According to these rules, the
-cost of a journey can differ, for example, depending on: different costs
-for each trip leg, transport mode or route; distance- or zone-based
-fares; different fares for types of riders (e.g elderly people or
-students) or time of the day (e.g. peak and off-peak hours); among many
-others rules. As such, taking all of these possible rules into
-consideration when calculating the monetary cost of multimodal can be
-quite difficult. `r5r` currently does not cover these more complex fare
-rules.
+**Not supported:** more complex rules, such as:
 
-The fare calculator currently available in `r5r` is not intended to be a
-robust solution that can take into consideration all public transport
-systems and their specific fare rules. That would be a Herculean task.
-The features included in `r5r`’s fare calculator are inspired by our
-empirical observations of Brazilian public transport systems, and is
-meant to be used mainly in the [Access to Opportunities
-project](https://www.ipea.gov.br/acessooportunidades/en/). Everyone else
-is welcome to use it, if the current features suit their needs.
+- distance- or zone-based fares;
+- fares by type of rider (e.g. elderly people or students);
+- fares by time of day (e.g. peak and off-peak hours).
 
-obs. The GTFS format has some features for specifying public transport
-fares, but those features are quite limited and are not enough for
-adequately representing many use cases. A new version of that
-specification is currently being developed [Fares
-V2](https://github.com/google/transit/issues/252), but it may take some
-time for it to be approved and for transport agencies actually start
-providing GTFS feeds with full fare information.
+The fare calculator is not meant to cover every public transport system.
+Its features are based on systems that use discounted transfers, which
+is a widely common system across many cities; everyone is welcome to use
+it if it suits their needs.
+
+obs. GTFS fare features are too limited for many use cases. A new
+specification, [Fares V2](https://github.com/google/transit/issues/252),
+is being developed, but it may take time to be approved and adopted by
+transport agencies.
 
   
 
 ## 2. Reprex: the public transport system of Porto Alegre
 
 In this vignette, we will be using the sample data set for the city of
-Porto Alegre (Brazil) included in `r5r`. Before we start, we need to
-increase the memory available to Java and load the packages used in this
-vignette
+Porto Alegre (Brazil) included in `r5r`. Set Java memory before loading
+the packages
+([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
 
 ``` r
 
@@ -99,11 +70,8 @@ library(dplyr)
 library(h3jsr)
 ```
 
-Porto Alegre has a relatively straightforward public transport system,
-where the vast majority of the population that rely on transit ride
-buses. The city also has a metropolitan rail service that connects the
-city center to the neighboring northbound municipalities. That system
-can be seen in the map below.
+Porto Alegre’s public transport is mostly buses, plus a metropolitan
+rail line connecting the city center to municipalities to the north:
 
 ``` r
 
@@ -129,10 +97,8 @@ ggplot() +
 
 ![](fare_structure_files/figure-html/unnamed-chunk-3-1.png)
 
-According to the fare rules in Porto Alegre, as in most Brazilian
-cities, the cost a a journey depends on a combination of number of
-subsequent trips and/or transport modes. In the case of Porto Alegre,
-the fare rules are as follows:
+As in most Brazilian cities, the cost of a journey depends on the number
+of rides and the modes combined:
 
 - Each bus ticket costs R\$ 4.80.
 - Riding a second bus adds R\$ 2.40 to the total cost. Subsequent bus
@@ -143,41 +109,29 @@ the fare rules are as follows:
 - The integrated fare between bus and train has a 10% discount, which
   totals R\$ 8.37.
 
-In the following sections, we will demonstrate how to implement those
-rules within r5r’s fare calculator.
-
   
 
 ## 3. Setting up the fare structure
 
-There are three support functions in `r5r` to help users configure the
-fare structure:
+Three functions help configure the fare structure:
 
 - [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md)
   analyses the study area’s GTFS and builds a ‘skeleton’ fare structure
-  structure with the parameters that need to be set;
+  with the parameters to set;
 - [`write_fare_structure()`](https://ipeagit.github.io/r5r/reference/write_fare_structure.md)
   and
   [`read_fare_structure()`](https://ipeagit.github.io/r5r/reference/read_fare_structure.md)
-  allow saving the current fare structure settings to disk, and reading
-  them back into memory. The settings are saved as standard `.csv` files
-  inside a zipped folder. These files can be edited outside the R
-  session using external text editors and spreadsheet software, for
-  user’s convenience.
+  save the fare structure to disk and read it back. It is stored as
+  `.csv` files in a `.zip`, which you can also edit in a text editor or
+  spreadsheet.
 
-First, we need to call
-[`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md),
-providing three parameters: the current `r5r_network` object, a
-`base_fare` used to populate the fare structure, and the `by` parameters
-that identifies what is the main property of the route that defines the
-different fares.
-
-In the example below, the `base_fare` is the standard bus ticket price
-of R\$ 4.80. We are also stating that `by = "MODE"`, so that each
-transport mode has its own fares and integration rules. Users can also
-create a fare structure where fare rules of routes differ by
-`"AGENCY_ID"` or `"AGENCY_NAME"`, or simply set `by = "GENERIC"` when
-the entire system follows the same rules.
+[`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md)
+takes the `r5r_network`, a `base_fare` to populate the structure, and
+`by`, the route property that defines different fares. Below,
+`base_fare` is the bus ticket price (R\$ 4.80) and `by = "MODE"` gives
+each mode its own fares and transfer rules. Fares can also differ by
+`"AGENCY_ID"` or `"AGENCY_NAME"`; use `by = "GENERIC"` if the whole
+system follows the same rules.
 
 ``` r
 
@@ -186,8 +140,7 @@ fare_structure <- setup_fare_structure(r5r_network,
                                        by = "MODE")
 ```
 
-Now let’s check the contents of the `fare_structure` object. We can see
-below that it is simply a `list` with a few properties and data.frames.
+`fare_structure` is a `list` of global properties and data.frames:
 
 ``` r
 
@@ -266,8 +219,7 @@ head(fare_structure, n=7)
 
 ### 3.1 Global Properties
 
-Let’s configure the global properties first, which are the ones that are
-applied to the entire system.
+Global properties apply to the entire system.
 
 #### `max_discounted_transfers`
 
@@ -290,7 +242,7 @@ free of charge. In this example, we can leave `fare_cap` set to its
 default `Inf` value because this feature is not applicable to Porto
 Alegre.
 
-Here is how we can check or update the values of these components:
+To check or update them:
 
 ``` r
 
@@ -330,16 +282,12 @@ fare_structure$fares_per_type
 #> 2:   RAIL               FALSE                     FALSE          FALSE   4.8
 ```
 
-We need to do a few small changes in the `fares_per_type` table to
-accommodate the fare rules of Porto Alegre. In the `"RAIL"` mode, we
-need to set `unlimited_transfers` and `allow_same_route_transfer` to
-`TRUE`, and update `fare` to 4.50. In the `"BUS"` mode, we can let the
-`allow_same_route_transfer` set to its default `FALSE` value, because
-even though there is a discount for transfers between buses (which is
-set in the following section), that discount is not valid when
-transferring between buses within the same route (for example, from bus
-route T1 to another T1). We’ll do those changes below, using
-`data.table` notation.
+To accommodate the fare rules of Porto Alegre, we set
+`unlimited_transfers` and `allow_same_route_transfer` to `TRUE` and
+`fare` to 4.50 for `"RAIL"`. For `"BUS"`, keep the default
+`allow_same_route_transfer = FALSE`: the bus-to-bus discount (set in the
+next section) does not apply between buses of the same route (e.g. from
+route T1 to another T1). In `data.table` notation:
 
 ``` r
 
@@ -348,7 +296,7 @@ fare_structure$fares_per_type[type == "RAIL", fare := 4.50]
 fare_structure$fares_per_type[type == "RAIL", allow_same_route_transfer := TRUE]
 ```
 
-Checking the results below, everything looks OK:
+The result:
 
 ``` r
 
@@ -478,34 +426,25 @@ columns were added specifically for the `r5r` fare structure.
   earlier (we could have chosen to discriminate fares by agency, for
   example).
 
-We actually don’t have any change do to in the `fares_per_route` table,
-in this example. It does not matter that the `route_fare` value is wrong
-for the “RAIL” lines, because we are using the fares set in
-`fares_per_type` and `fares_per_transfer` which we already set up
-correctly before.
+No changes to `fares_per_route` are needed here. The `route_fare` values
+of the “RAIL” lines are wrong, but they are not used because
+`use_route_fare` is `FALSE` for RAIL: fares come from `fares_per_type`
+and `fares_per_transfer`, set above. The `fare_structure` is now
+complete.
 
-Now that our `fare_structure` is complete, we can use it to calculate
-travel time matrices and accessibility while accounting for monetary
-cost cutoffs. Let’s see how it’s done in the next sections.
+## 4. Calculating travel time and accessibility accounting for monetary costs
 
-## 4. Calculating travel time and accessibiilty accounting for monetary costs
-
-The
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
 and
 [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
-functions have two new parameters to account for monetary costs
-thresholds:
+take two parameters for monetary cost thresholds:
 
 - `fare_structure`: the settings object that we’ve been working on.
 - `max_fare`: the maximum total fare that can be used in the trip.
 
 ### 4.1 Travel time with monetary cost
 
-The following example shows travel time differences when monetary costs
-are accounted for, using the
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
-function.
+Travel times with and without a R\$ 5.00 fare limit:
 
 ``` r
 
@@ -545,11 +484,9 @@ ttm[, travel_time_unl := travel_time_p50]
 ttm[, travel_time_p50 := NULL]
 ```
 
-Below, we can see a sample of the travel time differences with and
-without monetary cost restriction. We can see that some trips are not
-affected at all (`travel_time_unl == travel_time_500`), some trips take
-a little longer to complete (`travel_time_500 > travel_time_unl`), and
-other trips cannot be completed at all (`travel_time_500 == NA`).
+Some trips are unaffected (`travel_time_unl == travel_time_500`), some
+take longer (`travel_time_500 > travel_time_unl`), and some cannot be
+completed (`travel_time_500 == NA`):
 
 ``` r
 
@@ -584,7 +521,7 @@ p1 <- ggplot(time_difference, aes(y = travel_time_unl, x = travel_time_500)) +
   scale_y_continuous(breaks = seq(0, 45, 5)) +
   theme_light() +
   theme(legend.position = "none") +
-  labs(y = "travel time (minutes)\nunestricted monetary cost",
+  labs(y = "travel time (minutes)\nunrestricted monetary cost",
        x = "travel time (minutes)\nmonetary cost restricted to BRL 5.00"
        )
 
@@ -612,10 +549,9 @@ p1 + p2 + plot_annotation(subtitle = "Comparing travel times with and without mo
 
 ### 4.2 Calculating accessibility with monetary cost
 
-Now, we can answer questions like “how many health care facilities one
-can access in 60 minutes using public transport, on a R\$5.00 budget?”.
-We’ll do that below, and compare the results the accessibility
-unconstrained by monetary costs:
+How many healthcare facilities can one reach within 40 minutes by public
+transport on a R\$ 5.00 budget? Below, compared with an unlimited
+budget:
 
 ``` r
 
@@ -654,8 +590,7 @@ access$geometry <- h3jsr::cell_to_polygon(access$id)
 access <- st_as_sf(access)
 ```
 
-Finally, we can plot the results and see how accessibility levels can
-differ quite substantially when we account for monetary costs.
+Mapping both results shows the effect of the budget on accessibility:
 
 ``` r
 
@@ -674,11 +609,8 @@ ggplot(data = access) +
 
 #### Cleaning up after usage
 
-`r5r` objects are still allocated to any amount of memory previously set
-after they are done with their calculations. In order to remove an
-existing `r5r` object and reallocate the memory it had been using, we
-use the `stop_r5` function followed by a call to Java’s garbage
-collector, as follows:
+Stop the network and run Java’s garbage collector to free the memory it
+used:
 
 ``` r
 

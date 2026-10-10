@@ -2,7 +2,7 @@
 
 Extracts the transit network in `sf` format from a routable transport
 network built with
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)).
+[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
 
 ## Usage
 
@@ -19,7 +19,7 @@ transit_network_to_sf(r5r_network, r5r_core = deprecated())
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value

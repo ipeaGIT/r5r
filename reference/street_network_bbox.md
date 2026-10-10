@@ -2,7 +2,7 @@
 
 Extracts the geographic bounding box of the street network layer from a
 routable transport network built with
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)).
+[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
 It is a fast and memory-efficient alternative to
 `sf::st_bbox(street_network_to_sf(r5r_net))`.
 
@@ -30,7 +30,7 @@ street_network_bbox(
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value

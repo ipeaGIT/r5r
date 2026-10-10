@@ -56,7 +56,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">java_to_dt</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">java_to_dt</span><span class="op">(</span><span class="va">obj</span>, ids <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,6 +65,14 @@
 
 <dl><dt id="arg-obj">obj<a class="anchor" aria-label="anchor" href="#arg-obj"></a></dt>
 <dd><p>A Java Object reference</p></dd>
+
+
+<dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
+<dd><p>An optional named list of character vectors, e.g.
+<code>list(from_id = origins$id, to_id = destinations$id)</code>, holding the
+ids sent to Java. String columns named here are transferred as
+integer positions in these vectors, which is much faster than
+transferring one Java string per row.</p></dd>
 
 </dl></div>
     <div class="section level2">

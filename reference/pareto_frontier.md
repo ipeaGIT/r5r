@@ -48,8 +48,8 @@ pareto_frontier(
 - mode:
 
   A character vector. The transport modes allowed for access, transfer
-  and vehicle legs of the trips. Defaults to `WALK`. Please see details
-  for other options.
+  and vehicle legs of the trips. Defaults to `WALK`. See details for
+  other options.
 
 - mode_egress:
 
@@ -59,116 +59,93 @@ pareto_frontier(
 
 - departure_datetime:
 
-  A POSIXct object. Please note that the departure time only influences
-  public transport legs. When working with public transport networks,
-  please check the `calendar.txt` within your GTFS feeds for valid
-  dates. Please see details for further information on how datetimes are
-  parsed.
+  A POSIXct object. Only affects public transport legs; when routing
+  with public transport, it must fall within the service period of the
+  GTFS feeds (`calendar.txt`; see
+  [`check_transit_availability()`](https://ipeagit.github.io/r5r/reference/check_transit_availability.md)).
+  Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
+  details for how datetimes are parsed.
 
 - time_window:
 
-  An integer. The time window in minutes for which `r5r` will calculate
-  multiple travel time matrices departing each minute. Defaults to 10
-  minutes. By default, the function returns the result based on median
-  travel times, but the user can set the `percentiles` parameter to
-  extract more results. Please read the time window vignette for more
-  details on its usage
-  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md)
+  An integer. The time window in minutes. Departures are simulated every
+  minute from `departure_datetime` until `time_window` minutes later,
+  and travel times are summarized over these departures using
+  `percentiles` (the median by default). Defaults to 10. See
+  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md).
 
 - percentiles:
 
   An integer vector (max length of 5). Specifies the percentile to use
   when returning travel time estimates within the given time window.
-  Please note that this parameter is applied to the travel time
-  estimates only (e.g. if the 25th percentile is specified, and the
-  output between A and B is 15 minutes and 10 dollars, 25% of all trips
-  cheaper than 10 dollars taken between these points are shorter than 15
-  minutes). Defaults to 50, returning the median travel time. If a
-  vector with length bigger than 1 is passed, the output contains an
-  additional column that specifies the percentile of each travel time
-  and monetary cost combination. Due to upstream restrictions, only 5
-  percentiles can be specified at a time. For more details, please see
-  R5 documentation at
+  This parameter is applied to the travel time estimates only (e.g. if
+  the 25th percentile is specified, and the output between A and B is 15
+  minutes and 10 dollars, 25% of all trips cheaper than 10 dollars taken
+  between these points are shorter than 15 minutes). Defaults to 50,
+  returning the median travel time. If a vector with length bigger than
+  1 is passed, the output contains an additional column that specifies
+  the percentile of each travel time and monetary cost combination. Due
+  to upstream restrictions, only 5 percentiles can be specified at a
+  time. See the R5 documentation at
   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
 
 - max_walk_time:
 
   An integer. The maximum walking time (in minutes) to access and egress
-  the transit network, to make transfers within the network or to
-  complete walk-only trips. Defaults to no restrictions (numeric value
-  of `Inf`), as long as `max_trip_duration` is respected. When routing
-  transit trips, the max time is considered separately for each leg
-  (e.g. if you set `max_walk_time` to 15, you could get trips with an up
-  to 15 minutes walk leg to reach transit and another up to 15 minutes
-  walk leg to reach the destination after leaving transit. In walk-only
-  trips, whenever `max_walk_time` differs from `max_trip_duration`, the
-  lowest value is considered.
+  the transit network, make transfers, or complete walk-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In walk-only trips, the lower of
+  `max_walk_time` and `max_trip_duration` applies.
 
 - max_bike_time:
 
   An integer. The maximum cycling time (in minutes) to access and egress
-  the transit network, to make transfers within the network or to
-  complete bicycle-only trips. Defaults to no restrictions (numeric
-  value of `Inf`), as long as `max_trip_duration` is respected. When
-  routing transit trips, the max time is considered separately for each
-  leg (e.g. if you set `max_bike_time` to 15, you could get trips with
-  an up to 15 minutes cycle leg to reach transit and another up to 15
-  minutes cycle leg to reach the destination after leaving transit. In
-  bicycle-only trips, whenever `max_bike_time` differs from
-  `max_trip_duration`, the lowest value is considered.
+  the transit network, make transfers, or complete bicycle-only trips.
+  Applies to each leg separately (e.g. `15` allows up to 15 minutes to
+  reach transit and another 15 after leaving it). Defaults to `Inf` (no
+  limit besides `max_trip_duration`). In bicycle-only trips, the lower
+  of `max_bike_time` and `max_trip_duration` applies.
 
 - max_car_time:
 
   An integer. The maximum driving time (in minutes) to access and egress
-  the transit network, or to complete car-only trips. Defaults to no
-  restrictions, as long as `max_trip_duration` is respected. The max
-  time is considered separately for each leg (e.g. if you set
-  `max_car_time` to 15 minutes, you could potentially drive up to 15
-  minutes to reach transit, and up to *another* 15 minutes to reach the
-  destination after leaving transit). Defaults to `Inf`, no limit. In
-  car-only trips, whenever `max_car_time` differs from
-  `max_trip_duration`, the lowest value is considered.
+  the transit network, or to complete car-only trips. Applies to each
+  leg separately (e.g. `15` allows up to 15 minutes to reach transit and
+  another 15 after leaving it). Defaults to `Inf` (no limit besides
+  `max_trip_duration`). In car-only trips, the lower of `max_car_time`
+  and `max_trip_duration` applies.
 
 - max_trip_duration:
 
-  An integer. The maximum trip duration in minutes. Defaults to 120
-  minutes (2 hours).
+  An integer. The maximum trip duration in minutes. Defaults to 120.
 
 - fare_structure:
 
   A fare structure object, following the convention set in
   [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md).
-  This object describes how transit fares should be calculated. Please
-  see the fare structure vignette to understand how this object is
-  structured:
-  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md).
-  Required: without it there are no fares to trade off against travel
-  time.
+  This object describes how transit fares should be calculated. See
+  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md)
+  for its structure. Required: without it there are no fares to trade
+  off against travel time.
 
 - fare_cutoffs:
 
   A numeric vector, required. The monetary cutoffs (each greater than or
-  equal to 0) that should be considered when calculating the Pareto
-  frontier. Most of the time you'll want this parameter to be the
-  combination of all possible fares listed in you `fare_structure`.
-  Choosing a coarse distribution of cutoffs may result in many different
-  trips falling within the same cutoff. For example, if you have two
-  different routes in your GTFS, one costing \$3 and the other costing
-  \$4, and you set this parameter to `5`, the output will tell you the
-  fastest trips that costed up to \$5, but you won't be able to identify
-  which route was used to complete such trips. In this case, it would be
-  more beneficial to set the parameter as `c(3, 4)` (you could also
-  specify combinations of such values, such as 6, 7, 8 and so on,
-  because a transit user could hypothetically benefit from making
-  transfers between the available routes).
+  equal to 0) used to build the Pareto frontier. Usually these are all
+  possible fares in your `fare_structure`, including sums of fares for
+  trips with transfers. Coarse cutoffs merge different trips: with
+  routes costing \$3 and \$4 and a single cutoff of `5`, the output
+  shows the fastest trips costing up to \$5 but not which route they
+  used; `c(3, 4)` separates them.
 
 - walk_speed:
 
-  A numeric. Average walk speed in km/h. Defaults to 3.6 km/h.
+  A numeric. Average walk speed in km/h. Defaults to 3.6.
 
 - bike_speed:
 
-  A numeric. Average cycling speed in km/h. Defaults to 12 km/h.
+  A numeric. Average cycling speed in km/h. Defaults to 12.
 
 - max_rides:
 
@@ -180,45 +157,38 @@ pareto_frontier(
   An integer between 1 and 4. The maximum level of traffic stress that
   cyclists will tolerate. A value of 1 means cyclists will only travel
   through the quietest streets, while a value of 4 indicates cyclists
-  can travel through any road. Defaults to 2. Please see details for
-  more information.
+  can travel through any road. Defaults to 2. See details.
 
 - n_threads:
 
   An integer. The number of threads to use when running the router in
-  parallel. Defaults to use all available threads (Inf).
+  parallel. Defaults to `Inf` (all available threads).
 
 - verbose:
 
   A logical. Whether to show `R5` informative messages when running the
-  function. Defaults to `FALSE` (please note that in such case `R5`
-  error messages are still shown). Setting `verbose` to `TRUE` shows
-  detailed output, which can be useful for debugging issues not caught
+  function. Defaults to `FALSE` (`R5` error messages are still shown).
+  `TRUE` shows detailed output, useful for debugging issues not caught
   by `r5r`.
 
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
-  the progress counter does not interfere with `R5`'s output messages.
-  Setting `progress` to `TRUE` may impose a small penalty for
-  computation efficiency, because the progress counter must be
-  synchronized among all active threads.
+  Defaults to `FALSE`. Only works when `verbose` is `FALSE`. May
+  slightly slow computation, as the counter is synchronized across
+  threads.
 
 - output_dir:
 
-  Either `NULL` or a path to an existing directory. When not `NULL` (the
-  default), the function will write one `.csv` file with the results for
-  each origin in the specified directory. In such case, the function
-  returns the path specified in this parameter. This parameter is
-  particularly useful when running on memory-constrained settings
-  because writing the results directly to disk prevents `r5r` from
-  loading them to RAM memory. Missing values (`NA`) are written as empty
-  fields.
+  Either `NULL` (the default) or a path to an existing directory. When a
+  path is given, the function writes the results as `.csv` files to that
+  directory and returns the path instead of the results. Useful in
+  memory-constrained settings, as results are not loaded into RAM.
+  Missing values (`NA`) are written as empty fields.
 
 - r5r_core:
 
-  The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the
+  The `r5r_core` argument is deprecated as of r5r v2.3.0. Use the
   `r5r_network` argument instead.
 
 ## Value
@@ -246,15 +216,15 @@ include:
 
 ## Level of Traffic Stress (LTS)
 
-When cycling is enabled in `R5` (by passing the value `BIKE` to either
-`mode` or `mode_egress`), setting `max_lts` will allow cycling only on
-streets with a given level of danger/stress. Setting `max_lts` to 1, for
-example, will allow cycling only on separated bicycle infrastructure or
-low-traffic streets and routing will revert to walking when traversing
-any links with LTS exceeding 1. Setting `max_lts` to 3 will allow
-cycling on links with LTS 1, 2 or 3. Routing also reverts to walking if
-the street segment is tagged as non-bikable in OSM (e.g. a staircase),
-independently of the specified max LTS.
+When cycling is enabled in `R5` (by passing the value `BICYCLE` to
+either `mode` or `mode_egress`), setting `max_lts` will allow cycling
+only on streets with a given level of danger/stress. Setting `max_lts`
+to 1, for example, will allow cycling only on separated bicycle
+infrastructure or low-traffic streets and routing will revert to walking
+when traversing any links with LTS exceeding 1. Setting `max_lts` to 3
+will allow cycling on links with LTS 1, 2 or 3. Routing also reverts to
+walking if the street segment is tagged as non-bikable in OSM (e.g. a
+staircase), independently of the specified max LTS.
 
 The default methodology for assigning LTS values to network edges is
 based on commonly tagged attributes of OSM ways. See more info about LTS

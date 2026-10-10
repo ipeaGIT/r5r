@@ -1,6 +1,7 @@
 # Stop running r5r network
 
-Stops running r5r network
+Stops the given `r5r_network` objects, or all `r5r_network` objects in
+the calling environment if none is supplied.
 
 ## Usage
 

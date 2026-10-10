@@ -113,7 +113,7 @@ more information on how the grid cells are defined, see
 
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
 <dd><p>A character vector. The transport modes allowed for access,
-transfer and vehicle legs of the trips. Defaults to <code>WALK</code>. Please see
+transfer and vehicle legs of the trips. Defaults to <code>WALK</code>. See
 details for other options.</p></dd>
 
 
@@ -124,35 +124,31 @@ from the last public transport. It can be either <code>WALK</code>, <code>BICYCL
 
 
 <dt id="arg-departure-datetime">departure_datetime<a class="anchor" aria-label="anchor" href="#arg-departure-datetime"></a></dt>
-<dd><p>A POSIXct object. Please note that the departure
-time only influences public transport legs. When working with public
-transport networks, please check the <code>calendar.txt</code> within your GTFS
-feeds for valid dates. Please see details for further information on
-how datetimes are parsed.</p></dd>
+<dd><p>A POSIXct object. Only affects public transport
+legs; when routing with public transport, it must fall within the
+service period of the GTFS feeds (<code>calendar.txt</code>; see
+<code><a href="check_transit_availability.html">check_transit_availability()</a></code>). Defaults to <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time()</a></code>. See
+details for how datetimes are parsed.</p></dd>
 
 
 <dt id="arg-time-window">time_window<a class="anchor" aria-label="anchor" href="#arg-time-window"></a></dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
 will calculate multiple travel time matrices departing each minute.
 Defaults to 10 minutes. The function returns the result based on
-median travel times. Please read the time window vignette for more
-details on its usage <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code></p></dd>
+median travel times. See
+<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
 
 
 <dt id="arg-percentiles">percentiles<a class="anchor" aria-label="anchor" href="#arg-percentiles"></a></dt>
-<dd><p>An integer vector (max length of 5). Specifies the
-percentile to use when returning accessibility estimates within the given
-time window. Please note that this parameter is applied to the travel time
-estimates that generate the accessibility results, and not to the
-accessibility distribution itself (i.e. if the 25th percentile is
-specified, the accessibility is calculated from the 25th percentile travel
-time, which may or may not be equal to the 25th percentile of the
-accessibility distribution itself). Defaults to 50, returning the
-accessibility calculated from the median travel time. If a vector with
-length bigger than 1 is passed, the output contains an additional column
-that specifies the percentile of each accessibility estimate. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see <code>R5</code> documentation at <a href="https://docs.conveyal.com/analysis/methodology#accounting-for-variability" class="external-link">https://docs.conveyal.com/analysis/methodology#accounting-for-variability</a>.</p></dd>
+<dd><p>An integer vector (max length of 5, an <code>R5</code> limit). The
+travel time percentiles within the time window from which accessibility is
+calculated. They apply to travel times, not to the accessibility
+distribution: with 25, accessibility is calculated from the 25th
+percentile travel time, which may differ from the 25th percentile of
+accessibility. Defaults to 50 (the median travel time). With more than one
+value, the output gets a column identifying the percentile of each
+estimate. See the <code>R5</code> documentation at
+<a href="https://docs.conveyal.com/analysis/methodology#accounting-for-variability" class="external-link">https://docs.conveyal.com/analysis/methodology#accounting-for-variability</a>.</p></dd>
 
 
 <dt id="arg-max-walk-time">max_walk_time<a class="anchor" aria-label="anchor" href="#arg-max-walk-time"></a></dt>
@@ -210,16 +206,14 @@ allowed in the same trip. Defaults to 3.</p></dd>
 <dd><p>An integer between 1 and 4. The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4 indicates
-cyclists can travel through any road. Defaults to 2. Please see
-details for more information.</p></dd>
+cyclists can travel through any road. Defaults to 2. See details.</p></dd>
 
 
 <dt id="arg-fare-structure">fare_structure<a class="anchor" aria-label="anchor" href="#arg-fare-structure"></a></dt>
 <dd><p>A fare structure object, following the convention
 set in <code><a href="setup_fare_structure.html">setup_fare_structure()</a></code>. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-<code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>.</p></dd>
+should be calculated. See <code><a href="../articles/fare_structure.html">vignette("fare_structure", package = "r5r")</a></code>
+for its structure.</p></dd>
 
 
 <dt id="arg-max-fare">max_fare<a class="anchor" aria-label="anchor" href="#arg-max-fare"></a></dt>
@@ -261,12 +255,11 @@ LINESTRING and update its LTS value accordingly.</p></dd>
 
 <dt id="arg-draws-per-minute">draws_per_minute<a class="anchor" aria-label="anchor" href="#arg-draws-per-minute"></a></dt>
 <dd><p>An integer. The number of Monte Carlo draws to
-perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60-minute time window, for example. This parameter only affects the
-results when the GTFS feeds contain a <code>frequencies.txt</code> table. If the GTFS
-feed does not have a frequency table, r5r still allows for multiple runs
-over the set <code>time_window</code> but in a deterministic way.</p></dd>
+perform per minute of <code>time_window</code>. Defaults to 5. This would mean 300
+draws in a 60-minute time window, for example. This parameter only affects
+the results when the GTFS feeds contain a <code>frequencies.txt</code> table. If the
+GTFS feed does not have a frequency table, r5r still allows for multiple
+runs over the set <code>time_window</code> but in a deterministic way.</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
@@ -276,10 +269,9 @@ router in parallel. Defaults to use all available threads (<code>Inf</code>).</p
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>A logical. Whether to show <code>R5</code> informative messages when
-running the function. Defaults to <code>FALSE</code> (please note that in such case
-<code>R5</code> error messages are still shown). Setting <code>verbose</code> to <code>TRUE</code> shows
-detailed output, which can be useful for debugging issues not caught by
-<code>r5r</code>.</p></dd>
+running the function. Defaults to <code>FALSE</code> (<code>R5</code> error messages are still
+shown). <code>TRUE</code> shows detailed output, useful for debugging issues not
+caught by <code>r5r</code>.</p></dd>
 
 
 <dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
@@ -311,7 +303,7 @@ public transport modes available.</p></li>
 
 
 
-<p>When cycling is enabled in <code>R5</code> (by passing the value <code>BIKE</code> to either
+<p>When cycling is enabled in <code>R5</code> (by passing the value <code>BICYCLE</code> to either
 <code>mode</code> or <code>mode_egress</code>), setting <code>max_lts</code> will allow cycling only on
 streets with a given level of danger/stress. Setting <code>max_lts</code> to 1, for
 example, will allow cycling only on separated bicycle infrastructure or
