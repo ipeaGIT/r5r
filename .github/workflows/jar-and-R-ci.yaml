@@ -14,6 +14,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # the job commits the rebuilt JAR back to the branch
+    permissions:
+      contents: write
+
     # don't build on merges to master
     if: ${{ !github.ref_protected }}
 
