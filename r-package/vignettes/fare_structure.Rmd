@@ -39,7 +39,7 @@ R5 can combine time and monetary cost cutoffs, but each city's fare structure mu
 - fares by type of rider (e.g. elderly people or students);
 - fares by time of day (e.g. peak and off-peak hours).
 
-The fare calculator is not meant to cover every public transport system. Its features are based on Brazilian systems and it is mainly used in the [Access to Opportunities project](https://www.ipea.gov.br/acessooportunidades/en/); everyone is welcome to use it if it suits their needs.
+The fare calculator is not meant to cover every public transport system. Its features are based on systems that use discounted transfers, which is a widely common system across many cities; everyone is welcome to use it if it suits their needs.
 
 obs. GTFS fare features are too limited for many use cases. A new specification, [Fares V2](https://github.com/google/transit/issues/252), is being developed, but it may take time to be approved and adopted by transport agencies.
 
@@ -156,7 +156,7 @@ Below, we can see that the `fares_per_type` data.frame contains five columns:
 fare_structure$fares_per_type
 ```
 
-For Porto Alegre, set `unlimited_transfers` and `allow_same_route_transfer` to `TRUE` and `fare` to 4.50 for `"RAIL"`. For `"BUS"`, keep the default `allow_same_route_transfer = FALSE`: the bus-to-bus discount (set in the next section) does not apply between buses of the same route (e.g. from route T1 to another T1). In `data.table` notation:
+ To accommodate the fare rules of Porto Alegre, we set `unlimited_transfers` and `allow_same_route_transfer` to `TRUE` and `fare` to 4.50 for `"RAIL"`. For `"BUS"`, keep the default `allow_same_route_transfer = FALSE`: the bus-to-bus discount (set in the next section) does not apply between buses of the same route (e.g. from route T1 to another T1). In `data.table` notation:
 
 ```{r}
 fare_structure$fares_per_type[type == "RAIL", unlimited_transfers := TRUE]

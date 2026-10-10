@@ -23,8 +23,7 @@ knitr::opts_chunk$set(
 # 1. Introduction
 
 Routing models usually find either the fastest or the cheapest route. Accounting for both time and monetary cost at once is hard, because minimizing trip duration and minimizing cost are competing objectives [@conway2019getting].
-
-`r5r`'s `pareto_frontier()` returns the most efficient combinations of travel time and monetary cost between origin/destination pairs. This vignette shows, with a reproducible example, how to use it and interpret its results.
+To address this problem, `r5r`'s `pareto_frontier()` returns the most efficient combinations of travel time and monetary cost between origin/destination pairs. This vignette shows, with a reproducible example, how to use it and interpret its results.
 
 
 
@@ -66,6 +65,7 @@ ggplot(data=df, aes(x=cost, y=time, label = modes)) +
 <br>
 
 The frontier shows the time-cost trade-offs that public transport passengers face. It also supports cumulative-opportunity accessibility metrics with both time and cost cutoffs (e.g. the number of jobs reachable within 40 minutes and R\$ 5) [@conway2019getting].
+Let's see a couple concrete examples showing how `r5r` can calculate the Pareto frontier for multiple origins.
 
 
 
