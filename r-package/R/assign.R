@@ -92,7 +92,7 @@ assign_points_input <- function(df, name, unique_ids = TRUE) {
 #' @family assigning functions
 #'
 #' @keywords internal
-assign_mode <- function(mode, mode_egress, style) {
+assign_mode <- function(mode, mode_egress) {
   dr_modes <- c("WALK", "BICYCLE", "CAR", "BICYCLE_RENT", "CAR_PARK")
   tr_modes <- c(
     "TRANSIT",
@@ -197,8 +197,9 @@ assign_departure <- function(datetime) {
 #'
 #' @param max_time A numeric of length 1. Maximum walking distance (in
 #'   meters) for the whole trip. Passed from routing functions.
-#' @param speed A numeric of length 1. Average walk speed in km/h.
-#'   Defaults to 3.6 Km/h. Passed from routing functions.
+#' @param speed A numeric of length 1. Average walk or bike speed in km/h,
+#'   passed from routing functions and only validated here. `NULL` for car,
+#'   which has no speed argument.
 #' @param max_trip_duration A numeric of length 1. Maximum trip duration in
 #'   seconds. Defaults to 120 minutes (2 hours). Passed from routing functions.
 #' @param mode A string. Either `"bike"` or `"walk"`.
@@ -233,12 +234,13 @@ assign_max_street_time <- function(max_time, speed, max_trip_duration, mode) {
   checkmate::assert_number(
     speed,
     finite = TRUE,
+    null.ok = TRUE,
     .var.name = paste0(mode, "_speed")
   )
 
   checkmate::assert_count(max_trip_duration, positive = TRUE)
 
-  if (speed <= 0) {
+  if (!is.null(speed) && speed <= 0) {
     stop(
       "Assertion on '", mode, "_speed' failed: ",
       "Must have value greater than 0."

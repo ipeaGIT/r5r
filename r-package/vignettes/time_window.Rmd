@@ -187,7 +187,7 @@ head(ettm, n = 10)
 
 ### 3.5 Detailed itineraries with `time_window`.
 
-In the `detailed_itineraries()` function, the number of Monte Carlo draws per minute is hardcoded to 1. This means that the function simulates only one departure per minute within the `time_window`. So if you set a `time_window` of 10 minutes, it would simulate 10 departures, one in each minute. This is largely because the `time_window` behaves slightly differently here.
+In the `detailed_itineraries()` function, the number of Monte Carlo draws per minute is hardcoded to 1. This means that the function simulates about one departure per minute within the `time_window`, at random seconds (consecutive departures are 30 to 90 seconds apart, and the same departure times are used in every call with the same origin). So if you set a `time_window` of 10 minutes, it would simulate about 10 departures. Each departure is routed separately, and with the default `suboptimal_minutes = 0` only the itineraries arriving at the earliest time are kept for each departure, even if a slower one has fewer transfers. This is largely because the `time_window` behaves slightly differently here.
 
 See, functions like `travel_time_matrix()` or `accessibility()`, for example, return estimates of travel times or accessibility. In these cases, when we use the `time_window` parameter, these functions output selected percentiles of those values generated based on the distribution of all estimates that result from the multiple trip simulations.
 

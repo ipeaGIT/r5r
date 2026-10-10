@@ -804,7 +804,7 @@ unlink(jar_dir, recursive = TRUE)
 
 tictoc::tic()
 Sys.setenv(NOT_CRAN = "true")
-devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
+devtools::check(pkg = "./r-package/",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
 tictoc::toc()
 beepr::beep()
 

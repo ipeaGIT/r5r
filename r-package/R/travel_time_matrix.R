@@ -202,7 +202,7 @@ travel_time_matrix <- function(r5r_network,
   )
   max_car_time <- assign_max_street_time(
     max_car_time,
-    8, # 8 km/h, R5's default.
+    NULL, # no car speed argument to validate
     max_trip_duration,
     "car"
   )
@@ -275,12 +275,9 @@ travel_time_matrix <- function(r5r_network,
 
 
   if (nrow(travel_times) > 0) {
-    # replace travel-times of nonviable trips with NAs.
-    # the first column with travel time information is column 3, because
-    # columns 1 and 2 contain the ids of OD point.
-    # the percentiles parameter indicates how many travel times columns we'll
-    # have
-    for (j in seq(from = 3, to = (length(percentiles) + 2))) {
+    # replace travel-times of nonviable trips with NAs, in every travel time
+    # column (one per percentile)
+    for (j in grep("^travel_time_p", names(travel_times))) {
       data.table::set(
         travel_times,
         i = which(travel_times[[j]] > max_trip_duration),
