@@ -2,7 +2,7 @@
 
 **Project:** r5r — R package for rapid realistic multimodal routing and accessibility analysis (walk, bike, transit, car) on top of Conveyal's R5 engine (https://github.com/conveyal/r5), bridged through rJava and a small in-house JAR (`java-r5rcore`)
 **Maintainer:** Rafael H. M. Pereira (aut, cre) — Ipea, Institute for Applied Economic Research. Authors: Marcus Saraiva, Daniel Herszenhut, Alex Magnus, Matthew Wigginton Bhagat-Conway (see `r-package/DESCRIPTION` for the full list)
-**Repo:** https://github.com/ipeaGIT/r5r · **Branch:** `master` (not `main`) · **Site:** https://ipeagit.github.io/r5r/ · **Version:** 2.4.0.9000 (dev) · **Language:** English
+**Repo:** https://github.com/ipea/r5r · **Branch:** `master` (not `main`) · **Site:** https://ipea.github.io/r5r/ · **Version:** 2.4.0.9000 (dev) · **Language:** English
 
 **Monorepo:** the R package lives in `r-package/`; the Java bridge in `java-r5rcore/`. There is no `DESCRIPTION` at the repo root, so every devtools / `R CMD` call takes the explicit path, and the release gate is `/r-package-check r-package`.
 
