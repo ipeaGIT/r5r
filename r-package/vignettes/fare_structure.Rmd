@@ -48,7 +48,7 @@ obs. GTFS fare features are too limited for many use cases. A new specification,
 # 2. Reprex: the public transport system of Porto Alegre
 
 In this vignette, we will be using the sample data set for the city of Porto
-Alegre (Brazil) included in `r5r`. Set Java memory before loading the packages ([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+Alegre (Brazil) included in `r5r`. Set Java memory before loading the packages ([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
@@ -416,4 +416,4 @@ r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).

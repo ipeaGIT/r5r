@@ -21,16 +21,16 @@ knitr::opts_chunk$set(
 
 # 1. Introduction
 
-An isochrone shows all areas reachable from a place within a maximum travel time. This vignette uses the [`r5r` package](https://ipeagit.github.io/r5r/index.html) and the Porto Alegre (Brazil) sample data included in it to calculate and map public transport isochrones from the city's central bus station at several travel time thresholds. `r5r::isochrone()` builds both polygon- and line-based isochrones; we cover both.
+An isochrone shows all areas reachable from a place within a maximum travel time. This vignette uses the [`r5r` package](https://ipea.github.io/r5r/index.html) and the Porto Alegre (Brazil) sample data included in it to calculate and map public transport isochrones from the city's central bus station at several travel time thresholds. `r5r::isochrone()` builds both polygon- and line-based isochrones; we cover both.
 
-***Warning:*** to count opportunities (e.g. jobs, schools or hospitals) within each isochrone, we strongly recommend NOT using `isochrone()`. The [Accessibility vignette](https://ipeagit.github.io/r5r/articles/accessibility.html) shows much more efficient ways.
+***Warning:*** to count opportunities (e.g. jobs, schools or hospitals) within each isochrone, we strongly recommend NOT using `isochrone()`. The [Accessibility vignette](https://ipea.github.io/r5r/articles/accessibility.html) shows much more efficient ways.
 
 
 # 2. Build routable transport network with `build_network()`
 
 ### Increase Java memory and load libraries
 
-Set Java memory before loading the packages ([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+Set Java memory before loading the packages ([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
@@ -164,4 +164,4 @@ r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).

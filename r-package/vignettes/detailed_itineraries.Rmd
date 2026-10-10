@@ -87,7 +87,7 @@ det <- detailed_itineraries(
 head(det)
 ```
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
+knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
 ```
 
 
@@ -120,7 +120,7 @@ ggsave(plot = fig, filename = 'inst/img/vig_detailed_ggplot.png',
 ```
 
 ```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
+knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
 ```
 
 # 4. Other options
@@ -164,4 +164,4 @@ r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).

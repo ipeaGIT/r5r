@@ -108,7 +108,7 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 * A train ticket costs R\$ 4.50, with unlimited train rides as long as the passenger does not leave the stations.
 * The integrated bus + train fare has a 10% discount, totalling R\$ 8.37.
 
-A fare structure with these rules ships with `r5r`, so we simply read it. The [fare structure vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html) shows how to build one step by step.
+A fare structure with these rules ships with `r5r`, so we simply read it. The [fare structure vignette](https://ipea.github.io/r5r/articles/fare_structure.html) shows how to build one step by step.
 
 ```{r}
 fare_structure <- r5r::read_fare_structure(file.path(data_path, "fares/fares_poa.zip"))
@@ -183,7 +183,7 @@ r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).
 
 
 ## References

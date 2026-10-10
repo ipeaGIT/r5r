@@ -85,7 +85,7 @@ points <- fread(file.path(data_path, "poa_points_of_interest.csv"))
 - `max_rides`: maximum number of public transport rides
 - `max_walk_time` and `max_bike_time`: maximum walking or cycling time to and from public transport
 - `walk_speed` and `bike_speed`: average walking or cycling speed (km/h)
-- `max_fare`: maximum monetary cost in public transport. [See this vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html).
+- `max_fare`: maximum monetary cost in public transport. [See this vignette](https://ipea.github.io/r5r/articles/fare_structure.html).
 
 
 ```{r, message = FALSE}
@@ -103,7 +103,7 @@ head(ttm, n = 10)
 
 ```
 
-Travel times can vary significantly across the day with public transport service levels. The `time_window` and `percentiles` parameters handle this efficiently: R<sup>5</sup> computes travel times for departures every minute within `time_window` and returns the selected percentiles ([time window vignette](https://ipeagit.github.io/r5r/articles/time_window.html)).
+Travel times can vary significantly across the day with public transport service levels. The `time_window` and `percentiles` parameters handle this efficiently: R<sup>5</sup> computes travel times for departures every minute within `time_window` and returns the selected percentiles ([time window vignette](https://ipea.github.io/r5r/articles/time_window.html)).
 
 
 # 4. The `expanded_travel_time_matrix()` function
@@ -204,6 +204,6 @@ r5r::r5r_cache(delete_file = 'all')
 
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).
 
 ## References

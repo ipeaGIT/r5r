@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
 
 # 1. Introduction 
 
-**r5r** is an [R package for rapid realistic routing on multimodal transport networks](https://github.com/ipeaGIT/r5r) (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by [Conveyal](https://www.conveyal.com/). R<sup>5</sup> stands for [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5). More details about **r5r** can be found on the [package webpage](https://ipeagit.github.io/r5r/index.html) or on this [paper](
+**r5r** is an [R package for rapid realistic routing on multimodal transport networks](https://github.com/ipea/r5r) (walk, bike, public transport and car). It provides a simple and friendly interface to R<sup>5</sup>, a really fast and open source Java-based routing engine developed separately by [Conveyal](https://www.conveyal.com/). R<sup>5</sup> stands for [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5). More details about **r5r** can be found on the [package webpage](https://ipea.github.io/r5r/index.html) or on this [paper](
 https://doi.org/10.32866/001c.21262).
 
 # 2. Installation
@@ -48,7 +48,7 @@ You can install `{r5r}` from CRAN, or the development version from github.
 install.packages('r5r')
 
 # dev version with latest features
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+devtools::install_github("ipea/r5r", subdir = "r-package")
 ```
 
 
@@ -114,7 +114,7 @@ library(ggplot2)
 | `pareto_frontier()` | The trade-off between travel time and monetary cost of route alternatives |
 | `isochrone()` | Areas reachable from an origin within given travel times |
 
-Most of them can also account for monetary travel costs ([fare structure vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html)).
+Most of them can also account for monetary travel costs ([fare structure vignette](https://ipea.github.io/r5r/articles/fare_structure.html)).
 
 **Support functions**:
 
@@ -203,7 +203,7 @@ r5r_network <- build_network(data_path = data_path)
 
 ## 4.2 Accessibility analysis
 
-`accessibility()` is the fastest way to estimate accessibility. Here we count the schools and healthcare facilities reachable in less than 60 minutes by public transport and walking ([accessibility vignette](https://ipeagit.github.io/r5r/articles/accessibility.html)).
+`accessibility()` is the fastest way to estimate accessibility. Here we count the schools and healthcare facilities reachable in less than 60 minutes by public transport and walking ([accessibility vignette](https://ipea.github.io/r5r/articles/accessibility.html)).
 
 ```{r, message = FALSE, warning = FALSE}
 # set departure datetime input
@@ -237,7 +237,7 @@ For fast routing analysis, **r5r** currently has three core functions:
 
 `travel_time_matrix()` computes travel times between origin/destination pairs. Origins and destinations can be an `sf POINT` object or a `data.frame` with columns `id`, `lon` and `lat`. `max_walk_time` and `max_trip_duration` are in minutes, as are the resulting travel times.
 
-It can also capture travel time variation across departures within a time window ([time window vignette](https://ipeagit.github.io/r5r/articles/time_window.html)). 
+It can also capture travel time variation across departures within a time window ([time window vignette](https://ipea.github.io/r5r/articles/time_window.html)). 
 
 
 ```{r, message = FALSE}
@@ -263,7 +263,7 @@ head(ttm)
 ```
 
 ```{r ttm head, echo=FALSE, message=FALSE, out.width='100%', eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_ttm.png?raw=true")
+knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/img/vig_output_ttm.png?raw=true")
 ```
 
 
@@ -319,7 +319,7 @@ det <- detailed_itineraries(
 head(det)
 ```
 ```{r detailed head, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
+knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/img/vig_output_detailed.png?raw=true")
 ```
 
 The output is an `sf` data.frame, ready to map.
@@ -345,7 +345,7 @@ ggplot() +
 ```
 
 ```{r ggplot2 output, echo = FALSE, out.width='100%', message = FALSE, eval = FALSE}
-knitr::include_graphics("https://github.com/ipeaGIT/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
+knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/img/vig_detailed_ggplot.png?raw=true")
 ```
 
 
@@ -364,6 +364,6 @@ r5r::r5r_cache(delete_file = 'all')
 
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).
 
 
