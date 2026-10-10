@@ -257,7 +257,10 @@ expanded_travel_time_matrix <- function(r5r_network,
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
-  travel_times <- java_to_dt(travel_times)
+  travel_times <- java_to_dt(
+    travel_times,
+    ids = list(from_id = origins$id, to_id = destinations$id)
+  )
 
   # reverse order of origins destinations back ONLY if the order had been swapped before
   if (!is.null(res)) {
