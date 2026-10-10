@@ -2,18 +2,19 @@
 #'
 #' Detailed computation of travel time estimates between one or multiple origin
 #' destination pairs. Results show the travel time of the fastest route
-#' alternative departing each minute within a specified time window. Please
-#' note this function can be very memory intensive for large data sets and time
-#' windows.
+#' alternative departing each minute within a specified time window. This
+#' function can be very memory intensive for large data sets and time
+#' windows. `destinations` can have at most 5000 rows, a limit of R5 for
+#' detailed path information; split larger sets into chunks.
 #'
 #' @template r5r_network
 #' @template r5r_core
 #' @template common_arguments
 #' @param time_window An integer. The time window in minutes for which `r5r`
 #'   will calculate multiple travel time matrices departing each minute.
-#'   Defaults to 10 minutes. The function returns the result based on median
-#'   travel times. Please read the time window vignette for more details on its
-#'   usage `vignette("time_window", package = "r5r")`
+#'   Defaults to 10 minutes. The output has one row per departure minute (and
+#'   per Monte Carlo draw, see `draws_per_minute`). See
+#'   `vignette("time_window", package = "r5r")`.
 #' @template draws_per_minute
 #' @template scenarios
 #' @template verbose
@@ -21,22 +22,43 @@
 #'   each trip in the output. If `FALSE` (the default), the output lists the
 #'   total time between each origin-destination pair and the routes used to
 #'   complete the trip for each minute of the specified time window. If `TRUE`,
-#'   the output includes the total access, waiting, in-vehicle and transfer
-#'   time of each trip. Please note that setting this parameter to `TRUE` makes
-#'   the function significantly slower.
+#'   the output also includes the access, waiting, in-vehicle, transfer and
+#'   egress time of each trip, and its number of public transport rides. For
+#'   trips made only by walking, cycling or driving (`routes` equal to
+#'   `[WALK]`, `[BICYCLE]` or `[CAR]`), these components are all `0` and
+#'   `total_time` holds the whole trip.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) and the
 #'   routes used in each trip between origin and destination pairs, for each
 #'   minute of the specified time window. Each set of origin, destination and
 #'   departure minute can appear up to N times, where N is the number of Monte
-#'   Carlo draws specified in the function arguments (please note that this
-#'   only applies when the GTFS feeds that describe the transit network include
-#'   a frequencies table, otherwise only a single draw is performed). A pair is
-#'   completely absent from the final output if no trips could be completed in
+#'   Carlo draws set by `draws_per_minute` (this only applies when the GTFS
+#'   feeds include a frequencies table; otherwise a single draw is
+#'   performed). A pair is completely absent from the final output if no trips
+#'   could be completed in
 #'   any of the minutes of the time window. If for a single pair trips could be
 #'   completed in some of the minutes of the time window, but not for all of
 #'   them, the minutes in which trips couldn't be completed will have `NA`
-#'   travel time and routes used. If `output_dir` is not `NULL`, the function
+#'   travel time and routes used. A pair may also appear with `NA` in every
+#'   minute, when its only trips are slightly longer than `max_trip_duration`
+#'   (e.g. walk-only trips, whose time to walk between the point and the
+#'   street network is added after the limit is applied).
+#'
+#'   The output has the columns `from_id`, `to_id`, `departure_time`,
+#'   `draw_number`, `routes` and `total_time`, plus `access_time`,
+#'   `wait_time`, `ride_time`, `transfer_time`, `egress_time` and `n_rides`
+#'   when `breakdown = TRUE`. `routes` lists the public transport routes used,
+#'   separated by `|`, or the street mode (e.g. `[WALK]`) for trips that do
+#'   not use public transport. `draw_number` only labels the draws of a
+#'   departure minute; their order is arbitrary.
+#'
+#'   Travel times are reported with a precision of 0.1 minute, and trips
+#'   longer than `max_trip_duration` get `NA`. `travel_time_matrix()` rounds
+#'   travel times down to whole minutes, so it can report trips that are up to
+#'   0.9 minute over `max_trip_duration` which are `NA` here. With walk-,
+#'   bike- or car-only `mode`, travel times are whole minutes.
+#'
+#'   If `output_dir` is not `NULL`, the function
 #'   returns the path specified in that parameter, in which the `.csv` files
 #'   containing the results are saved.
 #'
@@ -91,7 +113,6 @@
 #' stop_r5(r5r_network)
 #' @export
 expanded_travel_time_matrix <- function(r5r_network,
-                                        r5r_core = deprecated(),
                                         origins,
                                         destinations,
                                         mode = "WALK",
@@ -114,7 +135,8 @@ expanded_travel_time_matrix <- function(r5r_network,
                                         n_threads = Inf,
                                         verbose = FALSE,
                                         progress = FALSE,
-                                        output_dir = NULL) {
+                                        output_dir = NULL,
+                                        r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
@@ -143,16 +165,23 @@ expanded_travel_time_matrix <- function(r5r_network,
   departure <- assign_departure(departure_datetime)
 
   # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   checkmate::assert_class(r5r_network, "r5r_network")
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
-  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm
+  # in direct modes reverse origin/destination to take advantage of R5's One to Many algorithm.
+  # skipped when output_dir is set: Java writes the CSVs with the swapped from_id/to_id and names
+  # the files after the swapped origins, and the swap is only undone in the in-memory result
+  # also skipped for more than 5000 origins: they would become destinations, above R5's limit
   data_path <- r5r_network$getDataPath()
-  res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
+  res <- NULL
+  if (is.null(output_dir) && nrow(origins) <= 5000) {
+    res <- reverse_if_direct_mode(origins, destinations, mode_list, data_path)
+  }
   if (!is.null(res)) {
     origins <- res$origins
     destinations <- res$destinations
@@ -172,7 +201,7 @@ expanded_travel_time_matrix <- function(r5r_network,
   )
   max_car_time <- assign_max_street_time(
     max_car_time,
-    8, # 8 km/h, R5's default.
+    NULL, # no car speed argument to validate
     max_trip_duration,
     "car"
   )
@@ -180,7 +209,8 @@ expanded_travel_time_matrix <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
   set_time_window(r5r_network, time_window)
@@ -226,7 +256,10 @@ expanded_travel_time_matrix <- function(r5r_network,
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
-  travel_times <- java_to_dt(travel_times)
+  travel_times <- java_to_dt(
+    travel_times,
+    ids = list(from_id = origins$id, to_id = destinations$id)
+  )
 
   # reverse order of origins destinations back ONLY if the order had been swapped before
   if (!is.null(res)) {

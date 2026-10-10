@@ -163,7 +163,9 @@ public class R5TravelTimeComputer extends TravelTimeComputer {
             // Change to walking in order to reach transit stops in pedestrian-only areas like train stations.
             // This implies you are dropped off or have a very easy parking spot for your vehicle.
             // This kind of multi-stage search should also be used when building egress distance cost tables.
-            if (accessMode != StreetMode.WALK) {
+            // Only with transit, as in upstream R5 v7.5 (TravelTimeComputer): this walk can take as long as the car/bike
+            // search itself, and without transit it would let car-only trips end with a walk not bounded by max_walk_time.
+            if (accessMode != StreetMode.WALK && request.hasTransit()) {
                 sr.keepRoutingOnFoot();
             }
 

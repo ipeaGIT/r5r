@@ -79,7 +79,7 @@ public class R5RCore {
     }
 
     public void setSuboptimalMinutes(int suboptimalMinutes) {
-        this.routingProperties.suboptimalMinutes = suboptimalMinutes;
+        this.routingProperties.suboptimalMinutes = Math.max(suboptimalMinutes, 0);
     }
 
     public int getTimeWindowSize() {
@@ -186,14 +186,24 @@ public class R5RCore {
         return this.numberOfThreads;
     }
 
+    // called from R before every routing call: reuse the pool when the number of threads is unchanged
     public void setNumberOfThreads(int numberOfThreads) {
+        if (r5rThreadPool != null && r5rThreadPool != ForkJoinPool.commonPool()
+                && r5rThreadPool.getParallelism() == numberOfThreads) return;
+        shutdownThreadPool();
         this.numberOfThreads = numberOfThreads;
         r5rThreadPool = new ForkJoinPool(numberOfThreads);
     }
 
     public void setNumberOfThreadsToMax() {
+        shutdownThreadPool();
         r5rThreadPool = ForkJoinPool.commonPool();
         numberOfThreads = ForkJoinPool.commonPool().getParallelism();
+    }
+
+    // the common pool cannot be shut down; routing calls are sequential, so the old pool is idle here
+    private void shutdownThreadPool() {
+        if (r5rThreadPool != null && r5rThreadPool != ForkJoinPool.commonPool()) r5rThreadPool.shutdown();
     }
 
     public void silentMode() {
@@ -498,7 +508,7 @@ public class R5RCore {
 
     public RDataFrame accessibility(String[] fromIds, double[] fromLats, double[] fromLons,
                                     String[] toIds, double[] toLats, double[] toLons,
-                                    String[] opportunities, int[][] opportunityCounts,
+                                    String[] opportunities, double[][] opportunityCounts,
                                     String decayFunction, double decayValue,
                                     String directModes, String transitModes, String accessModes, String egressModes,
                                     String date, String departureTime,
@@ -600,6 +610,14 @@ public class R5RCore {
     }
 
     // ------------------------------ SCENARIOS ----------------------------------------
+
+    // Discards the scenario network and restores the default routing properties.
+    // Called from R on exit of every routing function, so that nothing set for a
+    // call that fails (in R or in Java) leaks into the next call.
+    public void resetRoutingProperties() {
+        this.routingProperties.reset();
+        setCsvOutput("");
+    }
 
     public String applyCongestionPolygon(String filePath, String scalingAttribute, String priorityAttribute, String nameAttribute, float defaultScaling){
         Path fileJPath = Paths.get(filePath).toAbsolutePath().normalize();

@@ -7,11 +7,15 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
-#' @template fare_structure
+#' @param fare_structure A fare structure object, following the convention
+#'   set in [setup_fare_structure()]. This object describes how transit fares
+#'   should be calculated. See `vignette("fare_structure", package = "r5r")`
+#'   for its structure. Required: without it there are no fares to trade off
+#'   against travel time.
 #' @template verbose
 #' @param percentiles An integer vector (max length of 5). Specifies the
 #'   percentile to use when returning travel time estimates within the given
-#'   time window. Please note that this parameter is applied to the travel time
+#'   time window. This parameter is applied to the travel time
 #'   estimates only (e.g. if the 25th percentile is specified, and the output
 #'   between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper
 #'   than 10 dollars taken between these points are shorter than 15 minutes).
@@ -19,21 +23,15 @@
 #'   bigger than 1 is passed, the output contains an additional column that
 #'   specifies the percentile of each travel time and monetary cost
 #'   combination. Due to upstream restrictions, only 5 percentiles can be
-#'   specified at a time. For more details, please see R5 documentation at
+#'   specified at a time. See the R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
-#' @param fare_cutoffs A numeric vector. The monetary cutoffs that
-#'   should be considered when calculating the Pareto frontier. Most of the
-#'   time you'll want this parameter to be the combination of all possible
-#'   fares listed in you `fare_structure`. Choosing a coarse distribution of
-#'   cutoffs may result in many different trips falling within the same cutoff.
-#'   For example, if you have two different routes in your GTFS, one costing $3
-#'   and the other costing $4, and you set this parameter to `5`, the output
-#'   will tell you the fastest trips that costed up to $5, but you won't be
-#'   able to identify which route was used to complete such trips. In this
-#'   case, it would be more beneficial to set the parameter as `c(3, 4)` (you
-#'   could also specify combinations of such values, such as 6, 7, 8 and so on,
-#'   because a transit user could hypothetically benefit from making transfers
-#'   between the available routes).
+#' @param fare_cutoffs A numeric vector, required. The monetary cutoffs (each
+#'   greater than or equal to 0) used to build the Pareto frontier. Usually these
+#'   are all possible fares in your `fare_structure`, including sums of fares for trips
+#'   with transfers. Coarse cutoffs merge different trips: with routes costing
+#'   $3 and $4 and a single cutoff of `5`, the output shows the fastest trips
+#'   costing up to $5 but not which route they used; `c(3, 4)` separates
+#'   them.
 #'
 #' @return A `data.table` with the travel time and monetary cost Pareto frontier
 #'   between the specified origins and destinations. An additional column
@@ -88,7 +86,6 @@
 #' stop_r5(r5r_network)
 #' @export
 pareto_frontier <- function(r5r_network,
-                            r5r_core = deprecated(),
                             origins,
                             destinations,
                             mode = c("WALK", "TRANSIT"),
@@ -100,8 +97,8 @@ pareto_frontier <- function(r5r_network,
                             max_bike_time = Inf,
                             max_car_time = Inf,
                             max_trip_duration = 120L,
-                            fare_structure = NULL,
-                            fare_cutoffs = -1L,
+                            fare_structure,
+                            fare_cutoffs,
                             walk_speed = 3.6,
                             bike_speed = 12,
                             max_rides = 3,
@@ -109,7 +106,8 @@ pareto_frontier <- function(r5r_network,
                             n_threads = Inf,
                             verbose = FALSE,
                             progress = FALSE,
-                            output_dir = NULL) {
+                            output_dir = NULL,
+                            r5r_core = deprecated()) {
 
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
@@ -132,18 +130,32 @@ pareto_frontier <- function(r5r_network,
 
   # check inputs and set r5r options --------------------------------------
 
+  if (missing(fare_structure) || is.null(fare_structure)) {
+    cli::cli_abort(c(
+      "{.arg fare_structure} is required.",
+      "i" = "Create one with {.fn setup_fare_structure} or {.fn read_fare_structure}."
+    ))
+  }
+  if (missing(fare_cutoffs)) {
+    cli::cli_abort(c(
+      "{.arg fare_cutoffs} is required.",
+      "i" = "Pass the monetary cutoffs of the frontier, e.g. the fares of your {.arg fare_structure}."
+    ))
+  }
+
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
   departure <- assign_departure(departure_datetime)
 
   # check availability of transit services on the selected date
-  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|CABLE_CAR|GONDOLA|FUNICULAR') {
+  if (mode_list$transit_mode %like% 'TRANSIT|TRAM|SUBWAY|RAIL|BUS|FERRY|CABLE_CAR|GONDOLA|FUNICULAR') {
     check_transit_availability_on_date(r5r_network, departure_date = departure$date)
   }
 
   checkmate::assert_class(r5r_network, "r5r_network")
   r5r_network <- r5r_network@jcore
+  on.exit(r5r_network$resetRoutingProperties(), add = TRUE)
 
   max_walk_time <- assign_max_street_time(
     max_walk_time,
@@ -159,7 +171,7 @@ pareto_frontier <- function(r5r_network,
   )
   max_car_time <- assign_max_street_time(
     max_car_time,
-    8, # 8 km/h, R5's default.
+    NULL, # no car speed argument to validate
     max_trip_duration,
     "car"
   )
@@ -167,7 +179,8 @@ pareto_frontier <- function(r5r_network,
     max_trip_duration,
     mode_list,
     max_walk_time,
-    max_bike_time
+    max_bike_time,
+    max_car_time
   )
 
   set_time_window(r5r_network, time_window)
