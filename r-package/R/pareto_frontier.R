@@ -7,7 +7,12 @@
 #' @template r5r_core
 #' @template common_arguments
 #' @template time_window_related_args
-#' @template fare_structure
+#' @param fare_structure A fare structure object, following the convention
+#'   set in [setup_fare_structure()]. This object describes how transit fares
+#'   should be calculated. Please see the fare structure vignette to
+#'   understand how this object is structured:
+#'   `vignette("fare_structure", package = "r5r")`. Required: without it there
+#'   are no fares to trade off against travel time.
 #' @template verbose
 #' @param percentiles An integer vector (max length of 5). Specifies the
 #'   percentile to use when returning travel time estimates within the given
@@ -21,8 +26,9 @@
 #'   combination. Due to upstream restrictions, only 5 percentiles can be
 #'   specified at a time. For more details, please see R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
-#' @param fare_cutoffs A numeric vector. The monetary cutoffs that
-#'   should be considered when calculating the Pareto frontier. Most of the
+#' @param fare_cutoffs A numeric vector, required. The monetary cutoffs (each
+#'   greater than or equal to 0) that should be considered when calculating
+#'   the Pareto frontier. Most of the
 #'   time you'll want this parameter to be the combination of all possible
 #'   fares listed in you `fare_structure`. Choosing a coarse distribution of
 #'   cutoffs may result in many different trips falling within the same cutoff.
@@ -99,8 +105,8 @@ pareto_frontier <- function(r5r_network,
                             max_bike_time = Inf,
                             max_car_time = Inf,
                             max_trip_duration = 120L,
-                            fare_structure = NULL,
-                            fare_cutoffs = -1L,
+                            fare_structure,
+                            fare_cutoffs,
                             walk_speed = 3.6,
                             bike_speed = 12,
                             max_rides = 3,
@@ -132,6 +138,19 @@ pareto_frontier <- function(r5r_network,
 
   # check inputs and set r5r options --------------------------------------
 
+  if (missing(fare_structure) || is.null(fare_structure)) {
+    cli::cli_abort(c(
+      "{.arg fare_structure} is required.",
+      "i" = "Create one with {.fn setup_fare_structure} or {.fn read_fare_structure}."
+    ))
+  }
+  if (missing(fare_cutoffs)) {
+    cli::cli_abort(c(
+      "{.arg fare_cutoffs} is required.",
+      "i" = "Pass the monetary cutoffs of the frontier, e.g. the fares of your {.arg fare_structure}."
+    ))
+  }
+
   origins <- assign_points_input(origins, "origins")
   destinations <- assign_points_input(destinations, "destinations")
   mode_list <- assign_mode(mode, mode_egress)
@@ -160,7 +179,7 @@ pareto_frontier <- function(r5r_network,
   )
   max_car_time <- assign_max_street_time(
     max_car_time,
-    8, # 8 km/h, R5's default.
+    NULL, # no car speed argument to validate
     max_trip_duration,
     "car"
   )

@@ -17,8 +17,8 @@ pareto_frontier(
   max_bike_time = Inf,
   max_car_time = Inf,
   max_trip_duration = 120L,
-  fare_structure = NULL,
-  fare_cutoffs = -1L,
+  fare_structure,
+  fare_cutoffs,
   walk_speed = 3.6,
   bike_speed = 12,
   max_rides = 3,
@@ -109,10 +109,12 @@ Defaults to 120 minutes (2 hours).}
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
 should be calculated. Please see the fare structure vignette to
 understand how this object is structured:
-\code{vignette("fare_structure", package = "r5r")}.}
+\code{vignette("fare_structure", package = "r5r")}. Required: without it there
+are no fares to trade off against travel time.}
 
-\item{fare_cutoffs}{A numeric vector. The monetary cutoffs that
-should be considered when calculating the Pareto frontier. Most of the
+\item{fare_cutoffs}{A numeric vector, required. The monetary cutoffs (each
+greater than or equal to 0) that should be considered when calculating
+the Pareto frontier. Most of the
 time you'll want this parameter to be the combination of all possible
 fares listed in you \code{fare_structure}. Choosing a coarse distribution of
 cutoffs may result in many different trips falling within the same cutoff.

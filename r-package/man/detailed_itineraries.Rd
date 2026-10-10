@@ -58,9 +58,15 @@ for valid dates. Please see details for further information on how
 datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple itineraries departing each minute. Defaults to 10
-minutes. If the same sequence of routes appear in different minutes of the
-time window, only the fastest of them will be kept in the output. This
+will calculate multiple itineraries. Defaults to 10 minutes. Departures
+are simulated at about one per minute on average, at random seconds
+(consecutive departures are 30 to 90 seconds apart), and the same
+departure times are used in every call with the same origin. Each
+departure is routed separately, so an itinerary may appear or disappear
+when \code{departure_datetime} changes by one minute, depending on whether a
+simulated departure still catches a faster connection. If the same
+sequence of routes appear in different departures of the time window, only
+the fastest of them will be kept in the output. This
 happens because the result is not aggregated by percentile, as opposed to
 other routing functions in the package. Because of that, the output may
 contain trips departing after the specified \code{departure_datetime}, but
@@ -73,8 +79,12 @@ non-optimal RAPTOR branch can have from the optimal branch without being
 disregarded by the routing algorithm. If, for example, users set
 \code{suboptimal_minutes = 10}, the routing algorithm will consider sub-optimal
 routes that arrive up to 10 minutes after the arrival of the optimal one.
-This argument emulates the real-life behaviour that makes people want to
-take a path that is technically not optimal in terms of travel time, for
+The comparison is made separately for each departure within \code{time_window}
+and is based on arrival time only: a route that arrives later than this
+margin is discarded even if it has fewer transfers. With the default
+\code{suboptimal_minutes = 0}, only routes arriving at the earliest time are
+kept for each departure. This argument emulates the real-life behaviour
+that makes people want to take a path that is technically not optimal in terms of travel time, for
 example, for some practical reasons (e.g. mode preference, safety, etc).
 In practice, the higher this value, the more itineraries will be returned
 in the final result. Values above 0 can only be used when \code{shortest_path}

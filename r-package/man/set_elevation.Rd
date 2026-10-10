@@ -10,7 +10,7 @@ set_elevation(elevation)
 \item{elevation}{Character.}
 }
 \value{
-Character. Corretly formatted elevation.
+Character. Correctly formatted elevation.
 }
 \description{
 Verifies whether elevation mode is correct.
