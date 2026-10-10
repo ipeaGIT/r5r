@@ -2,8 +2,8 @@
 #'
 #' Detailed computation of travel time estimates between one or multiple origin
 #' destination pairs. Results show the travel time of the fastest route
-#' alternative departing each minute within a specified time window. Please
-#' note this function can be very memory intensive for large data sets and time
+#' alternative departing each minute within a specified time window. This
+#' function can be very memory intensive for large data sets and time
 #' windows. `destinations` can have at most 5000 rows, a limit of R5 for
 #' detailed path information; split larger sets into chunks.
 #'
@@ -13,9 +13,8 @@
 #' @param time_window An integer. The time window in minutes for which `r5r`
 #'   will calculate multiple travel time matrices departing each minute.
 #'   Defaults to 10 minutes. The output has one row per departure minute (and
-#'   per Monte Carlo draw, see `draws_per_minute`). Please read the time window
-#'   vignette for more details on its usage
-#'   `vignette("time_window", package = "r5r")`
+#'   per Monte Carlo draw, see `draws_per_minute`). See
+#'   `vignette("time_window", package = "r5r")`.
 #' @template draws_per_minute
 #' @template scenarios
 #' @template verbose
@@ -33,10 +32,10 @@
 #'   routes used in each trip between origin and destination pairs, for each
 #'   minute of the specified time window. Each set of origin, destination and
 #'   departure minute can appear up to N times, where N is the number of Monte
-#'   Carlo draws specified in the function arguments (please note that this
-#'   only applies when the GTFS feeds that describe the transit network include
-#'   a frequencies table, otherwise only a single draw is performed). A pair is
-#'   completely absent from the final output if no trips could be completed in
+#'   Carlo draws set by `draws_per_minute` (this only applies when the GTFS
+#'   feeds include a frequencies table; otherwise a single draw is
+#'   performed). A pair is completely absent from the final output if no trips
+#'   could be completed in
 #'   any of the minutes of the time window. If for a single pair trips could be
 #'   completed in some of the minutes of the time window, but not for all of
 #'   them, the minutes in which trips couldn't be completed will have `NA`

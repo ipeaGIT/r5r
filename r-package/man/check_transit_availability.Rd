@@ -13,10 +13,10 @@ check_transit_availability(
 )
 }
 \arguments{
-\item{r5r_network}{A routable transport network created with \code{build_network()}.}
+\item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
 \item{dates}{A vector of specific dates to be checked. Can be character strings
-in #'   "YYYY-MM-DD" format, or objects of class \code{Date}. This argument
+in "YYYY-MM-DD" format, or objects of class \code{Date}. This argument
 cannot be used with \code{start_date} or \code{end_date}.}
 
 \item{start_date}{The start date for a continuous date range. Must be a single
@@ -27,19 +27,18 @@ with \code{end_date}.}
 character string in "YYYY-MM-DD" format or a \code{Date} object. Must be used
 with \code{start_date}.}
 
-\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0. Please use the \code{r5r_network} argument instead.}
+\item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
+Use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with four columns: \code{date}, \code{total_services},
 \code{active_services}, and \code{pct_active} (the proportion of active services).
 }
 \description{
-This function checks the number and proportion of public transport services
-from the GTFS feeds in a \code{r5r_network} that are active on specified dates. This
-is useful to verify that the selected departure dates for routing analysis are
-valid and have adequate service levels. When routing with public transport, it
-is crucial to use a departure date where services are operational, as indicated
-in the GTFS \code{calendar.txt} file.
+Counts the public transport services in the GTFS feeds of a \code{r5r_network}
+that are active on given dates, and their proportion of all services. Use it
+to pick a departure date with adequate service: public transport routing only
+finds trips on dates when services run (per the GTFS \code{calendar.txt}).
 }
 \details{
 You can specify the dates to check in two ways:

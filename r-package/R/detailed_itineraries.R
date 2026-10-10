@@ -1,13 +1,10 @@
 #' Detailed itineraries between origin-destination pairs
 #'
-#' Returns detailed trip information between origin-destination pairs. The
-#' output includes the waiting and moving time in each trip leg, as well as some
-#' info such as the distance traveled, the routes used and the geometry of each
-#' leg. Please note that this function was originally conceptualized as a trip
-#' planning functionality, similar to other commercial and non-commercial APIs
-#' and apps (e.g. Moovit, Google's Directions API, OpenTripPlanning's
-#' PlannerResource API). Thus, it consumes much more time and memory than the
-#' other (more analytical) routing functions included in the package.
+#' Returns detailed trip information between origin-destination pairs: the
+#' waiting and moving time, distance, route and geometry of each trip leg.
+#' Designed for trip planning (like Google's Directions API or
+#' OpenTripPlanner), it takes much more time and memory than the package's
+#' other, more analytical, routing functions.
 #'
 #' @template r5r_network
 #' @template r5r_core
@@ -17,36 +14,27 @@
 #' @template fare_structure
 #' @template max_fare
 #' @param time_window An integer. The time window in minutes for which `r5r`
-#'   will calculate multiple itineraries. Defaults to 10 minutes. Departures
-#'   are simulated at about one per minute on average, at random seconds
-#'   (consecutive departures are 30 to 90 seconds apart), and the same
-#'   departure times are used in every call with the same origin. Each
-#'   departure is routed separately, so an itinerary may appear or disappear
-#'   when `departure_datetime` changes by one minute, depending on whether a
-#'   simulated departure still catches a faster connection. If the same
-#'   sequence of routes appear in different departures of the time window, only
-#'   the fastest of them will be kept in the output. This
-#'   happens because the result is not aggregated by percentile, as opposed to
-#'   other routing functions in the package. Because of that, the output may
-#'   contain trips departing after the specified `departure_datetime`, but
-#'   still within the time window. Please read the time window vignette for
-#'   more details on how this argument affects the results of each routing
-#'   function: `vignette("time_window", package = "r5r")`.
-#' @param suboptimal_minutes A number. The difference in minutes that each
-#'   non-optimal RAPTOR branch can have from the optimal branch without being
-#'   disregarded by the routing algorithm. If, for example, users set
-#'   `suboptimal_minutes = 10`, the routing algorithm will consider sub-optimal
-#'   routes that arrive up to 10 minutes after the arrival of the optimal one.
-#'   The comparison is made separately for each departure within `time_window`
-#'   and is based on arrival time only: a route that arrives later than this
-#'   margin is discarded even if it has fewer transfers. With the default
-#'   `suboptimal_minutes = 0`, only routes arriving at the earliest time are
-#'   kept for each departure. This argument emulates the real-life behaviour
-#'   that makes people want to take a path that is technically not optimal in terms of travel time, for
-#'   example, for some practical reasons (e.g. mode preference, safety, etc).
-#'   In practice, the higher this value, the more itineraries will be returned
-#'   in the final result. Values above 0 can only be used when `shortest_path`
-#'   is `FALSE` and `fare_structure` is `NULL`.
+#'   will calculate multiple itineraries. Defaults to 10. Departures are
+#'   simulated at random seconds, about one per minute (30 to 90 seconds
+#'   apart), with the same departure times in every call with the same origin.
+#'   Each departure is routed separately, so an itinerary may appear or
+#'   disappear when `departure_datetime` changes by one minute, depending on
+#'   whether a departure still catches a faster connection. Unlike other
+#'   routing functions, results are not aggregated by percentile: when the same
+#'   sequence of routes appears in several departures, only the fastest is
+#'   kept, so the output may contain trips departing after
+#'   `departure_datetime` but within the window. See
+#'   `vignette("time_window", package = "r5r")`.
+#' @param suboptimal_minutes A number. How many minutes after the optimal
+#'   arrival a non-optimal RAPTOR branch may arrive and still be kept (e.g.
+#'   with `10`, routes arriving up to 10 minutes after the fastest one are
+#'   considered). The comparison is made separately for each departure within
+#'   `time_window` and uses arrival time only: a route beyond this margin is
+#'   discarded even if it has fewer transfers. The default, `0`, keeps only
+#'   routes arriving at the earliest time for each departure. Higher values
+#'   return more itineraries, emulating people who take a slower route for
+#'   practical reasons (e.g. mode preference, safety). Values above 0 can only
+#'   be used when `shortest_path` is `FALSE` and `fare_structure` is `NULL`.
 #' @param shortest_path A logical. Whether the function should only return the
 #'   fastest itinerary between each origin and destination pair (the default)
 #'   or multiple alternatives. The fastest itinerary is the one with the
@@ -58,9 +46,8 @@
 #'   to the 1st destination, then the 2nd origin to the 2nd destination, and so
 #'   on (`FALSE`, the default) or to query routes between all origins to all
 #'   destinations (`TRUE`).
-#' @param drop_geometry A logical. Whether the output should include the
-#'   geometry of each trip leg or not. The default value of `FALSE` keeps the
-#'   geometry column in the result.
+#' @param drop_geometry A logical. Whether to drop the geometry of each trip
+#'   leg from the output. Defaults to `FALSE` (geometry kept).
 #' @param osm_link_ids A logical. Whether the output should include additional
 #'   columns: `osm_id_list` for the OSM ids of the road segments used along the
 #'   trip geometry, `edge_id_list` for the ids of the internal street network

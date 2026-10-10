@@ -1,12 +1,10 @@
 #' Check transit service availability by date
 #'
 #' @description
-#' This function checks the number and proportion of public transport services
-#' from the GTFS feeds in a `r5r_network` that are active on specified dates. This
-#' is useful to verify that the selected departure dates for routing analysis are
-#' valid and have adequate service levels. When routing with public transport, it
-#' is crucial to use a departure date where services are operational, as indicated
-#' in the GTFS `calendar.txt` file.
+#' Counts the public transport services in the GTFS feeds of a `r5r_network`
+#' that are active on given dates, and their proportion of all services. Use it
+#' to pick a departure date with adequate service: public transport routing only
+#' finds trips on dates when services run (per the GTFS `calendar.txt`).
 #'
 #' @details
 #' You can specify the dates to check in two ways:
@@ -16,10 +14,10 @@
 #' }
 #' You must use one of these two methods, but not both in the same function call.
 #'
-#' @param r5r_network A routable transport network created with `build_network()`.
-#' @param r5r_core The `r5r_core` argument is deprecated as of r5r v2.3.0. Please use the `r5r_network` argument instead.
+#' @template r5r_network
+#' @template r5r_core
 #' @param dates A vector of specific dates to be checked. Can be character strings
-#'        in #'   "YYYY-MM-DD" format, or objects of class `Date`. This argument
+#'        in "YYYY-MM-DD" format, or objects of class `Date`. This argument
 #'        cannot be used with `start_date` or `end_date`.
 #' @param start_date The start date for a continuous date range. Must be a single
 #'        character string in "YYYY-MM-DD" format or a `Date` object. Must be used

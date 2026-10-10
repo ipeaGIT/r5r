@@ -9,14 +9,14 @@ set_verbose(r5r_network, verbose)
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
 
-\item{verbose}{A logical, passed from function above.}
+\item{verbose}{A logical, passed from the function above.}
 }
 \value{
 Invisibly returns \code{TRUE}.
 }
 \description{
-Indicates whether R5 should output informative messages or not. Please note
-that R5 error messages are still reported even when \code{verbose} is \code{FALSE}.
+Indicates whether R5 should output informative messages or not. R5 error
+messages are still reported even when \code{verbose} is \code{FALSE}.
 }
 \seealso{
 Other setting functions:

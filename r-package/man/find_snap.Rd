@@ -25,7 +25,7 @@ Defaults to 1600m.}
 to the network. Defaults to \code{WALK}, also allows \code{BICYCLE} and \code{CAR}.}
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+Use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with the original points, their respective

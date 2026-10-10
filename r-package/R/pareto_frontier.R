@@ -9,14 +9,13 @@
 #' @template time_window_related_args
 #' @param fare_structure A fare structure object, following the convention
 #'   set in [setup_fare_structure()]. This object describes how transit fares
-#'   should be calculated. Please see the fare structure vignette to
-#'   understand how this object is structured:
-#'   `vignette("fare_structure", package = "r5r")`. Required: without it there
-#'   are no fares to trade off against travel time.
+#'   should be calculated. See `vignette("fare_structure", package = "r5r")`
+#'   for its structure. Required: without it there are no fares to trade off
+#'   against travel time.
 #' @template verbose
 #' @param percentiles An integer vector (max length of 5). Specifies the
 #'   percentile to use when returning travel time estimates within the given
-#'   time window. Please note that this parameter is applied to the travel time
+#'   time window. This parameter is applied to the travel time
 #'   estimates only (e.g. if the 25th percentile is specified, and the output
 #'   between A and B is 15 minutes and 10 dollars, 25% of all trips cheaper
 #'   than 10 dollars taken between these points are shorter than 15 minutes).
@@ -24,22 +23,15 @@
 #'   bigger than 1 is passed, the output contains an additional column that
 #'   specifies the percentile of each travel time and monetary cost
 #'   combination. Due to upstream restrictions, only 5 percentiles can be
-#'   specified at a time. For more details, please see R5 documentation at
+#'   specified at a time. See the R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
 #' @param fare_cutoffs A numeric vector, required. The monetary cutoffs (each
-#'   greater than or equal to 0) that should be considered when calculating
-#'   the Pareto frontier. Most of the
-#'   time you'll want this parameter to be the combination of all possible
-#'   fares listed in you `fare_structure`. Choosing a coarse distribution of
-#'   cutoffs may result in many different trips falling within the same cutoff.
-#'   For example, if you have two different routes in your GTFS, one costing $3
-#'   and the other costing $4, and you set this parameter to `5`, the output
-#'   will tell you the fastest trips that costed up to $5, but you won't be
-#'   able to identify which route was used to complete such trips. In this
-#'   case, it would be more beneficial to set the parameter as `c(3, 4)` (you
-#'   could also specify combinations of such values, such as 6, 7, 8 and so on,
-#'   because a transit user could hypothetically benefit from making transfers
-#'   between the available routes).
+#'   greater than or equal to 0) used to build the Pareto frontier. Usually these
+#'   are all possible fares in your `fare_structure`, including sums of fares for trips
+#'   with transfers. Coarse cutoffs merge different trips: with routes costing
+#'   $3 and $4 and a single cutoff of `5`, the output shows the fastest trips
+#'   costing up to $5 but not which route they used; `c(3, 4)` separates
+#'   them.
 #'
 #' @return A `data.table` with the travel time and monetary cost Pareto frontier
 #'   between the specified origins and destinations. An additional column

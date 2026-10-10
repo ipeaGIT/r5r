@@ -1,8 +1,8 @@
 #' @section Decay functions:
 #'
 #' `R5` allows one to use different decay functions when calculating
-#' accessibility. Please see the original `R5` documentation from Conveyal for
-#' more information on each one one
+#' accessibility. See the original `R5` documentation from Conveyal for
+#' more information on each one
 #' (<https://docs.conveyal.com/learn-more/decay-functions>). A summary of each
 #' available option, as well as the value passed to `decay_function` to use it
 #' (inside parentheses) are listed below:

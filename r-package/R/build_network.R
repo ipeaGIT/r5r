@@ -7,8 +7,8 @@
 #' GTFS feeds (in `.zip` format), when used for public transport routing, and a
 #' `.tif` file describing the elevation profile of the study area. If there is
 #' more than one GTFS feed in the directory, all feeds are automatically merged.
-#' If there is already a `'network.dat'` file in the directory, the function will
-#' simply read it and load it to memory (unless specified not to do so).
+#' If there is already a `'network.dat'` file in the directory, the function
+#' reads it instead (see `overwrite`).
 #'
 #' @template verbose
 #' @param data_path A string pointing to the directory where data inputs are
@@ -20,8 +20,8 @@
 #'        or to use a cached file. Defaults to `FALSE` (i.e. use a cached
 #'        network).
 #'
-#' @return A `r5r_network` object representing the built network to connect with
-#'         `R5` routing engine.
+#' @return An `r5r_network` object, used by r5r's routing and support
+#'         functions.
 #'
 #' @template elevation_section
 #'
