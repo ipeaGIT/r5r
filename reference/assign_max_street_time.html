@@ -69,8 +69,9 @@ meters) for the whole trip. Passed from routing functions.</p></dd>
 
 
 <dt id="arg-speed">speed<a class="anchor" aria-label="anchor" href="#arg-speed"></a></dt>
-<dd><p>A numeric of length 1. Average walk speed in km/h.
-Defaults to 3.6 Km/h. Passed from routing functions.</p></dd>
+<dd><p>A numeric of length 1. Average walk or bike speed in km/h,
+passed from routing functions and only validated here. <code>NULL</code> for car,
+which has no speed argument.</p></dd>
 
 
 <dt id="arg-max-trip-duration">max_trip_duration<a class="anchor" aria-label="anchor" href="#arg-max-trip-duration"></a></dt>

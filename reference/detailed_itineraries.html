@@ -146,9 +146,15 @@ datetimes are parsed.</p></dd>
 
 <dt id="arg-time-window">time_window<a class="anchor" aria-label="anchor" href="#arg-time-window"></a></dt>
 <dd><p>An integer. The time window in minutes for which <code>r5r</code>
-will calculate multiple itineraries departing each minute. Defaults to 10
-minutes. If the same sequence of routes appear in different minutes of the
-time window, only the fastest of them will be kept in the output. This
+will calculate multiple itineraries. Defaults to 10 minutes. Departures
+are simulated at about one per minute on average, at random seconds
+(consecutive departures are 30 to 90 seconds apart), and the same
+departure times are used in every call with the same origin. Each
+departure is routed separately, so an itinerary may appear or disappear
+when <code>departure_datetime</code> changes by one minute, depending on whether a
+simulated departure still catches a faster connection. If the same
+sequence of routes appear in different departures of the time window, only
+the fastest of them will be kept in the output. This
 happens because the result is not aggregated by percentile, as opposed to
 other routing functions in the package. Because of that, the output may
 contain trips departing after the specified <code>departure_datetime</code>, but
@@ -163,8 +169,12 @@ non-optimal RAPTOR branch can have from the optimal branch without being
 disregarded by the routing algorithm. If, for example, users set
 <code>suboptimal_minutes = 10</code>, the routing algorithm will consider sub-optimal
 routes that arrive up to 10 minutes after the arrival of the optimal one.
-This argument emulates the real-life behaviour that makes people want to
-take a path that is technically not optimal in terms of travel time, for
+The comparison is made separately for each departure within <code>time_window</code>
+and is based on arrival time only: a route that arrives later than this
+margin is discarded even if it has fewer transfers. With the default
+<code>suboptimal_minutes = 0</code>, only routes arriving at the earliest time are
+kept for each departure. This argument emulates the real-life behaviour
+that makes people want to take a path that is technically not optimal in terms of travel time, for
 example, for some practical reasons (e.g. mode preference, safety, etc).
 In practice, the higher this value, the more itineraries will be returned
 in the final result. Values above 0 can only be used when <code>shortest_path</code>
@@ -481,6 +491,7 @@ Information Science, 33(9), 1759-1787. <a href="https://doi.org/10.1080/13658816
 <span class="r-in"><span><span class="co"># build transport network</span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>

@@ -16,7 +16,7 @@ set_elevation(elevation)
 
 ## Value
 
-Character. Corretly formatted elevation.
+Character. Correctly formatted elevation.
 
 ## See also
 

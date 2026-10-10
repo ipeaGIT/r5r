@@ -2,6 +2,20 @@
 
 ## r5r (development version)
 
+**Major changes**
+
+- Faster routing. Compared with r5r 2.4.0 on the Porto Alegre and São
+  Paulo sample data, car-only
+  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+  [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md),
+  [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+  and
+  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+  are 2 to 7 times faster (bicycle-only 2.5 to 4 times), and
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+  with public transport is 2 to 4 times faster. Details in the minor
+  changes below.
+
 **Bug fixes**
 
 - Java memory set with `options(java.parameters = "-Xmx...")` before
@@ -115,6 +129,14 @@
   including on error.
 - A finite `max_fare` passed without a `fare_structure` now raises an
   error instead of being silently ignored.
+- [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+  failed when called without `fare_cutoffs`, because its default (`-1`)
+  was rejected by the function’s own check that cutoffs are 0 or more.
+  Without a `fare_structure` it ran but ignored fares, so its output was
+  not a Pareto frontier. Both `fare_structure` and `fare_cutoffs` are
+  now required arguments, with an informative error when either is
+  missing. Code that passed `fare_structure = NULL` (or left it out) now
+  raises an error.
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`,
   `max_trip_duration`, `time_window`, `percentiles`, `n_threads`,
   `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`,
@@ -260,6 +282,16 @@
   time among all departures within `time_window` (not the earliest
   arrival), and that `suboptimal_minutes` requires
   `shortest_path = FALSE` and no `fare_structure`.
+- The documentation of
+  [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+  and the time window vignette now explain how `time_window` and
+  `suboptimal_minutes` select itineraries. Departures are simulated at
+  random seconds (about one per minute, the same in every call from the
+  same origin) and routed separately, and for each departure only routes
+  arriving within `suboptimal_minutes` of the earliest arrival are kept,
+  even if a slower route has fewer transfers. As a result, an itinerary
+  can appear or disappear when the departure time changes by one minute.
+  Closed [\#534](https://github.com/ipeaGIT/r5r/issues/534).
 - The documentation of
   [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
   now describes its output correctly (one row per pair reachable in

@@ -6,7 +6,7 @@ direct and access/egress modes are allowed at a time.
 ## Usage
 
 ``` r
-assign_mode(mode, mode_egress, style)
+assign_mode(mode, mode_egress)
 ```
 
 ## Arguments

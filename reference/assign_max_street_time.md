@@ -17,8 +17,9 @@ assign_max_street_time(max_time, speed, max_trip_duration, mode)
 
 - speed:
 
-  A numeric of length 1. Average walk speed in km/h. Defaults to 3.6
-  Km/h. Passed from routing functions.
+  A numeric of length 1. Average walk or bike speed in km/h, passed from
+  routing functions and only validated here. `NULL` for car, which has
+  no speed argument.
 
 - max_trip_duration:
 

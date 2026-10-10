@@ -19,8 +19,8 @@ pareto_frontier(
   max_bike_time = Inf,
   max_car_time = Inf,
   max_trip_duration = 120L,
-  fare_structure = NULL,
-  fare_cutoffs = -1L,
+  fare_structure,
+  fare_cutoffs,
   walk_speed = 3.6,
   bike_speed = 12,
   max_rides = 3,
@@ -142,22 +142,25 @@ pareto_frontier(
   see the fare structure vignette to understand how this object is
   structured:
   [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md).
+  Required: without it there are no fares to trade off against travel
+  time.
 
 - fare_cutoffs:
 
-  A numeric vector. The monetary cutoffs that should be considered when
-  calculating the Pareto frontier. Most of the time you'll want this
-  parameter to be the combination of all possible fares listed in you
-  `fare_structure`. Choosing a coarse distribution of cutoffs may result
-  in many different trips falling within the same cutoff. For example,
-  if you have two different routes in your GTFS, one costing \$3 and the
-  other costing \$4, and you set this parameter to `5`, the output will
-  tell you the fastest trips that costed up to \$5, but you won't be
-  able to identify which route was used to complete such trips. In this
-  case, it would be more beneficial to set the parameter as `c(3, 4)`
-  (you could also specify combinations of such values, such as 6, 7, 8
-  and so on, because a transit user could hypothetically benefit from
-  making transfers between the available routes).
+  A numeric vector, required. The monetary cutoffs (each greater than or
+  equal to 0) that should be considered when calculating the Pareto
+  frontier. Most of the time you'll want this parameter to be the
+  combination of all possible fares listed in you `fare_structure`.
+  Choosing a coarse distribution of cutoffs may result in many different
+  trips falling within the same cutoff. For example, if you have two
+  different routes in your GTFS, one costing \$3 and the other costing
+  \$4, and you set this parameter to `5`, the output will tell you the
+  fastest trips that costed up to \$5, but you won't be able to identify
+  which route was used to complete such trips. In this case, it would be
+  more beneficial to set the parameter as `c(3, 4)` (you could also
+  specify combinations of such values, such as 6, 7, 8 and so on,
+  because a transit user could hypothetically benefit from making
+  transfers between the available routes).
 
 - walk_speed:
 
@@ -333,6 +336,7 @@ library(r5r)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path = data_path)
+#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

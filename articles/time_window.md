@@ -145,12 +145,12 @@ head(acc, n = 10)
 #>              <char>      <char>      <int>  <int>         <num>
 #>  1: 89a8100c603ffff     schools         10     45            13
 #>  2: 89a8100c603ffff     schools         20     45            13
-#>  3: 89a8100c603ffff     schools         50     45             7
+#>  3: 89a8100c603ffff     schools         50     45             6
 #>  4: 89a8100c603ffff     schools         70     45             6
 #>  5: 89a8100c603ffff     schools         80     45             6
 #>  6: 89a8100c617ffff     schools         10     45            14
 #>  7: 89a8100c617ffff     schools         20     45            13
-#>  8: 89a8100c617ffff     schools         50     45            10
+#>  8: 89a8100c617ffff     schools         50     45            12
 #>  9: 89a8100c617ffff     schools         70     45             6
 #> 10: 89a8100c617ffff     schools         80     45             6
 ```
@@ -289,16 +289,16 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       52.5
-#>  2:       47.6
-#>  3:       43.4
-#>  4:       40.7
-#>  5:       42.2
-#>  6:       51.6
-#>  7:       48.1
-#>  8:       35.0
-#>  9:       39.1
-#> 10:       41.6
+#>  1:       45.3
+#>  2:       49.4
+#>  3:       39.7
+#>  4:       43.8
+#>  5:       35.3
+#>  6:       47.9
+#>  7:       51.4
+#>  8:       52.2
+#>  9:       38.0
+#> 10:       40.3
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.
@@ -306,10 +306,15 @@ head(ettm, n = 10)
 In the
 [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
 function, the number of Monte Carlo draws per minute is hardcoded to 1.
-This means that the function simulates only one departure per minute
-within the `time_window`. So if you set a `time_window` of 10 minutes,
-it would simulate 10 departures, one in each minute. This is largely
-because the `time_window` behaves slightly differently here.
+This means that the function simulates about one departure per minute
+within the `time_window`, at random seconds (consecutive departures are
+30 to 90 seconds apart, and the same departure times are used in every
+call with the same origin). So if you set a `time_window` of 10 minutes,
+it would simulate about 10 departures. Each departure is routed
+separately, and with the default `suboptimal_minutes = 0` only the
+itineraries arriving at the earliest time are kept for each departure,
+even if a slower one has fewer transfers. This is largely because the
+`time_window` behaves slightly differently here.
 
 See, functions like
 [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
