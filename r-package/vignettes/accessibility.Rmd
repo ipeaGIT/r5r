@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 # 1. Introduction 
 
-Accessibility indicators measure how easily opportunities, such as jobs, can be reached from a given location [@levinson2020manual]. This vignette calculates and maps accessibility with the [`r5r` package](https://ipeagit.github.io/r5r/index.html), using the Porto Alegre (Brazil) sample data included in `r5r`, in two ways:
+Accessibility indicators measure how easily opportunities, such as jobs, can be reached from a given location [@levinson2020manual]. This vignette calculates and maps accessibility with the [`r5r` package](https://ipea.github.io/r5r/index.html), using the Porto Alegre (Brazil) sample data included in `r5r`, in two ways:
 
 - **quick:** `r5r::accessibility()`;
 - **flexible:** an `r5r` travel time matrix passed to the [{accessibility} package](https://ipea.github.io/accessibility/), which offers a wider range of metrics. 
@@ -32,7 +32,7 @@ Accessibility indicators measure how easily opportunities, such as jobs, can be 
 
 ### Increase Java memory and load libraries
 
-Set Java memory before loading the packages ([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+Set Java memory before loading the packages ([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ```{r, message = FALSE}
 options(java.parameters = "-Xmx2G")
@@ -100,7 +100,7 @@ head(access1)
 
 # 4. Accessibility: flexible approach
 
-The `{accessibility}` package takes a [travel time matrix](https://ipeagit.github.io/r5r/articles/travel_time_matrix.html), which we compute with `r5r`:
+The `{accessibility}` package takes a [travel time matrix](https://ipea.github.io/r5r/articles/travel_time_matrix.html), which we compute with `r5r`:
 
 ```{r, message = FALSE}
 # calculate travel time matrix
@@ -226,6 +226,6 @@ r5r::stop_r5(r5r_network)
 rJava::.jgc(R.gc = TRUE)
 ```
 
-If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipeaGIT/r5r).
+If you have any suggestions or want to report an error, please visit [the package GitHub page](https://github.com/ipea/r5r).
 
 ## References

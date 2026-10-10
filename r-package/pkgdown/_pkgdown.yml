@@ -1,15 +1,15 @@
-url: https://ipeagit.github.io/r5r/
+url: https://ipea.github.io/r5r/
 
 repo:
   url:
-    source: https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/
+    source: https://github.com/ipea/r5r/blob/HEAD/r-package/
 
 template:
   bootstrap: 5
   light-switch: true
 
 development:
-  mode: release
+  mode: auto
 
 reference:
   - title: "Building routable transport network"
