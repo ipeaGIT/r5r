@@ -1,24 +1,23 @@
 #' Calculate travel time matrix between origin destination pairs considering a
 #' time of arrival
 #'
-#' Computation of travel time estimates between one or multiple origin
-#' destination pairs considering a time of arrival. This function considers a
-#' time of arrival set by the user. The function returns the travel time of the
-#' trip with the latest departure time that arrives before the arrival time set
-#' by the user. Departures are searched minute by minute between
+#' Computes travel times between origin-destination pairs for a given arrival
+#' time: for each pair, the trip with the latest departure that arrives by
+#' `arrival_datetime`. Departures are searched minute by minute between
 #' `arrival_datetime - max_trip_duration` and `arrival_datetime`, so
-#' `max_trip_duration` also sets the search window. If you want to calculate
-#' travel times considering a departure time, have a look at the
-#' [travel_time_matrix()] function. This function is a wrapper around
-#' [expanded_travel_time_matrix()]. On one hand, this means the output of this
-#' function has more columns (more info) compared to the output of
-#' [travel_time_matrix()]. On the other hand, this function can be very memory
-#' intensive if the user allows for really long max trip duration.
+#' `max_trip_duration` also sets the search window. For a departure time, use
+#' [travel_time_matrix()]. This function wraps [expanded_travel_time_matrix()],
+#' so its output has more columns than that of [travel_time_matrix()], and it
+#' can be very memory intensive with a long `max_trip_duration`.
 #' `destinations` can have at most 5000 rows, a limit of R5 for detailed path
 #' information; split larger sets into chunks.
 #'
 #' @inheritParams expanded_travel_time_matrix
-#' @param arrival_datetime A POSIXct object.
+#' @param arrival_datetime A POSIXct object. The time by which trips must
+#'   arrive. When routing with public transport, services must run on the date
+#'   of `arrival_datetime - max_trip_duration` (see
+#'   [check_transit_availability()]). Defaults to `Sys.time()`. See details for
+#'   how datetimes are parsed.
 #'
 #' @return A `data.table` with one row per origin-destination pair that can be
 #'   reached by `arrival_datetime`, describing the trip with the latest
@@ -233,7 +232,10 @@ arrival_travel_time_matrix <- function(r5r_network,
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
-  travel_times <- java_to_dt(travel_times)
+  travel_times <- java_to_dt(
+    travel_times,
+    ids = list(from_id = origins$id, to_id = destinations$id)
+  )
 
   # reverse order of origins destinations back ONLY if the order had been swapped before
   if (!is.null(res)) {

@@ -1,12 +1,10 @@
 #' Set verbose argument
 #'
-#' Indicates whether R5 should output informative messages or not. Please note
-#' that R5 error messages are still reported even when `verbose` is `FALSE`.
+#' Indicates whether R5 should output informative messages or not. R5 error
+#' messages are still reported even when `verbose` is `FALSE`.
 #'
 #' @template r5r_network
 #' @param verbose A logical, passed from the function above.
-#'
-#' @param verbose A logical, passed from function above.
 #'
 #' @return Invisibly returns `TRUE`.
 #'

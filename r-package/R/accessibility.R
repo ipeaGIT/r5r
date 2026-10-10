@@ -19,9 +19,8 @@
 #' @param decay_function A string. Which decay function to use when calculating
 #'   accessibility. One of `step`, `exponential`, `fixed_exponential`, `linear`
 #'   or `logistic`. Defaults to `step`, which is equivalent to a cumulative
-#'   opportunities measure. Please see the details to understand how each
-#'   alternative works and how they relate to the `cutoffs` and `decay_value`
-#'   parameters.
+#'   opportunities measure. See details for how each alternative works and
+#'   how they relate to the `cutoffs` and `decay_value` parameters.
 #' @param cutoffs A numeric vector (maximum length of 12). This parameter has
 #'   different effects for each decay function: it indicates the cutoff times
 #'   in minutes when calculating cumulative opportunities accessibility with

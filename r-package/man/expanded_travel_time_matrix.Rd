@@ -39,25 +39,24 @@ expanded_travel_time_matrix(
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
 \item{mode}{A character vector. The transport modes allowed for access,
-transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
-details for other options.}
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. See details for
+other options.}
 
 \item{mode_egress}{A character vector. The transport mode used after egress
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. Please note that the departure
-time only influences public transport legs. When working with public
-transport networks, please check the \code{calendar.txt} within your GTFS feeds
-for valid dates. Please see details for further information on how
-datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. Only affects public transport
+legs; when routing with public transport, it must fall within the service
+period of the GTFS feeds (\code{calendar.txt}; see
+\code{\link[=check_transit_availability]{check_transit_availability()}}). Defaults to \code{Sys.time()}. See details for
+how datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 10 minutes. The output has one row per departure minute (and
-per Monte Carlo draw, see \code{draws_per_minute}). Please read the time window
-vignette for more details on its usage
-\code{vignette("time_window", package = "r5r")}}
+per Monte Carlo draw, see \code{draws_per_minute}). See
+\code{vignette("time_window", package = "r5r")}.}
 
 \item{breakdown}{A logical. Whether to include detailed information about
 each trip in the output. If \code{FALSE} (the default), the output lists the
@@ -70,45 +69,32 @@ trips made only by walking, cycling or driving (\code{routes} equal to
 \code{total_time} holds the whole trip.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
-access and egress the transit network, to make transfers within the network
-or to complete walk-only trips. Defaults to no restrictions (numeric value
-of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
-transit trips, the max time is considered separately for each leg (e.g. if
-you set \code{max_walk_time} to 15, you could get trips with an up to 15 minutes
-walk leg to reach transit and another up to 15 minutes walk leg to reach
-the destination after leaving transit. In walk-only trips, whenever
-\code{max_walk_time} differs from \code{max_trip_duration}, the lowest value is
-considered.}
+access and egress the transit network, make transfers, or complete
+walk-only trips. Applies to each leg separately (e.g. \code{15} allows up to 15
+minutes to reach transit and another 15 after leaving it). Defaults to
+\code{Inf} (no limit besides \code{max_trip_duration}). In walk-only trips, the lower
+of \code{max_walk_time} and \code{max_trip_duration} applies.}
 
 \item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
-access and egress the transit network, to make transfers within the network
-or to complete bicycle-only trips. Defaults to no restrictions (numeric
-value of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
-transit trips, the max time is considered separately for each leg (e.g. if
-you set \code{max_bike_time} to 15, you could get trips with an up to 15 minutes
-cycle leg to reach transit and another up to 15 minutes cycle leg to reach
-the destination after leaving transit. In bicycle-only trips, whenever
-\code{max_bike_time} differs from \code{max_trip_duration}, the lowest value is
-considered.}
+access and egress the transit network, make transfers, or complete
+bicycle-only trips. Applies to each leg separately (e.g. \code{15} allows up to
+15 minutes to reach transit and another 15 after leaving it). Defaults to
+\code{Inf} (no limit besides \code{max_trip_duration}). In bicycle-only trips, the
+lower of \code{max_bike_time} and \code{max_trip_duration} applies.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
 access and egress the transit network, or to complete car-only trips.
-Defaults to no restrictions, as long as \code{max_trip_duration} is respected.
-The max time is considered separately for each leg (e.g. if you set
-\code{max_car_time} to 15 minutes, you could potentially drive up to 15 minutes
-to reach transit, and up to \emph{another} 15 minutes to reach the destination
-after leaving transit). Defaults to \code{Inf}, no limit. In car-only trips,
-whenever \code{max_car_time} differs from \code{max_trip_duration}, the lowest value
-is considered.}
+Applies to each leg separately (e.g. \code{15} allows up to 15 minutes to reach
+transit and another 15 after leaving it). Defaults to \code{Inf} (no limit
+besides \code{max_trip_duration}). In car-only trips, the lower of
+\code{max_car_time} and \code{max_trip_duration} applies.}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
-Defaults to 120 minutes (2 hours).}
+Defaults to 120.}
 
-\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
-km/h.}
+\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6.}
 
-\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12
-km/h.}
+\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12.}
 
 \item{max_rides}{An integer. The maximum number of public transport rides
 allowed in the same trip. Defaults to 3.}
@@ -116,8 +102,7 @@ allowed in the same trip. Defaults to 3.}
 \item{max_lts}{An integer between 1 and 4. The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
-can travel through any road. Defaults to 2. Please see details for more
-information.}
+can travel through any road. Defaults to 2. See details.}
 
 \item{new_carspeeds}{A \code{data.frame} specifying the new car speed for each OSM
 edge id. This table must contain columns \code{osm_id}, \code{max_speed}
@@ -144,49 +129,43 @@ with LINESTRING geometry. R5 will then find the nearest road for each
 LINESTRING and update its LTS value accordingly.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
-perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60-minute time window, for example. This parameter only affects the
-results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
-feed does not have a frequency table, r5r still allows for multiple runs
-over the set \code{time_window} but in a deterministic way.}
+perform per minute of \code{time_window}. Defaults to 5. This would mean 300
+draws in a 60-minute time window, for example. This parameter only affects
+the results when the GTFS feeds contain a \code{frequencies.txt} table. If the
+GTFS feed does not have a frequency table, r5r still allows for multiple
+runs over the set \code{time_window} but in a deterministic way.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
-router in parallel. Defaults to use all available threads (Inf).}
+router in parallel. Defaults to \code{Inf} (all available threads).}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
-running the function. Defaults to \code{FALSE} (please note that in such case
-\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
-detailed output, which can be useful for debugging issues not caught by
-\code{r5r}.}
+running the function. Defaults to \code{FALSE} (\code{R5} error messages are still
+shown). \code{TRUE} shows detailed output, useful for debugging issues not
+caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
-\code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
-messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
-computation efficiency, because the progress counter must be synchronized
-among all active threads.}
+the router. Defaults to \code{FALSE}. Only works when \code{verbose} is \code{FALSE}.
+May slightly slow computation, as the counter is synchronized across
+threads.}
 
-\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
-\code{NULL} (the default), the function will write one \code{.csv} file with the
-results for each origin in the specified directory. In such case, the
-function returns the path specified in this parameter. This parameter is
-particularly useful when running on memory-constrained settings because
-writing the results directly to disk prevents \code{r5r} from loading them to
-RAM memory. Missing values (\code{NA}) are written as empty fields.}
+\item{output_dir}{Either \code{NULL} (the default) or a path to an existing
+directory. When a path is given, the function writes the results as
+\code{.csv} files to that directory and returns the path instead of the
+results. Useful in memory-constrained settings, as results are not
+loaded into RAM. Missing values (\code{NA}) are written as empty fields.}
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+Use the \code{r5r_network} argument instead.}
 }
 \value{
 A \code{data.table} with travel time estimates (in minutes) and the
 routes used in each trip between origin and destination pairs, for each
 minute of the specified time window. Each set of origin, destination and
 departure minute can appear up to N times, where N is the number of Monte
-Carlo draws specified in the function arguments (please note that this
-only applies when the GTFS feeds that describe the transit network include
-a frequencies table, otherwise only a single draw is performed). A pair is
-completely absent from the final output if no trips could be completed in
+Carlo draws set by \code{draws_per_minute} (this only applies when the GTFS
+feeds include a frequencies table; otherwise a single draw is
+performed). A pair is completely absent from the final output if no trips
+could be completed in
 any of the minutes of the time window. If for a single pair trips could be
 completed in some of the minutes of the time window, but not for all of
 them, the minutes in which trips couldn't be completed will have \code{NA}
@@ -216,8 +195,8 @@ containing the results are saved.
 \description{
 Detailed computation of travel time estimates between one or multiple origin
 destination pairs. Results show the travel time of the fastest route
-alternative departing each minute within a specified time window. Please
-note this function can be very memory intensive for large data sets and time
+alternative departing each minute within a specified time window. This
+function can be very memory intensive for large data sets and time
 windows. \code{destinations} can have at most 5000 rows, a limit of R5 for
 detailed path information; split larger sets into chunks.
 }
@@ -237,7 +216,7 @@ public transport modes available.
 \section{Level of Traffic Stress (LTS)}{
 
 
-When cycling is enabled in \code{R5} (by passing the value \code{BIKE} to either
+When cycling is enabled in \code{R5} (by passing the value \code{BICYCLE} to either
 \code{mode} or \code{mode_egress}), setting \code{max_lts} will allow cycling only on
 streets with a given level of danger/stress. Setting \code{max_lts} to 1, for
 example, will allow cycling only on separated bicycle infrastructure or

@@ -23,8 +23,8 @@
 #'   returning the median travel time. If a vector with length bigger than 1 is
 #'   passed, the output contains an additional column for each percentile
 #'   specifying the percentile travel time estimate. Due to
-#'   upstream restrictions, only 5 percentiles can be specified at a time. For
-#'   more details, please see R5 documentation at
+#'   upstream restrictions, only 5 percentiles can be specified at a time. See
+#'   the R5 documentation at
 #'   <https://docs.conveyal.com/analysis/methodology#accounting-for-variability>.
 #'
 #' @return A `data.table` with travel time estimates (in minutes) between
@@ -259,7 +259,10 @@ travel_time_matrix <- function(r5r_network,
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
-  travel_times <- java_to_dt(travel_times)
+  travel_times <- java_to_dt(
+    travel_times,
+    ids = list(from_id = origins$id, to_id = destinations$id)
+  )
 
   # reverse order of origins destinations back ONLY if the order had been swapped before
   if (!is.null(res)) {

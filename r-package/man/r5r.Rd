@@ -24,7 +24,7 @@ that \code{r5r} depends on.
 }
 \section{Usage}{
 
-Please check the vignettes on the \href{https://ipeagit.github.io/r5r/}{website}.
+See the vignettes on the \href{https://ipeagit.github.io/r5r/}{website}.
 }
 
 \seealso{

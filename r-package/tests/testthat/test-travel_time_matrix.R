@@ -379,3 +379,27 @@ test_that("output_dir CSVs leave percentiles over max_trip_duration empty", {
   expect_true(anyNA(mem$travel_time_p95))
   expect_true(isTRUE(all.equal(as.data.frame(csv), as.data.frame(mem), check.attributes = FALSE)))
 })
+
+test_that("from_id and to_id keep the input ids (transferred as positions)", {
+  # unusual, unsorted ids: positions must map back to exactly these strings
+  odd <- data.table::copy(pois)
+  odd$id <- paste0("id ç,\"", rev(seq_len(nrow(odd))))
+  lookup <- stats::setNames(odd$id, pois$id)
+
+  ttm <- tester()
+  ttm_odd <- tester(origins = odd, destinations = odd)
+  ttm[, `:=`(from_id = unname(lookup[from_id]), to_id = unname(lookup[to_id]))]
+  expect_identical(ttm_odd, ttm)
+
+  # a single origin is still passed to Java as String[]
+  one <- tester(origins = odd[2], destinations = odd)
+  expect_identical(one, ttm_odd[from_id == odd$id[2]])
+
+  # walk-only with more origins than destinations swaps them in Java (spo has no .tif)
+  orig <- data.table::copy(spo_points[1:20]); orig$id <- paste0("o", orig$id)
+  dest <- data.table::copy(spo_points[21:25]); dest$id <- paste0("d", dest$id)
+  rev_ttm <- tester(spo_network, origins = orig, destinations = dest)
+  expect_true(nrow(rev_ttm) > 0)
+  expect_true(all(rev_ttm$from_id %in% orig$id))
+  expect_true(all(rev_ttm$to_id %in% dest$id))
+})

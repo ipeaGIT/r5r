@@ -44,92 +44,70 @@ detailed_itineraries(
 \code{data.frame} containing the columns \code{id}, \code{lon} and \code{lat}.}
 
 \item{mode}{A character vector. The transport modes allowed for access,
-transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
-details for other options.}
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. See details for
+other options.}
 
 \item{mode_egress}{A character vector. The transport mode used after egress
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. Please note that the departure
-time only influences public transport legs. When working with public
-transport networks, please check the \code{calendar.txt} within your GTFS feeds
-for valid dates. Please see details for further information on how
-datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. Only affects public transport
+legs; when routing with public transport, it must fall within the service
+period of the GTFS feeds (\code{calendar.txt}; see
+\code{\link[=check_transit_availability]{check_transit_availability()}}). Defaults to \code{Sys.time()}. See details for
+how datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple itineraries. Defaults to 10 minutes. Departures
-are simulated at about one per minute on average, at random seconds
-(consecutive departures are 30 to 90 seconds apart), and the same
-departure times are used in every call with the same origin. Each
-departure is routed separately, so an itinerary may appear or disappear
-when \code{departure_datetime} changes by one minute, depending on whether a
-simulated departure still catches a faster connection. If the same
-sequence of routes appear in different departures of the time window, only
-the fastest of them will be kept in the output. This
-happens because the result is not aggregated by percentile, as opposed to
-other routing functions in the package. Because of that, the output may
-contain trips departing after the specified \code{departure_datetime}, but
-still within the time window. Please read the time window vignette for
-more details on how this argument affects the results of each routing
-function: \code{vignette("time_window", package = "r5r")}.}
+will calculate multiple itineraries. Defaults to 10. Departures are
+simulated at random seconds, about one per minute (30 to 90 seconds
+apart), with the same departure times in every call with the same origin.
+Each departure is routed separately, so an itinerary may appear or
+disappear when \code{departure_datetime} changes by one minute, depending on
+whether a departure still catches a faster connection. Unlike other
+routing functions, results are not aggregated by percentile: when the same
+sequence of routes appears in several departures, only the fastest is
+kept, so the output may contain trips departing after
+\code{departure_datetime} but within the window. See
+\code{vignette("time_window", package = "r5r")}.}
 
-\item{suboptimal_minutes}{A number. The difference in minutes that each
-non-optimal RAPTOR branch can have from the optimal branch without being
-disregarded by the routing algorithm. If, for example, users set
-\code{suboptimal_minutes = 10}, the routing algorithm will consider sub-optimal
-routes that arrive up to 10 minutes after the arrival of the optimal one.
-The comparison is made separately for each departure within \code{time_window}
-and is based on arrival time only: a route that arrives later than this
-margin is discarded even if it has fewer transfers. With the default
-\code{suboptimal_minutes = 0}, only routes arriving at the earliest time are
-kept for each departure. This argument emulates the real-life behaviour
-that makes people want to take a path that is technically not optimal in terms of travel time, for
-example, for some practical reasons (e.g. mode preference, safety, etc).
-In practice, the higher this value, the more itineraries will be returned
-in the final result. Values above 0 can only be used when \code{shortest_path}
-is \code{FALSE} and \code{fare_structure} is \code{NULL}.}
+\item{suboptimal_minutes}{A number. How many minutes after the optimal
+arrival a non-optimal RAPTOR branch may arrive and still be kept (e.g.
+with \code{10}, routes arriving up to 10 minutes after the fastest one are
+considered). The comparison is made separately for each departure within
+\code{time_window} and uses arrival time only: a route beyond this margin is
+discarded even if it has fewer transfers. The default, \code{0}, keeps only
+routes arriving at the earliest time for each departure. Higher values
+return more itineraries, emulating people who take a slower route for
+practical reasons (e.g. mode preference, safety). Values above 0 can only
+be used when \code{shortest_path} is \code{FALSE} and \code{fare_structure} is \code{NULL}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
-access and egress the transit network, to make transfers within the network
-or to complete walk-only trips. Defaults to no restrictions (numeric value
-of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
-transit trips, the max time is considered separately for each leg (e.g. if
-you set \code{max_walk_time} to 15, you could get trips with an up to 15 minutes
-walk leg to reach transit and another up to 15 minutes walk leg to reach
-the destination after leaving transit. In walk-only trips, whenever
-\code{max_walk_time} differs from \code{max_trip_duration}, the lowest value is
-considered.}
+access and egress the transit network, make transfers, or complete
+walk-only trips. Applies to each leg separately (e.g. \code{15} allows up to 15
+minutes to reach transit and another 15 after leaving it). Defaults to
+\code{Inf} (no limit besides \code{max_trip_duration}). In walk-only trips, the lower
+of \code{max_walk_time} and \code{max_trip_duration} applies.}
 
 \item{max_bike_time}{An integer. The maximum cycling time (in minutes) to
-access and egress the transit network, to make transfers within the network
-or to complete bicycle-only trips. Defaults to no restrictions (numeric
-value of \code{Inf}), as long as \code{max_trip_duration} is respected. When routing
-transit trips, the max time is considered separately for each leg (e.g. if
-you set \code{max_bike_time} to 15, you could get trips with an up to 15 minutes
-cycle leg to reach transit and another up to 15 minutes cycle leg to reach
-the destination after leaving transit. In bicycle-only trips, whenever
-\code{max_bike_time} differs from \code{max_trip_duration}, the lowest value is
-considered.}
+access and egress the transit network, make transfers, or complete
+bicycle-only trips. Applies to each leg separately (e.g. \code{15} allows up to
+15 minutes to reach transit and another 15 after leaving it). Defaults to
+\code{Inf} (no limit besides \code{max_trip_duration}). In bicycle-only trips, the
+lower of \code{max_bike_time} and \code{max_trip_duration} applies.}
 
 \item{max_car_time}{An integer. The maximum driving time (in minutes) to
 access and egress the transit network, or to complete car-only trips.
-Defaults to no restrictions, as long as \code{max_trip_duration} is respected.
-The max time is considered separately for each leg (e.g. if you set
-\code{max_car_time} to 15 minutes, you could potentially drive up to 15 minutes
-to reach transit, and up to \emph{another} 15 minutes to reach the destination
-after leaving transit). Defaults to \code{Inf}, no limit. In car-only trips,
-whenever \code{max_car_time} differs from \code{max_trip_duration}, the lowest value
-is considered.}
+Applies to each leg separately (e.g. \code{15} allows up to 15 minutes to reach
+transit and another 15 after leaving it). Defaults to \code{Inf} (no limit
+besides \code{max_trip_duration}). In car-only trips, the lower of
+\code{max_car_time} and \code{max_trip_duration} applies.}
 
 \item{max_trip_duration}{An integer. The maximum trip duration in minutes.
-Defaults to 120 minutes (2 hours).}
+Defaults to 120.}
 
-\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6
-km/h.}
+\item{walk_speed}{A numeric. Average walk speed in km/h. Defaults to 3.6.}
 
-\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12
-km/h.}
+\item{bike_speed}{A numeric. Average cycling speed in km/h. Defaults to 12.}
 
 \item{max_rides}{An integer. The maximum number of public transport rides
 allowed in the same trip. Defaults to 3.}
@@ -137,8 +115,7 @@ allowed in the same trip. Defaults to 3.}
 \item{max_lts}{An integer between 1 and 4. The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will only
 travel through the quietest streets, while a value of 4 indicates cyclists
-can travel through any road. Defaults to 2. Please see details for more
-information.}
+can travel through any road. Defaults to 2. See details.}
 
 \item{shortest_path}{A logical. Whether the function should only return the
 fastest itinerary between each origin and destination pair (the default)
@@ -155,9 +132,8 @@ destinations (\code{TRUE}).}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-\code{vignette("fare_structure", package = "r5r")}.}
+should be calculated. See \code{vignette("fare_structure", package = "r5r")}
+for its structure.}
 
 \item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.
@@ -189,24 +165,20 @@ with LINESTRING geometry. R5 will then find the nearest road for each
 LINESTRING and update its LTS value accordingly.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
-router in parallel. Defaults to use all available threads (Inf).}
+router in parallel. Defaults to \code{Inf} (all available threads).}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
-running the function. Defaults to \code{FALSE} (please note that in such case
-\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
-detailed output, which can be useful for debugging issues not caught by
-\code{r5r}.}
+running the function. Defaults to \code{FALSE} (\code{R5} error messages are still
+shown). \code{TRUE} shows detailed output, useful for debugging issues not
+caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
-\code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
-messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
-computation efficiency, because the progress counter must be synchronized
-among all active threads.}
+the router. Defaults to \code{FALSE}. Only works when \code{verbose} is \code{FALSE}.
+May slightly slow computation, as the counter is synchronized across
+threads.}
 
-\item{drop_geometry}{A logical. Whether the output should include the
-geometry of each trip leg or not. The default value of \code{FALSE} keeps the
-geometry column in the result.}
+\item{drop_geometry}{A logical. Whether to drop the geometry of each trip
+leg from the output. Defaults to \code{FALSE} (geometry kept).}
 
 \item{osm_link_ids}{A logical. Whether the output should include additional
 columns: \code{osm_id_list} for the OSM ids of the road segments used along the
@@ -225,16 +197,14 @@ segments used in the trip. You can inspect these edge ids and their
 associated properties, including OSM ids, with
 \code{\link[=street_network_to_sf]{street_network_to_sf()}}.}
 
-\item{output_dir}{Either \code{NULL} or a path to an existing directory. When not
-\code{NULL} (the default), the function will write one \code{.csv} file with the
-results for each origin in the specified directory. In such case, the
-function returns the path specified in this parameter. This parameter is
-particularly useful when running on memory-constrained settings because
-writing the results directly to disk prevents \code{r5r} from loading them to
-RAM memory. Missing values (\code{NA}) are written as empty fields.}
+\item{output_dir}{Either \code{NULL} (the default) or a path to an existing
+directory. When a path is given, the function writes the results as
+\code{.csv} files to that directory and returns the path instead of the
+results. Useful in memory-constrained settings, as results are not
+loaded into RAM. Missing values (\code{NA}) are written as empty fields.}
 
 \item{r5r_core}{The \code{r5r_core} argument is deprecated as of r5r v2.3.0.
-Please use the \code{r5r_network} argument instead.}
+Use the \code{r5r_network} argument instead.}
 }
 \value{
 When \code{drop_geometry} is \code{FALSE}, the function outputs a \verb{LINESTRING sf} with detailed information on the itineraries between the specified
@@ -267,14 +237,11 @@ saved. This function writes one file per origin-destination pair, named
 ids cannot contain characters that are not allowed in file names.
 }
 \description{
-Returns detailed trip information between origin-destination pairs. The
-output includes the waiting and moving time in each trip leg, as well as some
-info such as the distance traveled, the routes used and the geometry of each
-leg. Please note that this function was originally conceptualized as a trip
-planning functionality, similar to other commercial and non-commercial APIs
-and apps (e.g. Moovit, Google's Directions API, OpenTripPlanning's
-PlannerResource API). Thus, it consumes much more time and memory than the
-other (more analytical) routing functions included in the package.
+Returns detailed trip information between origin-destination pairs: the
+waiting and moving time, distance, route and geometry of each trip leg.
+Designed for trip planning (like Google's Directions API or
+OpenTripPlanner), it takes much more time and memory than the package's
+other, more analytical, routing functions.
 }
 \section{Transport modes}{
 
@@ -292,7 +259,7 @@ public transport modes available.
 \section{Level of Traffic Stress (LTS)}{
 
 
-When cycling is enabled in \code{R5} (by passing the value \code{BIKE} to either
+When cycling is enabled in \code{R5} (by passing the value \code{BICYCLE} to either
 \code{mode} or \code{mode_egress}), setting \code{max_lts} will allow cycling only on
 streets with a given level of danger/stress. Setting \code{max_lts} to 1, for
 example, will allow cycling only on separated bicycle infrastructure or

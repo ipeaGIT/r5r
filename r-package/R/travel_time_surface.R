@@ -23,21 +23,21 @@ setClass("travel_time_surface", slots=list(
 #'        more information on how the grid cells are defined, see
 #'        \href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}
 #' @param mode A character vector. The transport modes allowed for access,
-#'        transfer and vehicle legs of the trips. Defaults to `WALK`. Please see
+#'        transfer and vehicle legs of the trips. Defaults to `WALK`. See
 #'        details for other options.
 #' @param mode_egress A character vector. The transport mode used after egress
 #'        from the last public transport. It can be either `WALK`, `BICYCLE` or
 #'        `CAR`. Defaults to `WALK`. Ignored when public transport is not used.
-#' @param departure_datetime A POSIXct object. Please note that the departure
-#'        time only influences public transport legs. When working with public
-#'        transport networks, please check the `calendar.txt` within your GTFS
-#'        feeds for valid dates. Please see details for further information on
-#'        how datetimes are parsed.
+#' @param departure_datetime A POSIXct object. Only affects public transport
+#'        legs; when routing with public transport, it must fall within the
+#'        service period of the GTFS feeds (`calendar.txt`; see
+#'        [check_transit_availability()]). Defaults to `Sys.time()`. See
+#'        details for how datetimes are parsed.
 #' @param time_window An integer. The time window in minutes for which `r5r`
 #'        will calculate multiple travel time matrices departing each minute.
 #'        Defaults to 10 minutes. The function returns the result based on
-#'        median travel times. Please read the time window vignette for more
-#'        details on its usage `vignette("time_window", package = "r5r")`
+#'        median travel times. See
+#'        `vignette("time_window", package = "r5r")`.
 #' @param max_walk_time An integer. The maximum walking time (in minutes) to
 #'        access and egress the transit network, or to make transfers within the
 #'        network. Defaults to no restrictions, as long as `max_trip_duration`
@@ -71,8 +71,7 @@ setClass("travel_time_surface", slots=list(
 #' @param max_lts An integer between 1 and 4. The maximum level of traffic
 #'        stress that cyclists will tolerate. A value of 1 means cyclists will
 #'        only travel through the quietest streets, while a value of 4 indicates
-#'        cyclists can travel through any road. Defaults to 2. Please see
-#'        details for more information.
+#'        cyclists can travel through any road. Defaults to 2. See details.
 #'
 #' @template draws_per_minute
 #' @param n_threads An integer. The number of threads to use when running the

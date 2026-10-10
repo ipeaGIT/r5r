@@ -47,38 +47,34 @@ more information on how the grid cells are defined, see
 \href{https://docs.conveyal.com/analysis/methodology#zoom-levels}{the R5 documentation.}}
 
 \item{mode}{A character vector. The transport modes allowed for access,
-transfer and vehicle legs of the trips. Defaults to \code{WALK}. Please see
+transfer and vehicle legs of the trips. Defaults to \code{WALK}. See
 details for other options.}
 
 \item{mode_egress}{A character vector. The transport mode used after egress
 from the last public transport. It can be either \code{WALK}, \code{BICYCLE} or
 \code{CAR}. Defaults to \code{WALK}. Ignored when public transport is not used.}
 
-\item{departure_datetime}{A POSIXct object. Please note that the departure
-time only influences public transport legs. When working with public
-transport networks, please check the \code{calendar.txt} within your GTFS
-feeds for valid dates. Please see details for further information on
-how datetimes are parsed.}
+\item{departure_datetime}{A POSIXct object. Only affects public transport
+legs; when routing with public transport, it must fall within the
+service period of the GTFS feeds (\code{calendar.txt}; see
+\code{\link[=check_transit_availability]{check_transit_availability()}}). Defaults to \code{Sys.time()}. See
+details for how datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
 will calculate multiple travel time matrices departing each minute.
 Defaults to 10 minutes. The function returns the result based on
-median travel times. Please read the time window vignette for more
-details on its usage \code{vignette("time_window", package = "r5r")}}
+median travel times. See
+\code{vignette("time_window", package = "r5r")}.}
 
-\item{percentiles}{An integer vector (max length of 5). Specifies the
-percentile to use when returning accessibility estimates within the given
-time window. Please note that this parameter is applied to the travel time
-estimates that generate the accessibility results, and not to the
-accessibility distribution itself (i.e. if the 25th percentile is
-specified, the accessibility is calculated from the 25th percentile travel
-time, which may or may not be equal to the 25th percentile of the
-accessibility distribution itself). Defaults to 50, returning the
-accessibility calculated from the median travel time. If a vector with
-length bigger than 1 is passed, the output contains an additional column
-that specifies the percentile of each accessibility estimate. Due to
-upstream restrictions, only 5 percentiles can be specified at a time. For
-more details, please see \code{R5} documentation at \url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
+\item{percentiles}{An integer vector (max length of 5, an \code{R5} limit). The
+travel time percentiles within the time window from which accessibility is
+calculated. They apply to travel times, not to the accessibility
+distribution: with 25, accessibility is calculated from the 25th
+percentile travel time, which may differ from the 25th percentile of
+accessibility. Defaults to 50 (the median travel time). With more than one
+value, the output gets a column identifying the percentile of each
+estimate. See the \code{R5} documentation at
+\url{https://docs.conveyal.com/analysis/methodology#accounting-for-variability}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, or to make transfers within the
@@ -120,14 +116,12 @@ allowed in the same trip. Defaults to 3.}
 \item{max_lts}{An integer between 1 and 4. The maximum level of traffic
 stress that cyclists will tolerate. A value of 1 means cyclists will
 only travel through the quietest streets, while a value of 4 indicates
-cyclists can travel through any road. Defaults to 2. Please see
-details for more information.}
+cyclists can travel through any road. Defaults to 2. See details.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
-should be calculated. Please see the fare structure vignette to
-understand how this object is structured:
-\code{vignette("fare_structure", package = "r5r")}.}
+should be calculated. See \code{vignette("fare_structure", package = "r5r")}
+for its structure.}
 
 \item{max_fare}{A number. The maximum value that trips can cost when
 calculating the fastest journey between each origin and destination pair.
@@ -159,21 +153,19 @@ with LINESTRING geometry. R5 will then find the nearest road for each
 LINESTRING and update its LTS value accordingly.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
-perform per time window minute when calculating travel time matrices and
-when estimating accessibility. Defaults to 5. This would mean 300 draws in
-a 60-minute time window, for example. This parameter only affects the
-results when the GTFS feeds contain a \code{frequencies.txt} table. If the GTFS
-feed does not have a frequency table, r5r still allows for multiple runs
-over the set \code{time_window} but in a deterministic way.}
+perform per minute of \code{time_window}. Defaults to 5. This would mean 300
+draws in a 60-minute time window, for example. This parameter only affects
+the results when the GTFS feeds contain a \code{frequencies.txt} table. If the
+GTFS feed does not have a frequency table, r5r still allows for multiple
+runs over the set \code{time_window} but in a deterministic way.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}
 
 \item{verbose}{A logical. Whether to show \code{R5} informative messages when
-running the function. Defaults to \code{FALSE} (please note that in such case
-\code{R5} error messages are still shown). Setting \code{verbose} to \code{TRUE} shows
-detailed output, which can be useful for debugging issues not caught by
-\code{r5r}.}
+running the function. Defaults to \code{FALSE} (\code{R5} error messages are still
+shown). \code{TRUE} shows detailed output, useful for debugging issues not
+caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
 the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
@@ -205,7 +197,7 @@ public transport modes available.
 \section{Level of Traffic Stress (LTS)}{
 
 
-When cycling is enabled in \code{R5} (by passing the value \code{BIKE} to either
+When cycling is enabled in \code{R5} (by passing the value \code{BICYCLE} to either
 \code{mode} or \code{mode_egress}), setting \code{max_lts} will allow cycling only on
 streets with a given level of danger/stress. Setting \code{max_lts} to 1, for
 example, will allow cycling only on separated bicycle infrastructure or
