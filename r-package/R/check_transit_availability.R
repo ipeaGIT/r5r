@@ -49,37 +49,42 @@
 #' r5r_network <- build_network(data_path)
 #'
 #' # Discover operating dates without knowing the feed's date range
-#' available_dates <- check_transit_availability(r5r_network)
-#'
-#' # Example 1: Check a vector of specific dates
-#' # Let's check a regular weekday and a Sunday, where service may differ.
-#' dates_to_check <- c("2019-05-13", "2019-05-19")
-#' availability1 <- check_transit_availability(r5r_network, dates = dates_to_check)
-#' availability1
-#'
-#' # Example 2: Check a continuous date range using start_date and end_date
-#' availability2 <- check_transit_availability(
-#'   r5r_network,
-#'   start_date = "2019-01-01",
-#'   end_date = "2019-12-31"
-#' )
-#' availability2[121:124,]
-#'
+#' availability1 <- check_transit_availability(r5r_network)
+#' head(availability1)
 #' # plot availability over the year
 #' library(ggplot2)
-#' ggplot(availability2, aes(x = date, y = pct_active)) +
+#' ggplot(availability1, aes(x = date, y = pct_active)) +
 #'   geom_line() +
 #'   geom_point() +
 #'   theme_classic(base_size = 16)
 #'
+#' # Example 2: Check a vector of specific dates
+#' # Let's check a regular weekday and a Sunday, where service may differ.
+#' dates_to_check <- c("2019-05-13", "2019-05-19")
+#' availability2 <- check_transit_availability(
+#'   r5r_network,
+#'   dates = dates_to_check
+#' )
+#' head(availability2)
+#'
+#' # Example 3: Check a continuous date range using start_date and end_date
+#' availability3 <- check_transit_availability(
+#'   r5r_network,
+#'   start_date = "2019-01-01",
+#'   end_date = "2019-12-31"
+#' )
+#' availability3[121:124,]
+#'
+#'
 #' stop_r5(r5r_network)
 #' @export
-check_transit_availability <- function(r5r_network,
-                                       dates = NULL,
-                                       start_date = NULL,
-                                       end_date = NULL,
-                                       r5r_core = deprecated()
-                                       ) {
+check_transit_availability <- function(
+  r5r_network,
+  dates = NULL,
+  start_date = NULL,
+  end_date = NULL,
+  r5r_core = deprecated()
+) {
   # deprecating r5r_core --------------------------------------
   if (lifecycle::is_present(r5r_core)) {
     cli::cli_warn(c(
@@ -188,7 +193,9 @@ check_transit_availability <- function(r5r_network,
 
   # Transfer only the per-date counts, rather than a service table for each date.
   availability <- rJava::.jcall(
-    jcore, "Lorg/ipea/r5r/RDataFrame;", "getTransitServiceAvailability",
+    jcore,
+    "Lorg/ipea/r5r/RDataFrame;",
+    "getTransitServiceAvailability",
     rJava::.jarray(dates_formatted)
   )
   final_dt <- java_to_dt(availability)
