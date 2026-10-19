@@ -73,10 +73,19 @@ public abstract class R5Process<T, A> {
         destinationPoints = null;
     }
 
+    // 1-based number of the next origin to finish; read from R (through R5RCore) to print progress
+    protected final AtomicInteger totalProcessed = new AtomicInteger(1);
+    protected volatile boolean cancelled = false;
+
+    public int getProcessed() { return totalProcessed.get() - 1; }
+
+    public int getTotal() { return nOrigins; }
+
+    // remaining origins are skipped and run() returns null
+    public void cancel() { cancelled = true; }
+
     public A run() throws ExecutionException, InterruptedException {
         buildDestinationPointSet();
-        // TODO shouldn't this start at 0?
-        AtomicInteger totalProcessed = new AtomicInteger(1);
 
         try {
             // define callable separately so that Java compiler can check types
@@ -84,11 +93,12 @@ public abstract class R5Process<T, A> {
             Callable<List<T>> task = () ->
                     IntStream.range(0, nOrigins)
                             .parallel()
-                            .mapToObj(index -> tryRunProcess(totalProcessed, index))
+                            .mapToObj(this::tryRunProcess)
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList());
 
             List<T> processResults = r5rThreadPool.submit(task).get();
+            if (cancelled) return null;
 
             LOG.info(".. DONE!");
 
@@ -201,7 +211,8 @@ public abstract class R5Process<T, A> {
         this.maxTripDuration = maxTripDuration;
     }
 
-    protected T tryRunProcess(AtomicInteger totalProcessed, int index) {
+    protected T tryRunProcess(int index) {
+        if (cancelled) return null;
         T results = null;
         try {
             results = runProcess(index);
@@ -212,11 +223,17 @@ public abstract class R5Process<T, A> {
         }
 
         int nProcessed = totalProcessed.getAndIncrement();
-        if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
+        if (isProgressStep(nProcessed)) {
             LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
         }
 
         return results;
+    }
+
+    // report the first origin, then every 1% of origins, and the last one
+    protected boolean isProgressStep(int nProcessed) {
+        int interval = Math.max(1, (nOrigins + 99) / 100);
+        return nProcessed == 1 || nProcessed % interval == 0 || nProcessed == nOrigins;
     }
 
     protected abstract T runProcess(int index) throws ParseException;

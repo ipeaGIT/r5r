@@ -219,6 +219,7 @@ isochrone <- function(r5r_network,
                               draws_per_minute = draws_per_minute,
                               n_threads = n_threads,
                               verbose = verbose,
+                              progress = progress,
                               zoom = zoom
     )
 

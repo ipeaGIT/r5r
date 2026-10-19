@@ -47,6 +47,51 @@ java_to_dt <- function(obj, ids = NULL) {
   data.table::setnames(dt, new = columns)
 }
 
+#' Run a routing call on a Java background thread and print its progress
+#'
+#' @description Makes `R5RCore` start the routing method in `call` on a
+#'   background thread, then polls it from R. This way the progress counter is
+#'   printed by R, and shown in any console (Java's own output only reaches
+#'   terminals), and the call can be interrupted. An interrupted job is
+#'   cancelled by `resetRoutingProperties()`, which every routing function
+#'   calls on exit. With `options(r5r.async = FALSE)` the call runs
+#'   synchronously.
+#'
+#' @param r5r_network A Java reference to `org.ipea.r5r.R5RCore`.
+#' @param call The call to the routing method, evaluated lazily.
+#' @param progress A logical. Whether to print the progress counter.
+#'
+#' @return The Java object returned by the routing method.
+#' @family java support functions
+#'
+#' @keywords internal
+run_routing_job <- function(r5r_network, call, progress) {
+  if (!isTRUE(getOption("r5r.async", TRUE))) return(call)
+
+  r5r_network$deferNextRun()
+  force(call) # starts the job and returns NULL at once
+
+  # printed to stderr, like the "Preparing final output..." message
+  show <- progress && !isTRUE(getOption("knitr.in.progress"))
+  if (show) on.exit(cat("\n", file = stderr()), add = TRUE)
+
+  last <- -1L
+  repeat {
+    done <- rJava::.jcall(r5r_network, "Z", "waitForJob", 200L)
+    if (show) {
+      n <- rJava::.jcall(r5r_network, "I", "getJobProcessed")
+      if (n != last) {
+        total <- rJava::.jcall(r5r_network, "I", "getJobTotal")
+        cat("\r", n, " out of ", total, " origins processed.", sep = "", file = stderr())
+        last <- n
+      }
+    }
+    if (done) break
+  }
+
+  return(r5r_network$getJobResult())
+}
+
 #' data.table to speedMap
 #'
 #' @description Converts a `data.frame` with road OSM id's and respective speeds

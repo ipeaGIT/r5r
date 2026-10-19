@@ -77,7 +77,7 @@ setClass("travel_time_surface", slots=list(
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
 #' @param progress A logical. Whether to show a progress counter when running
-#'        the router. Defaults to `FALSE`. Only works when `verbose` is set to
+#'        the router. Defaults to `TRUE`. Only works when `verbose` is set to
 #'        `FALSE`, so the progress counter does not interfere with `R5`'s output
 #'        messages. Setting `progress` to `TRUE` may impose a small penalty for
 #'        computation efficiency, because the progress counter must be
@@ -123,7 +123,7 @@ travel_time_surface <- function(r5r_network,
                                draws_per_minute = 5L,
                                n_threads = Inf,
                                verbose = FALSE,
-                               progress = FALSE
+                               progress = TRUE
                       ) {
   # check inputs ------------------------------------------------------------
   checkmate::assert_class(r5r_network, "r5r_network")
@@ -182,11 +182,7 @@ travel_time_surface <- function(r5r_network,
   set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
   set_new_lts(r5r_network, new_lts)
 
-  surfaces <- rJava::.jcall(
-    r5r_network,
-    "[Lorg/ipea/r5r/RegularGridResult;",
-    "travelTimeSurfaces",
-    check=FALSE,
+  surfaces <- run_routing_job(r5r_network, r5r_network$travelTimeSurfaces(
     origins$id, origins$lat, origins$lon,
     mode_list$direct_modes,
     mode_list$transit_mode,
@@ -199,15 +195,10 @@ travel_time_surface <- function(r5r_network,
     max_car_time,
     max_trip_duration,
     as.integer(zoom)
-  )
-  ex <- rJava::.jgetEx(clear=TRUE)
-  if (!is.null(ex)) {
-    ex$printStackTrace()
-    cli::cli_abort("Internal R5 error (see detailed message above)")
-  }
+  ), progress)
 
   # convert from java objects to R travel_time_surface class
-  return(lapply(surfaces, process_surfaces))
+  return(lapply(rJava::.jevalArray(surfaces), process_surfaces))
 }
 
 # process each percentile of a travel time surface
