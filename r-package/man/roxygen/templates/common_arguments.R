@@ -42,7 +42,7 @@
 #' @param n_threads An integer. The number of threads to use when running the
 #'   router in parallel. Defaults to `Inf` (all available threads).
 #' @param progress A logical. Whether to show a progress counter when running
-#'   the router. Defaults to `FALSE`. Only works when `verbose` is `FALSE`.
+#'   the router. Defaults to `TRUE`. Only works when `verbose` is `FALSE`.
 #'   May slightly slow computation, as the counter is synchronized across
 #'   threads.
 #' @param output_dir Either `NULL` (the default) or a path to an existing

@@ -29,7 +29,7 @@ travel_time_surface(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = TRUE
 )
 }
 \arguments{
@@ -168,7 +168,7 @@ shown). \code{TRUE} shows detailed output, useful for debugging issues not
 caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is set to
+the router. Defaults to \code{TRUE}. Only works when \code{verbose} is set to
 \code{FALSE}, so the progress counter does not interfere with \code{R5}'s output
 messages. Setting \code{progress} to \code{TRUE} may impose a small penalty for
 computation efficiency, because the progress counter must be

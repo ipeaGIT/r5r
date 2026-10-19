@@ -135,7 +135,7 @@ travel_time_matrix <- function(r5r_network,
                                draws_per_minute = 5L,
                                n_threads = Inf,
                                verbose = FALSE,
-                               progress = FALSE,
+                               progress = TRUE,
                                output_dir = NULL,
                                r5r_core = deprecated()) {
 
@@ -238,7 +238,7 @@ travel_time_matrix <- function(r5r_network,
 
   # call r5r_network method and process result -------------------------------
 
-  travel_times <- r5r_network$travelTimeMatrix(
+  travel_times <- run_routing_job(r5r_network, r5r_network$travelTimeMatrix(
     origins$id,
     origins$lat,
     origins$lon,
@@ -255,7 +255,7 @@ travel_time_matrix <- function(r5r_network,
     max_bike_time,
     max_car_time,
     max_trip_duration
-  )
+  ), progress)
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 
