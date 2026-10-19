@@ -8,6 +8,7 @@ r5r_core.jar
 java-r5/.idea/libraries
 .Rproj.user
 .Rhistory
+.Rprofile
 r5r.Rcheck
 *.tar.gz
 network.dat
