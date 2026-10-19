@@ -27,7 +27,7 @@ arrival_travel_time_matrix(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE,
+  progress = TRUE,
   output_dir = NULL,
   r5r_core = deprecated()
 )
@@ -138,7 +138,7 @@ shown). \code{TRUE} shows detailed output, useful for debugging issues not
 caught by \code{r5r}.}
 
 \item{progress}{A logical. Whether to show a progress counter when running
-the router. Defaults to \code{FALSE}. Only works when \code{verbose} is \code{FALSE}.
+the router. Defaults to \code{TRUE}. Only works when \code{verbose} is \code{FALSE}.
 May slightly slow computation, as the counter is synchronized across
 threads.}
 

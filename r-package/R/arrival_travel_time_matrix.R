@@ -104,7 +104,7 @@ arrival_travel_time_matrix <- function(r5r_network,
                                        draws_per_minute = 5L,
                                        n_threads = Inf,
                                        verbose = FALSE,
-                                       progress = FALSE,
+                                       progress = TRUE,
                                        output_dir = NULL,
                                        r5r_core = deprecated()) {
 

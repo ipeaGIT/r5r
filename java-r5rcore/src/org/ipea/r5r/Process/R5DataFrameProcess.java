@@ -78,7 +78,7 @@ public abstract class R5DataFrameProcess extends R5Process<RDataFrame, RDataFram
             }
 
             int nProcessed = totalProcessed.getAndIncrement();
-            if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
+            if (isProgressStep(nProcessed)) {
                 LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
             }
         } catch (Exception e) {

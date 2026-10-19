@@ -77,7 +77,7 @@ setClass("travel_time_surface", slots=list(
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
 #' @param progress A logical. Whether to show a progress counter when running
-#'        the router. Defaults to `FALSE`. Only works when `verbose` is set to
+#'        the router. Defaults to `TRUE`. Only works when `verbose` is set to
 #'        `FALSE`, so the progress counter does not interfere with `R5`'s output
 #'        messages. Setting `progress` to `TRUE` may impose a small penalty for
 #'        computation efficiency, because the progress counter must be
@@ -123,7 +123,7 @@ travel_time_surface <- function(r5r_network,
                                draws_per_minute = 5L,
                                n_threads = Inf,
                                verbose = FALSE,
-                               progress = FALSE
+                               progress = TRUE
                       ) {
   # check inputs ------------------------------------------------------------
   checkmate::assert_class(r5r_network, "r5r_network")

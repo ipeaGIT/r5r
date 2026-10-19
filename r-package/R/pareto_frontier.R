@@ -105,7 +105,7 @@ pareto_frontier <- function(r5r_network,
                             max_lts = 2,
                             n_threads = Inf,
                             verbose = FALSE,
-                            progress = FALSE,
+                            progress = TRUE,
                             output_dir = NULL,
                             r5r_core = deprecated()) {
 

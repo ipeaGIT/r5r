@@ -212,11 +212,17 @@ public abstract class R5Process<T, A> {
         }
 
         int nProcessed = totalProcessed.getAndIncrement();
-        if (nProcessed % 1000 == 1 || (nProcessed == nOrigins)) {
+        if (isProgressStep(nProcessed)) {
             LOG.info("{} out of {} origins processed.", nProcessed, nOrigins);
         }
 
         return results;
+    }
+
+    // report the first origin, then every 1% of origins, and the last one
+    protected boolean isProgressStep(int nProcessed) {
+        int interval = Math.max(1, (nOrigins + 99) / 100);
+        return nProcessed == 1 || nProcessed % interval == 0 || nProcessed == nOrigins;
     }
 
     protected abstract T runProcess(int index) throws ParseException;
