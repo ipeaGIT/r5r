@@ -268,7 +268,7 @@ accessibility <- function(r5r_network,
   opportunities_names <- rJava::.jarray(opportunities_colnames)
   opportunities_values <- rJava::.jarray(opportunities, "[D")
 
-  accessibility <- r5r_network$accessibility(
+  accessibility <- run_routing_job(r5r_network, r5r_network$accessibility(
     from_id_arr,
     from_lat_arr,
     from_lon_arr,
@@ -289,7 +289,7 @@ accessibility <- function(r5r_network,
     max_bike_time,
     max_car_time,
     max_trip_duration
-  )
+  ), progress)
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 

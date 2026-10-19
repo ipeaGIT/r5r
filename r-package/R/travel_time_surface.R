@@ -182,11 +182,7 @@ travel_time_surface <- function(r5r_network,
   set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
   set_new_lts(r5r_network, new_lts)
 
-  surfaces <- rJava::.jcall(
-    r5r_network,
-    "[Lorg/ipea/r5r/RegularGridResult;",
-    "travelTimeSurfaces",
-    check=FALSE,
+  surfaces <- run_routing_job(r5r_network, r5r_network$travelTimeSurfaces(
     origins$id, origins$lat, origins$lon,
     mode_list$direct_modes,
     mode_list$transit_mode,
@@ -199,15 +195,10 @@ travel_time_surface <- function(r5r_network,
     max_car_time,
     max_trip_duration,
     as.integer(zoom)
-  )
-  ex <- rJava::.jgetEx(clear=TRUE)
-  if (!is.null(ex)) {
-    ex$printStackTrace()
-    cli::cli_abort("Internal R5 error (see detailed message above)")
-  }
+  ), progress)
 
   # convert from java objects to R travel_time_surface class
-  return(lapply(surfaces, process_surfaces))
+  return(lapply(rJava::.jevalArray(surfaces), process_surfaces))
 }
 
 # process each percentile of a travel time surface

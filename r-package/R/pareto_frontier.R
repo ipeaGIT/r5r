@@ -199,7 +199,7 @@ pareto_frontier <- function(r5r_network,
 
   # call r5r_network method and process result -------------------------------
 
-  frontier <- r5r_network$paretoFrontier(
+  frontier <- run_routing_job(r5r_network, r5r_network$paretoFrontier(
     origins$id,
     origins$lat,
     origins$lon,
@@ -216,7 +216,7 @@ pareto_frontier <- function(r5r_network,
     max_bike_time,
     max_car_time,
     max_trip_duration
-  )
+  ), progress)
 
   if (!verbose & progress) cat("Preparing final output...", file = stderr())
 

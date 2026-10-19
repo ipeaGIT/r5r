@@ -46,6 +46,8 @@
 **Minor changes**
 
 - `progress` now defaults to `TRUE` in all routing and accessibility functions (it was `FALSE` everywhere except `isochrone()`). Use `progress = FALSE` to hide the counter.
+- The progress counter is now printed by R, so it shows in every console (RStudio, Positron, RGui and terminals). It used to be printed by Java, which only reaches terminals; it is still written to `r5r-log.log`.
+- Routing functions can now be interrupted with Esc / Ctrl+C. The origins being routed at that moment finish first.
 - The progress counter now reports every 1% of origins, plus the first and the last one. It used to report only every 1,000 origins, so runs with up to 1,000 origins showed just the first and last origin.
 - Car-only and bicycle-only routing in `travel_time_matrix()`, `expanded_travel_time_matrix()`, `arrival_travel_time_matrix()`, `accessibility()` and `pareto_frontier()` is 2.5 to 4 times faster in a benchmark of this change alone (part of the overall gain in Major changes), as r5r no longer runs an unneeded search on foot. Bicycle results are unchanged. Car-only trips can no longer end with a walk not limited by `max_walk_time` (e.g. against a one-way street), so some car travel times are now longer (3% of origin-destination pairs in the Porto Alegre sample data, by 1 to 8 minutes), now consistent with `isochrone()`.
 - `travel_time_matrix()`, `expanded_travel_time_matrix()` and `arrival_travel_time_matrix()` return large results faster: passing an all-to-all matrix of the Porto Alegre sample grid (1.47 million rows) from Java to R went from 0.76 to 0.13 seconds. Results are unchanged.

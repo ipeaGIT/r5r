@@ -279,7 +279,7 @@ detailed_itineraries <- function(r5r_network,
 
   # call r5r_network method and process result -------------------------------
 
-  path_options <- r5r_network$detailedItineraries(
+  path_options <- run_routing_job(r5r_network, r5r_network$detailedItineraries(
     origins$id,
     origins$lat,
     origins$lon,
@@ -299,7 +299,7 @@ detailed_itineraries <- function(r5r_network,
     drop_geometry,
     shortest_path,
     osm_link_ids
-  )
+  ), progress)
 
   if (!is.null(output_dir)) return(output_dir)
 
