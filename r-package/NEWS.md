@@ -45,6 +45,7 @@
 
 **Minor changes**
 
+- Using new version of R5 v7.6. In `expanded_travel_time_matrix()`, `transfer_time` is now the transfer walking time recorded by R5, instead of the time left over after subtracting the other components from the total. A few travel times may differ slightly from previous versions.
 - `progress` now defaults to `TRUE` in all routing and accessibility functions (it was `FALSE` everywhere except `isochrone()`). Use `progress = FALSE` to hide the counter.
 - The progress counter is now printed by R, so it shows in every console (RStudio, Positron, RGui and terminals). It used to be printed by Java, which only reaches terminals; it is still written to `r5r-log.log`.
 - Routing functions can now be interrupted with Esc / Ctrl+C. The origins being routed at that moment finish first.
