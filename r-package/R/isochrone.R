@@ -41,6 +41,7 @@
 #'        time). Only used when `polygon_output = TRUE`; must be `NULL` for
 #'        line-based isochrones.
 #' @template draws_per_minute
+#' @template seed
 #' @param progress A logical. Whether to show a progress counter when running
 #'        the router. Defaults to `TRUE`. Only works when `verbose` is
 #'        `FALSE`. May slightly slow computation, as the counter is
@@ -147,6 +148,7 @@ isochrone <- function(r5r_network,
                       max_rides = 3,
                       max_lts = 2,
                       draws_per_minute = 5L,
+                      seed = NULL,
                       # TODO this is unused for line-based isos
                       percentiles = NULL,
                       n_threads = Inf,
@@ -217,6 +219,7 @@ isochrone <- function(r5r_network,
                               max_rides = max_rides,
                               max_lts = max_lts,
                               draws_per_minute = draws_per_minute,
+                              seed = seed,
                               n_threads = n_threads,
                               verbose = verbose,
                               progress = progress,
@@ -265,6 +268,7 @@ isochrone <- function(r5r_network,
                               max_rides = max_rides,
                               max_lts = max_lts,
                               draws_per_minute = draws_per_minute,
+                              seed = seed,
                               n_threads = n_threads,
                               verbose = verbose,
                               progress = progress

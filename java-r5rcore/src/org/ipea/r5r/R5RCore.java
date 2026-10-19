@@ -105,6 +105,10 @@ public class R5RCore {
         this.routingProperties.numberOfMonteCarloDraws = numberOfMonteCarloDraws;
     }
 
+    public void setMonteCarloSeed(int monteCarloSeed) {
+        this.routingProperties.monteCarloSeed = monteCarloSeed;
+    }
+
     public void setPercentiles(int[] percentiles) {
         this.routingProperties.percentiles = percentiles;
     }

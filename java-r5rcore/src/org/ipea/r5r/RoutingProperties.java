@@ -38,6 +38,7 @@ public class RoutingProperties {
     public int suboptimalMinutes = DEFAULT_SUBOPTIMAL_MINUTES; // Suboptimal minutes in point-to-point queries
     public int timeWindowSize = DEFAULT_TIME_WINDOW_SIZE; // minutes
     public int numberOfMonteCarloDraws = DEFAULT_NUMBER_OF_MONTE_CARLO_DRAWS; //
+    public Integer monteCarloSeed = null; // null: R5's unseeded frequency offsets
     public int[] percentiles = DEFAULT_PERCENTILES;
     public int[] cutoffs = DEFAULT_CUTOFFS;
     public boolean travelTimesBreakdown = false;
@@ -85,6 +86,7 @@ public class RoutingProperties {
         suboptimalMinutes = DEFAULT_SUBOPTIMAL_MINUTES;
         timeWindowSize = DEFAULT_TIME_WINDOW_SIZE;
         numberOfMonteCarloDraws = DEFAULT_NUMBER_OF_MONTE_CARLO_DRAWS;
+        monteCarloSeed = null;
 
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;

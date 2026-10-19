@@ -23,6 +23,7 @@ isochrone(
   max_rides = 3,
   max_lts = 2,
   draws_per_minute = 5L,
+  seed = NULL,
   percentiles = NULL,
   n_threads = Inf,
   verbose = FALSE,
@@ -118,6 +119,16 @@ draws in a 60-minute time window, for example. This parameter only affects
 the results when the GTFS feeds contain a \code{frequencies.txt} table. If the
 GTFS feed does not have a frequency table, r5r still allows for multiple
 runs over the set \code{time_window} but in a deterministic way.}
+
+\item{seed}{An integer or \code{NULL}. The seed of the Monte Carlo draws of the
+departure offsets of frequency-based transit routes. Defaults to \code{NULL},
+in which case the draws are random and results may vary slightly between
+runs. With an integer, the same inputs always give the same results,
+regardless of \code{n_threads}. Results are still a Monte Carlo sample, so a
+different seed may give slightly different results: report the seed used
+and check how sensitive the results are to it. Note that \code{set.seed()} has
+no effect on these draws. This parameter only affects the results when the
+GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{percentiles}{An integer vector (max length of 5). The travel time
 percentiles within \code{time_window} used to build the isochrones, one
