@@ -33,7 +33,7 @@ expanded_travel_time_matrix(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE,
+  progress = TRUE,
   output_dir = NULL,
   r5r_core = deprecated()
 )
@@ -197,9 +197,8 @@ expanded_travel_time_matrix(
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is `FALSE`. May
-  slightly slow computation, as the counter is synchronized across
-  threads.
+  Defaults to `TRUE`. Only works when `verbose` is `FALSE`. May slightly
+  slow computation, as the counter is synchronized across threads.
 
 - output_dir:
 
@@ -354,7 +353,6 @@ library(r5r)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

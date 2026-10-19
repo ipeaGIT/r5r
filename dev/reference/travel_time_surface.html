@@ -84,7 +84,7 @@ containing travel times from a specified point.</p>
 <span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -276,7 +276,7 @@ caught by <code>r5r</code>.</p></dd>
 
 <dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
 <dd><p>A logical. Whether to show a progress counter when running
-the router. Defaults to <code>FALSE</code>. Only works when <code>verbose</code> is set to
+the router. Defaults to <code>TRUE</code>. Only works when <code>verbose</code> is set to
 <code>FALSE</code>, so the progress counter does not interfere with <code>R5</code>'s output
 messages. Setting <code>progress</code> to <code>TRUE</code> may impose a small penalty for
 computation efficiency, because the progress counter must be

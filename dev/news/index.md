@@ -56,6 +56,14 @@
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   keeps accepting repeated ids in row-paired inputs
   (`all_to_all = FALSE`).
+- [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
+  ignored `progress` with `polygon_output = TRUE` (the default), so the
+  progress counter was never shown. Since `progress` defaults to `TRUE`
+  in
+  [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md),
+  the counter is now shown by default. The “Using cached R5 version”
+  message is now shown only with `verbose = TRUE` (it was shown only
+  with `verbose = FALSE`).
 - `FERRY` was missing from the list of transit modes that trigger the
   check for transit services on the departure date.
 - `max_car_time` now caps car-only trips, as `max_walk_time` and
@@ -221,6 +229,19 @@
 
 **Minor changes**
 
+- `progress` now defaults to `TRUE` in all routing and accessibility
+  functions (it was `FALSE` everywhere except
+  [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)).
+  Use `progress = FALSE` to hide the counter.
+- The progress counter is now printed by R, so it shows in every console
+  (RStudio, Positron, RGui and terminals). It used to be printed by
+  Java, which only reaches terminals; it is still written to
+  `r5r-log.log`.
+- Routing functions can now be interrupted with Esc / Ctrl+C. The
+  origins being routed at that moment finish first.
+- The progress counter now reports every 1% of origins, plus the first
+  and the last one. It used to report only every 1,000 origins, so runs
+  with up to 1,000 origins showed just the first and last origin.
 - Car-only and bicycle-only routing in
   [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
   [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),

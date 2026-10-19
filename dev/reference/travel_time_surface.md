@@ -31,7 +31,7 @@ travel_time_surface(
   draws_per_minute = 5L,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = TRUE
 )
 ```
 
@@ -224,7 +224,7 @@ travel_time_surface(
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
+  Defaults to `TRUE`. Only works when `verbose` is set to `FALSE`, so
   the progress counter does not interfere with `R5`'s output messages.
   Setting `progress` to `TRUE` may impose a small penalty for
   computation efficiency, because the progress counter must be
