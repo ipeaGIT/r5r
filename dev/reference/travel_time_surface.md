@@ -81,9 +81,10 @@ travel_time_surface(
 - time_window:
 
   An integer. The time window in minutes for which `r5r` will calculate
-  multiple travel time matrices departing each minute. Defaults to 10
-  minutes. The function returns the result based on median travel times.
-  See
+  multiple travel time matrices departing each minute (or, with a
+  `fare_structure`, at departure times sampled at random within the
+  window; see `draws_per_minute`). Defaults to 10 minutes. The function
+  returns the result based on median travel times. See
   [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/dev/articles/time_window.md).
 
 - percentiles:
@@ -204,10 +205,15 @@ travel_time_surface(
 
   An integer. The number of Monte Carlo draws to perform per minute of
   `time_window`. Defaults to 5. This would mean 300 draws in a 60-minute
-  time window, for example. This parameter only affects the results when
-  the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed
-  does not have a frequency table, r5r still allows for multiple runs
-  over the set `time_window` but in a deterministic way.
+  time window, for example. With the default routing algorithm, this
+  parameter only affects the results when the GTFS feeds contain a
+  `frequencies.txt` table; otherwise, r5r still routes a departure every
+  minute of `time_window`, in a deterministic way. In functions that
+  accept a `fare_structure`, passing one switches to the McRaptor
+  algorithm, which instead routes `time_window * draws_per_minute`
+  departure times sampled at random within the window (the same in every
+  call from the same origin). This parameter then affects the results
+  with or without frequencies.
 
 - n_threads:
 

@@ -334,6 +334,16 @@
   even if a slower route has fewer transfers. As a result, an itinerary
   can appear or disappear when the departure time changes by one minute.
   Closed [\#534](https://github.com/ipea/r5r/issues/534).
+- The documentation of `draws_per_minute` and `time_window` and the time
+  window vignette now explain that, with the McRaptor algorithm (used
+  when a `fare_structure` is passed, and always in
+  [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
+  and
+  [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)),
+  departures are sampled at random within the window instead of every
+  minute, so `draws_per_minute` affects results even when the GTFS feeds
+  have no `frequencies.txt` table. Closed
+  [\#282](https://github.com/ipea/r5r/issues/282).
 - The documentation of
   [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
   now describes its output correctly (one row per pair reachable in

@@ -123,8 +123,11 @@ how datetimes are parsed.</p></dd>
 <dd><p>An integer. The time window in minutes. Departures are
 simulated every minute from <code>departure_datetime</code> until <code>time_window</code>
 minutes later, and travel times are summarized over these departures using
-<code>percentiles</code> (the median by default). Defaults to 10. See
-<code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
+<code>percentiles</code> (the median by default). With a <code>fare_structure</code>, and always
+in <code>pareto_frontier()</code>, departures are instead sampled at random within
+the window: <code>draws_per_minute</code> per minute on average (one in
+<code>pareto_frontier()</code>), the same in every call from the same origin.
+Defaults to 10. See <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
 
 
 <dt id="arg-percentiles">percentiles<a class="anchor" aria-label="anchor" href="#arg-percentiles"></a></dt>
