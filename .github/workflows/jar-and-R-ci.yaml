@@ -12,7 +12,8 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
 
-    runs-on: ubuntu-latest
+    # pinned: the R packages below are Ubuntu 24.04 (noble) binaries
+    runs-on: ubuntu-24.04
 
     # the job commits the rebuilt JAR back to the branch
     permissions:
