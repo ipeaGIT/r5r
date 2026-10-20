@@ -73,8 +73,11 @@ centroids of all segments in the transport network.}
 \item{time_window}{An integer. The time window in minutes. Departures are
 simulated every minute from \code{departure_datetime} until \code{time_window}
 minutes later, and travel times are summarized over these departures using
-\code{percentiles} (the median by default). Defaults to 10. See
-\code{vignette("time_window", package = "r5r")}.}
+\code{percentiles} (the median by default). With a \code{fare_structure}, and always
+in \code{\link[=pareto_frontier]{pareto_frontier()}}, departures are instead sampled at random within
+the window: \code{draws_per_minute} per minute on average (one in
+\code{\link[=pareto_frontier]{pareto_frontier()}}), the same in every call from the same origin.
+Defaults to 10. See \code{vignette("time_window", package = "r5r")}.}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, make transfers, or complete
@@ -114,10 +117,15 @@ can travel through any road. Defaults to 2. See details.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per minute of \code{time_window}. Defaults to 5. This would mean 300
-draws in a 60-minute time window, for example. This parameter only affects
-the results when the GTFS feeds contain a \code{frequencies.txt} table. If the
-GTFS feed does not have a frequency table, r5r still allows for multiple
-runs over the set \code{time_window} but in a deterministic way.}
+draws in a 60-minute time window, for example. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table; otherwise, r5r still routes a departure
+every minute of \code{time_window}, in a deterministic way. In functions that
+accept a \code{fare_structure}, passing one switches to the McRaptor algorithm,
+which instead routes \code{time_window * draws_per_minute} departure times
+sampled at random within the window (the same in every call from the same
+origin). This parameter then affects the results with or without
+frequencies.}
 
 \item{percentiles}{An integer vector (max length of 5). The travel time
 percentiles within \code{time_window} used to build the isochrones, one
