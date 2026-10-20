@@ -53,8 +53,11 @@ how datetimes are parsed.}
 \item{time_window}{An integer. The time window in minutes. Departures are
 simulated every minute from \code{departure_datetime} until \code{time_window}
 minutes later, and travel times are summarized over these departures using
-\code{percentiles} (the median by default). Defaults to 10. See
-\code{vignette("time_window", package = "r5r")}.}
+\code{percentiles} (the median by default). With a \code{fare_structure}, and always
+in \code{\link[=pareto_frontier]{pareto_frontier()}}, departures are instead sampled at random within
+the window: \code{draws_per_minute} per minute on average (one in
+\code{\link[=pareto_frontier]{pareto_frontier()}}), the same in every call from the same origin.
+Defaults to 10. See \code{vignette("time_window", package = "r5r")}.}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning travel time estimates within the given

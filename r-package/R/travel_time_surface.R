@@ -34,9 +34,10 @@ setClass("travel_time_surface", slots=list(
 #'        [check_transit_availability()]). Defaults to `Sys.time()`. See
 #'        details for how datetimes are parsed.
 #' @param time_window An integer. The time window in minutes for which `r5r`
-#'        will calculate multiple travel time matrices departing each minute.
-#'        Defaults to 10 minutes. The function returns the result based on
-#'        median travel times. See
+#'        will calculate multiple travel time matrices departing each minute
+#'        (or, with a `fare_structure`, at departure times sampled at random
+#'        within the window; see `draws_per_minute`). Defaults to 10 minutes.
+#'        The function returns the result based on median travel times. See
 #'        `vignette("time_window", package = "r5r")`.
 #' @param max_walk_time An integer. The maximum walking time (in minutes) to
 #'        access and egress the transit network, or to make transfers within the
