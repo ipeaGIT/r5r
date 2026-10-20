@@ -229,6 +229,32 @@
 
 **Minor changes**
 
+- [\#598](https://github.com/ipea/r5r/pull/598) Using new version of R5
+  v7.6. Results change slightly. On the Porto Alegre sample data, less
+  than 1% of origin-destination pairs change, mostly with shorter travel
+  times by public transport:
+  - R5 now links transit stops and origin/destination points to the
+    nearest street even when it lies along a long street segment.
+    Before, such stops could be linked to a farther street, which
+    lengthened the walk to and from transit.
+  - In
+    [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+    and
+    [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+    with `breakdown = TRUE`, `transfer_time` is now the transfer walking
+    time recorded by R5. It used to be the time left over after
+    subtracting the other components from the total, so time spent
+    waiting for a vehicle at the transfer stop was counted as transfer
+    time. This waiting time is now part of `wait_time`. When two
+    itineraries arrive at the same time, the one reported may also
+    differ. The components still add up to `total_time`.
+  - In
+    [`get_gtfs_errors()`](https://ipea.github.io/r5r/dev/reference/get_gtfs_errors.md),
+    the `file` column names some files without the `.txt` extension
+    (e.g. `calendar` instead of `calendar.txt`).
+  - Networks built with previous versions of r5r are rebuilt
+    automatically by
+    [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
 - `progress` now defaults to `TRUE` in all routing and accessibility
   functions (it was `FALSE` everywhere except
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)).
