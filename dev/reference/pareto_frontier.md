@@ -14,6 +14,7 @@ pareto_frontier(
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
   time_window = 10L,
+  seed = NULL,
   percentiles = 50L,
   max_walk_time = Inf,
   max_bike_time = Inf,
@@ -77,6 +78,21 @@ pareto_frontier(
   (one in `pareto_frontier()`), the same in every call from the same
   origin. Defaults to 10. See
   [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/dev/articles/time_window.md).
+
+- seed:
+
+  An integer or `NULL`. The seed of the Monte Carlo draws of the
+  departure offsets of frequency-based transit routes. Defaults to
+  `NULL`, in which case the draws are random and results may vary
+  slightly between runs. With an integer, the same inputs always give
+  the same results, regardless of `n_threads`. Results are still a Monte
+  Carlo sample, so a different seed may give slightly different results:
+  report the seed used and check how sensitive the results are to it.
+  Note that [`set.seed()`](https://rdrr.io/r/base/Random.html) has no
+  effect on these draws. This parameter only affects the results when
+  the GTFS feeds contain a `frequencies.txt` table. The departure times
+  sampled within `time_window` are already fixed for each origin; `seed`
+  only controls the departure offsets of frequency-based routes.
 
 - percentiles:
 

@@ -103,6 +103,7 @@ information; split larger sets into chunks.</p>
 <span>  carspeed_scale <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  new_lts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  draws_per_minute <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -250,6 +251,18 @@ which instead routes <code>time_window * draws_per_minute</code> departure times
 sampled at random within the window (the same in every call from the same
 origin). This parameter then affects the results with or without
 frequencies.</p></dd>
+
+
+<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
+<dd><p>An integer or <code>NULL</code>. The seed of the Monte Carlo draws of the
+departure offsets of frequency-based transit routes. Defaults to <code>NULL</code>,
+in which case the draws are random and results may vary slightly between
+runs. With an integer, the same inputs always give the same results,
+regardless of <code>n_threads</code>. Results are still a Monte Carlo sample, so a
+different seed may give slightly different results: report the seed used
+and check how sensitive the results are to it. Note that <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has
+no effect on these draws. This parameter only affects the results when the
+GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>

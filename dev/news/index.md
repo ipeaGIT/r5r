@@ -15,14 +15,52 @@
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   with public transport and no `fare_structure` is 2 to 4 times faster.
   Details in the minor changes below.
+- New `seed` argument in
+  [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
+  [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),
+  [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md),
+  [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md),
+  [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md),
+  [`travel_time_surface()`](https://ipea.github.io/r5r/dev/reference/travel_time_surface.md)
+  and
+  [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md).
+  With GTFS feeds that contain a `frequencies.txt` table, R5 draws
+  random departure offsets for frequency-based routes, so results could
+  change slightly between runs, and
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) had no effect on
+  them. Setting `seed` to an integer now gives identical results across
+  runs and regardless of `n_threads`. The default `seed = NULL` keeps
+  the random draws. `seed` comes right after `draws_per_minute` (after
+  `time_window` in
+  [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)),
+  so calls that passed later arguments by position must now name them.
+  In
+  [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md),
+  the trips of each departure minute are now numbered in a fixed order
+  (by total travel time) in `draw_number`;
+  [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
+  uses the same order, so for the latest departure that arrives in time
+  it now returns the fastest trip, where it used to return an arbitrary
+  one. Closes [\#593](https://github.com/ipea/r5r/issues/593).
 
 **Bug fixes**
+
+- [`travel_time_surface()`](https://ipea.github.io/r5r/dev/reference/travel_time_surface.md)
+  and
+  [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
+  with `polygon_output = TRUE` now use the same travel time computer as
+  [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md).
+  Results without `fare_structure` are unchanged. With `fare_structure`,
+  the walk to transit stops now respects `max_walk_time`, as it already
+  did in
+  [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md).
 
 - Java memory set with `options(java.parameters = "-Xmx...")` before
   [`library(r5r)`](https://github.com/ipea/r5r) was ignored since r5r
   v2.2.0, so Java always ran with its default maximum heap (a quarter of
   the machine’s RAM, capped at about 30 GB). The memory limit and any
   other Java options set by the user now take effect again.
+
 - [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
   [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
   and
@@ -30,13 +68,16 @@
   returned `from_id` and `to_id` swapped with walk-only routing, no
   elevation data and fewer origins than destinations (introduced in r5r
   2.4.0). Closes again [\#501](https://github.com/ipea/r5r/issues/501).
+
 - [\#569](https://github.com/ipea/r5r/pull/569) Fix broken source links
   in documentation website. Closed
   [\#527](https://github.com/ipea/r5r/issues/527)
+
 - Origins/destinations passed as `sf` objects that also carried
   `lon`/`lat` (or `x`/`y`) attribute columns were routed using those
   attribute columns instead of the point geometry. The geometry is now
   always used.
+
 - [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
   [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
   and
@@ -45,17 +86,21 @@
   the destinations) when `output_dir` was used with walk-only routing,
   no elevation data and more origins than destinations. This is fixed,
   but such runs with `output_dir` may now take longer.
+
 - `percentiles` are now sorted in ascending order internally. Unsorted
   values (e.g. `c(75, 25)`) used to crash inside R5 with an
   uninformative Java error.
+
 - Origins/destinations with missing `lon`/`lat` coordinates now trigger
   a warning listing the affected ids. They used to be dropped silently.
+
 - Origins/destinations with duplicated `id` values now raise an error in
   all one-to-many functions, instead of returning ambiguous duplicated
   rows.
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   keeps accepting repeated ids in row-paired inputs
   (`all_to_all = FALSE`).
+
 - [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
   ignored `progress` with `polygon_output = TRUE` (the default), so the
   progress counter was never shown. Since `progress` defaults to `TRUE`
@@ -64,11 +109,14 @@
   the counter is now shown by default. The “Using cached R5 version”
   message is now shown only with `verbose = TRUE` (it was shown only
   with `verbose = FALSE`).
+
 - `FERRY` was missing from the list of transit modes that trigger the
   check for transit services on the departure date.
+
 - `max_car_time` now caps car-only trips, as `max_walk_time` and
   `max_bike_time` already did for walk-only and bike-only trips. It used
   to apply only to car access/egress legs of transit trips.
+
 - [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
   with the `logistic`, `exponential` and `linear` decay functions
   ignored every trip longer than `max(cutoffs)`, although these curves
@@ -77,23 +125,27 @@
   `step` function (the cap was introduced in r5r 2.1.0,
   [\#348](https://github.com/ipea/r5r/issues/348)). Results of the other
   decay functions change and are now larger.
+
 - [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
   now accepts fractional opportunity values (e.g. population
   interpolated onto a grid). They used to be truncated to integers, so
   any value below 1 counted as 0. Missing values are treated as 0, now
   with a warning, and infinite values raise an error.
+
 - `cutoffs` in
   [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
   are now validated (whole numbers between 1 and 120, no duplicates) and
   sorted in ascending order. Unsorted or out-of-range values used to
   crash inside R5 with an uninformative Java error, and duplicated
   values returned duplicated rows.
+
 - In
   [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md),
   the `decay_value` of the `linear` decay function is now required to be
   a whole number of minutes between 1 and 59. Fractional values used to
   be silently truncated by R5, and values of 60 or more crashed inside
   R5.
+
 - [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   reported transfer-walk durations that differed from those used to find
   and rank itineraries. On networks built with elevation data this could
@@ -104,11 +156,13 @@
   [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
   and
   [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md).
+
 - In
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md),
   transfer walks from or to the first stop of the transit network had a
   straight-line geometry and distance and no OSM or edge ids. They are
   now routed on the street network like all other transfers.
+
 - CSV files written with `output_dir` did not quote text values, so any
   value containing a comma broke the file. This made every file written
   by
@@ -118,23 +172,28 @@
   function when an id or route name contained a comma. Such values are
   now quoted following the CSV standard (RFC 4180); files without such
   values are unchanged.
+
 - [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   with `output_dir` silently overwrote the file of a repeated
   origin-destination pair (allowed since row-paired inputs may repeat
   ids), and crashed with a Java error on ids containing characters not
   allowed in file names (e.g. `/`). It now raises an informative error
   in both cases.
+
 - [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   with zero-row `origins` or `destinations` crashed inside Java. It now
   returns an empty result.
+
 - A routing call that failed after a scenario (`new_carspeeds`,
   `carspeed_scale` or `new_lts`) had been applied left that scenario,
   and the other routing settings of the call, active in the routing
   engine, so the next call silently returned scenario results. All
   routing functions now reset the routing settings when they exit,
   including on error.
+
 - A finite `max_fare` passed without a `fare_structure` now raises an
   error instead of being silently ignored.
+
 - [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
   failed when called without `fare_cutoffs`, because its default (`-1`)
   was rejected by the function’s own check that cutoffs are 0 or more.
@@ -143,18 +202,21 @@
   now required arguments, with an informative error when either is
   missing. Code that passed `fare_structure = NULL` (or left it out) now
   raises an error.
+
 - Integer arguments (`max_walk_time`, `max_bike_time`, `max_car_time`,
   `max_trip_duration`, `time_window`, `percentiles`, `n_threads`,
   `max_rides`, `max_lts`, `draws_per_minute`, `cutoffs`,
   `suboptimal_minutes`, and `zoom` in
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md))
   now reject non-integer values instead of silently truncating them.
+
 - Polygon-based isochrones from
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
   were shifted by half a grid cell to the north-west (about 94 m at the
   default `zoom = 10` in Porto Alegre), because R5’s travel times,
   computed at the centre of each Web Mercator pixel, were placed at the
   pixel’s corner. Polygons are now in the right place.
+
 - In polygon-based
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md),
   the polygon of the largest cutoff was cut short, so its size depended
@@ -162,18 +224,21 @@
   was up to 19% smaller with `cutoffs = 30` than with
   `cutoffs = c(30, 60)`). It is now complete, so the largest polygons
   get larger (routing now runs 10 minutes past the largest cutoff).
+
 - Line-based
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
   (`polygon_output = FALSE`) assigned segments to the wrong band when
   `cutoffs` were not in ascending order, and crashed with duplicated
   `cutoffs`. `cutoffs` are now sorted and deduplicated, and must be
   finite, non-missing and include a value greater than 0.
+
 - Line-based
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)
   now returns an `id` column with the origin id, so results for several
   origins can be told apart. The `id` column is now always character in
   both outputs (it used to keep the input type in polygon output), and
   the `st_centroid` warning on every line-based call is gone.
+
 - [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
   searched departures in the wrong time window for walk-, bike- or
   car-only trips when `max_walk_time`, `max_bike_time` or `max_car_time`
@@ -182,12 +247,14 @@
   `max_trip_duration = 120` and `max_walk_time = 20`, departures between
   12:00 and 12:19 for an arrival at 14:00, instead of between 13:40 and
   13:59).
+
 - [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md)
   now detects and aborts with an informative message when a cached
   `network.dat` triggers a silent internal rebuild that fails on high
   priority GTFS errors, instead of silently returning an unusable
   `r5r_network` that only fails later with an opaque
   `NullPointerException` on the first routing call.
+
 - With `output_dir`, the CSV files written by
   [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
   [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
@@ -196,15 +263,18 @@
   held `2147483647` and a `[WALK]` route for trips longer than
   `max_trip_duration`, where the in-memory result has `NA`. These cells
   are now empty fields, so the files match the in-memory result.
+
 - [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
   and
   [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
   failed with walk-only routing, no elevation data and more than 5000
   origins, even with 5000 or fewer destinations (R5’s limit for path
   details). This now works.
+
 - Java errors raised while routing now reach R with their original
   message (e.g. R5’s 5000-destination limit for path details) instead of
   an empty `java.lang.RuntimeException`.
+
 - [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
   and
   [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
@@ -212,6 +282,7 @@
   walk-, bike- or car-only trips: the first minute returned extra rows
   with an empty `departure_time`. Each departure minute now has one row
   per draw.
+
 - [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/arrival_travel_time_matrix.md)
   stopped searching earlier departures at the first minute with no trip,
   so pairs that could still arrive in time by leaving earlier were
@@ -219,6 +290,7 @@
   also compared arrivals using durations rounded to 0.1 minute, which
   accepted trips up to 3 seconds late and could reject trips arriving on
   time; it now uses the exact duration.
+
 - Leg geometries of
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   repeated a vertex at every intermediate public transport stop (and in

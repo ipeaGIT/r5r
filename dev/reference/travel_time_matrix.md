@@ -33,6 +33,7 @@ travel_time_matrix(
   carspeed_scale = 1,
   new_lts = NULL,
   draws_per_minute = 5L,
+  seed = NULL,
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE,
@@ -211,6 +212,19 @@ travel_time_matrix(
   departure times sampled at random within the window (the same in every
   call from the same origin). This parameter then affects the results
   with or without frequencies.
+
+- seed:
+
+  An integer or `NULL`. The seed of the Monte Carlo draws of the
+  departure offsets of frequency-based transit routes. Defaults to
+  `NULL`, in which case the draws are random and results may vary
+  slightly between runs. With an integer, the same inputs always give
+  the same results, regardless of `n_threads`. Results are still a Monte
+  Carlo sample, so a different seed may give slightly different results:
+  report the seed used and check how sensitive the results are to it.
+  Note that [`set.seed()`](https://rdrr.io/r/base/Random.html) has no
+  effect on these draws. This parameter only affects the results when
+  the GTFS feeds contain a `frequencies.txt` table.
 
 - n_threads:
 

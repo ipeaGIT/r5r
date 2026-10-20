@@ -63,6 +63,7 @@
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_max_lts.html</loc></url>
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_max_rides.html</loc></url>
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_monte_carlo_draws.html</loc></url>
+<url><loc>https://ipea.github.io/r5r/dev/reference/set_monte_carlo_seed.html</loc></url>
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_n_threads.html</loc></url>
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_new_congestion.html</loc></url>
 <url><loc>https://ipea.github.io/r5r/dev/reference/set_new_lts.html</loc></url>

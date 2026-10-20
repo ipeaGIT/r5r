@@ -41,6 +41,7 @@ Other setting functions:
 [`set_max_fare()`](https://ipea.github.io/r5r/dev/reference/set_max_fare.md),
 [`set_max_lts()`](https://ipea.github.io/r5r/dev/reference/set_max_lts.md),
 [`set_max_rides()`](https://ipea.github.io/r5r/dev/reference/set_max_rides.md),
+[`set_monte_carlo_seed()`](https://ipea.github.io/r5r/dev/reference/set_monte_carlo_seed.md),
 [`set_n_threads()`](https://ipea.github.io/r5r/dev/reference/set_n_threads.md),
 [`set_new_congestion()`](https://ipea.github.io/r5r/dev/reference/set_new_congestion.md),
 [`set_new_lts()`](https://ipea.github.io/r5r/dev/reference/set_new_lts.md),

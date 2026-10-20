@@ -67,6 +67,7 @@ origin and destination pairs.</p>
 <span>  mode_egress <span class="op">=</span> <span class="st">"WALK"</span>,</span>
 <span>  departure_datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  time_window <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  percentiles <span class="op">=</span> <span class="fl">50L</span>,</span>
 <span>  max_walk_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  max_bike_time <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -128,6 +129,18 @@ in <code>pareto_frontier()</code>, departures are instead sampled at random with
 the window: <code>draws_per_minute</code> per minute on average (one in
 <code>pareto_frontier()</code>), the same in every call from the same origin.
 Defaults to 10. See <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
+
+
+<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
+<dd><p>An integer or <code>NULL</code>. The seed of the Monte Carlo draws of the
+departure offsets of frequency-based transit routes. Defaults to <code>NULL</code>,
+in which case the draws are random and results may vary slightly between
+runs. With an integer, the same inputs always give the same results,
+regardless of <code>n_threads</code>. Results are still a Monte Carlo sample, so a
+different seed may give slightly different results: report the seed used
+and check how sensitive the results are to it. Note that <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has
+no effect on these draws. This parameter only affects the results when the
+GTFS feeds contain a <code>frequencies.txt</code> table. The departure times sampled within <code>time_window</code> are already fixed for each origin; <code>seed</code> only controls the departure offsets of frequency-based routes.</p></dd>
 
 
 <dt id="arg-percentiles">percentiles<a class="anchor" aria-label="anchor" href="#arg-percentiles"></a></dt>
