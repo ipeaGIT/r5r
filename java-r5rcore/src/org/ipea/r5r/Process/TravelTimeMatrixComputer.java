@@ -251,7 +251,7 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
                         breakdown.accessTime = routeSequence.stopSequence.access == null ? 0 : routeSequence.stopSequence.access.time / 60.0f;
                         breakdown.waitTime = iteration.waitTimes.sum() / 60.0f;
                         breakdown.rideTime = routeSequence.stopSequence.rideTimesSeconds == null ? 0 : routeSequence.stopSequence.rideTimesSeconds.sum() / 60.0f;
-                        breakdown.transferTime = routeSequence.stopSequence.transferTime(iteration) / 60f;
+                        breakdown.transferTime = routeSequence.stopSequence.totalTransferTimeSeconds() / 60f;
                         breakdown.egressTime = routeSequence.stopSequence.egress == null ? 0 : routeSequence.stopSequence.egress.time / 60.0f;
                         breakdown.totalTime = iteration.totalTime / 60.0f;
 

@@ -343,6 +343,7 @@ public class R5TravelTimeComputer extends TravelTimeComputer {
         // annotating with the access mode, then use the annotated paths to initialize the appropriate field in the
         // propagater. Not supported for fare requests, which use the McRaptor router and path style.
         if ((request.includePathResults || request.makeTauiSite) && worker != null) {
+            perTargetPropagater.departureTimeForIteration = worker.departureTimeForIteration;
             perTargetPropagater.pathsToStopsForIteration = worker.pathsPerIteration.stream().peek(paths -> {
                 for (Path path : paths) {
                     if (path != null) {
