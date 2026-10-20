@@ -119,6 +119,8 @@
 <li>Networks built with previous versions of r5r are rebuilt automatically by <code><a href="../reference/build_network.html">build_network()</a></code>.</li>
 </ul></li>
 <li>
+<a href="https://github.com/ipea/r5r/pull/594" class="external-link">#594</a> <code><a href="../reference/check_transit_availability.html">check_transit_availability()</a></code> now discovers operating dates when no date arguments are supplied, including GTFS calendar exceptions. Street-only networks and empty explicit date vectors return a typed empty availability table. Date queries transfer availability counts in one Java batch, reducing transfer overhead.</li>
+<li>
 <code>progress</code> now defaults to <code>TRUE</code> in all routing and accessibility functions (it was <code>FALSE</code> everywhere except <code><a href="../reference/isochrone.html">isochrone()</a></code>). Use <code>progress = FALSE</code> to hide the counter.</li>
 <li>The progress counter is now printed by R, so it shows in every console (RStudio, Positron, RGui and terminals). It used to be printed by Java, which only reaches terminals; it is still written to <code>r5r-log.log</code>.</li>
 <li>Routing functions can now be interrupted with Esc / Ctrl+C. The origins being routed at that moment finish first.</li>

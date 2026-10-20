@@ -255,6 +255,13 @@
   - Networks built with previous versions of r5r are rebuilt
     automatically by
     [`build_network()`](https://ipea.github.io/r5r/dev/reference/build_network.md).
+- [\#594](https://github.com/ipea/r5r/pull/594)
+  [`check_transit_availability()`](https://ipea.github.io/r5r/dev/reference/check_transit_availability.md)
+  now discovers operating dates when no date arguments are supplied,
+  including GTFS calendar exceptions. Street-only networks and empty
+  explicit date vectors return a typed empty availability table. Date
+  queries transfer availability counts in one Java batch, reducing
+  transfer overhead.
 - `progress` now defaults to `TRUE` in all routing and accessibility
   functions (it was `FALSE` everywhere except
   [`isochrone()`](https://ipea.github.io/r5r/dev/reference/isochrone.md)).
