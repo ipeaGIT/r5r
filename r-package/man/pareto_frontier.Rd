@@ -12,6 +12,7 @@ pareto_frontier(
   mode_egress = "WALK",
   departure_datetime = Sys.time(),
   time_window = 10L,
+  seed = NULL,
   percentiles = 50L,
   max_walk_time = Inf,
   max_bike_time = Inf,
@@ -58,6 +59,16 @@ in \code{\link[=pareto_frontier]{pareto_frontier()}}, departures are instead sam
 the window: \code{draws_per_minute} per minute on average (one in
 \code{\link[=pareto_frontier]{pareto_frontier()}}), the same in every call from the same origin.
 Defaults to 10. See \code{vignette("time_window", package = "r5r")}.}
+
+\item{seed}{An integer or \code{NULL}. The seed of the Monte Carlo draws of the
+departure offsets of frequency-based transit routes. Defaults to \code{NULL},
+in which case the draws are random and results may vary slightly between
+runs. With an integer, the same inputs always give the same results,
+regardless of \code{n_threads}. Results are still a Monte Carlo sample, so a
+different seed may give slightly different results: report the seed used
+and check how sensitive the results are to it. Note that \code{set.seed()} has
+no effect on these draws. This parameter only affects the results when the
+GTFS feeds contain a \code{frequencies.txt} table. The departure times sampled within \code{time_window} are already fixed for each origin; \code{seed} only controls the departure offsets of frequency-based routes.}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning travel time estimates within the given

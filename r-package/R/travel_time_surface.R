@@ -75,6 +75,7 @@ setClass("travel_time_surface", slots=list(
 #'        cyclists can travel through any road. Defaults to 2. See details.
 #'
 #' @template draws_per_minute
+#' @template seed
 #' @param n_threads An integer. The number of threads to use when running the
 #'        router in parallel. Defaults to use all available threads (`Inf`).
 #' @param progress A logical. Whether to show a progress counter when running
@@ -122,6 +123,7 @@ travel_time_surface <- function(r5r_network,
                                carspeed_scale = 1,
                                new_lts = NULL,
                                draws_per_minute = 5L,
+                               seed = NULL,
                                n_threads = Inf,
                                verbose = FALSE,
                                progress = TRUE
@@ -166,6 +168,7 @@ travel_time_surface <- function(r5r_network,
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
   set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+  set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
   set_max_rides(r5r_network, max_rides)

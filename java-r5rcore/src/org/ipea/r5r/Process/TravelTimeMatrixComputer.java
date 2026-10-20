@@ -110,7 +110,7 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
     protected RDataFrame runProcess(int index) throws ParseException {
         RegionalTask request = buildRegionalTask(index);
 
-        TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork);
+        TravelTimeComputer computer = new R5TravelTimeComputer(request, transportNetwork, routingProperties.monteCarloSeed);
         OneOriginResult travelTimeResults = computer.computeTravelTimes();
         RDataFrame travelTimesTable = buildDataFrameStructure(fromIds[index], 10);
         populateDataFrame(travelTimeResults, travelTimesTable);
@@ -228,6 +228,15 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
         }
     }
 
+    private static final Comparator<PathBreakdown> PATH_ORDER = Comparator
+            .comparingDouble((PathBreakdown p) -> p.totalTime)
+            .thenComparing(p -> p.routes)
+            .thenComparingDouble(p -> p.accessTime)
+            .thenComparingDouble(p -> p.waitTime)
+            .thenComparingDouble(p -> p.rideTime)
+            .thenComparingDouble(p -> p.transferTime)
+            .thenComparingDouble(p -> p.egressTime);
+
     private Multimap<Integer, PathBreakdown>[] extractPathResults(PathResult paths, TravelTimeResult travelTimes) {
         Multimap<Integer, PathBreakdown>[] pathResults = new Multimap[nDestinations];
 
@@ -265,6 +274,12 @@ public class TravelTimeMatrixComputer extends R5DataFrameProcess {
 
                         pathResults[d].put(breakdown.nRides == 0 ? DIRECT_KEY : iteration.departureTime, breakdown);
                     }
+                }
+
+                // R5 iterates route sequences in hash order, which changes between runs. Sort the paths of each
+                // departure minute so that draw numbers (and the path picked by the arrival-time filter) are stable.
+                for (Integer key : pathResults[d].keySet()) {
+                    ((List<PathBreakdown>) pathResults[d].get(key)).sort(PATH_ORDER);
                 }
             } else {
                 // if iteration map for this destination is null, add possible direct route if shorter than max trip duration

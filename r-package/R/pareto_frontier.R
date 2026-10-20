@@ -13,6 +13,8 @@
 #'   for its structure. Required: without it there are no fares to trade off
 #'   against travel time.
 #' @template verbose
+#' @templateVar seed_mcraptor TRUE
+#' @template seed
 #' @param percentiles An integer vector (max length of 5). Specifies the
 #'   percentile to use when returning travel time estimates within the given
 #'   time window. This parameter is applied to the travel time
@@ -92,6 +94,7 @@ pareto_frontier <- function(r5r_network,
                             mode_egress = "WALK",
                             departure_datetime = Sys.time(),
                             time_window = 10L,
+                            seed = NULL,
                             percentiles = 50L,
                             max_walk_time = Inf,
                             max_bike_time = Inf,
@@ -186,6 +189,7 @@ pareto_frontier <- function(r5r_network,
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
   set_monte_carlo_draws(r5r_network, 1, time_window)
+  set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
   set_max_rides(r5r_network, max_rides)

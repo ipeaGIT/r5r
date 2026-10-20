@@ -7,6 +7,7 @@
 #' @template common_arguments
 #' @template time_window_related_args
 #' @template draws_per_minute
+#' @template seed
 #' @template fare_structure
 #' @template max_fare
 #' @template scenarios
@@ -152,6 +153,7 @@ accessibility <- function(r5r_network,
                           carspeed_scale = 1,
                           new_lts = NULL,
                           draws_per_minute = 5L,
+                          seed = NULL,
                           n_threads = Inf,
                           verbose = FALSE,
                           progress = TRUE,
@@ -237,6 +239,7 @@ accessibility <- function(r5r_network,
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
   set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+  set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
   set_max_rides(r5r_network, max_rides)
