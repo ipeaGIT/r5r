@@ -238,10 +238,10 @@ jobs:
         shell: Rscript {0}
         working-directory: r-package
 
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v7
         with:
-          # Fail if error if not on PR, or if on PR and token is given
-          fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
+          # Fail on upload error only when a token is set (forks have none)
+          fail_ci_if_error: ${{ secrets.CODECOV_TOKEN != '' }}
           files: ./cobertura.xml
           plugins: noop
           disable_search: true
