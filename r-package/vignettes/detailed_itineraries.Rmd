@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 **r5r**'s routing and accessibility functions are very fast, but they return only the essential information, and only the optimal route (minimizing travel time and/or monetary cost). Sometimes, though, we would like to do more simple route planning analysis and extract more information for each route. Also, we might be interested in finding not only the fastest route but some other suboptimal route alternatives too. 
 This is where the `detailed_itineraries()` function comes in. `detailed_itineraries()` returns, for each origin/destination pair, a detailed route plan per leg, i.e. a part of the trip on a single mode, such as walking to the bus stop (R5's documentation calls legs 'segments'). Each leg has its mode, waiting time, travel time, distance and geometry. The function can also return suboptimal route alternatives.
 
-**obs.** Use `detailed_itineraries()` only if you need suboptimal alternative routes and/or route geometries. For route information by trip segment alone, we strongly recommend `expanded_travel_time_matrix()`.
+**obs.** If you only need the routes used and the access, waiting, in-vehicle and transfer times, `expanded_travel_time_matrix()` is enough. Use `detailed_itineraries()` when you need each trip segment's mode, distance or geometry, or suboptimal alternative routes.
 
 # 2. Build routable transport network with `build_network()`
 
@@ -125,7 +125,8 @@ knitr::include_graphics("https://github.com/ipea/r5r/blob/master/r-package/inst/
 
 # 4. Other options
 
-- **All origins to all destinations:** by default, `detailed_itineraries()` routes the 1st origin to the 1st destination, the 2nd to the 2nd, and so on. Set `all_to_all = TRUE` to route every origin to every destination.
+- **Fastest route only:** with the default `shortest_path = TRUE` and no `fare_structure`, public transport is routed with R5's RAPTOR algorithm, the one used by `travel_time_matrix()`, which is much faster than the search for alternative routes. It routes one departure at each minute of `time_window` and returns the fastest itinerary.
+- **All origins to all destinations:** by default, `detailed_itineraries()` routes the 1st origin to the 1st destination, the 2nd to the 2nd, and so on. Set `all_to_all = TRUE` to route every origin to every destination. With `shortest_path = TRUE`, a single search per origin then serves all its destinations.
 - **No geometry:** set `drop_geometry = TRUE` to return results without the trip geometry. This makes the function faster.
 
 

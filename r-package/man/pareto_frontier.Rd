@@ -219,8 +219,9 @@ ignoring the timezone attribute.
 \section{Routing algorithm}{
 
 
-The \code{\link[=detailed_itineraries]{detailed_itineraries()}} and \code{\link[=pareto_frontier]{pareto_frontier()}} functions use an
-\code{R5}-specific extension to the McRAPTOR routing algorithm. The
+The \code{\link[=pareto_frontier]{pareto_frontier()}} function, and \code{\link[=detailed_itineraries]{detailed_itineraries()}} with
+\code{shortest_path = FALSE} or a \code{fare_structure}, use an \code{R5}-specific
+extension to the McRAPTOR routing algorithm. The
 implementation used in \code{detailed_itineraries()} allows the router to find
 paths that are optimal and less than optimal in terms of travel time, with
 some heuristics around multiple access modes, riding the same patterns, etc.

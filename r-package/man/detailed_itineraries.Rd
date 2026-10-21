@@ -58,28 +58,30 @@ period of the GTFS feeds (\code{calendar.txt}; see
 how datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple itineraries. Defaults to 10. Departures are
-simulated at random seconds, about one per minute (30 to 90 seconds
-apart), with the same departure times in every call with the same origin.
-Each departure is routed separately, so an itinerary may appear or
-disappear when \code{departure_datetime} changes by one minute, depending on
-whether a departure still catches a faster connection. Unlike other
-routing functions, results are not aggregated by percentile: when the same
-sequence of routes appears in several departures, only the fastest is
-kept, so the output may contain trips departing after
-\code{departure_datetime} but within the window. See
+will calculate multiple itineraries. Defaults to 10. Unlike other routing
+functions, results are not aggregated by percentile, so the output may
+contain trips departing after \code{departure_datetime} but within the window.
+With \code{shortest_path = TRUE} and no \code{fare_structure}, a trip is routed for
+each minute from \code{departure_datetime} until \code{time_window} minutes later,
+and the fastest one is returned (ties go to the earliest departure).
+Otherwise, departures are simulated at random seconds, about one per
+minute (30 to 90 seconds apart), with the same departure times in every
+call with the same origin, and each departure is routed separately: an
+itinerary may appear or disappear when \code{departure_datetime} changes by one
+minute, and when the same sequence of routes appears in several
+departures, only the fastest is kept. See
 \code{vignette("time_window", package = "r5r")}.}
 
 \item{suboptimal_minutes}{A number. How many minutes after the optimal
-arrival a non-optimal RAPTOR branch may arrive and still be kept (e.g.
+arrival a non-optimal McRAPTOR branch may arrive and still be kept (e.g.
 with \code{10}, routes arriving up to 10 minutes after the fastest one are
-considered). The comparison is made separately for each departure within
-\code{time_window} and uses arrival time only: a route beyond this margin is
-discarded even if it has fewer transfers. The default, \code{0}, keeps only
-routes arriving at the earliest time for each departure. Higher values
-return more itineraries, emulating people who take a slower route for
-practical reasons (e.g. mode preference, safety). Values above 0 can only
-be used when \code{shortest_path} is \code{FALSE} and \code{fare_structure} is \code{NULL}.}
+considered). It can only be used when \code{shortest_path = FALSE} and
+\code{fare_structure} is \code{NULL}. The comparison is made separately for each
+departure within \code{time_window} and uses arrival time only: a route beyond
+this margin is discarded even if it has fewer transfers. The default, \code{0},
+keeps only routes arriving at the earliest time for each departure. Higher
+values return more itineraries, emulating people who take a slower route for
+practical reasons (e.g. mode preference, safety).}
 
 \item{max_walk_time}{An integer. The maximum walking time (in minutes) to
 access and egress the transit network, make transfers, or complete
@@ -123,12 +125,18 @@ or multiple alternatives. The fastest itinerary is the one with the
 shortest travel time, measured from its own departure time, among all
 departures within \code{time_window}. With a large \code{time_window}, it may depart
 later and arrive later than other itineraries; use \code{time_window = 1} to
-get the itinerary with the earliest arrival for a given departure time.}
+get the itinerary with the earliest arrival for a given departure time.
+Without a \code{fare_structure}, public transport trips are then routed with
+R5's RAPTOR algorithm, which is much faster than the McRAPTOR algorithm
+used for alternative routes and fares (see the Fastest itinerary section).}
 
 \item{all_to_all}{A logical. Whether to query routes between the 1st origin
 to the 1st destination, then the 2nd origin to the 2nd destination, and so
 on (\code{FALSE}, the default) or to query routes between all origins to all
-destinations (\code{TRUE}).}
+destinations (\code{TRUE}). With \code{shortest_path = TRUE} and no \code{fare_structure},
+\code{all_to_all = TRUE} runs one public transport search per origin for all
+its destinations, which is much faster than listing the same pairs with
+\code{all_to_all = FALSE}.}
 
 \item{fare_structure}{A fare structure object, following the convention
 set in \code{\link[=setup_fare_structure]{setup_fare_structure()}}. This object describes how transit fares
@@ -216,7 +224,8 @@ segment (trip leg) of one itinerary, with the columns:
 origin and destination of the pair;
 \item \code{option}: the itinerary number within the pair. Options are ordered
 with direct (non-transit) trips first, then by number of segments, then
-by duration, so \code{option} 1 is not necessarily the fastest one;
+by duration, so \code{option} 1 is not necessarily the fastest one. With
+\code{shortest_path = TRUE}, each pair has a single itinerary (\code{option} 1);
 \item \code{departure_time}: the departure time of the itinerary (\code{"HH:MM:SS"});
 \item \code{total_duration}, \code{total_distance}: duration and distance of the whole
 itinerary;
@@ -306,8 +315,9 @@ ignoring the timezone attribute.
 \section{Routing algorithm}{
 
 
-The \code{\link[=detailed_itineraries]{detailed_itineraries()}} and \code{\link[=pareto_frontier]{pareto_frontier()}} functions use an
-\code{R5}-specific extension to the McRAPTOR routing algorithm. The
+The \code{\link[=pareto_frontier]{pareto_frontier()}} function, and \code{\link[=detailed_itineraries]{detailed_itineraries()}} with
+\code{shortest_path = FALSE} or a \code{fare_structure}, use an \code{R5}-specific
+extension to the McRAPTOR routing algorithm. The
 implementation used in \code{detailed_itineraries()} allows the router to find
 paths that are optimal and less than optimal in terms of travel time, with
 some heuristics around multiple access modes, riding the same patterns, etc.
@@ -325,6 +335,28 @@ transit routing. Transportation Science, 49(3), 591-604.
 multiobjective optimization method to account for cost constraints in public
 transit accessibility metrics. International Journal of Geographical
 Information Science, 33(9), 1759-1787. \doi{10.1080/13658816.2019.1605075}
+}
+}
+
+\section{Fastest itinerary}{
+
+
+When only the fastest itinerary is returned (\code{shortest_path = TRUE}) and no
+\code{fare_structure} is used, public transport is routed with R5's RAPTOR
+algorithm (Conway et al, 2017), the one used by \code{\link[=travel_time_matrix]{travel_time_matrix()}},
+which is much faster than McRAPTOR. Compared with McRAPTOR, the results can
+differ slightly: departures are routed every minute of \code{time_window}
+instead of at random seconds, so the itinerary returned is never more than
+about a minute slower and often faster; walking transfers between stops are
+limited by \code{max_walk_time} (McRAPTOR only applies it to the first and last
+legs); stops where the GTFS \code{pickup_type} or \code{drop_off_type} does not allow
+boarding or alighting are respected; and when two trips are equally fast,
+the route chosen may differ.
+\itemize{
+\item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
+transit and land use sketch planning using interactive accessibility methods
+on combined schedule and headway-based networks. Transportation Research
+Record, 2653(1), 45-53. \doi{10.3141/2653-06}
 }
 }
 

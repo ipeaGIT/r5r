@@ -1,13 +1,16 @@
 package org.ipea.r5r.Planner;
 
+import com.conveyal.r5.analyst.cluster.AnalysisWorkerTask;
 import com.conveyal.r5.api.util.LegMode;
 import com.conveyal.r5.api.util.StreetSegment;
 import com.conveyal.r5.profile.*;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.transit.TransportNetwork;
+import com.conveyal.r5.transit.path.Path;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.TObjectIntMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ public class TripPlanner {
     private String toId;
     private boolean shortestPath;
     private boolean OSMLinkIds;
+    private boolean fastRaptor;
 
     private final TransportNetwork transportNetwork;
     private final ProfileRequest request;
@@ -43,6 +47,11 @@ public class TripPlanner {
 
     public void setOSMLinkIds(boolean OSMLinkIds) {
         this.OSMLinkIds = OSMLinkIds;
+    }
+
+    // route transit with R5's FastRaptorWorker instead of McRAPTOR: fastest trip only, no fares (#464)
+    public void setFastRaptor(boolean fastRaptor) {
+        this.fastRaptor = fastRaptor;
     }
 
     public TripPlanner(TransportNetwork transportNetwork, ProfileRequest request) {
@@ -62,7 +71,26 @@ public class TripPlanner {
         Map<LegMode, StreetRouter> accessRouter = null;
         Map<LegMode, StreetRouter> egressRouter = null;
 
-        if (request.hasTransit()) {
+        if (request.hasTransit() && fastRaptor) {
+            if (request.inRoutingFareCalculator != null) {
+                throw new IllegalStateException("FastRaptor itineraries do not support fares");
+            }
+            FastRaptorOrigin origin = sharedOrigin;
+            TIntIntMap egressTimes = sharedEgressTimes;
+            if (egressTimes == null) {
+                egressRouter = findEgressPaths(request);
+                egressTimes = egressTimesAtStops(egressRouter);
+            }
+            if (origin == null && !shared && !egressTimes.isEmpty()) {
+                BitSet retainPathsToStops = new BitSet();
+                egressTimes.forEachKey(stop -> { retainPathsToStops.set(stop); return true; });
+                origin = searchFastRaptorOrigin(retainPathsToStops);
+            }
+            if (origin != null) {
+                accessRouter = origin.accessRouter;
+                addFastRaptorTrip(trips, origin, egressTimes);
+            }
+        } else if (request.hasTransit()) {
             // Find access paths and times
             accessRouter = findAccessPaths(request);
             egressRouter = findEgressPaths(request);
@@ -146,12 +174,136 @@ public class TripPlanner {
             tripList = List.of(tripList.stream().min(Comparator.comparingInt(Trip::getTotalDurationSeconds)).get());
         }
 
+        // with egress times shared by the destination, the egress search is only needed for a transit trip's leg
+        if (fastRaptor && egressRouter == null && tripList.stream().anyMatch(trip -> trip.directFirst() == 1)) {
+            egressRouter = findEgressPaths(request);
+        }
+
         // build street paths and geometries only for the trips that are returned
         for (Trip trip : tripList) {
             trip.augment(accessRouter, egressRouter, transportNetwork, request, OSMLinkIds);
         }
 
         return tripList;
+    }
+
+    // with all_to_all, a FastRaptor search and egress times shared with the other pairs of the same origin and
+    // destination (origin is null when the origin reaches no stop)
+    private boolean shared;
+    private FastRaptorOrigin sharedOrigin;
+    private TIntIntMap sharedEgressTimes;
+
+    public void setFastRaptorShared(FastRaptorOrigin origin, TIntIntMap egressTimes) {
+        this.shared = true;
+        this.sharedOrigin = origin;
+        this.sharedEgressTimes = egressTimes;
+    }
+
+    /**
+     * Access search and FastRaptorWorker search from the request's origin, keeping the paths to retainPathsToStops.
+     * Null when no stop is reached by the access search.
+     */
+    public FastRaptorOrigin searchFastRaptorOrigin(BitSet retainPathsToStops) {
+        Map<LegMode, StreetRouter> accessRouter = findAccessPaths(request);
+        StreetRouter access = accessRouter.get(request.accessModes.iterator().next());
+        if (access == null || retainPathsToStops.isEmpty()) return null;
+
+        // R5 rejects arrivals at or after departure + max_trip_duration, and then fails a checkState when it steps
+        // the departure back one minute and an access stop cannot be updated: drop those stops up front
+        TIntIntMap accessTimes = streetTimesAtStops(access, false, request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
+        if (accessTimes.isEmpty()) return null;
+
+        FastRaptorWorker worker = new FastRaptorWorker(transportNetwork.transitLayer, (AnalysisWorkerTask) request, accessTimes);
+        worker.retainPaths = true;
+        worker.retainPathsToStops = retainPathsToStops;
+        int[][] travelTimes = worker.route();
+
+        // keep only the best departure per stop (shortest travel time, ties to the earliest departure): with a
+        // fixed egress time per stop, the fastest trip through a stop departs then, and an origin shared by many
+        // destinations then holds one value per stop instead of one per stop and minute
+        int nStops = transportNetwork.transitLayer.getStopCount();
+        int[] travelTime = new int[nStops];
+        Arrays.fill(travelTime, FastRaptorWorker.UNREACHED);
+        int[] departureTime = new int[nStops];
+        Path[] path = new Path[nStops];
+        for (int i = 0; i < travelTimes.length; i++) {
+            Path[] paths = worker.pathsPerIteration.get(i);
+            int departure = worker.departureTimeForIteration[i];
+            for (int stop = retainPathsToStops.nextSetBit(0); stop >= 0; stop = retainPathsToStops.nextSetBit(stop + 1)) {
+                int time = travelTimes[i][stop];
+                if (time == FastRaptorWorker.UNREACHED || paths[stop] == null) continue;
+                if (time < travelTime[stop] || (time == travelTime[stop] && departure < departureTime[stop])) {
+                    travelTime[stop] = time;
+                    departureTime[stop] = departure;
+                    path[stop] = paths[stop];
+                }
+            }
+        }
+        return new FastRaptorOrigin(accessRouter, accessTimes, travelTime, departureTime, path);
+    }
+
+    /** Egress times from the stops reached by the egress search to the request's destination. */
+    public TIntIntMap egressTimesAtStops() {
+        return egressTimesAtStops(findEgressPaths(request));
+    }
+
+    private TIntIntMap egressTimesAtStops(Map<LegMode, StreetRouter> egressRouter) {
+        StreetRouter egress = egressRouter.get(request.egressModes.iterator().next());
+        if (egress == null) return new TIntIntHashMap();
+        return streetTimesAtStops(egress, true, request.maxTripDurationMinutes * FastRaptorWorker.SECONDS_PER_MINUTE);
+    }
+
+    /**
+     * Adds the fastest transit trip found by R5's FastRaptorWorker over every minute of the time window, as a
+     * replacement for McRAPTOR when only the shortest path is needed and there are no fares.
+     * <p>
+     * route() returns, per departure minute and stop, the travel time to that stop by vehicle (access included);
+     * adding the egress time gives the door-to-door duration, as R5's own propagation does. Ties go to the earliest
+     * departure, then to the lowest egress stop index.
+     */
+    private void addFastRaptorTrip(Map<String, Trip> trips, FastRaptorOrigin origin, TIntIntMap egressTimes) {
+        int[] egressStops = egressTimes.keys();
+        Arrays.sort(egressStops);
+
+        int bestStop = -1, bestTotal = Integer.MAX_VALUE;
+        for (int stop : egressStops) {
+            if (origin.path[stop] == null) continue;
+            int total = origin.travelTime[stop] + egressTimes.get(stop);
+            if (total < bestTotal || (total == bestTotal && origin.departureTime[stop] < origin.departureTime[bestStop])) {
+                bestStop = stop;
+                bestTotal = total;
+            }
+        }
+        if (bestStop < 0) return;
+
+        Trip trip = new Trip(origin.path[bestStop], origin.departureTime[bestStop], origin.accessTimes,
+                egressTimes.get(bestStop), bestTotal, transportNetwork);
+        trip.setOD(fromId, toId, request);
+        trips.put(trip.getKey(), trip);
+    }
+
+    /**
+     * Street time to each stop reached by a router, below maxSeconds, as Trip.augment() will report it in the access
+     * or egress leg. The egress search runs backwards from the destination, so on networks with elevation its times
+     * are those of walking (or cycling) uphill where the trip goes downhill, and vice versa; StreetPath re-times the
+     * leg in the direction of travel (State.reverse()). Ranking departures by the backward times would return a trip
+     * that is not the fastest by its own reported duration, so egress times are re-timed the same way here.
+     */
+    private TIntIntMap streetTimesAtStops(StreetRouter router, boolean reverseSearch, int maxSeconds) {
+        boolean previousReverseSearch = router.profileRequest.reverseSearch;
+        router.profileRequest.reverseSearch = reverseSearch; // getStateAtVertex() reads the search direction
+        TIntIntMap times = new TIntIntHashMap();
+        router.getReachedStops().forEachEntry((stop, reachedTime) -> {
+            int time = reachedTime;
+            if (reverseSearch) {
+                StreetRouter.State state = router.getStateAtVertex(transportNetwork.transitLayer.streetVertexForStop.get(stop));
+                if (state != null) time = state.reverse(transportNetwork).getDurationSeconds();
+            }
+            if (time < maxSeconds) times.put(stop, time);
+            return true;
+        });
+        router.profileRequest.reverseSearch = previousReverseSearch;
+        return times;
     }
 
 
