@@ -11,7 +11,11 @@
   [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
   and
   [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
-  are 2 to 7 times faster (bicycle-only 2.5 to 4 times), and
+  are 2 to 4 times faster (bicycle-only 1.3 to 2.8 times;
+  [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+  1.5 to 2.6 times), public transport routing in these functions takes
+  about as long as in r5r 2.4.0 (from 28% slower to 1.6 times faster),
+  and
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   with public transport and no `fare_structure` is 2 to 4 times faster.
   Details in the minor changes below.
