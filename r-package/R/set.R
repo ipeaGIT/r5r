@@ -246,6 +246,28 @@ set_monte_carlo_draws <- function(r5r_network, draws_per_minute, time_window) {
 }
 
 
+#' Set the seed of the Monte Carlo draws
+#'
+#' Sets the seed used by R5 to draw the departure offsets of frequency-based
+#' transit routes.
+#'
+#' @template r5r_network
+#' @param seed An integer or `NULL`. `NULL` keeps R5's unseeded draws.
+#'
+#' @return Invisibly returns `TRUE`.
+#'
+#' @family setting functions
+#'
+#' @keywords internal
+set_monte_carlo_seed <- function(r5r_network, seed) {
+  checkmate::assert_int(seed, null.ok = TRUE)
+
+  if (!is.null(seed)) r5r_network$setMonteCarloSeed(as.integer(seed))
+
+  return(invisible(TRUE))
+}
+
+
 #' Set the fare structure used when calculating transit fares
 #'
 #' Sets the fare structure used by our "generic" fare calculator. A value of

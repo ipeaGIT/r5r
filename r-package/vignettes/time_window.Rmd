@@ -40,6 +40,8 @@ In `r5r`, functions such as `travel_time_matrix()` and `accessibility()` have a 
 
 With `time_window`, R<sup>5</sup> computes an estimate for a departure every minute from `departure_datetime` until the end of the window. If the GTFS feeds have a `frequencies.txt` table, `draws_per_minute` sets the number of Monte Carlo draws per minute (default 5, i.e. 300 draws in a 60-minute window); without frequencies, departures are deterministic and `draws_per_minute` does not affect results. For the effect of the number of draws on result stability, see Stewart et al [-@stewart2022half].
 
+This holds for the default routing algorithm (FastRaptor). When a `fare_structure` is passed to `travel_time_matrix()`, `accessibility()` or `travel_time_surface()`, always in `pareto_frontier()`, and in `detailed_itineraries()` with `shortest_path = FALSE`, R<sup>5</sup> uses the McRaptor algorithm instead. McRaptor does not route a departure every minute: it routes `time_window * draws_per_minute` departure times sampled at random within the window (consecutive departures are, on average, `1 / draws_per_minute` minutes apart, and the same departure times are used in every call with the same origin). So with McRaptor, `draws_per_minute` affects results even if the GTFS feeds have no `frequencies.txt` table. `pareto_frontier()` and `detailed_itineraries()` fix it at 1.
+
 The result is not a single estimate but a distribution reflecting the uncertainty within the window. The `percentiles` parameter selects which percentiles to return. For example, a 25th-percentile travel time of 15 minutes from A to B means that 25% of trips departing within the window are shorter than 15 minutes.
 
 ## 3. Demonstration of `time_window`.
@@ -150,7 +152,7 @@ head(ttm, n = 10)
 
 ```
 
-Each `travel_time_pXX` column gives the travel time within which XX% of the trips departing between 2pm and 3pm are completed: `travel_time_p10` for the fastest 10%, `travel_time_p50` the median, and so on. An `NA` means fewer than XX% of the trips arrive within `max_trip_duration` (90 minutes).
+Each `travel_time_pXX` column gives the travel time within which XX% of the trips departing between 2pm and 3pm are completed: `travel_time_p10` for the fastest 10%, `travel_time_p50` the median, and so on. An `NA` means fewer than XX% of the trips arrive within `max_trip_duration` (90 minutes). A wider `time_window` can include departures with worse service, so it can produce more `NA`s in the higher percentiles.
 
 
 
@@ -181,7 +183,7 @@ head(ettm, n = 10)
 
 With the default `shortest_path = TRUE` and no `fare_structure`, it routes one departure at each minute of `time_window`, as `travel_time_matrix()` does with schedule-based GTFS; ties between equally fast itineraries go to the earliest departure.
 
-With `shortest_path = FALSE` or a `fare_structure`, its number of draws per minute is fixed at 1: it simulates about one departure per minute of `time_window`, at random seconds (consecutive departures are 30 to 90 seconds apart, and the same departure times are used in every call with the same origin). So a 10-minute `time_window` simulates about 10 departures. Each departure is routed separately, and with the default `suboptimal_minutes = 0` only the itineraries arriving earliest are kept for each departure, even if a slower one has fewer transfers.
+With `shortest_path = FALSE` or a `fare_structure`, it uses the McRaptor algorithm with one draw per minute (see Section 2): consecutive departures are 30 to 90 seconds apart, so a 10-minute `time_window` simulates about 10 departures. Each departure is routed separately, and with the default `suboptimal_minutes = 0` only the itineraries arriving earliest are kept for each departure, even if a slower one has fewer transfers.
 
 *obs.* `detailed_itineraries()` cannot route public transport trips on frequency-based GTFS feeds; use `gtfstools::frequencies_to_stop_times()` to create a suitable feed.
 

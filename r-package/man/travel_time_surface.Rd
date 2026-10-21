@@ -27,6 +27,7 @@ travel_time_surface(
   carspeed_scale = 1,
   new_lts = NULL,
   draws_per_minute = 5L,
+  seed = NULL,
   n_threads = Inf,
   verbose = FALSE,
   progress = TRUE
@@ -61,9 +62,10 @@ service period of the GTFS feeds (\code{calendar.txt}; see
 details for how datetimes are parsed.}
 
 \item{time_window}{An integer. The time window in minutes for which \code{r5r}
-will calculate multiple travel time matrices departing each minute.
-Defaults to 10 minutes. The function returns the result based on
-median travel times. See
+will calculate multiple travel time matrices departing each minute
+(or, with a \code{fare_structure}, at departure times sampled at random
+within the window; see \code{draws_per_minute}). Defaults to 10 minutes.
+The function returns the result based on median travel times. See
 \code{vignette("time_window", package = "r5r")}.}
 
 \item{percentiles}{An integer vector (max length of 5, an \code{R5} limit). The
@@ -154,10 +156,25 @@ LINESTRING and update its LTS value accordingly.}
 
 \item{draws_per_minute}{An integer. The number of Monte Carlo draws to
 perform per minute of \code{time_window}. Defaults to 5. This would mean 300
-draws in a 60-minute time window, for example. This parameter only affects
-the results when the GTFS feeds contain a \code{frequencies.txt} table. If the
-GTFS feed does not have a frequency table, r5r still allows for multiple
-runs over the set \code{time_window} but in a deterministic way.}
+draws in a 60-minute time window, for example. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table; otherwise, r5r still routes a departure
+every minute of \code{time_window}, in a deterministic way. In functions that
+accept a \code{fare_structure}, passing one switches to the McRaptor algorithm,
+which instead routes \code{time_window * draws_per_minute} departure times
+sampled at random within the window (the same in every call from the same
+origin). This parameter then affects the results with or without
+frequencies.}
+
+\item{seed}{An integer or \code{NULL}. The seed of the Monte Carlo draws of the
+departure offsets of frequency-based transit routes. Defaults to \code{NULL},
+in which case the draws are random and results may vary slightly between
+runs. With an integer, the same inputs always give the same results,
+regardless of \code{n_threads}. Results are still a Monte Carlo sample, so a
+different seed may give slightly different results: report the seed used
+and check how sensitive the results are to it. Note that \code{set.seed()} has
+no effect on these draws. This parameter only affects the results when the
+GTFS feeds contain a \code{frequencies.txt} table.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to use all available threads (\code{Inf}).}

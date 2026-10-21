@@ -102,6 +102,7 @@ arrival_travel_time_matrix <- function(r5r_network,
                                        carspeed_scale = 1,
                                        new_lts = NULL,
                                        draws_per_minute = 5L,
+                                       seed = NULL,
                                        n_threads = Inf,
                                        verbose = FALSE,
                                        progress = TRUE,
@@ -191,6 +192,7 @@ arrival_travel_time_matrix <- function(r5r_network,
 
   set_time_window(r5r_network, max_trip_duration)
   set_monte_carlo_draws(r5r_network, draws_per_minute, max_trip_duration)
+  set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
   set_max_rides(r5r_network, max_rides)
