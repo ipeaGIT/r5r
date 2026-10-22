@@ -152,6 +152,8 @@ travel_time_matrix <- function(r5r_network,
     r5r_network <- r5r_core
   }
 
+  if (missing(departure_datetime)) warn_default_datetime(mode)
+
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
 
@@ -218,7 +220,7 @@ travel_time_matrix <- function(r5r_network,
 
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
-  set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+  set_monte_carlo_draws(r5r_network, draws_per_minute, time_window, fare_structure)
   set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
