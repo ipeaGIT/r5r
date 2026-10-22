@@ -120,6 +120,8 @@ arrival_travel_time_matrix <- function(r5r_network,
     r5r_network <- r5r_core
   }
 
+  if (missing(arrival_datetime)) warn_default_datetime(mode, "arrival_datetime")
+
   old_options <- options(datatable.optimize = Inf)
   on.exit(options(old_options), add = TRUE)
   checkmate::assert_number(n_threads, lower = 1)
