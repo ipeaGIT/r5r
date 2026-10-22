@@ -137,19 +137,24 @@ contain a \code{frequencies.txt} table; otherwise, r5r still routes a departure
 every minute of \code{time_window}, in a deterministic way. In functions that
 accept a \code{fare_structure}, passing one switches to the McRaptor algorithm,
 which instead routes \code{time_window * draws_per_minute} departure times
-sampled at random within the window (the same in every call from the same
-origin). This parameter then affects the results with or without
-frequencies.}
+sampled at random within the window (different for each origin, and the
+same in every call from the same origin with the same \code{seed}). This
+parameter then affects the results with or without frequencies. R5's
+McRaptor cannot sample many departure times per minute over long windows,
+so such combinations raise an error (e.g. 8 draws per minute in a
+10-minute window, or 5 in a window of 150 minutes or more).}
 
 \item{seed}{An integer or \code{NULL}. The seed of the Monte Carlo draws of the
-departure offsets of frequency-based transit routes. Defaults to \code{NULL},
-in which case the draws are random and results may vary slightly between
-runs. With an integer, the same inputs always give the same results,
-regardless of \code{n_threads}. Results are still a Monte Carlo sample, so a
-different seed may give slightly different results: report the seed used
-and check how sensitive the results are to it. Note that \code{set.seed()} has
-no effect on these draws. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table.}
+departure offsets of frequency-based transit routes and, with the McRaptor
+algorithm, of the departure times sampled within \code{time_window}. Defaults
+to \code{NULL}, in which case the draws are random and results may vary
+slightly between runs. With an integer, the same inputs always give the
+same results, regardless of \code{n_threads}. Results are still a Monte Carlo
+sample, so a different seed may give slightly different results: report
+the seed used and check how sensitive the results are to it. Note that
+\code{set.seed()} has no effect on these draws. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table. In functions that accept a \code{fare_structure}, passing one switches to the McRaptor algorithm, and \code{seed} then affects the results with or without frequencies.}
 
 \item{n_threads}{An integer. The number of threads to use when running the
 router in parallel. Defaults to \code{Inf} (all available threads).}

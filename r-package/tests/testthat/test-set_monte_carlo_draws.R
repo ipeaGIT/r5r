@@ -183,3 +183,28 @@ test_that("spo draws_per_minute should fail in pareto_frontier() issue #281", {
   expect_error( eval(small_draws_expr) )
   expect_error( eval(big_draws_expr) )
 })
+
+# R5's McRaptor departure sampler never ends for some combinations (#602).
+# A mock network: the check runs before the number of draws is passed to Java
+test_that("infeasible draws are rejected with a fare_structure", {
+  mock_network <- list(setNumberOfMonteCarloDraws = function(draws) NULL)
+  tester <- function(dpm, tw, fs = list()) {
+    set_monte_carlo_draws(mock_network, dpm, tw, fare_structure = fs)
+  }
+
+  # cases of #602 at time_window = 10
+  expect_true(tester(5, 10))
+  expect_true(tester(7, 10))
+  expect_true(tester(10, 10))
+  expect_error(tester(8, 10), "issues/602")
+  expect_error(tester(11, 10), "issues/602")
+  expect_error(tester(61, 10), "issues/602")
+
+  # the default draws_per_minute fails with long windows
+  expect_true(tester(5, 120))
+  expect_error(tester(5, 150), "issues/602")
+  expect_true(tester(1, 180))
+
+  # without a fare_structure there is no limit
+  expect_true(tester(61, 180, fs = NULL))
+})
