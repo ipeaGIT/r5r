@@ -1,6 +1,13 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Original commit for the manual walking-egress comparison'
+        required: true
+        default: '3dd6edaf17ece0cc41e363cf1280f3019a50deae'
+        type: string
   push:
     paths:
       - java-r5rcore/**
@@ -248,3 +255,76 @@ jobs:
           disable_search: true
           token: ${{ secrets.CODECOV_TOKEN }}
           working-directory: r-package
+
+  walking-egress:
+    # Keep the historical two-package/300-pair audit opt-in. The physical Java
+    # regressions and testthat checks still run in ordinary CI.
+    if: github.event_name == 'workflow_dispatch'
+    needs: build-jar
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      NOT_CRAN: "true"
+      TZ: America/Sao_Paulo
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Sync CI-built bridge
+        run: |
+          git fetch origin "${{ github.ref_name }}"
+          git checkout "${{ github.ref_name }}"
+          git pull --ff-only origin "${{ github.ref_name }}"
+          git rev-parse HEAD
+          sha256sum r-package/inst/jar/r5r.jar
+      - uses: r-lib/actions/setup-r@v2
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: r-package
+          extra-packages: any::devtools
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Synthetic baseline must fail the physical assertions
+        working-directory: java-r5rcore
+        run: |
+          set +e
+          ./gradlew egressRegression -PbaselineEgress > baseline-egress.log 2>&1
+          status=$?
+          set -e
+          cat baseline-egress.log
+          test "$status" -ne 0
+          grep -q 'FAIL: near endpoint gets its own directed' baseline-egress.log
+          grep -q 'FAIL: known final leg' baseline-egress.log
+          grep -q 'FAIL: final geometry reaches requested destination' baseline-egress.log
+      - name: Corrected physical regressions
+        working-directory: java-r5rcore
+        run: ./gradlew egressRegression
+      - name: Install original master in isolated library
+        env:
+          BASELINE_REF: ${{ inputs.baseline_ref }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/egress-baseline-source" "$RUNNER_TEMP/egress-baseline-lib"
+          baseline_commit=$(git rev-parse --verify --end-of-options "$BASELINE_REF^{commit}")
+          echo "Baseline commit: $baseline_commit"
+          git archive "$baseline_commit" -- r-package | tar -x -C "$RUNNER_TEMP/egress-baseline-source"
+          R CMD INSTALL --library="$RUNNER_TEMP/egress-baseline-lib" "$RUNNER_TEMP/egress-baseline-source/r-package"
+      - name: Measure upstream master egress on both algorithms
+        run: Rscript --vanilla .github/scripts/check-walking-egress.R --baseline
+        env:
+          EGRESS_BASELINE_LIB: ${{ runner.temp }}/egress-baseline-lib
+          EGRESS_EXPECTED_BRIDGE: ${{ runner.temp }}/egress-baseline-source/r-package/inst/jar/r5r.jar
+      - name: Install corrected package
+        run: R CMD INSTALL r-package
+      - name: Corrected POA routes and 300-pair audit for both algorithms
+        run: Rscript --vanilla .github/scripts/check-walking-egress.R
+        env:
+          EGRESS_EXPECTED_BRIDGE: r-package/inst/jar/r5r.jar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: walking-egress-synthetic
+          path: java-r5rcore/baseline-egress.log
