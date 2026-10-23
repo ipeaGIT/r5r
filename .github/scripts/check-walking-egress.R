@@ -21,12 +21,22 @@ loaded_jar <- function(name) {
   pd <- rJava::.jcall(cls, "Ljava/security/ProtectionDomain;", "getProtectionDomain")
   cs <- rJava::.jcall(pd, "Ljava/security/CodeSource;", "getCodeSource")
   url <- rJava::.jcall(cs, "Ljava/net/URL;", "getLocation")
-  sub("^file:", "", rJava::.jcall(url, "S", "toExternalForm"))
+  URLdecode(sub("^file:", "", rJava::.jcall(url, "S", "toExternalForm")))
 }
 jars <- c(bridge = loaded_jar("org/ipea/r5r/R5RCore"),
           r5 = loaded_jar("com/conveyal/r5/transit/TransportNetwork"))
 print(jars)
-print(tools::md5sum(jars))
+sha256 <- function(path) {
+  output <- system2("sha256sum", shQuote(normalizePath(path, mustWork = TRUE)), stdout = TRUE)
+  stopifnot(is.null(attr(output, "status")), length(output) == 1L)
+  sub(" .*", "", output)
+}
+expected_bridge <- Sys.getenv("EGRESS_EXPECTED_BRIDGE")
+stopifnot(nzchar(expected_bridge))
+loaded_sha <- sha256(jars[["bridge"]])
+expected_sha <- sha256(expected_bridge)
+cat("Bridge SHA256 loaded:", loaded_sha, "expected:", expected_sha, "\n")
+stopifnot(identical(loaded_sha, expected_sha))
 route <- function(origins, destinations, limit, shortest = FALSE) detailed_itineraries(
   network, origins, destinations, mode = c("WALK", "TRANSIT"),
   all_to_all = FALSE,
@@ -47,15 +57,28 @@ for (i in seq_len(nrow(known))) {
   if (baseline) {
     stopifnot(nrow(low) == 0L, min(high$total_duration) < 60)
   } else {
-    stopifnot(min(high$total_duration) > 60 || nrow(low) > 0L)
+    if (min(high$total_duration) <= 60 - 0.1) {
+      stopifnot(nrow(low) > 0L, min(low$total_duration) == min(high$total_duration))
+    }
     transit_options <- unique(high$option[!high$mode %in% c("WALK", "BICYCLE", "CAR")])
     stopifnot(length(transit_options) > 0L)
     transit <- high[high$option %in% transit_options, ]
     last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
-    ends <- lapply(sf::st_geometry(last), function(g) tail(unclass(g), 1L)[1L, 1:2])
-    stopifnot(all(vapply(ends, function(x) max(abs(x - c(destination$lon, destination$lat))) < 1e-7, logical(1))))
+    snap <- find_snap(network, destination, mode = "WALK")
+    stopifnot(snap$found)
+    for (g in sf::st_geometry(last)) {
+      coordinates <- unclass(g)[, 1:2, drop = FALSE]
+      stopifnot(max(abs(coordinates[nrow(coordinates), ] - c(destination$lon, destination$lat))) < 1e-7)
+      snap_index <- if (max(abs(c(destination$lon - snap$snap_lon,
+                                 destination$lat - snap$snap_lat))) < 1e-10) nrow(coordinates) else nrow(coordinates) - 1L
+      stopifnot(max(abs(coordinates[snap_index, ] - c(snap$snap_lon, snap$snap_lat))) < 1e-7)
+    }
     shortest <- route(origin, destination, 90L, TRUE)
     stopifnot(nrow(shortest) > 0L)
+    if (min(shortest$total_duration) <= 60 - 0.1) {
+      shorter <- route(origin, destination, 60L, TRUE)
+      stopifnot(nrow(shorter) > 0L, min(shorter$total_duration) == min(shortest$total_duration))
+    }
     # Each leg/wait is rounded to 0.1min in the public output.
     totals <- as.data.table(high)[, .(difference = abs(sum(segment_duration + wait) - total_duration[1L]),
                                       tolerance = .N * .1), by = option]

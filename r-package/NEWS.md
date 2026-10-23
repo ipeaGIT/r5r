@@ -1,6 +1,6 @@
 # r5r (development version)
 
-- [#2](https://github.com/e-kotov/r5r/pull/2) `detailed_itineraries()` now retains the final partial street segment and the connection to the destination when reconstructing transit egress legs. Backward searches associate partial distances and directional costs with the correct street endpoint, and the reported egress duration includes the same complete cost used for routing and duration limits. Results can change, particularly for destinations on long street segments. This correction applies to the McRAPTOR path; the separate FastRaptor feature branch still needs integration and validation.
+- [#2](https://github.com/e-kotov/r5r/pull/2) `detailed_itineraries()` now retains the final partial street segment and the connection to the destination when reconstructing transit egress legs. Backward searches associate partial distances and directional costs with the correct street endpoint, and the reported egress duration includes the same complete cost used for routing and duration limits. Results can change, particularly for destinations on long street segments.
 
 # r5r 2.5.0
 

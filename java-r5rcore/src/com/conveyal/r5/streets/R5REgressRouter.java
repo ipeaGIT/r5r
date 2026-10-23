@@ -35,14 +35,16 @@ public final class R5REgressRouter extends StreetRouter {
         if (probe == null) return;
         State seed = new State(vertex, edgeId, probe.streetMode);
         // R5 v7.6 represents elevation/raster adjustments as an average factor per directed
-        // edge, and TraversalTimeCalculator documents scaling full-edge times for splits.
-        // This preserves that model; it does not integrate a new partial elevation profile.
+        // edge. StreetRouter.partialRideSeconds also scales a whole-edge traversal time.
+        // We ceil rather than round to avoid understating the connection (at most 1s extra).
+        // This preserves the averaged model, not an exact clipped elevation profile.
         int partialSeconds = partialMm == 0 ? 0 : (int) Math.ceil(
                 probe.getDurationSeconds() * (partialMm / (double) edge.getLengthMm()));
         int offStreetSeconds = (int) Math.ceil(offStreetMm / (1000d * profileRequest.walkSpeed));
         seed.incrementTimeInSeconds((long) partialSeconds + offStreetSeconds);
         seed.distance = partialMm + offStreetMm;
-        if (timeLimitSeconds > 0 && seed.getDurationSeconds() > timeLimitSeconds) return;
+        // Match StreetRouter.route(), which admits states strictly below the time limit.
+        if (timeLimitSeconds > 0 && seed.getDurationSeconds() >= timeLimitSeconds) return;
         streetLayer.edgeStore.startTurnRestriction(seed.streetMode, true, seed);
         queue.add(seed);
         bestStatesAtEdge.put(edgeId, seed);

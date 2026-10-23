@@ -38,13 +38,16 @@ public final class EgressPath {
             root = root.backState;
         }
         Split split = router.getOriginSplit();
-        if (split == null || (root.vertex != split.vertex0 && root.vertex != split.vertex1)) {
+        if (split == null || !((root.backEdge == split.edge && root.vertex == split.vertex0)
+                || (root.backEdge == split.edge + 1 && root.vertex == split.vertex1))) {
             throw new IllegalArgumentException("Egress path must descend from this router's point origin");
         }
         EdgeStore.Edge edge = router.streetLayer.edgeStore.getCursor(split.edge);
         Coordinate[] full = edge.getGeometry().getCoordinates();
         List<Coordinate> partial = new ArrayList<>();
-        boolean fromVertex0 = root.vertex == split.vertex0;
+        // A self-loop has the same vertex at both ends; only the directed seed edge
+        // distinguishes which part of the street leads to the snapped destination.
+        boolean fromVertex0 = root.backEdge == split.edge;
         if (fromVertex0) {
             for (int i = 0; i <= split.seg; i++) partial.add(full[i]);
         } else {

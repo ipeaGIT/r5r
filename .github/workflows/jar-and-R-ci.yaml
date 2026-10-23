@@ -1,6 +1,13 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Original commit for the manual walking-egress comparison'
+        required: true
+        default: '520010a2a2297d7bdbb2f9574585337a8d1be43f'
+        type: string
   push:
     paths:
       - java-r5rcore/**
@@ -250,6 +257,9 @@ jobs:
           working-directory: r-package
 
   walking-egress:
+    # Keep the historical two-package/300-pair audit opt-in. The physical Java
+    # regressions and testthat checks still run in ordinary CI.
+    if: github.event_name == 'workflow_dispatch'
     needs: build-jar
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -294,18 +304,25 @@ jobs:
         working-directory: java-r5rcore
         run: ./gradlew egressRegression
       - name: Install original master in isolated library
+        env:
+          BASELINE_REF: ${{ inputs.baseline_ref }}
         run: |
           mkdir -p "$RUNNER_TEMP/egress-baseline-source" "$RUNNER_TEMP/egress-baseline-lib"
-          git archive 520010a2a2297d7bdbb2f9574585337a8d1be43f r-package | tar -x -C "$RUNNER_TEMP/egress-baseline-source"
+          baseline_commit=$(git rev-parse --verify --end-of-options "$BASELINE_REF^{commit}")
+          echo "Baseline commit: $baseline_commit"
+          git archive "$baseline_commit" -- r-package | tar -x -C "$RUNNER_TEMP/egress-baseline-source"
           R CMD INSTALL --library="$RUNNER_TEMP/egress-baseline-lib" "$RUNNER_TEMP/egress-baseline-source/r-package"
       - name: Confirm original master failures on both POA routes
         run: Rscript --vanilla .github/scripts/check-walking-egress.R --baseline
         env:
           EGRESS_BASELINE_LIB: ${{ runner.temp }}/egress-baseline-lib
+          EGRESS_EXPECTED_BRIDGE: ${{ runner.temp }}/egress-baseline-source/r-package/inst/jar/r5r.jar
       - name: Install corrected package
         run: R CMD INSTALL r-package
       - name: Corrected POA routes and deterministic 300-pair audit
         run: Rscript --vanilla .github/scripts/check-walking-egress.R
+        env:
+          EGRESS_EXPECTED_BRIDGE: r-package/inst/jar/r5r.jar
       - uses: actions/upload-artifact@v4
         if: always()
         with:
