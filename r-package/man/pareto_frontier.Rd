@@ -57,18 +57,21 @@ minutes later, and travel times are summarized over these departures using
 \code{percentiles} (the median by default). With a \code{fare_structure}, and always
 in \code{\link[=pareto_frontier]{pareto_frontier()}}, departures are instead sampled at random within
 the window: \code{draws_per_minute} per minute on average (one in
-\code{\link[=pareto_frontier]{pareto_frontier()}}), the same in every call from the same origin.
+\code{\link[=pareto_frontier]{pareto_frontier()}}), different for each origin and the same in every call
+from the same origin with the same \code{seed}.
 Defaults to 10. See \code{vignette("time_window", package = "r5r")}.}
 
 \item{seed}{An integer or \code{NULL}. The seed of the Monte Carlo draws of the
-departure offsets of frequency-based transit routes. Defaults to \code{NULL},
-in which case the draws are random and results may vary slightly between
-runs. With an integer, the same inputs always give the same results,
-regardless of \code{n_threads}. Results are still a Monte Carlo sample, so a
-different seed may give slightly different results: report the seed used
-and check how sensitive the results are to it. Note that \code{set.seed()} has
-no effect on these draws. This parameter only affects the results when the
-GTFS feeds contain a \code{frequencies.txt} table. The departure times sampled within \code{time_window} are already fixed for each origin; \code{seed} only controls the departure offsets of frequency-based routes.}
+departure offsets of frequency-based transit routes and, with the McRaptor
+algorithm, of the departure times sampled within \code{time_window}. Defaults
+to \code{NULL}, in which case the draws are random and results may vary
+slightly between runs. With an integer, the same inputs always give the
+same results, regardless of \code{n_threads}. Results are still a Monte Carlo
+sample, so a different seed may give slightly different results: report
+the seed used and check how sensitive the results are to it. Note that
+\code{set.seed()} has no effect on these draws. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a \code{frequencies.txt} table. This function always uses the McRaptor algorithm, so \code{seed} affects the results with or without frequencies.}
 
 \item{percentiles}{An integer vector (max length of 5). Specifies the
 percentile to use when returning travel time estimates within the given

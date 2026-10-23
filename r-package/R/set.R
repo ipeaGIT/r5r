@@ -227,18 +227,48 @@ set_percentiles <- function(r5r_network, percentiles) {
 #' @template r5r_network
 #' @param draws_per_minute A number.
 #' @param time_window A number.
+#' @param fare_structure A fare structure or `NULL`. When set, R5 uses the
+#'   McRaptor algorithm, and combinations of `draws_per_minute` and
+#'   `time_window` that its departure-time sampler cannot handle are rejected.
 #'
 #' @return Invisibly returns `TRUE`.
 #'
 #' @family setting functions
 #'
 #' @keywords internal
-set_monte_carlo_draws <- function(r5r_network, draws_per_minute, time_window) {
+set_monte_carlo_draws <- function(r5r_network,
+                                  draws_per_minute,
+                                  time_window,
+                                  fare_structure = NULL) {
   # time_window is previously checked in set_time_window()
   checkmate::assert_count(draws_per_minute, positive = TRUE)
 
   draws <- time_window * draws_per_minute
   draws <- as.integer(draws)
+
+  # R5's McRaptor samples departure times with steps of nextInt(m) + m %/% 2
+  # seconds, m = 60 %/% draws_per_minute, and retries until it gets exactly
+  # `draws` of them (#602). The steps average less than m, so the expected count
+  # overshoots `draws` as the window grows and the retries may never end.
+  # p is the normal approximation of the chance of one retry hitting `draws`;
+  # it matches a simulation of the sampler (dpm 3-10, windows 10-240 min).
+  # p >= 5e-5 accepts every case of #602 that worked (dpm 7, window 10: 8.7e-5)
+  if (!is.null(fare_structure)) {
+    m <- 60 %/% draws_per_minute
+    mu <- (m - 1) / 2 + m %/% 2
+    span <- 60 * time_window
+    sd <- sqrt(span * (m^2 - 1) / 12 / mu^3)
+    z <- ((span - (m - 1) / 2) / mu + 1 - draws) / sd
+    p <- if (m < 2) 0 else exp(-z^2 / 2) / sqrt(2 * pi) / sd
+
+    if (p < 5e-5) {
+      cli::cli_abort(c(
+        "{.arg draws_per_minute} = {draws_per_minute} with a {.arg time_window} of {time_window} minutes is not supported with a {.arg fare_structure}.",
+        "i" = "R5's McRaptor algorithm cannot sample this many departure times and could run indefinitely.",
+        "i" = "Use a lower {.arg draws_per_minute} or a shorter {.arg time_window}. See {.url https://github.com/ipea/r5r/issues/602}."
+      ))
+    }
+  }
 
   r5r_network$setNumberOfMonteCarloDraws(draws)
 

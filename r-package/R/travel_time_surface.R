@@ -167,7 +167,7 @@ travel_time_surface <- function(r5r_network,
 
   set_time_window(r5r_network, time_window)
   set_percentiles(r5r_network, percentiles)
-  set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+  set_monte_carlo_draws(r5r_network, draws_per_minute, time_window, fare_structure)
   set_monte_carlo_seed(r5r_network, seed)
   set_speed(r5r_network, walk_speed, "walk")
   set_speed(r5r_network, bike_speed, "bike")
