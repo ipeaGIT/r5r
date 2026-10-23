@@ -23,7 +23,10 @@ test_that("transit egress keeps the destination connection and consistent cutoff
     for (shortest in c(FALSE, TRUE)) {
       result <- if (shortest) route(90L, TRUE) else high
       expect_gt(nrow(result), 0L)
-      last <- result[!duplicated(result$option, fromLast = TRUE), ]
+      transit_options <- unique(result$option[!result$mode %in% c("WALK", "BICYCLE", "CAR")])
+      expect_gt(length(transit_options), 0L)
+      transit <- result[result$option %in% transit_options, ]
+      last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
       for (geometry in sf::st_geometry(last)) {
         endpoint <- tail(unclass(geometry), 1L)[1L, 1:2]
         expect_equal(unname(endpoint), c(destination$lon, destination$lat), tolerance = 1e-7)

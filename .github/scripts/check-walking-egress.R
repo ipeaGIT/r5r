@@ -48,7 +48,10 @@ for (i in seq_len(nrow(known))) {
     stopifnot(nrow(low) == 0L, min(high$total_duration) < 60)
   } else {
     stopifnot(min(high$total_duration) > 60 || nrow(low) > 0L)
-    last <- high[!duplicated(high$option, fromLast = TRUE), ]
+    transit_options <- unique(high$option[!high$mode %in% c("WALK", "BICYCLE", "CAR")])
+    stopifnot(length(transit_options) > 0L)
+    transit <- high[high$option %in% transit_options, ]
+    last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
     ends <- lapply(sf::st_geometry(last), function(g) tail(unclass(g), 1L)[1L, 1:2])
     stopifnot(all(vapply(ends, function(x) max(abs(x - c(destination$lon, destination$lat))) < 1e-7, logical(1))))
     shortest <- route(origin, destination, 90L, TRUE)

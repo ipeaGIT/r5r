@@ -98,6 +98,12 @@ public class EgressRegression {
         Coordinate end = segment.geometry.getCoordinateN(segment.geometry.getNumPoints() - 1);
         check(end.equals2D(new Coordinate(fixture.destinationLon, fixture.destinationLat)),
                 "final geometry reaches requested destination");
+        double geometryMeters = 0;
+        Coordinate[] coordinates = segment.geometry.getCoordinates();
+        for (int i = 1; i < coordinates.length; i++) {
+            geometryMeters += coordinates[i].distance(coordinates[i - 1]) * 111111.111;
+        }
+        check(Math.abs(geometryMeters - 24) < 0.1, "geometry represents the same complete 24m walk");
         if (!baseline) {
             check(segment.streetEdges.size() == 2, "full approach edge and clipped terminal edge retained");
             check(segment.streetEdges.get(1).distance == 10000, "terminal edge distance clipped to 10m");
