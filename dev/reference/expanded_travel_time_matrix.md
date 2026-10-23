@@ -184,22 +184,31 @@ expanded_travel_time_matrix(
   minute of `time_window`, in a deterministic way. In functions that
   accept a `fare_structure`, passing one switches to the McRaptor
   algorithm, which instead routes `time_window * draws_per_minute`
-  departure times sampled at random within the window (the same in every
-  call from the same origin). This parameter then affects the results
-  with or without frequencies.
+  departure times sampled at random within the window (different for
+  each origin, and the same in every call from the same origin with the
+  same `seed`). This parameter then affects the results with or without
+  frequencies. R5's McRaptor cannot sample many departure times per
+  minute over long windows, so such combinations raise an error (e.g. 8
+  draws per minute in a 10-minute window, or 5 in a window of 150
+  minutes or more).
 
 - seed:
 
   An integer or `NULL`. The seed of the Monte Carlo draws of the
-  departure offsets of frequency-based transit routes. Defaults to
-  `NULL`, in which case the draws are random and results may vary
-  slightly between runs. With an integer, the same inputs always give
-  the same results, regardless of `n_threads`. Results are still a Monte
-  Carlo sample, so a different seed may give slightly different results:
-  report the seed used and check how sensitive the results are to it.
-  Note that [`set.seed()`](https://rdrr.io/r/base/Random.html) has no
-  effect on these draws. This parameter only affects the results when
-  the GTFS feeds contain a `frequencies.txt` table.
+  departure offsets of frequency-based transit routes and, with the
+  McRaptor algorithm, of the departure times sampled within
+  `time_window`. Defaults to `NULL`, in which case the draws are random
+  and results may vary slightly between runs. With an integer, the same
+  inputs always give the same results, regardless of `n_threads`.
+  Results are still a Monte Carlo sample, so a different seed may give
+  slightly different results: report the seed used and check how
+  sensitive the results are to it. Note that
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) has no effect on
+  these draws. With the default routing algorithm, this parameter only
+  affects the results when the GTFS feeds contain a `frequencies.txt`
+  table. In functions that accept a `fare_structure`, passing one
+  switches to the McRaptor algorithm, and `seed` then affects the
+  results with or without frequencies.
 
 - n_threads:
 
@@ -345,6 +354,9 @@ can be found in Delling et al (2015). However, whenever the user
 includes transit fares inputs to these functions, they automatically
 switch to use an `R5`-specific extension to the McRAPTOR routing
 algorithm.
+[`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
+also uses RAPTOR when it only returns the fastest itinerary
+(`shortest_path = TRUE`) and no fares are used.
 
 - Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
   transit and land use sketch planning using interactive accessibility

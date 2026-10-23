@@ -131,7 +131,7 @@ head(prtf)
 #>           <char>              <char>      <int>       <int>         <num>
 #> 1: public_market       public_market         50           0           1.0
 #> 2: public_market bus_central_station         50          23           1.0
-#> 3: public_market bus_central_station         50          19           4.5
+#> 3: public_market bus_central_station         50          18           4.5
 #> 4: public_market bus_central_station         50          14           4.8
 #> 5: public_market    gasometer_museum         50          29           1.0
 #> 6: public_market    gasometer_museum         50          13           4.8

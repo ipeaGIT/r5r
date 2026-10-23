@@ -5,7 +5,12 @@ Sets the number of Monte Carlo draws to be used by R5.
 ## Usage
 
 ``` r
-set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+set_monte_carlo_draws(
+  r5r_network,
+  draws_per_minute,
+  time_window,
+  fare_structure = NULL
+)
 ```
 
 ## Arguments
@@ -22,6 +27,12 @@ set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
 - time_window:
 
   A number.
+
+- fare_structure:
+
+  A fare structure or `NULL`. When set, R5 uses the McRaptor algorithm,
+  and combinations of `draws_per_minute` and `time_window` that its
+  departure-time sampler cannot handle are rejected.
 
 ## Value
 

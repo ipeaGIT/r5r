@@ -127,20 +127,23 @@ minutes later, and travel times are summarized over these departures using
 <code>percentiles</code> (the median by default). With a <code>fare_structure</code>, and always
 in <code>pareto_frontier()</code>, departures are instead sampled at random within
 the window: <code>draws_per_minute</code> per minute on average (one in
-<code>pareto_frontier()</code>), the same in every call from the same origin.
+<code>pareto_frontier()</code>), different for each origin and the same in every call
+from the same origin with the same <code>seed</code>.
 Defaults to 10. See <code><a href="../articles/time_window.html">vignette("time_window", package = "r5r")</a></code>.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p>An integer or <code>NULL</code>. The seed of the Monte Carlo draws of the
-departure offsets of frequency-based transit routes. Defaults to <code>NULL</code>,
-in which case the draws are random and results may vary slightly between
-runs. With an integer, the same inputs always give the same results,
-regardless of <code>n_threads</code>. Results are still a Monte Carlo sample, so a
-different seed may give slightly different results: report the seed used
-and check how sensitive the results are to it. Note that <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has
-no effect on these draws. This parameter only affects the results when the
-GTFS feeds contain a <code>frequencies.txt</code> table. The departure times sampled within <code>time_window</code> are already fixed for each origin; <code>seed</code> only controls the departure offsets of frequency-based routes.</p></dd>
+departure offsets of frequency-based transit routes and, with the McRaptor
+algorithm, of the departure times sampled within <code>time_window</code>. Defaults
+to <code>NULL</code>, in which case the draws are random and results may vary
+slightly between runs. With an integer, the same inputs always give the
+same results, regardless of <code>n_threads</code>. Results are still a Monte Carlo
+sample, so a different seed may give slightly different results: report
+the seed used and check how sensitive the results are to it. Note that
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has no effect on these draws. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a <code>frequencies.txt</code> table. This function always uses the McRaptor algorithm, so <code>seed</code> affects the results with or without frequencies.</p></dd>
 
 
 <dt id="arg-percentiles">percentiles<a class="anchor" aria-label="anchor" href="#arg-percentiles"></a></dt>
@@ -332,8 +335,9 @@ ignoring the timezone attribute.</p>
 
 
 
-<p>The <code><a href="detailed_itineraries.html">detailed_itineraries()</a></code> and <code>pareto_frontier()</code> functions use an
-<code>R5</code>-specific extension to the McRAPTOR routing algorithm. The
+<p>The <code>pareto_frontier()</code> function, and <code><a href="detailed_itineraries.html">detailed_itineraries()</a></code> with
+<code>shortest_path = FALSE</code> or a <code>fare_structure</code>, use an <code>R5</code>-specific
+extension to the McRAPTOR routing algorithm. The
 implementation used in <code><a href="detailed_itineraries.html">detailed_itineraries()</a></code> allows the router to find
 paths that are optimal and less than optimal in terms of travel time, with
 some heuristics around multiple access modes, riding the same patterns, etc.
@@ -398,11 +402,11 @@ Information Science, 33(9), 1759-1787. <a href="https://doi.org/10.1080/13658816
 <span class="r-out co"><span class="r-pr">#&gt;</span>            from_id           to_id percentile travel_time monetary_cost</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;          &lt;char&gt;      &lt;int&gt;       &lt;int&gt;         &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: 89a901291abffff 89a901291abffff         50           2           4.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff 89a9012a3cfffff         50          73           9.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 89a901291abffff 89a9012a3cfffff         50          72           9.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3: 89a901291abffff 89a901295b7ffff         50          61           4.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4: 89a901291abffff 89a901295b7ffff         50          55           4.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901291abffff 89a901295b7ffff         50          46           9.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901291abffff 89a901284a3ffff         50          61           4.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 89a901291abffff 89a901295b7ffff         50          45           9.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 89a901291abffff 89a901284a3ffff         50          59           4.8</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> r5r_network has been successfully stopped.</span>

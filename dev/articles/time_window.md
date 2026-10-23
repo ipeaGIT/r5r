@@ -50,15 +50,16 @@ This holds for the default routing algorithm (FastRaptor). When a
 [`accessibility()`](https://ipea.github.io/r5r/dev/reference/accessibility.md)
 or
 [`travel_time_surface()`](https://ipea.github.io/r5r/dev/reference/travel_time_surface.md),
-and always in
-[`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
-and
-[`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md),
-R⁵ uses the McRaptor algorithm instead. McRaptor does not route a
-departure every minute: it routes `time_window * draws_per_minute`
-departure times sampled at random within the window (consecutive
-departures are, on average, `1 / draws_per_minute` minutes apart, and
-the same departure times are used in every call with the same origin).
+always in
+[`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md),
+and in
+[`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
+with `shortest_path = FALSE`, R⁵ uses the McRaptor algorithm instead.
+McRaptor does not route a departure every minute: it routes
+`time_window * draws_per_minute` departure times sampled at random
+within the window (consecutive departures are, on average,
+`1 / draws_per_minute` minutes apart, each origin gets its own departure
+times, and the same ones in every call with the same origin and `seed`).
 So with McRaptor, `draws_per_minute` affects results even if the GTFS
 feeds have no `frequencies.txt` table.
 [`pareto_frontier()`](https://ipea.github.io/r5r/dev/reference/pareto_frontier.md)
@@ -136,7 +137,7 @@ head(acc, n = 10)
 #>              <char>      <char>      <int>  <int>         <num>
 #>  1: 89a8100c603ffff     schools         10     45            13
 #>  2: 89a8100c603ffff     schools         20     45            13
-#>  3: 89a8100c603ffff     schools         50     45             7
+#>  3: 89a8100c603ffff     schools         50     45             6
 #>  4: 89a8100c603ffff     schools         70     45             6
 #>  5: 89a8100c603ffff     schools         80     45             6
 #>  6: 89a8100c617ffff     schools         10     45            14
@@ -270,16 +271,16 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       38.0
-#>  2:       40.1
-#>  3:       44.7
-#>  4:       49.1
-#>  5:       49.2
-#>  6:       37.2
-#>  7:       37.7
-#>  8:       39.3
-#>  9:       41.6
-#> 10:       53.7
+#>  1:       36.8
+#>  2:       39.5
+#>  3:       39.7
+#>  4:       44.0
+#>  5:       52.6
+#>  6:       38.4
+#>  7:       39.2
+#>  8:       41.8
+#>  9:       43.0
+#> 10:       44.4
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.
@@ -292,12 +293,19 @@ and arrive later than others (use `time_window = 1` for the earliest
 arrival). With `shortest_path = FALSE`, it also returns sub-optimal
 alternatives.
 
-It uses the McRaptor algorithm with one draw per minute (see Section 2):
-consecutive departures are 30 to 90 seconds apart, so a 10-minute
-`time_window` simulates about 10 departures. Each departure is routed
-separately, and with the default `suboptimal_minutes = 0` only the
-itineraries arriving earliest are kept for each departure, even if a
-slower one has fewer transfers.
+With the default `shortest_path = TRUE` and no `fare_structure`, it
+routes one departure at each minute of `time_window`, as
+[`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md)
+does with schedule-based GTFS; ties between equally fast itineraries go
+to the earliest departure.
+
+With `shortest_path = FALSE` or a `fare_structure`, it uses the McRaptor
+algorithm with one draw per minute (see Section 2): consecutive
+departures are 30 to 90 seconds apart, so a 10-minute `time_window`
+simulates about 10 departures. Each departure is routed separately, and
+with the default `suboptimal_minutes = 0` only the itineraries arriving
+earliest are kept for each departure, even if a slower one has fewer
+transfers.
 
 *obs.*
 [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)

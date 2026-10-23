@@ -245,21 +245,26 @@ contain a <code>frequencies.txt</code> table; otherwise, r5r still routes a depa
 every minute of <code>time_window</code>, in a deterministic way. In functions that
 accept a <code>fare_structure</code>, passing one switches to the McRaptor algorithm,
 which instead routes <code>time_window * draws_per_minute</code> departure times
-sampled at random within the window (the same in every call from the same
-origin). This parameter then affects the results with or without
-frequencies.</p></dd>
+sampled at random within the window (different for each origin, and the
+same in every call from the same origin with the same <code>seed</code>). This
+parameter then affects the results with or without frequencies. R5's
+McRaptor cannot sample many departure times per minute over long windows,
+so such combinations raise an error (e.g. 8 draws per minute in a
+10-minute window, or 5 in a window of 150 minutes or more).</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p>An integer or <code>NULL</code>. The seed of the Monte Carlo draws of the
-departure offsets of frequency-based transit routes. Defaults to <code>NULL</code>,
-in which case the draws are random and results may vary slightly between
-runs. With an integer, the same inputs always give the same results,
-regardless of <code>n_threads</code>. Results are still a Monte Carlo sample, so a
-different seed may give slightly different results: report the seed used
-and check how sensitive the results are to it. Note that <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has
-no effect on these draws. This parameter only affects the results when the
-GTFS feeds contain a <code>frequencies.txt</code> table.</p></dd>
+departure offsets of frequency-based transit routes and, with the McRaptor
+algorithm, of the departure times sampled within <code>time_window</code>. Defaults
+to <code>NULL</code>, in which case the draws are random and results may vary
+slightly between runs. With an integer, the same inputs always give the
+same results, regardless of <code>n_threads</code>. Results are still a Monte Carlo
+sample, so a different seed may give slightly different results: report
+the seed used and check how sensitive the results are to it. Note that
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> has no effect on these draws. With the default routing
+algorithm, this parameter only affects the results when the GTFS feeds
+contain a <code>frequencies.txt</code> table. In functions that accept a <code>fare_structure</code>, passing one switches to the McRaptor algorithm, and <code>seed</code> then affects the results with or without frequencies.</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
@@ -395,7 +400,9 @@ minute over the time window set by the user in the 'time_window' parameter.
 A detailed description of base RAPTOR can be found in Delling et al (2015).
 However, whenever the user includes transit fares inputs to these functions,
 they automatically switch to use an <code>R5</code>-specific extension to the McRAPTOR
-routing algorithm.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
+routing algorithm. <code><a href="detailed_itineraries.html">detailed_itineraries()</a></code> also uses RAPTOR when it only
+returns the fastest itinerary (<code>shortest_path = TRUE</code>) and no fares are
+used.</p><ul><li><p>Conway, M. W., Byrd, A., &amp; van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
 on combined schedule and headway-based networks. Transportation Research
 Record, 2653(1), 45-53. <a href="https://doi.org/10.3141/2653-06" class="external-link">doi:10.3141/2653-06</a></p></li>

@@ -24,11 +24,13 @@ bus stop (R5’s documentation calls legs ‘segments’). Each leg has its
 mode, waiting time, travel time, distance and geometry. The function can
 also return suboptimal route alternatives.
 
-**obs.** Use
+**obs.** If you only need the routes used and the access, waiting,
+in-vehicle and transfer times,
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md)
+is enough. Use
 [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
-only if you need suboptimal alternative routes and/or route geometries.
-For route information by trip segment alone, we strongly recommend
-[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/expanded_travel_time_matrix.md).
+when you need each trip segment’s mode, distance or geometry, or
+suboptimal alternative routes.
 
 ## 2. Build routable transport network with `build_network()`
 
@@ -103,15 +105,15 @@ head(det)
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           35.6           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           35.6           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           35.6           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           35.6           9460       5 WALK
-#> 6 -51.22875      2       14:07:57           42.7           8773       1 WALK
+#> 1 -51.22875      1       14:08:16           35.3           9460       1 WALK
+#> 2 -51.22875      1       14:08:16           35.3           9460       2 RAIL
+#> 3 -51.22875      1       14:08:16           35.3           9460       3 WALK
+#> 4 -51.22875      1       14:08:16           35.3           9460       4  BUS
+#> 5 -51.22875      1       14:08:16           35.3           9460       5 WALK
+#> 6 -51.22875      2       14:08:16           42.4           8773       1 WALK
 #>   segment_duration wait distance  route                       geometry
 #> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 2              6.6  1.7     4796 LINHA1 LINESTRING (-51.19763 -29.9...
 #> 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...
@@ -148,11 +150,19 @@ fig
 
 ## 4. Other options
 
+- **Fastest route only:** with the default `shortest_path = TRUE` and no
+  `fare_structure`, public transport is routed with R5’s RAPTOR
+  algorithm, the one used by
+  [`travel_time_matrix()`](https://ipea.github.io/r5r/dev/reference/travel_time_matrix.md),
+  which is much faster than the search for alternative routes. It routes
+  one departure at each minute of `time_window` and returns the fastest
+  itinerary.
 - **All origins to all destinations:** by default,
   [`detailed_itineraries()`](https://ipea.github.io/r5r/dev/reference/detailed_itineraries.md)
   routes the 1st origin to the 1st destination, the 2nd to the 2nd, and
   so on. Set `all_to_all = TRUE` to route every origin to every
-  destination.
+  destination. With `shortest_path = TRUE`, a single search per origin
+  then serves all its destinations.
 - **No geometry:** set `drop_geometry = TRUE` to return results without
   the trip geometry. This makes the function faster.
 
