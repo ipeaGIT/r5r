@@ -301,7 +301,7 @@ jobs:
       - name: Confirm original master failures on both POA routes
         run: Rscript .github/scripts/check-walking-egress.R --baseline
         env:
-          R_LIBS_USER: ${{ runner.temp }}/egress-baseline-lib
+          EGRESS_BASELINE_LIB: ${{ runner.temp }}/egress-baseline-lib
       - name: Install corrected package
         run: R CMD INSTALL r-package
       - name: Corrected POA routes and deterministic 300-pair audit

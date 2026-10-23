@@ -1,5 +1,7 @@
 # Run only in GitHub Actions, after installing the intended package in its own library.
 baseline <- "--baseline" %in% commandArgs(TRUE)
+baseline_library <- Sys.getenv("EGRESS_BASELINE_LIB")
+if (nzchar(baseline_library)) .libPaths(c(baseline_library, .libPaths()))
 options(java.parameters = "-Xmx4G")
 library(r5r)
 library(data.table)
