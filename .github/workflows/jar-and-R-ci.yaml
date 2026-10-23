@@ -299,13 +299,13 @@ jobs:
           git archive 520010a2a2297d7bdbb2f9574585337a8d1be43f r-package | tar -x -C "$RUNNER_TEMP/egress-baseline-source"
           R CMD INSTALL --library="$RUNNER_TEMP/egress-baseline-lib" "$RUNNER_TEMP/egress-baseline-source/r-package"
       - name: Confirm original master failures on both POA routes
-        run: Rscript .github/scripts/check-walking-egress.R --baseline
+        run: Rscript --vanilla .github/scripts/check-walking-egress.R --baseline
         env:
           EGRESS_BASELINE_LIB: ${{ runner.temp }}/egress-baseline-lib
       - name: Install corrected package
         run: R CMD INSTALL r-package
       - name: Corrected POA routes and deterministic 300-pair audit
-        run: Rscript .github/scripts/check-walking-egress.R
+        run: Rscript --vanilla .github/scripts/check-walking-egress.R
       - uses: actions/upload-artifact@v4
         if: always()
         with:
