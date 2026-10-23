@@ -9,6 +9,7 @@ import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TObjectIntMap;
+import org.ipea.r5r.R5.R5TravelTimeComputer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +105,8 @@ public class TripPlanner {
             McRaptorSuboptimalPathProfileRouter router = new McRaptorSuboptimalPathProfileRouter(transportNetwork,
                     request, accessTimes, egressTimes, listSupplier,
                     null, true);
+            // each origin gets its own sample of departure times (#601)
+            R5TravelTimeComputer.seedOffsets(router, null, request.fromLat, request.fromLon);
 
             int maxFare = request.maxFare;
             if (request.inRoutingFareCalculator == null) {

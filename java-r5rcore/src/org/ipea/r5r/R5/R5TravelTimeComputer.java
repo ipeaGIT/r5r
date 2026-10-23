@@ -64,8 +64,23 @@ public class R5TravelTimeComputer extends TravelTimeComputer {
         if (seed != null) seedOffsets(FastRaptorWorker.class, worker, seed, fromLat, fromLon);
     }
 
+    /**
+     * McRAPTOR also samples its departure times with its own generator (mersenneTwister), which R5 seeds from
+     * (int) (fromLat * 1e9): this overflows beyond about 2.15 degrees of latitude, so almost every origin gets the
+     * same sample (#601, conveyal/r5#1026). It is always reseeded here: from the origin coordinates when seed is
+     * null (deterministic, as in R5, but different for each origin), and otherwise also from the seed, with a stream
+     * distinct from the offsets one.
+     */
     public static void seedOffsets(McRaptorSuboptimalPathProfileRouter router, Integer seed, double fromLat, double fromLon) {
         if (seed != null) seedOffsets(McRaptorSuboptimalPathProfileRouter.class, router, seed, fromLat, fromLon);
+        long departureSeed = seed == null ? Objects.hash(fromLat, fromLon) : Objects.hash(seed, fromLat, fromLon, 1);
+        try {
+            Field mtField = McRaptorSuboptimalPathProfileRouter.class.getDeclaredField("mersenneTwister");
+            mtField.setAccessible(true);
+            ((MersenneTwister) mtField.get(router)).setSeed(departureSeed);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("McRAPTOR departure-time sampling cannot be seeded with this version of R5.", e);
+        }
     }
 
     private static void seedOffsets(Class<?> routerClass, Object router, int seed, double fromLat, double fromLon) {

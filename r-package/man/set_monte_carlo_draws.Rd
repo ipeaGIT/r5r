@@ -4,7 +4,12 @@
 \alias{set_monte_carlo_draws}
 \title{Set number of Monte Carlo draws}
 \usage{
-set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
+set_monte_carlo_draws(
+  r5r_network,
+  draws_per_minute,
+  time_window,
+  fare_structure = NULL
+)
 }
 \arguments{
 \item{r5r_network}{A routable transport network created with \code{\link[=build_network]{build_network()}}.}
@@ -12,6 +17,10 @@ set_monte_carlo_draws(r5r_network, draws_per_minute, time_window)
 \item{draws_per_minute}{A number.}
 
 \item{time_window}{A number.}
+
+\item{fare_structure}{A fare structure or \code{NULL}. When set, R5 uses the
+McRaptor algorithm, and combinations of \code{draws_per_minute} and
+\code{time_window} that its departure-time sampler cannot handle are rejected.}
 }
 \value{
 Invisibly returns \code{TRUE}.
