@@ -43,6 +43,8 @@ public class RoutingProperties {
     public int[] cutoffs = DEFAULT_CUTOFFS;
     public boolean travelTimesBreakdown = false;
     public boolean expandedTravelTimes = false;
+    public boolean fastRaptor = false; // detailed_itineraries(), shortest path without fares: FastRaptorWorker, not McRAPTOR
+    public boolean fastRaptorPerOrigin = false; // all_to_all: one FastRaptor search per origin, shared by its pairs
     public PathResult.Stat travelTimesBreakdownStat = PathResult.Stat.MEAN;
 
     public float maxFare = DEFAULT_MAX_FARE;
@@ -91,6 +93,8 @@ public class RoutingProperties {
         travelTimesBreakdown = false;
         travelTimesBreakdownStat = PathResult.Stat.MEAN;
         expandedTravelTimes = false;
+        fastRaptor = false;
+        fastRaptorPerOrigin = false;
 
         percentiles = DEFAULT_PERCENTILES;
         cutoffs = DEFAULT_CUTOFFS;

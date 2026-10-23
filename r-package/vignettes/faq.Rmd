@@ -45,7 +45,7 @@ knitr::opts_chunk$set(
 
 <details><summary>click to expand</summary>
 
-> The functions `travel_time_matrix()` (and `expanded_travel_time_matrix()`) and `detailed_itineraries()` use different routing algorithms, as explained in the documentation of these functions. As such, we advise not to use or combine the output of these functions.
+> `travel_time_matrix()` (and `expanded_travel_time_matrix()`) and `detailed_itineraries()` compute different things, as explained in the documentation of these functions. `detailed_itineraries()` returns the fastest itinerary over the time window rather than a percentile of travel times, and it routes the walk or bike legs to and from public transport with separate street searches for each origin-destination pair (`travel_time_matrix()` uses precomputed street times between stops and destinations). With `shortest_path = FALSE` or a `fare_structure`, it also uses a different routing algorithm (McRAPTOR), which simulates departures at random seconds. As such, we advise not to combine the output of these functions.
 
 </details>
 

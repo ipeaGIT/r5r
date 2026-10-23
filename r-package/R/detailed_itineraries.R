@@ -14,27 +14,29 @@
 #' @template fare_structure
 #' @template max_fare
 #' @param time_window An integer. The time window in minutes for which `r5r`
-#'   will calculate multiple itineraries. Defaults to 10. Departures are
-#'   simulated at random seconds, about one per minute (30 to 90 seconds
-#'   apart), with the same departure times in every call with the same origin.
-#'   Each departure is routed separately, so an itinerary may appear or
-#'   disappear when `departure_datetime` changes by one minute, depending on
-#'   whether a departure still catches a faster connection. Unlike other
-#'   routing functions, results are not aggregated by percentile: when the same
-#'   sequence of routes appears in several departures, only the fastest is
-#'   kept, so the output may contain trips departing after
-#'   `departure_datetime` but within the window. See
+#'   will calculate multiple itineraries. Defaults to 10. Unlike other routing
+#'   functions, results are not aggregated by percentile, so the output may
+#'   contain trips departing after `departure_datetime` but within the window.
+#'   With `shortest_path = TRUE` and no `fare_structure`, a trip is routed for
+#'   each minute from `departure_datetime` until `time_window` minutes later,
+#'   and the fastest one is returned (ties go to the earliest departure).
+#'   Otherwise, departures are simulated at random seconds, about one per
+#'   minute (30 to 90 seconds apart), with the same departure times in every
+#'   call with the same origin, and each departure is routed separately: an
+#'   itinerary may appear or disappear when `departure_datetime` changes by one
+#'   minute, and when the same sequence of routes appears in several
+#'   departures, only the fastest is kept. See
 #'   `vignette("time_window", package = "r5r")`.
 #' @param suboptimal_minutes A number. How many minutes after the optimal
-#'   arrival a non-optimal RAPTOR branch may arrive and still be kept (e.g.
+#'   arrival a non-optimal McRAPTOR branch may arrive and still be kept (e.g.
 #'   with `10`, routes arriving up to 10 minutes after the fastest one are
-#'   considered). The comparison is made separately for each departure within
-#'   `time_window` and uses arrival time only: a route beyond this margin is
-#'   discarded even if it has fewer transfers. The default, `0`, keeps only
-#'   routes arriving at the earliest time for each departure. Higher values
-#'   return more itineraries, emulating people who take a slower route for
-#'   practical reasons (e.g. mode preference, safety). Values above 0 can only
-#'   be used when `shortest_path` is `FALSE` and `fare_structure` is `NULL`.
+#'   considered). It can only be used when `shortest_path = FALSE` and 
+#'   `fare_structure` is `NULL`. The comparison is made separately for each 
+#'   departure within `time_window` and uses arrival time only: a route beyond 
+#'   this margin is discarded even if it has fewer transfers. The default, `0`, 
+#'   keeps only routes arriving at the earliest time for each departure. Higher 
+#'   values return more itineraries, emulating people who take a slower route for
+#'   practical reasons (e.g. mode preference, safety).
 #' @param shortest_path A logical. Whether the function should only return the
 #'   fastest itinerary between each origin and destination pair (the default)
 #'   or multiple alternatives. The fastest itinerary is the one with the
@@ -42,10 +44,16 @@
 #'   departures within `time_window`. With a large `time_window`, it may depart
 #'   later and arrive later than other itineraries; use `time_window = 1` to
 #'   get the itinerary with the earliest arrival for a given departure time.
+#'   Without a `fare_structure`, public transport trips are then routed with
+#'   R5's RAPTOR algorithm, which is much faster than the McRAPTOR algorithm
+#'   used for alternative routes and fares (see the Fastest itinerary section).
 #' @param all_to_all A logical. Whether to query routes between the 1st origin
 #'   to the 1st destination, then the 2nd origin to the 2nd destination, and so
 #'   on (`FALSE`, the default) or to query routes between all origins to all
-#'   destinations (`TRUE`).
+#'   destinations (`TRUE`). With `shortest_path = TRUE` and no `fare_structure`,
+#'   `all_to_all = TRUE` runs one public transport search per origin for all
+#'   its destinations, which is much faster than listing the same pairs with
+#'   `all_to_all = FALSE`.
 #' @param drop_geometry A logical. Whether to drop the geometry of each trip
 #'   leg from the output. Defaults to `FALSE` (geometry kept).
 #' @param osm_link_ids A logical. Whether the output should include additional
@@ -70,6 +78,25 @@
 #' @template datetime_parsing_section
 #' @template mcraptor_algorithm_section
 #'
+#' @section Fastest itinerary:
+#'
+#' When only the fastest itinerary is returned (`shortest_path = TRUE`) and no
+#' `fare_structure` is used, public transport is routed with R5's RAPTOR
+#' algorithm (Conway et al, 2017), the one used by [travel_time_matrix()],
+#' which is much faster than McRAPTOR. Compared with McRAPTOR, the results can
+#' differ slightly: departures are routed every minute of `time_window`
+#' instead of at random seconds, so the itinerary returned is never more than
+#' about a minute slower and often faster; walking transfers between stops are
+#' limited by `max_walk_time` (McRAPTOR only applies it to the first and last
+#' legs); stops where the GTFS `pickup_type` or `drop_off_type` does not allow
+#' boarding or alighting are respected; and when two trips are equally fast,
+#' the route chosen may differ.
+#'
+#' - Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
+#' transit and land use sketch planning using interactive accessibility methods
+#' on combined schedule and headway-based networks. Transportation Research
+#' Record, 2653(1), 45-53. \doi{10.3141/2653-06}
+#'
 #' @return When `drop_geometry` is `FALSE`, the function outputs a `LINESTRING
 #'   sf` with detailed information on the itineraries between the specified
 #'   origins and destinations. When `TRUE`, the output is a `data.table`. All
@@ -79,7 +106,8 @@
 #'     origin and destination of the pair;
 #'   - `option`: the itinerary number within the pair. Options are ordered
 #'     with direct (non-transit) trips first, then by number of segments, then
-#'     by duration, so `option` 1 is not necessarily the fastest one;
+#'     by duration, so `option` 1 is not necessarily the fastest one. With
+#'     `shortest_path = TRUE`, each pair has a single itinerary (`option` 1);
 #'   - `departure_time`: the departure time of the itinerary (`"HH:MM:SS"`);
 #'   - `total_duration`, `total_distance`: duration and distance of the whole
 #'     itinerary;
@@ -278,6 +306,14 @@ detailed_itineraries <- function(r5r_network,
   # SCENARIOS -------------------------------------------
   set_new_congestion(r5r_network, new_carspeeds, carspeed_scale)
   set_new_lts(r5r_network, new_lts)
+
+  # the fastest trip without fares is routed with R5's RAPTOR instead of
+  # McRAPTOR; with all_to_all, one search per origin serves all its
+  # destinations. Both flags are reset on exit with the other properties
+  if (shortest_path && is.null(fare_structure)) {
+    r5r_network$setFastRaptor(TRUE)
+    r5r_network$setFastRaptorPerOrigin(all_to_all)
+  }
 
   # call r5r_network method and process result -------------------------------
 

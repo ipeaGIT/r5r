@@ -56,6 +56,11 @@ test_that("transit egress keeps the destination connection and consistent cutoff
       expect_gt(length(transit_options), 0L)
       transit <- result[result$option %in% transit_options, ]
       last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
+      totals <- data.table::as.data.table(result)[,
+        .(difference = abs(sum(segment_duration + wait) - total_duration[1L]), tolerance = .N * .1),
+        by = option]
+      expect_true(all(totals$difference <= totals$tolerance + 1e-8))
+      expect_true(all(lower$total_duration <= limit + .05))
       for (i in seq_len(nrow(last))) {
         geometry <- sf::st_geometry(last)[[i]]
         coordinates <- unclass(geometry)[, 1:2, drop = FALSE]
@@ -80,4 +85,23 @@ test_that("transit egress keeps the destination connection and consistent cutoff
       }
     }
   }
+})
+
+
+test_that("corrected FastRaptor egress agrees in shared and paired searches", {
+  origins <- points[match(c("89a9012aedbffff", "89a90129c4fffff"), points$id), ]
+  destinations <- points[match(c("89a9012997bffff", "89a90128b4fffff"), points$id), ]
+  route <- function(origins, destinations, shared) detailed_itineraries(
+    r5r_network, origins, destinations, mode = c("WALK", "TRANSIT"),
+    departure_datetime = as.POSIXct("2019-05-13 14:00:00", tz = "America/Sao_Paulo"),
+    time_window = 10L, max_walk_time = 53L, max_trip_duration = 90L,
+    shortest_path = TRUE, all_to_all = shared, n_threads = 2L,
+    progress = FALSE, osm_link_ids = TRUE
+  )
+  shared <- route(origins, destinations, TRUE)
+  paired <- route(origins[rep(1:2, each = 2L), ], destinations[rep(1:2, times = 2L), ], FALSE)
+  expect_gt(nrow(shared), 0L)
+  expect_true(all(origins$id %in% shared$from_id))
+  expect_true(all(destinations$id %in% shared$to_id))
+  expect_equal(shared, paired)
 })

@@ -23,7 +23,7 @@ public final class EgressPath {
                                       LegMode mode, double destinationLat, double destinationLon) {
         StreetSegment segment = new StreetSegment();
         segment.mode = mode;
-        // These are the complete costs already supplied to McRAPTOR. State.reverse() in
+        // These are the complete costs already supplied to RAPTOR or McRAPTOR. State.reverse() in
         // R5 v7.6 drops the root's partial-edge/off-street costs, so do not use it here.
         segment.duration = state.getLegDurationSeconds();
         segment.distance = state.distance;

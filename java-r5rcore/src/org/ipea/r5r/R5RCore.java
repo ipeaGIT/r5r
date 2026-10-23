@@ -135,6 +135,18 @@ public class R5RCore {
         return this.routingProperties.maxRides;
     }
 
+    public void setFastRaptor(boolean fastRaptor) {
+        this.routingProperties.fastRaptor = fastRaptor;
+    }
+
+    public boolean getFastRaptor() {
+        return this.routingProperties.fastRaptor;
+    }
+
+    public void setFastRaptorPerOrigin(boolean perOrigin) {
+        this.routingProperties.fastRaptorPerOrigin = perOrigin;
+    }
+
     public void setMaxRides(int maxRides) {
         this.routingProperties.maxRides = maxRides;
     }
