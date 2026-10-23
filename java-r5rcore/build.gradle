@@ -35,3 +35,12 @@ dependencies {
     // JRI.jar is missing from some rJava builds; Gradle 9 rejects an empty path
     if (rJavaPath) implementation files(rJavaPath)
 }
+
+sourceSets.test.java.srcDirs = ['test']
+
+tasks.register('egressRegression', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'org.ipea.r5r.Planner.EgressRegression'
+    if (project.hasProperty('baselineEgress')) args '--baseline'
+}

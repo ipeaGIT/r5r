@@ -5,6 +5,7 @@ import com.conveyal.r5.api.util.StreetSegment;
 import com.conveyal.r5.profile.*;
 import com.conveyal.r5.streets.EdgeStore;
 import com.conveyal.r5.streets.StreetRouter;
+import com.conveyal.r5.streets.R5REgressRouter;
 import com.conveyal.r5.transit.TransportNetwork;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntIntMap;
@@ -246,7 +247,7 @@ public class TripPlanner {
         //TODO: this must be reverse search
         request.reverseSearch = true;
         for(LegMode mode: request.egressModes) {
-            StreetRouter streetRouter = new StreetRouter(transportNetwork.streetLayer);
+            StreetRouter streetRouter = new R5REgressRouter(transportNetwork.streetLayer);
             streetRouter.transitStopSearch = true;
             streetRouter.quantityToMinimize = StreetRouter.State.RoutingVariable.DURATION_SECONDS;
 
