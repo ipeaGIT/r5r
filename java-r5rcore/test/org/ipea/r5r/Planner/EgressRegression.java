@@ -179,6 +179,14 @@ public class EgressRegression {
         check(segment.streetEdges.get(0).geometry.getCoordinateN(1).equals2D(middle),
                 "vertex1 curved partial visits interior point in reverse order");
         check(segment.streetEdges.get(0).edgeId == 1, "vertex1 curved partial retains directed edge");
+        boolean rejected = false;
+        try {
+            EgressPath.build(router, new StreetRouter.State(1, 0, StreetMode.WALK), LegMode.WALK,
+                    0.00059, 0.002);
+        } catch (IllegalArgumentException expected) {
+            rejected = true;
+        }
+        check(rejected, "ordinary forward root edge cannot be paired with vertex1");
     }
 
     private static void selfLoopPartials() {

@@ -43,6 +43,10 @@ route <- function(origins, destinations, limit, shortest = FALSE) detailed_itine
   departure_datetime = as.POSIXct("2019-05-13 14:00:00", tz = "America/Sao_Paulo"),
   time_window = 10L, max_walk_time = 53L, max_trip_duration = limit,
   shortest_path = shortest, n_threads = 2L, progress = FALSE, osm_link_ids = TRUE)
+if (!baseline) {
+  source("r-package/tests/testthat/helper-egress.R")
+  edges <- street_network_to_sf(network)$edges
+}
 known <- data.table(
   from_id = c("89a9012aedbffff", "89a90129c4fffff"),
   to_id = c("89a9012997bffff", "89a90128b4fffff"))
@@ -60,24 +64,36 @@ for (i in seq_len(nrow(known))) {
     if (min(high$total_duration) <= 60 - 0.1) {
       stopifnot(nrow(low) > 0L, min(low$total_duration) == min(high$total_duration))
     }
-    transit_options <- unique(high$option[!high$mode %in% c("WALK", "BICYCLE", "CAR")])
-    stopifnot(length(transit_options) > 0L)
-    transit <- high[high$option %in% transit_options, ]
-    last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
     snap <- find_snap(network, destination, mode = "WALK")
     stopifnot(snap$found)
-    for (g in sf::st_geometry(last)) {
-      coordinates <- unclass(g)[, 1:2, drop = FALSE]
-      stopifnot(max(abs(coordinates[nrow(coordinates), ] - c(destination$lon, destination$lat))) < 1e-7)
-      snap_index <- if (max(abs(c(destination$lon - snap$snap_lon,
-                                 destination$lat - snap$snap_lat))) < 1e-10) nrow(coordinates) else nrow(coordinates) - 1L
-      stopifnot(max(abs(coordinates[snap_index, ] - c(snap$snap_lon, snap$snap_lat))) < 1e-7)
-    }
-    shortest <- route(origin, destination, 90L, TRUE)
-    stopifnot(nrow(shortest) > 0L)
-    if (min(shortest$total_duration) <= 60 - 0.1) {
-      shorter <- route(origin, destination, 60L, TRUE)
-      stopifnot(nrow(shorter) > 0L, min(shorter$total_duration) == min(shortest$total_duration))
+    for (shortest in c(FALSE, TRUE)) {
+      result <- if (shortest) route(origin, destination, 90L, TRUE) else high
+      stopifnot(nrow(result) > 0L)
+      limit <- as.integer(floor(min(result$total_duration)) + 1L)
+      stopifnot(limit < 90L)
+      lower <- route(origin, destination, limit, shortest)
+      stopifnot(nrow(lower) > 0L, min(lower$total_duration) == min(result$total_duration))
+      cat("KNOWN_CUTOFF", i, "shortest", shortest, "limit", limit,
+          "minimum", min(lower$total_duration), "\n")
+      transit_options <- unique(result$option[!result$mode %in% c("WALK", "BICYCLE", "CAR")])
+      stopifnot(length(transit_options) > 0L)
+      transit <- result[result$option %in% transit_options, ]
+      last <- transit[!duplicated(transit$option, fromLast = TRUE), ]
+      for (j in seq_len(nrow(last))) {
+        coordinates <- unclass(sf::st_geometry(last)[[j]])[, 1:2, drop = FALSE]
+        stopifnot(max(abs(coordinates[nrow(coordinates), ] - c(destination$lon, destination$lat))) < 1e-7)
+        snap_index <- if (max(abs(c(destination$lon - snap$snap_lon,
+                                   destination$lat - snap$snap_lat))) < 1e-10) nrow(coordinates) else nrow(coordinates) - 1L
+        stopifnot(snap_index >= 2L,
+                  max(abs(coordinates[snap_index, ] - c(snap$snap_lon, snap$snap_lat))) < 1e-7)
+        ids <- as.integer(strsplit(gsub("\\[|\\]", "", last$edge_id_list[j]), ",", fixed = TRUE)[[1L]])
+        stopifnot(length(ids) > 0L, !anyNA(ids))
+        edge_index <- match(tail(ids, 1L), edges$edge_index)
+        stopifnot(!is.na(edge_index))
+        edge <- unclass(sf::st_geometry(edges)[[edge_index]])
+        stopifnot(egress_follows_directed_partial(coordinates, snap_index, edge))
+      }
+      cat("KNOWN_DIRECTED_PARTIALS", i, "shortest", shortest, "checked", nrow(last), "\n")
     }
     # Each leg/wait is rounded to 0.1min in the public output.
     totals <- as.data.table(high)[, .(difference = abs(sum(segment_duration + wait) - total_duration[1L]),
@@ -107,9 +123,13 @@ if (!baseline) {
     b <- summaries[[as.character(high)]]
     setnames(a, "minimum", "low_minimum")
     z <- merge(a, b, by = c("pair_id", "from_id", "to_id"))
-    n <- z[is.na(low_minimum) & !is.na(minimum) & minimum <= low - 0.1 + 1e-8, .N]
-    contradictions <- contradictions + n
-    cat("CUTOFF", low, high, "contradictions", n, "\n")
+    bad <- z[!is.na(minimum) & minimum <= low - 0.1 + 1e-8 &
+               (is.na(low_minimum) | low_minimum > minimum + 1e-8)]
+    contradictions <- contradictions + nrow(bad)
+    cat("CUTOFF", low, high, "contradictions", nrow(bad),
+        "missing", sum(is.na(bad$low_minimum)),
+        "worse", sum(!is.na(bad$low_minimum)), "\n")
+    if (nrow(bad)) print(bad, nrows = nrow(bad))
   }
   stopifnot(contradictions == 0L)
 }
