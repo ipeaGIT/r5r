@@ -36,11 +36,23 @@ dependencies {
     if (rJavaPath) implementation files(rJavaPath)
 }
 
-sourceSets.test.java.srcDirs = ['test']
+// Standalone physical assertions, separate from Gradle's JUnit test discovery.
+sourceSets {
+    egressRegression {
+        java.srcDirs = ['test']
+        compileClasspath += sourceSets.main.output + configurations.runtimeClasspath
+        runtimeClasspath += sourceSets.main.output + configurations.runtimeClasspath
+    }
+}
 
 tasks.register('egressRegression', JavaExec) {
-    dependsOn testClasses
-    classpath = sourceSets.test.runtimeClasspath
+    dependsOn egressRegressionClasses
+    classpath = sourceSets.egressRegression.runtimeClasspath
     mainClass = 'org.ipea.r5r.Planner.EgressRegression'
     if (project.hasProperty('baselineEgress')) args '--baseline'
+}
+
+
+tasks.named('check') {
+    dependsOn tasks.named('egressRegression')
 }
