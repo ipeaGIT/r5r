@@ -87,8 +87,8 @@ below:
 ## See also
 
 Other Build network:
-[`download_r5()`](https://ipeagit.github.io/r5r/reference/download_r5.md),
-[`setup_r5()`](https://ipeagit.github.io/r5r/reference/setup_r5.md)
+[`download_r5()`](https://ipea.github.io/r5r/reference/download_r5.md),
+[`setup_r5()`](https://ipea.github.io/r5r/reference/setup_r5.md)
 
 ## Examples
 
@@ -99,7 +99,6 @@ library(r5r)
 data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_network <- build_network(data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 ```

@@ -2,7 +2,7 @@
 
 Extracts the OpenStreetMap network in `sf` format from a routable
 transport network built with
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+[`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 ## Usage
 
@@ -15,7 +15,7 @@ street_network_to_sf(r5r_network, r5r_core = deprecated())
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 - r5r_core:
 
@@ -30,9 +30,9 @@ A list with two components of a street network in sf format: vertices
 ## See also
 
 Other network functions:
-[`find_snap()`](https://ipeagit.github.io/r5r/reference/find_snap.md),
-[`street_network_bbox()`](https://ipeagit.github.io/r5r/reference/street_network_bbox.md),
-[`transit_network_to_sf()`](https://ipeagit.github.io/r5r/reference/transit_network_to_sf.md)
+[`find_snap()`](https://ipea.github.io/r5r/reference/find_snap.md),
+[`street_network_bbox()`](https://ipea.github.io/r5r/reference/street_network_bbox.md),
+[`transit_network_to_sf()`](https://ipea.github.io/r5r/reference/transit_network_to_sf.md)
 
 ## Examples
 
@@ -42,7 +42,6 @@ library(r5r)
 # build transport network
 path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,16 +80,16 @@
                         <h4 data-toc-skip class="author">Rafael H. M.
 Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
             
-            <h4 data-toc-skip class="date">2026-10-10</h4>
+            <h4 data-toc-skip class="date">2026-10-23</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/r5r.Rmd" class="external-link"><code>vignettes/r5r.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/vignettes/r5r.Rmd" class="external-link"><code>vignettes/r5r.Rmd</code></a></small>
       <div class="d-none name"><code>r5r.Rmd</code></div>
     </div>
 
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> is an R package for rapid realistic routing on
+      <a href="https://github.com/ipea/r5r" class="external-link">r5r</a> is an R package for rapid realistic routing on
       multimodal transport networks (walk, bike, public transport and
       car) using R<sup>5</sup>. The package allows users to generate
       detailed routing analysis or calculate travel time matrices using
@@ -100,28 +100,28 @@ Pereira, Marcus Saraiva, Daniel Herszenhut, Carlos Kaue Braga</h4>
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><strong>r5r</strong> is an <a href="https://github.com/ipeaGIT/r5r" class="external-link">R
+<p><strong>r5r</strong> is an <a href="https://github.com/ipea/r5r" class="external-link">R
 package for rapid realistic routing on multimodal transport networks</a>
 (walk, bike, public transport and car). It provides a simple and
 friendly interface to R<sup>5</sup>, a really fast and open source
 Java-based routing engine developed separately by <a href="https://www.conveyal.com/" class="external-link">Conveyal</a>. R<sup>5</sup> stands for
 <a href="https://github.com/conveyal/r5" class="external-link">Rapid Realistic Routing on
 Real-world and Reimagined networks</a>. More details about
-<strong>r5r</strong> can be found on the <a href="https://ipeagit.github.io/r5r/index.html">package webpage</a> or
-on this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>.</p>
+<strong>r5r</strong> can be found on the <a href="https://ipea.github.io/r5r/index.html">package webpage</a> or on
+this <a href="https://doi.org/10.32866/001c.21262" class="external-link">paper</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">2. Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> from CRAN, or the development
+<p>You can install <a href="https://github.com/ipea/r5r" class="external-link">r5r</a> from CRAN, or the development
 version from github.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># from CRAN</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'r5r'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># dev version with latest features</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipeaGIT/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span></span></code></pre></div>
-<p><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> requires the <em>Java Development Kit (JDK)
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ipea/r5r"</span>, subdir <span class="op">=</span> <span class="st">"r-package"</span><span class="op">)</span></span></code></pre></div>
+<p><a href="https://github.com/ipea/r5r" class="external-link">r5r</a> requires the <em>Java Development Kit (JDK)
 21</em>. Any free, open-source JDK works, for example:</p>
 <ul>
 <li>
@@ -154,7 +154,7 @@ preferred option)</li>
 </h2>
 <p>First, set the memory available to Java with the
 <code>java.parameters</code> option (2 GB is enough for the sample
-data). Do this <strong>before</strong> loading <a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> or any
+data). Do this <strong>before</strong> loading <a href="https://github.com/ipea/r5r" class="external-link">r5r</a> or any
 other Java-based package: <code>rJava</code> starts the Java Virtual
 Machine only once per R session, so later changes only take effect after
 restarting R.</p>
@@ -166,11 +166,11 @@ restarting R.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-Xmx2G"</span>, <span class="st">"-XX:ActiveProcessorCount=4"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Then we can load the packages used in this vignette:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> has eight <strong>fundamental
+<p><a href="https://github.com/ipea/r5r" class="external-link">r5r</a> has eight <strong>fundamental
 functions</strong>:</p>
 <table class="table">
 <colgroup>
@@ -222,7 +222,7 @@ alternatives</td>
 </tr>
 </tbody>
 </table>
-<p>Most of them can also account for monetary travel costs (<a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">fare
+<p>Most of them can also account for monetary travel costs (<a href="https://ipea.github.io/r5r/articles/fare_structure.html">fare
 structure vignette</a>).</p>
 <p><strong>Support functions</strong>:</p>
 <table class="table">
@@ -260,7 +260,7 @@ as <code>sf</code>
 <div class="section level3">
 <h3 id="data-requirements">3.1 Data requirements:<a class="anchor" aria-label="anchor" href="#data-requirements"></a>
 </h3>
-<p>To use <a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a>, you will need:</p>
+<p>To use <a href="https://github.com/ipea/r5r" class="external-link">r5r</a>, you will need:</p>
 <ul>
 <li>A road network data set from OpenStreetMap in <code>.pbf</code>
 format (<em>mandatory</em>)</li>
@@ -315,7 +315,7 @@ package</li>
 <div class="section level3">
 <h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h3>
-<p><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a> includes sample data for Porto Alegre
+<p><a href="https://github.com/ipea/r5r" class="external-link">r5r</a> includes sample data for Porto Alegre
 (Brazil):</p>
 <ul>
 <li>An OpenStreetMap network: <code>poa_osm.pbf</code>
@@ -392,7 +392,7 @@ into a routable network.</p>
 </h3>
 <p><code><a href="../reference/accessibility.html">accessibility()</a></code> is the fastest way to estimate
 accessibility. Here we count the schools and healthcare facilities
-reachable in less than 60 minutes by public transport and walking (<a href="https://ipeagit.github.io/r5r/articles/accessibility.html">accessibility
+reachable in less than 60 minutes by public transport and walking (<a href="https://ipea.github.io/r5r/articles/accessibility.html">accessibility
 vignette</a>).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set departure datetime input</span></span>
@@ -438,8 +438,8 @@ origin/destination pairs. Origins and destinations can be an
 <code>max_walk_time</code> and <code>max_trip_duration</code> are in
 minutes, as are the resulting travel times.</p>
 <p>It can also capture travel time variation across departures within a
-time window (<a href="https://ipeagit.github.io/r5r/articles/time_window.html">time
-window vignette</a>).</p>
+time window (<a href="https://ipea.github.io/r5r/articles/time_window.html">time window
+vignette</a>).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set inputs</span></span>
 <span><span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span><span class="op">)</span></span>
@@ -550,15 +550,15 @@ mode, waiting time, travel time and distance.</p>
 <span><span class="co">#&gt; 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt; 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995</span></span>
 <span><span class="co">#&gt;      to_lon option departure_time total_duration total_distance segment mode</span></span>
-<span><span class="co">#&gt; 1 -51.22875      1       14:07:57           35.6           9460       1 WALK</span></span>
-<span><span class="co">#&gt; 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL</span></span>
-<span><span class="co">#&gt; 3 -51.22875      1       14:07:57           35.6           9460       3 WALK</span></span>
-<span><span class="co">#&gt; 4 -51.22875      1       14:07:57           35.6           9460       4  BUS</span></span>
-<span><span class="co">#&gt; 5 -51.22875      1       14:07:57           35.6           9460       5 WALK</span></span>
-<span><span class="co">#&gt; 6 -51.22875      2       14:09:43           46.0           8779       1 WALK</span></span>
+<span><span class="co">#&gt; 1 -51.22875      1       14:08:16           35.3           9460       1 WALK</span></span>
+<span><span class="co">#&gt; 2 -51.22875      1       14:08:16           35.3           9460       2 RAIL</span></span>
+<span><span class="co">#&gt; 3 -51.22875      1       14:08:16           35.3           9460       3 WALK</span></span>
+<span><span class="co">#&gt; 4 -51.22875      1       14:08:16           35.3           9460       4  BUS</span></span>
+<span><span class="co">#&gt; 5 -51.22875      1       14:08:16           35.3           9460       5 WALK</span></span>
+<span><span class="co">#&gt; 6 -51.22875      2       14:09:34           46.1           8779       1 WALK</span></span>
 <span><span class="co">#&gt;   segment_duration wait distance  route                       geometry</span></span>
 <span><span class="co">#&gt; 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...</span></span>
-<span><span class="co">#&gt; 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
+<span><span class="co">#&gt; 2              6.6  1.7     4796 LINHA1 LINESTRING (-51.19763 -29.9...</span></span>
 <span><span class="co">#&gt; 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...</span></span>
 <span><span class="co">#&gt; 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...</span></span>
 <span><span class="co">#&gt; 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...</span></span>
@@ -594,8 +594,7 @@ it used:</p>
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
-<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
-page</a>.</p>
+<a href="https://github.com/ipea/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 </div>
 </div>

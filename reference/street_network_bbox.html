@@ -3,7 +3,7 @@
 routable transport network built with build_network(). It is a fast and
 memory-efficient alternative to sf::st_bbox(street_network_to_sf(r5r_net))."><meta property="og:description" content="Extracts the geographic bounding box of the street network layer from a
 routable transport network built with build_network(). It is a fast and
-memory-efficient alternative to sf::st_bbox(street_network_to_sf(r5r_net))."><meta property="og:image" content="https://ipeagit.github.io/r5r/logo.png"></head><body>
+memory-efficient alternative to sf::st_bbox(street_network_to_sf(r5r_net))."><meta property="og:image" content="https://ipea.github.io/r5r/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -11,7 +11,7 @@ memory-efficient alternative to sf::st_bbox(street_network_to_sf(r5r_net))."><me
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ memory-efficient alternative to sf::st_bbox(street_network_to_sf(r5r_net))."><me
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Extract the geographic bounding box of the transport network</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/R/street_network_bbox.R" class="external-link"><code>R/street_network_bbox.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/R/street_network_bbox.R" class="external-link"><code>R/street_network_bbox.R</code></a></small>
       <div class="d-none name"><code>street_network_bbox.Rd</code></div>
     </div>
 
@@ -104,13 +104,12 @@ All outputs use the WGS84 coordinate reference system (EPSG: 4326).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa"</span>, package <span class="op">=</span> <span class="st">"r5r"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r5r_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="build_network.html">build_network</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using cached network from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">/home/runner/work/_temp/Library/r5r/extdata/poa/network.dat</span>.</span>
 <span class="r-in"><span></span></span>

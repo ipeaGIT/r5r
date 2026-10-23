@@ -31,6 +31,7 @@ isochrone(
   max_rides = 3,
   max_lts = 2,
   draws_per_minute = 5L,
+  seed = NULL,
   percentiles = NULL,
   n_threads = Inf,
   verbose = FALSE,
@@ -45,7 +46,7 @@ isochrone(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 - origins:
 
@@ -85,7 +86,7 @@ isochrone(
   A POSIXct object. Only affects public transport legs; when routing
   with public transport, it must fall within the service period of the
   GTFS feeds (`calendar.txt`; see
-  [`check_transit_availability()`](https://ipeagit.github.io/r5r/reference/check_transit_availability.md)).
+  [`check_transit_availability()`](https://ipea.github.io/r5r/reference/check_transit_availability.md)).
   Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
   details for how datetimes are parsed.
 
@@ -102,8 +103,15 @@ isochrone(
   An integer. The time window in minutes. Departures are simulated every
   minute from `departure_datetime` until `time_window` minutes later,
   and travel times are summarized over these departures using
-  `percentiles` (the median by default). Defaults to 10. See
-  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md).
+  `percentiles` (the median by default). With a `fare_structure`, and
+  always in
+  [`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md),
+  departures are instead sampled at random within the window:
+  `draws_per_minute` per minute on average (one in
+  [`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)),
+  different for each origin and the same in every call from the same
+  origin with the same `seed`. Defaults to 10. See
+  [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/articles/time_window.md).
 
 - max_walk_time:
 
@@ -161,10 +169,37 @@ isochrone(
 
   An integer. The number of Monte Carlo draws to perform per minute of
   `time_window`. Defaults to 5. This would mean 300 draws in a 60-minute
-  time window, for example. This parameter only affects the results when
-  the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed
-  does not have a frequency table, r5r still allows for multiple runs
-  over the set `time_window` but in a deterministic way.
+  time window, for example. With the default routing algorithm, this
+  parameter only affects the results when the GTFS feeds contain a
+  `frequencies.txt` table; otherwise, r5r still routes a departure every
+  minute of `time_window`, in a deterministic way. In functions that
+  accept a `fare_structure`, passing one switches to the McRaptor
+  algorithm, which instead routes `time_window * draws_per_minute`
+  departure times sampled at random within the window (different for
+  each origin, and the same in every call from the same origin with the
+  same `seed`). This parameter then affects the results with or without
+  frequencies. R5's McRaptor cannot sample many departure times per
+  minute over long windows, so such combinations raise an error (e.g. 8
+  draws per minute in a 10-minute window, or 5 in a window of 150
+  minutes or more).
+
+- seed:
+
+  An integer or `NULL`. The seed of the Monte Carlo draws of the
+  departure offsets of frequency-based transit routes and, with the
+  McRaptor algorithm, of the departure times sampled within
+  `time_window`. Defaults to `NULL`, in which case the draws are random
+  and results may vary slightly between runs. With an integer, the same
+  inputs always give the same results, regardless of `n_threads`.
+  Results are still a Monte Carlo sample, so a different seed may give
+  slightly different results: report the seed used and check how
+  sensitive the results are to it. Note that
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) has no effect on
+  these draws. With the default routing algorithm, this parameter only
+  affects the results when the GTFS feeds contain a `frequencies.txt`
+  table. In functions that accept a `fare_structure`, passing one
+  switches to the McRaptor algorithm, and `seed` then affects the
+  results with or without frequencies.
 
 - percentiles:
 
@@ -277,11 +312,11 @@ perhaps surprisingly, ignoring the timezone attribute.
 ## Routing algorithm
 
 The
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md),
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md),
+[`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/reference/arrival_travel_time_matrix.md)
 and
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 functions use an `R5`-specific extension to the RAPTOR routing algorithm
 (see Conway et al., 2017). This RAPTOR extension uses a systematic
 sample of one departure per minute over the time window set by the user
@@ -311,7 +346,6 @@ library(ggplot2)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path = data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

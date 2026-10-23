@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2020
-    COPYRIGHT HOLDER: Ipea
+    COPYRIGHT HOLDER: r5r contributors

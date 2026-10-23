@@ -32,7 +32,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/inst/CITATION)
+[`inst/CITATION`](https://github.com/ipea/r5r/blob/HEAD/r-package/inst/CITATION)
 
 Pereira, R. H. M., Saraiva, M., Herszenhut, D., Braga, C. K. V., &
 Conway, M. W. (2021). r5r: Rapid Realistic Routing on Multimodal

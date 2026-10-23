@@ -42,8 +42,8 @@ The path to the downloaded file.
 ## See also
 
 Other Build network:
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md),
-[`setup_r5()`](https://ipeagit.github.io/r5r/reference/setup_r5.md)
+[`build_network()`](https://ipea.github.io/r5r/reference/build_network.md),
+[`setup_r5()`](https://ipea.github.io/r5r/reference/setup_r5.md)
 
 ## Examples
 
@@ -51,6 +51,6 @@ Other Build network:
 library(r5r)
 
 download_r5(temp_dir = TRUE)
-#> Downloading R5 jar file to /tmp/RtmpUnBmrs/r5-v7.5-1-gf3631e9-all.jar
-#> [1] "/tmp/RtmpUnBmrs/r5-v7.5-1-gf3631e9-all.jar"
+#> Downloading R5 jar file to /tmp/RtmpHiyQja/r5-v7.6-all.jar
+#> [1] "/tmp/RtmpHiyQja/r5-v7.6-all.jar"
 ```

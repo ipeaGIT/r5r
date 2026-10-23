@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">r5r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,9 +78,9 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Travel time matrices</h1>
             
-            <h4 data-toc-skip class="date">2026-10-10</h4>
+            <h4 data-toc-skip class="date">2026-10-23</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/r5r/blob/HEAD/r-package/vignettes/travel_time_matrix.Rmd" class="external-link"><code>vignettes/travel_time_matrix.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipea/r5r/blob/HEAD/r-package/vignettes/travel_time_matrix.Rmd" class="external-link"><code>vignettes/travel_time_matrix.Rmd</code></a></small>
       <div class="d-none name"><code>travel_time_matrix.Rmd</code></div>
     </div>
 
@@ -117,7 +117,7 @@ how they differ.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx2G"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load libraries</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipeaGIT/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ipea/r5r" class="external-link">r5r</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
@@ -155,8 +155,8 @@ walking or cycling time to and from public transport</li>
 <code>walk_speed</code> and <code>bike_speed</code>: average walking
 or cycling speed (km/h)</li>
 <li>
-<code>max_fare</code>: maximum monetary cost in public transport. <a href="https://ipeagit.github.io/r5r/articles/fare_structure.html">See
-this vignette</a>.</li>
+<code>max_fare</code>: maximum monetary cost in public transport. <a href="https://ipea.github.io/r5r/articles/fare_structure.html">See this
+vignette</a>.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate travel time matrix</span></span>
@@ -186,8 +186,8 @@ this vignette</a>.</li>
 transport service levels. The <code>time_window</code> and
 <code>percentiles</code> parameters handle this efficiently:
 R<sup>5</sup> computes travel times for departures every minute within
-<code>time_window</code> and returns the selected percentiles (<a href="https://ipeagit.github.io/r5r/articles/time_window.html">time
-window vignette</a>).</p>
+<code>time_window</code> and returns the selected percentiles (<a href="https://ipea.github.io/r5r/articles/time_window.html">time window
+vignette</a>).</p>
 </div>
 <div class="section level2">
 <h2 id="the-expanded_travel_time_matrix-function">4. The <code>expanded_travel_time_matrix()</code> function<a class="anchor" aria-label="anchor" href="#the-expanded_travel_time_matrix-function"></a>
@@ -371,8 +371,7 @@ it used:</p>
 <code class="sourceCode R"><span><span class="fu">r5r</span><span class="fu">::</span><span class="fu"><a href="../reference/stop_r5.html">stop_r5</a></span><span class="op">(</span><span class="va">r5r_network</span><span class="op">)</span></span>
 <span><span class="fu">rJava</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rJava/man/jgc.html" class="external-link">.jgc</a></span><span class="op">(</span>R.gc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If you have any suggestions or want to report an error, please visit
-<a href="https://github.com/ipeaGIT/r5r" class="external-link">the package GitHub
-page</a>.</p>
+<a href="https://github.com/ipea/r5r" class="external-link">the package GitHub page</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

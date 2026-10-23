@@ -28,10 +28,10 @@ R5 Jar in use, the memory set to Java and user's Session Info.
 ``` r
 r5r_sitrep()
 #> $r5r_package_version
-#> [1] ‘2.4.0.9001’
+#> [1] ‘2.5.0’
 #> 
 #> $r5_jar_version
-#> [1] "7.5"
+#> [1] "7.6"
 #> 
 #> $java_version
 #> [1] "21.0.12.1"
@@ -63,14 +63,14 @@ r5r_sitrep()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] ggplot2_4.0.3  r5r_2.4.0.9001
+#> [1] ggplot2_4.0.3 r5r_2.5.0    
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] gtable_0.3.6        xfun_0.61           bslib_0.12.0       
+#>  [1] gtable_0.3.6        xfun_0.62           bslib_0.12.0       
 #>  [4] httr2_1.3.0         htmlwidgets_1.6.4   processx_3.9.0     
 #>  [7] rJava_1.0-18        callr_3.8.0         vctrs_0.7.3        
 #> [10] tools_4.6.1         ps_1.9.3            generics_0.1.4     
-#> [13] curl_8.0.0          proxy_0.4-29        tibble_3.3.1       
+#> [13] curl_8.1.0          proxy_0.4-29        tibble_3.3.1       
 #> [16] fansi_1.0.7         sfheaders_0.4.5     pkgconfig_2.0.3    
 #> [19] KernSmooth_2.23-26  data.table_1.18.6.1 checkmate_2.3.4    
 #> [22] RColorBrewer_1.1-3  S7_0.2.2            desc_1.4.3         

@@ -29,9 +29,10 @@ travel_time_surface(
   carspeed_scale = 1,
   new_lts = NULL,
   draws_per_minute = 5L,
+  seed = NULL,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE
+  progress = TRUE
 )
 ```
 
@@ -40,7 +41,7 @@ travel_time_surface(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 - origins:
 
@@ -74,17 +75,18 @@ travel_time_surface(
   A POSIXct object. Only affects public transport legs; when routing
   with public transport, it must fall within the service period of the
   GTFS feeds (`calendar.txt`; see
-  [`check_transit_availability()`](https://ipeagit.github.io/r5r/reference/check_transit_availability.md)).
+  [`check_transit_availability()`](https://ipea.github.io/r5r/reference/check_transit_availability.md)).
   Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
   details for how datetimes are parsed.
 
 - time_window:
 
   An integer. The time window in minutes for which `r5r` will calculate
-  multiple travel time matrices departing each minute. Defaults to 10
-  minutes. The function returns the result based on median travel times.
-  See
-  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md).
+  multiple travel time matrices departing each minute (or, with a
+  `fare_structure`, at departure times sampled at random within the
+  window; see `draws_per_minute`). Defaults to 10 minutes. The function
+  returns the result based on median travel times. See
+  [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/articles/time_window.md).
 
 - percentiles:
 
@@ -158,9 +160,9 @@ travel_time_surface(
 - fare_structure:
 
   A fare structure object, following the convention set in
-  [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md).
+  [`setup_fare_structure()`](https://ipea.github.io/r5r/reference/setup_fare_structure.md).
   This object describes how transit fares should be calculated. See
-  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md)
+  [`vignette("fare_structure", package = "r5r")`](https://ipea.github.io/r5r/articles/fare_structure.md)
   for its structure.
 
 - max_fare:
@@ -184,7 +186,7 @@ travel_time_surface(
   polygon, `scale` with the new speed scaling factors and `priority`,
   which is a number ranking which polygon should be considered in case
   of overlapping polygons. See more info in the scenarios vignette
-  ([`vignette("scenarios", package = "r5r")`](https://ipeagit.github.io/r5r/articles/scenarios.md)).
+  ([`vignette("scenarios", package = "r5r")`](https://ipea.github.io/r5r/articles/scenarios.md)).
 
 - carspeed_scale:
 
@@ -204,10 +206,37 @@ travel_time_surface(
 
   An integer. The number of Monte Carlo draws to perform per minute of
   `time_window`. Defaults to 5. This would mean 300 draws in a 60-minute
-  time window, for example. This parameter only affects the results when
-  the GTFS feeds contain a `frequencies.txt` table. If the GTFS feed
-  does not have a frequency table, r5r still allows for multiple runs
-  over the set `time_window` but in a deterministic way.
+  time window, for example. With the default routing algorithm, this
+  parameter only affects the results when the GTFS feeds contain a
+  `frequencies.txt` table; otherwise, r5r still routes a departure every
+  minute of `time_window`, in a deterministic way. In functions that
+  accept a `fare_structure`, passing one switches to the McRaptor
+  algorithm, which instead routes `time_window * draws_per_minute`
+  departure times sampled at random within the window (different for
+  each origin, and the same in every call from the same origin with the
+  same `seed`). This parameter then affects the results with or without
+  frequencies. R5's McRaptor cannot sample many departure times per
+  minute over long windows, so such combinations raise an error (e.g. 8
+  draws per minute in a 10-minute window, or 5 in a window of 150
+  minutes or more).
+
+- seed:
+
+  An integer or `NULL`. The seed of the Monte Carlo draws of the
+  departure offsets of frequency-based transit routes and, with the
+  McRaptor algorithm, of the departure times sampled within
+  `time_window`. Defaults to `NULL`, in which case the draws are random
+  and results may vary slightly between runs. With an integer, the same
+  inputs always give the same results, regardless of `n_threads`.
+  Results are still a Monte Carlo sample, so a different seed may give
+  slightly different results: report the seed used and check how
+  sensitive the results are to it. Note that
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) has no effect on
+  these draws. With the default routing algorithm, this parameter only
+  affects the results when the GTFS feeds contain a `frequencies.txt`
+  table. In functions that accept a `fare_structure`, passing one
+  switches to the McRaptor algorithm, and `seed` then affects the
+  results with or without frequencies.
 
 - n_threads:
 
@@ -224,7 +253,7 @@ travel_time_surface(
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is set to `FALSE`, so
+  Defaults to `TRUE`. Only works when `verbose` is set to `FALSE`, so
   the progress counter does not interfere with `R5`'s output messages.
   Setting `progress` to `TRUE` may impose a small penalty for
   computation efficiency, because the progress counter must be
@@ -297,11 +326,11 @@ perhaps surprisingly, ignoring the timezone attribute.
 ## Routing algorithm
 
 The
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md),
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md),
+[`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/reference/arrival_travel_time_matrix.md)
 and
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 functions use an `R5`-specific extension to the RAPTOR routing algorithm
 (see Conway et al., 2017). This RAPTOR extension uses a systematic
 sample of one departure per minute over the time window set by the user
@@ -324,10 +353,10 @@ algorithm.
 ## See also
 
 Other support functions:
-[`exists_tiff()`](https://ipeagit.github.io/r5r/reference/exists_tiff.md),
-[`fileurl_from_metadata()`](https://ipeagit.github.io/r5r/reference/fileurl_from_metadata.md),
-[`get_gtfs_errors()`](https://ipeagit.github.io/r5r/reference/get_gtfs_errors.md),
-[`start_r5r_java()`](https://ipeagit.github.io/r5r/reference/start_r5r_java.md),
-[`stop_r5()`](https://ipeagit.github.io/r5r/reference/stop_r5.md),
-[`tempdir_unique()`](https://ipeagit.github.io/r5r/reference/tempdir_unique.md),
-[`validate_bad_osm_ids()`](https://ipeagit.github.io/r5r/reference/validate_bad_osm_ids.md)
+[`exists_tiff()`](https://ipea.github.io/r5r/reference/exists_tiff.md),
+[`fileurl_from_metadata()`](https://ipea.github.io/r5r/reference/fileurl_from_metadata.md),
+[`get_gtfs_errors()`](https://ipea.github.io/r5r/reference/get_gtfs_errors.md),
+[`start_r5r_java()`](https://ipea.github.io/r5r/reference/start_r5r_java.md),
+[`stop_r5()`](https://ipea.github.io/r5r/reference/stop_r5.md),
+[`tempdir_unique()`](https://ipea.github.io/r5r/reference/tempdir_unique.md),
+[`validate_bad_osm_ids()`](https://ipea.github.io/r5r/reference/validate_bad_osm_ids.md)

@@ -3,7 +3,7 @@
 Abstract
 
 This vignette shows how to use the
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)
 function to examine the trade-offs between travel time and monetary cost
 in travel time matrices in r5r.
 
@@ -13,7 +13,7 @@ Routing models usually find either the fastest or the cheapest route.
 Accounting for both time and monetary cost at once is hard, because
 minimizing trip duration and minimizing cost are competing objectives
 (Conway and Stewart 2019). To address this problem, `r5r`’s
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)
 returns the most efficient combinations of travel time and monetary cost
 between origin/destination pairs. This vignette shows, with a
 reproducible example, how to use it and interpret its results.
@@ -90,8 +90,8 @@ public transport system. In Porto Alegre:
 
 A fare structure with these rules ships with `r5r`, so we simply read
 it. The [fare structure
-vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html)
-shows how to build one step by step.
+vignette](https://ipea.github.io/r5r/articles/fare_structure.html) shows
+how to build one step by step.
 
 ``` r
 
@@ -131,7 +131,7 @@ head(prtf)
 #>           <char>              <char>      <int>       <int>         <num>
 #> 1: public_market       public_market         50           0           1.0
 #> 2: public_market bus_central_station         50          23           1.0
-#> 3: public_market bus_central_station         50          19           4.5
+#> 3: public_market bus_central_station         50          18           4.5
 #> 4: public_market bus_central_station         50          14           4.8
 #> 5: public_market    gasometer_museum         50          29           1.0
 #> 6: public_market    gasometer_museum         50          13           4.8
@@ -155,7 +155,7 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).
 
 ### References
 

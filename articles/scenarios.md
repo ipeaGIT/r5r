@@ -389,4 +389,4 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).

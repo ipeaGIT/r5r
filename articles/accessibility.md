@@ -10,11 +10,11 @@ using the `r5r` package.
 Accessibility indicators measure how easily opportunities, such as jobs,
 can be reached from a given location (Levinson and et al. 2020). This
 vignette calculates and maps accessibility with the [`r5r`
-package](https://ipeagit.github.io/r5r/index.html), using the Porto
-Alegre (Brazil) sample data included in `r5r`, in two ways:
+package](https://ipea.github.io/r5r/index.html), using the Porto Alegre
+(Brazil) sample data included in `r5r`, in two ways:
 
 - **quick:**
-  [`r5r::accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md);
+  [`r5r::accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md);
 - **flexible:** an `r5r` travel time matrix passed to the
   [{accessibility} package](https://ipea.github.io/accessibility/),
   which offers a wider range of metrics.
@@ -24,7 +24,7 @@ Alegre (Brazil) sample data included in `r5r`, in two ways:
 #### Increase Java memory and load libraries
 
 Set Java memory before loading the packages
-([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ``` r
 
@@ -40,7 +40,7 @@ library(h3jsr)
 library(dplyr)
 ```
 
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
+[`build_network()`](https://ipea.github.io/r5r/reference/build_network.md)
 takes the directory holding the OpenStreetMap and GTFS data:
 
 ``` r
@@ -62,7 +62,7 @@ Here we count the schools (`points$schools`) and public healthcare
 facilities (`points$healthcare`) reachable by public transport in less
 than 20 minutes, using the median travel time of departures every minute
 over a 60-minute window (2pm to 3pm).
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 handles several opportunity types in one call, which is much more
 efficient than computing a travel time matrix and aggregating it
 yourself.
@@ -106,7 +106,7 @@ head(access1)
 #> 6: 89a901295b7ffff  healthcare         50     20             4
 ```
 
-[`r5r::accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`r5r::accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 also computes gravity-based metrics: set `decay_function` to
 `"exponential"`, `"fixed_exponential"`, `"linear"` or `"logistic"`.
 Metrics not implemented in R5, such as floating catchment area, travel
@@ -118,7 +118,7 @@ opportunities, are available in the
 
 The [accessibility](https://github.com/ipeaGIT/accessibility) package
 takes a [travel time
-matrix](https://ipeagit.github.io/r5r/articles/travel_time_matrix.html),
+matrix](https://ipea.github.io/r5r/articles/travel_time_matrix.html),
 which we compute with `r5r`:
 
 ``` r
@@ -149,7 +149,7 @@ head(ttm)
 [`accessibility::cumulative_cutoff()`](https://rdrr.io/pkg/accessibility/man/cumulative_cutoff.html)
 computes the same cumulative metric from the travel time matrix and land
 use data. It also counts trips that take exactly the cutoff time, while
-[`r5r::accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`r5r::accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 counts only trips strictly shorter than it, so the two estimates can
 differ slightly:
 
@@ -289,7 +289,7 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).
 
 ### References
 

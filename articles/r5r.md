@@ -2,29 +2,28 @@
 
 Abstract
 
-[r5r](https://github.com/ipeaGIT/r5r) is an R package for rapid
-realistic routing on multimodal transport networks (walk, bike, public
-transport and car) using R⁵. The package allows users to generate
-detailed routing analysis or calculate travel time matrices using
-seamless parallel computing on top of the R⁵ Java machine
-<https://github.com/conveyal/r5>
+[r5r](https://github.com/ipea/r5r) is an R package for rapid realistic
+routing on multimodal transport networks (walk, bike, public transport
+and car) using R⁵. The package allows users to generate detailed routing
+analysis or calculate travel time matrices using seamless parallel
+computing on top of the R⁵ Java machine <https://github.com/conveyal/r5>
 
 ## 1. Introduction
 
 **r5r** is an [R package for rapid realistic routing on multimodal
-transport networks](https://github.com/ipeaGIT/r5r) (walk, bike, public
+transport networks](https://github.com/ipea/r5r) (walk, bike, public
 transport and car). It provides a simple and friendly interface to R⁵, a
 really fast and open source Java-based routing engine developed
 separately by [Conveyal](https://www.conveyal.com/). R⁵ stands for
 [Rapid Realistic Routing on Real-world and Reimagined
 networks](https://github.com/conveyal/r5). More details about **r5r**
 can be found on the [package
-webpage](https://ipeagit.github.io/r5r/index.html) or on this
+webpage](https://ipea.github.io/r5r/index.html) or on this
 [paper](https://doi.org/10.32866/001c.21262).
 
 ## 2. Installation
 
-You can install [r5r](https://github.com/ipeaGIT/r5r) from CRAN, or the
+You can install [r5r](https://github.com/ipea/r5r) from CRAN, or the
 development version from github.
 
 ``` r
@@ -33,10 +32,10 @@ development version from github.
 install.packages('r5r')
 
 # dev version with latest features
-devtools::install_github("ipeaGIT/r5r", subdir = "r-package")
+devtools::install_github("ipea/r5r", subdir = "r-package")
 ```
 
-[r5r](https://github.com/ipeaGIT/r5r) requires the *Java Development Kit
+[r5r](https://github.com/ipea/r5r) requires the *Java Development Kit
 (JDK) 21*. Any free, open-source JDK works, for example:
 
 - [Adoptium/Eclipse Temurin](https://adoptium.net/) (our preferred
@@ -70,7 +69,7 @@ rJavaEnv::java_check_version_rjava()
 
 First, set the memory available to Java with the `java.parameters`
 option (2 GB is enough for the sample data). Do this **before** loading
-[r5r](https://github.com/ipeaGIT/r5r) or any other Java-based package:
+[r5r](https://github.com/ipea/r5r) or any other Java-based package:
 `rJava` starts the Java Virtual Machine only once per R session, so
 later changes only take effect after restarting R.
 
@@ -93,35 +92,34 @@ library(data.table)
 library(ggplot2)
 ```
 
-[r5r](https://github.com/ipeaGIT/r5r) has eight **fundamental
-functions**:
+[r5r](https://github.com/ipea/r5r) has eight **fundamental functions**:
 
 | Function | Returns |
 |----|----|
-| [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md) | A routable multimodal transport network |
-| [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md) | Access to opportunities from each origin, given a decay function |
-| [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md) | Travel times between origin/destination pairs for a departure time |
-| [`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md) | Travel times for an arrival time, with routes used (and a time breakdown with `breakdown = TRUE`) |
-| [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md) | Travel times per departure minute, with routes used (and a time breakdown with `breakdown = TRUE`) |
-| [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md) | One or more alternative routes per origin/destination pair, detailed by trip segment |
-| [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md) | The trade-off between travel time and monetary cost of route alternatives |
-| [`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md) | Areas reachable from an origin within given travel times |
+| [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md) | A routable multimodal transport network |
+| [`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md) | Access to opportunities from each origin, given a decay function |
+| [`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md) | Travel times between origin/destination pairs for a departure time |
+| [`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/reference/arrival_travel_time_matrix.md) | Travel times for an arrival time, with routes used (and a time breakdown with `breakdown = TRUE`) |
+| [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md) | Travel times per departure minute, with routes used (and a time breakdown with `breakdown = TRUE`) |
+| [`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md) | One or more alternative routes per origin/destination pair, detailed by trip segment |
+| [`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md) | The trade-off between travel time and monetary cost of route alternatives |
+| [`isochrone()`](https://ipea.github.io/r5r/reference/isochrone.md) | Areas reachable from an origin within given travel times |
 
 Most of them can also account for monetary travel costs ([fare structure
-vignette](https://ipeagit.github.io/r5r/articles/fare_structure.html)).
+vignette](https://ipea.github.io/r5r/articles/fare_structure.html)).
 
 **Support functions**:
 
 | Function | Returns |
 |----|----|
-| [`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md) | The OpenStreetMap street network of a `network.dat` file, as `sf` |
-| [`transit_network_to_sf()`](https://ipeagit.github.io/r5r/reference/transit_network_to_sf.md) | The public transport network of a `network.dat` file, as `sf` |
-| [`find_snap()`](https://ipeagit.github.io/r5r/reference/find_snap.md) | Where input points snap to the street network |
-| [`r5r_sitrep()`](https://ipeagit.github.io/r5r/reference/r5r_sitrep.md) | A situation report to help debug errors |
+| [`street_network_to_sf()`](https://ipea.github.io/r5r/reference/street_network_to_sf.md) | The OpenStreetMap street network of a `network.dat` file, as `sf` |
+| [`transit_network_to_sf()`](https://ipea.github.io/r5r/reference/transit_network_to_sf.md) | The public transport network of a `network.dat` file, as `sf` |
+| [`find_snap()`](https://ipea.github.io/r5r/reference/find_snap.md) | Where input points snap to the street network |
+| [`r5r_sitrep()`](https://ipea.github.io/r5r/reference/r5r_sitrep.md) | A situation report to help debug errors |
 
 ### 3.1 Data requirements:
 
-To use [r5r](https://github.com/ipeaGIT/r5r), you will need:
+To use [r5r](https://github.com/ipea/r5r), you will need:
 
 - A road network data set from OpenStreetMap in `.pbf` format
   (*mandatory*)
@@ -148,8 +146,8 @@ Here are a few places from where you can download these data sets:
 
 ### Data
 
-[r5r](https://github.com/ipeaGIT/r5r) includes sample data for Porto
-Alegre (Brazil):
+[r5r](https://github.com/ipea/r5r) includes sample data for Porto Alegre
+(Brazil):
 
 - An OpenStreetMap network: `poa_osm.pbf`
 - Two public transport feeds: `poa_eptc.zip` and `poa_trensurb.zip`
@@ -215,7 +213,7 @@ head(points)
 
 ### 4.1 Building routable transport network with `build_network()`
 
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
+[`build_network()`](https://ipea.github.io/r5r/reference/build_network.md)
 (1) downloads the R⁵ JAR (on first use or when the R⁵ version changes)
 and caches it locally; and (2) combines the `.pbf`, GTFS `.zip` and
 optional elevation `.tif` files in `data_path` into a routable network.
@@ -228,11 +226,11 @@ r5r_network <- build_network(data_path = data_path)
 
 ### 4.2 Accessibility analysis
 
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 is the fastest way to estimate accessibility. Here we count the schools
 and healthcare facilities reachable in less than 60 minutes by public
 transport and walking ([accessibility
-vignette](https://ipeagit.github.io/r5r/articles/accessibility.html)).
+vignette](https://ipea.github.io/r5r/articles/accessibility.html)).
 
 ``` r
 
@@ -266,14 +264,14 @@ head(access)
 ### 4.3 Routing analysis
 
 For fast routing analysis, **r5r** currently has three core functions:
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md)
 and
-[`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md).
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md).
 
 #### Fast many to many travel time matrix
 
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 computes travel times between origin/destination pairs. Origins and
 destinations can be an `sf POINT` object or a `data.frame` with columns
 `id`, `lon` and `lat`. `max_walk_time` and `max_trip_duration` are in
@@ -281,7 +279,7 @@ minutes, as are the resulting travel times.
 
 It can also capture travel time variation across departures within a
 time window ([time window
-vignette](https://ipeagit.github.io/r5r/articles/time_window.html)).
+vignette](https://ipea.github.io/r5r/articles/time_window.html)).
 
 ``` r
 
@@ -316,9 +314,9 @@ head(ttm)
 
 #### Expanded travel time matrix with minute-by-minute estimates
 
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md)
 works like
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 but also returns, for each origin/destination pair, the routes used and
 (with `breakdown = TRUE`) the access, waiting, in-vehicle and transfer
 times. It can be very memory intensive for large data sets.
@@ -359,7 +357,7 @@ head(ettm)
 #### Detailed itineraries
 
 Most routing packages return only the fastest route.
-[`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md)
 can also return alternative routes between origin/destination pairs,
 detailed by trip segment: transport mode, waiting time, travel time and
 distance.
@@ -401,15 +399,15 @@ head(det)
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 6 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           35.6           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           35.6           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           35.6           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           35.6           9460       5 WALK
-#> 6 -51.22875      2       14:09:43           46.0           8779       1 WALK
+#> 1 -51.22875      1       14:08:16           35.3           9460       1 WALK
+#> 2 -51.22875      1       14:08:16           35.3           9460       2 RAIL
+#> 3 -51.22875      1       14:08:16           35.3           9460       3 WALK
+#> 4 -51.22875      1       14:08:16           35.3           9460       4  BUS
+#> 5 -51.22875      1       14:08:16           35.3           9460       5 WALK
+#> 6 -51.22875      2       14:09:34           46.1           8779       1 WALK
 #>   segment_duration wait distance  route                       geometry
 #> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 2              6.6  1.7     4796 LINHA1 LINESTRING (-51.19763 -29.9...
 #> 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...
@@ -420,7 +418,7 @@ The output is an `sf` data.frame, ready to map.
 
 ##### Visualize results
 
-[`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md)
+[`street_network_to_sf()`](https://ipea.github.io/r5r/reference/street_network_to_sf.md)
 extracts the OSM street network used in routing, to give the map
 geographic context:
 
@@ -454,4 +452,4 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).

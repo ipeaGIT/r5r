@@ -2,15 +2,15 @@
 
 Creates a basic fare structure that describes how transit fares should
 be calculated in
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md),
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md),
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 and
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md).
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md).
 This fare structure can be manually edited and adjusted to the existing
 rules in your study area, as long as they stick to some basic premises.
 See the [fare-structure
-vignette](https://ipeagit.github.io/r5r/doc/fare_structure.md).
+vignette](https://ipea.github.io/r5r/doc/fare_structure.md).
 
 ## Usage
 
@@ -30,7 +30,7 @@ setup_fare_structure(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 - base_fare:
 
@@ -70,10 +70,10 @@ setup_fare_structure(
   `SUBWAY|BUS`, `001|007` or `SUBWAY 001|BUS 007`, respectively. The
   debug output lists all itineraries `R5` checked when calculating
   routes, not only those returned by
-  [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
-  [`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+  [`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+  [`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
   and
-  [`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md).
+  [`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md).
   This slows computation, but the larger sample of itineraries helps
   find issues in the fare structure.
 
@@ -89,8 +89,8 @@ A fare structure object.
 ## See also
 
 Other fare structure:
-[`read_fare_structure()`](https://ipeagit.github.io/r5r/reference/read_fare_structure.md),
-[`write_fare_structure()`](https://ipeagit.github.io/r5r/reference/write_fare_structure.md)
+[`read_fare_structure()`](https://ipea.github.io/r5r/reference/read_fare_structure.md),
+[`write_fare_structure()`](https://ipea.github.io/r5r/reference/write_fare_structure.md)
 
 ## Examples
 
@@ -99,7 +99,6 @@ library(r5r)
 
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 

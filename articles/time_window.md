@@ -28,9 +28,9 @@ over a time window and take the average or median. Repeating the routing
 for each departure is slow, though.
 
 In `r5r`, functions such as
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 and
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 have a `time_window` parameter that does this in a single call. This
 vignette shows how to use it and interpret the results.
 
@@ -43,6 +43,28 @@ Monte Carlo draws per minute (default 5, i.e. 300 draws in a 60-minute
 window); without frequencies, departures are deterministic and
 `draws_per_minute` does not affect results. For the effect of the number
 of draws on result stability, see Stewart et al (2022).
+
+This holds for the default routing algorithm (FastRaptor). When a
+`fare_structure` is passed to
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
+or
+[`travel_time_surface()`](https://ipea.github.io/r5r/reference/travel_time_surface.md),
+and always in
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)
+and
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md),
+R⁵ uses the McRaptor algorithm instead. McRaptor does not route a
+departure every minute: it routes `time_window * draws_per_minute`
+departure times sampled at random within the window (consecutive
+departures are, on average, `1 / draws_per_minute` minutes apart, each
+origin gets its own departure times, and the same ones in every call
+with the same origin and `seed`). So with McRaptor, `draws_per_minute`
+affects results even if the GTFS feeds have no `frequencies.txt` table.
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)
+and
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md)
+fix it at 1.
 
 The result is not a single estimate but a distribution reflecting the
 uncertainty within the window. The `percentiles` parameter selects which
@@ -119,7 +141,7 @@ head(acc, n = 10)
 #>  5: 89a8100c603ffff     schools         80     45             6
 #>  6: 89a8100c617ffff     schools         10     45            14
 #>  7: 89a8100c617ffff     schools         20     45            13
-#>  8: 89a8100c617ffff     schools         50     45             9
+#>  8: 89a8100c617ffff     schools         50     45            10
 #>  9: 89a8100c617ffff     schools         70     45             6
 #> 10: 89a8100c617ffff     schools         80     45             6
 ```
@@ -208,12 +230,13 @@ Each `travel_time_pXX` column gives the travel time within which XX% of
 the trips departing between 2pm and 3pm are completed: `travel_time_p10`
 for the fastest 10%, `travel_time_p50` the median, and so on. An `NA`
 means fewer than XX% of the trips arrive within `max_trip_duration` (90
-minutes).
+minutes). A wider `time_window` can include departures with worse
+service, so it can produce more `NA`s in the higher percentiles.
 
 ### 3.4 Expanded travel time matrix with `time_window`.
 
 With `time_window`,
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md)
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md)
 returns the fastest route departing at each minute of the window,
 instead of percentiles. It can be very memory intensive for large data
 sets and time windows.
@@ -247,21 +270,21 @@ head(ettm, n = 10)
 #> 10: 89a8100c603ffff 89a8100c28bffff       14:01:00           5 4491-10
 #>     total_time
 #>          <num>
-#>  1:       38.5
-#>  2:       38.3
-#>  3:       47.4
-#>  4:       48.6
-#>  5:       35.3
-#>  6:       41.5
-#>  7:       38.0
-#>  8:       51.4
-#>  9:       49.5
-#> 10:       48.1
+#>  1:       34.7
+#>  2:       36.2
+#>  3:       38.3
+#>  4:       41.6
+#>  5:       47.2
+#>  6:       36.2
+#>  7:       39.7
+#>  8:       46.3
+#>  9:       46.4
+#> 10:       48.6
 ```
 
 ### 3.5 Detailed itineraries with `time_window`.
 
-[`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md)
 returns itineraries rather than travel time or accessibility
 percentiles. With `time_window`, it returns the fastest itinerary: the
 shortest travel time measured from its own departure, so it may depart
@@ -269,17 +292,15 @@ and arrive later than others (use `time_window = 1` for the earliest
 arrival). With `shortest_path = FALSE`, it also returns sub-optimal
 alternatives.
 
-Its number of draws per minute is fixed at 1: it simulates about one
-departure per minute of `time_window`, at random seconds (consecutive
-departures are 30 to 90 seconds apart, and the same departure times are
-used in every call with the same origin). So a 10-minute `time_window`
-simulates about 10 departures. Each departure is routed separately, and
-with the default `suboptimal_minutes = 0` only the itineraries arriving
-earliest are kept for each departure, even if a slower one has fewer
-transfers.
+It uses the McRaptor algorithm with one draw per minute (see Section 2):
+consecutive departures are 30 to 90 seconds apart, so a 10-minute
+`time_window` simulates about 10 departures. Each departure is routed
+separately, and with the default `suboptimal_minutes = 0` only the
+itineraries arriving earliest are kept for each departure, even if a
+slower one has fewer transfers.
 
 *obs.*
-[`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+[`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md)
 cannot route public transport trips on frequency-based GTFS feeds; use
 [`gtfstools::frequencies_to_stop_times()`](https://rdrr.io/pkg/gtfstools/man/frequencies_to_stop_times.html)
 to create a suitable feed.
@@ -296,7 +317,7 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).
 
 ## References
 

@@ -55,7 +55,7 @@ transport agencies.
 In this vignette, we will be using the sample data set for the city of
 Porto Alegre (Brazil) included in `r5r`. Set Java memory before loading
 the packages
-([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ``` r
 
@@ -82,7 +82,6 @@ rail line connecting the city center to municipalities to the north:
 data_path <- system.file("extdata/poa", package = "r5r")
 
 r5r_network <- build_network(data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 
@@ -115,17 +114,17 @@ of rides and the modes combined:
 
 Three functions help configure the fare structure:
 
-- [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md)
+- [`setup_fare_structure()`](https://ipea.github.io/r5r/reference/setup_fare_structure.md)
   analyses the study area’s GTFS and builds a ‘skeleton’ fare structure
   with the parameters to set;
-- [`write_fare_structure()`](https://ipeagit.github.io/r5r/reference/write_fare_structure.md)
+- [`write_fare_structure()`](https://ipea.github.io/r5r/reference/write_fare_structure.md)
   and
-  [`read_fare_structure()`](https://ipeagit.github.io/r5r/reference/read_fare_structure.md)
+  [`read_fare_structure()`](https://ipea.github.io/r5r/reference/read_fare_structure.md)
   save the fare structure to disk and read it back. It is stored as
   `.csv` files in a `.zip`, which you can also edit in a text editor or
   spreadsheet.
 
-[`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md)
+[`setup_fare_structure()`](https://ipea.github.io/r5r/reference/setup_fare_structure.md)
 takes the `r5r_network`, a `base_fare` to populate the structure, and
 `by`, the route property that defines different fares. Below,
 `base_fare` is the bus ticket price (R\$ 4.80) and `by = "MODE"` gives
@@ -434,9 +433,9 @@ complete.
 
 ## 4. Calculating travel time and accessibility accounting for monetary costs
 
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 and
-[`accessibility()`](https://ipeagit.github.io/r5r/reference/accessibility.md)
+[`accessibility()`](https://ipea.github.io/r5r/reference/accessibility.md)
 take two parameters for monetary cost thresholds:
 
 - `fare_structure`: the settings object that we’ve been working on.
@@ -493,12 +492,12 @@ completed (`travel_time_500 == NA`):
 tail(ttm, 10)
 #>             from_id           to_id travel_time_500 travel_time_unl
 #>              <char>          <char>           <int>           <int>
-#>  1: 89a90166da7ffff 89a90129c2bffff              38              36
-#>  2: 89a90166da7ffff 89a90129aa7ffff              33              30
-#>  3: 89a90166da7ffff 89a90e93497ffff              33              33
-#>  4: 89a90166da7ffff 89a90129807ffff              39              38
-#>  5: 89a90166da7ffff 89a90129b5bffff              34              34
-#>  6: 89a90166da7ffff 89a90129dd7ffff              37              37
+#>  1: 89a90166da7ffff 89a90129863ffff              35              35
+#>  2: 89a90166da7ffff 89a90129c2bffff              38              38
+#>  3: 89a90166da7ffff 89a90129aa7ffff              33              30
+#>  4: 89a90166da7ffff 89a90e93497ffff              32              32
+#>  5: 89a90166da7ffff 89a90129807ffff              39              38
+#>  6: 89a90166da7ffff 89a90129b5bffff              34              34
 #>  7: 89a90166da7ffff 89a90129bbbffff              33              33
 #>  8: 89a90166da7ffff 89a90129bd7ffff              26              26
 #>  9: 89a90166da7ffff 89a90129a47ffff              19              19
@@ -619,4 +618,4 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).

@@ -29,8 +29,8 @@ A fare structure object.
 ## See also
 
 Other fare structure:
-[`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md),
-[`write_fare_structure()`](https://ipeagit.github.io/r5r/reference/write_fare_structure.md)
+[`setup_fare_structure()`](https://ipea.github.io/r5r/reference/setup_fare_structure.md),
+[`write_fare_structure()`](https://ipea.github.io/r5r/reference/write_fare_structure.md)
 
 ## Examples
 

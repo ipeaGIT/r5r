@@ -26,7 +26,7 @@ click to expand
 > parameters provide convenient and efficient ways to build different
 > scenarios of traffic congestion, road closure and interventions in
 > cycling infrastructure. [See this
-> vignette](https://ipeagit.github.io/r5r/articles/scenarios.html). For
+> vignette](https://ipea.github.io/r5r/articles/scenarios.html). For
 > other changes to the OSM network (e.g. including a new road link), you
 > would need to edit the OpenStreetMap `.pbf` file directly before using
 > it in `r5r`. To do this, you can edit the `.pbf` file with [JOSM
@@ -38,11 +38,11 @@ click to expand
 click to expand
 
 > The functions
-> [`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+> [`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 > (and
-> [`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md))
+> [`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md))
 > and
-> [`detailed_itineraries()`](https://ipeagit.github.io/r5r/reference/detailed_itineraries.md)
+> [`detailed_itineraries()`](https://ipea.github.io/r5r/reference/detailed_itineraries.md)
 > use different routing algorithms, as explained in the documentation of
 > these functions. As such, we advise not to use or combine the output
 > of these functions.
@@ -88,7 +88,7 @@ click to expand
 > in OpenStreetMap data. You can change car speeds from within R with
 > the `new_carspeeds` and `carspeed_scale` parameters of the routing
 > functions. [See this
-> vignette](https://ipeagit.github.io/r5r/articles/scenarios.html).
+> vignette](https://ipea.github.io/r5r/articles/scenarios.html).
 
 ## 6. Why do I get identical results by public transport and walking?
 

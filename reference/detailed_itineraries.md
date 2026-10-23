@@ -35,7 +35,7 @@ detailed_itineraries(
   new_lts = NULL,
   n_threads = Inf,
   verbose = FALSE,
-  progress = FALSE,
+  progress = TRUE,
   drop_geometry = FALSE,
   osm_link_ids = FALSE,
   output_dir = NULL,
@@ -48,7 +48,7 @@ detailed_itineraries(
 - r5r_network:
 
   A routable transport network created with
-  [`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md).
+  [`build_network()`](https://ipea.github.io/r5r/reference/build_network.md).
 
 - origins, destinations:
 
@@ -72,7 +72,7 @@ detailed_itineraries(
   A POSIXct object. Only affects public transport legs; when routing
   with public transport, it must fall within the service period of the
   GTFS feeds (`calendar.txt`; see
-  [`check_transit_availability()`](https://ipeagit.github.io/r5r/reference/check_transit_availability.md)).
+  [`check_transit_availability()`](https://ipea.github.io/r5r/reference/check_transit_availability.md)).
   Defaults to [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). See
   details for how datetimes are parsed.
 
@@ -89,7 +89,7 @@ detailed_itineraries(
   same sequence of routes appears in several departures, only the
   fastest is kept, so the output may contain trips departing after
   `departure_datetime` but within the window. See
-  [`vignette("time_window", package = "r5r")`](https://ipeagit.github.io/r5r/articles/time_window.md).
+  [`vignette("time_window", package = "r5r")`](https://ipea.github.io/r5r/articles/time_window.md).
 
 - suboptimal_minutes:
 
@@ -177,9 +177,9 @@ detailed_itineraries(
 - fare_structure:
 
   A fare structure object, following the convention set in
-  [`setup_fare_structure()`](https://ipeagit.github.io/r5r/reference/setup_fare_structure.md).
+  [`setup_fare_structure()`](https://ipea.github.io/r5r/reference/setup_fare_structure.md).
   This object describes how transit fares should be calculated. See
-  [`vignette("fare_structure", package = "r5r")`](https://ipeagit.github.io/r5r/articles/fare_structure.md)
+  [`vignette("fare_structure", package = "r5r")`](https://ipea.github.io/r5r/articles/fare_structure.md)
   for its structure.
 
 - max_fare:
@@ -203,7 +203,7 @@ detailed_itineraries(
   polygon, `scale` with the new speed scaling factors and `priority`,
   which is a number ranking which polygon should be considered in case
   of overlapping polygons. See more info in the scenarios vignette
-  ([`vignette("scenarios", package = "r5r")`](https://ipeagit.github.io/r5r/articles/scenarios.md)).
+  ([`vignette("scenarios", package = "r5r")`](https://ipea.github.io/r5r/articles/scenarios.md)).
 
 - carspeed_scale:
 
@@ -234,9 +234,8 @@ detailed_itineraries(
 - progress:
 
   A logical. Whether to show a progress counter when running the router.
-  Defaults to `FALSE`. Only works when `verbose` is `FALSE`. May
-  slightly slow computation, as the counter is synchronized across
-  threads.
+  Defaults to `TRUE`. Only works when `verbose` is `FALSE`. May slightly
+  slow computation, as the counter is synchronized across threads.
 
 - drop_geometry:
 
@@ -260,7 +259,7 @@ detailed_itineraries(
   segment). For more precision, use `edge_id_list`, which returns the
   exact internal edge segments used in the trip. You can inspect these
   edge ids and their associated properties, including OSM ids, with
-  [`street_network_to_sf()`](https://ipeagit.github.io/r5r/reference/street_network_to_sf.md).
+  [`street_network_to_sf()`](https://ipea.github.io/r5r/reference/street_network_to_sf.md).
 
 - output_dir:
 
@@ -376,7 +375,7 @@ perhaps surprisingly, ignoring the timezone attribute.
 ## Routing algorithm
 
 The `detailed_itineraries()` and
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md)
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md)
 functions use an `R5`-specific extension to the McRAPTOR routing
 algorithm. The implementation used in `detailed_itineraries()` allows
 the router to find paths that are optimal and less than optimal in terms
@@ -385,7 +384,7 @@ riding the same patterns, etc. The specific extension to McRAPTOR to do
 suboptimal path routing is not documented yet, but a detailed
 description of base McRAPTOR can be found in Delling et al (2015). The
 implementation used in
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md),
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md),
 on the other hand, returns only the fastest trip within a given monetary
 cutoff, ignoring slower trips that cost the same. A detailed discussion
 on the algorithm can be found in Conway and Stewart (2019).
@@ -403,10 +402,10 @@ on the algorithm can be found in Conway and Stewart (2019).
 ## See also
 
 Other routing:
-[`arrival_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/arrival_travel_time_matrix.md),
-[`expanded_travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/expanded_travel_time_matrix.md),
-[`pareto_frontier()`](https://ipeagit.github.io/r5r/reference/pareto_frontier.md),
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md)
+[`arrival_travel_time_matrix()`](https://ipea.github.io/r5r/reference/arrival_travel_time_matrix.md),
+[`expanded_travel_time_matrix()`](https://ipea.github.io/r5r/reference/expanded_travel_time_matrix.md),
+[`pareto_frontier()`](https://ipea.github.io/r5r/reference/pareto_frontier.md),
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md)
 
 ## Examples
 
@@ -416,7 +415,6 @@ library(r5r)
 # build transport network
 data_path <- system.file("extdata/poa", package = "r5r")
 r5r_network <- build_network(data_path)
-#> Using cached R5 version from /home/runner/.cache/R/r5r/r5_jar_v7.5.1/r5-v7.5-1-gf3631e9-all.jar
 #> ℹ Using cached network from
 #>   /home/runner/work/_temp/Library/r5r/extdata/poa/network.dat.
 
@@ -450,14 +448,14 @@ head(det)
 #> 4 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #> 5 farrapos_station -29.99772 -51.19762 praia_de_belas_shopping_center -30.04995
 #>      to_lon option departure_time total_duration total_distance segment mode
-#> 1 -51.22875      1       14:07:57           35.6           9460       1 WALK
-#> 2 -51.22875      1       14:07:57           35.6           9460       2 RAIL
-#> 3 -51.22875      1       14:07:57           35.6           9460       3 WALK
-#> 4 -51.22875      1       14:07:57           35.6           9460       4  BUS
-#> 5 -51.22875      1       14:07:57           35.6           9460       5 WALK
+#> 1 -51.22875      1       14:08:16           35.3           9460       1 WALK
+#> 2 -51.22875      1       14:08:16           35.3           9460       2 RAIL
+#> 3 -51.22875      1       14:08:16           35.3           9460       3 WALK
+#> 4 -51.22875      1       14:08:16           35.3           9460       4  BUS
+#> 5 -51.22875      1       14:08:16           35.3           9460       5 WALK
 #>   segment_duration wait distance  route                       geometry
 #> 1              5.1  0.0      174        LINESTRING (-51.1981 -29.99...
-#> 2              6.6  2.0     4796 LINHA1 LINESTRING (-51.19763 -29.9...
+#> 2              6.6  1.7     4796 LINHA1 LINESTRING (-51.19763 -29.9...
 #> 3              4.0  0.0      256        LINESTRING (-51.22827 -30.0...
 #> 4             10.4  4.4     4083    188 LINESTRING (-51.22926 -30.0...
 #> 5              3.2  0.0      151        LINESTRING (-51.22949 -30.0...

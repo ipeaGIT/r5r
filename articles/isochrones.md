@@ -9,26 +9,26 @@ the `r5r` package.
 
 An isochrone shows all areas reachable from a place within a maximum
 travel time. This vignette uses the [`r5r`
-package](https://ipeagit.github.io/r5r/index.html) and the Porto Alegre
+package](https://ipea.github.io/r5r/index.html) and the Porto Alegre
 (Brazil) sample data included in it to calculate and map public
 transport isochrones from the city’s central bus station at several
 travel time thresholds.
-[`r5r::isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
+[`r5r::isochrone()`](https://ipea.github.io/r5r/reference/isochrone.md)
 builds both polygon- and line-based isochrones; we cover both.
 
 ***Warning:*** to count opportunities (e.g. jobs, schools or hospitals)
 within each isochrone, we strongly recommend NOT using
-[`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md).
-The [Accessibility
-vignette](https://ipeagit.github.io/r5r/articles/accessibility.html)
-shows much more efficient ways.
+[`isochrone()`](https://ipea.github.io/r5r/reference/isochrone.md). The
+[Accessibility
+vignette](https://ipea.github.io/r5r/articles/accessibility.html) shows
+much more efficient ways.
 
 ## 2. Build routable transport network with `build_network()`
 
 #### Increase Java memory and load libraries
 
 Set Java memory before loading the packages
-([why](https://ipeagit.github.io/r5r/articles/r5r.html#usage)).
+([why](https://ipea.github.io/r5r/articles/r5r.html#usage)).
 
 ``` r
 
@@ -40,7 +40,7 @@ library(data.table)
 library(ggplot2)
 ```
 
-[`build_network()`](https://ipeagit.github.io/r5r/reference/build_network.md)
+[`build_network()`](https://ipea.github.io/r5r/reference/build_network.md)
 takes the directory holding the OpenStreetMap and GTFS data:
 
 ``` r
@@ -100,9 +100,9 @@ iso1 <- r5r::isochrone(
   )
 ```
 
-[`isochrone()`](https://ipeagit.github.io/r5r/reference/isochrone.md)
-works like
-[`travel_time_matrix()`](https://ipeagit.github.io/r5r/reference/travel_time_matrix.md),
+[`isochrone()`](https://ipea.github.io/r5r/reference/isochrone.md) works
+like
+[`travel_time_matrix()`](https://ipea.github.io/r5r/reference/travel_time_matrix.md),
 but with `polygon_output = TRUE` it returns an `sf` data.frame with one
 `POLYGON`/`MULTIPOLYGON` per origin, cutoff and percentile:
 
@@ -222,4 +222,4 @@ rJava::.jgc(R.gc = TRUE)
 ```
 
 If you have any suggestions or want to report an error, please visit
-[the package GitHub page](https://github.com/ipeaGIT/r5r).
+[the package GitHub page](https://github.com/ipea/r5r).
