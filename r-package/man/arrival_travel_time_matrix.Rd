@@ -270,7 +270,9 @@ minute over the time window set by the user in the 'time_window' parameter.
 A detailed description of base RAPTOR can be found in Delling et al (2015).
 However, whenever the user includes transit fares inputs to these functions,
 they automatically switch to use an \code{R5}-specific extension to the McRAPTOR
-routing algorithm.
+routing algorithm. \code{\link[=detailed_itineraries]{detailed_itineraries()}} also uses RAPTOR when it only
+returns the fastest itinerary (\code{shortest_path = TRUE}) and no fares are
+used.
 \itemize{
 \item Conway, M. W., Byrd, A., & van der Linden, M. (2017). Evidence-based
 transit and land use sketch planning using interactive accessibility methods
