@@ -6,7 +6,7 @@
 
 **Bug fixes**
 
-- [#2](https://github.com/e-kotov/r5r/pull/2) `detailed_itineraries()` now retains the final partial street segment and the connection to the destination in transit egress legs. Backward searches associate partial distances and directional costs with the correct street endpoint. Both RAPTOR and McRAPTOR use the complete egress cost for routing, duration limits and output, including RAPTOR searches shared across destinations. Results can change, particularly for destinations on long street segments.
+- [#607](https://github.com/ipea/r5r/pull/607) `detailed_itineraries()` now retains the final partial street segment and the connection to the destination in transit egress legs. Backward searches associate partial distances and directional costs with the correct street endpoint. Both RAPTOR and McRAPTOR use the complete egress cost for routing, duration limits and output, including RAPTOR searches shared across destinations. Results can change, particularly for destinations on long street segments.
 
 # r5r 2.5.0
 
